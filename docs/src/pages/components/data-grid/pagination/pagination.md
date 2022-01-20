@@ -1,81 +1,124 @@
 ---
-title: Data Grid - Paging
+title: Data Grid - Pagination
 ---
 
 # Data Grid - Pagination
 
-<p class="description">Through paging, a segment of data can be viewed from the assigned data source.</p>
+<p class="description">Easily paginate your rows and only fetch what you need.</p>
 
-By default, the MIT `DataGrid` displays the rows with pagination, and up to 100 rows per page.
+> ⚠️ The default pagination behavior depends on your plan.
+>
+> - On the `DataGrid`, pagination is enabled by default and can't be disabled
+> - On the `DataGridPro`, pagination is disabled by default, use the `pagination` prop to enable it
 
-On the other hand, the commercial `DataGridPro` component displays, by default, all the rows with infinite scrolling (and virtualization) and without the 100 rows per page limitation. You need to set the `pagination` prop to enable the pagination feature in such a case.
+## Size of the page
 
-## Basic example
+The MIT `DataGrid` is limited to pages of up to 100 rows. If you want larger pages, you will need to migrate to the [Pro plan](https://mui.com/store/items/material-ui-pro/)
 
-{{"demo": "pages/components/data-grid/pagination/BasicPaginationGrid.js", "bg": "inline"}}
+By default, each page contains 100 rows. The user can change the size of the page through the selector in the footer.
 
-## Page size
+### Page size options
 
-- The default page size is `100`, you can change this value with the `pageSize` prop.
-- You can configure the possible page size the user can choose from with the `rowsPerPageOptions` prop.
+You can configure the page size the user can choose from with the `rowsPerPageOptions` prop.
 
-{{"demo": "pages/components/data-grid/pagination/SizePaginationGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/pagination/PageSizeCustomOptions.js", "bg": "inline"}}
 
-## Controlled pagination
+### Automatic page size
 
-While the previous demos show how the pagination can be uncontrolled, the active page can be controlled with the `page`/`onPageChange` props.
+Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
 
-{{"demo": "pages/components/data-grid/pagination/ControlledPaginationGrid.js", "bg": "inline"}}
+> ⚠️ You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the grid according to the `pageSize`.
 
-## Auto size
+{{"demo": "pages/components/data-grid/pagination/PageSizeAuto.js", "bg": "inline"}}
 
-The `autoPageSize` prop allows to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
-By default, this feature is off.
+### Initialize the page size
 
-{{"demo": "pages/components/data-grid/pagination/AutoPaginationGrid.js", "bg": "inline"}}
+To initialize the page size without controlling it, provide the page size to the `initialState` prop.
+
+```tsx
+<DataGrid
+  initialState={{
+    pagination: {
+      pageSize: 10,
+    },
+  }}
+/>
+```
+
+{{"demo": "pages/components/data-grid/pagination/PageSizeInitialState.js", "bg": "inline"}}
+
+### Controlled page size
+
+Use the `pageSize` prop to control the size of the pages.
+
+You can use the `onPageSizeChange` prop to listen to changes to the page size and update the prop accordingly.
+
+{{"demo": "pages/components/data-grid/pagination/PageSizeControlled.js", "bg": "inline"}}
+
+## Current page
+
+### Initialize the page
+
+To initialize the page without controlling it, provide the page to the `initialState` prop.
+
+```tsx
+<DataGrid
+  initialState={{
+    pagination: {
+      page: 1,
+    },
+  }}
+/>
+```
+
+{{"demo": "pages/components/data-grid/pagination/PageInitialState.js", "bg": "inline"}}
+
+### Controlled page
+
+Use the `page` prop to control the size of the pages.
+
+You can use the `onPageChange` prop to listen to changes to the page size and update the prop accordingly.
+
+{{"demo": "pages/components/data-grid/pagination/PageControlled.js", "bg": "inline"}}
 
 ## Server-side pagination
 
-By default, pagination works on the client-side.
-To switch it to server-side, set `paginationMode="server"`.
-You also need to set the `rowCount` prop so that the grid knows the total number of pages.
-Finally, you need to handle the `onPageChange` callback to load the rows for the corresponding page.
+By default, the pagination is handled on the client.
+This means you have to give the rows of all pages to the grid.
+If your dataset is too big, and you only want to fetch the current page, you can use server-side pagination.
+
+**Note**: For more information regarding server-side pagination in combination with controlled selection check [here](/components/data-grid/selection/#usage-with-server-side-pagination)
+
+### Basic implementation
+
+- Set the prop `paginationMode` to `server`
+- Provide a `rowCount` prop to let the grid know how many pages there is
+- Add a `onPageChange` callback ot load the rows when the page changes
 
 {{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js", "bg": "inline"}}
 
-## Cursor-based pagination
+### Cursor implementation
 
-You can adapt the pagination for your cursor-based pagination.
+You can also handle servers with cursor-based pagination.
 To do so, you just have to keep track of the next cursor associated with each page you fetched.
 
 {{"demo": "pages/components/data-grid/pagination/CursorPaginationGrid.js", "bg": "inline"}}
 
-## Customization
+## Custom pagination UI
 
 You can customize the rendering of the pagination in the footer following [the component section](/components/data-grid/components/#pagination) of the documentation.
 
-## Paginate > 100 rows [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-The `DataGrid` component can display up to 100 rows per page.
-The `DataGridPro` component removes this limitation.
-The following demo displays 200 rows per page:
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
-{{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/pagination/PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-The grid exposes a set of methods that enables all of these features using the imperative apiRef.
+{{"demo": "pages/components/data-grid/pagination/PaginationSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
-
-- `setPageSize`: Set the number of rows in one page.
-- `setPage`: Set the displayed page.
-- `onPageChange`: Callback fired after a new page has been displayed.
-- `onPageSizeChange`: Callback fired after the page size was changed.
-
-Below is an example of how you can reset the page using the imperative `setPage` method.
-
-{{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js", "bg": "inline", "disableAd": true}}
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state)
 
 ## API
 

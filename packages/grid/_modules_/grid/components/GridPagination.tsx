@@ -1,47 +1,33 @@
 import * as React from 'react';
-import TablePagination from '@material-ui/core/TablePagination';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
-import { useGridApiContext } from '../hooks/root/useGridApiContext';
-import { createTheme, getMuiVersion } from '../utils/utils';
+import TablePagination, {
+  tablePaginationClasses,
+  TablePaginationProps,
+} from '@mui/material/TablePagination';
+import { styled } from '@mui/material/styles';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 
-const defaultTheme = createTheme();
-// Used to hide the Rows per page selector on small devices
-const useStyles = makeStyles(
-  (theme: Theme) => ({
-    selectLabel: {
-      display: 'none',
-      [theme.breakpoints.up('md')]: {
-        display: 'block',
-      },
+const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
+  [`& .${tablePaginationClasses.selectLabel}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
     },
-    caption: {
-      // input label
-      '&[id]': {
-        display: 'none',
-        [theme.breakpoints.up('md')]: {
-          display: 'block',
-        },
-      },
+  },
+  [`& .${tablePaginationClasses.input}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline-flex',
     },
-    input: {
-      display: 'none',
-      [theme.breakpoints.up('md')]: {
-        display: 'inline-flex',
-      },
-    },
-  }),
-  { defaultTheme },
-);
+  },
+}));
 
 export const GridPagination = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function GridPagination(props, ref) {
-  const classes = useStyles();
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
@@ -50,34 +36,21 @@ export const GridPagination = React.forwardRef<
     () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
     [paginationState.rowCount, paginationState.pageSize],
   );
+
   const handlePageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
       const newPageSize = Number(event.target.value);
-      apiRef!.current!.setPageSize(newPageSize);
+      apiRef.current.setPageSize(newPageSize);
     },
     [apiRef],
   );
 
-  const handlePageChange = React.useCallback(
-    (event: any, page: number) => {
-      apiRef!.current!.setPage(page);
+  const handlePageChange = React.useCallback<TablePaginationProps['onPageChange']>(
+    (event, page) => {
+      apiRef.current.setPage(page);
     },
     [apiRef],
   );
-
-  const getPaginationChangeHandlers = () => {
-    if (getMuiVersion() !== 'v4') {
-      return {
-        onPageChange: handlePageChange,
-        onRowsPerPageChange: handlePageSizeChange,
-      };
-    }
-
-    return {
-      onChangePage: handlePageChange,
-      onChangeRowsPerPage: handlePageSizeChange,
-    };
-  };
 
   if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -85,30 +58,25 @@ export const GridPagination = React.forwardRef<
     if (
       !warnedOnceMissingPageSizeInRowsPerPageOptions.current &&
       !rootProps.autoPageSize &&
-      !rootProps.rowsPerPageOptions!.includes(rootProps.pageSize ?? paginationState.pageSize)
+      !rootProps.rowsPerPageOptions.includes(rootProps.pageSize ?? paginationState.pageSize)
     ) {
       console.warn(
         [
-          `Material-UI: The page size \`${
+          `MUI: The page size \`${
             rootProps.pageSize ?? paginationState.pageSize
           }\` is not preset in the \`rowsPerPageOptions\``,
           `Add it to show the pagination select.`,
         ].join('\n'),
       );
+
       warnedOnceMissingPageSizeInRowsPerPageOptions.current = true;
     }
   }
 
   return (
-    // @ts-ignore TODO remove once upgraded v4 support is dropped
-    <TablePagination
+    <GridPaginationRoot
       ref={ref}
-      classes={{
-        ...(getMuiVersion() === 'v5'
-          ? { selectLabel: classes.selectLabel }
-          : { caption: classes.caption }),
-        input: classes.input,
-      }}
+      // @ts-ignore
       component="div"
       count={paginationState.rowCount}
       page={paginationState.page <= lastPage ? paginationState.page : lastPage}
@@ -118,8 +86,9 @@ export const GridPagination = React.forwardRef<
           : []
       }
       rowsPerPage={paginationState.pageSize}
-      {...apiRef!.current.getLocaleText('MuiTablePagination')}
-      {...getPaginationChangeHandlers()}
+      onPageChange={handlePageChange}
+      onRowsPerPageChange={handlePageSizeChange}
+      {...apiRef.current.getLocaleText('MuiTablePagination')}
       {...props}
     />
   );

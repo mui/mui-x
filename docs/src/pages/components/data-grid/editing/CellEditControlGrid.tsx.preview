@@ -1,0 +1,11 @@
+<Alert severity="info" style={{ marginBottom: 8 }}>
+  <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
+</Alert>
+<div style={{ height: 400, width: '100%' }}>
+  <DataGrid
+    rows={rows}
+    columns={columns}
+    editRowsModel={editRowsModel}
+    onEditRowsModelChange={handleEditRowsModelChange}
+  />
+</div>

@@ -1,39 +1,29 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { createTheme, Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import {
   GridColumns,
-  GridEditCellPropsParams,
   GridRowsProp,
   useGridApiRef,
   DataGridPro,
+  GridEditCellProps,
+  GridPreProcessEditCellProps,
 } from '@mui/x-data-grid-pro';
 
-// TODO v5: remove
-function getThemePaletteMode(palette: any): string {
-  return palette.type || palette.mode;
-}
-
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme: Theme) => {
-    const isDark = getThemePaletteMode(theme.palette) === 'dark';
-
-    return {
-      root: {
-        '& .MuiDataGrid-cell--editable': {
-          backgroundColor: isDark ? '#376331' : 'rgb(217 243 190)',
-        },
-        '& .Mui-error': {
-          backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-          color: isDark ? '#ff4343' : '#750f0f',
-        },
-      },
-    };
+const StyledBox = styled(Box)(({ theme }) => ({
+  height: 400,
+  width: '100%',
+  '& .MuiDataGrid-cell--editable': {
+    backgroundColor: theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+    '& .MuiInputBase-root': {
+      height: '100%',
+    },
   },
-  { defaultTheme },
-);
+  '& .Mui-error': {
+    backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+    color: theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f',
+  },
+}));
 
 let promiseTimeout: any;
 function validateName(username: string): Promise<boolean> {
@@ -48,44 +38,30 @@ function validateName(username: string): Promise<boolean> {
 
 export default function ValidateServerNameGrid() {
   const apiRef = useGridApiRef();
-  const classes = useStyles();
 
   const keyStrokeTimeoutRef = React.useRef<any>();
 
-  const handleCellEditPropsChange = React.useCallback(
-    async ({ id, field, props }: GridEditCellPropsParams, event) => {
-      if (field === 'name') {
-        clearTimeout(promiseTimeout);
-        clearTimeout(keyStrokeTimeoutRef.current);
+  const preProcessEditCellProps = (params: GridPreProcessEditCellProps) =>
+    new Promise<GridEditCellProps>((resolve) => {
+      clearTimeout(promiseTimeout);
+      clearTimeout(keyStrokeTimeoutRef.current);
 
-        let newModel = apiRef.current.getEditRowsModel();
-        apiRef.current.setEditRowsModel({
-          ...newModel,
-          [id]: {
-            ...newModel[id],
-            [field]: { ...newModel[id][field], error: true },
-          },
-        });
+      // basic debouncing here
+      keyStrokeTimeoutRef.current = setTimeout(async () => {
+        const isValid = await validateName(params.props.value!.toString());
+        resolve({ ...params.props, error: !isValid });
+      }, 100);
+    });
 
-        // basic debouncing here
-        keyStrokeTimeoutRef.current = setTimeout(async () => {
-          const data = props; // Fix eslint value is missing in prop-types for JS files
-          const isValid = await validateName(data.value!.toString());
-          newModel = apiRef.current.getEditRowsModel();
-          apiRef.current.setEditRowsModel({
-            ...newModel,
-            [id]: {
-              ...newModel[id],
-              [field]: { ...newModel[id][field], error: !isValid },
-            },
-          });
-        }, 100);
-
-        event.defaultMuiPrevented = true;
-      }
+  const columns: GridColumns = [
+    {
+      field: 'name',
+      headerName: 'MUI Contributor',
+      width: 180,
+      editable: true,
+      preProcessEditCellProps,
     },
-    [apiRef],
-  );
+  ];
 
   React.useEffect(() => {
     return () => {
@@ -95,22 +71,16 @@ export default function ValidateServerNameGrid() {
   }, []);
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <StyledBox>
       <DataGridPro
-        className={classes.root}
         apiRef={apiRef}
         rows={rows}
         columns={columns}
-        onEditCellPropsChange={handleCellEditPropsChange}
         isCellEditable={(params) => params.row.id === 5}
       />
-    </div>
+    </StyledBox>
   );
 }
-
-const columns: GridColumns = [
-  { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },
-];
 
 const rows: GridRowsProp = [
   {

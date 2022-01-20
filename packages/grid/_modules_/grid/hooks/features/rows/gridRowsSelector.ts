@@ -1,28 +1,33 @@
 import { createSelector } from 'reselect';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
-import { GridState } from '../core/gridState';
-import { InternalGridRowsState } from './gridRowsState';
-
-export type GridRowsLookup = Record<GridRowId, GridRowModel>;
+import { GridState } from '../../../models/gridState';
 
 export const gridRowsStateSelector = (state: GridState) => state.rows;
 
 export const gridRowCountSelector = createSelector(
   gridRowsStateSelector,
-  (rows: InternalGridRowsState) => rows && rows.totalRowCount,
+  (rows) => rows.totalRowCount,
+);
+
+export const gridTopLevelRowCountSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows.totalTopLevelRowCount,
 );
 
 export const gridRowsLookupSelector = createSelector(
   gridRowsStateSelector,
-  (rows: InternalGridRowsState) => rows && rows.idRowsLookup,
+  (rows) => rows.idRowsLookup,
 );
 
-export const unorderedGridRowIdsSelector = createSelector(
+export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
+
+export const gridRowGroupingNameSelector = createSelector(
   gridRowsStateSelector,
-  (rows: InternalGridRowsState) => rows.allRows,
+  (rows) => rows.groupingName,
 );
 
-export const unorderedGridRowModelsSelector = createSelector(
+export const gridRowTreeDepthSelector = createSelector(
   gridRowsStateSelector,
-  (rows: InternalGridRowsState) => rows.allRows.map((id) => rows.idRowsLookup[id]),
+  (rows) => rows.treeDepth,
 );
+
+export const gridRowIdsSelector = createSelector(gridRowsStateSelector, (rows) => rows.ids);

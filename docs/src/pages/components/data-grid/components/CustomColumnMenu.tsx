@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { createTheme, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 import {
   GridColumnMenu,
   GridColumnMenuContainer,
@@ -11,52 +11,50 @@ import {
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
-import StarOutlineIcon from '@material-ui/icons/StarOutline';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme: Theme) => ({
-    primary: {
-      background: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText,
-    },
-    secondary: {
-      background: theme.palette.secondary.main,
-      color: theme.palette.secondary.contrastText,
-    },
-  }),
-  { defaultTheme },
-);
+const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)<{
+  ownerState: { color: string };
+}>(({ theme, ownerState }) => ({
+  background: theme.palette[ownerState.color].main,
+  color: theme.palette[ownerState.color].contrastText,
+}));
+
+const StyledGridColumnMenu = styled(GridColumnMenu)<{
+  ownerState: { color: string };
+}>(({ theme, ownerState }) => ({
+  background: theme.palette[ownerState.color].main,
+  color: theme.palette[ownerState.color].contrastText,
+}));
 
 export function CustomColumnMenuComponent(
   props: GridColumnMenuProps & { color: string },
 ) {
-  const classes = useStyles();
   const { hideMenu, currentColumn, color, ...other } = props;
 
   if (currentColumn.field === 'name') {
     return (
-      <GridColumnMenuContainer
+      <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
         currentColumn={currentColumn}
-        className={classes[color]}
+        ownerState={{ color }}
         {...other}
       >
         <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />
         <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} />
-      </GridColumnMenuContainer>
+      </StyledGridColumnMenuContainer>
     );
   }
   if (currentColumn.field === 'stars') {
     return (
-      <GridColumnMenuContainer
+      <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
         currentColumn={currentColumn}
-        className={classes[color]}
+        ownerState={{ color }}
         {...other}
       >
-        <div
-          style={{
+        <Box
+          sx={{
             width: 127,
             height: 160,
             display: 'flex',
@@ -65,16 +63,16 @@ export function CustomColumnMenuComponent(
             alignItems: 'center',
           }}
         >
-          <StarOutlineIcon style={{ fontSize: 80 }} />
-        </div>
-      </GridColumnMenuContainer>
+          <StarOutlineIcon sx={{ fontSize: 80 }} />
+        </Box>
+      </StyledGridColumnMenuContainer>
     );
   }
   return (
-    <GridColumnMenu
+    <StyledGridColumnMenu
       hideMenu={hideMenu}
       currentColumn={currentColumn}
-      className={classes[color]}
+      ownerState={{ color }}
       {...other}
     />
   );
@@ -112,7 +110,7 @@ export default function CustomColumnMenu() {
           rows={[
             {
               id: 1,
-              name: 'Material-UI',
+              name: 'MUI',
               stars: 28000,
               default: 'Open source',
             },

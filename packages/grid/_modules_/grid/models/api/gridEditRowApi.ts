@@ -1,16 +1,16 @@
-import * as React from 'react';
 import { GridCellMode, GridRowMode } from '../gridCell';
 import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridCommitCellChangeParams, GridEditCellValueParams } from '../params/gridEditCellParams';
+import { MuiBaseEvent } from '../muiEvent';
 
 /**
  * The editing API interface that is available in the grid `apiRef`.
  */
 export interface GridEditRowApi {
   /**
-   * Set sthe edit rows model of the grid.
+   * Set the edit rows model of the grid.
    * @param {GridEditRowsModel} model The new edit rows model.
    */
   setEditRowsModel: (model: GridEditRowsModel) => void;
@@ -30,7 +30,7 @@ export interface GridEditRowApi {
    * Gets the mode of a cell.
    * @param {GridRowId} id The id of the row.
    * @param {string} field The field to get the mode.
-   * @returns Returns `"edit"` or `"view"`.
+   * @returns {GridCellMode} Returns `"edit"` or `"view"`.
    */
   getCellMode: (id: GridRowId, field: string) => GridCellMode;
   /**
@@ -42,7 +42,7 @@ export interface GridEditRowApi {
   /**
    * Gets the mode of a row.
    * @param {GridRowId} id The id of the row.
-   * @returns Returns `"edit"` or `"view"`.
+   * @returns {GridRowMode} Returns `"edit"` or `"view"`.
    */
   getRowMode: (id: GridRowId) => GridRowMode;
   /**
@@ -57,19 +57,22 @@ export interface GridEditRowApi {
    * @param {GridEditCellValueParams} params Contains the id, field and value to set.
    * @param {React.SyntheticEvent} event The event to pass forward.
    */
-  setEditCellValue: (params: GridEditCellValueParams, event?: React.SyntheticEvent) => void;
+  setEditCellValue: (params: GridEditCellValueParams, event?: MuiBaseEvent) => void;
   /**
    * Updates the field at the given id with the value stored in the edit row model.
    * @param {GridCommitCellChangeParams} params The id and field to commit to.
    * @param {React.SyntheticEvent} event The event to pass forward.
    * @returns {boolean} A boolean indicating if there is an error.
    */
-  commitCellChange: (params: GridCommitCellChangeParams, event?: any) => boolean;
+  commitCellChange: (
+    params: GridCommitCellChangeParams,
+    event?: MuiBaseEvent,
+  ) => boolean | Promise<boolean>;
   /**
    * Updates the row at the given id with the values stored in the edit row model.
    * @param {GridRowId} id The id to commit to.
    * @param {React.SyntheticEvent} event The event to pass forward.
    * @returns {boolean} A boolean indicating if there is an error.
    */
-  commitRowChange: (id: GridRowId, event?: any) => boolean;
+  commitRowChange: (id: GridRowId, event?: MuiBaseEvent) => boolean | Promise<boolean>;
 }

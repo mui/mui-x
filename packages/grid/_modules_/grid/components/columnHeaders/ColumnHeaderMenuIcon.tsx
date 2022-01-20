@@ -1,9 +1,11 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import IconButton from '@material-ui/core/IconButton';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export interface ColumnHeaderMenuIconProps {
   column: GridStateColDef;
@@ -13,28 +15,45 @@ export interface ColumnHeaderMenuIconProps {
   iconButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
+type OwnerState = ColumnHeaderMenuIconProps & {
+  classes?: DataGridProcessedProps['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes, open } = ownerState;
+
+  const slots = {
+    root: ['menuIcon', open && 'menuOpen'],
+    button: ['menuIconButton'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
   const { column, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
   const apiRef = useGridApiContext();
-  const ColumnMenuIcon = apiRef!.current.components.ColumnMenuIcon!;
+  const rootProps = useGridRootProps();
+  const ownerState = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const handleMenuIconClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      apiRef!.current.toggleColumnMenu(column.field);
+      apiRef.current.toggleColumnMenu(column.field);
     },
     [apiRef, column.field],
   );
 
   return (
-    <div className={clsx(gridClasses.menuIcon, { [gridClasses.menuOpen]: open })}>
+    <div className={classes.root}>
       <IconButton
         ref={iconButtonRef}
         tabIndex={-1}
-        className={gridClasses.menuIconButton}
-        aria-label={apiRef!.current.getLocaleText('columnMenuLabel')}
-        title={apiRef!.current.getLocaleText('columnMenuLabel')}
+        className={classes.button}
+        aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+        title={apiRef.current.getLocaleText('columnMenuLabel')}
         size="small"
         onClick={handleMenuIconClick}
         aria-expanded={open ? 'true' : undefined}
@@ -42,7 +61,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
         aria-controls={columnMenuId}
         id={columnMenuButtonId}
       >
-        <ColumnMenuIcon fontSize="small" />
+        <rootProps.components.ColumnMenuIcon fontSize="small" />
       </IconButton>
     </div>
   );

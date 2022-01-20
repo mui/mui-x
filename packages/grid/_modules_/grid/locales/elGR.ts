@@ -4,7 +4,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const elGRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Δεν υπάρχουν καταχωρήσεις',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Δεν βρέθηκαν αποτελέσματα.',
   errorOverlayDefaultLabel: 'Παρουσιάστηκε απρόβλεπτο σφάλμα.',
 
   // Density selector toolbar button text
@@ -30,6 +30,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Εξαγωγή',
   toolbarExportLabel: 'Εξαγωγή',
   toolbarExportCSV: 'Λήψη ως CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Εύρεση στήλης',
@@ -59,8 +60,13 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'είναι ίσο ή μετά',
   filterOperatorBefore: 'είναι πριν',
   filterOperatorOnOrBefore: 'είναι ίσο ή πριν',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'είναι κενό',
+  filterOperatorIsNotEmpty: 'δεν είναι κενό',
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Μενού',
@@ -87,8 +93,33 @@ const elGRGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Σύνολο Γραμμών:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} από ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
+
+  // Actions cell more text
+  actionsCellMore: 'περισσότερα',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const elGR: Localization = getGridLocalization(elGRGrid);

@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { GridState } from '../core/gridState';
+import { GridState } from '../../../models/gridState';
 import { GridFocusState, GridTabIndexState } from './gridFocusState';
 
 export const gridFocusStateSelector = (state: GridState) => state.focus;

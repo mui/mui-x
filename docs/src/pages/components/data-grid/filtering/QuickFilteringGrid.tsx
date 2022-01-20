@@ -1,47 +1,15 @@
 import * as React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import {
-  DataGrid,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
-} from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import ClearIcon from '@material-ui/icons/Clear';
-import SearchIcon from '@material-ui/icons/Search';
-import { createTheme, Theme } from '@material-ui/core/styles';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from '@mui/icons-material/Search';
 
 function escapeRegExp(value: string): string {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
-
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme: Theme) =>
-    createStyles({
-      root: {
-        padding: theme.spacing(0.5, 0.5, 0),
-        justifyContent: 'space-between',
-        display: 'flex',
-        alignItems: 'flex-start',
-        flexWrap: 'wrap',
-      },
-      textField: {
-        [theme.breakpoints.down('xs')]: {
-          width: '100%',
-        },
-        margin: theme.spacing(1, 0.5, 1.5),
-        '& .MuiSvgIcon-root': {
-          marginRight: theme.spacing(0.5),
-        },
-        '& .MuiInput-underline:before': {
-          borderBottom: `1px solid ${theme.palette.divider}`,
-        },
-      },
-    }),
-  { defaultTheme },
-);
 
 interface QuickSearchToolbarProps {
   clearSearch: () => void;
@@ -50,20 +18,18 @@ interface QuickSearchToolbarProps {
 }
 
 function QuickSearchToolbar(props: QuickSearchToolbarProps) {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <div>
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-      </div>
+    <Box
+      sx={{
+        p: 0.5,
+        pb: 0,
+      }}
+    >
       <TextField
         variant="standard"
         value={props.value}
         onChange={props.onChange}
         placeholder="Search…"
-        className={classes.textField}
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,
           endAdornment: (
@@ -78,16 +44,32 @@ function QuickSearchToolbar(props: QuickSearchToolbarProps) {
             </IconButton>
           ),
         }}
+        sx={{
+          width: {
+            xs: 1,
+            sm: 'auto',
+          },
+          m: (theme) => theme.spacing(1, 0.5, 1.5),
+          '& .MuiSvgIcon-root': {
+            mr: 0.5,
+          },
+          '& .MuiInput-underline:before': {
+            borderBottom: 1,
+            borderColor: 'divider',
+          },
+        }}
       />
-    </div>
+    </Box>
   );
 }
 
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
 export default function QuickFilteringGrid() {
   const { data } = useDemoData({
-    dataSet: 'Commodity',
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
-    maxColumns: 6,
   });
   const [searchText, setSearchText] = React.useState('');
   const [rows, setRows] = React.useState<any[]>(data.rows);
@@ -108,7 +90,7 @@ export default function QuickFilteringGrid() {
   }, [data.rows]);
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <Box sx={{ height: 400, width: 1 }}>
       <DataGrid
         components={{ Toolbar: QuickSearchToolbar }}
         rows={rows}
@@ -116,11 +98,12 @@ export default function QuickFilteringGrid() {
         componentsProps={{
           toolbar: {
             value: searchText,
-            onChange: (event) => requestSearch(event.target.value),
+            onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
+              requestSearch(event.target.value),
             clearSearch: () => requestSearch(''),
           },
         }}
       />
-    </div>
+    </Box>
   );
 }

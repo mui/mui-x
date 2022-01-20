@@ -29,6 +29,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Download as CSV',
+  toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
@@ -100,6 +101,24 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Boolean cell text
   booleanCellTrueLabel: 'true',
   booleanCellFalseLabel: 'false',
+
+  // Actions cell more text
+  actionsCellMore: 'more',
+
+  // Column pinning text
+  pinToLeft: 'Pin to left',
+  pinToRight: 'Pin to right',
+  unpin: 'Unpin',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'Group',
+  treeDataExpand: 'see children',
+  treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  groupingColumnHeaderName: 'Group',
+  groupColumn: (name) => `Group by ${name}`,
+  unGroupColumn: (name) => `Stop grouping by ${name}`,
 
   // Used core components translation keys
   MuiTablePagination: {},

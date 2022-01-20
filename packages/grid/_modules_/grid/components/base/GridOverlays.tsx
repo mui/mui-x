@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { visibleGridRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export function GridOverlays() {
@@ -10,29 +10,24 @@ export function GridOverlays() {
   const rootProps = useGridRootProps();
 
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
 
   const showNoRowsOverlay = !rootProps.loading && totalRowCount === 0;
   const showNoResultsOverlay = !rootProps.loading && totalRowCount > 0 && visibleRowCount === 0;
 
   if (showNoRowsOverlay) {
-    return (
-      <apiRef.current.components.NoRowsOverlay {...rootProps.componentsProps?.noRowsOverlay} />
-    );
+    return <rootProps.components.NoRowsOverlay {...rootProps.componentsProps?.noRowsOverlay} />;
   }
 
   if (showNoResultsOverlay) {
     return (
-      <apiRef.current.components.NoResultsOverlay
-        {...rootProps.componentsProps?.noResultsOverlay}
-      />
+      <rootProps.components.NoResultsOverlay {...rootProps.componentsProps?.noResultsOverlay} />
     );
   }
 
   if (rootProps.loading) {
-    return (
-      <apiRef.current.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />
-    );
+    return <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />;
   }
+
   return null;
 }

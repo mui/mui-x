@@ -1,2 +1,8 @@
 export * from './gridColumnsSelector';
-export * from './useGridColumns';
+export type {
+  GridColumnLookup,
+  GridColumnsState,
+  GridColumnsInitialState,
+  GridColumnVisibilityModel,
+} from './gridColumnsInterfaces';
+export { getGridColDef } from './gridColumnsUtils';

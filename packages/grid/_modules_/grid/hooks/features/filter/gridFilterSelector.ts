@@ -1,52 +1,111 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
-import { GridState } from '../core/gridState';
-import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
+import { GridState } from '../../../models/gridState';
+import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
+import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 
-export const visibleGridRowsStateSelector = (state: GridState) => state.visibleRows;
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
+export const gridFilterStateSelector = (state: GridState) => state.filter;
 
-export const visibleSortedGridRowsSelector = createSelector(
-  visibleGridRowsStateSelector,
-  sortedGridRowsSelector,
-  (visibleRowsState, sortedRows) => {
-    const map = new Map<GridRowId, GridRowModel>();
-    sortedRows.forEach((row, id) => {
-      if (visibleRowsState.visibleRowsLookup[id] !== false) {
-        map.set(id, row);
-      }
-    });
-    return map;
-  },
+/**
+ * Get the current filter model.
+ * @category Filtering
+ */
+export const gridFilterModelSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.filterModel,
 );
 
-export const visibleSortedGridRowsAsArraySelector = createSelector(
-  visibleSortedGridRowsSelector,
-  (visibleSortedRows) => [...visibleSortedRows.entries()],
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
+export const gridVisibleRowsLookupSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.visibleRowsLookup,
 );
 
-export const visibleSortedGridRowIdsSelector = createSelector(
-  visibleSortedGridRowsSelector,
-  (visibleSortedRows) => [...visibleSortedRows.keys()],
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
+export const gridFilteredDescendantCountLookupSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.filteredDescendantCountLookup,
 );
 
-export const visibleGridRowCountSelector = createSelector(
-  visibleGridRowsStateSelector,
-  gridRowCountSelector,
-  (visibleRowsState, totalRowsCount) => {
-    if (visibleRowsState.visibleRows == null) {
-      return totalRowsCount;
+/**
+ * Get the id and the model of the rows accessible after the filtering process.
+ * @category Filtering
+ */
+export const gridVisibleSortedRowEntriesSelector = createSelector(
+  gridVisibleRowsLookupSelector,
+  gridSortedRowEntriesSelector,
+  (visibleRowsLookup, sortedRows) =>
+    sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
+);
+
+/**
+ * Get the id of the rows accessible after the filtering process.
+ * @category Filtering
+ */
+export const gridVisibleSortedRowIdsSelector = createSelector(
+  gridVisibleSortedRowEntriesSelector,
+  (visibleSortedRowEntries) => visibleSortedRowEntries.map((row) => row.id),
+);
+
+/**
+ * @category Filtering
+ * @deprecated Use `gridVisibleSortedRowIdsSelector` instead
+ * @ignore - do not document.
+ */
+export const gridVisibleRowsSelector = gridVisibleSortedRowIdsSelector;
+
+/**
+ * Get the id and the model of the top level rows accessible after the filtering process.
+ * @category Filtering
+ */
+export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
+  gridVisibleSortedRowEntriesSelector,
+  gridRowTreeSelector,
+  gridRowTreeDepthSelector,
+  (visibleSortedRows, rowTree, rowTreeDepth) => {
+    if (rowTreeDepth < 2) {
+      return visibleSortedRows;
     }
-    return visibleRowsState.visibleRows.length;
+
+    return visibleSortedRows.filter((row) => rowTree[row.id]?.depth === 0);
   },
 );
 
-export const filterGridStateSelector = (state: GridState) => state.filter;
+/**
+ * Get the amount of rows accessible after the filtering process.
+ * @category Filtering
+ */
+export const gridVisibleRowCountSelector = createSelector(
+  gridVisibleSortedRowEntriesSelector,
+  (visibleSortedRows) => visibleSortedRows.length,
+);
 
-export const activeGridFilterItemsSelector = createSelector(
-  filterGridStateSelector,
+/**
+ * Get the amount of top level rows accessible after the filtering process.
+ * @category Filtering
+ */
+export const gridVisibleTopLevelRowCountSelector = createSelector(
+  gridVisibleSortedTopLevelRowEntriesSelector,
+  (visibleSortedTopLevelRows) => visibleSortedTopLevelRows.length,
+);
+
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
+export const gridFilterActiveItemsSelector = createSelector(
+  gridFilterModelSelector,
   gridColumnLookupSelector,
   (filterModel, columnLookup) =>
     filterModel.items?.filter((item) => {
@@ -69,23 +128,23 @@ export const activeGridFilterItemsSelector = createSelector(
     }),
 );
 
-export const filterGridItemsCounterSelector = createSelector(
-  activeGridFilterItemsSelector,
-  (activeFilters) => activeFilters.length,
-);
+export type GridFilterActiveItemsLookup = { [columnField: string]: GridFilterItem[] };
 
-export type FilterColumnLookup = Record<string, GridFilterItem[]>;
-export const filterGridColumnLookupSelector = createSelector(
-  activeGridFilterItemsSelector,
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
+export const gridFilterActiveItemsLookupSelector = createSelector(
+  gridFilterActiveItemsSelector,
   (activeFilters) => {
-    const result: FilterColumnLookup = activeFilters.reduce((res, filterItem) => {
+    const result: GridFilterActiveItemsLookup = activeFilters.reduce((res, filterItem) => {
       if (!res[filterItem.columnField!]) {
         res[filterItem.columnField!] = [filterItem];
       } else {
         res[filterItem.columnField!].push(filterItem);
       }
       return res;
-    }, {} as FilterColumnLookup);
+    }, {} as GridFilterActiveItemsLookup);
 
     return result;
   },

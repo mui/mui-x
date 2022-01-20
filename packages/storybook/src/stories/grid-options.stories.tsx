@@ -3,7 +3,7 @@ import { GridColDef, DataGridPro } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/Options',
+  title: 'DataGridPro Test/Options',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

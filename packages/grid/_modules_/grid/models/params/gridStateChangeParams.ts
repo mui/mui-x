@@ -1,4 +1,4 @@
-import { GridState } from '../../hooks/features/core/gridState';
+import { GridState } from '../gridState';
 import { GridApi } from '../api';
 
 export interface GridStateChangeParams {

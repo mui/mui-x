@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export function GridFooterPlaceholder() {
@@ -14,7 +14,7 @@ export function GridFooterPlaceholder() {
 
   return (
     <div ref={footerRef}>
-      <apiRef.current.components.Footer {...rootProps.componentsProps?.footer} />
+      <rootProps.components.Footer {...rootProps.componentsProps?.footer} />
     </div>
   );
 }

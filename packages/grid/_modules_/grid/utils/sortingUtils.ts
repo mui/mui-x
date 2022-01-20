@@ -16,9 +16,15 @@ export const nextGridSortDirection = (
 export const isDesc = (direction: GridSortDirection) => direction === 'desc';
 
 export const gridNillComparer = (v1: GridCellValue, v2: GridCellValue): number | null => {
-  if (v1 == null && v2 != null) return -1;
-  if (v2 == null && v1 != null) return 1;
-  if (v1 == null && v2 == null) return 0;
+  if (v1 == null && v2 != null) {
+    return -1;
+  }
+  if (v2 == null && v1 != null) {
+    return 1;
+  }
+  if (v1 == null && v2 == null) {
+    return 0;
+  }
 
   return null;
 };
@@ -58,7 +64,11 @@ export const gridDateComparer = (value1: GridCellValue, value2: GridCellValue): 
     return nillResult;
   }
 
-  if (value1! > value2!) return 1;
-  if (value1! < value2!) return -1;
+  if (value1! > value2!) {
+    return 1;
+  }
+  if (value1! < value2!) {
+    return -1;
+  }
   return 0;
 };

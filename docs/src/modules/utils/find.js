@@ -45,7 +45,7 @@ function findPagesMarkdown(
   return pagesMarkdown;
 }
 
-const componentRegex = /^(Unstable_)?([A-Z][a-z]+)+\.js/;
+const componentRegex = /^(Unstable_)?([A-Z][a-z]+)+\.tsx/;
 
 // Returns the component source in a flat array.
 function findComponents(directory, components = []) {
@@ -126,8 +126,12 @@ function findPages(
   pages.sort((a, b) => {
     const pathnameA = a.pathname.replace(/-/g, '');
     const pathnameB = b.pathname.replace(/-/g, '');
-    if (pathnameA < pathnameB) return -1;
-    if (pathnameA > pathnameB) return 1;
+    if (pathnameA < pathnameB) {
+      return -1;
+    }
+    if (pathnameA > pathnameB) {
+      return 1;
+    }
     return 0;
   });
 

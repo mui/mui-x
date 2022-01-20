@@ -1,4 +1,4 @@
-import { itIT as itITCore } from '@material-ui/core/locale';
+import { itIT as itITCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -11,9 +11,9 @@ const itITGrid: Partial<GridLocaleText> = {
   // Density selector toolbar button text
   toolbarDensity: 'Densità',
   toolbarDensityLabel: 'Densità',
-  toolbarDensityCompact: 'Compact',
+  toolbarDensityCompact: 'Compatta',
   toolbarDensityStandard: 'Standard',
-  toolbarDensityComfortable: 'Confortable',
+  toolbarDensityComfortable: 'Comoda',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Colonne',
@@ -28,9 +28,10 @@ const itITGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtri attivi` : `${count} filtro attivo`,
 
   // Export selector toolbar button text
-  // toolbarExport: 'Export',
-  // toolbarExportLabel: 'Export',
-  // toolbarExportCSV: 'Download as CSV',
+  toolbarExport: 'Esporta',
+  toolbarExportLabel: 'Esporta',
+  toolbarExportCSV: 'Esporta in CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Cerca colonna',
@@ -56,12 +57,17 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'termina per',
   filterOperatorIs: 'uguale a',
   filterOperatorNot: 'diversa da',
-  filterOperatorOnOrAfter: 'a partire dal',
   filterOperatorAfter: 'dopo il',
-  filterOperatorOnOrBefore: 'fino al',
+  filterOperatorOnOrAfter: 'a partire dal',
   filterOperatorBefore: 'prima del',
+  filterOperatorOnOrBefore: 'fino al',
   filterOperatorIsEmpty: 'è vuoto',
   filterOperatorIsNotEmpty: 'non è vuoto',
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -85,7 +91,7 @@ const itITGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} record selezionato`,
 
   // Total rows footer text
-  footerTotalRows: 'Record totali :',
+  footerTotalRows: 'Record totali:',
 
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
@@ -93,6 +99,28 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleziona',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
+
+  // Actions cell more text
+  actionsCellMore: 'più',
+
+  // Column pinning text
+  pinToLeft: 'Blocca a sinistra',
+  pinToRight: 'Blocca a destra',
+  unpin: 'Sblocca',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

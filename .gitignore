@@ -6,14 +6,16 @@
 __diff_output__
 .DS_STORE
 *.log
+*.tsbuildinfo
 /.eslintcache
 /.nyc_output
 /coverage
 /docs/.next
+/docs/pages/playground.tsx
 /docs/export
 /test/regressions/screenshots
 build
-# TODO `dist` should be replaced with `build`, per convention
 dist
 node_modules
 size-snapshot.json
+performance-snapshot.json

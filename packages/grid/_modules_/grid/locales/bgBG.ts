@@ -1,4 +1,4 @@
-import { bgBG as bgBGCore } from '@material-ui/core/locale';
+import { bgBG as bgBGCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -15,7 +15,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Стандартна',
   toolbarDensityComfortable: 'Комфортна',
 
-  // GridColumns selector toolbar button text
+  // Columns selector toolbar button text
   toolbarColumns: 'Колони',
   toolbarColumnsLabel: 'Покажи селектора на колони',
 
@@ -26,7 +26,13 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Покажи Филтрите',
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
-  // GridColumns panel text
+  // Export selector toolbar button text
+  // toolbarExport: 'Export',
+  // toolbarExportLabel: 'Export',
+  // toolbarExportCSV: 'Download as CSV',
+  // toolbarExportPrint: 'Print',
+
+  // Columns panel text
   columnsPanelTextFieldLabel: 'Намери колона',
   columnsPanelTextFieldPlaceholder: 'Заглавие на колона',
   columnsPanelDragIconLabel: 'Пренареди на колона',
@@ -40,6 +46,8 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
   filterPanelColumns: 'Колони',
+  filterPanelInputLabel: 'Стойност',
+  filterPanelInputPlaceholder: 'Стойност на филтъра',
 
   // Filter operators text
   filterOperatorContains: 'съдържа',
@@ -52,10 +60,13 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'е на или след',
   filterOperatorBefore: 'е преди',
   filterOperatorOnOrBefore: 'е на или преди',
-  filterPanelInputLabel: 'Стойност',
-  filterPanelInputPlaceholder: 'Стойност на филтъра',
   // filterOperatorIsEmpty: 'is empty',
   // filterOperatorIsNotEmpty: 'is not empty',
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Меню',
@@ -81,8 +92,32 @@ const bgBGGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Общо Rедове:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

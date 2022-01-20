@@ -1,39 +1,50 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import TrapFocus from '@material-ui/core/Unstable_TrapFocus';
-import { makeStyles } from '@material-ui/styles';
-import { getMuiVersion } from '../../utils/utils';
+import TrapFocus from '@mui/material/Unstable_TrapFocus';
+import { styled } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-const useStyles = makeStyles(
-  () => ({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      flex: 1,
-      '&:focus': {
-        outline: 0,
-      },
-    },
-  }),
-  { name: 'MuiGridPanelWrapper' },
-);
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['panelWrapper'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+const GridPanelWrapperRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'PanelWrapper',
+  overridesResolver: (props, styles) => styles.panelWrapper,
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  '&:focus': {
+    outline: 0,
+  },
+});
 
 const isEnabled = () => true;
 
 export function GridPanelWrapper(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
 ) {
-  const classes = useStyles();
   const { className, ...other } = props;
-  const extraProps = getMuiVersion().startsWith('v4')
-    ? {
-        getDoc: () => document,
-      }
-    : ({} as any);
+  const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   return (
-    <TrapFocus open disableEnforceFocus isEnabled={isEnabled} {...extraProps}>
-      <div tabIndex={-1} className={clsx(classes.root, className)} {...other} />
+    <TrapFocus open disableEnforceFocus isEnabled={isEnabled}>
+      <GridPanelWrapperRoot tabIndex={-1} className={clsx(className, classes.root)} {...other} />
     </TrapFocus>
   );
 }

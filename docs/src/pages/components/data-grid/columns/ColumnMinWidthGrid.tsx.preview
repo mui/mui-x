@@ -1,0 +1,4 @@
+<DataGrid
+  columns={[{ field: 'username', minWidth: 150 }, { field: 'age' }]}
+  rows={rows}
+/>

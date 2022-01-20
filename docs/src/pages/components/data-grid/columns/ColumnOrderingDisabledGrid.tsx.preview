@@ -1,0 +1,8 @@
+<DataGridPro
+  columns={[
+    { field: 'id' },
+    { field: 'username' },
+    { field: 'age', disableReorder: true },
+  ]}
+  rows={rows}
+/>

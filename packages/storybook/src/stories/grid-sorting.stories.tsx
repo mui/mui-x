@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import { randomInt } from '@mui/x-data-grid-generator';
 import {
   GridColDef,
@@ -7,12 +7,11 @@ import {
   GridRowsProp,
   GridSortModel,
   useGridApiRef,
-  getInitialGridSortingState,
 } from '@mui/x-data-grid-pro';
 import { action } from '@storybook/addon-actions';
 
 export default {
-  title: 'X-Grid Tests/Sorting',
+  title: 'DataGridPro Test/Sorting',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/action/panel' },
@@ -237,10 +236,7 @@ export const UnsortableLastCol = () => {
   columns[columns.length] = {
     field: 'username',
     sortable: false,
-    valueGetter: (params) =>
-      `${params.getValue(params.id, 'name') || 'unknown'}_${
-        params.getValue(params.id, 'age') || 'x'
-      }`,
+    valueGetter: (params) => `${params.row.name || 'unknown'}_${params.row.age || 'x'}`,
     width: 150,
   };
 
@@ -255,10 +251,7 @@ export const CustomComparator = () => {
   const columns = getColumns();
   columns[columns.length] = {
     field: 'username',
-    valueGetter: (params) =>
-      `${params.getValue(params.id, 'name') || 'unknown'}_${
-        params.getValue(params.id, 'age') || 'x'
-      }`,
+    valueGetter: (params) => `${params.row.name || 'unknown'}_${params.row.age || 'x'}`,
     sortComparator: (v1, v2, cellParams1, cellParams2) =>
       (cellParams1.api.getCellValue(cellParams1.id, 'age') as number) -
       (cellParams2.api.getCellValue(cellParams2.id, 'age') as number),
@@ -559,9 +552,7 @@ export function SimpleModelWithOnChangeControlSort() {
     },
   ]);
 
-  const [simpleSortModel, setSortModel] = React.useState<GridSortModel>(
-    getInitialGridSortingState().sortModel,
-  );
+  const [simpleSortModel, setSortModel] = React.useState<GridSortModel>([]);
   const handleSortChange = React.useCallback((model) => {
     setSortModel(model);
   }, []);

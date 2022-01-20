@@ -6,7 +6,7 @@ title: Data Grid - Localization
 
 <p class="description">The Data Grid allows to support users from different locales, with formatting, RTL, and localized strings.</p>
 
-The default locale of Material-UI is English (United States). If you want to use other locales, follow the instructions below.
+The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
 ## Translation keys
 
@@ -18,12 +18,12 @@ In the following example, the labels of the density selector are customized.
 
 ## Locale text
 
-The default locale of Material-UI is English (United States).
+The default locale of MUI is English (United States).
 
 You can use the theme to configure the locale text:
 
 ```jsx
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG } from '@mui/x-data-grid';
 
 const theme = createTheme(
@@ -45,9 +45,9 @@ If you are already using the [translations of the core components](/guides/local
 The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 
 ```jsx
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG } from '@mui/x-data-grid';
-import { bgBG as coreBgBG } from '@material-ui/core/locale';
+import { bgBG as coreBgBG } from '@mui/material/locale';
 
 const theme = createTheme(
   {
@@ -81,11 +81,15 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Czech                   | cs-CZ               | `csCZ`      |
 | Dutch                   | nl-NL               | `nlNL`      |
 | English (United States) | en-US               | `enUS`      |
+| Finnish                 | fi-FI               | `fiFI`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
 | Greek                   | el-GR               | `elGR`      |
+| Hebrew                  | he-IL               | `heIL`      |
 | Italian                 | it-IT               | `itIT`      |
 | Japanese                | ja-JP               | `jaJP`      |
+| Korean                  | ko-KR               | `koKR`      |
+| Persian                 | fa-IR               | `faIR`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
 | Russian                 | ru-RU               | `ruRU`      |
@@ -93,13 +97,12 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Spanish (Spain)         | es-ES               | `esES`      |
 | Turkish                 | tr-TR               | `trTR`      |
 | Ukraine                 | uk-UA               | `ukUA`      |
+| Simplified Chinese      | zh-CN               | `zhCN`      |
 
-You can [find the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
+You can [find the source](https://github.com/mui-org/material-ui-x/tree/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
-
-Please do consider contributing new translations back to Material-UI by opening a pull request. However, Material-UI aims to support the 100 most popular locales. We might not accept contributions for locales that are not frequently used, for instance, `gl-ES` that has "only" 2.5 million native speakers.
-See the [Docs](https://material-ui.com/components/data-grid/localization/) for more details.
+Note that these translations of the Data grid component depend on the [Localization strategy](/guides/localization/) of the whole library.
 
 ## API
 

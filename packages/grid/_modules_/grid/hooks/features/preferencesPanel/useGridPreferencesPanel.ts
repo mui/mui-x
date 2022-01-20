@@ -1,21 +1,29 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
-export const useGridPreferencesPanel = (apiRef: GridApiRef): void => {
+export const useGridPreferencesPanel = (
+  apiRef: GridApiRef,
+  props: Pick<DataGridProcessedProps, 'initialState'>,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
+
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    preferencePanel: props.initialState?.preferencePanel ?? { open: false },
+  }));
   const hideTimeout = React.useRef<any>();
   const immediateTimeout = React.useRef<any>();
 
   const hidePreferences = React.useCallback(() => {
     logger.debug('Hiding Preferences Panel');
-    setGridState((state) => ({ ...state, preferencePanel: { open: false } }));
-    forceUpdate();
-  }, [forceUpdate, logger, setGridState]);
+    apiRef.current.setState((state) => ({ ...state, preferencePanel: { open: false } }));
+    apiRef.current.forceUpdate();
+  }, [apiRef, logger]);
 
   // This is to prevent the preferences from closing when you open a select box or another panel,
   // The issue is in MUI core V4 => Fixed in V5
@@ -33,13 +41,13 @@ export const useGridPreferencesPanel = (apiRef: GridApiRef): void => {
     (newValue: GridPreferencePanelsValue) => {
       logger.debug('Opening Preferences Panel');
       doNotHidePanel();
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         preferencePanel: { ...state.preferencePanel, open: true, openedPanelValue: newValue },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [doNotHidePanel, forceUpdate, logger, setGridState],
+    [doNotHidePanel, apiRef, logger],
   );
 
   useGridApiMethod(

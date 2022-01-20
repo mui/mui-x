@@ -1,9 +1,8 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
-import { withStyles } from '@material-ui/styles';
-import webfontloader from 'webfontloader';
+import { withStyles } from '@mui/styles';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import addons, { mockChannel } from '@storybook/addons';
@@ -18,9 +17,11 @@ LicenseInfo.setLicenseKey(
 
 const blacklist = [
   /^docs-components-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
-  'docs-components-data-grid-filtering/ColumnTypeFilteringGrid.png', // Needs interaction
+  'docs-components-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
   'docs-components-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
-  'docs-components-data-grid-filtering/ExtendNumericOperator.png', // Needs interaction
+  'docs-components-data-grid-filtering/CustomInputComponent.png', // Needs interaction
+  // TODO import the Rating from @mui/material, not the lab.
+  'docs-components-data-grid-components/CustomFooter.png',
   // 'docs-system-typography',
   /^stories(.*)(?<!Snap)\.png$/, // Excludes stories that aren't suffixed with 'Snap'.
 ];
@@ -157,25 +158,6 @@ function App() {
     };
   }, []);
 
-  // Using <link rel="stylesheet" /> does not apply the google Roboto font in chromium headless/headfull.
-  const [fontState, setFontState] = React.useState('pending');
-  React.useEffect(() => {
-    webfontloader.load({
-      google: {
-        families: ['Roboto:300,400,500,700'],
-      },
-      timeout: 20000,
-      active: () => {
-        setFontState('active');
-      },
-      inactive: () => {
-        setFontState('inactive');
-      },
-    });
-  }, []);
-
-  const testPrepared = fontState !== 'pending';
-
   function computePath(test) {
     return `/${test.suite}/${test.name}`;
   }
@@ -183,7 +165,7 @@ function App() {
   return (
     <Router>
       <GlobalStyles />
-      <Switch>
+      <Routes>
         {tests.map((test) => {
           const path = computePath(test);
           const TestCase = test.case;
@@ -198,18 +180,20 @@ function App() {
           }
 
           return (
-            <Route key={path} exact path={path}>
-              {testPrepared && (
+            <Route
+              key={path}
+              exact
+              path={path}
+              element={
                 <TestViewer dataGridContainer={dataGridContainer}>
                   <TestCase />
                 </TestViewer>
-              )}
-            </Route>
+              }
+            />
           );
         })}
-      </Switch>
+      </Routes>
       <div hidden={!isDev}>
-        <div data-webfontloader={fontState}>webfontloader: {fontState}</div>
         <p>
           Devtools can be enabled by appending <code>#dev</code> in the addressbar or disabled by
           appending <code>#no-dev</code>.

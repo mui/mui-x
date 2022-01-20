@@ -1,0 +1,12 @@
+<DataGrid
+  columns={columns}
+  rows={rows}
+  sortModel={[
+    { field: 'name', sort: 'asc' },
+    { field: 'stars', sort: 'desc' },
+  ]}
+  components={{
+    ColumnSortedDescendingIcon: SortedDescendingIcon,
+    ColumnSortedAscendingIcon: SortedAscendingIcon,
+  }}
+/>

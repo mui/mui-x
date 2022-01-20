@@ -40,5 +40,5 @@ export function exportAs(
     return;
   }
 
-  throw new Error('exportAs not supported');
+  throw new Error('MUI: exportAs not supported');
 }

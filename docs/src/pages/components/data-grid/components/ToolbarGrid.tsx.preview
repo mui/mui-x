@@ -1,0 +1,6 @@
+<DataGrid
+  {...data}
+  components={{
+    Toolbar: GridToolbar,
+  }}
+/>

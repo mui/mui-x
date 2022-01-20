@@ -1,3 +1,6 @@
 export * from './gridPaginationSelector';
-export * from './useGridPage';
-export * from './useGridPageSize';
+export type {
+  GridPaginationApi,
+  GridPaginationState,
+  GridPaginationInitialState,
+} from './gridPaginationInterfaces';

@@ -6,12 +6,12 @@ import {
   GridValueGetterParams,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import CreateIcon from '@material-ui/icons/Create';
-import Button from '@material-ui/core/Button';
+import CreateIcon from '@mui/icons-material/Create';
+import Button from '@mui/material/Button';
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/Columns',
+  title: 'DataGridPro Test/Columns',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -304,13 +304,11 @@ export const ValueGetterAndFormatter = () => {
       { field: 'id', hide: true },
       {
         field: 'firstAge',
-        valueGetter: (params: GridValueGetterParams) =>
-          `${params.getValue(params.id, 'first')}_${params.getValue(params.id, 'age')}`,
+        valueGetter: (params: GridValueGetterParams) => `${params.row.first}_${params.row.age}`,
       },
       {
         field: 'firstAgeFormatted',
-        valueGetter: (params: GridValueGetterParams) =>
-          `${params.getValue(params.id, 'first')}_${params.getValue(params.id, 'age')}`,
+        valueGetter: (params: GridValueGetterParams) => `${params.row.first}_${params.row.age}`,
         valueFormatter: (params) => `${params.value} yrs`,
       },
     ],
@@ -353,8 +351,8 @@ export const SingleSelectColumnType = () => {
 
   const data = {
     rows: [
-      { id: 0, country: 'bg', fruit: 1, rating: 5 },
-      { id: 1, country: 'nl', fruit: 2, rating: 4 },
+      { id: 0, country: 'bg', fruit: 1, rating: 5, role: 1 },
+      { id: 1, country: 'nl', fruit: 2, rating: 4, role: 0 },
     ],
     columns: [
       {
@@ -383,6 +381,14 @@ export const SingleSelectColumnType = () => {
         field: 'rating',
         type: 'singleSelect',
         valueOptions: ratings,
+        editable: true,
+        width: 200,
+      },
+      {
+        field: 'role',
+        type: 'singleSelect',
+        valueOptions: [0, 1, 2],
+        valueFormatter: ({ value }) => ['User', 'Admin', 'Superuser'][value],
         editable: true,
         width: 200,
       },

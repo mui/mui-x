@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { createTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -10,32 +8,6 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
-// TODO v5: remove
-function getThemePaletteMode(palette) {
-  return palette.type || palette.mode;
-}
-
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => {
-    const isDark = getThemePaletteMode(theme.palette) === 'dark';
-
-    return {
-      root: {
-        '& .MuiDataGrid-cell--editing': {
-          backgroundColor: 'rgb(255,215,115, 0.19)',
-          color: '#1a3e72',
-        },
-        '& .Mui-error': {
-          backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-          color: isDark ? '#ff4343' : '#750f0f',
-        },
-      },
-    };
-  },
-  { defaultTheme },
-);
-
 function validateEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -43,36 +15,42 @@ function validateEmail(email) {
 }
 
 export default function ValidateRowModelControlGrid() {
-  const [editRowsModel, setEditRowsModel] = React.useState({});
-  const classes = useStyles();
-
-  const handleEditRowsModelChange = React.useCallback((newModel) => {
-    const updatedModel = { ...newModel };
-    Object.keys(updatedModel).forEach((id) => {
-      if (updatedModel[id].email) {
-        const isValid = validateEmail(updatedModel[id].email.value);
-        updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
-      }
-    });
-    setEditRowsModel(updatedModel);
-  }, []);
-
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        editRowsModel={editRowsModel}
-        onEditRowsModelChange={handleEditRowsModelChange}
-      />
-    </div>
+    <Box
+      sx={{
+        height: 400,
+        width: 1,
+        '& .MuiDataGrid-cell--editing': {
+          bgcolor: 'rgb(255,215,115, 0.19)',
+          color: '#1a3e72',
+          '& .MuiInputBase-root': {
+            height: '100%',
+          },
+        },
+        '& .Mui-error': {
+          bgcolor: (theme) =>
+            `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+          color: (theme) => (theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f'),
+        },
+      }}
+    >
+      <DataGrid rows={rows} columns={columns} />
+    </Box>
   );
 }
 
 const columns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
-  { field: 'email', headerName: 'Email', width: 200, editable: true },
+  {
+    field: 'email',
+    headerName: 'Email',
+    width: 200,
+    editable: true,
+    preProcessEditCellProps: (params) => {
+      const isValid = validateEmail(params.props.value);
+      return { ...params.props, error: !isValid };
+    },
+  },
   {
     field: 'dateCreated',
     headerName: 'Date Created',

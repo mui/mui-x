@@ -1,33 +1,51 @@
 import * as React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import Tooltip from '@material-ui/core/Tooltip';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { gridClasses } from '../../gridClasses';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridIconButtonContainer } from './GridIconButtonContainer';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
 }
 
+type OwnerState = ColumnHeaderFilterIconProps & {
+  classes?: DataGridProcessedProps['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    icon: ['filterIcon'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const { counter } = props;
   const apiRef = useGridApiContext();
-
-  const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
+  const rootProps = useGridRootProps();
+  const ownerState = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const toggleFilter = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
 
-      const { open, openedPanelValue } = gridPreferencePanelStateSelector(apiRef!.current.state);
+      const { open, openedPanelValue } = gridPreferencePanelStateSelector(apiRef.current.state);
 
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
-        apiRef!.current.hideFilterPanel();
+        apiRef.current.hideFilterPanel();
       } else {
-        apiRef!.current.showFilterPanel();
+        apiRef.current.showFilterPanel();
       }
     },
     [apiRef],
@@ -41,31 +59,32 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
     <IconButton
       onClick={toggleFilter}
       color="default"
-      aria-label={apiRef!.current.getLocaleText('columnHeaderFiltersLabel')}
+      aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
       tabIndex={-1}
     >
-      <FilteredColumnIconElement className={gridClasses.filterIcon} fontSize="small" />
+      <rootProps.components.ColumnFilteredIcon className={classes.icon} fontSize="small" />
     </IconButton>
   );
 
   return (
-    <Tooltip
+    <rootProps.components.BaseTooltip
       title={
-        apiRef!.current.getLocaleText('columnHeaderFiltersTooltipActive')(
+        apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
         ) as React.ReactElement
       }
       enterDelay={1000}
+      {...rootProps.componentsProps?.baseTooltip}
     >
-      <div className={gridClasses.iconButtonContainer}>
+      <GridIconButtonContainer>
         {counter > 1 && (
           <Badge badgeContent={counter} color="default">
             {iconButton}
           </Badge>
         )}
         {counter === 1 && iconButton}
-      </div>
-    </Tooltip>
+      </GridIconButtonContainer>
+    </rootProps.components.BaseTooltip>
   );
 }

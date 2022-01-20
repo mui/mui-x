@@ -10,6 +10,10 @@
   "labels": ["dependencies"],
   "packageRules": [
     {
+      "matchDepTypes": ["peerDependencies"],
+      "rangeStrategy": "widen"
+    },
+    {
       "groupName": "babel",
       "matchPackagePatterns": "@babel/*"
     },
@@ -25,21 +29,6 @@
       "groupName": "core-js",
       "matchPackageNames": ["core-js"],
       "allowedVersions": "< 2.0.0"
-    },
-    {
-      "groupName": "JSS",
-      "matchPackageNames": [
-        "jss",
-        "jss-plugin-camel-case",
-        "jss-plugin-default-unit",
-        "jss-plugin-global",
-        "jss-plugin-nested",
-        "jss-plugin-props-sort",
-        "jss-plugin-props-sort",
-        "jss-plugin-rule-value-function",
-        "jss-plugin-vendor-prefixer",
-        "react-jss"
-      ]
     },
     {
       "groupName": "raw-loader",
@@ -82,6 +71,26 @@
     {
       "groupName": "storybook",
       "matchPackagePatterns": "@storybook/*"
+    },
+    {
+      "groupName": "AG Grid",
+      "matchPackagePatterns": "ag-grid-*"
+    },
+    {
+      "groupName": "node",
+      "matchPackageNames": ["node"],
+      "enabled": false
+    },
+    {
+      "groupName": "MUI Core",
+      "matchPackageNames": [
+        "@mui/material",
+        "@mui/joy",
+        "@mui/icons-material",
+        "@mui/base",
+        "@mui/system",
+        "@mui/utils"
+      ]
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],

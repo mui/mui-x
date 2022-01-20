@@ -1,16 +1,48 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Tooltip from '@material-ui/core/Tooltip';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { isOverflown } from '../../utils/domUtils';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['columnHeaderTitle'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+const GridColumnHeaderTitleRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderTitle',
+  overridesResolver: (props, styles) => styles.columnHeaderTitle,
+})(({ theme }) => ({
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  fontWeight: theme.typography.fontWeightMedium,
+}));
 
 const ColumnHeaderInnerTitle = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function ColumnHeaderInnerTitle(props, ref) {
   const { className, ...other } = props;
+  const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
-  return <div ref={ref} className={clsx(gridClasses.columnHeaderTitle, className)} {...other} />;
+  return (
+    <GridColumnHeaderTitleRoot ref={ref} className={clsx(classes.root, className)} {...other} />
+  );
 });
 
 export interface GridColumnHeaderTitleProps {
@@ -20,8 +52,9 @@ export interface GridColumnHeaderTitleProps {
 }
 
 // No React.memo here as if we display the sort icon, we need to recalculate the isOver
-export function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
+function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   const { label, description, columnWidth } = props;
+  const rootProps = useGridRootProps();
   const titleRef = React.useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = React.useState('');
 
@@ -37,8 +70,23 @@ export function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   }, [titleRef, columnWidth, description, label]);
 
   return (
-    <Tooltip title={description || tooltip}>
+    <rootProps.components.BaseTooltip
+      title={description || tooltip}
+      {...rootProps.componentsProps?.baseTooltip}
+    >
       <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
-    </Tooltip>
+    </rootProps.components.BaseTooltip>
   );
 }
+
+GridColumnHeaderTitle.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  columnWidth: PropTypes.number.isRequired,
+  description: PropTypes.string,
+  label: PropTypes.string.isRequired,
+} as any;
+
+export { GridColumnHeaderTitle };

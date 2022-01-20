@@ -1,22 +1,23 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/DeleteOutlined';
-import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Close';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
 import {
   GridRowsProp,
   useGridApiRef,
   DataGridPro,
   GridApiRef,
   GridColumns,
-  GridRowId,
-  GridApi,
   GridRowParams,
   MuiEvent,
   GridToolbarContainer,
+  GridActionsCellItem,
+  GridEventListener,
+  GridEvents,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -24,111 +25,6 @@ import {
   randomUpdatedDate,
   randomId,
 } from '@mui/x-data-grid-generator';
-import { createTheme, Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
-
-const defaultTheme = createTheme();
-
-const useStyles = makeStyles(
-  (theme: Theme) => ({
-    root: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: theme.spacing(1),
-      color: theme.palette.text.secondary,
-    },
-    textPrimary: {
-      color: theme.palette.text.primary,
-    },
-  }),
-  { defaultTheme },
-);
-
-interface RowMenuProps {
-  api: GridApi;
-  id: GridRowId;
-}
-
-function RowMenuCell(props: RowMenuProps) {
-  const { api, id } = props;
-  const classes = useStyles();
-  const isInEditMode = api.getRowMode(id) === 'edit';
-
-  const handleEditClick = (event) => {
-    event.stopPropagation();
-    api.setRowMode(id, 'edit');
-  };
-
-  const handleSaveClick = (event) => {
-    event.stopPropagation();
-    api.commitRowChange(id);
-    api.setRowMode(id, 'view');
-
-    const row = api.getRow(id);
-    api.updateRows([{ ...row, isNew: false }]);
-  };
-
-  const handleDeleteClick = (event) => {
-    event.stopPropagation();
-    api.updateRows([{ id, _action: 'delete' }]);
-  };
-
-  const handleCancelClick = (event) => {
-    event.stopPropagation();
-    api.setRowMode(id, 'view');
-
-    const row = api.getRow(id);
-    if (row!.isNew) {
-      api.updateRows([{ id, _action: 'delete' }]);
-    }
-  };
-
-  if (isInEditMode) {
-    return (
-      <div className={classes.root}>
-        <IconButton
-          color="primary"
-          size="small"
-          aria-label="save"
-          onClick={handleSaveClick}
-        >
-          <SaveIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          color="inherit"
-          size="small"
-          aria-label="cancel"
-          className={classes.textPrimary}
-          onClick={handleCancelClick}
-        >
-          <CancelIcon fontSize="small" />
-        </IconButton>
-      </div>
-    );
-  }
-
-  return (
-    <div className={classes.root}>
-      <IconButton
-        color="inherit"
-        className={classes.textPrimary}
-        size="small"
-        aria-label="edit"
-        onClick={handleEditClick}
-      >
-        <EditIcon fontSize="small" />
-      </IconButton>
-      <IconButton
-        color="inherit"
-        size="small"
-        aria-label="delete"
-        onClick={handleDeleteClick}
-      >
-        <DeleteIcon fontSize="small" />
-      </IconButton>
-    </div>
-  );
-}
 
 const rows: GridRowsProp = [
   {
@@ -168,37 +64,6 @@ const rows: GridRowsProp = [
   },
 ];
 
-const columns: GridColumns = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
-  { field: 'age', headerName: 'Age', type: 'number', editable: true },
-  {
-    field: 'dateCreated',
-    headerName: 'Date Created',
-    type: 'date',
-    width: 180,
-    editable: true,
-  },
-  {
-    field: 'lastLogin',
-    headerName: 'Last Login',
-    type: 'dateTime',
-    width: 220,
-    editable: true,
-  },
-  {
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: RowMenuCell,
-    sortable: false,
-    width: 100,
-    headerAlign: 'center',
-    filterable: false,
-    align: 'center',
-    disableColumnMenu: true,
-    disableReorder: true,
-  },
-];
-
 interface EditToolbarProps {
   apiRef: GridApiRef;
 }
@@ -216,7 +81,7 @@ function EditToolbar(props: EditToolbarProps) {
         rowIndex: apiRef.current.getRowsCount() - 1,
       });
       apiRef.current.setCellFocus(id, 'name');
-    }, 150);
+    });
   };
 
   return (
@@ -238,15 +103,127 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleRowEditStop = (
-    params: GridRowParams,
-    event: MuiEvent<React.SyntheticEvent>,
+  const handleRowEditStop: GridEventListener<GridEvents.rowEditStop> = (
+    params,
+    event,
   ) => {
     event.defaultMuiPrevented = true;
   };
 
+  const handleCellFocusOut: GridEventListener<GridEvents.cellFocusOut> = (
+    params,
+    event,
+  ) => {
+    event.defaultMuiPrevented = true;
+  };
+
+  const handleEditClick = (id) => (event) => {
+    event.stopPropagation();
+    apiRef.current.setRowMode(id, 'edit');
+  };
+
+  const handleSaveClick = (id) => async (event) => {
+    event.stopPropagation();
+    // Wait for the validation to run
+    const isValid = await apiRef.current.commitRowChange(id);
+    if (isValid) {
+      apiRef.current.setRowMode(id, 'view');
+      const row = apiRef.current.getRow(id);
+      apiRef.current.updateRows([{ ...row, isNew: false }]);
+    }
+  };
+
+  const handleDeleteClick = (id) => (event) => {
+    event.stopPropagation();
+    apiRef.current.updateRows([{ id, _action: 'delete' }]);
+  };
+
+  const handleCancelClick = (id) => (event) => {
+    event.stopPropagation();
+    apiRef.current.setRowMode(id, 'view');
+
+    const row = apiRef.current.getRow(id);
+    if (row!.isNew) {
+      apiRef.current.updateRows([{ id, _action: 'delete' }]);
+    }
+  };
+
+  const columns: GridColumns = [
+    { field: 'name', headerName: 'Name', width: 180, editable: true },
+    { field: 'age', headerName: 'Age', type: 'number', editable: true },
+    {
+      field: 'dateCreated',
+      headerName: 'Date Created',
+      type: 'date',
+      width: 180,
+      editable: true,
+    },
+    {
+      field: 'lastLogin',
+      headerName: 'Last Login',
+      type: 'dateTime',
+      width: 220,
+      editable: true,
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      cellClassName: 'actions',
+      getActions: ({ id }) => {
+        const isInEditMode = apiRef.current.getRowMode(id) === 'edit';
+
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              onClick={handleSaveClick(id)}
+              color="primary"
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ];
+
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <Box
+      sx={{
+        height: 500,
+        width: '100%',
+        '& .actions': {
+          color: 'text.secondary',
+        },
+        '& .textPrimary': {
+          color: 'text.primary',
+        },
+      }}
+    >
       <DataGridPro
         rows={rows}
         columns={columns}
@@ -254,6 +231,7 @@ export default function FullFeaturedCrudGrid() {
         editMode="row"
         onRowEditStart={handleRowEditStart}
         onRowEditStop={handleRowEditStop}
+        onCellFocusOut={handleCellFocusOut}
         components={{
           Toolbar: EditToolbar,
         }}
@@ -261,6 +239,6 @@ export default function FullFeaturedCrudGrid() {
           toolbar: { apiRef },
         }}
       />
-    </div>
+    </Box>
   );
 }

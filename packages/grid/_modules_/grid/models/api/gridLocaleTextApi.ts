@@ -1,4 +1,4 @@
-import { ComponentsPropsList } from '@material-ui/core/styles';
+import { ComponentsPropsList } from '@mui/material/styles';
 
 /**
  * Set the types of the texts in the grid.
@@ -31,6 +31,7 @@ export interface GridLocaleText {
   toolbarExport: React.ReactNode;
   toolbarExportLabel: string;
   toolbarExportCSV: React.ReactNode;
+  toolbarExportPrint: React.ReactNode;
 
   // Columns panel text
   columnsPanelTextFieldLabel: string;
@@ -97,6 +98,24 @@ export interface GridLocaleText {
   // Boolean cell text
   booleanCellTrueLabel: string;
   booleanCellFalseLabel: string;
+
+  // Actions cell more text
+  actionsCellMore: string;
+
+  // Column pinning text
+  pinToLeft: string;
+  pinToRight: string;
+  unpin: string;
+
+  // Tree Data
+  treeDataGroupingHeaderName: string;
+  treeDataExpand: string;
+  treeDataCollapse: string;
+
+  // Grouping columns
+  groupingColumnHeaderName: string;
+  groupColumn: (name: string) => string;
+  unGroupColumn: (name: string) => string;
 
   // Used core components translation keys
   MuiTablePagination: Omit<

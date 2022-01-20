@@ -1,0 +1,7 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  filterMode="server"
+  onFilterModelChange={onFilterChange}
+  loading={loading}
+/>

@@ -5,26 +5,41 @@ import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
+  GridGroupingValueGetterParams,
   GridRenderCellParams,
   GridRenderEditCellParams,
   GridValueFormatterParams,
   GridValueGetterParams,
+  GridValueSetterParams,
+  GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
-import { GridComparatorFn } from '../gridSortModel';
+import { GridComparatorFn, GridSortDirection } from '../gridSortModel';
 import { GridColType, GridNativeColTypes } from './gridColType';
+import { GridRowParams } from '../params/gridRowParams';
+import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
+import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
+import { GridRowModel } from '../gridRows';
+import { GridEditCellProps } from '../gridEditRowModel';
 
 /**
  * Alignment used in position elements in Cells.
  */
 export type GridAlignment = 'left' | 'right' | 'center';
 
+type ValueOptions = string | number | { value: any; label: string };
+
+/**
+ * Value that can be used as a key for grouping rows
+ */
+export type GridKeyValue = string | number | boolean;
+
 /**
  * Column Definition interface.
  */
 export interface GridColDef {
   /**
-   * The column identifier. It's used to map with [[GridRowData]] values.
+   * The column identifier. It's used to map with [[GridRowModel]] values.
    */
   field: string;
   /**
@@ -50,15 +65,30 @@ export interface GridColDef {
    */
   minWidth?: number;
   /**
+   * Sets the maximum width of a column.
+   * @default Infinity
+   */
+  maxWidth?: number;
+  /**
    * If `true`, hide the column.
+   * @deprecated Use the `columnVisibility` prop instead.
    * @default false
    */
   hide?: boolean;
+  /**
+   * If `false`, removes the buttons for hiding this column.
+   * @default true
+   */
+  hideable?: boolean;
   /**
    * If `true`, the column is sortable.
    * @default true
    */
   sortable?: boolean;
+  /**
+   * The order of the sorting sequence.
+   */
+  sortingOrder?: GridSortDirection[];
   /**
    * If `true`, the column is resizable.
    * @default true
@@ -70,6 +100,17 @@ export interface GridColDef {
    */
   editable?: boolean;
   /**
+   * If `true`, the rows can be grouped based on this column values (pro-plan only).
+   * @default true
+   */
+  groupable?: boolean;
+  /**
+   * If `false`, the menu items for column pinning menu will not be rendered.
+   * Only available in DataGridPro.
+   * @default true
+   */
+  pinnable?: boolean;
+  /**
    * A comparator function used to sort rows.
    */
   sortComparator?: GridComparatorFn;
@@ -79,18 +120,32 @@ export interface GridColDef {
    */
   type?: GridColType;
   /**
-   * To be used in combination with `type: 'singleSelect'`. This is an array of the possible cell values and labels.
+   * To be used in combination with `type: 'singleSelect'`. This is an array (or a function returning an array) of the possible cell values and labels.
    */
-  valueOptions?: Array<string | number | { value: any; label: string }>;
+  valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams) => Array<ValueOptions>);
   /**
    * Allows to align the column values in cells.
    */
   align?: GridAlignment;
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
-   * @param params
+   * @param {GridValueGetterParams} params Object containing parameters for the getter.
+   * @returns {GridCellValue} The cell value.
    */
   valueGetter?: (params: GridValueGetterParams) => GridCellValue;
+  /**
+   * Function that transforms a complex cell value into a key that be used for grouping the rows.
+   * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.
+   * @returns {GridKeyValue | null | undefined} The cell key.
+   */
+  groupingValueGetter?: (params: GridGroupingValueGetterParams) => GridKeyValue | null | undefined;
+  /**
+   * Function that allows to customize how the entered value is stored in the row.
+   * It only works with cell/row editing.
+   * @param {GridValueSetterParams} params Object containing parameters for the setter.
+   * @returns {GridRowModel} The row with the updated field.
+   */
+  valueSetter?: (params: GridValueSetterParams) => GridRowModel;
   /**
    * Function that allows to apply a formatter before rendering its value.
    * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
@@ -110,21 +165,33 @@ export interface GridColDef {
   cellClassName?: GridCellClassNamePropType;
   /**
    * Allows to override the component rendered as cell for this column.
-   * @param params
+   * @param {GridRenderCellParams} params Object containing parameters for the renderer.
+   * @returns {React.ReactNode} The element to be rendered.
    */
   renderCell?: (params: GridRenderCellParams) => React.ReactNode;
   /**
    * Allows to override the component rendered in edit cell mode for this column.
-   * @param params
+   * @param {GridRenderEditCellParams} params Object containing parameters for the renderer.
+   * @returns {React.ReactNode} The element to be rendered.
    */
   renderEditCell?: (params: GridRenderEditCellParams) => React.ReactNode;
+  /**
+   * Callback fired when the edit props of the cell changes.
+   * It allows to process the props that saved into the state.
+   * @param {GridPreProcessEditCellProps} params Object contaning parameters of the cell being editted.
+   * @returns {GridEditCellProps | Promise<GridEditCellProps>} The new edit cell props.
+   */
+  preProcessEditCellProps?: (
+    params: GridPreProcessEditCellProps,
+  ) => GridEditCellProps | Promise<GridEditCellProps>;
   /**
    * Class name that will be added in the column header cell.
    */
   headerClassName?: GridColumnHeaderClassNamePropType;
   /**
    * Allows to render a component in the column header cell.
-   * @param params
+   * @param {GridColumnHeaderParams} params Object containing parameters for the renderer.
+   * @returns {React.ReactNode} The element to be rendered.
    */
   renderHeader?: (params: GridColumnHeaderParams) => React.ReactNode;
   /**
@@ -162,12 +229,27 @@ export interface GridColDef {
   disableExport?: boolean;
 }
 
-export type GridColumns = GridColDef[];
+export interface GridActionsColDef extends GridColDef {
+  /**
+   * Type allows to merge this object with a default definition [[GridColDef]].
+   * @default 'actions'
+   */
+  type: 'actions';
+  /**
+   * Function that returns the actions to be shown.
+   * @param {GridRowParams} params The params for each row.
+   * @returns {React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
+   */
+  getActions: (params: GridRowParams) => React.ReactElement<GridActionsCellItemProps>[];
+}
+
+export type GridEnrichedColDef = GridColDef | GridActionsColDef;
+
+export type GridColumns = GridEnrichedColDef[];
+
 export type GridColTypeDef = Omit<GridColDef, 'field'> & { extendType?: GridNativeColTypes };
 
-export interface GridStateColDef extends GridColDef {
-  computedWidth: number;
-}
+export type GridStateColDef = GridEnrichedColDef & { computedWidth: number };
 
 /**
  * Meta Info about columns.
@@ -177,14 +259,46 @@ export interface GridColumnsMeta {
   positions: number[];
 }
 
-export type GridColumnLookup = { [field: string]: GridStateColDef };
+export interface GridGroupingColDefOverride
+  extends Omit<
+    GridColDef,
+    | 'editable'
+    | 'valueSetter'
+    | 'field'
+    | 'type'
+    | 'preProcessEditCellProps'
+    | 'renderEditCell'
+    | 'groupable'
+  > {
+  /**
+   * The field from which we want to apply the sorting and the filtering for the grouping column.
+   * It is only useful when `props.rowGroupingColumnMode === "multiple"` to decide which grouping criteria should be used for sorting and filtering.
+   * Do not have any effect when building the tree with the `props.treeData` feature.
+   * @default: The sorting and filtering is applied based on the leaf field in any, otherwise based on top level grouping criteria.
+   */
+  mainGroupingCriteria?: string;
 
-export interface GridColumnsState {
-  all: string[];
-  lookup: GridColumnLookup;
+  /**
+   * The field from which we want to render the leaves of the tree.
+   * Do not have any effect when building the tree with the `props.treeData` feature.
+   */
+  leafField?: string;
+
+  /**
+   * If `true`, the grouping cells will not render the amount of descendants.
+   * @default: false
+   */
+  hideDescendantCount?: boolean;
 }
 
-export const getInitialGridColumnsState = (): GridColumnsState => ({
-  all: [],
-  lookup: {},
-});
+export interface GridGroupingColDefOverrideParams {
+  /**
+   * The name of the grouping algorithm currently building the grouping column.
+   */
+  groupingName: string;
+
+  /**
+   * The fields of the columns from which we want to group the values on this new grouping column.
+   */
+  fields: string[];
+}

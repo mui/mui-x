@@ -1,4 +1,5 @@
 import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
+import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 /**
  * The column API interface that is available in the grid [[apiRef]].
@@ -29,7 +30,7 @@ export interface GridColumnApi {
    * Returns the index position of a column. By default, only the visible columns are considered.
    * Pass `false` to `useVisibleColumns` to consider all columns.
    * @param {string} field The column field.
-   * @param {boolean} useVisibleColumns Determines if all columns or the visible ones should be considered.
+   * @param {boolean} useVisibleColumns Determines if all columns or the visible ones should be considered. Default is `true`.
    * @returns {number} The index position.
    */
   getColumnIndex: (field: string, useVisibleColumns?: boolean) => number;
@@ -42,6 +43,7 @@ export interface GridColumnApi {
   /**
    * Updates the definition of a column.
    * @param {GridColDef} col The new [[GridColDef]] object.
+   * @deprecated Use `apiRef.current.updateColumns` instead.
    */
   updateColumn: (col: GridColDef) => void;
   /**
@@ -50,9 +52,14 @@ export interface GridColumnApi {
    */
   updateColumns: (cols: GridColDef[]) => void;
   /**
+   * Sets the column visibility model to the one given by `model`.
+   * @param {GridColumnVisibilityModel} model The new visible columns model.
+   */
+  setColumnVisibilityModel: (model: GridColumnVisibilityModel) => void;
+  /**
    * Changes the visibility of the column referred by `field`.
    * @param {string} field The column to change visibility.
-   * @param {boolean} isVisible Pass `true` to show the column, or `false` to hide it.
+   * @param {boolean} isVisible Pass `true` to show the column, or `false` to hide it. Default is `false`
    */
   setColumnVisibility: (field: string, isVisible: boolean) => void;
   /**

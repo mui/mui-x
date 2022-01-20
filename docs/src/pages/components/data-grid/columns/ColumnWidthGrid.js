@@ -4,7 +4,7 @@ import { DataGrid } from '@mui/x-data-grid';
 const rows = [
   {
     id: 1,
-    username: '@MaterialUI',
+    username: '@MUI',
     age: 38,
   },
 ];

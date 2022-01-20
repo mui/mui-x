@@ -1,4 +1,4 @@
-import { csCZ as csCZCore } from '@material-ui/core/locale';
+import { csCZ as csCZCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -121,6 +121,14 @@ const csCZKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZKGrid, csCZCore);

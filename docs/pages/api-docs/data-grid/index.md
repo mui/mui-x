@@ -13,7 +13,8 @@
 - [GridCellParams](/api/data-grid/grid-cell-params/)
 - [GridColDef](/api/data-grid/grid-col-def/)
 - [GridRowParams](/api/data-grid/grid-row-params/)
-- [GridExportCsvOptions](/api/data-grid/grid-export-csv-options/)
+- [GridCsvExportOptions](/api/data-grid/grid-csv-export-options/)
+- [GridPrintExportOptions](/api/data-grid/grid-print-export-options/)
 
 ## Events
 

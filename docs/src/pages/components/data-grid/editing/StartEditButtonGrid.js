@@ -1,41 +1,29 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import { createTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
-
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => ({
-    root: {
-      justifyContent: 'center',
-      display: 'flex',
-      borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-  }),
-  { defaultTheme },
-);
 
 function EditToolbar(props) {
   const { selectedCellParams, apiRef, setSelectedCellParams } = props;
-  const classes = useStyles();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!selectedCellParams) {
       return;
     }
     const { id, field, cellMode } = selectedCellParams;
     if (cellMode === 'edit') {
-      apiRef.current.commitCellChange({ id, field });
-      apiRef.current.setCellMode(id, field, 'view');
-      setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
+      // Wait for the validation to run
+      const isValid = await apiRef.current.commitCellChange({ id, field });
+      if (isValid) {
+        apiRef.current.setCellMode(id, field, 'view');
+        setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
+      }
     } else {
       apiRef.current.setCellMode(id, field, 'edit');
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
@@ -48,7 +36,14 @@ function EditToolbar(props) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        justifyContent: 'center',
+        display: 'flex',
+        borderBottom: 1,
+        borderColor: 'divider',
+      }}
+    >
       <Button
         onClick={handleClick}
         onMouseDown={handleMouseDown}
@@ -57,7 +52,7 @@ function EditToolbar(props) {
       >
         {selectedCellParams?.cellMode === 'edit' ? 'Save' : 'Edit'}
       </Button>
-    </div>
+    </Box>
   );
 }
 

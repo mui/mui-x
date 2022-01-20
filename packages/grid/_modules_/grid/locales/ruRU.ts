@@ -1,10 +1,11 @@
-import { ruRU as ruRUCore } from '@material-ui/core/locale';
+import { ruRU as ruRUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-export const ruRUGrid: Partial<GridLocaleText> = {
+const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
+  noResultsOverlayLabel: 'Данные не найдены.',
   errorOverlayDefaultLabel: 'Обнаружена ошибка.',
 
   // Density selector toolbar button text
@@ -40,6 +41,7 @@ export const ruRUGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Экспорт',
   toolbarExportLabel: 'Экспорт',
   toolbarExportCSV: 'Скачать в формате CSV',
+  toolbarExportPrint: 'Печать',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Найти столбец',
@@ -69,8 +71,8 @@ export const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'больше или равно',
   filterOperatorBefore: 'меньше чем',
   filterOperatorOnOrBefore: 'меньше или равно',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'пустой',
+  filterOperatorIsNotEmpty: 'не пустой',
 
   // Filter values text
   filterValueAny: 'любой',
@@ -120,8 +122,8 @@ export const ruRUGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Всего строк:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} из ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Выбор флажка',
@@ -129,6 +131,24 @@ export const ruRUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'истина',
   booleanCellFalseLabel: 'ложь',
+
+  // Actions cell more text
+  actionsCellMore: 'ещё',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'Группа',
+  treeDataExpand: 'показать дочерние элементы',
+  treeDataCollapse: 'скрыть дочерние элементы',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

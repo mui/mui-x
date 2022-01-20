@@ -3,9 +3,9 @@ import { GridRowId, GridRowModel } from '../gridRows';
 import type { GridColumns } from '../colDef';
 
 /**
- * Object passed as parameter in the column [[GridColDef]] cell renderer.
+ * Object passed as parameter in the row callbacks.
  */
-export interface GridRowParams {
+export interface GridRowParams<R extends GridRowModel = GridRowModel> {
   /**
    * The grid row id.
    */
@@ -13,15 +13,17 @@ export interface GridRowParams {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: GridRowModel;
+  row: R;
   /**
    * All grid columns.
    */
   columns: GridColumns;
   /**
    * Get the cell value of a row and field.
-   * @param id
-   * @param field
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field.
+   * @returns {GridCellValue} The cell value.
+   * @deprecated Use `params.row` to directly access the fields you want instead.
    */
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }

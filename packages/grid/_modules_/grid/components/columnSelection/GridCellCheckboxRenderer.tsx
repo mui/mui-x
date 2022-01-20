@@ -1,24 +1,43 @@
 import * as React from 'react';
-import { useForkRef } from '@material-ui/core/utils';
-import { GridEvents } from '../../constants/eventsConstants';
+import PropTypes from 'prop-types';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { useForkRef } from '@mui/material/utils';
+import { GridEvents } from '../../models/events';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 
-export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['checkboxInput'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const { field, id, value, tabIndex, hasFocus } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
+    const ownerState = { classes: rootProps.classes };
+    const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
     const handleRef = useForkRef(checkboxElement, ref);
     const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      apiRef!.current.selectRow(id, event.target.checked, true);
+      const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
+      apiRef.current.publishEvent(GridEvents.rowSelectionCheckboxChange, params, event);
     };
 
     const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -44,33 +63,92 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+          apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
         }
       },
       [apiRef, props],
     );
 
-    const CheckboxComponent = apiRef?.current.components.Checkbox!;
-
     const isSelectable =
-      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef!.current.getRowParams(id));
+      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
 
     return (
-      <CheckboxComponent
+      <rootProps.components.BaseCheckbox
         ref={handleRef}
         tabIndex={tabIndex}
         checked={!!value}
         onChange={handleChange}
         onClick={handleClick}
-        className={gridClasses.checkboxInput}
+        className={classes.root}
         color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
-        {...apiRef?.current.componentsProps?.checkbox}
+        {...rootProps.componentsProps?.baseCheckbox}
       />
     );
   },
 );
+
+GridCellCheckboxForwardRef.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The mode of the cell.
+   */
+  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  /**
+   * The column of the row that the current cell belongs to.
+   */
+  colDef: PropTypes.object.isRequired,
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
+  formattedValue: PropTypes.any.isRequired,
+  /**
+   * Get the cell value of a row and field.
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field.
+   * @returns {GridCellValue} The cell value.
+   * @deprecated Use `params.row` to directly access the fields you want instead.
+   */
+  getValue: PropTypes.func.isRequired,
+  /**
+   * If true, the cell is the active element.
+   */
+  hasFocus: PropTypes.bool.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * If true, the cell is editable.
+   */
+  isEditable: PropTypes.bool,
+  /**
+   * The row model of the row that the current cell belongs to.
+   */
+  row: PropTypes.any.isRequired,
+  /**
+   * The node of the row that the current cell belongs to.
+   */
+  rowNode: PropTypes.object.isRequired,
+  /**
+   * the tabIndex value.
+   */
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.any.isRequired,
+} as any;
+
+export { GridCellCheckboxForwardRef };
 
 export const GridCellCheckboxRenderer = React.memo(GridCellCheckboxForwardRef);

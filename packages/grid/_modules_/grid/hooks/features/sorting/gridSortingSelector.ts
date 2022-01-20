@@ -1,37 +1,39 @@
 import { createSelector } from 'reselect';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
-import { GridState } from '../core/gridState';
-import {
-  GridRowsLookup,
-  gridRowsLookupSelector,
-  unorderedGridRowIdsSelector,
-} from '../rows/gridRowsSelector';
-import { GridSortingState } from './gridSortingState';
+import { GridState } from '../../../models/gridState';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 
-const sortingGridStateSelector = (state: GridState) => state.sorting;
+/**
+ * @category Sorting
+ * @ignore - do not document.
+ */
+const gridSortingStateSelector = (state: GridState) => state.sorting;
 
-export const sortedGridRowIdsSelector = createSelector(
-  sortingGridStateSelector,
-  unorderedGridRowIdsSelector,
-  (sortingState: GridSortingState, allRows: GridRowId[]) =>
-    sortingState.sortedRows.length ? sortingState.sortedRows : allRows,
+/**
+ * Get the id of the rows after the sorting process.
+ * @category Sorting
+ */
+export const gridSortedRowIdsSelector = createSelector(
+  gridSortingStateSelector,
+  (sortingState) => sortingState.sortedRows,
 );
 
-export const sortedGridRowsSelector = createSelector(
-  sortedGridRowIdsSelector,
+/**
+ * Get the id and the model of the rows after the sorting process.
+ * @category Sorting
+ */
+export const gridSortedRowEntriesSelector = createSelector(
+  gridSortedRowIdsSelector,
   gridRowsLookupSelector,
-  (sortedIds: GridRowId[], idRowsLookup: GridRowsLookup) => {
-    const map = new Map<GridRowId, GridRowModel>();
-    sortedIds.forEach((id) => {
-      map.set(id, idRowsLookup[id]);
-    });
-    return map;
-  },
+  (sortedIds, idRowsLookup) => sortedIds.map((id) => ({ id, model: idRowsLookup[id] })),
 );
 
+/**
+ * Get the current sorting model.
+ * @category Sorting
+ */
 export const gridSortModelSelector = createSelector(
-  sortingGridStateSelector,
+  gridSortingStateSelector,
   (sorting) => sorting.sortModel,
 );
 
@@ -40,6 +42,10 @@ export type GridSortColumnLookup = Record<
   { sortDirection: GridSortDirection; sortIndex?: number }
 >;
 
+/**
+ * @category Sorting
+ * @ignore - do not document.
+ */
 export const gridSortColumnLookupSelector = createSelector(
   gridSortModelSelector,
   (sortModel: GridSortModel) => {

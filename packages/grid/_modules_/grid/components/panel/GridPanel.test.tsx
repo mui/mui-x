@@ -1,20 +1,15 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error JS
-  describeConformance,
-} from 'test/utils';
+import { createRenderer, describeConformance } from '@mui/monorepo/test/utils';
 import {
   GridPanel,
   gridPanelClasses as classes,
   useGridApiRef,
   GridApiContext,
 } from '@mui/x-data-grid';
-import { Popper } from '@material-ui/core';
+import Popper from '@mui/material/Popper';
 
 describe('<GridPanel />', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   function Wrapper(props) {
     const apiRef = useGridApiRef();
@@ -39,6 +34,6 @@ describe('<GridPanel />', () => {
       return wrapper.find('span').childAt(0);
     },
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'reactTestRenderer'],
+    only: ['mergeClassName', 'propsSpread', 'refForwarding', 'rootClass'],
   }));
 });

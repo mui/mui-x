@@ -3,14 +3,14 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
 import { GridApiRef, useGridApiRef, DataGridPro, GridRowsProp } from '@mui/x-data-grid-pro';
-import Button from '@material-ui/core/Button';
-import Pagination from '@material-ui/lab/Pagination';
+import Button from '@mui/material/Button';
+import Pagination from '@mui/material/Pagination';
 import { action } from '@storybook/addon-actions';
 import { useData } from '../hooks/useData';
 import { getData, GridData } from '../data/data-service';
 
 export default {
-  title: 'X-Grid Tests/Pagination',
+  title: 'DataGridPro Test/Pagination',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -295,7 +295,7 @@ const gridTestRows = [
   },
   {
     id: 1,
-    brand: 'Addidas',
+    brand: 'Adidas',
   },
   {
     id: 2,
