@@ -6,5 +6,5 @@ export interface GridVirtualScrollerApi {
    * @returns {GridRenderContext} The `GridRenderContext`.
    * @ignore - do not document.
    */
-  unstable_getGridRenderContext: () => GridRenderContext;
+  unstable_getRenderContext: () => GridRenderContext;
 }

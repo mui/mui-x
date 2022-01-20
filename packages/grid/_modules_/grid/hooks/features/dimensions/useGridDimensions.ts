@@ -15,7 +15,7 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
-import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
+import { gridDensityHeaderHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -145,23 +145,15 @@ export function useGridDimensions(
   );
 
   const getViewportPageSize = React.useCallback(() => {
-    // Aways null
-    console.log(apiRef.current.unstable_getGridRenderContext());
-    const dimensions = apiRef.current.getRootDimensions();
-
-    if (!dimensions) {
-      return 0;
-    }
+    const renderContext = apiRef.current.unstable_getRenderContext();
+    const viewportPageSize = renderContext.lastRowIndex - renderContext.firstRowIndex;
 
     const currentPage = getCurrentPageRows(apiRef.current.state, {
       pagination: props.pagination,
       paginationMode: props.paginationMode,
     });
-    const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef.current.state),
-    );
 
-    return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
+    return Math.min(viewportPageSize - 1, currentPage.rows.length);
   }, [apiRef, props.pagination, props.paginationMode]);
 
   const dimensionsApi: GridDimensionsApi = {
