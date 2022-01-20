@@ -3,10 +3,12 @@ import {
   GridRowId,
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
+  GridState,
 } from '../../../models';
 import { GridFilterState } from '../filter';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { GridAggregatedFilterItemApplier } from '../filter/gridFilterState';
+import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
@@ -143,3 +145,10 @@ export const getColDefOverrides = (
 
   return groupingColDefProp;
 };
+
+export const setStateRowGroupingModel =
+  (rowGroupingModel: GridRowGroupingModel) =>
+  (state: GridState): GridState => ({
+    ...state,
+    rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
+  });

@@ -6,10 +6,10 @@ import {
   GridPreferencePanelsValue,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { useData } from 'packages/storybook/src/hooks/useData';
 import { createRenderer, screen } from '@mui/monorepo/test/utils';
+import { useMovieData } from '@mui/x-data-grid-generator';
 import { expect } from 'chai';
-import { getColumnValues } from '../../../../../test/utils/helperFn';
+import { getColumnHeadersTextContent, getColumnValues } from '../../../../../test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -19,19 +19,27 @@ describe('<DataGridPro /> - State Persistence', () => {
   let apiRef: GridApiRef;
 
   const TestCase = (props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) => {
-    const basicData = useData(100, 2);
+    const data = useMovieData();
 
     apiRef = useGridApiRef();
 
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
-          {...basicData}
+          {...data}
           pagination
           autoHeight={isJSDOM}
           {...props}
           apiRef={apiRef}
-          rowsPerPageOptions={[100, 10, 5]}
+          disableVirtualization
+          rowsPerPageOptions={[100, 2]}
+          experimentalFeatures={{ rowGrouping: true }} // To enable the `rowGroupingModel in export / restore
+          initialState={{
+            columns: {
+              columnVisibilityModel: {}, // To enable the `columnVisibilityModel` in export / restore
+            },
+          }}
+          defaultGroupingExpansionDepth={-1}
         />
       </div>
     );
@@ -41,6 +49,9 @@ describe('<DataGridPro /> - State Persistence', () => {
     it('should return the whole exportable state', () => {
       render(<TestCase />);
       expect(apiRef.current.exportState()).to.deep.equal({
+        columns: {
+          columnVisibilityModel: {},
+        },
         filter: {
           filterModel: {
             items: [],
@@ -58,6 +69,9 @@ describe('<DataGridPro /> - State Persistence', () => {
         preferencePanel: {
           open: false,
         },
+        rowGrouping: {
+          model: [],
+        },
         sorting: {
           sortModel: [],
         },
@@ -66,33 +80,42 @@ describe('<DataGridPro /> - State Persistence', () => {
 
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
-      apiRef.current.setPageSize(5);
+      apiRef.current.setPageSize(2);
       apiRef.current.setPage(1);
-      apiRef.current.setPinnedColumns({ left: ['id'] });
+      apiRef.current.setPinnedColumns({ left: ['company'] });
       apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
-      apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
+      apiRef.current.setSortModel([{ field: 'director', sort: 'asc' }]);
       apiRef.current.setFilterModel({
-        items: [{ columnField: 'id', operatorValue: '<', value: '97' }],
+        items: [{ columnField: 'gross', operatorValue: '>', value: '1500000000' }],
       });
+      apiRef.current.setRowGroupingModel(['director']);
+      apiRef.current.setColumnVisibilityModel({ year: false });
+
       expect(apiRef.current.exportState()).to.deep.equal({
+        columns: {
+          columnVisibilityModel: { year: false },
+        },
         filter: {
           filterModel: {
-            items: [{ columnField: 'id', operatorValue: '<', value: '97' }],
+            items: [{ columnField: 'gross', operatorValue: '>', value: '1500000000' }],
           },
         },
         pagination: {
           page: 1,
-          pageSize: 5,
+          pageSize: 2,
         },
         pinnedColumns: {
-          left: ['id'],
+          left: ['company'],
         },
         preferencePanel: {
           open: true,
           openedPanelValue: GridPreferencePanelsValue.filters,
         },
         sorting: {
-          sortModel: [{ field: 'id', sort: 'desc' }],
+          sortModel: [{ field: 'director', sort: 'asc' }],
+        },
+        rowGrouping: {
+          model: ['director'],
         },
       });
     });
@@ -103,35 +126,52 @@ describe('<DataGridPro /> - State Persistence', () => {
       render(<TestCase />);
 
       apiRef.current.restoreState({
+        columns: {
+          columnVisibilityModel: { year: false },
+        },
         filter: {
           filterModel: {
-            items: [{ columnField: 'id', operatorValue: '<', value: '97' }],
+            items: [{ columnField: 'gross', operatorValue: '>', value: '1500000000' }],
           },
         },
         pagination: {
           page: 1,
-          pageSize: 5,
+          pageSize: 2,
         },
         pinnedColumns: {
-          left: ['id'],
+          left: ['company'],
         },
         preferencePanel: {
           open: true,
           openedPanelValue: GridPreferencePanelsValue.filters,
         },
         sorting: {
-          sortModel: [{ field: 'id', sort: 'desc' }],
+          sortModel: [{ field: 'director', sort: 'asc' }],
+        },
+        rowGrouping: {
+          model: ['director'],
         },
       });
 
-      // Test sorting + filtering + pagination
-      expect(getColumnValues(0)).to.deep.equal(['91', '90', '89', '88', '87']);
+      // Pagination
+      expect(getColumnValues(0)).to.deep.equal(['', 'Disney Studios', '', 'Universal Pictures']);
+
+      // Sorting and row grouping
+      expect(getColumnValues(1)).to.deep.equal(['J. J. Abrams (1)', '', 'Colin Trevorrow (1)', '']);
+
+      // Filtering
+      expect(getColumnValues(3)).to.deep.equal(['', '2,068,223,624$', '', '1,671,713,208$']);
+
       // Preference panel
       expect(screen.getByRole('button', { name: /Add Filter/i })).to.not.equal(null);
+
+      // Columns visibility
+      expect(getColumnHeadersTextContent()).to.not.include('Year');
+
       // Pinning
       expect(
         document.querySelector('.MuiDataGrid-pinnedColumnHeaders--left')?.textContent,
-      ).to.deep.equal('id');
+      ).to.deep.equal('Company');
     });
 
     it('should restore partial exportable state', () => {
@@ -140,11 +180,11 @@ describe('<DataGridPro /> - State Persistence', () => {
       apiRef.current.restoreState({
         pagination: {
           page: 1,
-          pageSize: 5,
+          pageSize: 2,
         },
       });
 
-      expect(getColumnValues(0)).to.deep.equal(['5', '6', '7', '8', '9']);
+      expect(getColumnValues(0)).to.deep.equal(['Titanic', 'Star Wars: The Force Awakens']);
     });
 
     it('should restore controlled sub-state', () => {
@@ -165,15 +205,15 @@ describe('<DataGridPro /> - State Persistence', () => {
       apiRef.current.restoreState({
         pagination: {
           page: 1,
-          pageSize: 5,
+          pageSize: 2,
         },
       });
       clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['5', '6', '7', '8', '9']);
+      expect(getColumnValues(0)).to.deep.equal(['Titanic', 'Star Wars: The Force Awakens']);
     });
 
     // Not sure how to make that one work, if the `pageSize` update is async, we try to update the `page` with an outdated `pageSize` which can cause problem.
-    // it.only('should restore when controlled pageSize but not page', () => {
+    // it('should restore when controlled pageSize but not page', () => {
     //     const ControlledTest = () => {
     //         const [pageSize, setPageSize] = React.useState(100)
     //
@@ -188,11 +228,11 @@ describe('<DataGridPro /> - State Persistence', () => {
     //     apiRef.current.restoreState({
     //         pagination: {
     //             page: 1,
-    //             pageSize: 5,
+    //             pageSize: 2,
     //         },
     //     })
     //   clock.runToLast();
-    //   expect(getColumnValues(0)).to.deep.equal(['5', '6', '7', '8', '9']);
+    //   expect(getColumnValues(0)).to.deep.equal(['Titanic', 'Star Wars: The Force Awakens']);
     // })
   });
 });

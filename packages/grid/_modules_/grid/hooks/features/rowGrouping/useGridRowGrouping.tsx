@@ -25,13 +25,18 @@ import {
   getColDefOverrides,
   GROUPING_COLUMNS_FEATURE_NAME,
   isGroupingColumn,
+  setStateRowGroupingModel,
 } from './gridRowGroupingUtils';
 import {
   createGroupingColDefForOneGroupingCriteria,
   createGroupingColDefForAllGroupingCriteria,
 } from './createGroupingColDef';
 import { isDeepEqual } from '../../../utils/utils';
-import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import {
+  GridPreProcessingGroup,
+  GridPreProcessor,
+  useGridRegisterPreProcessor,
+} from '../../core/preProcessing';
 import { GridColumnRawLookup, GridColumnsRawState } from '../columns/gridColumnsInterfaces';
 import { useGridRegisterFilteringMethod } from '../filter/useGridRegisterFilteringMethod';
 import { GridFilteringMethod } from '../filter/gridFilterState';
@@ -363,10 +368,7 @@ export const useGridRowGrouping = (
     (model) => {
       const currentModel = gridRowGroupingModelSelector(apiRef.current.state);
       if (currentModel !== model) {
-        apiRef.current.setState((state) => ({
-          ...state,
-          rowGrouping: { ...state.rowGrouping, model },
-        }));
+        apiRef.current.setState(setStateRowGroupingModel(model));
         updateRowGrouping();
         apiRef.current.forceUpdate();
       }
@@ -435,6 +437,51 @@ export const useGridRowGrouping = (
       setRowGroupingCriteriaIndex,
     },
     'GridRowGroupingApi',
+  );
+
+  /**
+   * PRE-PROCESSING
+   */
+  const stateExportPreProcessing = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.exportState>
+  >(
+    (prevState) => {
+      if (props.disableRowGrouping) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        rowGrouping: {
+          model: gridRowGroupingModelSelector(apiRef.current.state),
+        },
+      };
+    },
+    [apiRef, props.disableRowGrouping],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.restoreState>
+  >(
+    (params, context) => {
+      if (props.disableRowGrouping) {
+        return params;
+      }
+
+      const rowGroupingModel = context.stateToRestore.rowGrouping?.model;
+      if (rowGroupingModel != null) {
+        apiRef.current.setState(setStateRowGroupingModel(rowGroupingModel));
+      }
+      return params;
+    },
+    [apiRef, props.disableRowGrouping],
+  );
+
+  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
+  useGridRegisterPreProcessor(
+    apiRef,
+    GridPreProcessingGroup.restoreState,
+    stateRestorePreProcessing,
   );
 
   /**
