@@ -340,7 +340,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(checkboxCell).to.have.attribute('tabindex', '-1');
     });
 
-    it('should select/unselect all rows when pressing space', async () => {
+    it('should select/unselect all rows when pressing space', () => {
       render(<TestDataGridSelection checkboxSelection />);
 
       const selectAllCell = document.querySelector(
