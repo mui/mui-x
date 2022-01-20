@@ -454,7 +454,7 @@ describe('<DataGrid /> - Sorting', () => {
       expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
     });
 
-    it.only('should not allow to initialize the sorting with several items', () => {
+    it('should not allow to initialize the sorting with several items', () => {
       expect(() => {
         render(
           <Test

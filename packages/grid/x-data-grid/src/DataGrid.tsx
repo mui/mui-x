@@ -179,6 +179,17 @@ DataGridRaw.propTypes = {
   /**
    * Set the filter model of the grid.
    */
+  filterModel: PropTypes.shape({
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        columnField: PropTypes.string.isRequired,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        operatorValue: PropTypes.string,
+        value: PropTypes.any,
+      }),
+    ).isRequired,
+    linkOperator: PropTypes.oneOf(['and', 'or']),
+  }),
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
