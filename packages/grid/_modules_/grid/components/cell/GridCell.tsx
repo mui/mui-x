@@ -180,12 +180,15 @@ function GridCell(props: GridCellProps) {
     }
   });
 
-  let handleFocus: any = null;
+  let handleFocus: any = other.onFocus;
 
   if (process.env.NODE_ENV === 'test') {
-    handleFocus = () => {
+    handleFocus = (event: React.FocusEvent) => {
       const focusedCell = gridFocusCellSelector(apiRef.current.state);
       if (focusedCell?.id === rowId && focusedCell.field === field) {
+        if (typeof other.onFocus === 'function') {
+          other.onFocus(event);
+        }
         return;
       }
 
@@ -221,8 +224,8 @@ function GridCell(props: GridCellProps) {
       onKeyDown={publish(GridEvents.cellKeyDown, onKeyDown)}
       onDragEnter={publish(GridEvents.cellDragEnter, onDragEnter)}
       onDragOver={publish(GridEvents.cellDragOver, onDragOver)}
-      onFocus={handleFocus}
       {...other}
+      onFocus={handleFocus}
     >
       {children != null ? children : valueToRender?.toString()}
     </div>
