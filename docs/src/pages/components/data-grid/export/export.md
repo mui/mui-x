@@ -94,7 +94,7 @@ You can remove the CSV export option from the toolbar by setting `disableToolbar
 
 The DataGrid provides the ability to optimize the layout of the grid for print mode. It can also be used to export to PDF.
 
-The easiest way to enable the Print export is to pass the `GridToolbar` component in the `Toolbar` [component slot](<(/components/data-grid/components/#toolbar)>).
+The easiest way to enable the Print export is to pass the `GridToolbar` component in the `Toolbar` [component slot](/components/data-grid/components/#toolbar).
 
 {{"demo": "pages/components/data-grid/export/ExportDefaultToolbar.js", "bg": "inline"}}
 
