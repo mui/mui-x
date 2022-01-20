@@ -71,14 +71,23 @@ To change the row height for the whole grid, set the `rowHeight` prop:
 
 {{"demo": "pages/components/data-grid/rows/DenseHeightGrid.js", "bg": "inline"}}
 
-## Variable row height
+### Variable row height
 
 If you need some rows to have different row heights this can be achieved using the `getRowHeight` prop. This function is called for each visible row and if the return value is a `number` then that `number` will be set as that row's `rowHeight`. If the return value is `null` or `undefined` then the `rowHeight` prop will take effect for the given row.
 
 {{"demo": "pages/components/data-grid/rows/VariableRowHeightGrid.js", "bg": "inline"}}
 
-> Changing the `DataGrid` density does not affect the rows with variable row height.
+> ⚠ Changing the `DataGrid` density does not affect the rows with variable row height.
 > You can access the density factor from the params provided to the `getRowHeight` prop
+>
+> ⚠ Always memoize the function provided to `getRowHeight`.
+> The grid bases on the referential value of these props to cache their values and optimize the rendering.
+>
+> ```tsx
+> const handleGetRowHeight = React.useCallback(() => { ... }, []);
+>
+> <DataGridPro getRowHeight={handleGetRowHeight} />
+> ```
 
 ## Styling rows
 

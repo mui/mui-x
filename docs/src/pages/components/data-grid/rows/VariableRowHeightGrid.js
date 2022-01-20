@@ -40,9 +40,9 @@ export default function VariableRowHeightGrid() {
       <DataGrid
         rows={rows}
         columns={columns}
-        getRowHeight={({ id }) => {
+        getRowHeight={({ id, densityFactor }) => {
           if (id % 2 === 0) {
-            return 100;
+            return 100 * densityFactor;
           }
 
           return null;

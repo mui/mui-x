@@ -17,6 +17,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
 import { GridRenderContext } from '../../../models';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(
@@ -275,7 +276,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
-      const targetRowHeight = apiRef.current.unstable_getTargetRowHeight(id);
+      const targetRowHeight = apiRef.current.unstable_getRowHeight(id);
 
       rows.push(
         <rootProps.components.Row
@@ -338,6 +339,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   if (!needsHorizontalScrollbar) {
     rootStyle.overflowX = 'hidden';
   }
+
+  const getGridRenderContext = (): GridRenderContext => renderContext!;
+
+  const virtualScrollerApi = {
+    unstable_getGridRenderContext: getGridRenderContext,
+  };
+
+  useGridApiMethod(apiRef, virtualScrollerApi, 'GridVirtualScrollerApi');
 
   return {
     renderContext,

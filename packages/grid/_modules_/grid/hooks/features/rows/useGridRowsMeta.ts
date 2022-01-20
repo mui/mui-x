@@ -80,7 +80,7 @@ export const useGridRowsMeta = (
   }, [rowHeight, filterState, paginationState, sortingState, hydrateRowsMeta]);
 
   const rowsMetaApi: GridRowsMetaApi = {
-    unstable_getTargetRowHeight: getTargetRowHeight,
+    unstable_getRowHeight: getTargetRowHeight,
   };
 
   useGridApiMethod(apiRef, rowsMetaApi, 'GridRowsMetaApi');

@@ -10,5 +10,5 @@ export interface GridRowsMetaApi {
    * @returns {number} The target row height.
    * @ignore - do not document.
    */
-  unstable_getTargetRowHeight: (id: GridRowId) => number;
+  unstable_getRowHeight: (id: GridRowId) => number;
 }

@@ -8,13 +8,11 @@ import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
-import {
-  gridDensityRowHeightSelector,
-  gridDensityHeaderHeightSelector,
-} from '../density/densitySelector';
+import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
 import { gridClasses } from '../../../gridClasses';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
@@ -35,7 +33,7 @@ export const useGridPrintExport = (
   props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
@@ -151,7 +149,7 @@ export const useGridPrintExport = (
 
       // Expand container height to accommodate all rows
       gridClone.style.height = `${
-        visibleRowCount * rowHeight +
+        rowsMeta.currentPageTotalHeight +
         headerHeight +
         gridToolbarElementHeight +
         gridFooterElementHeight
@@ -216,7 +214,7 @@ export const useGridPrintExport = (
       // Trigger print
       printWindow.contentWindow!.print();
     },
-    [apiRef, doc, visibleRowCount, rowHeight, headerHeight],
+    [apiRef, doc, rowsMeta.currentPageTotalHeight, headerHeight],
   );
 
   const handlePrintWindowAfterPrint = React.useCallback(

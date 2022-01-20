@@ -6,7 +6,7 @@ import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<DataGridPro /> - Pagination', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   describe('setPage', () => {
     it('should apply valid value', () => {
@@ -92,7 +92,6 @@ describe('<DataGridPro /> - Pagination', () => {
       };
 
       render(<GridTest />);
-      clock.runToLast();
 
       expect(getColumnValues()).to.deep.equal(['0', '1', '2', '3', '4']);
       act(() => {

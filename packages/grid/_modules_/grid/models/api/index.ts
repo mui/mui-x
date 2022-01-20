@@ -22,3 +22,4 @@ export * from './gridClipboardApi';
 export * from './gridCallbackDetails';
 export * from './gridScrollApi';
 export * from './gridColumnPinningApi';
+export * from './gridVirtualScrollerApi';

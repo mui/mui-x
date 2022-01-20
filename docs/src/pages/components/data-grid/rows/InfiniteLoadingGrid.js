@@ -72,6 +72,18 @@ export default function InfiniteLoadingGrid() {
         components={{
           LoadingOverlay: CustomLoadingOverlay,
         }}
+        getRowHeight={({ model }) => {
+          if (
+            model.commodity.includes('Oats') ||
+            model.commodity.includes('Milk') ||
+            model.commodity.includes('Soybean') ||
+            model.commodity.includes('Rice')
+          ) {
+            return 100;
+          }
+
+          return null;
+        }}
       />
     </div>
   );

@@ -1072,7 +1072,6 @@ export function VariableRowHeight() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
-    maxColumns: 60,
   });
 
   return (

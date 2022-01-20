@@ -145,6 +145,8 @@ export function useGridDimensions(
   );
 
   const getViewportPageSize = React.useCallback(() => {
+    // Aways null
+    console.log(apiRef.current.unstable_getGridRenderContext());
     const dimensions = apiRef.current.getRootDimensions();
 
     if (!dimensions) {
