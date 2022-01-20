@@ -49,7 +49,7 @@ There are a few ways to include or hide other columns:
 <DataGrid componentsProps={{ toolbar: { csvOptions: { allColumns: true } } }} />
 ```
 
-3. Set the `disableExport` attribute to true in each `GridColDef`.
+3. Set the `disableExport` attribute to `true` in each `GridColDef`.
 
 ```jsx
 <DataGrid columns={[{ field: 'id', disableExport: true }, { field: 'brand' }]} />
