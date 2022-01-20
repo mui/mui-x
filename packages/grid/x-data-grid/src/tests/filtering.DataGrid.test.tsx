@@ -167,7 +167,7 @@ describe('<DataGrid /> - Filter', () => {
   };
 
   it('should throw for more than one filter item', () => {
-    expect(() => {
+    expect(async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -184,7 +184,9 @@ describe('<DataGrid /> - Filter', () => {
       );
     })
       // @ts-expect-error need to migrate helpers to TypeScript
-      .toErrorDev('`model.items` has more than 1 item');
+      .toWarnDev(
+        'MUI: The `filterModel` can only contain a single item when `prop.disableMultipleColumnsFiltering` is set to `true`.',
+      );
   });
 
   it('should apply the filterModel prop correctly', () => {

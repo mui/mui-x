@@ -9,6 +9,7 @@ import {
   GridSortModel,
 } from '../../../models';
 import { isDesc } from '../../../utils/sortingUtils';
+import { buildWarning } from '../../../utils/warning';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
@@ -104,4 +105,21 @@ export const buildAggregatedSortingApplier = (
       }))
       .sort((a, b) => compareRows(comparatorList, a.params, b.params))
       .map((row) => row.value.id);
+};
+
+const sortModelDisableMultiColumnsSortingWarning = buildWarning([
+  'MUI: The `sortModel` can only contain a single item when `prop.disableMultipleColumnsSorting` is set to `true`.',
+  'If you are using the `DataGrid` community version, this property is always `true`.',
+]);
+
+export const checkSortModelValidity = (
+  model: GridSortModel,
+  disableMultipleColumnsSorting: boolean,
+) => {
+  if (disableMultipleColumnsSorting && model.length > 1) {
+    sortModelDisableMultiColumnsSortingWarning();
+    return [model[0]];
+  }
+
+  return model;
 };

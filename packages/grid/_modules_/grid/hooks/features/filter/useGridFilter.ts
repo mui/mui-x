@@ -16,25 +16,17 @@ import {
   GridFilteringMethod,
   GridFilteringMethodCollection,
 } from './gridFilterState';
-import { GridFilterModel } from '../../../models/gridFilterModel';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
-import { buildAggregatedFilterApplier, cleanFilterItem } from './gridFilterUtils';
-
-const checkFilterModelValidity = (model: GridFilterModel) => {
-  if (model.items.length > 1) {
-    const hasItemsWithoutIds = model.items.find((item) => item.id == null);
-    if (hasItemsWithoutIds) {
-      throw new Error(
-        "MUI: The 'id' field is required on `filterModel.items` when you use multiple filters.",
-      );
-    }
-  }
-};
+import {
+  buildAggregatedFilterApplier,
+  cleanFilterItem,
+  checkFilterModelValidity,
+} from './gridFilterUtils';
 
 /**
  * @requires useGridColumns (state, method, event)
@@ -57,17 +49,13 @@ export const useGridFilter = (
   const lastFilteringMethodApplied = React.useRef<GridFilteringMethod | null>(null);
 
   useGridStateInit(apiRef, (state) => {
-    if (props.filterModel) {
-      checkFilterModelValidity(props.filterModel);
-    }
+    const filterModel =
+      props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
 
     return {
       ...state,
       filter: {
-        filterModel:
-          props.filterModel ??
-          props.initialState?.filter?.filterModel ??
-          getDefaultGridFilterModel(),
+        filterModel: checkFilterModelValidity(filterModel, props.disableMultipleColumnsFiltering),
         visibleRowsLookup: {},
         filteredDescendantCountLookup: {},
       },
@@ -202,18 +190,12 @@ export const useGridFilter = (
     (model) => {
       const currentModel = gridFilterModelSelector(apiRef.current.state);
       if (currentModel !== model) {
-        checkFilterModelValidity(model);
-
-        if (model.items.length > 1 && props.disableMultipleColumnsFiltering) {
-          model.items = [model.items[0]];
-        }
-
         logger.debug('Setting filter model');
         apiRef.current.setState((state) => ({
           ...state,
           filter: {
             ...state.filter,
-            filterModel: model,
+            filterModel: checkFilterModelValidity(model, props.disableMultipleColumnsFiltering),
           },
         }));
         apiRef.current.unstable_applyFilters();
