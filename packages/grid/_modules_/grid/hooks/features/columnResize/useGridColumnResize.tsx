@@ -22,6 +22,7 @@ import {
   GridColumnHeaderSeparatorProps,
   GridColumnHeaderSeparatorSides,
 } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
+import { clamp } from '../../../utils/utils';
 
 // TODO: remove support for Safari < 13.
 // https://caniuse.com/#search=touch-action
@@ -186,7 +187,7 @@ export const useGridColumnResize = (
       separatorSide.current!,
     );
 
-    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
+    newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
     updateWidth(newWidth);
 
     const params: GridColumnResizeParams = {
@@ -281,7 +282,7 @@ export const useGridColumnResize = (
       separatorSide.current!,
     );
 
-    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
+    newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
     updateWidth(newWidth);
 
     const params: GridColumnResizeParams = {

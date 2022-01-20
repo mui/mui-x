@@ -66,6 +66,11 @@ export interface GridColDef<GridApi extends GridApiCommon = GridApiCommunity> {
    */
   minWidth?: number;
   /**
+   * Sets the maximum width of a column.
+   * @default Infinity
+   */
+  maxWidth?: number;
+  /**
    * If `true`, hide the column.
    * @deprecated Use the `columnVisibility` prop instead.
    * @default false

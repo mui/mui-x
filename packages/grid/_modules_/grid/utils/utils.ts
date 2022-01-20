@@ -32,5 +32,9 @@ export function escapeRegExp(value: string): string {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 
+/**
+ * Follows the CSS specification behavior for min and max
+ * If min > max, then the min have priority
+ */
 export const clamp = (value: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, value));
+  Math.max(min, Math.min(max, value));
