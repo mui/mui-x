@@ -104,7 +104,7 @@ To enable the Print export in a custom toolbar, use the `GridToolbarExport` comp
 
 ### Custom exported content
 
-**Note**: All the customization related to the `printOptions` can either be passed directly to the `GridToolbar` or to the `GridToolbarExport` as a prop.
+**Note**: All the customizations related to the `printOptions` can either be passed directly to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
 ```tsx
 <DataGrid componentsProps={{ toolbar: { printOptions }}} />
