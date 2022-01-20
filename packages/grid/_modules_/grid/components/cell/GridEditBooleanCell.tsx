@@ -1,15 +1,33 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import Checkbox from '@material-ui/core/Checkbox';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
-import { unstable_useId as useId } from '@material-ui/core/utils';
-import { useEnhancedEffect } from '../../utils/material-ui-utils';
-import { gridClasses } from '../../gridClasses';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_useId as useId,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/material/utils';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['editBooleanCell'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export function GridEditBooleanCell(
   props: GridRenderEditCellParams &
-    React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
+    Omit<
+      React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
+      'id'
+    >,
 ) {
   const {
     id: idProp,
@@ -18,6 +36,7 @@ export function GridEditBooleanCell(
     api,
     field,
     row,
+    rowNode,
     colDef,
     cellMode,
     isEditable,
@@ -31,6 +50,9 @@ export function GridEditBooleanCell(
   const inputRef = React.useRef<HTMLInputElement>(null);
   const id = useId();
   const [valueState, setValueState] = React.useState(value);
+  const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,13 +74,14 @@ export function GridEditBooleanCell(
   }, [hasFocus]);
 
   return (
-    <label htmlFor={id} className={clsx(gridClasses.editBooleanCell, className)} {...other}>
-      <Checkbox
+    <label htmlFor={id} className={clsx(classes.root, className)} {...other}>
+      <rootProps.components.BaseCheckbox
         id={id}
         inputRef={inputRef}
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"
+        {...rootProps.componentsProps?.baseCheckbox}
       />
     </label>
   );

@@ -1,8 +1,8 @@
-import { skSK as skSKCore } from '@material-ui/core/locale';
+import { skSK as skSKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-export const skSKGrid: Partial<GridLocaleText> = {
+const skSKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žiadne záznamy',
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
@@ -26,11 +26,13 @@ export const skSKGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Zobraziť filtre',
   toolbarFiltersTooltipActive: (count) => {
     let pluralForm = 'aktívnych filtrov';
+
     if (count > 1 && count < 5) {
       pluralForm = 'aktívne filtre';
     } else if (count === 1) {
       pluralForm = 'aktívny filter';
     }
+
     return `${count} ${pluralForm}`;
   },
 
@@ -38,6 +40,7 @@ export const skSKGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stiahnuť ako CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Nájsť stĺpec',
@@ -87,11 +90,13 @@ export const skSKGrid: Partial<GridLocaleText> = {
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
     let pluralForm = 'aktívnych filtrov';
+
     if (count > 1 && count < 5) {
       pluralForm = 'aktívne filtre';
     } else if (count === 1) {
       pluralForm = 'aktívny filter';
     }
+
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Zobraziť filtre',
@@ -100,11 +105,13 @@ export const skSKGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => {
     let pluralForm = 'vybraných záznamov';
+
     if (count > 1 && count < 5) {
       pluralForm = 'vybrané záznamy';
     } else if (count === 1) {
       pluralForm = 'vybraný záznam';
     }
+
     return `${count} ${pluralForm}`;
   },
 
@@ -112,8 +119,7 @@ export const skSKGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Riadkov spolu:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Výber riadku',
@@ -121,6 +127,24 @@ export const skSKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'áno',
   booleanCellFalseLabel: 'nie',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

@@ -29,7 +29,7 @@ async function getWebpackSizes(webpackEnvironment) {
         errors: true,
       });
       throw new Error(
-        `The following errors occured during bundling of ${Object.keys(
+        `The following errors occurred during bundling of ${Object.keys(
           entrypoints,
         )} with webpack: \n${errors.join('\n')}`,
       );

@@ -15,6 +15,9 @@ console.log(`Loading config for ${env}`);
 const maxAssetSize = 1024 * 1024;
 
 const config: StorybookConfig = {
+  core: {
+    builder: 'webpack5',
+  },
   stories: ['../src/**/*.stories.*'],
   addons: ['@storybook/addon-essentials', '@storybook/addon-storysource', '@storybook/addon-a11y'],
   typescript: {
@@ -43,16 +46,12 @@ const config: StorybookConfig = {
 
     config.module.rules.push({
       test: /\.stories\.tsx?$/,
-      loaders: [
-        {
-          loader: require.resolve('@storybook/source-loader'),
-          options: {
-            parser: 'typescript',
-            prettierConfig: { printWidth: 80, singleQuote: true },
-            tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
-          },
-        },
-      ],
+      loader: require.resolve('@storybook/source-loader'),
+      options: {
+        parser: 'typescript',
+        prettierConfig: { printWidth: 80, singleQuote: true },
+        tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
+      },
       enforce: 'pre',
     });
 
@@ -90,13 +89,16 @@ const config: StorybookConfig = {
       ...config.resolve,
       extensions: ['.js', '.ts', '.tsx'],
       alias: {
-        '@mui/x-data-grid': path.resolve(__dirname, '../../../packages/grid/data-grid/src'),
+        '@mui/x-data-grid': path.resolve(__dirname, '../../../packages/grid/x-data-grid/src'),
         '@mui/x-data-grid-generator': path.resolve(
           __dirname,
-          '../../../packages/grid/x-grid-data-generator/src',
+          '../../../packages/grid/x-data-grid-generator/src',
         ),
-        '@mui/x-data-grid-pro': path.resolve(__dirname, '../../../packages/grid/x-grid/src'),
-        '@mui/x-license-pro': path.resolve(__dirname, '../../../packages/x-license/src'),
+        '@mui/x-data-grid-pro': path.resolve(
+          __dirname,
+          '../../../packages/grid/x-data-grid-pro/src',
+        ),
+        '@mui/x-license-pro': path.resolve(__dirname, '../../../packages/x-license-pro/src'),
       },
     };
     return config;

@@ -1,61 +1,46 @@
 import {
   GridCellParams,
-  gridCheckboxSelectionColDef,
+  GRID_CHECKBOX_SELECTION_COL_DEF,
   GridStateColDef,
   GridRowId,
-  GridRowModel,
+  GridCellValue,
 } from '../../../../models';
-import { GridExportCsvDelimiter } from '../../../../models/gridExport';
 
-const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimiter) => {
+const serialiseCellValue = (value: GridCellValue, delimiterCharacter: string) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
-    return formattedValue.includes(delimiterCharacter) ? `"${formattedValue}"` : formattedValue;
+
+    // Make sure value containing delimiter or line break won't be splitted into multiple rows
+    if ([delimiterCharacter, '\n', '\r'].some((delimiter) => formattedValue.includes(delimiter))) {
+      return `"${formattedValue}"`;
+    }
+
+    return formattedValue;
   }
 
   return value;
 };
 
-export function serialiseRow(
+const serialiseRow = (
   id: GridRowId,
   columns: GridStateColDef[],
   getCellParams: (id: GridRowId, field: string) => GridCellParams,
-  delimiterCharacter: GridExportCsvDelimiter,
-): Array<string> {
-  const mappedRow: string[] = [];
-  columns.forEach(
-    (column) =>
-      column.field !== gridCheckboxSelectionColDef.field &&
-      mappedRow.push(
-        serialiseCellValue(getCellParams(id, column.field).formattedValue, delimiterCharacter),
-      ),
+  delimiterCharacter: string,
+) =>
+  columns.map((column) =>
+    serialiseCellValue(getCellParams(id, column.field).formattedValue, delimiterCharacter),
   );
-  return mappedRow;
-}
 
 interface BuildCSVOptions {
   columns: GridStateColDef[];
-  rows: Map<GridRowId, GridRowModel>;
-  selectedRowIds: GridRowId[];
+  rowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
-  delimiterCharacter: GridExportCsvDelimiter;
-  includeHeaders?: boolean;
+  delimiterCharacter: string;
+  includeHeaders: boolean;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
-  const {
-    columns,
-    rows,
-    selectedRowIds,
-    getCellParams,
-    delimiterCharacter,
-    includeHeaders = true,
-  } = options;
-  let rowIds = [...rows.keys()];
-
-  if (selectedRowIds.length) {
-    rowIds = rowIds.filter((id) => selectedRowIds.includes(id));
-  }
+  const { columns, rowIds, getCellParams, delimiterCharacter, includeHeaders } = options;
 
   const CSVBody = rowIds
     .reduce<string>(
@@ -72,7 +57,7 @@ export function buildCSV(options: BuildCSVOptions): string {
   }
 
   const CSVHead = `${columns
-    .filter((column) => column.field !== gridCheckboxSelectionColDef.field)
+    .filter((column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field)
     .map((column) => serialiseCellValue(column.headerName || column.field, delimiterCharacter))
     .join(delimiterCharacter)}\r\n`;
 

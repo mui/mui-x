@@ -1,17 +1,28 @@
 version: 2.1
 
+parameters:
+  browserstack-force:
+    description: Whether to force browserstack usage. We have limited resources on browserstack so the pipeline might decide to skip browserstack if this parameter isn't set to true.
+    type: boolean
+    default: false
+  react-dist-tag:
+    description: The dist-tag of react to be used
+    type: string
+    default: stable
+
 defaults: &defaults
   parameters:
     react-dist-tag:
       description: The dist-tag of react to be used
       type: string
-      default: stable
+      default: << pipeline.parameters.react-dist-tag >>
   environment:
     # Keep in sync with "Save playwright cache"
     PLAYWRIGHT_BROWSERS_PATH: /tmp/pw-browsers
     # expose it globally otherwise we have to thread it from each job to the install command
+    BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_DIST_TAG: << parameters.react-dist-tag >>
-  working_directory: /tmp/material-ui-x
+  working_directory: /tmp/mui
   docker:
     - image: circleci/node:12
 # CircleCI has disabled the cache across forks for security reasons.
@@ -40,12 +51,11 @@ commands:
       - restore_cache:
           name: Restore yarn cache
           keys:
-            - v7-yarn-{{ checksum "yarn.lock" }}
-            - v7-yarn-
+            - v8-yarn-{{ checksum "yarn.lock" }}
       - run:
           name: Set yarn cache folder
           command: |
-            # Keep path in sync with `save_cache` for key "v7-yarn-"
+            # Keep path in sync with `save_cache` for key "v8-yarn-"
             yarn config set cache-folder /tmp/yarn-cache
             # Debug information
             yarn cache dir
@@ -63,8 +73,6 @@ commands:
                 name: Restore playwright cache
                 keys:
                   - v5-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
-                  - v5-playwright-{{ arch }}-
-                  - v5-playwright-
       - run:
           name: Install js dependencies
           command: yarn install --verbose
@@ -72,7 +80,7 @@ commands:
             PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: <<# parameters.browsers >>0<</ parameters.browsers >><<^ parameters.browsers >>1<</ parameters.browsers >>
       - save_cache:
           name: Save yarn cache
-          key: v7-yarn-{{ checksum "yarn.lock" }}
+          key: v8-yarn-{{ checksum "yarn.lock" }}
           paths:
             # Keep path in sync with "Set yarn cache folder"
             # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
@@ -100,12 +108,6 @@ jobs:
       - run:
           name: Check for duplicated packages
           command: yarn deduplicate
-      - save_cache:
-          key: v6-yarn-sha-{{ checksum "yarn.lock" }}
-          paths:
-          # Keep path in sync with "Set yarn cache folder"
-          # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
-            - ~/.cache/yarn
   test_unit:
     <<: *defaults
     steps:
@@ -121,14 +123,11 @@ jobs:
             then
               exit 1
             fi
-  test_static:
+  test_lint:
     <<: *defaults
     steps:
       - checkout
       - install_js
-      - run:
-          name: '`yarn prettier` changes committed?'
-          command: yarn prettier check-changed
       - run:
           name: Eslint
           command: yarn eslint:ci
@@ -139,15 +138,38 @@ jobs:
           name: Lint JSON
           command: yarn jsonlint
       - run:
+          name: Lint Markdown
+          command: yarn markdownlint
+  test_static:
+    <<: *defaults
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: '`yarn prettier` changes committed?'
+          command: yarn prettier check-changed
+      - run:
+          name: Generate PropTypes
+          command: yarn proptypes
+      - run:
+          name: '`yarn proptypes` changes committed?'
+          command: git diff --exit-code
+      - run:
           name: Generate the documentation
           command: yarn docs:api
       - run:
           name: '`yarn docs:api` changes committed?'
           command: git diff --exit-code
+      - run:
+          name: Sync locale files
+          command: yarn l10n
+      - run:
+          name: '`yarn l10n` changes committed?'
+          command: git diff --exit-code
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:b1fa463bae2eee613e1bd20ac3867948947e6fcb379a6dfaab19f4742ef1c1fe
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -178,7 +200,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:b1fa463bae2eee613e1bd20ac3867948947e6fcb379a6dfaab19f4742ef1c1fe
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -191,7 +213,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:b1fa463bae2eee613e1bd20ac3867948947e6fcb379a6dfaab19f4742ef1c1fe
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -204,12 +226,38 @@ jobs:
       - run:
           name: Upload screenshots to Argos CI
           command: yarn test:argos
+  test_performance:
+    <<: *defaults
+    docker:
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+        environment:
+          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    steps:
+      - checkout
+      - install_js:
+          browsers: true
+      - run:
+          name: Run performance tests
+          command: xvfb-run yarn test:performance
+      - store_artifacts:
+          name: Persist performance snapshot as pipeline artifact
+          path: performance-snapshot.json
+          destination: performance-snapshot.json
+      - run:
+          name: Run danger on PRs
+          command: yarn danger ci --fail-on-errors
+          environment:
+            DANGER_DISABLE_TRANSPILATION: 'true'
+            DANGER_COMMAND: 'reportPerformance'
 workflows:
   version: 2
   pipeline:
     jobs:
       - checkout
       - test_unit:
+          requires:
+            - checkout
+      - test_lint:
           requires:
             - checkout
       - test_static:
@@ -225,5 +273,8 @@ workflows:
           requires:
             - checkout
       - test_regressions:
+          requires:
+            - checkout
+      - test_performance:
           requires:
             - checkout

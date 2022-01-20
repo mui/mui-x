@@ -1,13 +1,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { DataGridPro, GridOptionsProp, GridColDef } from '@mui/x-data-grid-pro';
-import DoneIcon from '@material-ui/icons/Done';
-import ClearIcon from '@material-ui/icons/Clear';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useData } from '../hooks/useData';
 import '../style/grid-stories.css';
 
 export default {
-  title: 'X-Grid Tests/Styling',
+  title: 'DataGridPro Test/Styling',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -19,13 +19,16 @@ export default {
 
 export const BigRowsAndHeader = () => {
   const data = useData(200, 200);
-  const options: GridOptionsProp = {
-    headerHeight: 80,
-    rowHeight: 60,
-    checkboxSelection: true,
-  };
 
-  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
+  return (
+    <DataGridPro
+      rows={data.rows}
+      columns={data.columns}
+      headerHeight={80}
+      rowHeight={60}
+      checkboxSelection
+    />
+  );
 };
 
 export const Unset = () => {
@@ -35,11 +38,8 @@ export const Unset = () => {
 
 export const Small = () => {
   const data = useData(200, 200);
-  const options: GridOptionsProp = {
-    headerHeight: 35,
-    rowHeight: 27,
-  };
-  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
+
+  return <DataGridPro rows={data.rows} columns={data.columns} headerHeight={35} rowHeight={27} />;
 };
 
 interface IsDoneProps {
@@ -61,10 +61,7 @@ const getColumns: () => GridColDef[] = () => [
     field: 'fullName',
     description: 'this column has a value getter and is not sortable',
     sortable: false,
-    valueGetter: (params) =>
-      `${params.getValue(params.id, 'firstName') || ''} ${
-        params.getValue(params.id, 'lastName') || ''
-      }`.trim(),
+    valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`.trim(),
   },
   {
     field: 'isRegistered',

@@ -1,10 +1,12 @@
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import * as React from 'react';
-import MenuList from '@material-ui/core/MenuList';
+import MenuList from '@mui/material/MenuList';
 import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuProps } from './GridColumnMenuProps';
+import { gridClasses } from '../../../gridClasses';
 
-export const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
+const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenuContainer(props: GridColumnMenuProps, ref) {
     const { hideMenu, currentColumn, open, id, labelledby, className, children, ...other } = props;
 
@@ -14,7 +16,7 @@ export const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridCo
           event.preventDefault();
         }
         if (isHideMenuKey(event.key)) {
-          hideMenu();
+          hideMenu(event);
         }
       },
       [hideMenu],
@@ -24,7 +26,7 @@ export const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridCo
       <MenuList
         id={id}
         ref={ref}
-        className={clsx('MuiDataGrid-gridMenuList', className)}
+        className={clsx(gridClasses.menuList, className)}
         aria-labelledby={labelledby}
         onKeyDown={handleListKeyDown}
         autoFocus={open}
@@ -35,3 +37,17 @@ export const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridCo
     );
   },
 );
+
+GridColumnMenuContainer.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  currentColumn: PropTypes.object.isRequired,
+  hideMenu: PropTypes.func.isRequired,
+  id: PropTypes.string,
+  labelledby: PropTypes.string,
+  open: PropTypes.bool.isRequired,
+} as any;
+
+export { GridColumnMenuContainer };

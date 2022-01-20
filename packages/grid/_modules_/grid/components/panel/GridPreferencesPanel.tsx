@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const GridPreferencesPanel = React.forwardRef<
@@ -19,22 +19,22 @@ export const GridPreferencesPanel = React.forwardRef<
     preferencePanelState.openedPanelValue === GridPreferencePanelsValue.columns;
   const isFiltersTabOpen = !preferencePanelState.openedPanelValue || !isColumnsTabOpen;
 
-  const ColumnSelectorComponent = apiRef!.current.components.ColumnsPanel!;
-  const FilterPanelComponent = apiRef!.current.components.FilterPanel!;
-  const Panel = apiRef!.current.components.Panel!;
   return (
-    <Panel
+    <rootProps.components.Panel
       ref={ref}
+      as={rootProps.components.BasePopper}
       open={columns.length > 0 && preferencePanelState.open}
-      {...apiRef?.current.componentsProps?.panel}
+      {...rootProps.componentsProps?.panel}
       {...props}
+      {...rootProps.componentsProps?.basePopper}
     >
       {!rootProps.disableColumnSelector && isColumnsTabOpen && (
-        <ColumnSelectorComponent {...apiRef?.current.componentsProps?.columnsPanel} />
+        <rootProps.components.ColumnsPanel {...rootProps.componentsProps?.columnsPanel} />
       )}
+
       {!rootProps.disableColumnFilter && isFiltersTabOpen && (
-        <FilterPanelComponent {...apiRef?.current.componentsProps?.filterPanel} />
+        <rootProps.components.FilterPanel {...rootProps.componentsProps?.filterPanel} />
       )}
-    </Panel>
+    </rootProps.components.Panel>
   );
 });

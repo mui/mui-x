@@ -1,0 +1,1 @@
+<DataGrid rowHeight={25} {...data} />

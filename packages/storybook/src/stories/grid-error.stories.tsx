@@ -3,7 +3,7 @@ import { DataGridPro, GridColDef, useGridApiRef, GridOverlay } from '@mui/x-data
 import '../style/grid-stories.css';
 
 export default {
-  title: 'X-Grid Tests/Error Handling',
+  title: 'DataGridPro Test/Error Handling',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -25,10 +25,7 @@ const getColumns: () => GridColDef[] = () => [
     field: 'fullName',
     description: 'this column has a value getter and is not sortable',
     sortable: false,
-    valueGetter: (params) =>
-      `${params.getValue(params.id, 'firstName') || ''} ${
-        params.getValue(params.id, 'lastName') || ''
-      }`,
+    valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
   },
   {
     field: 'isRegistered',

@@ -1,33 +1,33 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import Rating from '@material-ui/lab/Rating';
+import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
 import { DataGrid } from '@mui/x-data-grid';
 
 function renderRating(params) {
   return <Rating readOnly value={params.value} />;
 }
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingRight: 16,
-  },
-});
+renderRating.propTypes = {
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.number.isRequired,
+};
 
 function RatingEditInputCell(props) {
   const { id, value, api, field } = props;
-  const classes = useStyles();
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
     if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
-      api.commitCellChange({ id, field });
-      api.setCellMode(id, field, 'view');
+      // Wait for the validation to run
+      const isValid = await api.commitCellChange({ id, field });
+      if (isValid) {
+        api.setCellMode(id, field, 'view');
+      }
     }
   };
 
@@ -38,15 +38,15 @@ function RatingEditInputCell(props) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
       <Rating
         ref={handleRef}
         name="rating"
         precision={1}
-        value={Number(value)}
+        value={value}
         onChange={handleChange}
       />
-    </div>
+    </Box>
   );
 }
 
@@ -54,9 +54,9 @@ RatingEditInputCell.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
-   * The column field of the cell that triggered the event
+   * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
   /**
@@ -66,13 +66,7 @@ RatingEditInputCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  value: PropTypes.number.isRequired,
 };
 
 function renderRatingEditInputCell(params) {

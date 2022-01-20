@@ -1,4 +1,4 @@
-import { enUS as enUSCore } from '@material-ui/core/locale';
+import { enUS as enUSCore } from '@mui/material/locale';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 

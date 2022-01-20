@@ -1,4 +1,4 @@
-import { ptBR as ptBRCore } from '@material-ui/core/locale';
+import { ptBR as ptBRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -31,6 +31,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Baixar como CSV',
+  toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Localizar coluna',
@@ -56,12 +57,17 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'termina com',
   filterOperatorIs: 'é',
   filterOperatorNot: 'não é',
+  filterOperatorAfter: 'após',
   filterOperatorOnOrAfter: 'em ou após',
   filterOperatorBefore: 'antes de',
   filterOperatorOnOrBefore: 'em ou antes de',
-  filterOperatorAfter: 'após',
   filterOperatorIsEmpty: 'está vazio',
   filterOperatorIsNotEmpty: 'não está vazio',
+
+  // Filter values text
+  filterValueAny: 'qualquer',
+  filterValueTrue: 'verdadeiro',
+  filterValueFalse: 'falso',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -97,6 +103,24 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sim',
   booleanCellFalseLabel: 'não',
+
+  // Actions cell more text
+  actionsCellMore: 'mais',
+
+  // Column pinning text
+  pinToLeft: 'Fixar à esquerda',
+  pinToRight: 'Fixar à direita',
+  unpin: 'Desafixar',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  groupingColumnHeaderName: 'Grupo',
+  groupColumn: (name) => `Agrupar por ${name}`,
+  unGroupColumn: (name) => `Parar agrupamento por ${name}`,
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

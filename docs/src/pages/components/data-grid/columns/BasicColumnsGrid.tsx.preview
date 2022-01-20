@@ -1,0 +1,10 @@
+<DataGrid
+  columns={[{ field: 'username' }, { field: 'age' }]}
+  rows={[
+    {
+      id: 1,
+      username: '@MUI',
+      age: 20,
+    },
+  ]}
+/>

@@ -1,5 +1,4 @@
-// TODO v5: import from arSD
-import { enUS as enUSCore } from '@material-ui/core/locale';
+import { arSD as arSDCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -32,6 +31,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarExport: 'تصدير',
   toolbarExportLabel: 'تصدير',
   toolbarExportCSV: 'تنزيل كملف CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'ايجاد عمود',
@@ -101,6 +101,24 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'صحيح',
   booleanCellFalseLabel: 'خاطئة',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
-export const arSD: Localization = getGridLocalization(arSDGrid, enUSCore);
+export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);

@@ -1,4 +1,4 @@
-import { frFR as frFRCore } from '@material-ui/core/locale';
+import { frFR as frFRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -31,6 +31,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Exporter',
   toolbarExportLabel: 'Exporter',
   toolbarExportCSV: 'Télécharger en CSV',
+  toolbarExportPrint: 'Imprimer',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',
@@ -56,12 +57,17 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'se termine par',
   filterOperatorIs: 'est',
   filterOperatorNot: "n'est pas",
-  filterOperatorOnOrAfter: 'égal ou postérieur',
   filterOperatorAfter: 'postérieur',
-  filterOperatorOnOrBefore: 'égal ou antérieur',
+  filterOperatorOnOrAfter: 'égal ou postérieur',
   filterOperatorBefore: 'antérieur',
+  filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorIsEmpty: 'est vide',
   filterOperatorIsNotEmpty: "n'est pas vide",
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -93,6 +99,28 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Sélection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
+
+  // Actions cell more text
+  actionsCellMore: 'Plus',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'Groupe',
+  treeDataExpand: 'afficher les enfants',
+  treeDataCollapse: 'masquer les enfants',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

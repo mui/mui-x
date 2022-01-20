@@ -1,3 +1,2 @@
 export * from './gridSortingSelector';
-export * from './useGridSorting';
-export * from './gridSortingState';
+export type { GridSortingState, GridSortingInitialState } from './gridSortingState';

@@ -1,80 +1,92 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../core/useGridState';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import {
+  useGridSelector,
+  useGridLogger,
+  useGridApiMethod,
+  useGridApiEventHandler,
+} from '../../utils';
+import { gridColumnMenuSelector } from './columnMenuSelector';
+import { GridColumnMenuApi } from '../../../models';
 
+/**
+ * @requires useGridColumnResize (event)
+ * @requires useGridInfiniteLoader (event)
+ */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
-  const showColumnMenu = React.useCallback(
-    (field: string) => {
-      logger.debug('Opening Column Menu');
-      setGridState((state) => ({
-        ...state,
-        columnMenu: { open: true, field },
-      }));
-      apiRef.current.hidePreferences();
-      forceUpdate();
+  useGridStateInit(apiRef, (state) => ({ ...state, columnMenu: { open: false } }));
+  const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
+
+  /**
+   * API METHODS
+   */
+  const showColumnMenu = React.useCallback<GridColumnMenuApi['showColumnMenu']>(
+    (field) => {
+      const shouldUpdate = apiRef.current.setState((state) => {
+        if (state.columnMenu.open && state.columnMenu.field === field) {
+          return state;
+        }
+
+        logger.debug('Opening Column Menu');
+        return {
+          ...state,
+          columnMenu: { open: true, field },
+        };
+      });
+
+      if (shouldUpdate) {
+        apiRef.current.hidePreferences();
+        apiRef.current.forceUpdate();
+      }
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [apiRef, logger],
   );
 
-  const hideColumnMenu = React.useCallback(() => {
-    logger.debug('Hiding Column Menu');
-    setGridState((state) => ({
-      ...state,
-      columnMenu: { ...state.columnMenu, open: false, field: undefined },
-    }));
-    forceUpdate();
-  }, [forceUpdate, logger, setGridState]);
+  const hideColumnMenu = React.useCallback<GridColumnMenuApi['hideColumnMenu']>(() => {
+    const shouldUpdate = apiRef.current.setState((state) => {
+      if (!state.columnMenu.open && state.columnMenu.field === undefined) {
+        return state;
+      }
 
-  const toggleColumnMenu = React.useCallback(
-    (field: string) => {
+      logger.debug('Hiding Column Menu');
+      return {
+        ...state,
+        columnMenu: { ...state.columnMenu, open: false, field: undefined },
+      };
+    });
+
+    if (shouldUpdate) {
+      apiRef.current.forceUpdate();
+    }
+  }, [apiRef, logger]);
+
+  const toggleColumnMenu = React.useCallback<GridColumnMenuApi['toggleColumnMenu']>(
+    (field) => {
       logger.debug('Toggle Column Menu');
-      if (!gridState.columnMenu.open || gridState.columnMenu.field !== field) {
+      if (!columnMenu.open || columnMenu.field !== field) {
         showColumnMenu(field);
       } else {
         hideColumnMenu();
       }
     },
-    [logger, showColumnMenu, hideColumnMenu, gridState],
+    [logger, showColumnMenu, hideColumnMenu, columnMenu],
   );
 
-  const handleColumnResizeStart = React.useCallback(() => {
-    setGridState((state) => {
-      if (state.columnMenu.open) {
-        return {
-          ...state,
-          columnMenu: {
-            ...state.columnMenu,
-            open: false,
-          },
-        };
-      }
+  const columnMenuApi: GridColumnMenuApi = {
+    showColumnMenu,
+    hideColumnMenu,
+    toggleColumnMenu,
+  };
 
-      return state;
-    });
-  }, [setGridState]);
+  useGridApiMethod(apiRef, columnMenuApi, 'GridColumnMenuApi');
 
-  React.useEffect(() => {
-    if (gridState.isScrolling) {
-      hideColumnMenu();
-    }
-  }, [gridState.isScrolling, hideColumnMenu]);
-
-  useGridApiMethod(
-    apiRef,
-    {
-      showColumnMenu,
-      hideColumnMenu,
-      toggleColumnMenu,
-    },
-    'ColumnMenuApi',
-  );
-
-  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
+  /**
+   * EVENTS
+   */
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
+  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, hideColumnMenu);
 };

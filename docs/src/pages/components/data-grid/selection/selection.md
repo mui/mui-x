@@ -28,13 +28,16 @@ Row selection can be performed with a simple mouse click, or using the [keyboard
 
 Single row selection is enable by default with the `DataGrid` component.
 To unselect a row, hold the <kbd class="key">CTRL</kbd> key and click on it.
-For the `DataGridPro`, you need to disable multiple row selection with `disableMultipleSelection={true}`.
 
 {{"demo": "pages/components/data-grid/selection/SingleRowSelectionGrid.js", "bg": "inline"}}
 
-### Multiple row selection [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Multiple row selection [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-To select multiple rows on the `DataGridPro` component, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
+On the `DataGridPro` component, you can select multiple rows in two ways:
+
+- To select multiple independent rows, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
+- To select a range of rows, hold the <kbd class="key">SHIFT</kbd> key while selecting rows.
+- To disable multiple row selection, use `disableMultipleSelection={true}`.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -62,17 +65,34 @@ In the demo below only rows with quantity above 50000 can be selected:
 
 ## Controlled selection
 
+Use the `selectionModel` prop to control the selection.
+Each time this prop changes, the `onSelectionModelChange` callback is called with the new selection value.
+
 {{"demo": "pages/components/data-grid/selection/ControlledSelectionGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Usage with server-side pagination
+
+Using the controlled selection with `paginationMode="server"` may result in selected rows being lost when the page is changed.
+This happens because the grid cross-checks with the `rows` prop and only calls `onSelectionModelChange` with existing row IDs.
+Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the grid will call `onSelectionModelChange` with an empty value.
+To prevent this unwanted behavior, there are two ways:
+
+- Save the `selectionModel` **before the page is changed** and restore it later
+- Append the newly loaded rows to the existing rows
+
+The following demo shows how to implement the first solution:
+
+{{"demo": "pages/components/data-grid/selection/ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
+
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
-> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
 {{"demo": "pages/components/data-grid/selection/SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## 🚧 Range selection [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## 🚧 Range selection [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

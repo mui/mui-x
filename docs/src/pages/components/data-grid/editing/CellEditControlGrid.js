@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import {
@@ -6,7 +5,7 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/material/Alert';
 
 export default function CellEditControlGrid() {
   const [editRowsModel, setEditRowsModel] = React.useState({});

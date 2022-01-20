@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import {

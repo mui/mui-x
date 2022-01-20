@@ -11,8 +11,9 @@ export async function raf() {
   });
 }
 
-export const CLOCK_SYNC_FACTOR = 10;
-
+/**
+ * Returns the 0-based row and column index of the active cell
+ */
 export function getActiveCell(): string | null {
   let activeElement: Element | null;
   if (document.activeElement && document.activeElement.getAttribute('role') === 'cell') {
@@ -25,11 +26,14 @@ export function getActiveCell(): string | null {
     return null;
   }
 
-  return `${activeElement.getAttribute('data-rowindex')}-${activeElement.getAttribute(
-    'data-colindex',
-  )}`;
+  return `${activeElement.parentElement!.getAttribute(
+    'data-rowindex',
+  )}-${activeElement.getAttribute('data-colindex')}`;
 }
 
+/**
+ * Returns the 0-based column index of the active column header
+ */
 export function getActiveColumnHeader() {
   let activeElement: Element | null;
   if (document.activeElement && document.activeElement.getAttribute('role') === 'columnheader') {
@@ -43,10 +47,10 @@ export function getActiveColumnHeader() {
     return null;
   }
 
-  return `${activeElement.getAttribute('aria-colindex')}`;
+  return `${Number(activeElement.getAttribute('aria-colindex')) - 1}`;
 }
 
-export async function sleep(duration: number) {
+export function sleep(duration: number) {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve();
@@ -78,7 +82,7 @@ export function getColumnHeadersTextContent() {
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector(
-    `[role="cell"][data-rowindex="${rowIndex}"][data-colindex="${colIndex}"]`,
+    `[role="row"][data-rowindex="${rowIndex}"] [role="cell"][data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);

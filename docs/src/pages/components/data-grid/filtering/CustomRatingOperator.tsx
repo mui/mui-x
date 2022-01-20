@@ -1,49 +1,56 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Rating } from '@material-ui/lab';
+import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
 import {
   GridFilterInputValueProps,
   DataGrid,
   GridFilterItem,
-  GridFilterModel,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const useStyles = makeStyles({
-  root: {
-    display: 'inline-flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 48,
-    paddingLeft: 20,
-  },
-});
-
 function RatingInputValue(props: GridFilterInputValueProps) {
-  const classes = useStyles();
-  const { item, applyValue } = props;
+  const { item, applyValue, focusElementRef } = props;
+
+  const ratingRef: React.Ref<any> = React.useRef(null);
+  React.useImperativeHandle(focusElementRef, () => ({
+    focus: () => {
+      ratingRef.current
+        .querySelector(`input[value="${Number(item.value) || ''}"]`)
+        .focus();
+    },
+  }));
 
   const handleFilterChange = (event) => {
     applyValue({ ...item, value: event.target.value });
   };
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        display: 'inline-flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 48,
+        pl: '20px',
+      }}
+    >
       <Rating
         name="custom-rating-filter-operator"
         placeholder="Filter value"
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
+        ref={ratingRef}
       />
-    </div>
+    </Box>
   );
 }
 
-const ratingOnlyOperators = [
+const ratingOnlyOperators: GridFilterOperator[] = [
   {
-    label: 'From',
-    value: 'from',
+    label: 'Above',
+    value: 'above',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (
         !filterItem.columnField ||
@@ -62,30 +69,48 @@ const ratingOnlyOperators = [
   },
 ];
 
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
 export default function CustomRatingOperator() {
-  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
-  const columns = [...data.columns];
-  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
-    items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
+  const { data } = useDemoData({
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
+    rowLength: 100,
   });
 
-  if (columns.length > 0) {
-    const ratingColumn = columns.find((col) => col.field === 'rating');
-    const newRatingColumn = {
-      ...ratingColumn!,
-      filterOperators: ratingOnlyOperators,
-    };
-    const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
-    columns[ratingColIndex] = newRatingColumn;
-  }
+  const columns = React.useMemo(
+    () =>
+      data.columns.map((col) =>
+        col.field === 'rating'
+          ? {
+              ...col,
+              filterOperators: ratingOnlyOperators,
+            }
+          : col,
+      ),
+    [data.columns],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data.rows}
+        {...data}
         columns={columns}
-        filterModel={filterModel}
-        onFilterModelChange={(model) => setFilterModel(model)}
+        initialState={{
+          ...data.initialState,
+          filter: {
+            filterModel: {
+              items: [
+                {
+                  id: 1,
+                  columnField: 'rating',
+                  value: '3.5',
+                  operatorValue: 'above',
+                },
+              ],
+            },
+          },
+        }}
       />
     </div>
   );

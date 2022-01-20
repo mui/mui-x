@@ -11,18 +11,15 @@ function resolvePath(sourcePath, currentFile, opts) {
 }
 
 const alias = {
-  '@mui/x-data-grid': '../packages/grid/data-grid/src',
-  '@mui/x-data-grid-generator': '../packages/grid/x-grid-data-generator/src',
-  '@mui/x-data-grid-pro': '../packages/grid/x-grid/src',
-  '@mui/x-license-pro': '../packages/x-license/src',
-  // Help in the event npm and git are significantly desynchronized.
-  '@material-ui/core': './node_modules/@material-ui/monorepo/packages/material-ui/src',
-  '@material-ui/styles': './node_modules/@material-ui/monorepo/packages/material-ui-styles/src',
-  '@material-ui/docs': './node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
-  '@material-ui/lab': './node_modules/@material-ui/monorepo/packages/material-ui-lab/src',
-  docs: './node_modules/@material-ui/monorepo/docs',
+  '@mui/x-data-grid': '../packages/grid/x-data-grid/src',
+  '@mui/x-data-grid-generator': '../packages/grid/x-data-grid-generator/src',
+  '@mui/x-data-grid-pro': '../packages/grid/x-data-grid-pro/src',
+  '@mui/x-license-pro': '../packages/x-license-pro/src',
+  '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
+  '@mui/markdown': '../node_modules/@mui/monorepo/docs/packages/markdown',
+  '@mui/monorepo': '../node_modules/@mui/monorepo',
+  docs: '../node_modules/@mui/monorepo/docs', // TODO remove
   docsx: './',
-  modules: './node_modules/@material-ui/monorepo/modules',
 };
 
 const { version: transformRuntimeVersion } = fse.readJSONSync(
@@ -38,9 +35,7 @@ module.exports = {
     [
       'babel-plugin-transform-rename-import',
       {
-        replacements: [
-          { original: '@material-ui/utils/macros/MuiError.macro', replacement: 'react' },
-        ],
+        replacements: [{ original: '@mui/utils/macros/MuiError.macro', replacement: 'react' }],
       },
     ],
     'babel-plugin-optimize-clsx',
@@ -61,6 +56,7 @@ module.exports = {
     /@babel[\\|/]runtime/,
     // Fix const foo = /{{(.+?)}}/gs; crashing.
     /prettier/,
+    /@mui[\\|/]docs[\\|/]markdown/,
   ],
   env: {
     production: {

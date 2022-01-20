@@ -5,7 +5,8 @@
     "noEmit": true,
     "types": ["react", "node", "requestidlecallback"],
     "jsx": "preserve",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "incremental": true
   },
   "include": ["src/pages/**/*"],
   "exclude": ["docs/.next", "docs/export"]

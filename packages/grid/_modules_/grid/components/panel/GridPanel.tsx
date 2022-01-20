@@ -1,17 +1,14 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Paper from '@material-ui/core/Paper';
-import Popper, { PopperProps } from '@material-ui/core/Popper';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { getMuiVersion, createTheme } from '../../utils/utils';
+import { MUIStyledCommonProps } from '@mui/system';
+import { styled, Theme } from '@mui/material/styles';
+import { generateUtilityClasses, InternalStandardProps as StandardProps } from '@mui/material';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Paper from '@mui/material/Paper';
+import Popper, { PopperProps } from '@mui/material/Popper';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
-import {
-  InternalStandardProps as StandardProps,
-  generateUtilityClasses,
-} from '../../utils/material-ui-utils';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -20,7 +17,8 @@ export interface GridPanelClasses {
   paper: string;
 }
 
-export interface GridPanelProps extends StandardProps<PopperProps, 'children'> {
+export interface GridPanelProps
+  extends StandardProps<MUIStyledCommonProps<Theme> & PopperProps, 'children'> {
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
@@ -29,83 +27,96 @@ export interface GridPanelProps extends StandardProps<PopperProps, 'children'> {
   open: boolean;
 }
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme: Theme) => ({
-    root: {
-      zIndex: theme.zIndex.modal,
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      minWidth: 300,
-      maxHeight: 450,
-      display: 'flex',
-    },
-  }),
-  { name: 'MuiGridPanel', defaultTheme },
-);
+export const gridPanelClasses = generateUtilityClasses('MuiDataGrid', ['panel', 'paper']);
 
-export const gridPanelClasses = generateUtilityClasses('MuiGridPanel', ['root', 'paper']);
+const GridPanelRoot = styled(Popper, {
+  name: 'MuiDataGrid',
+  slot: 'Panel',
+  overridesResolver: (props, styles) => styles.panel,
+})(({ theme }) => ({
+  zIndex: theme.zIndex.modal,
+}));
 
-export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(function GridPanel(
-  props,
-  ref,
-) {
-  const { children, className, open, ...other } = props;
-  const classes = useStyles(other);
+const GridPaperRoot = styled(Paper, {
+  name: 'MuiDataGrid',
+  slot: 'Paper',
+  overridesResolver: (props, styles) => styles.paper,
+})(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  minWidth: 300,
+  maxHeight: 450,
+  display: 'flex',
+}));
+
+const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
+  const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
-
-  const getPopperModifiers = (): any => {
-    if (getMuiVersion() === 'v5') {
-      return [
-        {
-          name: 'flip',
-          enabled: false,
-        },
-      ];
-    }
-
-    return {
-      flip: {
-        enabled: false,
-      },
-    };
-  };
+  const classes = gridPanelClasses;
+  const [isPlaced, setIsPlaced] = React.useState(false);
 
   const handleClickAway = React.useCallback(() => {
-    apiRef!.current.hidePreferences();
+    apiRef.current.hidePreferences();
   }, [apiRef]);
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
       if (isEscapeKey(event.key)) {
-        apiRef!.current.hidePreferences();
+        apiRef.current.hidePreferences();
       }
     },
     [apiRef],
   );
 
-  const anchorEl = apiRef?.current.columnHeadersContainerElementRef?.current;
+  const anchorEl = apiRef.current.columnHeadersContainerElementRef?.current;
 
   if (!anchorEl) {
     return null;
   }
 
   return (
-    <Popper
+    <GridPanelRoot
       ref={ref}
       placement="bottom-start"
-      className={clsx(className, classes.root)}
-      open={open}
+      className={clsx(className, classes.panel)}
       anchorEl={anchorEl}
-      modifiers={getPopperModifiers()}
+      modifiers={[
+        {
+          name: 'flip',
+          enabled: false,
+        },
+        {
+          name: 'isPlaced',
+          enabled: true,
+          phase: 'main',
+          fn: () => {
+            setIsPlaced(true);
+          },
+        },
+      ]}
       {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
-        <Paper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
-          {children}
-        </Paper>
+        <GridPaperRoot className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
+          {isPlaced && children}
+        </GridPaperRoot>
       </ClickAwayListener>
-    </Popper>
+    </GridPanelRoot>
   );
-}) as (props: GridPanelProps) => JSX.Element;
+});
+
+GridPanel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * If `true`, the component is shown.
+   */
+  open: PropTypes.bool.isRequired,
+} as any;
+
+export { GridPanel };

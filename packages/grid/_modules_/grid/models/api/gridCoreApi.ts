@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { MuiEvent } from '../gridOptions';
-import {
-  GridEventEmitter,
-  GridSubscribeEventOptions,
-} from '../../utils/eventEmitter/GridEventEmitter';
+import { GridEventPublisher, GridEventListener, GridEventsStr } from '../events';
+import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
  */
-export interface GridCoreApi extends GridEventEmitter {
+export interface GridCoreApi {
   /**
    * The react ref of the grid root container div element.
    * @ignore - do not document.
@@ -45,31 +42,29 @@ export interface GridCoreApi extends GridEventEmitter {
    */
   footerRef?: React.RefObject<HTMLDivElement>;
   /**
+   * The generic event emitter manager.
+   * @ignore - do not document
+   */
+  unstable_eventManager: EventManager;
+  /**
    * Registers a handler for an event.
    * @param {string} event The name of the event.
    * @param {function} handler The handler to be called.
    * @param {object} options Additional options for this listener.
    * @returns {function} A function to unsubscribe from this event.
    */
-  subscribeEvent: (
-    event: string,
-    handler: (
-      params: any,
-      event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}>,
-      details: any,
-    ) => void,
-    options?: GridSubscribeEventOptions,
+  subscribeEvent: <E extends GridEventsStr>(
+    event: E,
+    handler: GridEventListener<E>,
+    options?: EventListenerOptions,
   ) => () => void;
   /**
    * Emits an event.
-   * @param {string} name The name of the event.
-   * @param {...*} args Arguments to be passed to the handlers.
+   * @param {GridEvents} name The name of the event.
+   * @param {any} params Arguments to be passed to the handlers.
+   * @param {MuiEvent<MuiBaseEvent>} event The event object to pass forward.
    */
-  publishEvent: (
-    name: string,
-    params?: any,
-    event?: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap]>,
-  ) => void;
+  publishEvent: GridEventPublisher;
   /**
    * Displays the error overlay component.
    * @param {any} props Props to be passed to the `ErrorOverlay` component.

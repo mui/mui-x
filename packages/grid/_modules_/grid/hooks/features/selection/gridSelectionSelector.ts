@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { GridState } from '../core/gridState';
+import { GridState } from '../../../models/gridState';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 
 export const gridSelectionStateSelector = (state: GridState) => state.selection;

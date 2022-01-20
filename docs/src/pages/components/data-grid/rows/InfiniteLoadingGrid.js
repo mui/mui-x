@@ -2,14 +2,14 @@ import * as React from 'react';
 import { DataGridPro, GridOverlay } from '@mui/x-data-grid-pro';
 import {
   useDemoData,
-  getRealData,
+  getRealGridData,
   getCommodityColumns,
 } from '@mui/x-data-grid-generator';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const MAX_ROW_LENGTH = 500;
 
-async function sleep(duration) {
+function sleep(duration) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve();
@@ -39,7 +39,7 @@ export default function InfiniteLoadingGrid() {
 
   const loadServerRows = async (newRowLength) => {
     setLoading(true);
-    const newData = await getRealData(newRowLength, getCommodityColumns());
+    const newData = await getRealGridData(newRowLength, getCommodityColumns());
     // Simulate network throttle
     await sleep(Math.random() * 500 + 100);
 

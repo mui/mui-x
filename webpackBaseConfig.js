@@ -7,14 +7,18 @@ module.exports = {
   resolve: {
     modules: [__dirname, 'node_modules'],
     alias: {
-      '@mui/x-data-grid': path.resolve(__dirname, './packages/grid/data-grid/src'),
+      '@mui/x-data-grid': path.resolve(__dirname, './packages/grid/x-data-grid/src'),
       '@mui/x-data-grid-generator': path.resolve(
         __dirname,
-        './packages/grid/x-grid-data-generator/src',
+        './packages/grid/x-data-grid-generator/src',
       ),
-      '@mui/x-data-grid-pro': path.resolve(__dirname, './packages/grid/x-grid/src'),
-      '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license/src'),
-      docs: path.resolve(__dirname, './docs/node_modules/@material-ui/monorepo/docs'),
+      '@mui/x-data-grid-pro': path.resolve(__dirname, './packages/grid/x-data-grid-pro/src'),
+      '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license-pro/src'),
+      '@mui/markdown': path.resolve(
+        __dirname,
+        './node_modules/@mui/monorepo/docs/packages/markdown',
+      ),
+      docs: path.resolve(__dirname, './node_modules/@mui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
     },
     extensions: ['.js', '.ts', '.tsx', '.d.ts'],
@@ -24,13 +28,14 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/build/',
   },
+  target: 'web',
   module: {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
-        exclude: /node_modules\/(?!@material-ui)/,
+        exclude: /node_modules\/(?!@mui)/,
         loader: 'babel-loader',
-        query: {
+        options: {
           cacheDirectory: true,
         },
       },

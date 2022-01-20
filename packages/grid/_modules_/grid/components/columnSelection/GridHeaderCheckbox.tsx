@@ -1,41 +1,97 @@
 import * as React from 'react';
-import { GridEvents } from '../../constants/eventsConstants';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
-import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
+import PropTypes from 'prop-types';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { GridEvents } from '../../models/events';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
-import { selectedGridRowsCountSelector } from '../../hooks/features/selection/gridSelectionSelector';
+import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
-import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { gridClasses } from '../../gridClasses';
+import { isNavigationKey } from '../../utils/keyboardUtils';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
+import { gridVisibleSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 
-export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['checkboxInput'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
+    const ownerState = { classes: rootProps.classes };
+    const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-    const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
-    const totalRows = useGridSelector(apiRef, gridRowCountSelector);
+    const selection = useGridSelector(apiRef, gridSelectionStateSelector);
+    const visibleRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
+    const paginatedVisibleRowIds = useGridSelector(
+      apiRef,
+      gridPaginatedVisibleSortedGridRowIdsSelector,
+    );
 
-    const isIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
-    // TODO core v5 remove || isIndeterminate, no longer has any effect
-    const isChecked = (totalSelectedRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
+    const filteredSelection = React.useMemo(
+      () =>
+        typeof rootProps.isRowSelectable === 'function'
+          ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
+          : selection,
+      [apiRef, rootProps.isRowSelectable, selection],
+    );
+
+    // All the rows that could be selected / unselected by toggling this checkbox
+    const selectionCandidates = React.useMemo(() => {
+      const rowIds =
+        !rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly
+          ? visibleRowIds
+          : paginatedVisibleRowIds;
+
+      // Convert to an object to make O(1) checking if a row exists or not
+      // TODO create selector that returns visibleRowIds/paginatedVisibleRowIds as an object
+      return rowIds.reduce((acc, id) => {
+        acc[id] = true;
+        return acc;
+      }, {});
+    }, [
+      rootProps.pagination,
+      rootProps.checkboxSelectionVisibleOnly,
+      paginatedVisibleRowIds,
+      visibleRowIds,
+    ]);
+
+    // Amount of rows selected and that are visible in the current page
+    const currentSelectionSize = React.useMemo(
+      () => filteredSelection.filter((id) => selectionCandidates[id]).length,
+      [filteredSelection, selectionCandidates],
+    );
+
+    const isIndeterminate =
+      currentSelectionSize > 0 && currentSelectionSize < Object.keys(selectionCandidates).length;
+
+    const isChecked = currentSelectionSize > 0;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const checked = event.target.checked;
-      const rowsToBeSelected = rootProps.checkboxSelectionVisibleOnly
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
-        : visibleSortedGridRowIdsSelector(apiRef.current.state);
-      apiRef!.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
+      const params: GridHeaderSelectionCheckboxParams = {
+        value: event.target.checked,
+      };
+
+      apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, params);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
     React.useLayoutEffect(() => {
-      const element = apiRef!.current.getColumnHeaderElement(props.field);
+      const element = apiRef.current.getColumnHeaderElement(props.field);
       if (tabIndex === 0 && element) {
         element!.tabIndex = -1;
       }
@@ -43,14 +99,18 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
 
     const handleKeyDown = React.useCallback(
       (event) => {
-        if (isSpaceKey(event.key)) {
-          event.stopPropagation();
+        if (event.key === ' ') {
+          // imperative toggle the checkbox because Space is disable by some preventDefault
+          apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, {
+            value: !isChecked,
+          });
         }
+        // TODO v6 remove columnHeaderNavigationKeyDown events which are not used internally anymore
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
+          apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
         }
       },
-      [apiRef, props],
+      [apiRef, props, isChecked],
     );
 
     const handleSelectionChange = React.useCallback(() => {
@@ -58,24 +118,39 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     }, []);
 
     React.useEffect(() => {
-      return apiRef?.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
+      return apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
-    const CheckboxComponent = apiRef?.current.components.Checkbox!;
-
     return (
-      <CheckboxComponent
+      <rootProps.components.BaseCheckbox
         ref={ref}
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}
-        className={gridClasses.checkboxInput}
+        className={classes.root}
         color="primary"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
-        {...apiRef?.current.componentsProps?.checkbox}
+        {...rootProps.componentsProps?.baseCheckbox}
       />
     );
   },
 );
+
+GridHeaderCheckbox.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The column of the current header component.
+   */
+  colDef: PropTypes.object.isRequired,
+  /**
+   * The column field of the column that triggered the event
+   */
+  field: PropTypes.string.isRequired,
+} as any;
+
+export { GridHeaderCheckbox };

@@ -1,1 +1,1 @@
-require('@material-ui/monorepo/scripts/prettier');
+require('@mui/monorepo/scripts/prettier');

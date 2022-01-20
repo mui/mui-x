@@ -1,60 +1,89 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
-import { useGridState } from '../../../hooks/features/core/useGridState';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
-import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
-import { GridAddIcon } from '../../icons/index';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+import { GridAddIcon } from '../../icons';
 import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
 import { GridFilterForm } from './GridFilterForm';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { useGridSelector } from '../../../hooks/utils/useGridSelector';
+import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
+import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 
 export function GridFilterPanel() {
   const apiRef = useGridApiContext();
-  const [gridState] = useGridState(apiRef!);
   const rootProps = useGridRootProps();
-
-  const hasMultipleFilters = React.useMemo(
-    () => gridState.filter.items.length > 1,
-    [gridState.filter.items.length],
-  );
+  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+  const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
+  const lastFilterRef = React.useRef<any>(null);
 
   const applyFilter = React.useCallback(
     (item: GridFilterItem) => {
-      apiRef!.current.upsertFilter(item);
+      apiRef.current.upsertFilterItem(item);
     },
     [apiRef],
   );
 
   const applyFilterLinkOperator = React.useCallback(
     (operator: GridLinkOperator) => {
-      apiRef!.current.applyFilterLinkOperator(operator);
+      apiRef.current.setFilterLinkOperator(operator);
     },
     [apiRef],
   );
 
-  const addNewFilter = React.useCallback(() => {
-    apiRef!.current.upsertFilter({});
-  }, [apiRef]);
+  const getDefaultItem = React.useCallback((): GridFilterItem | null => {
+    const firstColumnWithOperator = filterableColumns.find(
+      (colDef) => colDef.filterOperators?.length,
+    );
+    if (!firstColumnWithOperator) {
+      return null;
+    }
+
+    return {
+      columnField: firstColumnWithOperator.field,
+      operatorValue: firstColumnWithOperator.filterOperators![0].value,
+      id: Math.round(Math.random() * 1e5),
+    };
+  }, [filterableColumns]);
+
+  const items = React.useMemo<GridFilterItem[]>(() => {
+    if (filterModel.items.length) {
+      return filterModel.items;
+    }
+
+    const defaultItem = getDefaultItem();
+
+    return defaultItem ? [defaultItem] : [];
+  }, [filterModel.items, getDefaultItem]);
+
+  const hasMultipleFilters = items.length > 1;
+
+  const addNewFilter = () => {
+    const defaultItem = getDefaultItem();
+    if (!defaultItem) {
+      return;
+    }
+    apiRef.current.setFilterModel({ ...filterModel, items: [...items, defaultItem] });
+  };
 
   const deleteFilter = React.useCallback(
     (item: GridFilterItem) => {
-      apiRef!.current.deleteFilter(item);
+      apiRef.current.deleteFilterItem(item);
     },
     [apiRef],
   );
 
   React.useEffect(() => {
-    if (gridState.filter.items.length === 0) {
-      addNewFilter();
+    if (items.length > 0) {
+      lastFilterRef.current!.focus();
     }
-  }, [addNewFilter, gridState.filter.items.length]);
+  }, [items.length]);
 
   return (
     <GridPanelWrapper>
       <GridPanelContent>
-        {gridState.filter.items.map((item, index) => (
+        {items.map((item, index) => (
           <GridFilterForm
             key={item.id == null ? index : item.id}
             item={item}
@@ -62,17 +91,23 @@ export function GridFilterPanel() {
             deleteFilter={deleteFilter}
             hasMultipleFilters={hasMultipleFilters}
             showMultiFilterOperators={index > 0}
-            multiFilterOperator={gridState.filter.linkOperator}
+            multiFilterOperator={filterModel.linkOperator}
             disableMultiFilterOperator={index !== 1}
             applyMultiFilterOperatorChanges={applyFilterLinkOperator}
+            focusElementRef={index === items.length - 1 ? lastFilterRef : null}
           />
         ))}
       </GridPanelContent>
       {!rootProps.disableMultipleColumnsFiltering && (
         <GridPanelFooter>
-          <Button onClick={addNewFilter} startIcon={<GridAddIcon />} color="primary">
-            {apiRef!.current.getLocaleText('filterPanelAddFilter')}
-          </Button>
+          <rootProps.components.BaseButton
+            onClick={addNewFilter}
+            startIcon={<GridAddIcon />}
+            color="primary"
+            {...rootProps.componentsProps?.baseButton}
+          >
+            {apiRef.current.getLocaleText('filterPanelAddFilter')}
+          </rootProps.components.BaseButton>
         </GridPanelFooter>
       )}
     </GridPanelWrapper>

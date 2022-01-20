@@ -1,0 +1,7 @@
+<DataGrid
+  {...data}
+  columns={data.columns.map((column) => ({
+    ...column,
+    sortable: false,
+  }))}
+/>

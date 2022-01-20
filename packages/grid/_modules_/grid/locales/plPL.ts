@@ -1,11 +1,11 @@
-import { plPL as plPLCore } from '@material-ui/core/locale';
+import { plPL as plPLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-export const plPLGrid: Partial<GridLocaleText> = {
+const plPLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Brak danych',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Nie znaleziono wyników.',
   errorOverlayDefaultLabel: 'Wystąpił błąd.',
 
   // Density selector toolbar button text
@@ -30,6 +30,7 @@ export const plPLGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Eksportuj',
   toolbarExportLabel: 'Eksportuj',
   toolbarExportCSV: 'Pobierz jako plik CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Znajdź kolumnę',
@@ -59,8 +60,13 @@ export const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'większe lub równe',
   filterOperatorBefore: 'mniejsze niż',
   filterOperatorOnOrBefore: 'mniejsze lub równe',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'jest pusty',
+  filterOperatorIsNotEmpty: 'nie jest pusty',
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -83,8 +89,33 @@ export const plPLGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Łączna liczba wierszy:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} z ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
+
+  // Actions cell more text
+  actionsCellMore: 'więcej',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

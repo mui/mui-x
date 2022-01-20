@@ -1,16 +1,16 @@
 import * as React from 'react';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridEvents } from '../../../constants/eventsConstants';
-import { gridClasses } from '../../../gridClasses';
-import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
-import { GridCellParams } from '../../../models/params/gridCellParams';
+import { GridEvents, GridEventListener } from '../../../models/events';
+import { getDataGridUtilityClass } from '../../../gridClasses';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { useGridSelector } from '../core/useGridSelector';
-import { useGridState } from '../core/useGridState';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridSelector } from '../../utils/useGridSelector';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import { GridPreProcessingGroup } from '../../core/preProcessing';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
@@ -30,16 +30,33 @@ const hasCursorPositionChanged = (
 ): boolean =>
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
 
+type OwnerState = { classes: DataGridProProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    columnHeaderDragging: ['columnHeader--dragging'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 /**
  * Only available in DataGridPro
+ * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'disableColumnReorder'>,
+  props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    columnReorder: { dragCol: '' },
+  }));
+
   const dragColField = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
@@ -48,6 +65,8 @@ export const useGridColumnReorder = (
   });
   const originColumnIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<any>();
+  const ownerState = { classes: props.classes };
+  const classes = useUtilityClasses(ownerState);
 
   React.useEffect(() => {
     return () => {
@@ -55,47 +74,59 @@ export const useGridColumnReorder = (
     };
   }, []);
 
-  const handleColumnHeaderDragStart = React.useCallback(
-    (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLElement>) => {
+  const handleColumnHeaderDragStart = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderDragStart>
+  >(
+    (params, event) => {
       if (props.disableColumnReorder || params.colDef.disableReorder) {
         return;
       }
 
       logger.debug(`Start dragging col ${params.field}`);
+      // Prevent drag events propagation.
+      // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
+      event.stopPropagation();
 
       dragColNode.current = event.currentTarget;
-      dragColNode.current.classList.add(gridClasses['columnSeparator--dragging']);
+      dragColNode.current.classList.add(classes.columnHeaderDragging);
 
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: params.field },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current!.classList.remove(gridClasses['columnSeparator--dragging']);
+        dragColNode.current!.classList.remove(classes.columnHeaderDragging);
       });
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
     },
-    [props.disableColumnReorder, logger, setGridState, forceUpdate, apiRef],
+    [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
   );
 
-  const handleDragEnter = React.useCallback(
-    (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent<HTMLElement>) => {
-      event.preventDefault();
-    },
-    [],
-  );
+  const handleDragEnter = React.useCallback<
+    GridEventListener<GridEvents.cellDragEnter | GridEvents.columnHeaderDragEnter>
+  >((params, event) => {
+    event.preventDefault();
+    // Prevent drag events propagation.
+    // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
+    event.stopPropagation();
+  }, []);
 
-  const handleDragOver = React.useCallback(
-    (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent) => {
+  const handleDragOver = React.useCallback<
+    GridEventListener<GridEvents.cellDragOver | GridEvents.columnHeaderDragOver>
+  >(
+    (params, event) => {
       if (!dragColField) {
         return;
       }
 
       logger.debug(`Dragging over col ${params.field}`);
       event.preventDefault();
+      // Prevent drag events propagation.
+      // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
+      event.stopPropagation();
 
       const coordinates = { x: event.clientX, y: event.clientY };
 
@@ -107,11 +138,7 @@ export const useGridColumnReorder = (
         const targetColVisibleIndex = apiRef.current.getColumnIndex(params.field, true);
         const targetCol = apiRef.current.getColumn(params.field);
         const dragColIndex = apiRef.current.getColumnIndex(dragColField, false);
-        const visibleColumnAmount = apiRef.current.getVisibleColumns().length;
-
-        const canBeReordered =
-          !targetCol.disableReorder ||
-          (targetColVisibleIndex > 0 && targetColVisibleIndex < visibleColumnAmount - 1);
+        const visibleColumns = apiRef.current.getVisibleColumns();
 
         const cursorMoveDirectionX = getCursorMoveDirectionX(cursorPosition.current, coordinates);
         const hasMovedLeft =
@@ -119,8 +146,28 @@ export const useGridColumnReorder = (
         const hasMovedRight =
           cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT && dragColIndex < targetColIndex;
 
-        if (canBeReordered && (hasMovedLeft || hasMovedRight)) {
-          apiRef.current.setColumnIndex(dragColField, targetColIndex);
+        if (hasMovedLeft || hasMovedRight) {
+          let canBeReordered: boolean;
+          if (!targetCol.disableReorder) {
+            canBeReordered = true;
+          } else if (hasMovedLeft) {
+            canBeReordered =
+              targetColIndex > 0 && !visibleColumns[targetColIndex - 1].disableReorder;
+          } else {
+            canBeReordered =
+              targetColIndex < visibleColumns.length - 1 &&
+              !visibleColumns[targetColIndex + 1].disableReorder;
+          }
+
+          const canBeReorderedProcessed = apiRef.current.unstable_applyPreProcessors(
+            GridPreProcessingGroup.canBeReordered,
+            canBeReordered,
+            { targetIndex: targetColVisibleIndex },
+          );
+
+          if (canBeReorderedProcessed) {
+            apiRef.current.setColumnIndex(dragColField, targetColIndex);
+          }
         }
 
         cursorPosition.current = coordinates;
@@ -129,31 +176,35 @@ export const useGridColumnReorder = (
     [apiRef, dragColField, logger],
   );
 
-  const handleDragEnd = React.useCallback(
-    (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent): void => {
+  const handleDragEnd = React.useCallback<GridEventListener<GridEvents.columnHeaderDragEnd>>(
+    (params, event): void => {
       if (props.disableColumnReorder || !dragColField) {
         return;
       }
 
       logger.debug('End dragging col');
       event.preventDefault();
+      // Prevent drag events propagation.
+      // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
+      event.stopPropagation();
 
       clearTimeout(removeDnDStylesTimeout.current);
       dragColNode.current = null;
 
       // Check if the column was dropped outside the grid.
       if (event.dataTransfer.dropEffect === 'none') {
-        apiRef.current.setColumnIndex(params.field, originColumnIndex.current!);
+        // Accessing params.field may contain the wrong field as header elements are reused
+        apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
         originColumnIndex.current = null;
       }
 
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: '' },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [props.disableColumnReorder, logger, setGridState, forceUpdate, apiRef, dragColField],
+    [props.disableColumnReorder, logger, apiRef, dragColField],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnHeaderDragStart);
@@ -162,5 +213,4 @@ export const useGridColumnReorder = (
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, handleDragEnd);
   useGridApiEventHandler(apiRef, GridEvents.cellDragEnter, handleDragEnter);
   useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
-  useGridApiEventHandler(apiRef, GridEvents.cellDragEnd, handleDragEnd);
 };

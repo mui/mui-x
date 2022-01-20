@@ -5,13 +5,13 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 export default function MultipleRowSelectionGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 10,
+    rowLength: 100,
     maxColumns: 6,
   });
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} />
+      <DataGridPro {...data} pagination pageSize={10} />
     </div>
   );
 }

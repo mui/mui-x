@@ -1,11 +1,11 @@
-import { jaJP as jaJPCore } from '@material-ui/core/locale';
+import { jaJP as jaJPCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const jaJPGrid: Partial<GridLocaleText> = {
   // Root
-  noRowsLabel: '行がありません',
-  // noResultsOverlayLabel: 'No results found.',
+  noRowsLabel: '行がありません。',
+  noResultsOverlayLabel: '結果がありません。',
   errorOverlayDefaultLabel: 'エラーが発生しました。',
 
   // Density selector toolbar button text
@@ -30,6 +30,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarExport: 'エクスポート',
   toolbarExportLabel: 'エクスポート',
   toolbarExportCSV: 'CSVダウンロード',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '列検索',
@@ -59,8 +60,13 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: '...以降',
   filterOperatorBefore: '...より前',
   filterOperatorOnOrBefore: '...以前',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: '...空である',
+  filterOperatorIsNotEmpty: '...空でない',
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'メニュー',
@@ -83,8 +89,33 @@ const jaJPGrid: Partial<GridLocaleText> = {
   footerTotalRows: '総行数:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'チェックボックス',
+
+  // Boolean cell text
+  booleanCellTrueLabel: '真',
+  booleanCellFalseLabel: '偽',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

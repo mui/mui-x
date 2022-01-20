@@ -1,11 +1,12 @@
 import * as React from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
+import PropTypes from 'prop-types';
+import MenuItem from '@mui/material/MenuItem';
 import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-export const GridColumnsMenuItem = (props: GridFilterItemProps) => {
+const GridColumnsMenuItem = (props: GridFilterItemProps) => {
   const { onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -13,7 +14,7 @@ export const GridColumnsMenuItem = (props: GridFilterItemProps) => {
   const showColumns = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
-      apiRef!.current.showPreferences(GridPreferencePanelsValue.columns);
+      apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
     },
     [apiRef, onClick],
   );
@@ -24,7 +25,18 @@ export const GridColumnsMenuItem = (props: GridFilterItemProps) => {
 
   return (
     <MenuItem onClick={showColumns}>
-      {apiRef!.current.getLocaleText('columnMenuShowColumns')}
+      {apiRef.current.getLocaleText('columnMenuShowColumns')}
     </MenuItem>
   );
 };
+
+GridColumnsMenuItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  column: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+} as any;
+
+export { GridColumnsMenuItem };

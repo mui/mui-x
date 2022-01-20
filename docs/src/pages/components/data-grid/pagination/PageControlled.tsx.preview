@@ -1,0 +1,8 @@
+<DataGrid
+  page={page}
+  onPageChange={(newPage) => setPage(newPage)}
+  pageSize={5}
+  rowsPerPageOptions={[5]}
+  pagination
+  {...data}
+/>

@@ -1,11 +1,11 @@
-import { nlNL as nlNLCore } from '@material-ui/core/locale';
+import { nlNL as nlNLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const nlNLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Geen resultaten.',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Geen resultaten gevonden.',
   errorOverlayDefaultLabel: 'Er deed zich een fout voor.',
 
   // Density selector toolbar button text
@@ -28,9 +28,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} actieve filters` : `${count} filter actief`,
 
   // Export selector toolbar button text
-  // toolbarExport: 'Export',
-  // toolbarExportLabel: 'Export',
-  // toolbarExportCSV: 'Download as CSV',
+  toolbarExport: 'Exporteren',
+  toolbarExportLabel: 'Exporteren',
+  toolbarExportCSV: 'Exporteer naar CSV',
+  toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Zoek kolom',
@@ -56,12 +57,17 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'eindigt met',
   filterOperatorIs: 'is',
   filterOperatorNot: 'is niet',
-  filterOperatorOnOrAfter: 'is gelijk of er voor',
-  filterOperatorAfter: 'is voor',
-  filterOperatorOnOrBefore: 'is gelijk of er na',
-  filterOperatorBefore: 'is na',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorAfter: 'is na',
+  filterOperatorOnOrAfter: 'is gelijk of er na',
+  filterOperatorBefore: 'is voor',
+  filterOperatorOnOrBefore: 'is gelijk of er voor',
+  filterOperatorIsEmpty: 'is leeg',
+  filterOperatorIsNotEmpty: 'is niet leeg',
+
+  // Filter values text
+  filterValueAny: 'alles',
+  filterValueTrue: 'waar',
+  filterValueFalse: 'onwaar',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -88,8 +94,33 @@ const nlNLGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Totaal:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} van ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'Checkbox selectie',
+
+  // Boolean cell text
+  booleanCellTrueLabel: 'waar',
+  booleanCellFalseLabel: 'onwaar',
+
+  // Actions cell more text
+  actionsCellMore: 'meer',
+
+  // Column pinning text
+  pinToLeft: 'Links vastzetten',
+  pinToRight: 'Rechts vastzetten',
+  unpin: 'Losmaken',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'Groep',
+  treeDataExpand: 'Uitvouwen',
+  treeDataCollapse: 'Inklappen',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

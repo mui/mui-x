@@ -1,13 +1,15 @@
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowGroupingResult } from '../../core/rowGroupsPerProcessing';
 
-export interface InternalGridRowsState {
-  idRowsLookup: Record<GridRowId, GridRowModel>;
-  allRows: GridRowId[];
+export interface GridRowsState extends GridRowGroupingResult {
+  /**
+   * Amount of rows before applying the filtering.
+   * It also count the expanded and collapsed children rows.
+   */
   totalRowCount: number;
-}
 
-export const getInitialGridRowState: () => InternalGridRowsState = () => ({
-  idRowsLookup: {},
-  allRows: [],
-  totalRowCount: 0,
-});
+  /**
+   * Amount of rows before applying the filtering.
+   * It does not count the expanded children rows.
+   */
+  totalTopLevelRowCount: number;
+}

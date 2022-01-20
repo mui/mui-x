@@ -21,13 +21,9 @@ const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
 const tsConfig = typescriptToProptypes.loadConfig(path.resolve(__dirname, '../tsconfig.json'));
 
-const unwrap = babel.createConfigItem(
-  require('../node_modules/@material-ui/monorepo/packages/babel-plugin-unwrap-createstyles'),
-);
-
 const babelConfig = {
   presets: ['@babel/preset-typescript'],
-  plugins: [unwrap],
+  plugins: [],
   generatorOpts: { retainLines: true },
   babelrc: false,
   configFile: false,
@@ -79,7 +75,17 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
 
     const source = await fse.readFile(tsxPath, 'utf8');
 
-    const { code } = await babel.transformAsync(source, { ...babelConfig, filename: tsxPath });
+    const transformOptions = { ...babelConfig, filename: tsxPath };
+    const enableJSXPreview = !tsxPath.includes(path.join('pages', 'premium-themes'));
+    if (enableJSXPreview) {
+      transformOptions.plugins = transformOptions.plugins.concat([
+        [
+          require.resolve('docsx/src/modules/utils/babel-plugin-jsx-preview'),
+          { maxLines: 16, outputFilename: `${tsxPath}.preview` },
+        ],
+      ]);
+    }
+    const { code } = await babel.transformAsync(source, transformOptions);
 
     if (/import \w* from 'prop-types'/.test(code)) {
       throw new Error('TypeScript demo contains prop-types, please remove them');

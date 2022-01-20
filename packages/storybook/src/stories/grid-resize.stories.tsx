@@ -4,7 +4,7 @@ import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/Resize',
+  title: 'DataGridPro Test/Resize',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

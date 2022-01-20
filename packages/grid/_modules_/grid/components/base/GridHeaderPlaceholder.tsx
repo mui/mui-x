@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export function GridHeaderPlaceholder() {
@@ -10,7 +10,7 @@ export function GridHeaderPlaceholder() {
 
   return (
     <div ref={headerRef}>
-      <apiRef.current.components.Header {...rootProps.componentsProps?.header} />
+      <rootProps.components.Header {...rootProps.componentsProps?.header} />
     </div>
   );
 }

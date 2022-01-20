@@ -1,10 +1,15 @@
 import * as React from 'react';
-import { DataGrid, useGridSlotComponentProps } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  gridPageCountSelector,
+  gridPageSelector,
+  useGridApiContext,
+  useGridSelector,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { createTheme, Theme } from '@material-ui/core/styles';
-import { createStyles, makeStyles } from '@material-ui/styles';
-import Pagination from '@material-ui/lab/Pagination';
-import PaginationItem from '@material-ui/lab/PaginationItem';
+import { Theme, styled } from '@mui/material/styles';
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
 
 function customCheckbox(theme: Theme) {
   return {
@@ -13,7 +18,7 @@ function customCheckbox(theme: Theme) {
       height: 16,
       backgroundColor: 'transparent',
       border: `1px solid ${
-        theme.palette.type === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'
+        theme.palette.mode === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'
       }`,
       borderRadius: 2,
     },
@@ -50,74 +55,67 @@ function customCheckbox(theme: Theme) {
   };
 }
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme: Theme) =>
-    createStyles({
-      root: {
-        border: 0,
-        color:
-          theme.palette.type === 'light'
-            ? 'rgba(0,0,0,.85)'
-            : 'rgba(255,255,255,0.85)',
-        fontFamily: [
-          '-apple-system',
-          'BlinkMacSystemFont',
-          '"Segoe UI"',
-          'Roboto',
-          '"Helvetica Neue"',
-          'Arial',
-          'sans-serif',
-          '"Apple Color Emoji"',
-          '"Segoe UI Emoji"',
-          '"Segoe UI Symbol"',
-        ].join(','),
-        WebkitFontSmoothing: 'auto',
-        letterSpacing: 'normal',
-        '& .MuiDataGrid-columnsContainer': {
-          backgroundColor: theme.palette.type === 'light' ? '#fafafa' : '#1d1d1d',
-        },
-        '& .MuiDataGrid-iconSeparator': {
-          display: 'none',
-        },
-        '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
-          borderRight: `1px solid ${
-            theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
-          }`,
-        },
-        '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-          borderBottom: `1px solid ${
-            theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
-          }`,
-        },
-        '& .MuiDataGrid-cell': {
-          color:
-            theme.palette.type === 'light'
-              ? 'rgba(0,0,0,.85)'
-              : 'rgba(255,255,255,0.65)',
-        },
-        '& .MuiPaginationItem-root': {
-          borderRadius: 0,
-        },
-        ...customCheckbox(theme),
-      },
-    }),
-  { defaultTheme },
-);
+const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+  border: 0,
+  color:
+    theme.palette.mode === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
+  fontFamily: [
+    '-apple-system',
+    'BlinkMacSystemFont',
+    '"Segoe UI"',
+    'Roboto',
+    '"Helvetica Neue"',
+    'Arial',
+    'sans-serif',
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+  ].join(','),
+  WebkitFontSmoothing: 'auto',
+  letterSpacing: 'normal',
+  '& .MuiDataGrid-columnsContainer': {
+    backgroundColor: theme.palette.mode === 'light' ? '#fafafa' : '#1d1d1d',
+  },
+  '& .MuiDataGrid-iconSeparator': {
+    display: 'none',
+  },
+  '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
+    borderRight: `1px solid ${
+      theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
+    }`,
+  },
+  '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
+    borderBottom: `1px solid ${
+      theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
+    }`,
+  },
+  '& .MuiDataGrid-cell': {
+    color:
+      theme.palette.mode === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.65)',
+  },
+  '& .MuiPaginationItem-root': {
+    borderRadius: 0,
+  },
+  ...customCheckbox(theme),
+}));
 
 function CustomPagination() {
-  const { state, apiRef } = useGridSlotComponentProps();
+  const apiRef = useGridApiContext();
+  const page = useGridSelector(apiRef, gridPageSelector);
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
   return (
     <Pagination
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={state.pagination.page}
-      count={state.pagination.pageCount}
+      page={page + 1}
+      count={pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => apiRef.current.setPage(value)}
+      onChange={(event: React.ChangeEvent<unknown>, value: number) =>
+        apiRef.current.setPage(value - 1)
+      }
     />
   );
 }
@@ -128,12 +126,9 @@ export default function AntDesignGrid() {
     rowLength: 10,
     maxColumns: 10,
   });
-  const classes = useStyles();
-
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
+      <StyledDataGrid
         checkboxSelection
         pageSize={5}
         rowsPerPageOptions={[5]}
