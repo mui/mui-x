@@ -15,7 +15,7 @@ export default function ColumnSizingGrid() {
       <DataGridPro
         columns={[
           { field: 'id' },
-          { field: 'username', minWidth: 150 },
+          { field: 'username', width: 125, minWidth: 150, maxWidth: 200 },
           { field: 'age', resizable: false },
         ]}
         rows={rows}
