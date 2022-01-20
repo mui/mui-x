@@ -1,4 +1,7 @@
-import type { GridColumnsState } from '../hooks/features/columns/gridColumnsInterfaces';
+import type {
+  GridColumnsInitialState,
+  GridColumnsState,
+} from '../hooks/features/columns/gridColumnsInterfaces';
 import type { GridEditRowsModel } from './gridEditRowModel';
 import type { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
 import type { GridColumnReorderState } from '../hooks/features/columnReorder';
@@ -55,6 +58,7 @@ export interface GridInitialState {
   pagination?: GridPaginationInitialState;
   sorting?: GridSortingInitialState;
   filter?: GridFilterInitialState;
+  columns?: GridColumnsInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
   rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;

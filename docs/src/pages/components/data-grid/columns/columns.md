@@ -68,7 +68,7 @@ It works by dividing the remaining space in the grid among all flex columns in p
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
 
-To set a minimum width for a `flex` column set the `minWidth` property in `GridColDef`.
+To set a minimum and maximum width for a `flex` column set the `minWidth` and the `maxWidth` property in `GridColDef`.
 
 **Note**
 
@@ -76,16 +76,6 @@ To set a minimum width for a `flex` column set the `minWidth` property in `GridC
 - `flex` doesn't work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
 
 {{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
-
-### Hiding
-
-Set the column definition attribute `hide` to `true` to hide the column.
-The attribute `hideable`, when `false`, prevents the user from hiding a column through the columns panel or the "Hide" option, available in the column menu.
-Hiding a column using the imperative API is still possible.
-
-In this example, you can not hide the "username" column, and by default the "age" column is hidden.
-
-{{"demo": "pages/components/data-grid/columns/ColumnHiding.js", "bg": "inline"}}
 
 ### Resizing [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
@@ -95,6 +85,8 @@ To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
 
 To restrict resizing a column under a certain width set the `minWidth` property in `GridColDef`.
+
+To restrict resizing a column above a certain width set the `maxWidth` property in `GridColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -322,6 +314,68 @@ However, some types require additional properties to be set to make them work co
   ```
 
 {{"demo": "pages/components/data-grid/columns/ColumnTypesGrid.js", "bg": "inline"}}
+
+## Column visibility
+
+By default, all the columns are visible.
+The column's visibility can be switched through the user interface in two ways:
+
+- By opening the column menu and clicking the _Hide_ menu item.
+- By clicking the _Columns_ menu and toggling the columns to show or hide.
+
+You can prevent the user from hiding a column through the user interface by setting the `hideable` in `GridColDef` to `false`.
+
+In the following demo, the "username" column cannot be hidden.
+
+{{"demo": "pages/components/data-grid/columns/VisibleColumnsBasicExample.js", "bg": "inline"}}
+
+### Initialize the visible columns
+
+To initialize the visible columns without controlling them, provide the model to the `initialState` prop.
+
+```tsx
+<DataGrid
+  initialState={{
+    columns: {
+      columnsVisibilityModel: {
+        // Hide columns status and traderName, the other columns will remain visible
+        status: false,
+        traderName: false,
+      },
+    },
+  }}
+/>
+```
+
+{{"demo": "pages/components/data-grid/columns/VisibleColumnsModelInitialState.js", "bg": "inline", "defaultCodeOpen": false }}
+
+### Controlled visible columns
+
+Use the `columnVisibilityModel` prop to control the visible columns.
+You can use the `onColumnVisibilityModelChange` prop to listen to the changes to the visible columns and update the prop accordingly.
+
+```tsx
+<DataGrid
+  columnVisibilityModel={{
+    // Hide columns status and traderName, the other columns will remain visible
+    status: false,
+    traderName: false,
+  }}
+/>
+```
+
+> ⚠️The grid does not handle switching between controlled and uncontrolled modes.
+>
+> This edge case will be supported in v6 after the removal of legacy `hide` field.
+
+{{"demo": "pages/components/data-grid/columns/VisibleColumnsModelControlled.js", "bg": "inline"}}
+
+### Column `hide` property (deprecated)
+
+Before the introduction of the `columnVisibilityModel`, the columns could be hidden by setting the `hide` property in `GridColDef` to `true`.
+This method still works but will be removed on the next major release.
+
+{{"demo": "pages/components/data-grid/columns/ColumnHiding.js", "bg": "inline"}}
 
 ## Custom column types
 
