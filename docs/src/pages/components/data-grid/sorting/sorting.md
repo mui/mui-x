@@ -120,7 +120,7 @@ const columns: GridColDef = [
 
 ## Server-side sorting
 
-Sorting can be run service-side by setting the `sortingMode` prop to `server`, and implementing the `onSortModelChange` handler.
+Sorting can be run server-side by setting the `sortingMode` prop to `server`, and implementing the `onSortModelChange` handler.
 
 {{"demo": "pages/components/data-grid/sorting/ServerSortingGrid.js", "bg": "inline"}}
 
