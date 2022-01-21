@@ -21,7 +21,6 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { getDataGridUtilityClass, gridClasses } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import {
-  GridPreProcessingGroup,
   GridPreProcessor,
   useGridRegisterPreProcessor,
 } from '../../core/preProcessing';
@@ -122,7 +121,7 @@ export const useGridSelection = (
    * PRE-PROCESSING
    */
   const updateSelectionColumn = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
+    GridPreProcessor<'hydrateColumns'>
   >(
     (columnsState) => {
       const selectionColumn: GridColDef = {
@@ -148,7 +147,7 @@ export const useGridSelection = (
     [apiRef, classes, props.checkboxSelection],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, updateSelectionColumn);
+  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
 
   /**
    * API METHODS

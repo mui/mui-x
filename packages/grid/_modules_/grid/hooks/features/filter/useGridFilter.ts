@@ -21,7 +21,6 @@ import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
 import { buildAggregatedFilterApplier, cleanFilterItem } from './gridFilterUtils';
 
@@ -287,12 +286,12 @@ export const useGridFilter = (
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
-      if (name !== GridPreProcessingGroup.filteringMethod) {
+      if (name !== 'filteringMethod') {
         return;
       }
 
       filteringMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-        GridPreProcessingGroup.filteringMethod,
+        'filteringMethod',
         {},
       );
 
@@ -322,7 +321,7 @@ export const useGridFilter = (
     // This line of pre-processor initialization should always come after the registration of `flatFilteringMethod`
     // Otherwise on the 1st render there would be no filtering method registered
     filteringMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.filteringMethod,
+      'filteringMethod',
       {},
     );
     apiRef.current.unstable_applyFilters();

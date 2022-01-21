@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { GridSortingMethod } from './gridSortingState';
 import {
-  GridPreProcessingGroup,
   GridPreProcessor,
   useGridRegisterPreProcessor,
 } from '../../core/preProcessing';
@@ -13,7 +12,7 @@ export const useGridRegisterSortingMethod = (
   filteringMethod: GridSortingMethod,
 ) => {
   const updateRegistration = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.sortingMethod>
+    GridPreProcessor<'sortingMethod'>
   >(
     (sortingMethodCollection) => {
       sortingMethodCollection[groupingName] = filteringMethod;
@@ -22,5 +21,5 @@ export const useGridRegisterSortingMethod = (
     [groupingName, filteringMethod],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.sortingMethod, updateRegistration);
+  useGridRegisterPreProcessor(apiRef, 'sortingMethod', updateRegistration);
 };

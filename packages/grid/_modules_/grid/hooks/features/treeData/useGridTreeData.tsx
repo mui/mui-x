@@ -18,7 +18,6 @@ import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
 import {
-  GridPreProcessingGroup,
   GridPreProcessor,
   useGridRegisterPreProcessor,
 } from '../../core/preProcessing';
@@ -141,7 +140,7 @@ export const useGridTreeData = (
   }, [apiRef, props.groupingColDef]);
 
   const updateGroupingColumn = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
+    GridPreProcessor<'hydrateColumns'>
   >(
     (columnsState) => {
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
@@ -202,7 +201,7 @@ export const useGridTreeData = (
     [apiRef, props.disableChildrenSorting],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, updateGroupingColumn);
+  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterFilteringMethod(apiRef, TREE_DATA_GROUPING_NAME, filteringMethod);
   useGridRegisterSortingMethod(apiRef, TREE_DATA_GROUPING_NAME, sortingMethod);
 

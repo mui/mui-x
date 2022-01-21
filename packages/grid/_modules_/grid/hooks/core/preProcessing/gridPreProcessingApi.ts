@@ -1,35 +1,24 @@
 import { GridCellIndexCoordinates, GridColDef, GridScrollParams } from '../../../models';
 import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
 import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
-import { GridCanBeReorderedPreProcessingContext } from '../../features/columnReorder/columnReorderInterfaces';
 import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
 
 export type PreProcessorCallback = (value: any, params?: any) => any;
 
-export enum GridPreProcessingGroup {
-  hydrateColumns = 'hydrateColumns',
-  scrollToIndexes = 'scrollToIndexes',
-  columnMenu = 'columnMenu',
-  canBeReordered = 'canBeReordered',
-  filteringMethod = 'filteringMethod',
-  sortingMethod = 'sortingMethod',
-}
+export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup
 
-interface GridPreProcessingGroupLookup {
-  [GridPreProcessingGroup.hydrateColumns]: {
+export interface GridPreProcessingGroupLookup {
+  hydrateColumns: {
     value: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
   };
-  [GridPreProcessingGroup.scrollToIndexes]: {
+  scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
-  [GridPreProcessingGroup.columnMenu]: { value: JSX.Element[]; context: GridColDef };
-  [GridPreProcessingGroup.canBeReordered]: {
-    value: boolean;
-    context: GridCanBeReorderedPreProcessingContext;
-  };
-  [GridPreProcessingGroup.filteringMethod]: { value: GridFilteringMethodCollection };
-  [GridPreProcessingGroup.sortingMethod]: { value: GridSortingMethodCollection };
+  columnMenu: { value: JSX.Element[]; context: GridColDef };
+
+  filteringMethod: { value: GridFilteringMethodCollection };
+  sortingMethod: { value: GridSortingMethodCollection };
 }
 
 export type GridPreProcessor<P extends GridPreProcessingGroup> = (

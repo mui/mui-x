@@ -10,6 +10,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
+
 const INITIAL_GROUPING_COLUMN_MODEL = ['company'];
 
 const useKeepGroupingColumnsHidden = (

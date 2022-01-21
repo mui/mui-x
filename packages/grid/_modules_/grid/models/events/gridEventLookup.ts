@@ -22,8 +22,6 @@ import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridPreProcessingGroup } from '../../hooks/core/preProcessing';
-import type { GridRowGroupingModel } from '../../hooks/features/rowGrouping';
-import type { GridPinnedColumns } from '../api/gridColumnPinningApi';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 export interface GridRowEventLookup {
@@ -130,8 +128,6 @@ export interface GridControlledStateEventLookup {
   sortModelChange: { params: GridSortModel };
   editRowsModelChange: { params: GridEditRowsModel };
   selectionChange: { params: GridSelectionModel };
-  rowGroupingModelChange: { params: GridRowGroupingModel };
-  pinnedColumnsChange: { params: GridPinnedColumns };
   columnVisibilityModelChange: { params: GridColumnVisibilityModel };
 }
 
