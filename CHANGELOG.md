@@ -37,7 +37,22 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   See the [documentation](https://mui.com/components/data-grid/group-pivot/#row-grouping) for more details.
 
 - ⚡ Add `is any of` filter operator (#2874) @alexfauquette
+
+  The new filter operator `is any of` allows the user to provide multiple values. It opens access to complex filtering pattern mixing `AND` and `OR` logic connectors, such as `status is any of filled or rejected, and currency is any of EUR or USD`.
+
+  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="964" height="657">
+
 - ✨ Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
+
+  You can now limit the width of the flex columns and the resizable columns with the new maxWidth property on GridColDef.
+
+  ```tsx
+  const columns: GridColDef[] = [
+    { field: 'director', flex: 1, maxWidth: 200 }, // will take the free space up to 200px and will not be resizable above 200px
+    { field: 'year', maxWidth: 150 }, // will not be resizable above 200px
+  ]
+  ```
+
 - 🙈 Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
 
   To make the grid more flexible we added component slots for base `@mui/material` components that we use. Those component slots are prefixed with `Base` to differentiate them from the other grid specific components
