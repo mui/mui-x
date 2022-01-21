@@ -64,7 +64,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ```tsx
   const CustomDataGrid = (props: DataGridProps) => {
     return (
-      <DataGrid {...props} componentsProps={{ toolbar: { csvOptions: { delimiter: ';' }} />
+      <DataGrid {...props} componentsProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />
     )
   }
   ```
