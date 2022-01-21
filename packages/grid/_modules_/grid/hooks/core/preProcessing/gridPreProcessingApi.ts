@@ -5,7 +5,7 @@ import { GridColumnsRawState } from '../../features/columns/gridColumnsInterface
 
 export type PreProcessorCallback = (value: any, params?: any) => any;
 
-export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup
+export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
 export interface GridPreProcessingGroupLookup {
   hydrateColumns: {

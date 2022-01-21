@@ -96,9 +96,7 @@ export const useGridColumnPinning = (
   /**
    * PRE-PROCESSING
    */
-  const calculateScrollLeft = React.useCallback<
-    GridPreProcessor<'scrollToIndexes'>
-  >(
+  const calculateScrollLeft = React.useCallback<GridPreProcessor<'scrollToIndexes'>>(
     (initialValue, params) => {
       if (props.disableColumnPinning) {
         return initialValue;
@@ -140,9 +138,7 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns, props.disableColumnPinning],
   );
 
-  const addColumnMenuButtons = React.useCallback<
-    GridPreProcessor<'columnMenu'>
-  >(
+  const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
     (initialValue, column) => {
       if (props.disableColumnPinning) {
         return initialValue;
@@ -157,9 +153,7 @@ export const useGridColumnPinning = (
     [props.disableColumnPinning],
   );
 
-  const reorderPinnedColumns = React.useCallback<
-    GridPreProcessor<'hydrateColumns'>
-  >(
+  const reorderPinnedColumns = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
     (columnsState) => {
       if (columnsState.all.length === 0 || props.disableColumnPinning) {
         return columnsState;
@@ -186,9 +180,7 @@ export const useGridColumnPinning = (
     [pinnedColumns, props.disableColumnPinning],
   );
 
-  const checkIfCanBeReordered = React.useCallback<
-    GridPreProcessor<'canBeReordered'>
-  >(
+  const checkIfCanBeReordered = React.useCallback<GridPreProcessor<'canBeReordered'>>(
     (initialValue, { targetIndex }) => {
       const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef.current.state);
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
