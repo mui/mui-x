@@ -15,15 +15,12 @@ test.describe.parallel('DataGrid docs', () => {
 
     const anchors = page.locator('[aria-label="Page table of contents"] ul a');
 
-    const anchorTexts = await anchors.allTextContents();
+    const firstAnchor = await anchors.first();
+    const textContent = await firstAnchor.textContent();
 
-    await Promise.all(
-      anchorTexts.map(async (text, index) => {
-        await expect(anchors.nth(index)).toHaveAttribute(
-          'href',
-          `/x/react-data-grid/getting-started/#${kebabCase(text.toLowerCase())}`,
-        );
-      }),
+    await expect(firstAnchor).toHaveAttribute(
+      'href',
+      `/x/react-data-grid/getting-started/#${kebabCase(textContent || '')}`,
     );
   });
 
@@ -33,15 +30,12 @@ test.describe.parallel('DataGrid docs', () => {
 
       const anchors = await page.locator('div > h2#heading-api ~ ul a');
 
-      const anchorTexts = await anchors.allTextContents();
+      const firstAnchor = await anchors.first();
+      const textContent = await firstAnchor.textContent();
 
-      await Promise.all(
-        anchorTexts.map(async (text, index) => {
-          await expect(anchors.nth(index)).toHaveAttribute(
-            'href',
-            `/x/api/data-grid/${kebabCase(text)}/`,
-          );
-        }),
+      await expect(firstAnchor).toHaveAttribute(
+        'href',
+        `/x/api/data-grid/${kebabCase(textContent || '')}/`,
       );
     });
 
