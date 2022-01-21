@@ -113,7 +113,7 @@ Sort order can be configured (and overridden) on a per-column basis by setting t
 
 ```tsx
 const columns: GridColDef = [
-  { field: 'quantity', sortingOrder: ['desc', 'asc', null] },
+  { field: 'rating', sortingOrder: ['desc', 'asc', null] },
 ];
 ```
 
@@ -123,7 +123,7 @@ const columns: GridColDef = [
 
 Sorting can be run server-side by setting the `sortingMode` prop to `server`, and implementing the `onSortModelChange` handler.
 
-{{"demo": "pages/components/data-grid/sorting/ServerSortingGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/sorting/ServerSortingGrid.js", "bg": "inline",}}
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

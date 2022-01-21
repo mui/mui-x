@@ -14,7 +14,7 @@ export default function OrderSortingPerColumnGrid() {
   const columns = React.useMemo<GridColumns>(
     () =>
       data.columns.map((column) => {
-        if (column.field === 'quantity') {
+        if (column.field === 'rating') {
           return {
             ...column,
             sortingOrder: ['desc', 'asc', null],
