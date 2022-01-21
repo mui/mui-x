@@ -69,6 +69,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   }
   ```
 
+- 🚀 Add controlled behavior for the visible columns (#3554) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
