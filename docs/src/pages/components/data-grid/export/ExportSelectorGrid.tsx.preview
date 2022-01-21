@@ -1,6 +1,0 @@
-<DataGrid
-  {...data}
-  components={{
-    Toolbar: CustomToolbar,
-  }}
-/>

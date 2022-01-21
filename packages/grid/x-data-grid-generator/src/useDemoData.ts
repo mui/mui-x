@@ -4,12 +4,12 @@ import { GridDemoData, getRealGridData } from './services/real-data-service';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
 import asyncWorker from './asyncWorker';
-import { GridColDefGenerator } from './services/gridColDefGenerator';
 import {
   AddPathToDemoDataOptions,
   DemoTreeDataValue,
   addTreeDataOptionsToDemoData,
 } from './services/tree-data-generator';
+import { GridColumnVisibilityModel } from '../../_modules_';
 
 const dataCache = new LRUCache<string, DemoTreeDataValue>({
   max: 10,
@@ -36,11 +36,7 @@ export interface UseDemoDataOptions {
 
 // Generate fake data from a seed.
 // It's about x20 faster than getRealData.
-async function extrapolateSeed(
-  rowLength: number,
-  columns: GridColDefGenerator[],
-  data: GridDemoData,
-): Promise<GridDemoData> {
+async function extrapolateSeed(rowLength: number, data: GridDemoData): Promise<GridDemoData> {
   return new Promise<any>((resolve) => {
     const seed = data.rows;
     const rows = data.rows.slice();
@@ -49,8 +45,8 @@ async function extrapolateSeed(
     function work() {
       const row = {} as any;
 
-      for (let j = 0; j < columns.length; j += 1) {
-        const column = columns[j];
+      for (let j = 0; j < data.columns.length; j += 1) {
+        const column = data.columns[j];
         const index = Math.round(Math.random() * (seed.length - 1));
 
         if (column.field === 'id') {
@@ -110,18 +106,30 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     if (options.maxColumns) {
       columns = columns.slice(0, options.maxColumns);
     }
+
     return columns;
   }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields]);
 
-  const [data, setData] = React.useState<GridDemoData>(() =>
-    addTreeDataOptionsToDemoData(
+  const [data, setData] = React.useState<DemoTreeDataValue>(() => {
+    const columns = getColumns();
+
+    // TODO: Stop using `GridColDef.hide` in v6
+    const columnVisibilityModel: GridColumnVisibilityModel = {};
+    columns.forEach((col) => {
+      if (col.hide) {
+        columnVisibilityModel[col.field] = false;
+      }
+    });
+
+    return addTreeDataOptionsToDemoData(
       {
-        columns: getColumns(),
+        columns,
         rows: [],
+        initialState: { columns: { columnVisibilityModel } },
       },
       options.treeData,
-    ),
-  );
+    );
+  });
 
   React.useEffect(() => {
     const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
@@ -141,12 +149,11 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
       setLoading(true);
 
       let newData: DemoTreeDataValue;
-      const columns = getColumns();
       if (rowLength > 1000) {
-        newData = await getRealGridData(1000, columns);
-        newData = await extrapolateSeed(rowLength, columns, newData);
+        newData = await getRealGridData(1000, getColumns());
+        newData = await extrapolateSeed(rowLength, newData);
       } else {
-        newData = await getRealGridData(rowLength, columns);
+        newData = await getRealGridData(rowLength, getColumns());
       }
 
       if (!active) {
@@ -174,7 +181,6 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     };
   }, [
     rowLength,
-    data.columns,
     options.dataSet,
     options.maxColumns,
     options.treeData?.maxDepth,
