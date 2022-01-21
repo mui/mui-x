@@ -142,6 +142,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [core] Update `l10n` issue with a single command line (#3588) @alexfauquette
 - [test] Wait for promise to resolve before expect (#3597) @m4theushw
 - [test] Split cell/row editing tests (#3618) @m4theushw
+- [test] Skip tests on Safari (#3679) @m4theushw
 
 ## 5.2.2
 
