@@ -40,7 +40,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
   The new filter operator `is any of` allows the user to provide multiple values. It opens access to complex filtering pattern mixing `AND` and `OR` logic connectors, such as `status is any of filled or rejected, and currency is any of EUR or USD`.
 
-  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="964" height="657">
+  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="770" height="370">
 
 - ✨ Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
 
