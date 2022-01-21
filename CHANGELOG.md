@@ -44,7 +44,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - ✨ Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
 
-  You can now limit the width of the flex columns and the resizable columns with the new maxWidth property on GridColDef.
+  You can now limit the width of the flex columns and the resizable columns with the new `maxWidth` property on `GridColDef`.
 
   ```tsx
   const columns: GridColDef[] = [
