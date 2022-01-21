@@ -114,13 +114,13 @@ const csCZKGrid: Partial<GridLocaleText> = {
 
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) => {
-    const str = totalCount.toLocaleString();
+    const str = totalCount.toString();
     const firstDigit = str[0];
     const op =
       ['4', '6', '7'].includes(firstDigit) || (firstDigit === '1' && str.length % 3 === 0)
         ? 'ze'
         : 'z';
-    return `${visibleCount.toLocaleString()} ${op} ${str}`;
+    return `${visibleCount.toLocaleString()} ${op} ${totalCount.toLocaleString()}`;
   },
 
   // Checkbox selection text
