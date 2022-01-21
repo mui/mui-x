@@ -117,7 +117,7 @@ const csCZKGrid: Partial<GridLocaleText> = {
     const str = totalCount.toLocaleString();
     const firstDigit = str[0];
     const op =
-      ['4', '6', '7'].indexOf(firstDigit) >= 0 || (firstDigit === '1' && str.length % 3 === 0)
+      ['4', '6', '7'].includes(firstDigit) || (firstDigit === '1' && str.length % 3 === 0)
         ? 'ze'
         : 'z';
     return `${visibleCount.toLocaleString()} ${op} ${str}`;
