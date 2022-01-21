@@ -6,7 +6,7 @@ const baselineProps = {
   columns: [{ field: 'id' }, { field: 'name' }],
 };
 
-export default function ProKeyboardNavigationFocus() {
+export default function KeyboardNavigationFocus() {
   return (
     <React.Fragment>
       <button type="button" autoFocus data-testid="initial-focus">
