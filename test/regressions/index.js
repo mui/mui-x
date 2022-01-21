@@ -85,11 +85,10 @@ const stories = requireStories.keys().reduce((res, path) => {
 }, []);
 
 // Also use some of the demos to avoid code duplication.
-const requireDocs = require.context(
-  FEATURE_TOGGLE.enable_product_scope ? 'docsx/data' : 'docsx/src/pages',
-  true,
-  /js$/,
-);
+let requireDocs = require.context('docsx/src/pages', true, /js$/);
+if (FEATURE_TOGGLE.enable_product_scope) {
+  requireDocs = require.context('docsx/data', true, /js$/);
+}
 const docs = requireDocs.keys().reduce((res, path) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${FEATURE_TOGGLE.enable_product_scope ? 'components-' : ''}${suiteArray
