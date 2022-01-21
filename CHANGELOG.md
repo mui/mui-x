@@ -53,7 +53,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ]
   ```
 
-- 🙈 Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
+- 🚀 Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
 
   To make the grid more flexible we added component slots for base `@mui/material` components that we use. Those component slots are prefixed with `Base` to differentiate them from the other grid specific components
 
@@ -69,7 +69,29 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   }
   ```
 
-- 🚀 Add controlled behavior for the visible columns (#3554) @flaviendelangle
+- 🙈 Add controlled behavior for the visible columns (#3554) @flaviendelangle
+
+  ```tsx
+  // To fully control
+  <DataGrid
+    columnVisibilityModel={columnVisibilityModel}
+    onColumnVisilibilityModelChange={newModel => setColumnVisibilityModel(newModel)}
+  />
+
+  // To initialize without controlling
+  <DataGrid
+    initialState={{
+      columns: {
+        columnVisibilityModel
+      }
+    }}
+  />
+  ```
+
+  See the [documentation](https://mui.com/components/data-grid/columns/#column-visibility) for more details.
+
+  The `hide` property from `GridColDef` still works but has been deprecated.
+
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
