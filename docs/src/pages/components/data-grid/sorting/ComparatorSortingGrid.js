@@ -8,6 +8,23 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['rating', 'country', 'isAdmin'];
 
+const nameAdminSortComparator = (v1, v2, param1, param2) => {
+  const adminComparatorResult = gridNumberComparator(
+    v1.isAdmin,
+    v2.isAdmin,
+    param1,
+    param2,
+  );
+
+  // The `isAdmin` values of the two cells are different
+  // We can stop here and sort based on the `isAdmin` field.
+  if (adminComparatorResult !== 0) {
+    return adminComparatorResult;
+  }
+
+  return gridStringOrNumberComparator(v1.name, v2.name, param1, param2);
+};
+
 export default function ComparatorSortingGrid() {
   const { data } = useDemoData({
     dataSet: 'Employee',
@@ -24,27 +41,15 @@ export default function ComparatorSortingGrid() {
           name: params.row.name,
           isAdmin: params.row.isAdmin,
         }),
-        renderCell: (params) => {
-          if (params.value.isAdmin) {
-            return `${params.value.name} (admin)`;
+        valueFormatter: (params) => {
+          const value = params.value;
+          if (value.isAdmin) {
+            return `${value.name} (admin)`;
           }
 
-          return params.value.name;
+          return value.name;
         },
-        sortComparator: (v1, v2, param1, param2) => {
-          const adminComparatorResult = gridNumberComparator(
-            v1.isAdmin,
-            v2.isAdmin,
-            param1,
-            param2,
-          );
-
-          if (adminComparatorResult !== 0) {
-            return adminComparatorResult;
-          }
-
-          return gridStringOrNumberComparator(v1.name, v2.name, param1, param2);
-        },
+        sortComparator: nameAdminSortComparator,
         width: 200,
       },
       {

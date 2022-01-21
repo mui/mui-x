@@ -5,6 +5,7 @@ import {
   GridValueGetterParams,
   gridNumberComparator,
   gridStringOrNumberComparator,
+  GridComparatorFn,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -14,6 +15,28 @@ interface NameAdminCellValue {
   name: string;
   isAdmin: boolean;
 }
+
+const nameAdminSortComparator: GridComparatorFn = (v1, v2, param1, param2) => {
+  const adminComparatorResult = gridNumberComparator(
+    (v1 as NameAdminCellValue).isAdmin,
+    (v2 as NameAdminCellValue).isAdmin,
+    param1,
+    param2,
+  );
+
+  // The `isAdmin` values of the two cells are different
+  // We can stop here and sort based on the `isAdmin` field.
+  if (adminComparatorResult !== 0) {
+    return adminComparatorResult;
+  }
+
+  return gridStringOrNumberComparator(
+    (v1 as NameAdminCellValue).name,
+    (v2 as NameAdminCellValue).name,
+    param1,
+    param2,
+  );
+};
 
 export default function ComparatorSortingGrid() {
   const { data } = useDemoData({
@@ -31,32 +54,15 @@ export default function ComparatorSortingGrid() {
           name: params.row.name,
           isAdmin: params.row.isAdmin,
         }),
-        renderCell: (params) => {
-          if (params.value.isAdmin) {
-            return `${params.value.name} (admin)`;
+        valueFormatter: (params) => {
+          const value = params.value as NameAdminCellValue;
+          if (value.isAdmin) {
+            return `${value.name} (admin)`;
           }
 
-          return params.value.name;
+          return value.name;
         },
-        sortComparator: (v1, v2, param1, param2) => {
-          const adminComparatorResult = gridNumberComparator(
-            (v1 as NameAdminCellValue).isAdmin,
-            (v2 as NameAdminCellValue).isAdmin,
-            param1,
-            param2,
-          );
-
-          if (adminComparatorResult !== 0) {
-            return adminComparatorResult;
-          }
-
-          return gridStringOrNumberComparator(
-            (v1 as NameAdminCellValue).name,
-            (v2 as NameAdminCellValue).name,
-            param1,
-            param2,
-          );
-        },
+        sortComparator: nameAdminSortComparator,
         width: 200,
       },
       {
