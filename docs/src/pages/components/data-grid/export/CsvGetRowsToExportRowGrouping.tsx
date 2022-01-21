@@ -53,7 +53,7 @@ const CustomToolbar = () => {
   );
 };
 
-export default function CsvGetRowsToExport() {
+export default function CsvGetRowsToExportRowGrouping() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
