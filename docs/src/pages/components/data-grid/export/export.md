@@ -57,6 +57,21 @@ There are a few ways to include or hide other columns:
 <DataGrid columns={[{ field: 'id', disableExport: true }, { field: 'brand' }]} />
 ```
 
+#### Exported rows
+
+By default, if some rows are selected, the CSV export will only contain those rows.
+If not, the CSV export will contain all the rows passing the filtering process and not collapsed.
+
+Set the `getRowsToExport` to manually pick the rows to include in the CSV export.
+
+{{"demo": "pages/components/data-grid/export/CsvGetRowsToExport.js", "bg": "inline", "defaultCodeOpen": false}}
+
+When using [Row grouping](/components/data-grid/group-pivot/#row-grouping), it can be useful to remove the groups from the CSV export
+
+**Note**: For now, it is not possible to export the collapsed row without first expanding them.
+
+{{"demo": "pages/components/data-grid/export/CsvGetRowsToExportRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
+
 #### Exported cells
 
 When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.

@@ -331,6 +331,7 @@ export const useGridRowGrouping = (
       return filterRowTreeFromGroupingColumns({
         rowTree,
         isRowMatchingFilters: params.isRowMatchingFilters,
+        shouldIgnoreChildrenExpanded: false,
       });
     },
     [apiRef],

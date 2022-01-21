@@ -1,0 +1,16 @@
+<DataGrid
+  {...data}
+  loading={loading}
+  components={{ Toolbar: CustomToolbar }}
+  pageSize={10}
+  rowsPerPageOptions={[10]}
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [
+          { columnField: 'quantity', operatorValue: '>', value: '20000' },
+        ],
+      },
+    },
+  }}
+/>

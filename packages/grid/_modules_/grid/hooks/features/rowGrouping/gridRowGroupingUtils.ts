@@ -37,6 +37,7 @@ export const isGroupingColumn = (field: string) =>
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
+  shouldIgnoreChildrenExpanded: boolean;
 }
 
 /**
@@ -87,7 +88,7 @@ export const filterRowTreeFromGroupingColumns = (
       const childSubTreeSize = filterTreeNode(
         childNode,
         areAncestorsPassingChildren && isMatchingFilters,
-        areAncestorsExpanded && !!node.childrenExpanded,
+        areAncestorsExpanded && (params.shouldIgnoreChildrenExpanded || !!node.childrenExpanded),
       );
       filteredDescendantCount += childSubTreeSize;
     });
