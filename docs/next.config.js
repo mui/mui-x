@@ -151,6 +151,7 @@ module.exports = {
       { source: '/api/:rest*', destination: '/api-docs/:rest*' },
     ];
   },
+  // redirects only take effect in the development, not production (because of `next export`).
   redirects: async () => {
     const redirects = [];
     if (process.env.NODE_ENV !== 'production') {
