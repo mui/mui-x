@@ -9,7 +9,7 @@ test.beforeEach(async ({}) => {
   test.skip(FEATURE_TOGGLE.enable_redirects, 'Migration is done.');
 });
 
-test.describe.parallel('DataGrid docs', () => {
+test.describe('DataGrid docs', () => {
   test('should have correct link with hash in the TOC', async ({ page }) => {
     await page.goto(`/components/data-grid/getting-started/`);
 
@@ -24,7 +24,7 @@ test.describe.parallel('DataGrid docs', () => {
     );
   });
 
-  test.describe.parallel('Demo page', () => {
+  test.describe('Demo page', () => {
     test('should have correct link for API section', async ({ page }) => {
       await page.goto(`/components/data-grid/`);
 
@@ -48,7 +48,7 @@ test.describe.parallel('DataGrid docs', () => {
     });
   });
 
-  test.describe.parallel('API page', () => {
+  test.describe('API page', () => {
     test('should have correct link for sidebar anchor', async ({ page }) => {
       await page.goto(`/api/data-grid/data-grid/`);
 
@@ -73,7 +73,7 @@ test.describe.parallel('DataGrid docs', () => {
     });
   });
 
-  test.describe.parallel('Search', () => {
+  test.describe('Search', () => {
     const retryToggleSearch = async (page: Page, count = 3) => {
       try {
         await page.keyboard.press('Meta+k');
