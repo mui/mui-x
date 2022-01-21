@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 21, 2022_
 
-A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Allow to group rows based on column value (#3277) @flaviendelangle
 
