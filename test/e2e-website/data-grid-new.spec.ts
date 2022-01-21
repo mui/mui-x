@@ -92,8 +92,6 @@ test.describe.parallel('DataGrid docs', () => {
     test('should have correct link when searching component', async ({ page }) => {
       await page.goto(`/x/react-data-grid/getting-started/`);
 
-      await page.waitForLoadState('networkidle'); // wait for docsearch
-
       await retryToggleSearch(page);
 
       await page.type('input#docsearch-input', 'datagrid', { delay: 50 });
@@ -109,8 +107,6 @@ test.describe.parallel('DataGrid docs', () => {
     test('should have correct link when searching API', async ({ page }) => {
       await page.goto(`/x/react-data-grid/getting-started/`);
 
-      await page.waitForLoadState('networkidle'); // wait for docsearch
-
       await retryToggleSearch(page);
 
       await page.type('input#docsearch-input', 'datagrid api', { delay: 50 });
@@ -125,8 +121,6 @@ test.describe.parallel('DataGrid docs', () => {
 
     test('should have correct link when searching pro API', async ({ page }) => {
       await page.goto(`/x/react-data-grid/getting-started/`);
-
-      await page.waitForLoadState('networkidle'); // wait for docsearch
 
       await retryToggleSearch(page);
 

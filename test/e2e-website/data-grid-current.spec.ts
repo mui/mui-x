@@ -86,7 +86,7 @@ test.describe.parallel('DataGrid docs', () => {
       }
     };
     test('should have correct link when searching component', async ({ page }) => {
-      await page.goto(`/components/data-grid/getting-started/`, { waitUntil: 'networkidle' });
+      await page.goto(`/components/data-grid/getting-started/`);
 
       await retryToggleSearch(page);
 
@@ -101,7 +101,7 @@ test.describe.parallel('DataGrid docs', () => {
     });
 
     test('should have correct link when searching API', async ({ page }) => {
-      await page.goto(`/components/data-grid/getting-started/`, { waitUntil: 'networkidle' });
+      await page.goto(`/components/data-grid/getting-started/`);
 
       await retryToggleSearch(page);
 
@@ -117,8 +117,6 @@ test.describe.parallel('DataGrid docs', () => {
 
     test('should have correct link when searching pro API', async ({ page }) => {
       await page.goto(`/components/data-grid/getting-started/`);
-
-      await page.waitForLoadState('networkidle'); // wait for docsearch
 
       await retryToggleSearch(page);
 
