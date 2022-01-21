@@ -8,34 +8,56 @@ title: Data Grid - Export
 
 ## CSV export
 
-The DataGrid allows the data to be exported to CSV by composing a [toolbar](/components/data-grid/components/#toolbar) with the `GridToolbarExport` component. Use the `components` prop to assign the custom toolbar.
+The easiest way to enable the CSV export is to pass the `GridToolbar` component in the `Toolbar` [component slot](/components/data-grid/components/#toolbar).
 
-{{"demo": "pages/components/data-grid/export/ExportSelectorGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/export/ExportDefaultToolbar.js", "bg": "inline"}}
 
-### Customize exported columns
+### Custom toolbar
+
+To enable the CSV export in a custom toolbar, use the `GridToolbarExport` component.
+
+{{"demo": "pages/components/data-grid/export/ExportCustomToolbar.js", "bg": "inline"}}
+
+### Custom exported content
+
+The csv export can be customized by passing a [`csvOptions`](/api/data-grid/grid-csv-export-options/) object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
+
+The following sections describes some customizations available on this interface.
+
+```tsx
+<DataGrid componentsProps={{ toolbar: { csvOptions } }} />
+
+// same as
+
+<GridToolbarExport csvOptions={csvOptions} />
+```
+
+#### Exported columns
 
 By default, the CSV will only contain the visible columns of the grid.
-There are two ways to include or hide other columns:
+There are a few ways to include or hide other columns:
 
-1. Define the exact columns to be exported with the `fields` attribute in the [`csvOptions`](/api/data-grid/grid-csv-export-options/) prop of [`GridToolbarExport`](/components/data-grid/components/#toolbar).
-
-```jsx
-<GridToolbarExport csvOptions={{ fields: ['id', 'name'] }} />
-```
-
-Set `allColumns` in [`csvOptions`](/api/data-grid/grid-csv-export-options/) to true to include hidden columns, instead of only the visible ones.
+1. Set the exact columns to be exported in [`csvOptions`](/api/data-grid/grid-csv-export-options/).
 
 ```jsx
-<GridToolbarExport csvOptions={{ allColumns: true }} />
+<DataGrid
+  componentsProps={{ toolbar: { csvOptions: { fields: ['id', 'name'] } } }}
+/>
 ```
 
-2. Set the `disableExport` attribute to true in each `GridColDef`.
+2. Set `allColumns` in [`csvOptions`](/api/data-grid/grid-csv-export-options/) to `true` to include hidden columns, instead of only the visible ones.
+
+```jsx
+<DataGrid componentsProps={{ toolbar: { csvOptions: { allColumns: true } } }} />
+```
+
+3. Set the `disableExport` attribute to `true` in each `GridColDef`.
 
 ```jsx
 <DataGrid columns={[{ field: 'id', disableExport: true }, { field: 'brand' }]} />
 ```
 
-### Export custom rendered cells
+#### Exported cells
 
 When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.
 You can provide a [`valueFormatter`](/components/data-grid/columns/#value-formatter) with a string representation to be used.
@@ -57,7 +79,9 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 You can remove the CSV export option from the toolbar by setting `disableToolbarButton` option to `true`.
 
 ```jsx
-<GridToolbarExport csvOptions={{ disableToolbarButton: true }} />
+<DataGrid
+  componentsProps={{ toolbar: { csvOptions: { disableToolbarButton: true } } }}
+/>
 ```
 
 ### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
@@ -66,40 +90,62 @@ You can remove the CSV export option from the toolbar by setting `disableToolbar
 
 {{"demo": "pages/components/data-grid/export/CsvExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## Print
+## Print export
 
-Optimization of the layout of the grid for print mode. It can also be used to export to PDF.
+The DataGrid provides the ability to optimize the layout of the grid for print mode. It can also be used to export to PDF.
 
-The DataGrid provides the ability to optimize the layout of the grid for print mode. It can also be used to export to PDF. You can print the grid by composing a [toolbar](/components/data-grid/components/#toolbar) with the `GridToolbarExport` component. Use the `components` prop to assign the custom toolbar.
+The easiest way to enable the Print export is to pass the `GridToolbar` component in the `Toolbar` [component slot](/components/data-grid/components/#toolbar).
 
-{{"demo": "pages/components/data-grid/export/ExportSelectorGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/export/ExportDefaultToolbar.js", "bg": "inline"}}
 
-### Customize printed columns
+### Custom toolbar
 
-By default, when printing the grid it will only contain the visible columns.
-There are two ways to include or hide other columns:
+To enable the Print export in a custom toolbar, use the `GridToolbarExport` component.
 
-1. Define the exact columns to be exported with the `fields` attribute in the [`printOptions`](/api/data-grid/grid-print-export-options/) prop of [`GridToolbarExport`](/components/data-grid/components/#toolbar).
+{{"demo": "pages/components/data-grid/export/ExportCustomToolbar.js", "bg": "inline"}}
 
-```jsx
-<GridToolbarExport printOptions={{ fields: ['id', 'name'] }} />
+### Custom exported content
+
+The print export can be customized by passing a [`printOptions`](/api/data-grid/grid-print-export-options/) object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
+
+The following sections describes some customizations available on this interface.
+
+```tsx
+<DataGrid componentsProps={{ toolbar: { printOptions }}} />
+
+// same as
+
+<GridToolbarExport printOptions={printOptions} />
 ```
 
-Set `allColumns` in [`printOptions`](/api/data-grid/grid-print-export-options/) to true to include hidden columns, instead of only the visible ones.
+#### Exported columns
+
+By default, the Print will only contain the visible columns of the grid.
+There are a few ways to include or hide other columns:
+
+1. Set the exact columns to be exported in [`printOptions`](/api/data-grid/grid-print-export-options/).
 
 ```jsx
-<GridToolbarExport printOptions={{ allColumns: true }} />
+<DataGrid
+  componentsProps={{ toolbar: { printOptions: { fields: ['id', 'name'] } } }}
+/>
 ```
 
-2. Set the `disableExport` attribute to `true` in each `GridColDef`.
+2. Set `allColumns` in [`printOptions`](/api/data-grid/grid-print-export-options/) to `true` to include hidden columns, instead of only the visible ones.
+
+```jsx
+<DataGrid componentsProps={{ toolbar: { printOptions: { allColumns: true } } }} />
+```
+
+3. Set the `disableExport` attribute to true in each `GridColDef`.
 
 ```jsx
 <DataGrid columns={[{ field: 'id', disableExport: true }, { field: 'brand' }]} />
 ```
 
-### Export custom rendered cells
+#### Exported cells
 
-When the value of a field is an object or a `renderCell` is provided, printing might not display the value correctly.
+When the value of a field is an object or a `renderCell` is provided, the Print export might not display the value correctly.
 You can provide a [`valueFormatter`](/components/data-grid/columns/#value-formatter) with a string representation to be used.
 
 ```jsx
@@ -114,12 +160,14 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
-### Remove the print button
+### Remove the export button
 
-You can remove the Print export button from the toolbar by setting `disableToolbarButton` option to `true`.
+You can remove the Print export option from the toolbar by setting `disableToolbarButton` option to `true`.
 
 ```jsx
-<GridToolbarExport printOptions={{ disableToolbarButton: true }} />
+<DataGrid
+  componentsProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
+/>
 ```
 
 ### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
