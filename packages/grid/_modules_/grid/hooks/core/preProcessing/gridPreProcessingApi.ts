@@ -16,7 +16,6 @@ export interface GridPreProcessingGroupLookup {
     context: Partial<GridCellIndexCoordinates>;
   };
   columnMenu: { value: JSX.Element[]; context: GridColDef };
-
   filteringMethod: { value: GridFilteringMethodCollection };
   sortingMethod: { value: GridSortingMethodCollection };
 }
