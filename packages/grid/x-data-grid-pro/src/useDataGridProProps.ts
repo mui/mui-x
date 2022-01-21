@@ -37,6 +37,8 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
     () => ({
       ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
       ...themedProps,
+      disableRowGrouping:
+        themedProps.disableRowGrouping || !themedProps.experimentalFeatures?.rowGrouping,
       localeText,
       components,
       signature: 'DataGridPro',

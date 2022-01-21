@@ -27,7 +27,8 @@ async function main() {
   // They're also most likely decorative for documentation demos
   await page.route(/./, async (route, request) => {
     const type = await request.resourceType();
-    if (type === 'image') {
+    // Block all images except the flags
+    if (type === 'image' && !request.url().startsWith('https://flagcdn.com')) {
       route.abort();
     } else {
       route.continue();

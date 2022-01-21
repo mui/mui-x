@@ -116,6 +116,11 @@ const nlNLGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Groep',
   treeDataExpand: 'Uitvouwen',
   treeDataCollapse: 'Inklappen',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

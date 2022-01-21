@@ -1,4 +1,4 @@
-import { GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridRowId } from '../../../models/gridRows';
 
@@ -21,7 +21,7 @@ export interface GridFilterState {
    * Amount of descendants that are passing the filters.
    * For the Tree Data, it includes all the intermediate depth levels (= amount of children + amount of grand children + ...).
    * For the Row Grouping by Column, it does not include the intermediate depth levels (= amount of descendant of maximum depth).
-   * If a row is not registered in this lookup, it is supposed to have no descendant passing the filters..
+   * If a row is not registered in this lookup, it is supposed to have no descendant passing the filters.
    */
   filteredDescendantCountLookup: Record<GridRowId, number>;
 }
@@ -30,8 +30,17 @@ export interface GridFilterInitialState {
   filterModel?: GridFilterModel;
 }
 
+/**
+ * @param {GridRowId} rowId The id of the row we want to filter.
+ * @param {(filterItem: GridFilterItem) => boolean} shouldApplyItem An optional callback to allow the filtering engine to only apply some items.
+ */
+export type GridAggregatedFilterItemApplier = (
+  rowId: GridRowId,
+  shouldApplyItem?: (filterItem: GridFilterItem) => boolean,
+) => boolean;
+
 export interface GridFilteringParams {
-  isRowMatchingFilters: ((rowId: GridRowId) => boolean) | null;
+  isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
 }
 
 export type GridFilteringMethod = (

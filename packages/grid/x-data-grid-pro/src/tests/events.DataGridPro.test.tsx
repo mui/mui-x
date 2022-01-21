@@ -18,7 +18,7 @@ import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 describe('<DataGridPro /> - Events Params', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer();
 
   const baselineProps: { rows: GridRowsProp; columns: GridColumns } = {
     rows: [
@@ -178,6 +178,8 @@ describe('<DataGridPro /> - Events Params', () => {
   });
 
   describe('onCellClick', () => {
+    clock.withFakeTimers();
+
     let eventStack: string[] = [];
     const push = (name: string) => () => {
       eventStack.push(name);
@@ -227,6 +229,7 @@ describe('<DataGridPro /> - Events Params', () => {
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 'Lisa' } });
+      clock.tick(500);
       expect(handleEditCellPropsChange.callCount).to.equal(1);
       fireEvent.keyDown(input, { key: 'Enter' });
       await waitFor(() => {
