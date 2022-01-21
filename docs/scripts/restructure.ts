@@ -53,6 +53,9 @@ function run() {
         // after: {{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
         data = data.replace(/"pages\/?[^"]*\/([^"]+\.js)"/gm, `"$1"`);
       }
+      if (filePath.endsWith('.js')) {
+        data = data.replace('pages/api-docs/data-grid', `pages/x/api/data-grid`);
+      }
       fs.mkdirSync(info.directory, { recursive: true });
       fs.writeFileSync(info.path, data);
 
@@ -75,7 +78,6 @@ function run() {
 
       if (filePath.endsWith('.js')) {
         data = data.replace('src/pages/components', `data`); // point to data path (A) in new directory
-        data = data.replace('pages/api-docs/data-grid', `pages/x/api/data-grid`); // point to data path (A) in new directory
       }
 
       fs.mkdirSync(info.directory, { recursive: true });
