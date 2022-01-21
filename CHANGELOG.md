@@ -49,7 +49,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ```tsx
   const columns: GridColDef[] = [
     { field: 'director', flex: 1, maxWidth: 200 }, // will take the free space up to 200px and will not be resizable above 200px
-    { field: 'year', maxWidth: 150 }, // will not be resizable above 200px
+    { field: 'year', maxWidth: 150 }, // will not be resizable above 150px
   ]
   ```
 
