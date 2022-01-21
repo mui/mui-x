@@ -66,7 +66,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] Add debounce to text input (#3617) @m4theushw
 - [DataGrid] Add `is any of` filter operator (#2874) @alexfauquette
 - [DataGrid] Allow to pass `csvOptions` and `printOptions` to `GridToolbar` (#3623) @flaviendelangle
-- [DataGrid] Disable `Hide` button if there's only one visible column (#3607 @cherniavskii
+- [DataGrid] Disable `Hide` button if there's only one visible column (#3607) @cherniavskii
 - [DataGrid] Fix line break characters breaking CSV rows (#3590) @cherniavskii
 - [DataGrid] Fix potential memory leak warning (#3558) @m4theushw
 - [DataGrid] Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
