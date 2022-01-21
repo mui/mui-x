@@ -71,7 +71,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] Fix potential memory leak warning (#3558) @m4theushw
 - [DataGrid] Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
 - [DataGrid] Make row editing work with `preProcessEditCellProps` (#3562) @flaviendelangle
-- [DataGridPro] Allow to group rows based on column value (#3277) @flaviendelangle
+- [DataGridPremium] Allow to group rows based on column value (#3277) @flaviendelangle
 - [DataGridPro] Export the column pinning selector (#3594) @flaviendelangle
 - [DataGridPro] Keep row children expansion when updating the rows (#3604) @flaviendelangle
 - [DataGridPro] Keep tree data grouping column width when regenerating the columns (#3603) @flaviendelangle
