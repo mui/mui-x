@@ -101,7 +101,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [docs] Include header badges as in the other components (#3606) @oliviertassinari
 - [docs] Lint markdown in the CI (#3504) @oliviertassinari
 - [docs] Make inputs to extend full height of the cell (#3567) @m4theushw
-- [docs] New documentation pageState (#3431) @flaviendelangle
+- [docs] Add documentation page about the grid state (#3431) @flaviendelangle
 - [docs] Replace `@mui/styles` in `x-data-grid-generator` (#3560) @m4theushw
 - [docs] Update usage of prop/property naming (#3649) @cherniavskii
 
