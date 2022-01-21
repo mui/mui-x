@@ -140,6 +140,7 @@ async function main(argv) {
     switch (tag) {
       case 'DataGrid':
       case 'DataGridPro':
+      case 'DataGridPremium':
       case 'l10n':
       case '118n':
         changeCommits.push(commitItem);
@@ -194,11 +195,11 @@ A big thanks to the ${
   } contributors who made this release possible. Here are some highlights ✨:
 
 TODO INSERT HIGHLIGHTS
+${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 
 TODO WRITE THE VERSION
 ### \`@mui/x-data-grid@v\` / \`@mui/x-data-grid-pro@v\`
 
-${changeLogMessages.join('\n')}
 ${logChangelogSection(changeCommits, '#### Changes')}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
