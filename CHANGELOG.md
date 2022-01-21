@@ -75,7 +75,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGridPro] Export the column pinning selector (#3594) @flaviendelangle
 - [DataGridPro] Keep row children expansion when updating the rows (#3604) @flaviendelangle
 - [DataGridPro] Keep tree data grouping column width when regenerating the columns (#3603) @flaviendelangle
-- [l10n] Improve Finnish (fiFI) locale (#3621) @alexfauquette
+- [l10n] Improve Finnish (fiFI) locale (#3621) @MijMa
 - [l10n] Improve Ukrainian (ukUA) locale (#3586) @Neonin
 
 ### Docs
