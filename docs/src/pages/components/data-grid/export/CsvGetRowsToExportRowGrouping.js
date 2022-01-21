@@ -9,10 +9,10 @@ import {
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
 
-const getRowsWithGroups = (apiRef) =>
+const getRowsWithGroups = ({ apiRef }) =>
   gridVisibleSortedRowIdsSelector(apiRef.current.state);
 
-const getRowsWithoutGroups = (apiRef) => {
+const getRowsWithoutGroups = ({ apiRef }) => {
   const rows = gridVisibleSortedRowIdsSelector(apiRef.current.state);
   const tree = gridRowTreeSelector(apiRef.current.state);
 

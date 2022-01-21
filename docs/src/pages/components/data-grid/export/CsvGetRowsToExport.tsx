@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import {
   DataGrid,
-  GridApiRef,
   GridCsvExportOptions,
+  GridCsvGetRowsToExportParams,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridSortedRowIdsSelector,
   GridToolbarContainer,
@@ -12,13 +12,13 @@ import {
   useGridRootProps,
 } from '@mui/x-data-grid';
 
-const getRowsFromCurrentPage = (apiRef: GridApiRef) =>
+const getRowsFromCurrentPage = ({ apiRef }: GridCsvGetRowsToExportParams) =>
   gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state);
 
-const getUnfilteredRows = (apiRef: GridApiRef) =>
+const getUnfilteredRows = ({ apiRef }: GridCsvGetRowsToExportParams) =>
   gridSortedRowIdsSelector(apiRef.current.state);
 
-const getFilteredRows = (apiRef: GridApiRef) =>
+const getFilteredRows = ({ apiRef }: GridCsvGetRowsToExportParams) =>
   gridVisibleSortedRowIdsSelector(apiRef.current.state);
 
 const CustomToolbar = () => {

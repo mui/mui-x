@@ -4,13 +4,13 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
 import { gridVisibleSortedRowIdsSelector } from '../filter';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
-import { GridCsvExportOptions } from '../../../models/gridExport';
+import { GridCsvExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { GridRowId, GridStateColDef } from '../../../models';
 
-const defaultGetRowsToExport = (apiRef: GridApiRef): GridRowId[] => {
+const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
   const visibleSortedRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
   const selectedRows = apiRef.current.getSelectedRows();
 
@@ -49,7 +49,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
       }
 
       const getRowsToExport = options.getRowsToExport ?? defaultGetRowsToExport;
-      const exportedRowIds = getRowsToExport(apiRef);
+      const exportedRowIds = getRowsToExport({ apiRef });
 
       return buildCSV({
         columns: exportedColumns,

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import {
   DataGridPro,
-  GridApiRef,
   GridCsvExportOptions,
+  GridCsvGetRowsToExportParams,
   gridRowTreeSelector,
   GridToolbarContainer,
   gridVisibleSortedRowIdsSelector,
@@ -11,10 +11,10 @@ import {
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
 
-const getRowsWithGroups = (apiRef: GridApiRef) =>
+const getRowsWithGroups = ({ apiRef }: GridCsvGetRowsToExportParams) =>
   gridVisibleSortedRowIdsSelector(apiRef.current.state);
 
-const getRowsWithoutGroups = (apiRef: GridApiRef) => {
+const getRowsWithoutGroups = ({ apiRef }: GridCsvGetRowsToExportParams) => {
   const rows = gridVisibleSortedRowIdsSelector(apiRef.current.state);
   const tree = gridRowTreeSelector(apiRef.current.state);
 

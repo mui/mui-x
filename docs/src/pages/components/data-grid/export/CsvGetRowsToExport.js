@@ -10,12 +10,13 @@ import {
   useGridRootProps,
 } from '@mui/x-data-grid';
 
-const getRowsFromCurrentPage = (apiRef) =>
+const getRowsFromCurrentPage = ({ apiRef }) =>
   gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state);
 
-const getUnfilteredRows = (apiRef) => gridSortedRowIdsSelector(apiRef.current.state);
+const getUnfilteredRows = ({ apiRef }) =>
+  gridSortedRowIdsSelector(apiRef.current.state);
 
-const getFilteredRows = (apiRef) =>
+const getFilteredRows = ({ apiRef }) =>
   gridVisibleSortedRowIdsSelector(apiRef.current.state);
 
 const CustomToolbar = () => {
