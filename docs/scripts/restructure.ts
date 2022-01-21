@@ -101,6 +101,16 @@ function run() {
   );
 
   fs.writeFileSync(featureTogglePath, featureToggle);
+
+  // update file import in SelectorDocs
+  const selectorDocsPath = path.join(process.cwd(), 'docs/src/modules/components/SelectorsDocs.js');
+  let selectorDocs = fs.readFileSync(selectorDocsPath, { encoding: 'utf8' });
+
+  selectorDocs = selectorDocs.replace(
+    `docsx/pages/api-docs/data-grid`,
+    `docsx/pages/x/api/data-grid`,
+  );
+  fs.writeFileSync(selectorDocsPath, selectorDocs);
 }
 
 run();
