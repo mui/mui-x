@@ -198,7 +198,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
     });
 
-    it('should set focus ont the cell when clicking the checkbox', () => {
+    it('should set focus on the cell when clicking the checkbox', () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getActiveCell()).to.equal(null);
 

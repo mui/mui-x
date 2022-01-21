@@ -338,7 +338,7 @@ export const useGridSelection = (
         gridClasses.cell,
       );
       const field = cellClicked?.getAttribute('data-field');
-      if (field === '__check__') {
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
         // click on checkbox should not trigger row selection
         return;
       }
