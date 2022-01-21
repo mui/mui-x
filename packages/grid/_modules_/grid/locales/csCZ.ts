@@ -116,10 +116,13 @@ const csCZKGrid: Partial<GridLocaleText> = {
   footerTotalVisibleRows: (visibleCount, totalCount) => {
     const str = totalCount.toLocaleString();
     const firstDigit = str[0];
-    const op = ['4','6','7'].indexOf(firstDigit) >= 0 || (firstDigit === '1' && str.length % 3 === 0) ? 'ze' : 'z';
-    return `${visibleCount.toLocaleString()} ${op} ${str}`
+    const op =
+      ['4', '6', '7'].indexOf(firstDigit) >= 0 || (firstDigit === '1' && str.length % 3 === 0)
+        ? 'ze'
+        : 'z';
+    return `${visibleCount.toLocaleString()} ${op} ${str}`;
   },
-  
+
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Výběr řádku',
 
@@ -142,8 +145,8 @@ const csCZKGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Skupina',
-  groupColumn: name => `Zoskupit podle ${name}`,
-  unGroupColumn: name => `Přestat zoskupovat podle ${name}`,
+  groupColumn: (name) => `Zoskupit podle ${name}`,
+  unGroupColumn: (name) => `Přestat zoskupovat podle ${name}`,
 };
 
 export const csCZ: Localization = getGridLocalization(csCZKGrid, csCZCore);

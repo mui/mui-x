@@ -122,8 +122,11 @@ const skSKGrid: Partial<GridLocaleText> = {
   footerTotalVisibleRows: (visibleCount, totalCount) => {
     const str = totalCount.toLocaleString();
     const firstDigit = str[0];
-    const op = ['4','6','7'].indexOf(firstDigit) >= 0 || (firstDigit === '1' && str.length % 3 === 0) ? 'zo' : 'z';
-    return `${visibleCount.toLocaleString()} ${op} ${str}`
+    const op =
+      ['4', '6', '7'].indexOf(firstDigit) >= 0 || (firstDigit === '1' && str.length % 3 === 0)
+        ? 'zo'
+        : 'z';
+    return `${visibleCount.toLocaleString()} ${op} ${str}`;
   },
 
   // Checkbox selection text
@@ -148,8 +151,8 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Skupina',
-  groupColumn: name => `Zoskupiť podľa ${name}`,
-  unGroupColumn: name => `Prestať zoskupovať podľa ${name}`,
+  groupColumn: (name) => `Zoskupiť podľa ${name}`,
+  unGroupColumn: (name) => `Prestať zoskupovať podľa ${name}`,
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);
