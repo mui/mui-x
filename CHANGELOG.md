@@ -115,6 +115,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGridPro] Keep tree data grouping column width when regenerating the columns (#3603) @flaviendelangle
 - [l10n] Improve Finnish (fiFI) locale (#3621) @MijMa
 - [l10n] Improve Ukrainian (ukUA) locale (#3586) @Neonin
+- [l10n] Improve Czech (csCZ) and Slovak (skSK) locale (#3678) @Haaxor1689
 
 ### Docs
 
