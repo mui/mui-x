@@ -71,7 +71,7 @@ export const useGridKeyboardNavigation = (
       const lastColIndex = colCount - 1;
       let shouldPreventDefault = true;
 
-      // eslint-disable-next-line default-case
+       
       switch (event.key) {
         case 'ArrowDown':
         case 'Enter': {
@@ -185,7 +185,7 @@ export const useGridKeyboardNavigation = (
       const lastColIndex = colCount - 1;
       let shouldPreventDefault = true;
 
-      // eslint-disable-next-line default-case
+       
       switch (event.key) {
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
