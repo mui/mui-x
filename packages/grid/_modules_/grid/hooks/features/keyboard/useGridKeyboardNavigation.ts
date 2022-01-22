@@ -71,7 +71,6 @@ export const useGridKeyboardNavigation = (
       const lastColIndex = colCount - 1;
       let shouldPreventDefault = true;
 
-       
       switch (event.key) {
         case 'ArrowDown':
         case 'Enter': {
@@ -185,7 +184,6 @@ export const useGridKeyboardNavigation = (
       const lastColIndex = colCount - 1;
       let shouldPreventDefault = true;
 
-       
       switch (event.key) {
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
