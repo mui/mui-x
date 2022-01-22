@@ -80,6 +80,7 @@ export function useGridEditRows(
   });
 
   const commitPropsAndExit = async (params: GridCellParams, event: MuiBaseEvent) => {
+    const { id, field } = params;
     if (params.cellMode === GridCellModes.View) {
       return;
     }
@@ -93,7 +94,8 @@ export function useGridEditRows(
         }
       });
     } else {
-      await apiRef.current.commitCellChange(params, event);
+      const commitParams = { id, field };
+      await apiRef.current.commitCellChange(commitParams, event);
       apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
     }
   };
