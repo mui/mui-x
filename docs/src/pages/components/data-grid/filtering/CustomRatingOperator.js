@@ -123,6 +123,7 @@ export default function CustomRatingOperator() {
         {...data}
         columns={columns}
         initialState={{
+          ...data.initialState,
           filter: {
             filterModel: {
               items: [

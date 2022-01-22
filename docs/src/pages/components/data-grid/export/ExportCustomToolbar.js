@@ -1,22 +1,17 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  GridToolbarContainer,
-  GridToolbarExport,
-  gridClasses,
-} from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomToolbar() {
   return (
-    <GridToolbarContainer className={gridClasses.toolbarContainer}>
+    <GridToolbarContainer>
       <GridToolbarExport />
     </GridToolbarContainer>
   );
 }
 
-export default function ExportSelectorGrid() {
-  const { data } = useDemoData({
+export default function ExportCustomToolbar() {
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 4,
     maxColumns: 6,
@@ -26,6 +21,7 @@ export default function ExportSelectorGrid() {
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         components={{
           Toolbar: CustomToolbar,
         }}
