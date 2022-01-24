@@ -34,8 +34,8 @@ export const gridVisibleRowsLookupSelector = createSelector(
  * @ignore - do not document.
  */
 export const gridFilteredRowsLookupSelector = createSelector(
-    gridFilterStateSelector,
-    (filterState) => filterState.filteredRowsLookup,
+  gridFilterStateSelector,
+  (filterState) => filterState.filteredRowsLookup,
 );
 
 /**
@@ -75,10 +75,10 @@ export const gridVisibleSortedRowIdsSelector = createSelector(
  * @category Filtering
  */
 export const gridFilteredSortedRowEntriesSelector = createSelector(
-    gridFilteredRowsLookupSelector,
-    gridSortedRowEntriesSelector,
-    (filteredRowsLookup, sortedRows) =>
-        sortedRows.filter((row) => filteredRowsLookup[row.id] !== false),
+  gridFilteredRowsLookupSelector,
+  gridSortedRowEntriesSelector,
+  (filteredRowsLookup, sortedRows) =>
+    sortedRows.filter((row) => filteredRowsLookup[row.id] !== false),
 );
 
 /**
@@ -87,8 +87,8 @@ export const gridFilteredSortedRowEntriesSelector = createSelector(
  * @category Filtering
  */
 export const gridFilteredSortedRowIdsSelector = createSelector(
-    gridFilteredSortedRowEntriesSelector,
-    (filteredSortedRowEntries) => filteredSortedRowEntries.map((row) => row.id),
+  gridFilteredSortedRowEntriesSelector,
+  (filteredSortedRowEntries) => filteredSortedRowEntries.map((row) => row.id),
 );
 
 /**
