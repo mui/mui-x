@@ -34,7 +34,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   />
   ```
 
-  See the [documentation](https://mui.com/components/data-grid/group-pivot/#row-grouping) for more details.
+  For more details see the [blog post](https://mui.com/blog/introducing-the-row-grouping-feature/) and [documentation](https://mui.com/components/data-grid/group-pivot/#row-grouping).
 
 - ⚡ Add `is any of` filter operator (#2874) @alexfauquette
 
