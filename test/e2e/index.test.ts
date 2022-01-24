@@ -301,5 +301,29 @@ describe('e2e', () => {
         ),
       ).to.equal('1/31/2025, 4:05:00 PM');
     });
+
+    // https://github.com/mui-org/material-ui-x/issues/3613
+    it('should not lose cell focus when scrolling with arrow down', async () => {
+      await renderFixture('DataGridPro/KeyboardNavigationFocus');
+
+      async function keyDown() {
+        await page.keyboard.down('ArrowDown');
+        // wait between keydown events for virtualization
+        await sleep(100);
+      }
+
+      await page.keyboard.down('Tab');
+
+      await keyDown(); // 0
+      await keyDown(); // 1
+      await keyDown(); // 2
+      await keyDown(); // 3
+
+      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+        'cell',
+        'Expected cell to be focused',
+      );
+      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('3');
+    });
   });
 });

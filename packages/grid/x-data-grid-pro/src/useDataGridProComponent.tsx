@@ -36,6 +36,7 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: DataGridProPr
   useGridInitialization(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridRowGrouping(apiRef, props);
+  useGridColumnPinning(apiRef, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
@@ -60,6 +61,5 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: DataGridProPr
   useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
-  useGridColumnPinning(apiRef, props);
   useGridEvents(apiRef, props);
 };

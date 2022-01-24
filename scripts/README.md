@@ -9,51 +9,24 @@ A typical release goes like this:
 The following steps must be proposed as a pull request.
 
 1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
+   To do so, use `yarn release:changelog` The options are the following:
 
-For instance: [https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master) (if you want to release `master` and the last tag is `v4.0.0-alpha.9`)
-You can use the following script in your browser console on any GitHub page to automatically navigate to the correct page.
+   ```bash
+   yarn release:changelog
+      --githubToken   YOUR_GITHUB_TOKEN (needs "public_repo" permission)
+      --lastRelease   The release to compare against (default: the last one)
+      --release       The branch to release (default: master)
+   ```
 
-```js
-(async () => {
-  const releaseBranch = 'next';
-  const tagResponse = await fetch(
-    'https://api.github.com/repos/mui-org/material-ui-x/tags?per_page=1',
-  );
-  const tagData = await tagResponse.json();
-  const lastTag = tagData[0].name;
-  const diffPage = `https://github.com/mui-org/material-ui-x/compare/${lastTag}...${releaseBranch}`;
-  window.location.href = diffPage;
-})();
-```
+   You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
 
-2. Generate the changelog with the following script:
+   In case of problem, another method to generate the changelog is available at the end of this page.
 
-```js
-(() => {
-  const commits = Array.from(document.querySelectorAll('.TimelineItem--condensed'));
-  const message = commits
-    .flatMap((day) => Array.from(day.querySelectorAll('li')))
-    .map((node) => {
-      return `- ${
-        Array.from(node.querySelectorAll('a'))
-          .map((a) => a.text)
-          .join('')
-          .split('\n')[0]
-      } ${node.querySelector('.AvatarStack-body img').getAttribute('alt')}`;
-    })
-    .filter((x) => x.indexOf('- Bump') !== 0)
-    .sort()
-    .join('\n');
-
-  copy(message);
-})();
-```
-
-3. Clean the generated changelog, to match the format of [https://github.com/mui-org/material-ui-x/releases](https://github.com/mui-org/material-ui-x/releases).
-4. Update the root `package.json`'s version
-5. Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
-6. Open PR with changes and wait for review and green CI.
-7. Merge PR once CI is green, and it has been approved.
+2. Clean the generated changelog, to match the format of [https://github.com/mui-org/material-ui-x/releases](https://github.com/mui-org/material-ui-x/releases).
+3. Update the root `package.json`'s version
+4. Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
+5. Open PR with changes and wait for review and green CI.
+6. Merge PR once CI is green, and it has been approved.
 
 ### Release the packages
 
@@ -82,3 +55,23 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
    Add a link to the GitHub release. Don't forget to change the version before exporting it: https://www.figma.com/file/vOx7rzFQZ9e54W81NReDdU/Utilities?node-id=2%3A7.
    You can check an example tweet here: https://twitter.com/MaterialUI/status/1472880775955718150
    If the release contains a big feature a additional tweet can be added in a thread to highlight that feature specifically. For inspiration check an example from MUI Core: https://twitter.com/MaterialUI/status/1467946870811078661
+
+## Manual changelog generation
+
+1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
+
+For instance: [https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master) (if you want to release `master` and the last tag is `v4.0.0-alpha.9`)
+You can use the following script in your browser console on any GitHub page to automatically navigate to the page comparing `master` with the last tag.
+
+```js
+(async () => {
+  const releaseBranch = 'master';
+  const tagResponse = await fetch(
+    'https://api.github.com/repos/mui-org/material-ui-x/tags?per_page=1',
+  );
+  const tagData = await tagResponse.json();
+  const lastTag = tagData[0].name;
+  const diffPage = `https://github.com/mui-org/material-ui-x/compare/${lastTag}...${releaseBranch}`;
+  window.location.href = diffPage;
+})();
+```
