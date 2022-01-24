@@ -96,7 +96,7 @@ async function run() {
 
       buildEventsDocumentation({
         // TODO: Pass all the projects and add the pro icon for pro-only events
-    project: projects.get('x-data-grid-pro')!,
+        project: projects.get('x-data-grid-pro')!,
         documentedInterfaces,
       });
 
