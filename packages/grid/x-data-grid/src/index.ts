@@ -2,6 +2,9 @@
 import {
   useGridApiContext as useUntypedGridApiContext,
   useGridApiRef as useUntypedGridApiRef,
+  GridApiCommunity,
+  GridApiRef,
+  GridApiCommon,
 } from '../../_modules_';
 
 export * from '../../_modules_';
@@ -11,7 +14,12 @@ export * from './useDataGridComponent';
 
 export { MAX_PAGE_SIZE } from './useDataGridProps';
 
-export const useGridApiContext =
-  useUntypedGridApiContext as () => import('../../_modules_').GridApiRefCommunity;
-export const useGridApiRef =
-  useUntypedGridApiRef as () => import('../../_modules_').GridApiRefCommunity;
+// Typing override to avoid breaking change until `__modules__` is removed
+
+export const useGridApiContext = useUntypedGridApiContext as <
+  GridApi extends GridApiCommon = GridApiCommunity,
+>() => GridApiRef<GridApi>;
+
+export const useGridApiRef = useUntypedGridApiRef as <
+  GridApi extends GridApiCommon = GridApiCommunity,
+>() => GridApiRef<GridApi>;
