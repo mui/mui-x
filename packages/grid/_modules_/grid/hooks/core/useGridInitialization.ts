@@ -14,14 +14,16 @@ import { useGridStateInitialization } from './useGridStateInitialization';
  * Initialize the technical pieces of the DataGrid (logger, state, ...) that any DataGrid implementation needs
  */
 export const useGridInitialization = <GridApi extends GridApiCommon>(
-  apiRef: GridApiRef<GridApi>,
+  inputApiRef: GridApiRef<GridApi> | undefined,
   props: DataGridProcessedProps,
 ) => {
+  const apiRef = useGridApiInitialization(inputApiRef, props);
   useGridLoggerFactory(apiRef, props);
-  useGridApiInitialization(apiRef, props);
   useGridErrorHandler(apiRef, props);
   useGridStateInitialization(apiRef, props);
   useGridPreProcessing(apiRef);
   useGridRowGroupsPreProcessing(apiRef);
   useGridLocaleText(apiRef, props);
+
+  return apiRef;
 };

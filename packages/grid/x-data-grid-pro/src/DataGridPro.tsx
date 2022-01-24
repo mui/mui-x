@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 import { LicenseInfo } from '@mui/x-license-pro';
 import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
 import {
-  GridApiPro,
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-  useGridApiRef,
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridProComponent } from './useDataGridProComponent';
@@ -35,9 +33,8 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   inProps,
   ref,
 ) {
-  const apiRef = useGridApiRef<GridApiPro>(inProps.apiRef);
   const props = useDataGridProProps(inProps);
-  useDataGridProComponent(apiRef, props);
+  const apiRef = useDataGridProComponent(props.apiRef, props);
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>

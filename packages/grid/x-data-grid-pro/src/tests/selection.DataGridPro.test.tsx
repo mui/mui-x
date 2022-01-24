@@ -9,7 +9,6 @@ import {
   DataGridPro,
   GridEvents,
   DataGridProProps,
-  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import { getData } from 'storybook/src/data/data-service';
 
@@ -36,7 +35,7 @@ describe('<DataGridPro /> - Selection', () => {
     ...other
   }: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'> &
     Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) => {
-    apiRef = useGridApiRef<GridApiPro>();
+    apiRef = useGridApiRef();
 
     const data = React.useMemo(() => getData(rowLength, 2), [rowLength]);
 

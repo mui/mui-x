@@ -12,7 +12,6 @@ import {
   DataGridPro,
   DataGridProProps,
   GRID_TREE_DATA_GROUPING_FIELD,
-  GridApiPro,
   GridApiRefPro,
   GridLinkOperator,
   GridRowsProp,
@@ -62,7 +61,7 @@ describe('<DataGridPro /> - Tree Data', () => {
   let apiRef: GridApiRefPro;
 
   const Test = (props: Partial<DataGridProProps>) => {
-    apiRef = useGridApiRef<GridApiPro>();
+    apiRef = useGridApiRef();
 
     return (
       <div style={{ width: 300, height: 800 }}>

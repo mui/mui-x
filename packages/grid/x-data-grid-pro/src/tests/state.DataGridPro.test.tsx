@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGridPro, GridApiPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -33,7 +33,7 @@ describe('<DataGridPro /> - State', () => {
     let apiRef;
 
     function Test() {
-      apiRef = useGridApiRef<GridApiPro>();
+      apiRef = useGridApiRef();
       const onStateChange = (params) => {
         onStateParams = params;
       };
@@ -54,7 +54,7 @@ describe('<DataGridPro /> - State', () => {
 
   it('should allow to control the state using apiRef', () => {
     function GridStateTest() {
-      const apiRef = useGridApiRef<GridApiPro>();
+      const apiRef = useGridApiRef();
 
       React.useEffect(() => {
         apiRef.current.setState((prev) => ({

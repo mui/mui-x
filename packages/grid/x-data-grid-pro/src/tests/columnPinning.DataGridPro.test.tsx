@@ -6,7 +6,6 @@ import {
   DataGridProProps,
   gridClasses,
   GridPinnedPosition,
-  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -34,7 +33,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   let apiRef: GridApiRefPro;
 
   const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
-    apiRef = useGridApiRef<GridApiPro>();
+    apiRef = useGridApiRef();
     const data = useData(1, nbCols);
     return (
       <div style={{ width: 302, height: 300 }}>

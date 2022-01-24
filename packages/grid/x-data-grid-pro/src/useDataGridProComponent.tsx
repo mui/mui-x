@@ -32,10 +32,10 @@ import { useGridRowGrouping } from '../../_modules_/grid/hooks/features/rowGroup
 import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
 
 export const useDataGridProComponent = (
-  apiRef: GridApiRefPro,
+  inputApiRef: GridApiRefPro | undefined,
   props: DataGridProProcessedProps,
 ) => {
-  useGridInitialization(apiRef, props);
+  const apiRef = useGridInitialization(inputApiRef, props);
   useGridTreeData(apiRef, props);
   useGridRowGrouping(apiRef, props);
   useGridSelection(apiRef, props);
@@ -63,4 +63,6 @@ export const useDataGridProComponent = (
   useGridDimensions(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridEvents(apiRef, props);
+
+  return apiRef;
 };

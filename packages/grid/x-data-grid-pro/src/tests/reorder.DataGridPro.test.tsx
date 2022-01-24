@@ -7,13 +7,7 @@ import {
   getCell,
   raf,
 } from 'test/utils/helperFn';
-import {
-  useGridApiRef,
-  DataGridPro,
-  gridClasses,
-  GridApiPro,
-  GridApiRefPro,
-} from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro, gridClasses, GridApiRefPro } from '@mui/x-data-grid-pro';
 import { useData } from 'storybook/src/hooks/useData';
 import { spy } from 'sinon';
 
@@ -62,7 +56,7 @@ describe('<DataGridPro /> - Reorder', () => {
 
       const TestCase = (props: { width: number }) => {
         const { width } = props;
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width, height: 300 }}>
             <DataGridPro
@@ -92,7 +86,7 @@ describe('<DataGridPro /> - Reorder', () => {
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef<GridApiPro>();
+      apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -115,7 +109,7 @@ describe('<DataGridPro /> - Reorder', () => {
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef<GridApiPro>();
+      apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -146,7 +140,7 @@ describe('<DataGridPro /> - Reorder', () => {
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef<GridApiPro>();
+      apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -177,7 +171,7 @@ describe('<DataGridPro /> - Reorder', () => {
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef<GridApiPro>();
+      apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -202,7 +196,7 @@ describe('<DataGridPro /> - Reorder', () => {
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef<GridApiPro>();
+      apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -223,7 +217,7 @@ describe('<DataGridPro /> - Reorder', () => {
     const onColumnOrderChange = spy();
     let apiRef: GridApiRefPro;
     const Test = () => {
-      apiRef = useGridApiRef<GridApiPro>();
+      apiRef = useGridApiRef();
       const data = useData(1, 3);
 
       return (
@@ -260,7 +254,7 @@ describe('<DataGridPro /> - Reorder', () => {
     const handleDragEnd = spy();
     let apiRef: GridApiRefPro;
     const Test = () => {
-      apiRef = useGridApiRef<GridApiPro>();
+      apiRef = useGridApiRef();
       const data = useData(1, 3);
 
       return (
@@ -306,7 +300,7 @@ describe('<DataGridPro /> - Reorder', () => {
       ];
 
       const Test = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
 
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -345,7 +339,7 @@ describe('<DataGridPro /> - Reorder', () => {
       ];
 
       const Test = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
 
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -380,7 +374,7 @@ describe('<DataGridPro /> - Reorder', () => {
       ];
 
       const Test = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
 
         return (
           <div style={{ width: 300, height: 300 }}>

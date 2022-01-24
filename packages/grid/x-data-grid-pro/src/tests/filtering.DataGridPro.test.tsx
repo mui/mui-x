@@ -9,7 +9,6 @@ import {
   SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   DataGridPro,
-  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
@@ -45,7 +44,7 @@ describe('<DataGridPro /> - Filter', () => {
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     const { rows, ...other } = props;
-    apiRef = useGridApiRef<GridApiPro>();
+    apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro

@@ -11,7 +11,6 @@ import {
   gridColumnLookupSelector,
   gridColumnVisibilityModelSelector,
   GridApiRefPro,
-  GridApiPro,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -32,7 +31,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &
       Partial<Pick<DataGridProProps, 'rows' | 'columns'>>,
   ) => {
-    apiRef = useGridApiRef<GridApiPro>();
+    apiRef = useGridApiRef();
 
     return (
       <div style={{ width: 300, height: 300 }}>

@@ -3,7 +3,6 @@ import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
-  GridApiPro,
   GridApiRefPro,
   useGridApiRef,
   DataGridPro,
@@ -93,7 +92,7 @@ describe('<DataGridPro /> - Layout', () => {
       let apiRef: GridApiRefPro;
 
       const TestCase = (props) => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
 
         return (
           <div style={{ width: 300, height: 500 }}>
@@ -147,7 +146,7 @@ describe('<DataGridPro /> - Layout', () => {
       let apiRef: GridApiRefPro;
 
       const TestCase = (props: Omit<DataGridProProps, 'apiRef'>) => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
 
         return (
           <div style={{ width: 300, height: 500 }}>

@@ -10,7 +10,6 @@ import {
   GridEvents,
   gridColumnLookupSelector,
   allGridColumnsFieldsSelector,
-  GridApiPro,
   GridApiRefPro,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
@@ -42,7 +41,7 @@ describe('<DataGridPro /> - Columns', () => {
   };
 
   const Test = (props: Partial<DataGridProProps>) => {
-    apiRef = useGridApiRef<GridApiPro>();
+    apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />

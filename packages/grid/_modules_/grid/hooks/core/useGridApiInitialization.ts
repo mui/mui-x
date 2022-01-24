@@ -1,21 +1,29 @@
 import * as React from 'react';
-import { GridApiRefCommunity } from '../../models/api/gridApiRef';
-import { useGridLogger } from '../utils/useGridLogger';
 import { GridEvents } from '../../models/events';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridCoreApi } from '../../models';
+import { GridApiRef, GridApiCommon, GridCoreApi } from '../../models';
+import { EventManager } from '../../utils/EventManager';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
-export function useGridApiInitialization(
-  apiRef: GridApiRefCommunity,
+export function useGridApiInitialization<GridApi extends GridApiCommon>(
+  inputApiRef: GridApiRef<GridApi> | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
-): void {
-  const logger = useGridLogger(apiRef, 'useApi');
+): GridApiRef<GridApi> {
+  const apiRef = React.useRef() as GridApiRef<GridApi>;
+
+  if (!apiRef.current) {
+    apiRef.current = {
+      unstable_eventManager: new EventManager(),
+      state: {} as GridApi['state'],
+    } as GridApi;
+  }
+
+  React.useImperativeHandle(inputApiRef, () => apiRef.current, [apiRef]);
 
   const publishEvent = React.useCallback<GridCoreApi['publishEvent']>(
     (...args: any[]) => {
@@ -33,15 +41,13 @@ export function useGridApiInitialization(
 
   const subscribeEvent = React.useCallback<GridCoreApi['subscribeEvent']>(
     (event, handler, options?) => {
-      logger.debug(`Binding ${event} event`);
       apiRef.current.unstable_eventManager.on(event, handler, options);
       const api = apiRef.current;
       return () => {
-        logger.debug(`Clearing ${event} event`);
         api.unstable_eventManager.removeListener(event, handler);
       };
     },
-    [apiRef, logger],
+    [apiRef],
   );
 
   const showError = React.useCallback<GridCoreApi['showError']>(
@@ -51,15 +57,15 @@ export function useGridApiInitialization(
     [apiRef],
   );
 
-  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
+  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError } as any, 'GridCoreApi');
 
   React.useEffect(() => {
-    logger.debug('Initializing grid api.');
     const api = apiRef.current;
 
     return () => {
-      logger.info('Unmounting Grid component. Clearing all events listeners.');
       api.publishEvent(GridEvents.unmount);
     };
-  }, [logger, apiRef]);
+  }, [apiRef]);
+
+  return apiRef;
 }

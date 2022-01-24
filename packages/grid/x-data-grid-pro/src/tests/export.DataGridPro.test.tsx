@@ -1,10 +1,4 @@
-import {
-  GridColumns,
-  useGridApiRef,
-  DataGridPro,
-  GridApiRefPro,
-  GridApiPro,
-} from '@mui/x-data-grid-pro';
+import { GridColumns, useGridApiRef, DataGridPro, GridApiRefPro } from '@mui/x-data-grid-pro';
 import { createRenderer } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -25,7 +19,7 @@ describe('<DataGridPro /> - Export', () => {
   describe('getDataAsCsv', () => {
     it('should work with basic strings', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
 
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -69,7 +63,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should work with comma', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -99,7 +93,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should apply valueFormatter correctly', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -136,7 +130,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should work with double quotes', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -166,7 +160,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should work with newline', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -210,7 +204,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should allow to change the delimiter', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -242,7 +236,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should only export the selected rows if any', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -271,7 +265,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should not export hidden column (deprecated)', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -328,7 +322,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should export hidden column if params.allColumns = true (deprecated)', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -393,7 +387,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should not export columns with column.disableExport = true', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -428,7 +422,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should only export columns in params.fields if defined (deprecated)', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -493,7 +487,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should export column defined in params.fields even if column.hide=true or column.disableExport=true (deprecated)', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -564,7 +558,7 @@ describe('<DataGridPro /> - Export', () => {
 
     it('should work with booleans', () => {
       const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef<GridApiPro>();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro

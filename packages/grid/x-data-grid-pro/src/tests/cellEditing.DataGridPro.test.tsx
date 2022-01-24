@@ -5,7 +5,6 @@ import {
   DataGridProProps,
   useGridApiRef,
   DataGridPro,
-  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
@@ -52,7 +51,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
   let apiRef: GridApiRefPro;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
-    apiRef = useGridApiRef<GridApiPro>();
+    apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />

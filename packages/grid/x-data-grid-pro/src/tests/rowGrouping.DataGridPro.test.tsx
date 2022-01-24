@@ -11,7 +11,6 @@ import {
   DataGridProProps,
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  GridApiPro,
   GridApiRefPro,
   GridGroupingValueGetterParams,
   GridPreferencePanelsValue,
@@ -69,7 +68,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
   let apiRef: GridApiRefPro;
 
   const Test = (props: Partial<DataGridProProps>) => {
-    apiRef = useGridApiRef<GridApiPro>();
+    apiRef = useGridApiRef();
 
     return (
       <div style={{ width: 300, height: 300 }}>

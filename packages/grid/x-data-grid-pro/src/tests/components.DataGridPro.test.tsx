@@ -7,7 +7,6 @@ import {
   gridClasses,
   useGridApiRef,
   DataGridProProps,
-  GridApiPro,
   GridApiRefPro,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -19,7 +18,7 @@ describe('<DataGridPro/> - Components', () => {
   let apiRef: GridApiRefPro;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
-    apiRef = useGridApiRef<GridApiPro>();
+    apiRef = useGridApiRef();
     const data = useData(100, 1);
     return (
       <div style={{ width: 500, height: 300 }}>
