@@ -419,7 +419,7 @@
   { "name": "trTR", "kind": "Variable" },
   { "name": "ukUA", "kind": "Variable" },
   { "name": "useGridApi", "kind": "Variable" },
-  { "name": "useGridApiContext", "kind": "Function" },
+  { "name": "useGridApiContext", "kind": "Variable" },
   { "name": "useGridApiEventHandler", "kind": "Variable" },
   { "name": "useGridApiMethod", "kind": "Function" },
   { "name": "useGridApiOptionHandler", "kind": "Function" },
