@@ -101,6 +101,16 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
+        if (
+          pathURL.startsWith('/docs-components-data-grid-filtering') &&
+          /(ServerFilterGrid|CustomMultiValueOperator).png$/.test(pathURL) // These cases don't render content
+        ) {
+          // Wait for the flags to load
+          await page.waitForResponse((response) =>
+            response.url().startsWith('https://flagcdn.com'),
+          );
+        }
+
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
 
