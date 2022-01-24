@@ -55,12 +55,10 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
   const handleKeydown = React.useCallback(
     (event: KeyboardEvent) => {
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
-      /**
-       * On some systems (e.g. MacOS) Alt+C might add accents to letters (like Alt+c gives ç)
-       * depending on keyboard layout and language.
-       * In this case `event.code` is used to check the actual key pressed.
-       */
-      if ((event.key.toLowerCase() !== 'c' && event.code !== 'KeyC') || !isModifierKeyPressed) {
+      // event.key === 'c' is not enough as alt+c can lead to ©, ç, or other characters on macOS.
+      // event.code === 'KeyC' is not enough as event.code assume a QWERTY keyboard layout which would
+      // be wrong with a Dvorak keyboard (as if pressing J).
+      if (String.fromCharCode(event.keyCode) !== 'C' || !isModifierKeyPressed) {
         return;
       }
 
