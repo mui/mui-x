@@ -83,7 +83,7 @@ describe('<DataGridPro /> - Clipboard', () => {
         apiRef.current.selectRows([0, 1]);
         const cell = getCell(0, 0);
         cell.focus();
-        fireEvent.keyDown(cell, { key: 'c', [key]: true });
+        fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
         expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
     });
@@ -93,21 +93,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       apiRef.current.selectRows([0, 1]);
       const cell = getCell(0, 0);
       cell.focus();
-      fireEvent.keyDown(cell, { key: 'c', altKey: true });
-      expect(writeText.callCount).to.equal(1, "writeText wasn't called");
-      expect(writeText.firstCall.args[0]).to.equal(
-        ['id\tBrand', '0\tNike', '1\tAdidas'].join('\r\n'),
-      );
-    });
-
-    it(`should copy the selected rows and headers to the clipboard when Alt + C is pressed with modified key`, () => {
-      render(<Test />);
-      apiRef.current.selectRows([0, 1]);
-      const cell = getCell(0, 0);
-      cell.focus();
-      // On some systems (e.g. MacOS) Alt+C might add accents to letters (like Alt+c gives ç)
-      // depending on keyboard layout and language
-      fireEvent.keyDown(cell, { key: 'ç', altKey: true, code: 'KeyC' });
+      fireEvent.keyDown(cell, { key: 'c', keyCode: 67, altKey: true });
       expect(writeText.callCount).to.equal(1, "writeText wasn't called");
       expect(writeText.firstCall.args[0]).to.equal(
         ['id\tBrand', '0\tNike', '1\tAdidas'].join('\r\n'),
