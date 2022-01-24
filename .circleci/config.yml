@@ -142,7 +142,7 @@ jobs:
       - install_js
       - run:
           name: Eslint
-          command: yarn eslint:ci
+          command: yarn lint:ci
       - run:
           name: Stylelint
           command: yarn stylelint
