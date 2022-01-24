@@ -11,5 +11,5 @@
     "rootDir": "./src"
   },
   "include": ["src/**/*.ts*"],
-  "exclude": ["src/**/*.d.ts", "src/**/*.test.*", "./**/*.spec.*"],
+  "exclude": ["src/**/*.d.ts", "src/**/*.test.*", "./**/*.spec.*"]
 }
