@@ -4,7 +4,7 @@
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
-  "license": "See LICENSE file",
+  "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"
   },

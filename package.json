@@ -58,6 +58,7 @@
     "build:codesandbox": "yarn release:build",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "cd packages/x-license-pro && yarn build && cd ../grid/x-data-grid-pro && yarn build && cd ../x-data-grid && yarn build && cd ../x-data-grid-generator && yarn build",
+    "release:build:next": "lerna run --parallel --scope \"@mui/{x-pickers,x-pickers-pro}\" build",
     "release:publish": "lerna publish from-package --dist-tag latest --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\""
   },
@@ -66,8 +67,8 @@
     "@babel/core": "^7.16.7",
     "@babel/node": "^7.16.8",
     "@babel/plugin-transform-object-assign": "^7.16.7",
-    "@babel/plugin-transform-runtime": "^7.16.4",
-    "@babel/preset-env": "^7.16.8",
+    "@babel/plugin-transform-runtime": "^7.16.10",
+    "@babel/preset-env": "^7.16.11",
     "@babel/register": "^7.16.9",
     "@babel/runtime": "^7.16.7",
     "@babel/traverse": "^7.16.8",
