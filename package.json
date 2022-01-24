@@ -57,7 +57,7 @@
     "typescript": "lerna run --no-bail --parallel typescript",
     "build:codesandbox": "yarn release:build",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
-    "release:build": "cd packages/x-license-pro && yarn build && cd ../grid/x-data-grid-pro && yarn build && cd ../x-data-grid && yarn build && cd ../x-data-grid-generator && yarn build",
+    "release:build": "cd packages/x-license-pro && yarn build && cd ../grid/x-data-grid-pro && yarn build && cd ../x-data-grid && yarn build && cd ../x-data-grid-generator && yarn build && yarn release:build:next",
     "release:build:next": "lerna run --parallel --scope \"@mui/{x-pickers,x-pickers-pro}\" build",
     "release:publish": "lerna publish from-package --dist-tag latest --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\""
