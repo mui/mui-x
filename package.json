@@ -57,6 +57,7 @@
     "jsonlint": "node scripts/jsonlint.js",
     "typescript": "lerna run --no-bail --parallel typescript",
     "build:codesandbox": "yarn release:build",
+    "release:changelog": "node scripts/releaseChangelog",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "cd packages/x-license-pro && yarn build && cd ../grid/x-data-grid-pro && yarn build && cd ../x-data-grid && yarn build && cd ../x-data-grid-generator && yarn build",
     "release:publish": "lerna publish from-package --dist-tag latest --contents build",
