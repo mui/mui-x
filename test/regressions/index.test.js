@@ -103,7 +103,7 @@ async function main() {
 
         if (
           pathURL.startsWith('/docs-components-data-grid-filtering') &&
-          /(ServerFilterGrid|CustomMultiValueOperator).png$/.test(pathURL) // These cases don't render content
+          !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL) // These cases don't render content
         ) {
           // Wait for the flags to load
           await page.waitForResponse((response) =>

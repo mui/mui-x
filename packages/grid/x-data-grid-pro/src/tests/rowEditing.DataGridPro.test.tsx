@@ -7,6 +7,11 @@ import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+function fireClickEvent(cell: HTMLElement) {
+  fireEvent.mouseUp(cell);
+  fireEvent.click(cell);
+}
+
 const nativeSetTimeout = setTimeout;
 
 describe('<DataGridPro /> - Row Editing', () => {
@@ -68,7 +73,8 @@ describe('<DataGridPro /> - Row Editing', () => {
     render(<TestCase editMode="row" />);
     expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
     const cell = getCell(1, 0);
-    cell.focus();
+    fireClickEvent(cell);
+
     fireEvent.keyDown(cell, { key: 'Enter' });
     expect(getRow(1)).to.have.class('MuiDataGrid-row--editing');
   });
@@ -136,8 +142,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
-    fireEvent.mouseUp(getCell(2, 0));
-    fireEvent.click(getCell(2, 0));
+    fireClickEvent(getCell(2, 0));
     clock.tick(0);
     await waitFor(() => {
       // Wait for promise
@@ -179,7 +184,6 @@ describe('<DataGridPro /> - Row Editing', () => {
       />,
     );
     const firstCell = getCell(0, 1);
-    firstCell.focus();
     fireEvent.doubleClick(firstCell);
     const input = firstCell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Peter Smith' } });

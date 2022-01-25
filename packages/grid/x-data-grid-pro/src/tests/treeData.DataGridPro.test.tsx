@@ -376,7 +376,8 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should toggle expansion when pressing Space while focusing grouping column', () => {
       render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      getCell(0, 0).focus();
+      fireEvent.mouseUp(getCell(0, 0));
+      fireEvent.click(getCell(0, 0));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireEvent.keyDown(getCell(0, 0), { key: ' ' });
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
