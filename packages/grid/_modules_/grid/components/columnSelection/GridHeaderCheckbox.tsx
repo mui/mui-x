@@ -50,10 +50,10 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       return selection.filter((id) => {
         // The row might have been deleted
         if (!apiRef.current.getRow(id)) {
-          return rootProps.isRowSelectable!(apiRef.current.getRowParams(id));
+          return false;
         }
 
-        return false;
+        return rootProps.isRowSelectable!(apiRef.current.getRowParams(id));
       });
     }, [apiRef, rootProps.isRowSelectable, selection]);
 
