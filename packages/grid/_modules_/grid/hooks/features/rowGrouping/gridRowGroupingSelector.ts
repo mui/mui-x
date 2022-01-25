@@ -1,8 +1,8 @@
 import { createSelector } from 'reselect';
-import { GridState } from '../../../models';
+import { GridStatePro } from '../../../models';
 import { gridColumnLookupSelector } from '../columns';
 
-export const gridRowGroupingStateSelector = (state: GridState) => state.rowGrouping;
+export const gridRowGroupingStateSelector = (state: GridStatePro) => state.rowGrouping;
 
 export const gridRowGroupingModelSelector = createSelector(
   gridRowGroupingStateSelector,

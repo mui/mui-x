@@ -1,11 +1,11 @@
-import { GridRowModel, GridInitialState, GridColumnVisibilityModel } from '@mui/x-data-grid-pro';
+import { GridRowModel, GridColumnVisibilityModel, GridInitialStatePro } from '@mui/x-data-grid-pro';
 import asyncWorker from '../asyncWorker';
 import { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGenerator';
 
 export interface GridDemoData {
   rows: GridRowModel[];
   columns: GridColDefGenerator[];
-  initialState?: GridInitialState;
+  initialState?: GridInitialStatePro;
 }
 
 export function getRealGridData(
