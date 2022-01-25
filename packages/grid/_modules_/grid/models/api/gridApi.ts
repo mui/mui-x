@@ -52,6 +52,7 @@ export interface GridApiCommon
     GridPreferencesPanelApi,
     GridPrintExportApi,
     GridDisableVirtualizationApi,
+    GridVirtualScrollerApi,
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
@@ -73,7 +74,6 @@ export interface GridApiPro
   extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
     GridStateApi<GridStatePro>,
     GridRowGroupingApi,
-    GridVirtualScrollerApi,
     GridColumnPinningApi {}
 
 /**
