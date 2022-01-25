@@ -337,7 +337,7 @@ To initialize the visible columns without controlling them, provide the model to
 <DataGrid
   initialState={{
     columns: {
-      columnsVisibilityModel: {
+      columnVisibilityModel: {
         // Hide columns status and traderName, the other columns will remain visible
         status: false,
         traderName: false,

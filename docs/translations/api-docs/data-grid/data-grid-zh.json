@@ -29,6 +29,7 @@
     "filterModel": "Set the filter model of the grid.",
     "getCellClassName": "Function that applies CSS classes dynamically on cells.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the cell.",
     "getRowClassName": "Function that applies CSS classes dynamically on rows.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the row.",
+    "getRowHeight": "Function that sets the row height per row.<br><br><strong>Signature:</strong><br><code>function(params: GridRowHeightParams) =&gt; GridRowHeightReturnValue</code><br><em>params:</em> With all properties from GridRowHeightParams.<br> <em>returns</em> (GridRowHeightReturnValue): The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied.",
     "getRowId": "Return the id of a given GridRowModel.",
     "headerHeight": "Set the height in pixel of the column headers in the grid.",
     "hideFooter": "If <code>true</code>, the footer component is hidden.",

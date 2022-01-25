@@ -40,7 +40,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stiahnuť ako CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'Vytlačiť',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Nájsť stĺpec',
@@ -70,8 +70,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'je na alebo po',
   filterOperatorBefore: 'je pred',
   filterOperatorOnOrBefore: 'je na alebo skôr',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'je prázdny',
+  filterOperatorIsNotEmpty: 'nie je prázdny',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',
@@ -119,7 +119,15 @@ const skSKGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Riadkov spolu:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) => {
+    const str = totalCount.toString();
+    const firstDigit = str[0];
+    const op =
+      ['4', '6', '7'].includes(firstDigit) || (firstDigit === '1' && str.length % 3 === 0)
+        ? 'zo'
+        : 'z';
+    return `${visibleCount.toLocaleString()} ${op} ${totalCount.toLocaleString()}`;
+  },
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Výber riadku',
@@ -129,22 +137,22 @@ const skSKGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'nie',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'viac',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Pripnúť na ľavo',
+  pinToRight: 'Pripnúť na pravo',
+  unpin: 'Odopnúť',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Skupina',
+  treeDataExpand: 'zobraziť potomkov',
+  treeDataCollapse: 'skryť potomkov',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Skupina',
+  groupColumn: (name) => `Zoskupiť podľa ${name}`,
+  unGroupColumn: (name) => `Prestať zoskupovať podľa ${name}`,
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);
