@@ -128,6 +128,11 @@ DataGridProRaw.propTypes = {
    */
   columnTypes: PropTypes.object,
   /**
+   * Set the column visibility model of the grid.
+   * If defined, the grid will ignore the `hide` property in [[GridColDef]].
+   */
+  columnVisibilityModel: PropTypes.object,
+  /**
    * Overrideable components.
    */
   components: PropTypes.object,
@@ -285,6 +290,12 @@ DataGridProRaw.propTypes = {
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
+  /**
+   * Function that sets the row height per row.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   */
+  getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
    */
@@ -492,11 +503,19 @@ DataGridProRaw.propTypes = {
   onColumnResize: PropTypes.func,
   /**
    * Callback fired when a column visibility changes.
+   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use `onColumnVisibilityModelChange` instead.
    */
   onColumnVisibilityChange: PropTypes.func,
+  /**
+   * Callback fired when the column visibility model changes.
+   * @param {GridColumnVisibilityModel} model The new model.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnVisibilityModelChange: PropTypes.func,
   /**
    * Callback fired when the width of a column is changed.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
