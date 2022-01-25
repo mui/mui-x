@@ -6,6 +6,7 @@ import { withStyles } from '@mui/styles';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import addons, { mockChannel } from '@storybook/addons';
+import FEATURE_TOGGLE from '../../docs/src/featureToggle';
 
 // See https://storybook.js.org/docs/react/workflows/faq#why-is-there-no-addons-channel
 addons.setChannel(mockChannel());
@@ -84,10 +85,15 @@ const stories = requireStories.keys().reduce((res, path) => {
 }, []);
 
 // Also use some of the demos to avoid code duplication.
-const requireDocs = require.context('docsx/src/pages', true, /js$/);
+let requireDocs = require.context('docsx/src/pages', true, /js$/);
+if (FEATURE_TOGGLE.enable_product_scope) {
+  requireDocs = require.context('docsx/data', true, /js$/);
+}
 const docs = requireDocs.keys().reduce((res, path) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
-  const suite = `docs-${suiteArray.reverse().join('-')}`;
+  const suite = `docs-${FEATURE_TOGGLE.enable_product_scope ? 'components-' : ''}${suiteArray
+    .reverse()
+    .join('-')}`;
 
   if (excludeTest(suite, name)) {
     return res;

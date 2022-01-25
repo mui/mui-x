@@ -8,6 +8,7 @@ import {
   getRows,
   getColumnHeaderCell,
   getColumnHeadersTextContent,
+  getActiveCell,
 } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { spy } from 'sinon';
@@ -174,13 +175,40 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
 
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 1));
       expect(getSelectedRowIds()).to.deep.equal([0]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', true);
 
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 1));
       expect(getSelectedRowIds()).to.deep.equal([]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
+    });
+
+    it('should check and uncheck when double clicking the checkbox', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', false);
+
+      fireEvent.click(getCell(0, 0).querySelector('input'));
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', true);
+
+      fireEvent.click(getCell(0, 0).querySelector('input'));
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', false);
+    });
+
+    it('should set focus on the cell when clicking the checkbox', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      expect(getActiveCell()).to.equal(null);
+
+      // simulate click
+      const checkboxInput = getCell(0, 0).querySelector('input');
+
+      fireEvent.mouseUp(checkboxInput);
+      fireEvent.click(checkboxInput);
+
+      expect(getActiveCell()).to.equal('0-0');
     });
 
     it('should select all visible rows regardless of pagination', () => {
@@ -226,11 +254,11 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should unselect from last clicked cell to cell after clicked cell if clicking inside a selected range', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      fireEvent.click(getCell(3, 0), { shiftKey: true });
+      fireEvent.click(getCell(3, 0).querySelector('input'), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
-      fireEvent.click(getCell(1, 0), { shiftKey: true });
+      fireEvent.click(getCell(1, 0).querySelector('input'), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
     });
   });
@@ -519,7 +547,7 @@ describe('<DataGrid /> - Selection', () => {
 
       render(<ControlCase />);
       expect(getSelectedRowIds()).to.deep.equal([]);
-      fireEvent.click(getCell(1, 0));
+      fireEvent.click(getCell(1, 1));
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
     });
   });
