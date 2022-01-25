@@ -8,6 +8,7 @@ import {
   GridGroupingValueGetterParams,
   GridRenderCellParams,
   useGridApiRef,
+  gridColumnVisibilityModelSelector,
 } from '@mui/x-data-grid-pro';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -23,17 +24,23 @@ const useKeepGroupingColumnsHidden = (
 
   React.useEffect(() => {
     apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
-      apiRef.current.updateColumns([
-        ...newModel
-          .filter((field) => !prevModel.current.includes(field))
-          .map((field) => ({ field, hide: true })),
-        ...prevModel.current
-          .filter((field) => !newModel.includes(field))
-          .map((field) => ({ field, hide: false })),
-      ]);
-      prevModel.current = initialModel;
+      const columnVisibilityModel = {
+        ...gridColumnVisibilityModelSelector(apiRef.current.state),
+      };
+      newModel.forEach((field) => {
+        if (!prevModel.current.includes(field)) {
+          columnVisibilityModel[field] = false;
+        }
+      });
+      prevModel.current.forEach((field) => {
+        if (!newModel.includes(field)) {
+          columnVisibilityModel[field] = true;
+        }
+      });
+      apiRef.current.setColumnVisibilityModel(columnVisibilityModel);
+      prevModel.current = newModel;
     });
-  }, [apiRef, initialModel]);
+  }, [apiRef]);
 
   return React.useMemo(
     () =>

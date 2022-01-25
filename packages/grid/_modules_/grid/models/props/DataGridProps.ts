@@ -13,11 +13,17 @@ import { GridEventListener, GridEvents } from '../events';
 import { GridApiRef, GridCallbackDetails, GridLocaleText } from '../api';
 import type { GridColumns, GridColumnTypesRecord } from '../colDef';
 import { GridClasses } from '../../gridClasses';
-import { GridCellParams, GridRowParams } from '../params';
+import {
+  GridCellParams,
+  GridRowHeightParams,
+  GridRowHeightReturnValue,
+  GridRowParams,
+} from '../params';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
 import { GridInitialState } from '../gridState';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
+import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 /**
  * The props users can give to the `DataGrid` component.
@@ -380,6 +386,12 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    */
   getRowClassName?: (params: GridRowParams) => string;
   /**
+   * Function that sets the row height per row.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   */
+  getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
+  /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
@@ -522,9 +534,11 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   onColumnOrderChange?: GridEventListener<GridEvents.columnOrderChange>;
   /**
    * Callback fired when a column visibility changes.
+   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use `onColumnVisibilityModelChange` instead.
    */
   onColumnVisibilityChange?: GridEventListener<GridEvents.columnVisibilityChange>;
   /**
@@ -610,6 +624,20 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    */
   onSelectionModelChange?: (
     selectionModel: GridSelectionModel,
+    details: GridCallbackDetails,
+  ) => void;
+  /**
+   * Set the column visibility model of the grid.
+   * If defined, the grid will ignore the `hide` property in [[GridColDef]].
+   */
+  columnVisibilityModel?: GridColumnVisibilityModel;
+  /**
+   * Callback fired when the column visibility model changes.
+   * @param {GridColumnVisibilityModel} model The new model.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onColumnVisibilityModelChange?: (
+    model: GridColumnVisibilityModel,
     details: GridCallbackDetails,
   ) => void;
   /**

@@ -1,13 +1,13 @@
 {
   "name": "eslint-plugin-material-ui",
-  "version": "5.2.2",
+  "version": "5.3.0",
   "private": true,
   "description": "Custom eslint rules for MUI X.",
   "main": "src/index.js",
   "devDependencies": {
     "@types/eslint": "^8.2.2",
-    "@typescript-eslint/experimental-utils": "^5.9.1",
-    "@typescript-eslint/parser": "^5.9.1"
+    "@typescript-eslint/experimental-utils": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0"
   },
   "scripts": {
     "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/eslint-plugin-material-ui/**/*.test.js' --timeout 3000"
