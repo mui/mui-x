@@ -47,7 +47,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
   };
 
   describe('apiRef: updateColumns', () => {
-    it('should not call `onColumnVisibilityModelChange` when no row visibility has changed', () => {
+    it('should not call `onColumnVisibilityModelChange` when no column visibility has changed', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGridPro
