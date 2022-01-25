@@ -60,9 +60,9 @@ module.exports = {
       parserOptions: { tsconfigRootDir: __dirname, project: ['./tsconfig.json'] },
     },
     {
-      files: ['docs/src/pages/**/*.js', 'docs/src/pages/**/*.tsx'],
+      files: ['docs/src/pages/components/**/*.js', 'docs/src/pages/components/**/*.tsx'],
       rules: {
-        'filenames/match-exported': ['error', [null, 'kebab', 'snake']],
+        'filenames/match-exported': ['error'],
       },
     },
   ],
