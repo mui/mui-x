@@ -714,7 +714,8 @@ describe('<DataGridPro /> - Rows', () => {
     it('should set the focus when pressing a key inside a cell', () => {
       render(<TestCase rows={baselineProps.rows} />);
       const cell = getCell(1, 0);
-      cell.focus();
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
       fireEvent.keyDown(cell, { key: 'a' });
       expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
