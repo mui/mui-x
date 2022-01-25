@@ -8,6 +8,7 @@ import buildExportsDocumentation from './buildExportsDocumentation';
 import buildSelectorsDocumentation from './buildSelectorsDocumentation';
 import buildEventsDocumentation from './buildEventsDocumentation';
 import { Project, Projects, ProjectNames } from './utils';
+import FEATURE_TOGGLE from '../../src/featureToggle';
 
 const workspaceRoot = path.resolve(__dirname, '../../../');
 
@@ -51,68 +52,71 @@ const createProject = (options: CreateProgramOptions): Project => {
   };
 };
 
-async function run(argv: { outputDirectory?: string }) {
-  const outputDirectory = path.resolve(argv.outputDirectory!);
-  fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
+async function run() {
+  const outputDirectories = FEATURE_TOGGLE.enable_product_scope
+    ? ['./docs/pages/api-docs/data-grid', './docs/pages/x/api/data-grid']
+    : ['./docs/pages/api-docs/data-grid'];
+  await Promise.allSettled(
+    outputDirectories.map(async (dir) => {
+      const outputDirectory = path.resolve(dir);
+      fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 
-  const projects: Projects = new Map();
+      const projects: Projects = new Map();
 
-  projects.set(
-    'x-data-grid-pro',
-    createProject({
-      name: 'x-data-grid-pro',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-      tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/tsconfig.json'),
-      entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
+      projects.set(
+        'x-data-grid-pro',
+        createProject({
+          name: 'x-data-grid-pro',
+          rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
+          tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/tsconfig.json'),
+          entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
+        }),
+      );
+
+      projects.set(
+        'x-data-grid',
+        createProject({
+          name: 'x-data-grid',
+          rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
+          tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/tsconfig.json'),
+          entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/src/index.ts'),
+        }),
+      );
+
+      const documentedInterfaces = buildInterfacesDocumentation({
+        projects,
+        outputDirectory,
+      });
+
+      await buildComponentsDocumentation({
+        outputDirectory,
+        documentedInterfaces,
+        projects,
+      });
+
+      buildEventsDocumentation({
+        project: projects.get('x-data-grid')!,
+        documentedInterfaces,
+      });
+
+      buildSelectorsDocumentation({
+        project: projects.get('x-data-grid-pro')!,
+        outputDirectory,
+      });
+
+      buildExportsDocumentation({
+        projects,
+      });
+
+      return Promise.resolve();
     }),
   );
-
-  projects.set(
-    'x-data-grid',
-    createProject({
-      name: 'x-data-grid',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
-      tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/tsconfig.json'),
-      entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/src/index.ts'),
-    }),
-  );
-
-  const documentedInterfaces = buildInterfacesDocumentation({
-    projects,
-    outputDirectory,
-  });
-
-  await buildComponentsDocumentation({
-    outputDirectory,
-    documentedInterfaces,
-    projects,
-  });
-
-  buildEventsDocumentation({
-    project: projects.get('x-data-grid')!,
-    documentedInterfaces,
-  });
-
-  buildSelectorsDocumentation({
-    project: projects.get('x-data-grid-pro')!,
-    outputDirectory,
-  });
-
-  buildExportsDocumentation({
-    projects,
-  });
 }
 
 yargs
   .command({
-    command: '$0 <outputDirectory>',
+    command: '$0',
     describe: 'generates API docs',
-    builder: (command) => {
-      return command.positional('outputDirectory', {
-        description: 'directory where the markdown is written to',
-        type: 'string',
-      });
-    },
     handler: run,
   })
   .help()

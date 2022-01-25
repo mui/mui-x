@@ -28,12 +28,14 @@ import type {
   GridRowGroupingInitialState,
 } from '../hooks/features/rowGrouping';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
+import { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 
 /**
  * TODO: Distinguish pro and community states
  */
 export interface GridState {
   rows: GridRowsState;
+  rowsMeta: GridRowsMetaState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
   columns: GridColumnsState;

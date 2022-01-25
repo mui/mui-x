@@ -1,0 +1,14 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  getRowHeight={({ id, densityFactor }: GridRowHeightParams) => {
+    if ((id as number) % 2 === 0) {
+      return 100 * densityFactor;
+    }
+
+    return null;
+  }}
+  components={{
+    Toolbar: CustomToolbar,
+  }}
+/>
