@@ -4,7 +4,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 
 import {GridLocaleText} from '@mui/x-data-grid';
 
-export const nbNOGrid: GridLocaleText = {
+const nbNOGrid: GridLocaleText = {
     // Root
     noRowsLabel: 'Ingen rader',
     noResultsOverlayLabel: 'Fant ingen resultat.',
@@ -125,5 +125,5 @@ export const nbNOGrid: GridLocaleText = {
 };
 
 
-export const esES: Localization = getGridLocalization(nbNOGRID, nbNOCore
+export const nbNO: Localization = getGridLocalization(nbNOGRID, nbNOCore
 );
