@@ -14,7 +14,11 @@ import { stub, spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-// TODO: Replace `cell.focus()` with `fireEvent.mouseUp(cell)`
+function fireClickEvent(cell: HTMLElement) {
+  fireEvent.mouseUp(cell);
+  fireEvent.click(cell);
+}
+
 describe('<DataGridPro /> - Cell Editing', () => {
   let baselineProps: Pick<DataGridProProps, 'autoHeight' | 'rows' | 'columns' | 'throttleRowsMs'>;
 
@@ -85,10 +89,10 @@ describe('<DataGridPro /> - Cell Editing', () => {
       render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
       const cellNike = getCell(0, 0);
       const cellAdidas = getCell(1, 0);
-      cellNike.focus();
+      fireClickEvent(cellNike);
       fireEvent.keyDown(cellNike, { key: 'Enter' });
       expect(cellNike).not.to.have.class('MuiDataGrid-cell--editing');
-      cellAdidas.focus();
+      fireClickEvent(cellAdidas);
       fireEvent.keyDown(cellAdidas, { key: 'Enter' });
       expect(cellAdidas).to.have.class('MuiDataGrid-cell--editing');
     });
@@ -98,7 +102,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
     it('should not allow to save an invalid value with Enter', async () => {
       render(<TestCase />);
       const cell = getCell(1, 0);
-      cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       expect(input).not.to.have.attribute('aria-invalid');
@@ -114,7 +117,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
     it('should not allow to save an invalid value with commitCellChange', () => {
       render(<TestCase />);
       const cell = getCell(1, 0);
-      cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       expect(input).not.to.have.attribute('aria-invalid');
@@ -129,7 +131,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       const onCellEditCommit = spy();
       render(<TestCase onCellEditCommit={onCellEditCommit} />);
       const cell = getCell(1, 0);
-      cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       expect(input).not.to.have.attribute('aria-invalid');
@@ -145,7 +146,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
     it('should update the state when neither the model nor the onChange are set', async () => {
       render(<TestCase />);
       const cell = getCell(1, 1);
-      cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('1961');
@@ -162,7 +162,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       render(<TestCase editRowsModel={{ 1: { year: { value: 1961 } } }} />);
       const cell = getCell(1, 1);
       const input = cell.querySelector('input')!;
-      input.focus();
+      fireClickEvent(input);
       expect(input.value).to.equal('1961');
       fireEvent.change(input, { target: { value: '1970' } });
       clock.tick(500);
@@ -176,7 +176,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       const onEditRowsModelChange = spy();
       render(<TestCase onEditRowsModelChange={onEditRowsModelChange} />);
       const cell = getCell(1, 1);
-      cell.focus();
       fireEvent.doubleClick(cell);
       expect(onEditRowsModelChange.callCount).to.equal(1);
       expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
@@ -207,7 +206,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       );
       const cell = getCell(1, 1);
       const input = cell.querySelector('input')!;
-      input.focus();
+      fireClickEvent(input);
       fireEvent.change(input, { target: { value: 1970 } });
       clock.tick(500);
       expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
@@ -242,7 +241,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should allow to switch between cell mode using double click', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
 
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
@@ -257,7 +255,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       />,
     );
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
 
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
@@ -274,13 +271,11 @@ describe('<DataGridPro /> - Cell Editing', () => {
       />,
     );
     const cell = getCell(1, 1);
-    cell.focus();
     fireEvent.doubleClick(cell);
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
 
     const otherCell = getCell(2, 1);
-    fireEvent.click(otherCell);
-    fireEvent.focus(otherCell);
+    fireClickEvent(otherCell);
     await waitFor(() => {
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
     });
@@ -289,7 +284,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should allow to switch between cell mode using enter key', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
-    cell.focus();
+    fireClickEvent(cell);
     fireEvent.keyDown(cell, { key: 'Enter' });
 
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
@@ -300,7 +295,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should allow to delete a cell directly if editable using delete key', async () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
-    cell.focus();
+    fireClickEvent(cell);
 
     expect(cell).to.have.text('Adidas');
     fireEvent.keyDown(cell, { key: 'Delete' });
@@ -314,7 +309,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should not allow to delete a cell directly if it is not editable', async () => {
     render(<TestCase isCellEditable={() => false} />);
     const cell = getCell(1, 0);
-    cell.focus();
+    fireClickEvent(cell);
 
     expect(cell).to.have.text('Adidas');
     fireEvent.keyDown(cell, { key: 'Delete' });
@@ -329,7 +324,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should allow to edit a cell value by typing an alpha char', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
-    cell.focus();
+    fireClickEvent(cell);
     expect(cell).to.have.text('Adidas');
     const params = apiRef.current.getCellParams(1, 'brand');
     apiRef.current.publishEvent(GridEvents.cellKeyDown, params, {
@@ -349,7 +344,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should allow to rollback from edit changes using Escape', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     expect(input.value).to.equal('Adidas');
@@ -366,7 +360,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should allow to save changes using Enter', async () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     expect(input.value).to.equal('Adidas');
@@ -386,7 +379,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should allow to save an edit changes using Tab', async () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     expect(input.value).to.equal('Adidas');
@@ -407,7 +399,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should allow to save an edit changes using shift+Tab', async () => {
     render(<TestCase />);
     const cell = getCell(1, 1);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     expect(input.value).to.equal('1961');
@@ -428,7 +419,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should allow to save changes by clicking outside', async () => {
     render(<TestCase />);
     const cell = getCell(1, 1);
-    cell.focus();
+    fireClickEvent(cell);
     expect(getActiveCell()).to.equal('1-1');
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
@@ -439,9 +430,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     const otherCell = getCell(2, 1);
-    fireEvent.mouseUp(otherCell);
-    fireEvent.click(otherCell);
-    fireEvent.focus(otherCell);
+    fireClickEvent(otherCell);
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell).to.have.text('1970');
@@ -452,7 +441,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should save changes when a column header is dragged', async () => {
     render(<TestCase />);
     const cell = getCell(1, 1);
-    cell.focus();
+    fireClickEvent(cell);
     expect(getActiveCell()).to.equal('1-1');
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
@@ -473,7 +462,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should save changes when a column header is focused', async () => {
     render(<TestCase />);
     const cell = getCell(1, 1);
-    cell.focus();
+    fireClickEvent(cell);
     expect(getActiveCell()).to.equal('1-1');
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
@@ -494,7 +483,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     render(<TestCase />);
     apiRef.current.setCellMode(1, 'year', 'edit');
     const cell = getCell(1, 1);
-    cell.focus();
+    fireClickEvent(cell);
     expect(getActiveCell()).to.equal('1-1');
     const input = cell.querySelector('input')!;
     expect(input.value).to.equal('1961');
@@ -504,9 +493,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     const otherCell = getCell(2, 1);
-    fireEvent.mouseUp(otherCell);
-    fireEvent.click(otherCell);
-    fireEvent.focus(otherCell);
+    fireClickEvent(otherCell);
+
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell).to.have.text('1970');
@@ -514,21 +502,19 @@ describe('<DataGridPro /> - Cell Editing', () => {
     });
   });
 
-  // TODO add one test for each column type because what really sets the focus is the autoFocus prop
   it('should move the focus to the new field', async () => {
     render(<TestCase />);
     // Turn first cell into edit mode
     apiRef.current.setCellMode(0, 'brand', 'edit');
 
     // Turn second cell into edit mode
-    getCell(1, 0).focus();
+    fireClickEvent(getCell(1, 0));
     apiRef.current.setCellMode(1, 'brand', 'edit');
     expect(document.querySelectorAll('input').length).to.equal(2);
 
     // Try to focus the first cell's input
     const input0 = getCell(0, 0).querySelector('input');
-    input0!.focus();
-    fireEvent.click(input0);
+    fireClickEvent(input0!);
     await waitFor(() => {
       expect(document.activeElement).to.have.property('value', 'Nike');
     });
@@ -548,7 +534,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       </div>,
     );
     const cell = getCell(1, 1);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     expect(input.value).to.equal('1961');
@@ -596,8 +581,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     fireEvent.doubleClick(cell);
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
-    fireEvent.mouseUp(screen.getByRole('button', { name: /Click me/i }));
-    fireEvent.click(screen.getByRole('button', { name: /Click me/i }));
+    fireClickEvent(screen.getByRole('button', { name: /Click me/i }));
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
   });
 
@@ -631,7 +615,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
     );
     expect(screen.queryAllByRole('row')).to.have.length(4);
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     expect(input.value).to.equal('Adidas');
@@ -652,7 +635,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
     const onEditCellPropsChange = spy();
     render(<TestCase onEditCellPropsChange={onEditCellPropsChange} />);
     const cell = getCell(1, 1);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: '1970' } });
@@ -676,7 +658,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
     const onCellEditCommit = spy();
     render(<TestCase onCellEditCommit={onCellEditCommit} />);
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'n' } });
@@ -710,7 +691,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       />,
     );
     const cell = getCell(0, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Peter Smith' } });
@@ -739,7 +719,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       />,
     );
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'n' } });
@@ -767,7 +746,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       />,
     );
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     expect(input).not.to.have.attribute('aria-invalid');
@@ -793,7 +771,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       />,
     );
     const cell = getCell(1, 0);
-    cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     expect(input).not.to.have.attribute('aria-invalid');
