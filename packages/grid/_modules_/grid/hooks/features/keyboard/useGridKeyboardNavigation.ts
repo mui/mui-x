@@ -9,6 +9,9 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { isNavigationKey } from '../../../utils/keyboardUtils';
+import { isGridHeaderCellRoot } from '../../../utils/domUtils';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef/gridCheckboxSelectionColDef';
 
 /**
  * @requires useGridPage (state)
@@ -158,10 +161,21 @@ export const useGridKeyboardNavigation = (
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderNavigationKeyDown>
+    GridEventListener<GridEvents.columnHeaderKeyDown>
   >(
     (params, event) => {
-      event.preventDefault();
+      if (
+        !isGridHeaderCellRoot(event.target as HTMLElement) &&
+        !(params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field && isNavigationKey(event.key))
+      ) {
+        // When focus is on a nested input, keyboard events have no effect to avoid conflicts with native events.
+        // There is on exception for the checkBoxHeader
+        return;
+      }
+
+      if (isNavigationKey(event.key)) {
+        event.preventDefault();
+      }
       if (!params.field) {
         return;
       }
@@ -224,11 +238,6 @@ export const useGridKeyboardNavigation = (
           if (event.ctrlKey || event.metaKey) {
             apiRef.current.toggleColumnMenu(params.field);
           }
-          break;
-        }
-
-        case ' ': {
-          event.preventDefault(); // prevent Space event from scrolling
           break;
         }
       }
