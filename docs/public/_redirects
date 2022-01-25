@@ -10,7 +10,9 @@
 
 # Redirections
 
-/ /components/data-grid/
+/ /x/react-data-grid/ 301
+/components/data-grid/* /x/react-data-grid/:splat 301
+/api/data-grid/* /x/api/data-grid/:splat 301
 
 ## Redirections have to be done in the core repository, it owns the domain name.
 ## e.g. https://github.com/mui-org/material-ui/blob/HEAD/docs/public/_redirects#L31
