@@ -7,7 +7,6 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-  useGridApiRef,
 } from '../../_modules_/grid';
 import { DataGridProps } from '../../_modules_/grid/models/props/DataGridProps';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
@@ -21,8 +20,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   ref,
 ) {
   const props = useDataGridProps(inProps);
-  const apiRef = useGridApiRef();
-  useDataGridComponent(apiRef, props);
+  const apiRef = useDataGridComponent(props);
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>

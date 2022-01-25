@@ -426,7 +426,7 @@
   { "name": "useGridApiEventHandler", "kind": "Variable" },
   { "name": "useGridApiMethod", "kind": "Function" },
   { "name": "useGridApiOptionHandler", "kind": "Function" },
-  { "name": "useGridApiRef", "kind": "Function" },
+  { "name": "useGridApiRef", "kind": "Variable" },
   { "name": "useGridLogger", "kind": "Function" },
   { "name": "useGridNativeEventListener", "kind": "Variable" },
   { "name": "useGridRootProps", "kind": "Variable" },
