@@ -225,7 +225,6 @@ describe('<DataGridPro /> - Events Params', () => {
       });
       render(<TestEvents onEditCellPropsChange={handleEditCellPropsChange} />);
       const cell = getCell(1, 1);
-      cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 'Lisa' } });

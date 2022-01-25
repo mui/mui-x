@@ -13,12 +13,14 @@ import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
+import { GridRowsMetaApi } from './gridRowsMetaApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import { GridColumnPinningApi } from './gridColumnPinningApi';
+import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
 import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
@@ -36,6 +38,7 @@ export interface GridApiCommon
     GridDensityApi,
     GridDimensionsApi,
     GridRowApi,
+    GridRowsMetaApi,
     GridEditRowApi,
     GridParamsApi,
     GridColumnApi,
@@ -70,6 +73,7 @@ export interface GridApiPro
   extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
     GridStateApi<GridStatePro>,
     GridRowGroupingApi,
+    GridVirtualScrollerApi,
     GridColumnPinningApi {}
 
 /**

@@ -28,6 +28,7 @@ import type {
   GridRowGroupingInitialState,
 } from '../hooks/features/rowGrouping';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
+import { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 
 /**
  * The state of `DataGrid`.
@@ -35,6 +36,7 @@ import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColu
  */
 export interface GridStateCommunity {
   rows: GridRowsState;
+  rowsMeta: GridRowsMetaState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
   columns: GridColumnsState;

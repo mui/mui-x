@@ -13,6 +13,7 @@ import { isDeepEqual } from '../../../utils/utils';
 export const COMPACT_DENSITY_FACTOR = 0.7;
 export const COMFORTABLE_DENSITY_FACTOR = 1.3;
 
+// TODO v6: revise keeping headerHeight and rowHeight in state
 const getUpdatedDensityState = (
   newDensity: GridDensity,
   newHeaderHeight: number,
@@ -24,18 +25,21 @@ const getUpdatedDensityState = (
         value: newDensity,
         headerHeight: Math.floor(newHeaderHeight * COMPACT_DENSITY_FACTOR),
         rowHeight: Math.floor(newRowHeight * COMPACT_DENSITY_FACTOR),
+        factor: COMPACT_DENSITY_FACTOR,
       };
     case GridDensityTypes.Comfortable:
       return {
         value: newDensity,
         headerHeight: Math.floor(newHeaderHeight * COMFORTABLE_DENSITY_FACTOR),
         rowHeight: Math.floor(newRowHeight * COMFORTABLE_DENSITY_FACTOR),
+        factor: COMFORTABLE_DENSITY_FACTOR,
       };
     default:
       return {
         value: newDensity,
         headerHeight: newHeaderHeight,
         rowHeight: newRowHeight,
+        factor: 1,
       };
   }
 };

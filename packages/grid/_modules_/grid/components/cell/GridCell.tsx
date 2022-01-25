@@ -16,6 +16,7 @@ import {
 } from '../../models';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export interface GridCellProps {
@@ -76,6 +77,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
+
+let warnedOnce = false;
 
 function GridCell(props: GridCellProps) {
   const {
@@ -177,6 +180,33 @@ function GridCell(props: GridCellProps) {
     }
   });
 
+  let handleFocus: any = other.onFocus;
+
+  if (process.env.NODE_ENV === 'test') {
+    handleFocus = (event: React.FocusEvent) => {
+      const focusedCell = gridFocusCellSelector(apiRef.current.state);
+      if (focusedCell?.id === rowId && focusedCell.field === field) {
+        if (typeof other.onFocus === 'function') {
+          other.onFocus(event);
+        }
+        return;
+      }
+
+      if (!warnedOnce) {
+        console.error(
+          [
+            `MUI: The cell with id=${rowId} and field=${field} received focus.`,
+            `According to the state, the focus should be at id=${focusedCell?.id}, field=${focusedCell?.field}.`,
+            'In the next render, the focus will be changed to match the state.',
+            'Call `fireEvent.mouseUp` and `fireEvent.click` before to sync the focus with the state.',
+          ].join('\n'),
+        );
+
+        warnedOnce = true;
+      }
+    };
+  }
+
   return (
     <div
       ref={cellRef}
@@ -195,6 +225,7 @@ function GridCell(props: GridCellProps) {
       onDragEnter={publish(GridEvents.cellDragEnter, onDragEnter)}
       onDragOver={publish(GridEvents.cellDragOver, onDragOver)}
       {...other}
+      onFocus={handleFocus}
     >
       {children != null ? children : valueToRender?.toString()}
     </div>

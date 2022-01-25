@@ -247,19 +247,22 @@ export const useGridFilter = (
     (params) => {
       if (props.filterMode === GridFeatureModeConstant.client && params.isRowMatchingFilters) {
         const rowIds = gridRowIdsSelector(apiRef.current.state);
-        const visibleRowsLookup: Record<GridRowId, boolean> = {};
+        const filteredRowsLookup: Record<GridRowId, boolean> = {};
         for (let i = 0; i < rowIds.length; i += 1) {
           const rowId = rowIds[i];
-          visibleRowsLookup[rowId] = params.isRowMatchingFilters(rowId);
+          filteredRowsLookup[rowId] = params.isRowMatchingFilters(rowId);
         }
         return {
-          visibleRowsLookup,
+          filteredRowsLookup,
+          // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` since no row is collapsed.
+          visibleRowsLookup: filteredRowsLookup,
           filteredDescendantCountLookup: {},
         };
       }
 
       return {
         visibleRowsLookup: {},
+        filteredRowsLookup: {},
         filteredDescendantCountLookup: {},
       };
     },

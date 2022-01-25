@@ -29,13 +29,11 @@ type GridRowInternalCacheValue = Omit<GridRowGroupParams, 'previousTree'>;
 
 interface GridRowsInternalCacheState {
   value: GridRowInternalCacheValue;
-
   /**
    * The value of the properties used by the grouping when the internal cache was created
    * We are storing it instead of accessing it directly when storing the cache to avoid synchronization issues
    */
   props: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
-
   /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
@@ -49,6 +47,12 @@ interface GridRowsInternalCache {
   lastUpdateMs: number;
 }
 
+interface ConvertGridRowsPropToStateParams {
+  prevState: GridRowsInternalCacheState;
+  props?: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
+  rows?: GridRowsProp;
+}
+
 function getGridRowId(
   rowModel: GridRowModel,
   getRowId?: GridRowIdGetter,
@@ -57,12 +61,6 @@ function getGridRowId(
   const id = getRowId ? getRowId(rowModel) : rowModel.id;
   checkGridRowIdIsValid(id, rowModel, detailErrorMessage);
   return id;
-}
-
-interface ConvertGridRowsPropToStateParams {
-  prevState: GridRowsInternalCacheState;
-  props?: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
-  rows?: GridRowsProp;
 }
 
 const convertGridRowsPropToState = ({
