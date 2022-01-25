@@ -36,6 +36,18 @@
     "category": "Filtering",
     "description": "Get the current filter model."
   },
+  {
+    "name": "gridFilteredSortedRowEntriesSelector",
+    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
+    "category": "Filtering",
+    "description": "Get the id and the model of the rows accessible after the filtering process.\nContains the collapsed children."
+  },
+  {
+    "name": "gridFilteredSortedRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "category": "Filtering",
+    "description": "Get the id of the rows accessible after the filtering process.\nContains the collapsed children."
+  },
   { "name": "gridFocusCellSelector", "returnType": "GridCellIdentifier | null", "description": "" },
   {
     "name": "gridFocusColumnHeaderSelector",
@@ -147,13 +159,13 @@
     "name": "gridVisibleSortedRowEntriesSelector",
     "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
     "category": "Filtering",
-    "description": "Get the id and the model of the rows accessible after the filtering process."
+    "description": "Get the id and the model of the rows accessible after the filtering process.\nDoes not contain the collapsed children."
   },
   {
     "name": "gridVisibleSortedRowIdsSelector",
     "returnType": "GridRowId[]",
     "category": "Filtering",
-    "description": "Get the id of the rows accessible after the filtering process."
+    "description": "Get the id of the rows accessible after the filtering process.\nDoes not contain the collapsed children."
   },
   {
     "name": "gridVisibleSortedTopLevelRowEntriesSelector",

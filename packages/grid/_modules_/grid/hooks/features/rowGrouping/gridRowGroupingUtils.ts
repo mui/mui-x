@@ -62,9 +62,10 @@ const shouldApplyFilterItemOnGroup = (item: GridFilterItem, node: GridRowTreeNod
  */
 export const filterRowTreeFromGroupingColumns = (
   params: FilterRowTreeFromTreeDataParams,
-): Pick<GridFilterState, 'visibleRowsLookup' | 'filteredDescendantCountLookup'> => {
+): Omit<GridFilterState, 'filterModel'> => {
   const { rowTree, isRowMatchingFilters } = params;
   const visibleRowsLookup: Record<GridRowId, boolean> = {};
+  const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
   const filterTreeNode = (
@@ -104,6 +105,7 @@ export const filterRowTreeFromGroupingColumns = (
     }
 
     visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
+    filteredRowsLookup[node.id] = shouldPassFilters;
 
     if (!shouldPassFilters) {
       return 0;
@@ -128,6 +130,7 @@ export const filterRowTreeFromGroupingColumns = (
 
   return {
     visibleRowsLookup,
+    filteredRowsLookup,
     filteredDescendantCountLookup,
   };
 };
