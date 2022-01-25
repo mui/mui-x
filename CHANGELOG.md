@@ -3,6 +3,148 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.3.0
+
+_Jan 21, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Allow to group rows based on column value (#3277) @flaviendelangle
+
+  ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
+
+  To avoid future regression for users of the Pro plan, the feature needs to be explicitly activated using the rowGrouping experimental feature flag.
+
+  ```tsx
+  // To fully control
+  <DataGridPro
+    rowGroupingModel={rowGroupingModel}
+    onRowGroupingModel={newModel => setRowGroupingModel(newModel)}
+    experimentalFeatures={{ rowGrouping: true }}
+  />
+
+  // To initialize without controlling
+  <DataGridPro
+    initialState={{
+      rowGrouping: {
+        model: rowGroupingModel,
+      },
+    }}
+    experimentalFeatures={{ rowGrouping: true }}
+  />
+  ```
+
+  See the [documentation](https://mui.com/components/data-grid/group-pivot/#row-grouping) for more details.
+
+- ⚡ Add `is any of` filter operator (#2874) @alexfauquette
+
+  The new filter operator `is any of` allows the user to provide multiple values. It opens access to complex filtering pattern mixing `AND` and `OR` logic connectors, such as `status is any of filled or rejected, and currency is any of EUR or USD`.
+
+  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="770" height="370">
+
+- ✨ Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
+
+  You can now limit the width of the flex columns and the resizable columns with the new `maxWidth` property on `GridColDef`.
+
+  ```tsx
+  const columns: GridColDef[] = [
+    { field: 'director', flex: 1, maxWidth: 200 }, // will take the free space up to 200px and will not be resizable above 200px
+    { field: 'year', maxWidth: 150 }, // will not be resizable above 150px
+  ]
+  ```
+
+- 🚀 Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
+
+  To make the grid more flexible we added component slots for base `@mui/material` components that we use. Those component slots are prefixed with `Base` to differentiate them from the other grid specific components
+
+  For more information check the documentation [documentation](https://mui.com/api/data-grid/data-grid/#slots).
+
+- 🔥 Allow to pass `csvOptions` and `printOptions` to `toolbar` component prop (#3623) @flaviendelangle
+
+  ```tsx
+  const CustomDataGrid = (props: DataGridProps) => {
+    return (
+      <DataGrid {...props} componentsProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />
+    )
+  }
+  ```
+
+- 🙈 Add controlled behavior for the visible columns (#3554) @flaviendelangle
+
+  ```tsx
+  // To fully control
+  <DataGrid
+    columnVisibilityModel={columnVisibilityModel}
+    onColumnVisilibilityModelChange={newModel => setColumnVisibilityModel(newModel)}
+  />
+
+  // To initialize without controlling
+  <DataGrid
+    initialState={{
+      columns: {
+        columnVisibilityModel
+      }
+    }}
+  />
+  ```
+
+  See the [documentation](https://mui.com/components/data-grid/columns/#column-visibility) for more details.
+
+  The `hide` property from `GridColDef` still works but has been deprecated.
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.3.0` / `@mui/x-data-grid-pro@v5.3.0`
+
+#### Changes
+
+- [DataGrid] Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
+- [DataGrid] Add controlled behavior for the visible columns (#3554) @flaviendelangle
+- [DataGrid] Add debounce to text input (#3617) @m4theushw
+- [DataGrid] Add `is any of` filter operator (#2874) @alexfauquette
+- [DataGrid] Allow to pass `csvOptions` and `printOptions` to `GridToolbar` (#3623) @flaviendelangle
+- [DataGrid] Disable `Hide` button if there's only one visible column (#3607) @cherniavskii
+- [DataGrid] Fix line break characters breaking CSV rows (#3590) @cherniavskii
+- [DataGrid] Fix potential memory leak warning (#3558) @m4theushw
+- [DataGrid] Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
+- [DataGrid] Make row editing work with `preProcessEditCellProps` (#3562) @flaviendelangle
+- [DataGridPro] Export the column pinning selector (#3594) @flaviendelangle
+- [DataGridPro] Keep row children expansion when updating the rows (#3604) @flaviendelangle
+- [DataGridPro] Keep tree data grouping column width when regenerating the columns (#3603) @flaviendelangle
+- [DataGridPremium] Allow to group rows based on column value (#3277) @flaviendelangle
+- [l10n] Improve Finnish (fiFI) locale (#3621) @MijMa
+- [l10n] Improve Ukrainian (ukUA) locale (#3586) @Neonin
+- [l10n] Improve Czech (csCZ) and Slovak (skSK) locale (#3678) @Haaxor1689
+
+### Docs
+
+- [docs] Add doc example for tree data children lazy loading (#3657) @flaviendelangle
+- [docs] Fix typo exchanging `false` and `true` on columns hiding section (#3561) @alexfauquette
+- [docs] Improve filtering documentation page (#3437) @flaviendelangle
+- [docs] Include header badges as in the other components (#3606) @oliviertassinari
+- [docs] Lint markdown in the CI (#3504) @oliviertassinari
+- [docs] Make inputs to extend full height of the cell (#3567) @m4theushw
+- [docs] Add documentation page about the grid state (#3431) @flaviendelangle
+- [docs] Replace `@mui/styles` in `x-data-grid-generator` (#3560) @m4theushw
+- [docs] Update usage of prop/property naming (#3649) @cherniavskii
+
+### Core
+
+- [core] Log the output of the script (#3527) @oliviertassinari
+- [core] Add ESLint rule to prevent direct state access (#3521) @m4theushw
+- [core] Add language to markdown code block (#3651) @m4theushw
+- [core] Add typing to the pre-processors methods (#3595) @flaviendelangle
+- [core] Don't bump peer dependency ranges on dependency updates (#3646) @oliviertassinari
+- [core] Rename more instances of Material-UI to MUI (#3525) @oliviertassinari
+- [core] Renovate should not try to update node (#3645) @oliviertassinari
+- [core] Report performance test results on each PR (#3551) @m4theushw
+- [core] Update monorepo (#3653) @m4theushw
+- [core] Update `l10n` issue with a single command line (#3588) @alexfauquette
+- [test] Wait for promise to resolve before expect (#3597) @m4theushw
+- [test] Split cell/row editing tests (#3618) @m4theushw
+- [test] Skip tests on Safari (#3679) @m4theushw
+
 ## 5.2.2
 
 _Jan 6, 2022_

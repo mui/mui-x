@@ -1,55 +1,47 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Slider, { SliderProps } from '@mui/material/Slider';
+import Slider, { SliderProps, sliderClasses } from '@mui/material/Slider';
 import { ValueLabelProps } from '@mui/base/SliderUnstyled';
 import Tooltip from '@mui/material/Tooltip';
-import { createStyles, makeStyles } from '@mui/styles';
 import { debounce } from '@mui/material/utils';
-import { alpha, createTheme } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      root: {
-        display: 'flex',
-        height: '100%',
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 0,
-        borderRadius: 0,
-      },
-      rail: {
-        height: '100%',
-        backgroundColor: 'transparent',
-      },
-      track: {
-        height: '100%',
-        transition: theme.transitions.create('background-color', {
-          duration: theme.transitions.duration.shorter,
-        }),
-        '&.low': {
-          backgroundColor: '#f44336',
-        },
-        '&.medium': {
-          backgroundColor: '#efbb5aa3',
-        },
-        '&.high': {
-          backgroundColor: '#088208a3',
-        },
-      },
-      thumb: {
-        height: '100%',
-        width: 5,
-        borderRadius: 0,
-        marginTop: 0,
-        backgroundColor: alpha('#000000', 0.2),
-      },
+const StyledSlider = styled(Slider)(({ theme }) => ({
+  display: 'flex',
+  height: '100%',
+  width: '100%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 0,
+  borderRadius: 0,
+  [`& .${sliderClasses.rail}`]: {
+    height: '100%',
+    backgroundColor: 'transparent',
+  },
+  [`& .${sliderClasses.track}`]: {
+    height: '100%',
+    transition: theme.transitions.create('background-color', {
+      duration: theme.transitions.duration.shorter,
     }),
-  { defaultTheme },
-);
+    '&.low': {
+      backgroundColor: '#f44336',
+    },
+    '&.medium': {
+      backgroundColor: '#efbb5aa3',
+    },
+    '&.high': {
+      backgroundColor: '#088208a3',
+    },
+  },
+  [`& .${sliderClasses.thumb}`]: {
+    height: '100%',
+    width: 5,
+    borderRadius: 0,
+    marginTop: 0,
+    backgroundColor: alpha('#000000', 0.2),
+  },
+}));
 
 const ValueLabelComponent = (props: ValueLabelProps) => {
   const { children, open, value } = props;
@@ -62,7 +54,6 @@ const ValueLabelComponent = (props: ValueLabelProps) => {
 };
 
 function EditProgress(props: GridRenderEditCellParams) {
-  const classes = useStyles();
   const { id, value, api, field } = props;
   const [valueState, setValueState] = React.useState(Number(value));
 
@@ -94,11 +85,10 @@ function EditProgress(props: GridRenderEditCellParams) {
   };
 
   return (
-    <Slider
+    <StyledSlider
       ref={handleRef}
       classes={{
-        ...classes,
-        track: clsx(classes.track, {
+        track: clsx({
           low: valueState < 0.3,
           medium: valueState >= 0.3 && valueState <= 0.7,
           high: valueState > 0.7,

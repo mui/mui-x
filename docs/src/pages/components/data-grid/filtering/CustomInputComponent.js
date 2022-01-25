@@ -88,13 +88,16 @@ export default function CustomInputComponent() {
         if (col.field === 'rating') {
           return {
             ...col,
-            filterOperators: getGridNumericOperators().map((operator) => ({
-              ...operator,
-              InputComponent: operator.InputComponent ? RatingInputValue : undefined,
-            })),
+            filterOperators: getGridNumericOperators()
+              .filter((operator) => operator.value !== 'isAnyOf')
+              .map((operator) => ({
+                ...operator,
+                InputComponent: operator.InputComponent
+                  ? RatingInputValue
+                  : undefined,
+              })),
           };
         }
-
         return col;
       }),
     [data.columns],
@@ -106,6 +109,7 @@ export default function CustomInputComponent() {
         rows={data.rows}
         columns={columns}
         initialState={{
+          ...data.initialState,
           filter: {
             filterModel: {
               items: [
