@@ -1,25 +1,17 @@
 import * as React from 'react';
 import {
-  GridColumns,
   DataGrid,
-  GridValueGetterParams,
   gridNumberComparator,
   gridStringOrNumberComparator,
-  GridComparatorFn,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const VISIBLE_FIELDS = ['rating', 'country', 'isAdmin'];
+const VISIBLE_FIELDS = ['rating', 'country', 'dateCreated'];
 
-interface NameAdminCellValue {
-  name: string;
-  isAdmin: boolean;
-}
-
-const nameAdminSortComparator: GridComparatorFn = (v1, v2, param1, param2) => {
+const nameAdminSortComparator = (v1, v2, param1, param2) => {
   const adminComparatorResult = gridNumberComparator(
-    (v1 as NameAdminCellValue).isAdmin,
-    (v2 as NameAdminCellValue).isAdmin,
+    v1.isAdmin,
+    v2.isAdmin,
     param1,
     param2,
   );
@@ -30,32 +22,27 @@ const nameAdminSortComparator: GridComparatorFn = (v1, v2, param1, param2) => {
     return adminComparatorResult;
   }
 
-  return gridStringOrNumberComparator(
-    (v1 as NameAdminCellValue).name,
-    (v2 as NameAdminCellValue).name,
-    param1,
-    param2,
-  );
+  return gridStringOrNumberComparator(v1.name, v2.name, param1, param2);
 };
 
-export default function ComparatorSortingGrid() {
+export default function ExtendedSortComparator() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
   });
 
-  const columns = React.useMemo<GridColumns>(
+  const columns = React.useMemo(
     () => [
       {
         field: 'nameAdmin',
         headerName: 'Name',
-        valueGetter: (params: GridValueGetterParams) => ({
+        valueGetter: (params) => ({
           name: params.row.name,
           isAdmin: params.row.isAdmin,
         }),
         valueFormatter: (params) => {
-          const value = params.value as NameAdminCellValue;
+          const value = params.value;
           if (value.isAdmin) {
             return `${value.name} (admin)`;
           }
@@ -64,16 +51,6 @@ export default function ComparatorSortingGrid() {
         },
         sortComparator: nameAdminSortComparator,
         width: 200,
-      },
-      {
-        field: 'dateCreatedCustom',
-        valueGetter: (params) => params.row.dateCreated,
-        headerName: 'Created on',
-        width: 180,
-        type: 'date',
-        sortComparator: (v1, v2) => {
-          return (v1 as Date).getDate() - (v2 as Date).getDate();
-        },
       },
       ...data.columns,
     ],
@@ -89,7 +66,7 @@ export default function ComparatorSortingGrid() {
           sorting: {
             sortModel: [
               {
-                field: 'username',
+                field: 'nameAdmin',
                 sort: 'asc',
               },
             ],

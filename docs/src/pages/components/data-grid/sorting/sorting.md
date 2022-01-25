@@ -6,8 +6,9 @@ title: Data Grid - Sorting
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 
-The sorting rules can be modified through the user interface by clicking on a column header.
-Repeat this action to pass to the next sorting direction of the column.
+Sorting is enabled by default to the grid users and works out of the box without any explicit configuration.
+Users can set a sorting rule simply by clicking on a column header.
+Following clicks change the column's sorting direction. You can see the applied direction on the header's arrow indicator.
 
 {{"demo": "pages/components/data-grid/sorting/BasicExampleDataGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -17,7 +18,9 @@ Repeat this action to pass to the next sorting direction of the column.
 >
 > To use multi-sorting, you need to upgrade to the [Pro plan](https://mui.com/store/items/material-ui-pro/)
 
-The demo below lets you sort the rows according to several criteria at the same time.
+## Multi-sorting [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+The following demo lets you sort the rows according to several criteria at the same time.
 
 Hold down the <kbd class="key">CTRL</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.
 
@@ -35,7 +38,8 @@ Each item represents a sorting rule and is composed of several elements:
 
 ### Initialize the sort model
 
-To initialize the sort model without controlling it, provide the model to the `initialState` prop.
+Sorting is enabled by default to the user.
+But if you want to set an initial sorting order, simply provide the model to the `initialState` prop.
 
 ```jsx
 <DataGrid
@@ -51,7 +55,7 @@ To initialize the sort model without controlling it, provide the model to the `i
 
 ### Controlled sort model
 
-Use the `sortModel` prop to control the sorting rules applied on the rows.
+Use the `sortModel` prop to control the state of the sorting rules.
 
 You can use the `onSortModelChange` prop to listen to changes in the sorting rules and update the prop accordingly.
 
@@ -60,8 +64,8 @@ You can use the `onSortModelChange` prop to listen to changes in the sorting rul
 ## Disable the sorting
 
 By default, all columns are sortable.
-To disable the filter on a column, set the `sortable` property of `GridColDef` to `false`.
-In the example below, the _rating_ column can not be sorted.
+To disable sorting on a column, set the `sortable` property of `GridColDef` to `false`.
+In the following demo, the user cannot use the _rating_ column as a sorting rule.
 
 ```tsx
 <Datagrid columns={[...columns, { field: 'rating', sortable: false }]} />
@@ -82,12 +86,19 @@ You can re-use them by importing the following functions:
 
 To extend or modify this behavior in a specific column, you can pass in a custom comparator, and override the `sortComparator` property of the `GridColDef` interface.
 
-In the example below:
+### Create a comparator from scratch
 
-- the "Name" column combines the `name` and `isAdmin` fields. The sorting is based on `isAdmin` and then on `name`, if necessary. It re-uses the built-in sorting comparator.
-- the "Created on" column sorting is based on the day of the month of the `createdOn` field. It is a fully custom sorting comparator.
+In the following demo, the "Created on" column sorting is based on the day of the month of the `createdOn` field.
+It is a fully custom sorting comparator.
 
-{{"demo": "pages/components/data-grid/sorting/ComparatorSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/sorting/FullyCustomSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Combine built-in comparators
+
+In the following demo, the "Name" column combines the `name` and `isAdmin` fields.
+The sorting is based on `isAdmin` and then on `name`, if necessary. It re-uses the built-in sorting comparator.
+
+{{"demo": "pages/components/data-grid/sorting/ExtendedSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom sort order
 
@@ -103,7 +114,7 @@ The next click will make it sort descending (`desc`). Another click will remove 
 ### For all columns
 
 The default sort order can be overridden for all columns with the `sortingOrder` prop.
-In the example below columns are only sortable in descending or ascending order.
+In the following demo, columns are only sortable in descending or ascending order.
 
 {{"demo": "pages/components/data-grid/sorting/OrderSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -123,7 +134,7 @@ const columns: GridColDef = [
 
 Sorting can be run server-side by setting the `sortingMode` prop to `server`, and implementing the `onSortModelChange` handler.
 
-{{"demo": "pages/components/data-grid/sorting/ServerSortingGrid.js", "bg": "inline",}}
+{{"demo": "pages/components/data-grid/sorting/ServerSortingGrid.js", "bg": "inline"}}
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

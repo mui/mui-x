@@ -5,7 +5,7 @@
     sorting: {
       sortModel: [
         {
-          field: 'username',
+          field: 'nameAdmin',
           sort: 'asc',
         },
       ],
