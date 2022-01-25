@@ -1,6 +1,7 @@
 import * as ts from 'typescript';
 import path from 'path';
 import { renderInline as renderMarkdownInline } from '@mui/monorepo/docs/packages/markdown';
+import FEATURE_TOGGLE from 'docs/src/featureToggle';
 
 import {
   DocumentedInterfaces,
@@ -68,8 +69,15 @@ export default function buildEventsDocumentation(options: BuildEventsDocumentati
   });
 
   const sortedEvents = events.sort((a, b) => a.name.localeCompare(b.name));
+  if (!FEATURE_TOGGLE.enable_redirects) {
+    writePrettifiedFile(
+      path.resolve(project.workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
+      JSON.stringify(sortedEvents),
+      project,
+    );
+  }
   writePrettifiedFile(
-    path.resolve(project.workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
+    path.resolve(project.workspaceRoot, 'docs/data/data-grid/events/events.json'),
     JSON.stringify(sortedEvents),
     project,
   );
