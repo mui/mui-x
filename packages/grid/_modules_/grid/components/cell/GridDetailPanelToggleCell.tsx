@@ -7,7 +7,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { gridExpandedRowsContentCacheSelector } from '../../hooks/features/detailPanel/gridDetailPanelSelector';
+import { gridDetailPanelExpandedRowsContentCacheSelector } from '../../hooks/features/detailPanel/gridDetailPanelSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 
 type OwnerState = { classes: DataGridProcessedProps['classes']; isExpanded: boolean };
@@ -30,7 +30,7 @@ const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
   const ownerState: OwnerState = { classes: rootProps.classes, isExpanded };
   const classes = useUtilityClasses(ownerState);
 
-  const contentCache = useGridSelector(apiRef, gridExpandedRowsContentCacheSelector);
+  const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
   const hasContent = React.isValidElement(contentCache[id]);
 
   return (

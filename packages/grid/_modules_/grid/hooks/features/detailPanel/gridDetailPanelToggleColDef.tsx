@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridDetailPanelToggleCell } from '../../../components/cell/GridDetailPanelToggleCell';
-import { gridExpandedRowIdsSelector } from './gridDetailPanelSelector';
+import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
 import { GridValueGetterFullParams } from '../../../models/params/gridCellParams';
 
 export const GRID_DETAIL_PANEL_TOGGLE_FIELD = '__detail_panel_toggle__';
@@ -21,7 +21,7 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   align: 'left',
   width: 40,
   valueGetter: (params) => {
-    const expandedRowIds = gridExpandedRowIdsSelector(
+    const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(
       (params as GridValueGetterFullParams).api.state,
     );
     return expandedRowIds.includes(params.id);

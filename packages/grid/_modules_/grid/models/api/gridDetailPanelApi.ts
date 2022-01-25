@@ -13,10 +13,10 @@ export interface GridDetailPanelApi {
    * Returns the rows whose detail panel is open.
    * @returns {GridRowId[]} An array of row ids.
    */
-  getExpandedRowIds: () => GridRowId[];
+  getExpandedDetailPanels: () => GridRowId[];
   /**
    * Changes which rows to expand the detail panel.
    * @param {GridRowId[]} ids The ids of the rows to open the detail panel.
    */
-  setExpandedRowIds: (ids: GridRowId[]) => void;
+  setExpandedDetailPanels: (ids: GridRowId[]) => void;
 }

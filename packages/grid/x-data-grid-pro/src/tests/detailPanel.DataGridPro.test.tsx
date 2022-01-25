@@ -356,7 +356,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       });
     });
 
-    describe('getExpandedRowIds', () => {
+    describe('getExpandedDetailPanels', () => {
       it('should return an array of ids', () => {
         render(
           <TestCase
@@ -368,11 +368,11 @@ describe('<DataGridPro /> - Detail panel', () => {
             }}
           />,
         );
-        expect(apiRef.current.getExpandedRowIds()).to.deep.equal([0, 1]);
+        expect(apiRef.current.getExpandedDetailPanels()).to.deep.equal([0, 1]);
       });
     });
 
-    describe('setExpandedRowIds', () => {
+    describe('setExpandedDetailPanels', () => {
       it('should update which detail panels are open', () => {
         render(
           <TestCase
@@ -387,7 +387,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         expect(screen.queryByText('Row 0')).not.to.equal(null);
         expect(screen.queryByText('Row 1')).to.equal(null);
         expect(screen.queryByText('Row 2')).to.equal(null);
-        apiRef.current.setExpandedRowIds([1, 2]);
+        apiRef.current.setExpandedDetailPanels([1, 2]);
         expect(screen.queryByText('Row 0')).to.equal(null);
         expect(screen.queryByText('Row 1')).not.to.equal(null);
         expect(screen.queryByText('Row 2')).not.to.equal(null);
