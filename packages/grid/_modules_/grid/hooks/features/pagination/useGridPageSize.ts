@@ -18,7 +18,7 @@ import {
   useGridRegisterPreProcessor,
 } from '../../core/preProcessing';
 
-const setStatePageSize =
+const mergeStateWithPageSize =
   (pageSize: number) =>
   (state: GridState): GridState => ({
     ...state,
@@ -81,7 +81,7 @@ export const useGridPageSize = (
 
       logger.debug(`Setting page size to ${pageSize}`);
 
-      apiRef.current.setState(setStatePageSize(pageSize));
+      apiRef.current.setState(mergeStateWithPageSize(pageSize));
       apiRef.current.forceUpdate();
     },
     [apiRef, logger],
@@ -120,7 +120,7 @@ export const useGridPageSize = (
     (params, context) => {
       const pageSize = context.stateToRestore.pagination?.pageSize;
       if (pageSize != null) {
-        apiRef.current.setState(setStatePageSize(pageSize));
+        apiRef.current.setState(mergeStateWithPageSize(pageSize));
       }
       return params;
     },

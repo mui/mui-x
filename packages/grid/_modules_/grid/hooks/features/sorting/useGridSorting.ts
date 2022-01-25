@@ -21,7 +21,7 @@ import { gridRowIdsSelector, gridRowGroupingNameSelector, gridRowTreeSelector } 
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridSortingMethod, GridSortingMethodCollection } from './gridSortingState';
-import { buildAggregatedSortingApplier, setStateSortModel } from './gridSortingUtils';
+import { buildAggregatedSortingApplier, mergeStateWithSortModel } from './gridSortingUtils';
 import {
   GridPreProcessingGroup,
   GridPreProcessor,
@@ -148,7 +148,7 @@ export const useGridSorting = (
       const currentModel = gridSortModelSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting sort model`);
-        apiRef.current.setState(setStateSortModel(model));
+        apiRef.current.setState(mergeStateWithSortModel(model));
         apiRef.current.forceUpdate();
         apiRef.current.applySorting();
       }
@@ -235,7 +235,7 @@ export const useGridSorting = (
       if (sortModel == null) {
         return params;
       }
-      apiRef.current.setState(setStateSortModel(sortModel));
+      apiRef.current.setState(mergeStateWithSortModel(sortModel));
 
       return {
         ...params,

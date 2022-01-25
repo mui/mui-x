@@ -30,7 +30,7 @@ import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod
 import {
   buildAggregatedFilterApplier,
   cleanFilterItem,
-  setStateFilterModel,
+  mergeStateWithFilterModel,
 } from './gridFilterUtils';
 
 const checkFilterModelValidity = (model: GridFilterModel) => {
@@ -213,7 +213,9 @@ export const useGridFilter = (
         checkFilterModelValidity(model);
 
         logger.debug('Setting filter model');
-        apiRef.current.setState(setStateFilterModel(model, props.disableMultipleColumnsFiltering));
+        apiRef.current.setState(
+          mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering),
+        );
         apiRef.current.unstable_applyFilters();
       }
     },
@@ -264,7 +266,7 @@ export const useGridFilter = (
         return params;
       }
       apiRef.current.setState(
-        setStateFilterModel(filterModel, props.disableMultipleColumnsFiltering),
+        mergeStateWithFilterModel(filterModel, props.disableMultipleColumnsFiltering),
       );
 
       return {

@@ -37,7 +37,7 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
   };
 };
 
-const setStatePage =
+const mergeStateWithPage =
   (page: number) =>
   (state: GridState): GridState => ({
     ...state,
@@ -83,7 +83,7 @@ export const useGridPage = (
   const setPage = React.useCallback(
     (page) => {
       logger.debug(`Setting page to ${page}`);
-      apiRef.current.setState(setStatePage(page));
+      apiRef.current.setState(mergeStateWithPage(page));
       apiRef.current.forceUpdate();
     },
     [apiRef, logger],
@@ -120,7 +120,7 @@ export const useGridPage = (
       // We apply the constraint even if the page did not change in case the pageSize changed.
       const page =
         context.stateToRestore.pagination?.page ?? gridPageSelector(apiRef.current.state);
-      apiRef.current.setState(setStatePage(page));
+      apiRef.current.setState(mergeStateWithPage(page));
       return params;
     },
     [apiRef],

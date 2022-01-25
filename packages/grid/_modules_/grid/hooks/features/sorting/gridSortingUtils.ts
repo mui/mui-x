@@ -21,7 +21,7 @@ interface GridParsedSortItem {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
 }
 
-export const setStateSortModel =
+export const mergeStateWithSortModel =
   (sortModel: GridSortModel) =>
   (state: GridState): GridState => ({
     ...state,

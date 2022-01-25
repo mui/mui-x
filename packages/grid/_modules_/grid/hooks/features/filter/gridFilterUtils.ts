@@ -13,7 +13,7 @@ type GridFilterItemApplier = {
   item: GridFilterItem;
 };
 
-export const setStateFilterModel = (
+export const mergeStateWithFilterModel = (
   filterModel: GridFilterModel,
   disableMultipleColumnsFiltering: boolean,
 ) => {

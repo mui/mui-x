@@ -1,5 +1,6 @@
-import Button from '@mui/material/Button';
+import * as React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import {
   DataGridPro,
@@ -9,8 +10,8 @@ import {
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
-import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Alert from '@mui/material/Alert';
 
 const GridCustomToolbar = ({ unMount }) => {
   const rootProps = useGridRootProps();
@@ -20,7 +21,7 @@ const GridCustomToolbar = ({ unMount }) => {
     <GridToolbarContainer>
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
-      <rootProps.components.BaseButton
+      <Button
         size="small"
         color="primary"
         startIcon={<rootProps.components.ColumnSelectorIcon />}
@@ -28,7 +29,7 @@ const GridCustomToolbar = ({ unMount }) => {
         {...rootProps.componentsProps?.baseButton}
       >
         Save state and unmount
-      </rootProps.components.BaseButton>
+      </Button>
     </GridToolbarContainer>
   );
 };
@@ -79,6 +80,11 @@ export default function RestoreStateInitialState() {
     return (
       <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
         <WrappedDataGridPro unMount={unMountGrid} initialState={savedState} />
+        {!!savedState && (
+          <Alert severity="info" style={{ marginBottom: 8 }}>
+            <code>Initial state: {JSON.stringify(savedState)}</code>
+          </Alert>
+        )}
       </Box>
     );
   }

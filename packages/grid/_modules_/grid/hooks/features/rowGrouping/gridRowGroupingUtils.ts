@@ -146,7 +146,7 @@ export const getColDefOverrides = (
   return groupingColDefProp;
 };
 
-export const setStateRowGroupingModel =
+export const mergeStateWithRowGroupingModel =
   (rowGroupingModel: GridRowGroupingModel) =>
   (state: GridState): GridState => ({
     ...state,

@@ -25,7 +25,7 @@ import {
   getColDefOverrides,
   GROUPING_COLUMNS_FEATURE_NAME,
   isGroupingColumn,
-  setStateRowGroupingModel,
+  mergeStateWithRowGroupingModel,
 } from './gridRowGroupingUtils';
 import {
   createGroupingColDefForOneGroupingCriteria,
@@ -368,7 +368,7 @@ export const useGridRowGrouping = (
     (model) => {
       const currentModel = gridRowGroupingModelSelector(apiRef.current.state);
       if (currentModel !== model) {
-        apiRef.current.setState(setStateRowGroupingModel(model));
+        apiRef.current.setState(mergeStateWithRowGroupingModel(model));
         updateRowGrouping();
         apiRef.current.forceUpdate();
       }
@@ -470,7 +470,7 @@ export const useGridRowGrouping = (
 
       const rowGroupingModel = context.stateToRestore.rowGrouping?.model;
       if (rowGroupingModel != null) {
-        apiRef.current.setState(setStateRowGroupingModel(rowGroupingModel));
+        apiRef.current.setState(mergeStateWithRowGroupingModel(rowGroupingModel));
       }
       return params;
     },

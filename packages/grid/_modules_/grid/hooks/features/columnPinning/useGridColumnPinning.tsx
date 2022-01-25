@@ -29,7 +29,7 @@ import { GridState } from '../../../models';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
-const setStatePinnedColumns =
+const mergeStateWithPinnedColumns =
   (pinnedColumns: GridPinnedColumns) =>
   (state: GridState): GridState => ({ ...state, pinnedColumns });
 
@@ -242,7 +242,7 @@ export const useGridColumnPinning = (
     (params, context) => {
       const newPinnedColumns = context.stateToRestore.pinnedColumns;
       if (newPinnedColumns != null) {
-        apiRef.current.setState(setStatePinnedColumns(newPinnedColumns));
+        apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));
       }
 
       return params;
@@ -327,7 +327,7 @@ export const useGridColumnPinning = (
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
       checkIfEnabled('setPinnedColumns');
-      apiRef.current.setState(setStatePinnedColumns(newPinnedColumns));
+      apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));
       apiRef.current.forceUpdate();
     },
     [apiRef, checkIfEnabled],

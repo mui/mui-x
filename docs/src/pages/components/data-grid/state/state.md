@@ -59,9 +59,12 @@ Some selectors are yet to be documented.
 The current state of the grid can be exported using `apiRef.current.exportState()`.
 It can then be restored by either passing it to the `initialState` prop or to the `apiRef.current.restoreState()` method.
 
+If one of the sub-state is being controlled, the grid will call the callback linked to that model (`onFilterModelChange` if `filterModel` is being controlled for instance).
+But if the callback is not defined or if calling it does not update the prop value, then the restored value will not be applied.
+
 ### Restore the state with `initialState`
 
-> ⚠️ If you restore the page using `initialState` before the data are fetched, the grid will automatically move to the 1st page.
+> ⚠️ If you restore the page using `initialState` before the data is fetched, the grid will automatically move to the 1st page.
 
 {{"demo": "pages/components/data-grid/state/RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -80,8 +83,9 @@ apiRef.current.restoreState({
 });
 ```
 
-**Note**: Most of the state keys are not fully independent.
-Restoring the pagination without restoring the filters or the sorting will work, but the rows displayed after the re-import will not be the same as before the export.
+> ⚠️ Most of the state keys are not fully independent.
+>
+> Restoring the pagination without restoring the filters or the sorting will work, but the rows displayed after the re-import will not be the same as before the export.
 
 ## API
 
