@@ -49,19 +49,20 @@ The grid responds to keyboard interactions from the user and emits events when k
 
 Use the arrow keys to move the focus.
 
-|                                                               Keys | Description                                   |
-| -----------------------------------------------------------------: | :-------------------------------------------- |
-|                                  <kbd class="key">Arrow Left</kbd> | Navigate between cell elements                |
-|                                <kbd class="key">Arrow Bottom</kbd> | Navigate between cell elements                |
-|                                 <kbd class="key">Arrow Right</kbd> | Navigate between cell elements                |
-|                                    <kbd class="key">Arrow Up</kbd> | Navigate between cell elements                |
-|                                        <kbd class="key">Home</kbd> | Navigate to the first cell of the current row |
-|                                         <kbd class="key">End</kbd> | Navigate to the last cell of the current row  |
-| <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">Home</kbd></kbd> | Navigate to the first cell of the first row   |
-|  <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">End</kbd></kbd> | Navigate to the last cell of the last row     |
-|                                       <kbd class="key">Space</kbd> | Navigate to the next scrollable page          |
-|                                     <kbd class="key">Page Up</kbd> | Navigate to the next scrollable page          |
-|                                   <kbd class="key">Page Down</kbd> | Navigate to the previous scrollable page      |
+|                                                               Keys | Description                                                 |
+| -----------------------------------------------------------------: | :---------------------------------------------------------- |
+|                                  <kbd class="key">Arrow Left</kbd> | Navigate between cell elements                              |
+|                                <kbd class="key">Arrow Bottom</kbd> | Navigate between cell elements                              |
+|                                 <kbd class="key">Arrow Right</kbd> | Navigate between cell elements                              |
+|                                    <kbd class="key">Arrow Up</kbd> | Navigate between cell elements                              |
+|                                        <kbd class="key">Home</kbd> | Navigate to the first cell of the current row               |
+|                                         <kbd class="key">End</kbd> | Navigate to the last cell of the current row                |
+| <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">Home</kbd></kbd> | Navigate to the first cell of the first row                 |
+|  <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">End</kbd></kbd> | Navigate to the last cell of the last row                   |
+|                                       <kbd class="key">Space</kbd> | Navigate to the next scrollable page                        |
+|                                     <kbd class="key">Page Up</kbd> | Navigate to the next scrollable page                        |
+|                                   <kbd class="key">Page Down</kbd> | Navigate to the previous scrollable page                    |
+|                                       <kbd class="key">Space</kbd> | Toggle row children expansion when grouping cell is focused |
 
 ### Selection
 

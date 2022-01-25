@@ -13,12 +13,18 @@
   },
   { "name": "gridColumnResizeSelector", "returnType": "GridColumnResizeState", "description": "" },
   {
+    "name": "gridColumnVisibilityModelSelector",
+    "returnType": "GridColumnVisibilityModel",
+    "description": ""
+  },
+  {
     "name": "gridColumnsMetaSelector",
     "returnType": "{ totalWidth: number; positions: number[] }",
     "description": ""
   },
   { "name": "gridColumnsSelector", "returnType": "GridColumnsState", "description": "" },
   { "name": "gridColumnsTotalWidthSelector", "returnType": "number", "description": "" },
+  { "name": "gridDensityFactorSelector", "returnType": "number", "description": "" },
   { "name": "gridDensityHeaderHeightSelector", "returnType": "number", "description": "" },
   { "name": "gridDensityRowHeightSelector", "returnType": "number", "description": "" },
   { "name": "gridDensitySelector", "returnType": "GridDensityState", "description": "" },
@@ -81,11 +87,23 @@
   },
   { "name": "gridResizingColumnFieldSelector", "returnType": "string", "description": "" },
   { "name": "gridRowCountSelector", "returnType": "number", "description": "" },
+  {
+    "name": "gridRowGroupingModelSelector",
+    "returnType": "GridRowGroupingModel",
+    "description": ""
+  },
   { "name": "gridRowGroupingNameSelector", "returnType": "string", "description": "" },
+  { "name": "gridRowGroupingSanitizedModelSelector", "returnType": "string[]", "description": "" },
+  {
+    "name": "gridRowGroupingStateSelector",
+    "returnType": "GridRowGroupingState",
+    "description": ""
+  },
   { "name": "gridRowIdsSelector", "returnType": "GridRowId[]", "description": "" },
   { "name": "gridRowTreeDepthSelector", "returnType": "number", "description": "" },
   { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig", "description": "" },
   { "name": "gridRowsLookupSelector", "returnType": "GridRowsLookup", "description": "" },
+  { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState", "description": "" },
   { "name": "gridRowsStateSelector", "returnType": "GridRowsState", "description": "" },
   { "name": "gridSelectionStateSelector", "returnType": "GridSelectionModel", "description": "" },
   {
