@@ -119,8 +119,8 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Groupe',
-  groupColumn: name => `Grouper par ${name}`,
-  unGroupColumn: name => `Arrêter de grouper par ${name}`,
+  groupColumn: (name) => `Grouper par ${name}`,
+  unGroupColumn: (name) => `Arrêter de grouper par ${name}`,
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
