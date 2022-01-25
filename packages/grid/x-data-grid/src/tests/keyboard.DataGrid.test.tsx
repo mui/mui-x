@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, createEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -325,6 +325,39 @@ describe('<DataGrid /> - Keyboard', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
       expect(getActiveCell()).to.equal(`5-1`);
     });
+
+    it('should be able to use keyboard in an child input', () => {
+      const columns = [
+        {
+          field: 'name',
+          headerName: 'Name',
+          width: 200,
+          renderHeader: () => <input type="text" data-testid="custom-input" />,
+        },
+      ];
+
+      const rows = [
+        {
+          id: 1,
+          name: 'John',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={rows} columns={columns} />
+        </div>,
+      );
+      const input = screen.getByTestId('custom-input');
+      input.focus();
+
+      // Verify that the event is not prevented during the bubbling.
+      // fireEvent.keyDown return false if it is the case
+      // For more info, see the related discussion: https://github.com/mui-org/material-ui-x/pull/3624/files#r787767632
+      expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
+      expect(fireEvent.keyDown(input, { key: ' ' })).to.equal(true);
+      expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
+    });
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 
@@ -356,11 +389,14 @@ describe('<DataGrid /> - Keyboard', () => {
     );
     const input = screen.getByTestId('custom-input');
     fireClickEvent(input);
-    const keydownEvent = createEvent.keyDown(input, {
-      key: 'a',
-    });
-    fireEvent(input, keydownEvent);
-    expect(handleInputKeyDown.returnValues).to.deep.equal([false]);
+    input.focus();
+
+    // Verify that the event is not prevented during the bubbling.
+    // fireEvent.keyDown return false if it is the case
+    // For more info, see the related discussion: https://github.com/mui-org/material-ui-x/pull/3624/files#r787767632
+    expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
+    expect(fireEvent.keyDown(input, { key: ' ' })).to.equal(true);
+    expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
   });
 
   it('should ignore key shortcuts if activeElement is not a cell', () => {
