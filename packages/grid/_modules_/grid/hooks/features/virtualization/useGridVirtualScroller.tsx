@@ -157,31 +157,43 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     ];
   };
 
-  const updateRenderZonePosition = (nextRenderContext: GridRenderContext) => {
-    const [firstRowToRender] = getRenderableIndexes({
-      firstIndex: nextRenderContext.firstRowIndex,
-      lastIndex: nextRenderContext.lastRowIndex,
-      minFirstIndex: 0,
-      maxLastIndex: currentPage.range?.lastRowIndex,
-      buffer: rootProps.rowBuffer,
-    });
+  const updateRenderZonePosition = React.useCallback(
+    (nextRenderContext: GridRenderContext) => {
+      const [firstRowToRender] = getRenderableIndexes({
+        firstIndex: nextRenderContext.firstRowIndex,
+        lastIndex: nextRenderContext.lastRowIndex,
+        minFirstIndex: 0,
+        maxLastIndex: currentPage.range?.lastRowIndex,
+        buffer: rootProps.rowBuffer,
+      });
 
-    const [firstColumnToRender] = getRenderableIndexes({
-      firstIndex: nextRenderContext.firstColumnIndex,
-      lastIndex: nextRenderContext.lastColumnIndex,
-      minFirstIndex: renderZoneMinColumnIndex,
-      maxLastIndex: renderZoneMaxColumnIndex,
-      buffer: rootProps.columnBuffer,
-    });
+      const [firstColumnToRender] = getRenderableIndexes({
+        firstIndex: nextRenderContext.firstColumnIndex,
+        lastIndex: nextRenderContext.lastColumnIndex,
+        minFirstIndex: renderZoneMinColumnIndex,
+        maxLastIndex: renderZoneMaxColumnIndex,
+        buffer: rootProps.columnBuffer,
+      });
 
-    const top = firstRowToRender * rowHeight;
-    const left = gridColumnsMetaSelector(apiRef.current.state).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
-    renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
+      const top = firstRowToRender * rowHeight;
+      const left = gridColumnsMetaSelector(apiRef.current.state).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
+      renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
 
-    if (typeof onRenderZonePositioning === 'function') {
-      onRenderZonePositioning({ top, left });
-    }
-  };
+      if (typeof onRenderZonePositioning === 'function') {
+        onRenderZonePositioning({ top, left });
+      }
+    },
+    [
+      apiRef,
+      currentPage.range?.lastRowIndex,
+      onRenderZonePositioning,
+      renderZoneMaxColumnIndex,
+      renderZoneMinColumnIndex,
+      rootProps.columnBuffer,
+      rootProps.rowBuffer,
+      rowHeight,
+    ],
+  );
 
   const handleScroll = (event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
