@@ -72,7 +72,8 @@ export const useGridDetailPanel = (
     return {
       ...state,
       detailPanel: {
-        expandedRowIds: props.initialState?.detailPanel?.expandedRowIds || [],
+        expandedRowIds:
+          props.detailPanelExpandedRowIds ?? props.initialState?.detailPanel?.expandedRowIds ?? [],
       },
     };
   });
