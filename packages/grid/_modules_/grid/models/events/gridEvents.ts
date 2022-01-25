@@ -1,3 +1,5 @@
+import { GridEventLookup } from './gridEventLookup';
+
 export enum GridEvents {
   /**
    * Fired when the grid is resized.
@@ -311,4 +313,4 @@ export enum GridEvents {
   virtualScrollerContentSizeChange = 'virtualScrollerContentSizeChange',
 }
 
-export type GridEventsStr = keyof typeof GridEvents;
+export type GridEventsStr = keyof GridEventLookup;
