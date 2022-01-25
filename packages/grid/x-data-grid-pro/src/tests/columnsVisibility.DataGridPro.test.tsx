@@ -17,7 +17,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rows: GridRowsProp = [{ id: 1 }];
 
-const columns: GridColumns = [{ field: 'id' }];
+const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
 
 /**
  * TODO: Remove deprecated tests on v6
@@ -45,6 +45,38 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       </div>
     );
   };
+
+  describe('apiRef: updateColumns', () => {
+    it('should not call `onColumnVisibilityModelChange` when no column visibility has changed', () => {
+      const onColumnVisibilityModelChange = spy();
+      render(
+        <TestDataGridPro
+          columnVisibilityModel={{ idBis: false }}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      apiRef.current.updateColumns([{ field: 'id', width: 300 }]);
+      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+    });
+
+    it('should not reset the visibility status based on `GridColDef.hide` on unmodified columns when controlling the model (deprecated)', () => {
+      const onColumnVisibilityModelChange = spy();
+      render(
+        <TestDataGridPro
+          columnVisibilityModel={{ idBis: false }}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      apiRef.current.updateColumns([{ field: 'id', hide: true }]);
+      expect(onColumnVisibilityModelChange.callCount).to.equal(1);
+      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+        id: false,
+        idBis: false,
+      });
+    });
+  });
 
   describe('apiRef: setColumnVisibility', () => {
     describe('Model on initialState: do not update `GridColDef.hide`', () => {
@@ -120,11 +152,15 @@ describe('<DataGridPro /> - Columns Visibility', () => {
         expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(true);
         expect(gridColumnVisibilityModelSelector(apiRef.current.state)).to.deep.equal({
           id: false,
+          idBis: true,
         });
 
         apiRef.current.setColumnVisibility('id', true);
         expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(false);
-        expect(gridColumnVisibilityModelSelector(apiRef.current.state)).to.deep.equal({ id: true });
+        expect(gridColumnVisibilityModelSelector(apiRef.current.state)).to.deep.equal({
+          id: true,
+          idBis: true,
+        });
       });
 
       it('should call `onColumnVisibilityModelChange` with the new model', () => {
@@ -134,11 +170,17 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
         apiRef.current.setColumnVisibility('id', false);
         expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-        expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({ id: false });
+        expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+          id: false,
+          idBis: true,
+        });
 
         apiRef.current.setColumnVisibility('id', true);
         expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-        expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({ id: true });
+        expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+          id: true,
+          idBis: true,
+        });
       });
 
       it('should call `onColumnVisibilityChange` with the new visibility status', () => {
