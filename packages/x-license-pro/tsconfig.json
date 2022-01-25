@@ -1,8 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig",
   "compilerOptions": {
-    "noEmit": true,
-    "types": ["mocha", "node", "chai"]
+    "noEmit": true, // TODO: Remove once the root tsconfig has `noEmit: true`
+    "types": ["mocha", "node", "chai", "chai-dom"]
   },
-  "include": ["src"]
+  "include": ["src/**/*"]
 }
