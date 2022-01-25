@@ -36,7 +36,11 @@ describe('<DataGridPro /> - Export', () => {
   });
 
   describe('component: GridToolbar', () => {
-    it('should export with the default csvOptions', async () => {
+    it('should export with the default csvOptions', async function test() {
+      // Safari 13 doesn't have Blob.text().
+      if (/safari/i.test(window.navigator.userAgent)) {
+        this.skip();
+      }
       render(<TestCase components={{ Toolbar: GridToolbar }} />);
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       clock.runToLast();
@@ -47,7 +51,11 @@ describe('<DataGridPro /> - Export', () => {
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
     });
 
-    it('should apply custom csvOptions', async () => {
+    it('should apply custom csvOptions', async function test() {
+      // Safari 13 doesn't have Blob.text().
+      if (/safari/i.test(window.navigator.userAgent)) {
+        this.skip();
+      }
       render(
         <TestCase
           components={{ Toolbar: GridToolbar }}
@@ -78,7 +86,11 @@ describe('<DataGridPro /> - Export', () => {
   });
 
   describe('component: GridToolbarExport', () => {
-    it('should export with the default csvOptions', async () => {
+    it('should export with the default csvOptions', async function test() {
+      // Safari 13 doesn't have Blob.text().
+      if (/safari/i.test(window.navigator.userAgent)) {
+        this.skip();
+      }
       render(<TestCase components={{ Toolbar: () => <GridToolbarExport /> }} />);
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       clock.runToLast();
@@ -89,7 +101,11 @@ describe('<DataGridPro /> - Export', () => {
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
     });
 
-    it('should apply custom csvOptions', async () => {
+    it('should apply custom csvOptions', async function test() {
+      // Safari 13 doesn't have Blob.text().
+      if (/safari/i.test(window.navigator.userAgent)) {
+        this.skip();
+      }
       render(
         <TestCase
           components={{ Toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}

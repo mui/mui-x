@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "5.2.2",
+  "version": "5.3.0",
   "private": true,
   "author": "MUI Team",
   "license": "MIT",
@@ -32,7 +32,7 @@
     "@trendmicro/react-interpolate": "^0.5.5",
     "@types/lodash": "^4.14.178",
     "@types/react-dom": "^17.0.11",
-    "@types/react-router-dom": "^5.3.2",
+    "@types/react-router-dom": "^5.3.3",
     "accept-language": "^3.0.18",
     "address": "^1.1.2",
     "ast-types": "^0.14.2",
@@ -82,7 +82,7 @@
     "@babel/preset-typescript": "^7.16.7",
     "@types/doctrine": "^0.0.5",
     "cpy-cli": "^3.1.1",
-    "cross-fetch": "^3.1.4",
+    "cross-fetch": "^3.1.5",
     "gm": "^1.23.1",
     "typescript-to-proptypes": "^2.1.0"
   }

@@ -24,6 +24,7 @@
   },
   { "name": "gridColumnsSelector", "returnType": "GridColumnsState", "description": "" },
   { "name": "gridColumnsTotalWidthSelector", "returnType": "number", "description": "" },
+  { "name": "gridDensityFactorSelector", "returnType": "number", "description": "" },
   { "name": "gridDensityHeaderHeightSelector", "returnType": "number", "description": "" },
   { "name": "gridDensityRowHeightSelector", "returnType": "number", "description": "" },
   { "name": "gridDensitySelector", "returnType": "GridDensityState", "description": "" },
@@ -102,6 +103,7 @@
   { "name": "gridRowTreeDepthSelector", "returnType": "number", "description": "" },
   { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig", "description": "" },
   { "name": "gridRowsLookupSelector", "returnType": "GridRowsLookup", "description": "" },
+  { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState", "description": "" },
   { "name": "gridRowsStateSelector", "returnType": "GridRowsState", "description": "" },
   { "name": "gridSelectionStateSelector", "returnType": "GridSelectionModel", "description": "" },
   {

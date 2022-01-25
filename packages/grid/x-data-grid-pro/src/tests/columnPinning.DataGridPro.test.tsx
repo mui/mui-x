@@ -116,6 +116,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
+    clock.runToLast();
     // @ts-expect-error need to migrate helpers to TypeScript
     expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
   });

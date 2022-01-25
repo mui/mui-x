@@ -119,14 +119,14 @@ const DataGridProVirtualScroller = React.forwardRef<
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
 
-  const handleRenderZonePositioning = ({ top }) => {
+  const handleRenderZonePositioning = React.useCallback(({ top }) => {
     if (leftColumns.current) {
       leftColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
     }
     if (rightColumns.current) {
       rightColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
     }
-  };
+  }, []);
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
