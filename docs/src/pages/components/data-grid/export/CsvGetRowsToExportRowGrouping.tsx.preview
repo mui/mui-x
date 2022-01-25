@@ -8,5 +8,4 @@
     },
   }}
   experimentalFeatures={{ rowGrouping: true }}
-  defaultGroupingExpansionDepth={-1}
 />
