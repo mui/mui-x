@@ -430,8 +430,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     const otherCell = getCell(2, 1);
-    fireEvent.mouseUp(otherCell);
-    fireEvent.click(otherCell);
+    fireClickEvent(otherCell);
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell).to.have.text('1970');
@@ -494,9 +493,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     const otherCell = getCell(2, 1);
-    fireEvent.mouseUp(otherCell);
-    fireEvent.click(otherCell);
-    fireEvent.focus(otherCell);
+    fireClickEvent(otherCell);
+
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell).to.have.text('1970');
@@ -583,8 +581,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     fireEvent.doubleClick(cell);
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
-    fireEvent.mouseUp(screen.getByRole('button', { name: /Click me/i }));
-    fireEvent.click(screen.getByRole('button', { name: /Click me/i }));
+    fireClickEvent(screen.getByRole('button', { name: /Click me/i }));
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
   });
 

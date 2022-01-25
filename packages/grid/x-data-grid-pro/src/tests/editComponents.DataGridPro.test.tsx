@@ -13,6 +13,11 @@ import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+function fireClickEvent(cell: HTMLElement) {
+  fireEvent.mouseUp(cell);
+  fireEvent.click(cell);
+}
+
 /**
  * Creates a date that is compatible with years before 1901
  * `new Date(0001)` creates a date for 1901, not 0001
@@ -324,8 +329,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.click(cell);
+      fireClickEvent(cell);
 
       fireEvent.keyDown(cell, { key: 'Enter' });
       fireEvent.keyDown(screen.queryByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
@@ -358,8 +362,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       const option = screen.queryAllByRole('option')[1];
-      fireEvent.mouseUp(option);
-      fireEvent.click(option);
+      fireClickEvent(option);
       await waitFor(() => {
         expect(cell.firstChild).to.have.class('Mui-error');
       });
@@ -386,8 +389,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       const option = screen.queryAllByRole('option')[1];
-      fireEvent.mouseUp(option);
-      fireEvent.click(option);
+      fireClickEvent(option);
       await waitFor(() => {
         expect(cell.firstChild).to.have.class('Mui-error');
       });
