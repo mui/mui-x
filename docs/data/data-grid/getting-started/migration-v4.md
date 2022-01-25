@@ -18,9 +18,9 @@ Depending on the complexity of the application however, this might not be possib
 An alternative is to install MUI Core v4 alongside to v5, and to configure them to avoid conflicts.
 This can be achieved with the following steps:
 
-1. First, make sure you have MUI X v5 installed. If not, install it with these [instructions](/components/data-grid/getting-started/#installation).
+1. First, make sure you have MUI X v5 installed. If not, install it with these [instructions](/x/react-data-grid/getting-started/#installation).
 
-2. Add a custom [`createGenerateClassName`](/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
+2. Add a custom [`createGenerateClassName`](/system/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
 ```jsx
 import { createGenerateClassName } from '@material-ui/core/styles';
@@ -168,7 +168,7 @@ The following interactive demo shows how these steps tie together:
   - `onRowLeave`
 
   If you depend on them, you can use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
-  For more information, check [this page](/components/data-grid/components/#row). Example:
+  For more information, check [this page](/x/react-data-grid/components/#row). Example:
 
   ```diff
   -<DataGrid onRowOver={handleRowOver} />;

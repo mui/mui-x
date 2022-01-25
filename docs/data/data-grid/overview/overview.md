@@ -19,20 +19,20 @@ Data tables display information in a grid-like format of rows and columns. They 
 
 The data grid comes with two different licenses:
 
-- [DataGrid](/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
-- [DataGridPro](/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
+- [DataGrid](/x/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
+- [DataGridPro](/x/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
   The features only available in the commercial version are suffixed with a <span class="plan-pro"></span> icon for the Pro plan or a <span class="plan-premium"></span> icon for the Premium plan.
 
   <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
 
-  You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
+  You can check the [feature comparison](/x/react-data-grid/getting-started/#feature-comparison) for more details.
   See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
-> Visit the [installation guide](/components/data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+> Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
 
 ### MIT version
 
-The first version is meant to simplify the [Table demo](/components/tables/#sorting-amp-selecting) with a clean abstraction.
+The first version is meant to simplify the [Table demo](/material/react-table/#sorting-amp-selecting) with a clean abstraction.
 This abstraction also set constraints that allow the component to implement new features.
 
 ```js
@@ -51,7 +51,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 {{"demo": "DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
-You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
+You can check the [feature comparison](/x/react-data-grid/getting-started/#feature-comparison) for more details.
 See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### MIT vs. commercial
@@ -76,32 +76,32 @@ We provide three options:
 
 - Built with and exclusively for React ⚛️
 - High performance 🚀
-- [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#single-and-multi-filtering) <span class="plan-pro"></span>
-- [Pagination](/components/data-grid/pagination/)
-- [Row & Cell editing](/components/data-grid/editing/)
-- [Sorting](/components/data-grid/sorting) and [multi-sort](/components/data-grid/sorting/#multi-column-sorting) <span class="plan-pro"></span>
-- [Selection](/components/data-grid/selection/)
-- [Column virtualization](/components/data-grid/virtualization/#column-virtualization) and [rows virtualization](/components/data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
-- [Row grouping](/components/data-grid/group-pivot/#row-grouping) <span class="plan-pro"></span>
-- [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="plan-pro"></span>
-- [Resizable columns](/components/data-grid/columns/#column-resizing) <span class="plan-pro"></span>
-- [100% customizable](/components/data-grid/style/)
+- [Filtering](/x/react-data-grid/filtering/) and [multi-filtering](/x/react-data-grid/filtering/#single-and-multi-filtering) <span class="plan-pro"></span>
+- [Pagination](/x/react-data-grid/pagination/)
+- [Row & Cell editing](/x/react-data-grid/editing/)
+- [Sorting](/x/react-data-grid/sorting) and [multi-sort](/x/react-data-grid/sorting/#multi-column-sorting) <span class="plan-pro"></span>
+- [Selection](/x/react-data-grid/selection/)
+- [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization) and [rows virtualization](/x/react-data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
+- [Row grouping](/x/react-data-grid/group-pivot/#row-grouping) <span class="plan-pro"></span>
+- [Tree data](/x/react-data-grid/group-pivot/#tree-data) <span class="plan-pro"></span>
+- [Resizable columns](/x/react-data-grid/columns/#column-resizing) <span class="plan-pro"></span>
+- [100% customizable](/x/react-data-grid/style/)
 - Server-side data
-- [Column hiding](/components/data-grid/columns/#hiding)
-- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
-- [Accessible](/components/data-grid/accessibility/)
-- [Localization](/components/data-grid/localization/)
+- [Column hiding](/x/react-data-grid/columns/#hiding)
+- [Column pinning](/x/react-data-grid/columns/#column-pinning) <span class="pro"></span>
+- [Accessible](/x/react-data-grid/accessibility/)
+- [Localization](/x/react-data-grid/localization/)
 
 ### 🚧 Upcoming features
 
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
 - Headless (hooks only)
-- [Excel export](/components/data-grid/export/) <span class="plan-premium"></span>
-- [Range selection](/components/data-grid/selection/#range-selection) <span class="plan-premium"></span>
-- [Pivot, Aggregation](/components/data-grid/group-pivot/) <span class="plan-premium"></span>
+- [Excel export](/x/react-data-grid/export/) <span class="plan-premium"></span>
+- [Range selection](/x/react-data-grid/selection/#range-selection) <span class="plan-premium"></span>
+- [Pivot, Aggregation](/x/react-data-grid/group-pivot/) <span class="plan-premium"></span>
 
-You can find more details on, the [feature comparison](/components/data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui-org/material-ui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui-org/material-ui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
+You can find more details on, the [feature comparison](/x/react-data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui-org/material-ui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui-org/material-ui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
 
 ## Resources
 
@@ -115,5 +115,5 @@ Here are some resources you might be interested in to learn more about the grid:
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

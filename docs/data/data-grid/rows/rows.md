@@ -65,7 +65,7 @@ The following demo updates the rows every 10ms, but they are only applied every 
 By default, the rows have a height of 52 pixels.
 This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
 
-If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/components/data-grid/accessibility/#density-selector)
+If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/x/react-data-grid/accessibility/#density-selector)
 
 To change the row height for the whole grid, set the `rowHeight` prop:
 
@@ -73,7 +73,7 @@ To change the row height for the whole grid, set the `rowHeight` prop:
 
 ## Styling rows
 
-You can check the [styling rows](/components/data-grid/style/#styling-rows) section for more information.
+You can check the [styling rows](/x/react-data-grid/style/#styling-rows) section for more information.
 
 ## 🚧 Row spanning
 
@@ -104,5 +104,5 @@ Pinned (or frozen, locked, or sticky) rows are rows that are visible at all time
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

@@ -74,11 +74,11 @@ The following demo shows how these two functions can be used:
 {{"demo": "ValueGetterSetterGrid.js", "bg": "inline"}}
 
 > Calling the `valueSetter` is the last step in the saving process.
-> The [validation](/components/data-grid/editing/#client-side-validation) will still be called with the values before they pass through the setter.
+> The [validation](/x/react-data-grid/editing/#client-side-validation) will still be called with the values before they pass through the setter.
 
 ### Client-side validation
 
-To validate the value in the cells, first add a `preProcessEditCellProps` callback to the [column definition](/api/data-grid/grid-col-def/) of the field to validate.
+To validate the value in the cells, first add a `preProcessEditCellProps` callback to the [column definition](/x/api/data-grid/grid-col-def/) of the field to validate.
 Once it is called, validate the value provided in `params.props.value`.
 Then, return a new object contaning `params.props` and also the `error` attribute set to true or false.
 If the `error` attribute is true, the value will never be committed.
@@ -132,7 +132,7 @@ The demo lets you edit the ratings by double-clicking the cell.
 
 ### Edit using external button [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-You can override the default [start editing](#start-editing) triggers using the [`event.defaultMuiPrevented`](/components/data-grid/events#disabling-the-default-behavior) on the synthetic React events.
+You can override the default [start editing](#start-editing) triggers using the [`event.defaultMuiPrevented`](/x/react-data-grid/events#disabling-the-default-behavior) on the synthetic React events.
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "disableAd": true}}
 
@@ -155,7 +155,7 @@ The demo shows how to catch the start & end edit events to log which cell is edi
 ## Row editing
 
 Row editing allows to edit all the cells of a row at once.
-It is based on the [cell editing](/components/data-grid/editing/#cell-editing), thus most of the features are also supported.
+It is based on the [cell editing](/x/react-data-grid/editing/#cell-editing), thus most of the features are also supported.
 To enable it, change the edit mode to `"row"` using the `editMode` prop, then set to `true` the `editable` property in the `GridColDef` object of those columns that should be editable.
 
 ```tsx
@@ -217,7 +217,7 @@ The following demo requires a value for the "Payment method" column if the "Is p
 
 ### Control with external buttons [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-You can [disable the default behavior](/components/data-grid/events/#disabling-the-default-behavior) of the grid and control the row edit using external buttons.
+You can [disable the default behavior](/x/react-data-grid/events/#disabling-the-default-behavior) of the grid and control the row edit using external buttons.
 
 Here is shown how a full-featured CRUD can be created.
 
@@ -226,7 +226,7 @@ Here is shown how a full-featured CRUD can be created.
 ### Saving rows with nested structures
 
 Saving columns that make use of `valueGetter` can be done adding a `valueSetter`.
-The same [approach](/components/data-grid/editing/#saving-nested-structures) from the cell editing mode can be used here.
+The same [approach](/x/react-data-grid/editing/#saving-nested-structures) from the cell editing mode can be used here.
 Note that the `valueSetter` will be called for each field.
 
 ### Server-side persistence [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
@@ -256,5 +256,5 @@ The following events can be imported and used to customize the row edition:
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
