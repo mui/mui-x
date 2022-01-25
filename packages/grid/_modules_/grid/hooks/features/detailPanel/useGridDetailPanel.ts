@@ -227,7 +227,10 @@ export const useGridDetailPanel = (
 
   React.useEffect(() => {
     if (props.detailPanelExpandedRowIds) {
-      apiRef.current.setExpandedDetailPanels(props.detailPanelExpandedRowIds);
+      const currentModel = gridDetailPanelExpandedRowIdsSelector(apiRef.current.state);
+      if (currentModel !== props.detailPanelExpandedRowIds) {
+        apiRef.current.setExpandedDetailPanels(props.detailPanelExpandedRowIds);
+      }
     }
   }, [apiRef, props.detailPanelExpandedRowIds]);
 
