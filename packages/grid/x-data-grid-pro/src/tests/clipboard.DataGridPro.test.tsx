@@ -94,7 +94,8 @@ describe('<DataGridPro /> - Clipboard', () => {
       render(<Test />);
       apiRef.current.selectRows([0, 1]);
       const cell = getCell(0, 0);
-      cell.focus();
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, altKey: true });
       expect(writeText.callCount).to.equal(1, "writeText wasn't called");
       expect(writeText.firstCall.args[0]).to.equal(
