@@ -8,7 +8,7 @@ title: Data Grid - Export
 
 ## CSV export
 
-The easiest way to enable the CSV export is to pass the `GridToolbar` component in the `Toolbar` [component slot](/components/data-grid/components/#toolbar).
+The easiest way to enable the CSV export is to pass the `GridToolbar` component in the `Toolbar` [component slot](/x/react-data-grid/components/#toolbar).
 
 {{"demo": "ExportDefaultToolbar.js", "bg": "inline"}}
 
@@ -20,7 +20,7 @@ To enable the CSV export in a custom toolbar, use the `GridToolbarExport` compon
 
 ### Custom exported content
 
-The csv export can be customized by passing a [`csvOptions`](/api/data-grid/grid-csv-export-options/) object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
+The csv export can be customized by passing a [`csvOptions`](/x/api/data-grid/grid-csv-export-options/) object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
 The following sections describes some customizations available on this interface.
 
@@ -37,7 +37,7 @@ The following sections describes some customizations available on this interface
 By default, the CSV will only contain the visible columns of the grid.
 There are a few ways to include or hide other columns:
 
-1. Set the exact columns to be exported in [`csvOptions`](/api/data-grid/grid-csv-export-options/).
+1. Set the exact columns to be exported in [`csvOptions`](/x/api/data-grid/grid-csv-export-options/).
 
 ```jsx
 <DataGrid
@@ -45,7 +45,7 @@ There are a few ways to include or hide other columns:
 />
 ```
 
-2. Set `allColumns` in [`csvOptions`](/api/data-grid/grid-csv-export-options/) to `true` to include hidden columns, instead of only the visible ones.
+2. Set `allColumns` in [`csvOptions`](/x/api/data-grid/grid-csv-export-options/) to `true` to include hidden columns, instead of only the visible ones.
 
 ```jsx
 <DataGrid componentsProps={{ toolbar: { csvOptions: { allColumns: true } } }} />
@@ -60,7 +60,7 @@ There are a few ways to include or hide other columns:
 #### Exported cells
 
 When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.
-You can provide a [`valueFormatter`](/components/data-grid/columns/#value-formatter) with a string representation to be used.
+You can provide a [`valueFormatter`](/x/react-data-grid/columns/#value-formatter) with a string representation to be used.
 
 ```jsx
 <DataGrid
@@ -94,7 +94,7 @@ You can remove the CSV export option from the toolbar by setting `disableToolbar
 
 The DataGrid provides the ability to optimize the layout of the grid for print mode. It can also be used to export to PDF.
 
-The easiest way to enable the Print export is to pass the `GridToolbar` component in the `Toolbar` [component slot](/components/data-grid/components/#toolbar).
+The easiest way to enable the Print export is to pass the `GridToolbar` component in the `Toolbar` [component slot](/x/react-data-grid/components/#toolbar).
 
 {{"demo": "ExportDefaultToolbar.js", "bg": "inline"}}
 
@@ -106,7 +106,7 @@ To enable the Print export in a custom toolbar, use the `GridToolbarExport` comp
 
 ### Custom exported content
 
-The print export can be customized by passing a [`printOptions`](/api/data-grid/grid-print-export-options/) object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
+The print export can be customized by passing a [`printOptions`](/x/api/data-grid/grid-print-export-options/) object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
 The following sections describes some customizations available on this interface.
 
@@ -123,7 +123,7 @@ The following sections describes some customizations available on this interface
 By default, the Print will only contain the visible columns of the grid.
 There are a few ways to include or hide other columns:
 
-1. Set the exact columns to be exported in [`printOptions`](/api/data-grid/grid-print-export-options/).
+1. Set the exact columns to be exported in [`printOptions`](/x/api/data-grid/grid-print-export-options/).
 
 ```jsx
 <DataGrid
@@ -131,7 +131,7 @@ There are a few ways to include or hide other columns:
 />
 ```
 
-2. Set `allColumns` in [`printOptions`](/api/data-grid/grid-print-export-options/) to `true` to include hidden columns, instead of only the visible ones.
+2. Set `allColumns` in [`printOptions`](/x/api/data-grid/grid-print-export-options/) to `true` to include hidden columns, instead of only the visible ones.
 
 ```jsx
 <DataGrid componentsProps={{ toolbar: { printOptions: { allColumns: true } } }} />
@@ -146,7 +146,7 @@ There are a few ways to include or hide other columns:
 #### Exported cells
 
 When the value of a field is an object or a `renderCell` is provided, the Print export might not display the value correctly.
-You can provide a [`valueFormatter`](/components/data-grid/columns/#value-formatter) with a string representation to be used.
+You can provide a [`valueFormatter`](/x/react-data-grid/columns/#value-formatter) with a string representation to be used.
 
 ```jsx
 <DataGrid
@@ -194,5 +194,5 @@ You will be able to copy and paste items to and from the grid using the system c
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

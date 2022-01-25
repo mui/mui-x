@@ -127,7 +127,7 @@ The value generated is used for filtering, sorting, rendering, etc. unless overr
 The value setter is to be used when editing rows and it is the counterpart of the value getter.
 It allows to customize how the entered value is stored in the row.
 A common use case for it is when the data is a nested structure.
-Refer to the [cell editing](/components/data-grid/editing/#saving-nested-structures) documentation to see an example using it.
+Refer to the [cell editing](/x/react-data-grid/editing/#saving-nested-structures) documentation to see an example using it.
 
 ```tsx
 function setFullName(params: GridValueSetterParams) {
@@ -158,13 +158,13 @@ In the following demo, a formatter is used to display the tax rate's decimal val
 
 The value generated is only used for rendering purposes.
 Filtering and sorting will not relay on the formatted value.
-Use the [`valueParser`](/components/data-grid/columns/#value-parser) to support filtering.
+Use the [`valueParser`](/x/react-data-grid/columns/#value-parser) to support filtering.
 
 ### Value parser
 
 The value parser allows you to convert the user-entered value to another one used for filtering or editing.
 Common use cases include parsing date strings to JavaScript `Date` objects or formatted numbers (e.g. "1,000.50") into `Number`.
-It can be understood as the inverse of [`valueFormatter`](/components/data-grid/columns/#value-formatter).
+It can be understood as the inverse of [`valueFormatter`](/x/react-data-grid/columns/#value-formatter).
 
 In the following demo, the tax rate is displayed as a percentage (e.g. 20%) but a decimal number is used as value (e.g. 0.2).
 
@@ -207,13 +207,13 @@ const columns: GridColDef[] = [
 
 {{"demo": "RenderCellGrid.js", "bg": "inline"}}
 
-**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#export-custom-rendered-cells) the data.
+**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/x/react-data-grid/export/#export-custom-rendered-cells) the data.
 
 #### Render edit cell
 
 The `renderCell` render function allows customizing the rendered in "view mode" only.
 For the "edit mode", set the `renderEditCell` function to customize the edit component.
-Check the [editing page](/components/data-grid/editing) for more details about editing.
+Check the [editing page](/x/react-data-grid/editing) for more details about editing.
 
 #### Expand cell renderer
 
@@ -249,11 +249,11 @@ const columns: GridColDef[] = [
 
 ### Styling header
 
-You can check the [styling header](/components/data-grid/style/#styling-column-headers) section for more information.
+You can check the [styling header](/x/react-data-grid/style/#styling-column-headers) section for more information.
 
 ### Styling cells
 
-You can check the [styling cells](/components/data-grid/style/#styling-cells) section for more information.
+You can check the [styling cells](/x/react-data-grid/style/#styling-cells) section for more information.
 
 ## Column types
 
@@ -439,9 +439,9 @@ They can be pinned either to the left or right side and cannot be reordered.
 To pin a column, there are a few ways:
 
 - Using the `initialState` prop
-- [Controlling](/components/data-grid/columns/#controlling-the-pinned-columns) the `pinnedColumns` and `onPinnedColumnsChange` props
+- [Controlling](/x/react-data-grid/columns/#controlling-the-pinned-columns) the `pinnedColumns` and `onPinnedColumnsChange` props
 - Dedicated buttons in the column menu
-- Accessing the [imperative](/components/data-grid/columns/#apiref) API
+- Accessing the [imperative](/x/react-data-grid/columns/#apiref) API
 
 To set pinned columns via `initialState`, pass an object with the following shape to this prop:
 
@@ -522,5 +522,5 @@ This is very close to the "column spanning" in an HTML `<table>`.
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
