@@ -262,7 +262,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should unselect from last clicked cell to cell after clicked cell if clicking inside a selected range', () => {
-      render(<TestDataGridSelection checkboxSelection />);
+      render(<TestDataGridSelection checkboxSelection disableVirtualization />);
       fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(getSelectedRowIds()).to.deep.equal([0]);
       fireEvent.click(getCell(3, 0).querySelector('input'), { shiftKey: true });
@@ -378,7 +378,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should select/unselect all rows when pressing space', async () => {
-      render(<TestDataGridSelection checkboxSelection />);
+      render(<TestDataGridSelection checkboxSelection disableVirtualization />);
 
       const selectAllCell = document.querySelector(
         '[role="columnheader"][data-field="__check__"] input',

@@ -5,8 +5,6 @@ import { expect } from 'chai';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGridPro /> - Pagination', () => {
   const { render } = createRenderer();
 
@@ -83,11 +81,11 @@ describe('<DataGridPro /> - Pagination', () => {
             <DataGridPro
               {...basicData}
               apiRef={apiRef}
-              autoHeight={isJSDOM}
               pageSize={pageSize}
               rowsPerPageOptions={[pageSize]}
               onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
               pagination
+              disableVirtualization
             />
           </div>
         );
