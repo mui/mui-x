@@ -4,7 +4,10 @@ import IconButton from '@mui/material/IconButton';
 import { switchClasses } from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
-import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
+import {
+  allGridColumnsSelector,
+  gridColumnVisibilityModelSelector,
+} from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridDragIcon } from '../icons/index';
@@ -59,36 +62,32 @@ export function GridColumnsPanel() {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
+  const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const toggleColumn = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      const { name } = event.target as HTMLInputElement;
-      const column = apiRef.current.getColumn(name);
-      apiRef.current.setColumnVisibility(name, !!column.hide);
-    },
-    [apiRef],
-  );
+  const toggleColumn = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const { name: field } = event.target as HTMLInputElement;
+    apiRef.current.setColumnVisibility(field, columnVisibilityModel[field] === false);
+  };
 
   const toggleAllColumns = React.useCallback(
-    (value: boolean) => {
+    (isVisible: boolean) => {
+      // TODO v6: call `setColumnVisibilityModel` directly
       apiRef.current.updateColumns(
         columns.map((col) => {
           if (col.hideable !== false) {
-            col.hide = value;
+            return { field: col.field, hide: !isVisible };
           }
+
           return col;
         }),
       );
     },
     [apiRef, columns],
   );
-
-  const showAllColumns = React.useCallback(() => toggleAllColumns(false), [toggleAllColumns]);
-  const hideAllColumns = React.useCallback(() => toggleAllColumns(true), [toggleAllColumns]);
 
   const handleSearchValueChange = React.useCallback((event) => {
     setSearchValue(event.target.value);
@@ -133,7 +132,7 @@ export function GridColumnsPanel() {
                 control={
                   <rootProps.components.BaseSwitch
                     disabled={column.hideable === false}
-                    checked={!column.hide}
+                    checked={columnVisibilityModel[column.field] !== false}
                     onClick={toggleColumn}
                     name={column.field}
                     color="primary"
@@ -160,14 +159,14 @@ export function GridColumnsPanel() {
       </GridPanelContent>
       <GridPanelFooter>
         <rootProps.components.BaseButton
-          onClick={hideAllColumns}
+          onClick={() => toggleAllColumns(false)}
           color="primary"
           {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
         </rootProps.components.BaseButton>
         <rootProps.components.BaseButton
-          onClick={showAllColumns}
+          onClick={() => toggleAllColumns(true)}
           color="primary"
           {...rootProps.componentsProps?.baseButton}
         >

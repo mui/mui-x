@@ -117,6 +117,11 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
 
+  // Grouping columns
+  groupingColumnHeaderName: 'Grupo',
+  groupColumn: (name) => `Agrupar por ${name}`,
+  unGroupColumn: (name) => `Parar agrupamento por ${name}`,
+
   // Master/detail
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Esconder',

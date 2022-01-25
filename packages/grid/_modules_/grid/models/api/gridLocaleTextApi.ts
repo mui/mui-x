@@ -112,6 +112,11 @@ export interface GridLocaleText {
   treeDataExpand: string;
   treeDataCollapse: string;
 
+  // Grouping columns
+  groupingColumnHeaderName: string;
+  groupColumn: (name: string) => string;
+  unGroupColumn: (name: string) => string;
+
   // Master/detail
   expandDetailPanel: string;
   collapseDetailPanel: string;

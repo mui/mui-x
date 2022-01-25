@@ -117,6 +117,11 @@ const itITGrid: Partial<GridLocaleText> = {
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
 
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
+
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',

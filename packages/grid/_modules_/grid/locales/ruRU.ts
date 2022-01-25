@@ -145,6 +145,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
   treeDataExpand: 'показать дочерние элементы',
   treeDataCollapse: 'скрыть дочерние элементы',
 
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
+
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',

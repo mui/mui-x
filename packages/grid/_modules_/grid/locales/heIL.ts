@@ -115,6 +115,11 @@ const heILGrid: Partial<GridLocaleText> = {
   treeDataExpand: 'הרחב',
   treeDataCollapse: 'כווץ',
 
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
+
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',

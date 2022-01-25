@@ -39,6 +39,7 @@ const parseSortItem = (sortItem: GridSortItem, apiRef: GridApiRef): GridParsedSo
   const getSortCellParams = (id: GridRowId): GridSortCellParams => ({
     id,
     field: column.field,
+    rowNode: apiRef.current.getRowNode(id)!,
     value: apiRef.current.getCellValue(id, column.field),
     api: apiRef.current,
   });

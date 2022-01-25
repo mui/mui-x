@@ -138,17 +138,7 @@ export const useGridColumnReorder = (
         const targetColVisibleIndex = apiRef.current.getColumnIndex(params.field, true);
         const targetCol = apiRef.current.getColumn(params.field);
         const dragColIndex = apiRef.current.getColumnIndex(dragColField, false);
-        const visibleColumnAmount = apiRef.current.getVisibleColumns().length;
-
-        const canBeReordered =
-          !targetCol.disableReorder ||
-          (targetColVisibleIndex > 0 && targetColVisibleIndex < visibleColumnAmount - 1);
-
-        const canBeReorderedProcessed = apiRef.current.unstable_applyPreProcessors(
-          GridPreProcessingGroup.canBeReordered,
-          canBeReordered,
-          { targetIndex: targetColVisibleIndex },
-        );
+        const visibleColumns = apiRef.current.getVisibleColumns();
 
         const cursorMoveDirectionX = getCursorMoveDirectionX(cursorPosition.current, coordinates);
         const hasMovedLeft =
@@ -156,8 +146,28 @@ export const useGridColumnReorder = (
         const hasMovedRight =
           cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT && dragColIndex < targetColIndex;
 
-        if (canBeReorderedProcessed && (hasMovedLeft || hasMovedRight)) {
-          apiRef.current.setColumnIndex(dragColField, targetColIndex);
+        if (hasMovedLeft || hasMovedRight) {
+          let canBeReordered: boolean;
+          if (!targetCol.disableReorder) {
+            canBeReordered = true;
+          } else if (hasMovedLeft) {
+            canBeReordered =
+              targetColIndex > 0 && !visibleColumns[targetColIndex - 1].disableReorder;
+          } else {
+            canBeReordered =
+              targetColIndex < visibleColumns.length - 1 &&
+              !visibleColumns[targetColIndex + 1].disableReorder;
+          }
+
+          const canBeReorderedProcessed = apiRef.current.unstable_applyPreProcessors(
+            GridPreProcessingGroup.canBeReordered,
+            canBeReordered,
+            { targetIndex: targetColVisibleIndex },
+          );
+
+          if (canBeReorderedProcessed) {
+            apiRef.current.setColumnIndex(dragColField, targetColIndex);
+          }
         }
 
         cursorPosition.current = coordinates;

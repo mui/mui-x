@@ -117,6 +117,11 @@ const frFRGrid: Partial<GridLocaleText> = {
   treeDataExpand: 'afficher les enfants',
   treeDataCollapse: 'masquer les enfants',
 
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
+
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',

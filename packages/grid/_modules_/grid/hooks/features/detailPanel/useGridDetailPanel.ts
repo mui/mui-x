@@ -2,12 +2,10 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
 import {
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from './gridDetailPanelToggleColDef';
-import { useGridState } from '../../utils/useGridState';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { GridEventListener } from '../../../models/events/gridEventListener';
@@ -24,6 +22,7 @@ import { GridDetailPanelApi } from '../../../models/api/gridDetailPanelApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowIdsSelector } from '../rows/gridRowsSelector';
 import { GridState } from '../../../models/gridState';
+import { GridPreProcessor } from '../../core/preProcessing/gridPreProcessingApi';
 
 function cacheContentAndHeight(
   apiRef: GridApiRef,
@@ -35,6 +34,8 @@ function cacheContentAndHeight(
     return {};
   }
 
+  // TODO change to lazy approach using a Proxy
+  // only call getDetailPanelContent when asked for an id
   const rowIds = gridRowIdsSelector(state);
   const contentCache = rowIds.reduce((acc, id) => {
     const params = apiRef.current.getRowParams(id);
@@ -76,7 +77,6 @@ export const useGridDetailPanel = (
     };
   });
 
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const expandedRowIds = useGridSelector(apiRef, gridExpandedRowIdsSelector);
   const contentCache = useGridSelector(apiRef, gridExpandedRowsContentCacheSelector);
   const heightCache = useGridSelector(apiRef, gridExpandedRowsHeightCacheSelector);
@@ -117,25 +117,31 @@ export const useGridDetailPanel = (
   useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 
-  const addToggleColumn = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
-      if (
-        columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] !== undefined ||
-        props.getDetailPanelContent == null
-      ) {
+  const addToggleColumn = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
+  >(
+    (columnsState) => {
+      if (props.getDetailPanelContent == null) {
+        // Remove the toggle column, when it exists
+        if (columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD]) {
+          delete columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD];
+          columnsState.all = columnsState.all.filter(
+            (field) => field !== GRID_DETAIL_PANEL_TOGGLE_FIELD,
+          );
+        }
         return columnsState;
       }
 
-      return {
-        ...columnsState,
-        all: [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.all],
-        lookup: {
-          [GRID_DETAIL_PANEL_TOGGLE_FIELD]: {
-            ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
-          },
-          ...columnsState.lookup,
-        },
-      };
+      // Don't add the toggle column if there's already one
+      // The user might have manually added it to have it in a custom position
+      if (columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD]) {
+        return columnsState;
+      }
+
+      // Othewise, add the toggle column at the beginning
+      columnsState.all = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.all];
+      columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = GRID_DETAIL_PANEL_TOGGLE_COL_DEF;
+      return columnsState;
     },
     [props.getDetailPanelContent],
   );
@@ -175,7 +181,7 @@ export const useGridDetailPanel = (
         return;
       }
 
-      setGridState((state) => {
+      apiRef.current.setState((state) => {
         return {
           ...state,
           detailPanel: {
@@ -186,9 +192,9 @@ export const useGridDetailPanel = (
           },
         };
       });
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [contentCache, forceUpdate, props.getDetailPanelContent, setGridState],
+    [apiRef, contentCache, props.getDetailPanelContent],
   );
 
   const getExpandedRowIds = React.useCallback<GridDetailPanelApi['getExpandedRowIds']>(
@@ -198,7 +204,7 @@ export const useGridDetailPanel = (
 
   const setExpandedRowIds = React.useCallback<GridDetailPanelApi['setExpandedRowIds']>(
     (ids) => {
-      setGridState((state) => {
+      apiRef.current.setState((state) => {
         return {
           ...state,
           detailPanel: {
@@ -207,9 +213,9 @@ export const useGridDetailPanel = (
           },
         };
       });
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [forceUpdate, setGridState],
+    [apiRef],
   );
 
   const detailPanelApi: GridDetailPanelApi = {
@@ -226,7 +232,7 @@ export const useGridDetailPanel = (
   }, [apiRef, props.detailPanelExpandedRowIds]);
 
   const updateCaches = React.useCallback(() => {
-    setGridState((state) => {
+    apiRef.current.setState((state) => {
       return {
         ...state,
         detailPanel: {
@@ -235,12 +241,12 @@ export const useGridDetailPanel = (
         },
       };
     });
-    forceUpdate();
-  }, [apiRef, forceUpdate, getDetailPanelContent, getDetailPanelHeight, setGridState]);
+    apiRef.current.forceUpdate();
+  }, [apiRef, getDetailPanelContent, getDetailPanelHeight]);
 
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, updateCaches);
+  useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, updateCaches);
 
   React.useEffect(() => {
     updateCaches();
-  }, [updateCaches]);
+  }, [apiRef, updateCaches]);
 };

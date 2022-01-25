@@ -13,22 +13,51 @@
   },
   { "name": "gridColumnResizeSelector", "returnType": "GridColumnResizeState", "description": "" },
   {
+    "name": "gridColumnVisibilityModelSelector",
+    "returnType": "GridColumnVisibilityModel",
+    "description": ""
+  },
+  {
     "name": "gridColumnsMetaSelector",
     "returnType": "{ totalWidth: number; positions: number[] }",
     "description": ""
   },
   { "name": "gridColumnsSelector", "returnType": "GridColumnsState", "description": "" },
   { "name": "gridColumnsTotalWidthSelector", "returnType": "number", "description": "" },
+  { "name": "gridDensityFactorSelector", "returnType": "number", "description": "" },
   { "name": "gridDensityHeaderHeightSelector", "returnType": "number", "description": "" },
   { "name": "gridDensityRowHeightSelector", "returnType": "number", "description": "" },
   { "name": "gridDensitySelector", "returnType": "GridDensityState", "description": "" },
   { "name": "gridDensityValueSelector", "returnType": "GridDensity", "description": "" },
   { "name": "gridEditRowsStateSelector", "returnType": "GridEditRowsModel", "description": "" },
+  { "name": "gridExpandedRowIdsSelector", "returnType": "GridRowId[]", "description": "" },
+  {
+    "name": "gridExpandedRowsContentCacheSelector",
+    "returnType": "Record<GridRowId, ReactNode>",
+    "description": ""
+  },
+  {
+    "name": "gridExpandedRowsHeightCacheSelector",
+    "returnType": "Record<GridRowId, number>",
+    "description": ""
+  },
   {
     "name": "gridFilterModelSelector",
     "returnType": "GridFilterModel",
     "category": "Filtering",
     "description": "Get the current filter model."
+  },
+  {
+    "name": "gridFilteredSortedRowEntriesSelector",
+    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
+    "category": "Filtering",
+    "description": "Get the id and the model of the rows accessible after the filtering process.\nContains the collapsed children."
+  },
+  {
+    "name": "gridFilteredSortedRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "category": "Filtering",
+    "description": "Get the id of the rows accessible after the filtering process.\nContains the collapsed children."
   },
   { "name": "gridFocusCellSelector", "returnType": "GridCellIdentifier | null", "description": "" },
   {
@@ -81,11 +110,23 @@
   },
   { "name": "gridResizingColumnFieldSelector", "returnType": "string", "description": "" },
   { "name": "gridRowCountSelector", "returnType": "number", "description": "" },
+  {
+    "name": "gridRowGroupingModelSelector",
+    "returnType": "GridRowGroupingModel",
+    "description": ""
+  },
   { "name": "gridRowGroupingNameSelector", "returnType": "string", "description": "" },
+  { "name": "gridRowGroupingSanitizedModelSelector", "returnType": "string[]", "description": "" },
+  {
+    "name": "gridRowGroupingStateSelector",
+    "returnType": "GridRowGroupingState",
+    "description": ""
+  },
   { "name": "gridRowIdsSelector", "returnType": "GridRowId[]", "description": "" },
   { "name": "gridRowTreeDepthSelector", "returnType": "number", "description": "" },
   { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig", "description": "" },
   { "name": "gridRowsLookupSelector", "returnType": "GridRowsLookup", "description": "" },
+  { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState", "description": "" },
   { "name": "gridRowsStateSelector", "returnType": "GridRowsState", "description": "" },
   { "name": "gridSelectionStateSelector", "returnType": "GridSelectionModel", "description": "" },
   {
@@ -129,13 +170,13 @@
     "name": "gridVisibleSortedRowEntriesSelector",
     "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
     "category": "Filtering",
-    "description": "Get the id and the model of the rows accessible after the filtering process."
+    "description": "Get the id and the model of the rows accessible after the filtering process.\nDoes not contain the collapsed children."
   },
   {
     "name": "gridVisibleSortedRowIdsSelector",
     "returnType": "GridRowId[]",
     "category": "Filtering",
-    "description": "Get the id of the rows accessible after the filtering process."
+    "description": "Get the id of the rows accessible after the filtering process.\nDoes not contain the collapsed children."
   },
   {
     "name": "gridVisibleSortedTopLevelRowEntriesSelector",

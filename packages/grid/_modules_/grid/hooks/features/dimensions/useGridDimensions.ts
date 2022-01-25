@@ -18,7 +18,7 @@ import { gridColumnsTotalWidthSelector } from '../columns';
 import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { gridRowsMetaSelector } from '../rows/gridRowsSelector';
+import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -53,15 +53,21 @@ export function useGridDimensions(
   apiRef: GridApiRef,
   props: Pick<
     DataGridProcessedProps,
-    'rows' | 'onResize' | 'scrollbarSize' | 'pagination' | 'paginationMode' | 'autoHeight'
+    | 'rows'
+    | 'onResize'
+    | 'scrollbarSize'
+    | 'pagination'
+    | 'paginationMode'
+    | 'autoHeight'
+    | 'getRowHeight'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const warningShown = React.useRef(false);
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
+  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -92,12 +98,12 @@ export function useGridDimensions(
     const viewportOuterSize: ElementSize = {
       width: rootDimensionsRef.current.width,
       height: props.autoHeight
-        ? rowsMeta.totalHeight
+        ? rowsMeta.currentPageTotalHeight
         : rootDimensionsRef.current.height - headerHeight,
     };
 
     const { hasScrollX, hasScrollY } = hasScroll({
-      content: { width: Math.round(columnsTotalWidth), height: rowsMeta.totalHeight },
+      content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
       container: viewportOuterSize,
       scrollBarSize,
     });
@@ -126,7 +132,13 @@ export function useGridDimensions(
         newFullDimensions.viewportInnerSize,
       );
     }
-  }, [apiRef, props.scrollbarSize, props.autoHeight, headerHeight, rowsMeta.totalHeight]);
+  }, [
+    apiRef,
+    props.scrollbarSize,
+    props.autoHeight,
+    headerHeight,
+    rowsMeta.currentPageTotalHeight,
+  ]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
@@ -149,12 +161,22 @@ export function useGridDimensions(
       pagination: props.pagination,
       paginationMode: props.paginationMode,
     });
+
+    // TODO: Use a combination of scrollTop, dimensions.viewportInnerSize.height and rowsMeta.possitions
+    // to find out the maximum number of rows that can fit in the visible part of the grid
+    if (props.getRowHeight) {
+      const renderContext = apiRef.current.unstable_getRenderContext();
+      const viewportPageSize = renderContext.lastRowIndex - renderContext.firstRowIndex;
+
+      return Math.min(viewportPageSize - 1, currentPage.rows.length);
+    }
+
     const maximumPageSizeWithoutScrollBar = Math.floor(
       dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef.current.state),
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
-  }, [apiRef, props.pagination, props.paginationMode]);
+  }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight]);
 
   const dimensionsApi: GridDimensionsApi = {
     resize,

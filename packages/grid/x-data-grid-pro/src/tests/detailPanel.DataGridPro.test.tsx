@@ -142,7 +142,8 @@ describe('<DataGridPro /> - Detail panel', () => {
       />,
     );
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    getCell(2, 1).focus();
+    fireEvent.mouseUp(getCell(2, 1));
+    fireEvent.click(getCell(2, 1));
     fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown' });
     expect(virtualScroller.scrollTop).to.equal(0);
     fireEvent.keyDown(getCell(3, 1), { key: 'ArrowDown' });
@@ -153,7 +154,8 @@ describe('<DataGridPro /> - Detail panel', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 1);
-    cell.focus();
+    fireEvent.mouseUp(cell);
+    fireEvent.click(cell);
     fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
     expect(screen.queryByText('Detail')).not.to.equal(null);
     fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
@@ -191,16 +193,18 @@ describe('<DataGridPro /> - Detail panel', () => {
         pagination
       />,
     );
-    expect(getDetailPanelContent.callCount).to.equal(2);
+
+    // Called 2x by the effect + 2x after applying the filters + 2x by StrictMode
+    expect(getDetailPanelContent.callCount).to.equal(6);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelContent.callCount).to.equal(2);
+    expect(getDetailPanelContent.callCount).to.equal(6);
 
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelContent.callCount).to.equal(2);
+    expect(getDetailPanelContent.callCount).to.equal(6);
 
     const getDetailPanelContent2 = spy(() => <div>Detail</div>);
     setProps({ getDetailPanelContent: getDetailPanelContent2 });
-    expect(getDetailPanelContent2.callCount).to.equal(2);
+    expect(getDetailPanelContent2.callCount).to.equal(2); // Called 2x by the effect
     fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
     expect(getDetailPanelContent2.callCount).to.equal(2);
   });
@@ -221,16 +225,17 @@ describe('<DataGridPro /> - Detail panel', () => {
         pagination
       />,
     );
-    expect(getDetailPanelHeight.callCount).to.equal(2);
+    // Called 2x by the effect + 2x after applying the filters + 2x by StrictMode
+    expect(getDetailPanelHeight.callCount).to.equal(6);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelHeight.callCount).to.equal(2);
+    expect(getDetailPanelHeight.callCount).to.equal(6);
 
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelHeight.callCount).to.equal(2);
+    expect(getDetailPanelHeight.callCount).to.equal(6);
 
     const getDetailPanelHeight2 = spy(() => 200);
     setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
-    expect(getDetailPanelHeight2.callCount).to.equal(2);
+    expect(getDetailPanelHeight2.callCount).to.equal(2); // Called 2x by the effect
     fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
     expect(getDetailPanelHeight2.callCount).to.equal(2);
   });
@@ -248,7 +253,8 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelHeight={getDetailPanelHeight}
       />,
     );
-    expect(getDetailPanelHeight.callCount).to.equal(1);
+    // Called 1x by the effect + 1x after applying the filters + 1x by StrictMode
+    expect(getDetailPanelHeight.callCount).to.equal(3);
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
   });
 

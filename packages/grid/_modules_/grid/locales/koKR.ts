@@ -112,6 +112,11 @@ const koKRGrid: Partial<GridLocaleText> = {
   treeDataExpand: '하위노드 펼치기',
   treeDataCollapse: '하위노드 접기',
 
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
+
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',

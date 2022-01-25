@@ -117,6 +117,11 @@ const fiFIGrid: Partial<GridLocaleText> = {
   treeDataExpand: 'Laajenna',
   treeDataCollapse: 'Supista',
 
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
+
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',

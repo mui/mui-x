@@ -117,6 +117,11 @@ const deDEGrid: Partial<GridLocaleText> = {
   treeDataExpand: 'Kinder einblenden',
   treeDataCollapse: 'Kinder ausblenden',
 
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
+
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',

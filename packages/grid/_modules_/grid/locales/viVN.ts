@@ -115,6 +115,11 @@ const viVNGrid: Partial<GridLocaleText> = {
   treeDataExpand: 'mở rộng',
   treeDataCollapse: 'ẩn đi',
 
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
+
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',

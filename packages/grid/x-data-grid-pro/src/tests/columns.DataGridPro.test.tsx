@@ -231,6 +231,27 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
+      it('should not resize a flex column above its maxWidth property (api resize)', () => {
+        const twoColumns = [
+          { field: 'id', maxWidth: 125, flex: 1 },
+          { field: 'brand', width: 200 },
+        ];
+
+        render(<Test columns={twoColumns} />);
+
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
+
+        apiRef.current.setColumnWidth('brand', 150);
+
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '125px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
+      });
+
       it('should not resize a flex column under its minWidth property (separator resize)', () => {
         const twoColumns = [
           { field: 'id', minWidth: 175, flex: 1 },
@@ -254,6 +275,33 @@ describe('<DataGridPro /> - Columns', () => {
 
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '175px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
+      });
+
+      it('should not resize a flex column above its maxWidth property (separator resize)', () => {
+        const twoColumns = [
+          { field: 'id', maxWidth: 125, flex: 1 },
+          { field: 'brand', width: 200 },
+        ];
+
+        render(<Test columns={twoColumns} />);
+
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
+
+        const separator = getColumnHeaderCell(1).querySelector(
+          `.${gridClasses['columnSeparator--resizable']}`,
+        );
+
+        fireEvent.mouseDown(separator, { clientX: 100 });
+        fireEvent.mouseMove(separator, { clientX: 50, buttons: 1 });
+        fireEvent.mouseUp(separator);
+
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '125px' });
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });

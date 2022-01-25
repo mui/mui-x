@@ -3,6 +3,7 @@ import { GridFilteringMethodCollection } from '../../features/filter/gridFilterS
 import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
 import { GridCanBeReorderedPreProcessingContext } from '../../features/columnReorder/columnReorderInterfaces';
 import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
+import { GridRowEntry } from '../../../models/gridRows';
 
 export type PreProcessorCallback = (value: any, params?: any) => any;
 
@@ -17,7 +18,9 @@ export enum GridPreProcessingGroup {
 }
 
 interface GridPreProcessingGroupLookup {
-  [GridPreProcessingGroup.hydrateColumns]: { value: GridColumnsRawState };
+  [GridPreProcessingGroup.hydrateColumns]: {
+    value: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+  };
   [GridPreProcessingGroup.scrollToIndexes]: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
@@ -29,6 +32,7 @@ interface GridPreProcessingGroupLookup {
   };
   [GridPreProcessingGroup.filteringMethod]: { value: GridFilteringMethodCollection };
   [GridPreProcessingGroup.sortingMethod]: { value: GridSortingMethodCollection };
+  [GridPreProcessingGroup.rowHeight]: { value: Record<string, number>; context: GridRowEntry };
 }
 
 export type GridPreProcessor<P extends GridPreProcessingGroup> = (
