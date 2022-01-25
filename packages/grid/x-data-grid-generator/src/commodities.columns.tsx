@@ -245,6 +245,10 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     groupingValueGetter: (params) => params.value.code,
     type: 'singleSelect',
     valueOptions: COUNTRY_ISO_OPTIONS,
+    sortComparator: (v1, v2) =>
+      (v1 as typeof COUNTRY_ISO_OPTIONS[number]).label.localeCompare(
+        (v2 as typeof COUNTRY_ISO_OPTIONS[number]).label,
+      ),
     editable,
     width: 120,
   },

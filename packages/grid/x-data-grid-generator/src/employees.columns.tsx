@@ -104,6 +104,10 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     renderEditCell: renderEditCountry,
     type: 'singleSelect',
     valueOptions: COUNTRY_ISO_OPTIONS,
+    sortComparator: (v1, v2) =>
+      (v1 as typeof COUNTRY_ISO_OPTIONS[number]).label.localeCompare(
+        (v2 as typeof COUNTRY_ISO_OPTIONS[number]).label,
+      ),
     width: 150,
     editable: true,
   },
