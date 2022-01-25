@@ -68,8 +68,6 @@ Set the `getRowsToExport` to manually pick the rows to include in the CSV export
 
 When using [Row grouping](/components/data-grid/group-pivot/#row-grouping), it can be useful to remove the groups from the CSV export
 
-**Note**: For now, it is not possible to export the collapsed row without first expanding them.
-
 {{"demo": "pages/components/data-grid/export/CsvGetRowsToExportRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
 #### Exported cells

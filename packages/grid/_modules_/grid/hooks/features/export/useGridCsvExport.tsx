@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
-import { gridVisibleSortedRowIdsSelector } from '../filter';
+import { gridFilteredSortedRowIdsSelector } from '../filter';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridCsvExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -11,7 +11,7 @@ import { buildCSV } from './serializers/csvSerializer';
 import { GridRowId, GridStateColDef } from '../../../models';
 
 const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
-  const visibleSortedRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+  const visibleSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef.current.state);
   const selectedRows = apiRef.current.getSelectedRows();
 
   if (selectedRows.size > 0) {
