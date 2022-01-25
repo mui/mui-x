@@ -44,6 +44,7 @@
     "filterModel": { "type": { "name": "custom", "description": "any" } },
     "getCellClassName": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
+    "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },

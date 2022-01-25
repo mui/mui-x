@@ -40,10 +40,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
       apiRef.current.publishEvent(GridEvents.rowSelectionCheckboxChange, params, event);
     };
 
-    const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
-      event.stopPropagation();
-    };
-
     React.useLayoutEffect(() => {
       if (tabIndex === 0 && element) {
         element!.tabIndex = -1;
@@ -78,7 +74,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
         tabIndex={tabIndex}
         checked={!!value}
         onChange={handleChange}
-        onClick={handleClick}
         className={classes.root}
         color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}

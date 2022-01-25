@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import { GridApiRef, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub } from 'sinon';
@@ -18,7 +18,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
   let apiRef: GridApiRef;
 
-  function Test() {
+  function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -40,6 +40,7 @@ describe('<DataGridPro /> - Clipboard', () => {
               brand: 'Puma',
             },
           ]}
+          {...props}
         />
       </div>
     );
@@ -86,10 +87,11 @@ describe('<DataGridPro /> - Clipboard', () => {
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected rows to the clipboard when ${key} + C is pressed`, () => {
-        render(<Test />);
+        render(<Test disableSelectionOnClick />);
         apiRef.current.selectRows([0, 1]);
         const cell = getCell(0, 0);
-        cell.focus();
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
         fireEvent.keyDown(cell, { key: 'c', [key]: true });
         expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });

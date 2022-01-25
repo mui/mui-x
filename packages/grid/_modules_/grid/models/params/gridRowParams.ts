@@ -1,5 +1,5 @@
 import { GridCellValue } from '../gridCell';
-import { GridRowId, GridRowModel } from '../gridRows';
+import { GridRowEntry, GridRowId, GridRowModel } from '../gridRows';
 import type { GridColumns } from '../colDef';
 
 /**
@@ -27,3 +27,18 @@ export interface GridRowParams<R extends GridRowModel = GridRowModel> {
    */
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }
+
+/**
+ * Object passed as parameter in the row getRowHeight callback.
+ */
+export interface GridRowHeightParams extends GridRowEntry {
+  /**
+   * The grid current density factor.
+   */
+  densityFactor: number;
+}
+
+/**
+ * The getRowHeight return value.
+ */
+export type GridRowHeightReturnValue = number | null | undefined;
