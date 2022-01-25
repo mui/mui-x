@@ -21,6 +21,7 @@ import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useG
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridEditRows } from '../../_modules_/grid/hooks/features/editRows/useGridEditRows';
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
+import { useGridRowsMeta } from '../../_modules_/grid/hooks/features/rows/useGridRowsMeta';
 import { useGridParamsApi } from '../../_modules_/grid/hooks/features/rows/useGridParamsApi';
 import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
 import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useGridSorting';
@@ -50,6 +51,7 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: DataGridProPr
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
+  useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);
