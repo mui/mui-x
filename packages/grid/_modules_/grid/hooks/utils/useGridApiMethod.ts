@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApi } from '../../models/api/gridApi';
-import { useGridLogger } from './useGridLogger';
 
 export function useGridApiMethod<T extends Partial<GridApi>>(
   apiRef: GridApiRef,
   apiMethods: T,
+  // TODO: Remove `apiName
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   apiName: string,
 ) {
-  const logger = useGridLogger(apiRef, 'useGridApiMethod');
   const apiMethodsRef = React.useRef(apiMethods);
   const [apiMethodsNames] = React.useState(Object.keys(apiMethods));
 
@@ -18,11 +18,10 @@ export function useGridApiMethod<T extends Partial<GridApi>>(
     }
     apiMethodsNames.forEach((methodName) => {
       if (!apiRef.current.hasOwnProperty(methodName)) {
-        logger.debug(`Adding ${apiName}.${methodName} to apiRef`);
         apiRef.current[methodName] = (...args) => apiMethodsRef.current[methodName](...args);
       }
     });
-  }, [apiMethodsNames, apiName, apiRef, logger]);
+  }, [apiMethodsNames, apiRef]);
 
   React.useEffect(() => {
     apiMethodsRef.current = apiMethods;

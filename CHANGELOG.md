@@ -34,13 +34,13 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   />
   ```
 
-  See the [documentation](https://mui.com/components/data-grid/group-pivot/#row-grouping) for more details.
+  For more details see the [introduction blog post](https://mui.com/blog/introducing-the-row-grouping-feature/) and [documentation](https://mui.com/components/data-grid/group-pivot/#row-grouping).
 
 - ⚡ Add `is any of` filter operator (#2874) @alexfauquette
 
   The new filter operator `is any of` allows the user to provide multiple values. It opens access to complex filtering pattern mixing `AND` and `OR` logic connectors, such as `status is any of filled or rejected, and currency is any of EUR or USD`.
 
-  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="770" height="370">
+  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="770">
 
 - ✨ Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
 
