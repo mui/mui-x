@@ -8,7 +8,6 @@ import { GridAutoSizer } from '../GridAutoSizer';
 import { GridOverlays } from './GridOverlays';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 interface GridBodyProps {
@@ -16,7 +15,6 @@ interface GridBodyProps {
   VirtualScrollerComponent: React.JSXElementConstructor<
     React.HTMLAttributes<HTMLDivElement> & {
       ref: React.Ref<HTMLDivElement>;
-      selectionLookup: {};
       disableVirtualization: boolean;
     }
   >;
@@ -33,7 +31,6 @@ function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const selection = useGridSelector(apiRef, gridSelectionStateSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
     rootProps.disableVirtualization,
@@ -73,23 +70,6 @@ function GridBody(props: GridBodyProps) {
     [apiRef],
   );
 
-  const filteredSelection = React.useMemo(
-    () =>
-      typeof rootProps.isRowSelectable === 'function'
-        ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
-        : selection,
-    [apiRef, rootProps.isRowSelectable, selection],
-  );
-
-  const selectionLookup = React.useMemo(
-    () =>
-      filteredSelection.reduce((lookup, rowId) => {
-        lookup[rowId] = rowId;
-        return lookup;
-      }, {}),
-    [filteredSelection],
-  );
-
   return (
     <GridMainContainer>
       <GridOverlays />
@@ -112,7 +92,6 @@ function GridBody(props: GridBodyProps) {
             <VirtualScrollerComponent
               ref={windowRef}
               style={style}
-              selectionLookup={selectionLookup} // TODO pass it directly to the row via componentsProps
               disableVirtualization={isVirtualizationDisabled}
             />
           );

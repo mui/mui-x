@@ -133,7 +133,9 @@ export const createColumnsState = ({
     };
   }
 
+  const columnsToUpsertLookup: Record<string, true> = {};
   columnsToUpsert.forEach((newColumn) => {
+    columnsToUpsertLookup[newColumn.field] = true;
     if (columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] == null) {
       // New Column
       columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = {
@@ -148,6 +150,8 @@ export const createColumnsState = ({
       };
     }
   });
+
+  const columnsLookupBeforePreProcessing = { ...columnsStateWithoutColumnVisibilityModel.lookup };
 
   const columnsStateWithPreProcessing: Omit<GridColumnsRawState, 'columnVisibilityModel'> =
     apiRef.current.unstable_applyPreProcessors(
@@ -167,6 +171,15 @@ export const createColumnsState = ({
       let hasModelChanged = false;
 
       columnsStateWithPreProcessing.all.forEach((field) => {
+        // If neither the `columnsToUpsert` nor the pre-processors updated the column,
+        // Then we don't want to update the visibility status of the column in the model.
+        if (
+          !columnsToUpsertLookup[field] &&
+          columnsLookupBeforePreProcessing[field] === columnsStateWithPreProcessing.lookup[field]
+        ) {
+          return;
+        }
+
         const isVisibleBefore = currentColumnVisibilityModel[field] ?? true;
         const isVisibleAfter = !columnsStateWithPreProcessing.lookup[field].hide;
 
