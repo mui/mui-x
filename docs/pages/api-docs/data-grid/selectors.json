@@ -29,18 +29,22 @@
   { "name": "gridDensityRowHeightSelector", "returnType": "number", "description": "" },
   { "name": "gridDensitySelector", "returnType": "GridDensityState", "description": "" },
   { "name": "gridDensityValueSelector", "returnType": "GridDensity", "description": "" },
-  { "name": "gridEditRowsStateSelector", "returnType": "GridEditRowsModel", "description": "" },
-  { "name": "gridExpandedRowIdsSelector", "returnType": "GridRowId[]", "description": "" },
   {
-    "name": "gridExpandedRowsContentCacheSelector",
+    "name": "gridDetailPanelExpandedRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "description": ""
+  },
+  {
+    "name": "gridDetailPanelExpandedRowsContentCacheSelector",
     "returnType": "Record<GridRowId, ReactNode>",
     "description": ""
   },
   {
-    "name": "gridExpandedRowsHeightCacheSelector",
+    "name": "gridDetailPanelExpandedRowsHeightCacheSelector",
     "returnType": "Record<GridRowId, number>",
     "description": ""
   },
+  { "name": "gridEditRowsStateSelector", "returnType": "GridEditRowsModel", "description": "" },
   {
     "name": "gridFilterModelSelector",
     "returnType": "GridFilterModel",

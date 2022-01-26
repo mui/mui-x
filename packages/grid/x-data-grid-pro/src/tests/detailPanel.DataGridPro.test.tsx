@@ -194,13 +194,17 @@ describe('<DataGridPro /> - Detail panel', () => {
       />,
     );
 
-    // Called 2x by the effect + 2x after applying the filters + 2x by StrictMode
-    expect(getDetailPanelContent.callCount).to.equal(6);
+    //   2x during state initialization
+    // + 2x during state initialization (StrictMode)
+    // + 2x when visibleRowsSet is fired
+    // + 2x when visibleRowsSet is fired (StrictMode)
+    // + 2x when the effect runs for the first time = 10x
+    expect(getDetailPanelContent.callCount).to.equal(10);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelContent.callCount).to.equal(6);
+    expect(getDetailPanelContent.callCount).to.equal(10);
 
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelContent.callCount).to.equal(6);
+    expect(getDetailPanelContent.callCount).to.equal(10);
 
     const getDetailPanelContent2 = spy(() => <div>Detail</div>);
     setProps({ getDetailPanelContent: getDetailPanelContent2 });
@@ -225,13 +229,17 @@ describe('<DataGridPro /> - Detail panel', () => {
         pagination
       />,
     );
-    // Called 2x by the effect + 2x after applying the filters + 2x by StrictMode
-    expect(getDetailPanelHeight.callCount).to.equal(6);
+    //   2x during state initialization
+    // + 2x during state initialization (StrictMode)
+    // + 2x when visibleRowsSet is fired
+    // + 2x when visibleRowsSet is fired (StrictMode)
+    // + 2x when the effect runs for the first time = 10x
+    expect(getDetailPanelHeight.callCount).to.equal(10);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelHeight.callCount).to.equal(6);
+    expect(getDetailPanelHeight.callCount).to.equal(10);
 
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelHeight.callCount).to.equal(6);
+    expect(getDetailPanelHeight.callCount).to.equal(10);
 
     const getDetailPanelHeight2 = spy(() => 200);
     setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
@@ -253,8 +261,12 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelHeight={getDetailPanelHeight}
       />,
     );
-    // Called 1x by the effect + 1x after applying the filters + 1x by StrictMode
-    expect(getDetailPanelHeight.callCount).to.equal(3);
+    //   1x during state initialization
+    // + 1x during state initialization (StrictMode)
+    // + 1x when visibleRowsSet is fired
+    // + 1x when visibleRowsSet is fired (StrictMode)
+    // + 1x when the effect runs for the first time = 5x
+    expect(getDetailPanelHeight.callCount).to.equal(5);
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
   });
 

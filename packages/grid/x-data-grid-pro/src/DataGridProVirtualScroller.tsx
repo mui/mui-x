@@ -21,7 +21,6 @@ import {
   gridDetailPanelExpandedRowsHeightCacheSelector,
 } from '../../_modules_/grid/hooks/features/detailPanel/gridDetailPanelSelector';
 import { useCurrentPageRows } from '../../_modules_/grid/hooks/utils/useCurrentPageRows';
-import { gridDensityRowHeightSelector } from '../../_modules_/grid/hooks/features/density/densitySelector';
 import {
   GridPinnedColumns,
   GridPinnedPosition,
@@ -141,10 +140,15 @@ const DataGridProVirtualScroller = React.forwardRef<
   const rootProps = useGridRootProps();
   const currentPage = useCurrentPageRows(apiRef, rootProps);
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
-  const detailPanelsContent = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
-  const detailPanelsHeights = useGridSelector(apiRef, gridDetailPanelExpandedRowsHeightCacheSelector);
+  const detailPanelsContent = useGridSelector(
+    apiRef,
+    gridDetailPanelExpandedRowsContentCacheSelector,
+  );
+  const detailPanelsHeights = useGridSelector(
+    apiRef,
+    gridDetailPanelExpandedRowsHeightCacheSelector,
+  );
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
@@ -243,12 +247,21 @@ const DataGridProVirtualScroller = React.forwardRef<
     minHeight: shouldExtendContent ? '100%' : 'auto',
   };
 
-  const { getDetailPanelContent } = rootProps;
+  const rowsLookup = React.useMemo(() => {
+    if (rootProps.getDetailPanelContent == null) {
+      return null;
+    }
+
+    return currentPage.rows.reduce((acc, { id }, index) => {
+      acc[id] = index;
+      return acc;
+    }, {} as Record<GridRowId, number>);
+  }, [currentPage.rows, rootProps.getDetailPanelContent]);
 
   const getDetailPanels = () => {
     const panels: React.ReactNode[] = [];
 
-    if (getDetailPanelContent == null) {
+    if (rootProps.getDetailPanelContent == null) {
       return panels;
     }
 
@@ -260,12 +273,12 @@ const DataGridProVirtualScroller = React.forwardRef<
       const content = detailPanelsContent[id];
 
       // Check if the id exists in the current page
-      const exists = currentPage.rows.find((row) => row.id === id);
+      const exists = rowsLookup![id] !== undefined;
 
       if (React.isValidElement(content) && exists) {
         const height = detailPanelsHeights[id];
-        const rowIndex = currentPage.rows.findIndex((rowEntry) => rowEntry.id === id);
-        const top = rowsMeta.positions[rowIndex] + rowHeight;
+        const rowIndex = rowsLookup![id];
+        const top = rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id);
 
         panels.push(
           <VirtualScrollerDetailPanel

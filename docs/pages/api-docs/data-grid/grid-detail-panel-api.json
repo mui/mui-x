@@ -3,12 +3,12 @@
   "description": "The master/detail API interface that is available in the grid apiRef.",
   "properties": [
     {
-      "name": "getExpandedRowIds",
+      "name": "getExpandedDetailPanels",
       "description": "Returns the rows whose detail panel is open.",
       "type": "() => GridRowId[]"
     },
     {
-      "name": "setExpandedRowIds",
+      "name": "setExpandedDetailPanels",
       "description": "Changes which rows to expand the detail panel.",
       "type": "(ids: GridRowId[]) => void"
     },

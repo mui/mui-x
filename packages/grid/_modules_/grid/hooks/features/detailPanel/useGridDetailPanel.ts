@@ -20,40 +20,7 @@ import { GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { GridDetailPanelApi } from '../../../models/api/gridDetailPanelApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridRowIdsSelector } from '../rows/gridRowsSelector';
-import { GridState } from '../../../models/gridState';
 import { GridPreProcessor } from '../../core/preProcessing/gridPreProcessingApi';
-
-function cacheContentAndHeight(
-  apiRef: GridApiRef,
-  state: GridState,
-  getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
-  getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
-) {
-  if (typeof getDetailPanelContent !== 'function') {
-    return {};
-  }
-
-  // TODO change to lazy approach using a Proxy
-  // only call getDetailPanelContent when asked for an id
-  const rowIds = gridRowIdsSelector(state);
-  const contentCache = rowIds.reduce((acc, id) => {
-    const params = apiRef.current.getRowParams(id);
-    acc[id] = getDetailPanelContent(params);
-    return acc;
-  }, {});
-
-  const heightCache = rowIds.reduce((acc, id) => {
-    if (contentCache[id] == null) {
-      return acc;
-    }
-    const params = apiRef.current.getRowParams(id);
-    acc[id] = getDetailPanelHeight(params);
-    return acc;
-  }, {});
-
-  return { contentCache, heightCache };
-}
 
 export const useGridDetailPanel = (
   apiRef: GridApiRef,
@@ -80,13 +47,10 @@ export const useGridDetailPanel = (
 
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
-  const heightCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsHeightCacheSelector);
-
-  const { getDetailPanelContent, getDetailPanelHeight } = props; // To avoid listing `props` as dependency
 
   const handleCellClick = React.useCallback<GridEventListener<GridEvents.cellClick>>(
     (params: GridCellParams, event: React.MouseEvent) => {
-      if (params.field !== GRID_DETAIL_PANEL_TOGGLE_FIELD || getDetailPanelContent == null) {
+      if (params.field !== GRID_DETAIL_PANEL_TOGGLE_FIELD || props.getDetailPanelContent == null) {
         return;
       }
 
@@ -102,7 +66,7 @@ export const useGridDetailPanel = (
 
       apiRef.current.toggleDetailPanel(params.id);
     },
-    [apiRef, contentCache, getDetailPanelContent],
+    [apiRef, contentCache, props.getDetailPanelContent],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
@@ -152,12 +116,13 @@ export const useGridDetailPanel = (
       if (expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
         return { ...initialValue, detail: 0 };
       }
+      const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef.current.state);
       return {
         ...initialValue,
         detail: heightCache[row.id] ?? 0, // Fallback to zero because the cache might not be ready yet (e.g. page was changed)
       };
     },
-    [expandedRowIds, heightCache],
+    [apiRef, expandedRowIds],
   );
 
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, addToggleColumn);
@@ -226,23 +191,4 @@ export const useGridDetailPanel = (
       }
     }
   }, [apiRef, props.detailPanelExpandedRowIds]);
-
-  const updateCaches = React.useCallback(() => {
-    apiRef.current.setState((state) => {
-      return {
-        ...state,
-        detailPanel: {
-          ...state.detailPanel,
-          ...cacheContentAndHeight(apiRef, state, getDetailPanelContent, getDetailPanelHeight),
-        },
-      };
-    });
-    apiRef.current.forceUpdate();
-  }, [apiRef, getDetailPanelContent, getDetailPanelHeight]);
-
-  useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, updateCaches);
-
-  React.useEffect(() => {
-    updateCaches();
-  }, [apiRef, updateCaches]);
 };
