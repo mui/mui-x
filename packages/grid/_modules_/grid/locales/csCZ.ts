@@ -2,7 +2,7 @@ import { csCZ as csCZCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-const csCZKGrid: Partial<GridLocaleText> = {
+const csCZGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žádné záznamy',
   noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
@@ -26,11 +26,13 @@ const csCZKGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Zobrazit filtry',
   toolbarFiltersTooltipActive: (count) => {
     let pluralForm = 'aktivních filtrů';
+
     if (count > 1 && count < 5) {
       pluralForm = 'aktivní filtry';
     } else if (count === 1) {
       pluralForm = 'aktivní filtr';
     }
+
     return `${count} ${pluralForm}`;
   },
 
@@ -38,6 +40,7 @@ const csCZKGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stáhnout jako CSV',
+  toolbarExportPrint: 'Vytisknout',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Najít sloupec',
@@ -67,8 +70,8 @@ const csCZKGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'je na nebo po',
   filterOperatorBefore: 'je před',
   filterOperatorOnOrBefore: 'je na nebo dříve',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'je prázdný',
+  filterOperatorIsNotEmpty: 'není prázdný',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',
@@ -87,11 +90,13 @@ const csCZKGrid: Partial<GridLocaleText> = {
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
     let pluralForm = 'aktivních filtrů';
+
     if (count > 1 && count < 5) {
       pluralForm = 'aktivní filtry';
     } else if (count === 1) {
       pluralForm = 'aktivní filtr';
     }
+
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Zobrazit filtry',
@@ -100,11 +105,13 @@ const csCZKGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => {
     let pluralForm = 'vybraných záznamů';
+
     if (count > 1 && count < 5) {
       pluralForm = 'vybrané záznamy';
     } else if (count === 1) {
       pluralForm = 'vybraný záznam';
     }
+
     return `${count} ${pluralForm}`;
   },
 
@@ -112,8 +119,15 @@ const csCZKGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Celkem řádků:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) => {
+    const str = totalCount.toString();
+    const firstDigit = str[0];
+    const op =
+      ['4', '6', '7'].includes(firstDigit) || (firstDigit === '1' && str.length % 3 === 0)
+        ? 'ze'
+        : 'z';
+    return `${visibleCount.toLocaleString()} ${op} ${totalCount.toLocaleString()}`;
+  },
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Výběr řádku',
@@ -123,12 +137,22 @@ const csCZKGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'ne',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'více',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Připnout na levo',
+  pinToRight: 'Připnout na pravo',
+  unpin: 'Odepnout',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'Skupina',
+  treeDataExpand: 'zobrazit potomky',
+  treeDataCollapse: 'skrýt potomky',
+
+  // Grouping columns
+  groupingColumnHeaderName: 'Skupina',
+  groupColumn: (name) => `Zoskupit podle ${name}`,
+  unGroupColumn: (name) => `Přestat zoskupovat podle ${name}`,
 };
 
-export const csCZ: Localization = getGridLocalization(csCZKGrid, csCZCore);
+export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);

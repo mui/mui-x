@@ -1045,3 +1045,30 @@ export function SnapGridWidthEdgeScroll() {
     </div>
   );
 }
+
+export function VariableRowHeight() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+  });
+
+  return (
+    <div style={{ height: 600 }}>
+      <DataGridPro
+        {...data}
+        getRowHeight={({ model }) => {
+          if (
+            model.commodity.includes('Oats') ||
+            model.commodity.includes('Milk') ||
+            model.commodity.includes('Soybean') ||
+            model.commodity.includes('Rice')
+          ) {
+            return 100;
+          }
+
+          return null;
+        }}
+      />
+    </div>
+  );
+}

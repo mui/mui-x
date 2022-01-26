@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
@@ -98,5 +98,21 @@ describe('<DataGrid /> - Cells', () => {
     expect(valueFormatter.lastCall.args[0].id).to.equal(0);
     expect(valueFormatter.lastCall.args[0].field).to.equal('isActive');
     expect(valueFormatter.lastCall.args[0].value).to.equal(true);
+  });
+
+  it('should throw when focusing cell without updating the state', function test() {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid {...baselineProps} columns={[{ field: 'brand', cellClassName: 'foobar' }]} />
+      </div>,
+    );
+
+    fireEvent.mouseUp(getCell(0, 0));
+    fireEvent.click(getCell(0, 0));
+
+    expect(() => {
+      getCell(1, 0).focus();
+      // @ts-expect-error need to migrate helpers to TypeScript
+    }).toErrorDev(['MUI: The cell with id=1 and field=brand received focus.']);
   });
 });
