@@ -248,7 +248,7 @@ export interface GridClasses {
   /**
    * Styles applied to the pinned column headers.
    */
-  'pinnedColumnHeaders': string;
+  pinnedColumnHeaders: string;
   /**
    * Styles applied to the left pinned column headers.
    */
