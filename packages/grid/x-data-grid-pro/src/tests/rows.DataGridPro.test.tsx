@@ -802,6 +802,13 @@ describe('<DataGridPro /> - Rows', () => {
   describe('apiRef: setRowHeight', () => {
     const ROW_HEIGHT = 52;
 
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     beforeEach(() => {
       baselineProps = {
         autoHeight: isJSDOM,
