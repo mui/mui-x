@@ -71,16 +71,16 @@ export default function CustomFilterPanel() {
             },
             sx: {
               // Customize inputs using css selectors
-              '& .MuiDataGrid-filterPanelFilterForm': { p: 2 },
-              '& .MuiDataGrid-filterPanelFilterForm:nth-child(even)': {
+              '& .MuiDataGrid-filterForm': { p: 2 },
+              '& .MuiDataGrid-filterForm:nth-child(even)': {
                 backgroundColor: (theme) =>
                   theme.palette.mode === 'dark' ? '#444' : '#ddd',
               },
-              '& .MuiDataGrid-filterPanelDeleteIcon': { display: 'none' },
-              '& .MuiDataGrid-filterPanelLinkOperatorInput': { mr: 2 },
-              '& .MuiDataGrid-filterPanelColumnInput': { mr: 2, width: 200 },
-              '& .MuiDataGrid-filterPanelOperatorInput': { mr: 5 },
-              '& .MuiDataGrid-filterPanelValueInput': { width: 300 },
+              '& .MuiDataGrid-filterFormDeleteIcon': { display: 'none' },
+              '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
+              '& .MuiDataGrid-filterFormColumnInput': { mr: 2, width: 200 },
+              '& .MuiDataGrid-filterFormOperatorInput': { mr: 5 },
+              '& .MuiDataGrid-filterFormValueInput': { width: 300 },
             },
           },
         }}
