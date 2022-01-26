@@ -2,7 +2,7 @@ import { csCZ as csCZCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-const csCZKGrid: Partial<GridLocaleText> = {
+const csCZGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žádné záznamy',
   noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
@@ -149,4 +149,4 @@ const csCZKGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Přestat zoskupovat podle ${name}`,
 };
 
-export const csCZ: Localization = getGridLocalization(csCZKGrid, csCZCore);
+export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);
