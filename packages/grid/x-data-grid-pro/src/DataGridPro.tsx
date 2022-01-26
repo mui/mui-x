@@ -8,7 +8,6 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-  useGridApiRef,
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridProComponent } from './useDataGridProComponent';
@@ -34,9 +33,8 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   inProps,
   ref,
 ) {
-  const apiRef = useGridApiRef(inProps.apiRef);
   const props = useDataGridProProps(inProps);
-  useDataGridProComponent(apiRef, props);
+  const apiRef = useDataGridProComponent(props.apiRef, props);
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
@@ -290,6 +288,12 @@ DataGridProRaw.propTypes = {
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
+  /**
+   * Function that sets the row height per row.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   */
+  getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
    */
