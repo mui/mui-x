@@ -138,6 +138,7 @@
   { "name": "GridCoreApi", "kind": "Interface" },
   { "name": "GridCsvExportApi", "kind": "Interface" },
   { "name": "GridCsvExportOptions", "kind": "Interface" },
+  { "name": "GridCsvGetRowsToExportParams", "kind": "Interface" },
   { "name": "gridDateComparator", "kind": "ExportSpecifier" },
   { "name": "gridDateFormatter", "kind": "Function" },
   { "name": "gridDateTimeFormatter", "kind": "Function" },

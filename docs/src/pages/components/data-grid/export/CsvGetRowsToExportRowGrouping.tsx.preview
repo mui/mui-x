@@ -1,0 +1,11 @@
+<DataGridPro
+  {...data}
+  loading={loading}
+  components={{ Toolbar: CustomToolbar }}
+  initialState={{
+    rowGrouping: {
+      model: ['commodity'],
+    },
+  }}
+  experimentalFeatures={{ rowGrouping: true }}
+/>

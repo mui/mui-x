@@ -262,6 +262,36 @@ describe('<DataGridPro /> - Export', () => {
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,Brand', '0,Nike'].join('\r\n'));
     });
 
+    it('should export the rows returned by params.getRowsToExport if defined', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(apiRef.current.getDataAsCsv({ getRowsToExport: () => [0] })).to.equal(
+        ['id,Brand', '0,Nike'].join('\r\n'),
+      );
+    });
+
     it('should not export hidden column (deprecated)', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
