@@ -2,6 +2,8 @@ import * as React from 'react';
 import { GridRowsProp, DataGrid, GridSortModel } from '@mui/x-data-grid';
 import { useDemoData, GridDemoData } from '@mui/x-data-grid-generator';
 
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
 function loadServerRows(sortModel: GridSortModel, data: GridDemoData): Promise<any> {
   return new Promise<any>((resolve) => {
     setTimeout(() => {
@@ -27,12 +29,12 @@ function loadServerRows(sortModel: GridSortModel, data: GridDemoData): Promise<a
 
 export default function ServerSortingGrid() {
   const { data } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 10,
-    maxColumns: 6,
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
+    rowLength: 100,
   });
   const [sortModel, setSortModel] = React.useState<GridSortModel>([
-    { field: 'commodity', sort: 'asc' },
+    { field: 'rating', sort: 'asc' },
   ]);
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);

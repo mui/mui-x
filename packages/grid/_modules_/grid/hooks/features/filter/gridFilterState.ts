@@ -11,8 +11,16 @@ export interface GridFilterState {
   filterModel: GridFilterModel;
 
   /**
+   * Filtering status for each row.
+   * A row is filtered if it is passing the filters, whether its parents are expanded or not.
+   * If a row is not registered in this lookup, it is filtered.
+   * This is the equivalent of the `visibleRowsLookup` if all the groups were expanded.
+   */
+  filteredRowsLookup: Record<GridRowId, boolean>;
+
+  /**
    * Visibility status for each row.
-   * A row is visible if it is passing the filters AND if its parent is expanded.
+   * A row is visible if it is passing the filters AND if its parents are expanded.
    * If a row is not registered in this lookup, it is visible.
    */
   visibleRowsLookup: Record<GridRowId, boolean>;
@@ -45,6 +53,6 @@ export interface GridFilteringParams {
 
 export type GridFilteringMethod = (
   params: GridFilteringParams,
-) => Pick<GridFilterState, 'visibleRowsLookup' | 'filteredDescendantCountLookup'>;
+) => Omit<GridFilterState, 'filterModel'>;
 
 export type GridFilteringMethodCollection = { [methodName: string]: GridFilteringMethod };

@@ -70,6 +70,7 @@
     },
     "getCellClassName": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
+    "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "getTreeDataPath": { "type": { "name": "func" } },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
