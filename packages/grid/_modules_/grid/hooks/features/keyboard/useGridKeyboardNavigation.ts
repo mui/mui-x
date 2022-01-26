@@ -234,7 +234,7 @@ export const useGridKeyboardNavigation = (
         }
 
         case ' ': {
-          event.preventDefault(); // prevent Space event from scrolling
+          // prevent Space event from scrolling
           break;
         }
 
