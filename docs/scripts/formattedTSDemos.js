@@ -9,7 +9,7 @@
  * List of demos to ignore when transpiling
  * Example: "app-bar/BottomAppBar.tsx"
  */
-const ignoreList = [];
+const ignoreList = ['/pages.ts'];
 
 const fse = require('fs-extra');
 const path = require('path');
@@ -34,24 +34,31 @@ const workspaceRoot = path.join(__dirname, '../../');
 async function getFiles(root) {
   const files = [];
 
-  await Promise.all(
-    (
-      await fse.readdir(root)
-    ).map(async (name) => {
-      const filePath = path.join(root, name);
-      const stat = await fse.stat(filePath);
+  try {
+    await Promise.all(
+      (
+        await fse.readdir(root)
+      ).map(async (name) => {
+        const filePath = path.join(root, name);
+        const stat = await fse.stat(filePath);
 
-      if (stat.isDirectory()) {
-        files.push(...(await getFiles(filePath)));
-      } else if (
-        stat.isFile() &&
-        filePath.endsWith('.tsx') &&
-        !ignoreList.some((ignorePath) => filePath.endsWith(path.normalize(ignorePath)))
-      ) {
-        files.push(filePath);
-      }
-    }),
-  );
+        if (stat.isDirectory()) {
+          files.push(...(await getFiles(filePath)));
+        } else if (
+          stat.isFile() &&
+          filePath.endsWith('.tsx') &&
+          !ignoreList.some((ignorePath) => filePath.endsWith(path.normalize(ignorePath)))
+        ) {
+          files.push(filePath);
+        }
+      }),
+    );
+  } catch (error) {
+    if (error.message?.includes('no such file or directory')) {
+      return [];
+    }
+    throw error;
+  }
 
   return files;
 }
@@ -129,7 +136,10 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
 async function main(argv) {
   const { watch: watchMode, disableCache: cacheDisabled } = argv;
 
-  const tsxFiles = await getFiles(path.join(workspaceRoot, 'docs/src/pages'));
+  const tsxFiles = [
+    ...(await getFiles(path.join(workspaceRoot, 'docs/src/pages'))), // old structure
+    ...(await getFiles(path.join(workspaceRoot, 'docs/data'))), // new structure
+  ];
 
   const program = typescriptToProptypes.createProgram(tsxFiles, tsConfig);
 

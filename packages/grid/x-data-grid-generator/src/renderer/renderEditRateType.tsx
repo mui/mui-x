@@ -3,31 +3,9 @@ import { GridRenderCellParams, GridEvents } from '@mui/x-data-grid';
 import Select, { SelectProps } from '@mui/material/Select';
 import { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { createStyles, makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
 import { RATE_TYPE_OPTIONS } from '../services/static-data';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      select: {
-        display: 'flex',
-        alignItems: 'center',
-        paddingLeft: theme.spacing(1),
-      },
-      optionIcon: {
-        minWidth: 36,
-      },
-      optionText: {
-        overflow: 'hidden',
-      },
-    }),
-  { defaultTheme },
-);
-
 function EditRateType(props: GridRenderCellParams) {
-  const classes = useStyles();
   const { id, value, api, field } = props;
 
   const handleChange: SelectProps['onChange'] = (event) => {
@@ -55,10 +33,17 @@ function EditRateType(props: GridRenderCellParams) {
   return (
     <Select
       value={value}
-      classes={{ select: classes.select }}
       onChange={handleChange}
       MenuProps={{
         onClose: handleClose,
+      }}
+      sx={{
+        height: 1,
+        '& .MuiSelect-select': {
+          display: 'flex',
+          alignItems: 'center',
+          pl: 1,
+        },
       }}
       autoFocus
       fullWidth

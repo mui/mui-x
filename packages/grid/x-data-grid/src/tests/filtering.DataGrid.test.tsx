@@ -136,7 +136,7 @@ describe('<DataGrid /> - Filter', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
-          autoHeight={isJSDOM}
+          disableVirtualization
           columns={columns || baselineProps.columns}
           rows={rows || baselineProps.rows}
           filterModel={
