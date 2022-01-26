@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useForkRef } from '@mui/material/utils';
-import { GridRowId } from '../../../models/gridRows';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -16,6 +15,7 @@ import { GridEventListener, GridEvents } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
 import { GridRenderContext } from '../../../models';
+import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 
 // Uses binary search to avoid looping through all possible positions
@@ -42,7 +42,6 @@ export function getIndexFromScroll(
 
 interface UseGridVirtualScrollerProps {
   ref: React.Ref<HTMLDivElement>;
-  selectionLookup: Record<string, GridRowId>;
   disableVirtualization?: boolean;
   renderZoneMinColumnIndex?: number;
   renderZoneMaxColumnIndex?: number;
@@ -56,7 +55,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const {
     ref,
-    selectionLookup,
     disableVirtualization,
     onRenderZonePositioning,
     renderZoneMinColumnIndex = 0,
@@ -69,6 +67,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+  const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const currentPage = useCurrentPageRows(apiRef, rootProps);
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -288,6 +287,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const { id, model } = renderedRows[i];
       const targetRowHeight = apiRef.current.unstable_getRowHeight(id);
 
+      let isSelected: boolean;
+      if (selectedRowsLookup[id] == null) {
+        isSelected = false;
+      } else if (typeof rootProps.isRowSelectable === 'function') {
+        isSelected = rootProps.isRowSelectable(apiRef.current.getRowParams(id));
+      } else {
+        isSelected = true;
+      }
+
       rows.push(
         <rootProps.components.Row
           key={id}
@@ -301,7 +309,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           visibleColumns={visibleColumns}
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
-          selected={selectionLookup[id] !== undefined}
+          selected={isSelected}
           index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
           containerWidth={availableSpace}
           {...rootProps.componentsProps?.row}

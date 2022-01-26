@@ -4,7 +4,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-export default function OrderSortingGrid() {
+export default function InitialSort() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
@@ -14,18 +14,17 @@ export default function OrderSortingGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        sortingOrder={['desc', 'asc']}
+        {...data}
         initialState={{
           sorting: {
             sortModel: [
               {
-                field: 'commodity',
-                sort: 'asc',
+                field: 'rating',
+                sort: 'desc',
               },
             ],
           },
         }}
-        {...data}
       />
     </div>
   );

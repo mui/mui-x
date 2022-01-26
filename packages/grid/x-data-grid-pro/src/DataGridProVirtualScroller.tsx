@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridRowId } from '../../_modules_/grid/models/gridRows';
 import { GridVirtualScroller } from '../../_modules_/grid/components/virtualization/GridVirtualScroller';
 import { GridVirtualScrollerContent } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerContent';
 import { GridVirtualScrollerRenderZone } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerRenderZone';
@@ -103,7 +102,6 @@ const VirtualScrollerPinnedColumns = styled('div', {
 }));
 
 interface DataGridProVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
-  selectionLookup: Record<string, GridRowId>;
   disableVirtualization?: boolean;
 }
 
@@ -111,7 +109,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   HTMLDivElement,
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
-  const { className, disableVirtualization, selectionLookup, ...other } = props;
+  const { className, disableVirtualization, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);

@@ -109,7 +109,7 @@ const quantityOnlyOperators = [
   },
 ];
 
-export default function CustomQuantityOperator() {
+export default function CustomMultiValueOperator() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
 
   const columns = [...data.columns];

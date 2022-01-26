@@ -448,6 +448,20 @@ describe('<DataGrid /> - Selection', () => {
       );
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
+
+    it('should not crash when paginationMode="server" and some selected rows are not provided to the grid', () => {
+      expect(() => {
+        render(
+          <TestDataGridSelection
+            paginationMode="server"
+            selectionModel={[1, 4]}
+            isRowSelectable={(params) => params.id > 0}
+            checkboxSelection
+          />,
+        );
+        // @ts-expect-error need to migrate helpers to TypeScript
+      }).not.toErrorDev();
+    });
   });
 
   describe('props: rows', () => {
