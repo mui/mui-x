@@ -174,6 +174,26 @@ export interface GridClasses {
    */
   filterForm: string;
   /**
+   * Styles applied to the delete icon of the filter form component.
+   */
+  filterFormDeleteIcon: string;
+  /**
+   * Styles applied to the link operator inout of the filter form component.
+   */
+  filterFormLinkOperatorInput: string;
+  /**
+   * Styles applied to the column input of the filter form component.
+   */
+  filterFormColumnInput: string;
+  /**
+   * Styles applied to the operator input of the filter form component.
+   */
+  filterFormOperatorInput: string;
+  /**
+   * Styles applied to the value input of the filter form component.
+   */
+  filterFormValueInput: string;
+  /**
    * Styles applied to the root of the input component.
    */
   editInputCell: string;
