@@ -74,7 +74,7 @@ But if the callback is not defined or if calling it does not update the prop val
 
 #### Restore part of the state
 
-It is possible to only pass some keys of the state to the `apiRef.current.restoreState()` method.
+It is possible to restore specific properties of the state using the `apiRef.current.restoreState()` method.
 For instance, to only restore the pinned columns:
 
 ```ts
