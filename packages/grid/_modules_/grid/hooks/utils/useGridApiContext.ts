@@ -18,5 +18,5 @@ export function useGridApiContext<
     );
   }
 
-  return apiRef as any;
+  return apiRef as GridApiRef<GridApi>;
 }

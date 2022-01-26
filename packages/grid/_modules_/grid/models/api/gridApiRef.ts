@@ -11,9 +11,9 @@ export type GridApiRef<GridApi extends GridApiCommon = GridApiCommunity> =
 /**
  * The reference storing the api of the Community-plan grid.
  */
-export type GridApiRefCommunity = React.MutableRefObject<GridApiCommunity>;
+export type GridApiRefCommunity = GridApiRef<GridApiCommunity>;
 
 /**
  * The reference storing the api of the Pro-plan grid.
  */
-export type GridApiRefPro = React.MutableRefObject<GridApiPro>;
+export type GridApiRefPro = GridApiRef<GridApiPro>;
