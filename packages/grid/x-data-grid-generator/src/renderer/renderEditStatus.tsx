@@ -9,31 +9,9 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
-import { createStyles, makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
 import { STATUS_OPTIONS } from '../services/static-data';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      select: {
-        display: 'flex',
-        alignItems: 'center',
-        paddingLeft: theme.spacing(1),
-      },
-      optionIcon: {
-        minWidth: 36,
-      },
-      optionText: {
-        overflow: 'hidden',
-      },
-    }),
-  { defaultTheme },
-);
-
 function EditStatus(props: GridRenderEditCellParams) {
-  const classes = useStyles();
   const { id, value, api, field } = props;
 
   const handleChange: SelectProps['onChange'] = (event) => {
@@ -61,10 +39,17 @@ function EditStatus(props: GridRenderEditCellParams) {
   return (
     <Select
       value={value}
-      classes={{ select: classes.select }}
       onChange={handleChange}
       MenuProps={{
         onClose: handleClose,
+      }}
+      sx={{
+        height: 1,
+        '& .MuiSelect-select': {
+          display: 'flex',
+          alignItems: 'center',
+          pl: 1,
+        },
       }}
       autoFocus
       fullWidth
@@ -89,10 +74,10 @@ function EditStatus(props: GridRenderEditCellParams) {
 
         return (
           <MenuItem key={option} value={option}>
-            <ListItemIcon className={classes.optionIcon}>
+            <ListItemIcon sx={{ minWidth: 36 }}>
               <IconComponent fontSize="small" />
             </ListItemIcon>
-            <ListItemText className={classes.optionText} primary={label} />
+            <ListItemText primary={label} sx={{ overflow: 'hidden' }} />
           </MenuItem>
         );
       })}

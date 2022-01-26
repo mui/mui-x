@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, describeConformance } from '@material-ui/monorepo/test/utils';
+import { createRenderer, describeConformance } from '@mui/monorepo/test/utils';
 import {
   GridPanel,
   gridPanelClasses as classes,

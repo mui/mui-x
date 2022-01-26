@@ -8,10 +8,10 @@ import {
 } from '../../utils/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
-import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 
 /**
  * Only available in DataGridPro
@@ -22,14 +22,14 @@ import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProProcessedProps,
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'
   >,
 ): void => {
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const currentPage = useCurrentPageRows(apiRef, props);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const contentHeight = Math.max(currentPage.rows.length * rowHeight, 1);
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
+  const contentHeight = Math.max(rowsMeta.currentPageTotalHeight, 1);
 
   const isInScrollBottomArea = React.useRef<boolean>(false);
 

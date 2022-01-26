@@ -1,15 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import { unstable_useEnhancedEffect as useEnhancedEffect, debounce } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { SUBMIT_FILTER_STROKE_TIME } from '../panel/filterPanel/GridFilterInputValue';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -58,13 +59,18 @@ function GridEditInputCell(props: GridRenderEditCellParams & Omit<InputBaseProps
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
+  const debouncedSetEditCellValue = React.useMemo(
+    () => debounce(api.setEditCellValue, SUBMIT_FILTER_STROKE_TIME),
+    [api.setEditCellValue],
+  );
+
   const handleChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
       setValueState(newValue);
-      api.setEditCellValue({ id, field, value: newValue }, event);
+      debouncedSetEditCellValue({ id, field, value: newValue }, event);
     },
-    [api, field, id],
+    [debouncedSetEditCellValue, field, id],
   );
 
   React.useEffect(() => {
@@ -83,7 +89,7 @@ function GridEditInputCell(props: GridRenderEditCellParams & Omit<InputBaseProps
       className={classes.root}
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}
-      value={valueState || ''}
+      value={valueState ?? ''}
       onChange={handleChange}
       {...other}
     />

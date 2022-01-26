@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridRowId } from '../../_modules_/grid/models/gridRows';
 import { GridVirtualScroller } from '../../_modules_/grid/components/virtualization/GridVirtualScroller';
 import { GridVirtualScrollerContent } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerContent';
 import { GridVirtualScrollerRenderZone } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerRenderZone';
@@ -12,7 +11,7 @@ import { gridVisibleColumnFieldsSelector } from '../../_modules_/grid/hooks/feat
 import { useGridApiEventHandler } from '../../_modules_/grid/hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../_modules_/grid/models/events';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
-import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
+import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
 import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import {
@@ -46,7 +45,7 @@ export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[
 };
 
 type OwnerState = {
-  classes: GridComponentProps['classes'];
+  classes: DataGridProProcessedProps['classes'];
   leftPinnedColumns: GridPinnedColumns['left'];
   rightPinnedColumns: GridPinnedColumns['right'];
 };
@@ -103,7 +102,6 @@ const VirtualScrollerPinnedColumns = styled('div', {
 }));
 
 interface DataGridProVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
-  selectionLookup: Record<string, GridRowId>;
   disableVirtualization?: boolean;
 }
 
@@ -111,7 +109,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   HTMLDivElement,
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
-  const { className, disableVirtualization, selectionLookup, ...other } = props;
+  const { className, disableVirtualization, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
@@ -119,14 +117,14 @@ const DataGridProVirtualScroller = React.forwardRef<
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
 
-  const handleRenderZonePositioning = ({ top }) => {
+  const handleRenderZonePositioning = React.useCallback(({ top }) => {
     if (leftColumns.current) {
       leftColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
     }
     if (rightColumns.current) {
       rightColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
     }
-  };
+  }, []);
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);

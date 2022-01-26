@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -176,7 +176,7 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
 
-    it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
+    it('should show all columns when clicking "SHOW ALL" from the column selector (deprecated)', () => {
       const customColumns = [
         {
           field: 'id',
@@ -195,6 +195,39 @@ describe('<DataGrid /> - Toolbar', () => {
             columns={customColumns}
             components={{
               Toolbar: GridToolbar,
+            }}
+          />
+        </div>,
+      );
+
+      fireEvent.click(getByText('Columns'));
+      fireEvent.click(getByText('Show all'));
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+    });
+
+    it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
+      const customColumns = [
+        {
+          field: 'id',
+        },
+        {
+          field: 'brand',
+        },
+      ];
+
+      const { getByText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={customColumns}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+            initialState={{
+              columns: {
+                columnVisibilityModel: { id: false, brand: false },
+              },
             }}
           />
         </div>,

@@ -35,7 +35,7 @@ export interface GridCsvExportOptions extends GridExportOptions {
    */
   utf8WithBom?: boolean;
   /**
-   * If `true, the first row of the CSV will include the headers of the grid.
+   * If `true`, the first row of the CSV will include the headers of the grid.
    * @default true
    */
   includeHeaders?: boolean;

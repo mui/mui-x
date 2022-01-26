@@ -9,13 +9,16 @@ import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
-import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
+import {
+  GridColumnHeaderSeparator,
+  GridColumnHeaderSeparatorProps,
+} from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -32,11 +35,12 @@ interface GridColumnHeaderItemProps {
   hasFocus?: boolean;
   tabIndex: 0 | -1;
   disableReorder?: boolean;
+  separatorSide?: GridColumnHeaderSeparatorProps['side'];
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
   showRightBorder: boolean;
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -80,6 +84,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     tabIndex,
     extendRowFullWidth,
     disableReorder,
+    separatorSide,
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -173,11 +178,17 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     />
   );
 
+  const sortingOrder: GridSortDirection[] = column.sortingOrder ?? rootProps.sortingOrder;
+
   const columnTitleIconButtons = (
     <React.Fragment>
       {!rootProps.disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
       {column.sortable && !column.hideSortIcons && (
-        <GridColumnHeaderSortIcon direction={sortDirection} index={sortIndex} />
+        <GridColumnHeaderSortIcon
+          direction={sortDirection}
+          index={sortIndex}
+          sortingOrder={sortingOrder}
+        />
       )}
     </React.Fragment>
   );
@@ -238,6 +249,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         resizing={isResizing}
         height={headerHeight}
         onMouseDown={publish(GridEvents.columnSeparatorMouseDown)}
+        side={separatorSide}
       />
       <GridColumnHeaderMenu
         columnMenuId={columnMenuId!}
@@ -269,6 +281,7 @@ GridColumnHeaderItem.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   isLastColumn: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
+  separatorSide: PropTypes.oneOf(['left', 'right']),
   sortDirection: PropTypes.oneOf(['asc', 'desc']),
   sortIndex: PropTypes.number,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,

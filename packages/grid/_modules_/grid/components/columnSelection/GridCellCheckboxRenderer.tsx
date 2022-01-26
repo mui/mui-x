@@ -8,10 +8,10 @@ import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -38,10 +38,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
       apiRef.current.publishEvent(GridEvents.rowSelectionCheckboxChange, params, event);
-    };
-
-    const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
-      event.stopPropagation();
     };
 
     React.useLayoutEffect(() => {
@@ -78,7 +74,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
         tabIndex={tabIndex}
         checked={!!value}
         onChange={handleChange}
-        onClick={handleClick}
         className={classes.root}
         color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
@@ -116,6 +111,7 @@ GridCellCheckboxForwardRef.propTypes = {
    * @param {GridRowId} id The row id.
    * @param {string} field The field.
    * @returns {GridCellValue} The cell value.
+   * @deprecated Use `params.row` to directly access the fields you want instead.
    */
   getValue: PropTypes.func.isRequired,
   /**

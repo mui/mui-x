@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
 import { DataGrid, DataGridProps, GridActionsCellItem } from '@mui/x-data-grid';
 import { getColumnValues, getRow } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
+import { COMPACT_DENSITY_FACTOR } from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Rows', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -52,7 +53,7 @@ describe('<DataGrid /> - Rows', () => {
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...props} columns={columns} autoHeight={isJSDOM} />
+          <DataGrid {...props} columns={columns} disableVirtualization />
         </div>
       );
 
@@ -98,8 +99,7 @@ describe('<DataGrid /> - Rows', () => {
 
   it('should apply the CSS class returned by getRowClassName', () => {
     const getRowId = (row) => `${row.clientId}`;
-    const handleRowClassName = (params) =>
-      params.getValue(params.id, 'age') < 20 ? 'under-age' : '';
+    const handleRowClassName = (params) => (params.row.age < 20 ? 'under-age' : '');
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid getRowClassName={handleRowClassName} getRowId={getRowId} {...baselineProps} />
@@ -111,7 +111,10 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('columnType: actions', () => {
-    const TestCase = ({ getActions }: { getActions?: () => JSX.Element[] }) => {
+    const TestCase = ({
+      getActions,
+      ...other
+    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -124,6 +127,7 @@ describe('<DataGrid /> - Rows', () => {
                 getActions,
               },
             ]}
+            {...other}
           />
         </div>
       );
@@ -187,7 +191,7 @@ describe('<DataGrid /> - Rows', () => {
       );
       expect(getRow(0).className).not.to.contain('Mui-selected');
       fireEvent.click(screen.getByRole('button', { name: 'more' }));
-      await waitFor(() => expect(screen.queryByText('print')).not.to.equal(null));
+      expect(screen.queryByText('print')).not.to.equal(null);
       fireEvent.click(screen.queryByText('print'));
       expect(getRow(0).className).not.to.contain('Mui-selected');
     });
@@ -197,6 +201,97 @@ describe('<DataGrid /> - Rows', () => {
       expect(getRow(0).className).not.to.contain('Mui-selected');
       fireEvent.click(screen.getByRole('button', { name: 'more' }));
       expect(getRow(0).className).not.to.contain('Mui-selected');
+    });
+
+    it('should close other menus before opening a new one', () => {
+      render(
+        <TestCase
+          rows={[{ id: 1 }, { id: 2 }]}
+          getActions={() => [<GridActionsCellItem label="print" showInMenu />]}
+        />,
+      );
+      expect(screen.queryAllByRole('menu')).to.have.length(0);
+
+      fireEvent.click(screen.getAllByRole('button', { name: 'more' })[0]);
+      clock.runToLast();
+      expect(screen.queryAllByRole('menu')).to.have.length(1);
+
+      fireEvent.click(screen.getAllByRole('button', { name: 'more' })[1]);
+      clock.runToLast();
+      expect(screen.queryAllByRole('menu')).to.have.length(1);
+    });
+  });
+
+  describe('Row height', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    const ROW_HEIGHT = 52;
+    const TestCase = (props) => {
+      const getRowId = (row) => `${row.clientId}`;
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
+        </div>
+      );
+    };
+
+    it('should set each row height whe rowHeight prop is used', () => {
+      const { setProps } = render(<TestCase />);
+
+      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+      expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
+      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+
+      setProps({ rowHeight: 30 });
+
+      expect(getRow(0).clientHeight).to.equal(30);
+      expect(getRow(1).clientHeight).to.equal(30);
+      expect(getRow(2).clientHeight).to.equal(30);
+    });
+
+    it('should set the second row to have a different row height than the others', () => {
+      render(<TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />);
+
+      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+      expect(getRow(1).clientHeight).to.equal(100);
+      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+    });
+
+    it('should set density to all but the row with variable row height', () => {
+      const { setProps } = render(
+        <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
+      );
+
+      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+      expect(getRow(1).clientHeight).to.equal(100);
+      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+
+      setProps({ density: 'compact' });
+
+      expect(getRow(0).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
+      expect(getRow(1).clientHeight).to.equal(100);
+      expect(getRow(2).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
+    });
+
+    it('should set the correct rowHeight and variable row height', () => {
+      const { setProps } = render(
+        <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
+      );
+
+      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+      expect(getRow(1).clientHeight).to.equal(100);
+      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+
+      setProps({ rowHeight: 30 });
+
+      expect(getRow(0).clientHeight).to.equal(30);
+      expect(getRow(1).clientHeight).to.equal(100);
+      expect(getRow(2).clientHeight).to.equal(30);
     });
   });
 });

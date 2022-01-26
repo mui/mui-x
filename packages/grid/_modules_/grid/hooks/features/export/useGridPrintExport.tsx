@@ -5,17 +5,17 @@ import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
-import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import {
-  gridDensityRowHeightSelector,
-  gridDensityHeaderHeightSelector,
-} from '../density/densitySelector';
+  allGridColumnsSelector,
+  gridColumnVisibilityModelSelector,
+} from '../columns/gridColumnsSelector';
+import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
 import { gridClasses } from '../../../gridClasses';
-import { useGridState } from '../../utils/useGridState';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
@@ -33,13 +33,13 @@ type PrintWindowOnLoad = (
  */
 export const useGridPrintExport = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pagination'>,
+  props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
-  const [gridState, setGridState] = useGridState(apiRef);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<any>();
@@ -62,7 +62,7 @@ export const useGridPrintExport = (
         // Show only wanted columns.
         apiRef.current.updateColumns(
           columns.map((column) => {
-            if (column.hide) {
+            if (columnVisibilityModel[column.field] !== false) {
               previousHiddenColumns.current.push(column.field);
             }
 
@@ -79,7 +79,7 @@ export const useGridPrintExport = (
         );
         resolve();
       }),
-    [columns, apiRef],
+    [columns, columnVisibilityModel, apiRef],
   );
 
   const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
@@ -153,7 +153,7 @@ export const useGridPrintExport = (
 
       // Expand container height to accommodate all rows
       gridClone.style.height = `${
-        visibleRowCount * rowHeight +
+        rowsMeta.currentPageTotalHeight +
         headerHeight +
         gridToolbarElementHeight +
         gridFooterElementHeight
@@ -218,7 +218,7 @@ export const useGridPrintExport = (
       // Trigger print
       printWindow.contentWindow!.print();
     },
-    [apiRef, doc, visibleRowCount, rowHeight, headerHeight],
+    [apiRef, doc, rowsMeta.currentPageTotalHeight, headerHeight],
   );
 
   const handlePrintWindowAfterPrint = React.useCallback(
@@ -227,7 +227,7 @@ export const useGridPrintExport = (
       doc.current!.body.removeChild(printWindow);
 
       // Revert grid to previous state
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         ...previousGridState.current,
       }));
@@ -248,7 +248,7 @@ export const useGridPrintExport = (
       previousGridState.current = null;
       previousHiddenColumns.current = [];
     },
-    [columns, apiRef, setGridState],
+    [columns, apiRef],
   );
 
   const exportDataAsPrint = React.useCallback(
@@ -259,7 +259,7 @@ export const useGridPrintExport = (
         throw new Error('MUI: No grid root element available.');
       }
 
-      previousGridState.current = gridState;
+      previousGridState.current = apiRef.current.state;
 
       if (props.pagination) {
         apiRef.current.setPageSize(visibleRowCount);
@@ -277,7 +277,6 @@ export const useGridPrintExport = (
       props,
       logger,
       apiRef,
-      gridState,
       buildPrintWindow,
       handlePrintWindowLoad,
       handlePrintWindowAfterPrint,

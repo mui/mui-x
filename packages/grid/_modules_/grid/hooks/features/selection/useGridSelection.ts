@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { isGridCellRoot } from '../../../utils/domUtils';
+import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
@@ -19,14 +18,17 @@ import {
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
-import { getDataGridUtilityClass } from '../../../gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import {
+  GridPreProcessingGroup,
+  GridPreProcessor,
+  useGridRegisterPreProcessor,
+} from '../../core/preProcessing';
 import { GridCellModes } from '../../../models/gridEditRowModel';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -48,7 +50,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export const useGridSelection = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     | 'checkboxSelection'
     | 'selectionModel'
     | 'onSelectionModelChange'
@@ -75,8 +77,6 @@ export const useGridSelection = (
   }, [props.selectionModel]);
 
   useGridStateInit(apiRef, (state) => ({ ...state, selection: propSelectionModel ?? [] }));
-
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
@@ -121,8 +121,10 @@ export const useGridSelection = (
   /**
    * PRE-PROCESSING
    */
-  const updateSelectionColumn = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
+  const updateSelectionColumn = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
+  >(
+    (columnsState) => {
       const selectionColumn: GridColDef = {
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
@@ -156,11 +158,11 @@ export const useGridSelection = (
       const currentModel = gridSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
-        setGridState((state) => ({ ...state, selection: model }));
-        forceUpdate();
+        apiRef.current.setState((state) => ({ ...state, selection: model }));
+        apiRef.current.forceUpdate();
       }
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, logger],
   );
 
   const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(
@@ -331,6 +333,22 @@ export const useGridSelection = (
         return;
       }
 
+      const cellClicked = findParentElementFromClassName(
+        event.target as HTMLElement,
+        gridClasses.cell,
+      );
+      const field = cellClicked?.getAttribute('data-field');
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        // click on checkbox should not trigger row selection
+        return;
+      }
+      if (field) {
+        const column = apiRef.current.getColumn(field);
+        if (column.type === 'actions') {
+          return;
+        }
+      }
+
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
         expandRowRangeSelection(params.id);
       } else {
@@ -338,11 +356,12 @@ export const useGridSelection = (
       }
     },
     [
+      disableSelectionOnClick,
+      canHaveMultipleSelection,
+      checkboxSelection,
+      apiRef,
       expandRowRangeSelection,
       handleSingleRowSelection,
-      canHaveMultipleSelection,
-      disableSelectionOnClick,
-      checkboxSelection,
     ],
   );
 

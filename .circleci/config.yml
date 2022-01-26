@@ -9,6 +9,14 @@ parameters:
     description: The dist-tag of react to be used
     type: string
     default: stable
+  workflow:
+    description: The name of the workflow to run
+    type: string
+    default: pipeline
+  e2e-base-url:
+    description: The base url for running end-to-end test
+    type: string
+    default: ''
 
 defaults: &defaults
   parameters:
@@ -16,13 +24,17 @@ defaults: &defaults
       description: The dist-tag of react to be used
       type: string
       default: << pipeline.parameters.react-dist-tag >>
+    e2e-base-url:
+      description: The base url for running end-to-end test
+      type: string
+      default: << pipeline.parameters.e2e-base-url >>
   environment:
     # Keep in sync with "Save playwright cache"
     PLAYWRIGHT_BROWSERS_PATH: /tmp/pw-browsers
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_DIST_TAG: << parameters.react-dist-tag >>
-  working_directory: /tmp/material-ui-x
+  working_directory: /tmp/mui
   docker:
     - image: circleci/node:12
 # CircleCI has disabled the cache across forks for security reasons.
@@ -52,7 +64,6 @@ commands:
           name: Restore yarn cache
           keys:
             - v8-yarn-{{ checksum "yarn.lock" }}
-            - v8-yarn-
       - run:
           name: Set yarn cache folder
           command: |
@@ -74,8 +85,6 @@ commands:
                 name: Restore playwright cache
                 keys:
                   - v5-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
-                  - v5-playwright-{{ arch }}-
-                  - v5-playwright-
       - run:
           name: Install js dependencies
           command: yarn install --verbose
@@ -111,12 +120,6 @@ jobs:
       - run:
           name: Check for duplicated packages
           command: yarn deduplicate
-      - save_cache:
-          key: v6-yarn-sha-{{ checksum "yarn.lock" }}
-          paths:
-            # Keep path in sync with "Set yarn cache folder"
-            # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
-            - ~/.cache/yarn
   test_unit:
     <<: *defaults
     steps:
@@ -132,14 +135,11 @@ jobs:
             then
               exit 1
             fi
-  test_static:
+  test_lint:
     <<: *defaults
     steps:
       - checkout
       - install_js
-      - run:
-          name: '`yarn prettier` changes committed?'
-          command: yarn prettier check-changed
       - run:
           name: Eslint
           command: yarn eslint:ci
@@ -149,6 +149,17 @@ jobs:
       - run:
           name: Lint JSON
           command: yarn jsonlint
+      - run:
+          name: Lint Markdown
+          command: yarn markdownlint
+  test_static:
+    <<: *defaults
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: '`yarn prettier` changes committed?'
+          command: yarn prettier check-changed
       - run:
           name: Generate PropTypes
           command: yarn proptypes
@@ -170,7 +181,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:f08e263c95e83334104e6e2fee047ad92062a03af6ae94c0f8686ba2b3014823
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -201,7 +212,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:f08e263c95e83334104e6e2fee047ad92062a03af6ae94c0f8686ba2b3014823
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -211,10 +222,25 @@ jobs:
       - run:
           name: Run e2e tests
           command: yarn test:e2e
-  test_regressions:
+  test_e2e_website:
     <<: *defaults
     docker:
       - image: mcr.microsoft.com/playwright@sha256:f08e263c95e83334104e6e2fee047ad92062a03af6ae94c0f8686ba2b3014823
+        environment:
+          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    steps:
+      - checkout
+      - install_js:
+          browsers: true
+      - run:
+          name: yarn test:e2e-website
+          command: yarn test:e2e-website
+          environment:
+            PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
+  test_regressions:
+    <<: *defaults
+    docker:
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -227,12 +253,40 @@ jobs:
       - run:
           name: Upload screenshots to Argos CI
           command: yarn test:argos
+  test_performance:
+    <<: *defaults
+    docker:
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+        environment:
+          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    steps:
+      - checkout
+      - install_js:
+          browsers: true
+      - run:
+          name: Run performance tests
+          command: xvfb-run yarn test:performance
+      - store_artifacts:
+          name: Persist performance snapshot as pipeline artifact
+          path: performance-snapshot.json
+          destination: performance-snapshot.json
+      - run:
+          name: Run danger on PRs
+          command: yarn danger ci --fail-on-errors
+          environment:
+            DANGER_DISABLE_TRANSPILATION: 'true'
+            DANGER_COMMAND: 'reportPerformance'
 workflows:
   version: 2
   pipeline:
+    when:
+      equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
       - checkout
       - test_unit:
+          requires:
+            - checkout
+      - test_lint:
           requires:
             - checkout
       - test_static:
@@ -248,5 +302,16 @@ workflows:
           requires:
             - checkout
       - test_regressions:
+          requires:
+            - checkout
+      - test_performance:
+          requires:
+            - checkout
+  e2e-website:
+    when:
+      equal: [e2e-website, << pipeline.parameters.workflow >>]
+    jobs:
+      - checkout
+      - test_e2e_website:
           requires:
             - checkout

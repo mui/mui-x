@@ -7,12 +7,11 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-  useGridApiRef,
 } from '../../_modules_/grid';
+import { DataGridProps } from '../../_modules_/grid/models/props/DataGridProps';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { MAX_PAGE_SIZE, DataGridProps } from './DataGridProps';
-import { useDataGridProps } from './useDataGridProps';
+import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
 import { DataGridVirtualScroller } from './DataGridVirtualScroller';
 import { DataGridColumnHeaders } from './DataGridColumnHeaders';
 
@@ -21,8 +20,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   ref,
 ) {
   const props = useDataGridProps(inProps);
-  const apiRef = useGridApiRef();
-  useDataGridComponent(apiRef, props);
+  const apiRef = useDataGridComponent(props);
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
@@ -104,6 +102,11 @@ DataGridRaw.propTypes = {
    * Extend native column types with your new column types.
    */
   columnTypes: PropTypes.object,
+  /**
+   * Set the column visibility model of the grid.
+   * If defined, the grid will ignore the `hide` property in [[GridColDef]].
+   */
+  columnVisibilityModel: PropTypes.object,
   /**
    * Overrideable components.
    */
@@ -199,6 +202,12 @@ DataGridRaw.propTypes = {
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
+  /**
+   * Function that sets the row height per row.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   */
+  getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
    */
@@ -366,26 +375,20 @@ DataGridRaw.propTypes = {
    */
   onColumnOrderChange: PropTypes.func,
   /**
-   * Callback fired while a column is being resized.
-   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onColumnResize: PropTypes.func,
-  /**
    * Callback fired when a column visibility changes.
+   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use `onColumnVisibilityModelChange` instead.
    */
   onColumnVisibilityChange: PropTypes.func,
   /**
-   * Callback fired when the width of a column is changed.
-   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   * Callback fired when the column visibility model changes.
+   * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnWidthChange: PropTypes.func,
+  onColumnVisibilityModelChange: PropTypes.func,
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
@@ -507,10 +510,6 @@ DataGridRaw.propTypes = {
     }
     return null;
   }),
-  /**
-   * If `true`, pagination is enabled.
-   * @default false
-   */
   pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(

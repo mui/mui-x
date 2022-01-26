@@ -9,7 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 const MAX_ROW_LENGTH = 500;
 
-async function sleep(duration: number) {
+function sleep(duration: number) {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve();

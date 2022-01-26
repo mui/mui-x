@@ -1,13 +1,21 @@
-import { createRenderer, fireEvent, screen, act } from '@material-ui/monorepo/test/utils';
-import { getCell, getColumnHeadersTextContent, getColumnValues } from 'test/utils/helperFn';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import {
+  getCell,
+  getColumnHeaderCell,
+  getColumnHeadersTextContent,
+  getColumnValues,
+} from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   DataGridPro,
   DataGridProProps,
+  GRID_TREE_DATA_GROUPING_FIELD,
   GridApiRef,
   GridLinkOperator,
   GridRowsProp,
+  GridRowTreeNodeConfig,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 
@@ -48,7 +56,7 @@ const baselineProps: DataGridProProps = {
 };
 
 describe('<DataGridPro /> - Tree Data', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -57,7 +65,7 @@ describe('<DataGridPro /> - Tree Data', () => {
 
     return (
       <div style={{ width: 300, height: 800 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} disableVirtualization />
       </div>
     );
   };
@@ -155,6 +163,20 @@ describe('<DataGridPro /> - Tree Data', () => {
       });
       expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'nameBis']);
       expect(getColumnValues(1)).to.deep.equal(['1', '2']);
+    });
+
+    it('should keep children expansion when changing some of the rows', () => {
+      const { setProps } = render(
+        <Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['A']);
+      apiRef.current.setRowChildrenExpansion('A', true);
+      clock.runToLast();
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
+      setProps({
+        rows: [{ name: 'A' }, { name: 'A.A' }, { name: 'B' }, { name: 'B.A' }],
+      });
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B']);
     });
   });
 
@@ -260,6 +282,33 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
   });
 
+  describe('prop: isGroupExpandedByDefault', () => {
+    it('should expand groups according to isGroupExpandedByDefault when defined', () => {
+      const isGroupExpandedByDefault = spy((node: GridRowTreeNodeConfig) => node.id === 'A');
+
+      render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
+      expect(isGroupExpandedByDefault.callCount).to.equal(8); // Should not be called on leaves
+      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A;
+      const callForNodeA = isGroupExpandedByDefault
+        .getCalls()
+        .find((call) => call.firstArg.id === node.id)!;
+      expect(callForNodeA.firstArg).to.deep.includes(node);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
+    });
+
+    it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
+      const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) => node.id === 'A';
+
+      render(
+        <Test
+          isGroupExpandedByDefault={isGroupExpandedByDefault}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
+    });
+  });
+
   describe('prop: groupingColDef', () => {
     it('should set the custom headerName', () => {
       render(<Test groupingColDef={{ headerName: 'Custom header name' }} />);
@@ -330,7 +379,8 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should toggle expansion when pressing Space while focusing grouping column', () => {
       render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      getCell(0, 0).focus();
+      fireEvent.mouseUp(getCell(0, 0));
+      fireEvent.click(getCell(0, 0));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireEvent.keyDown(getCell(0, 0), { key: ' ' });
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
@@ -341,6 +391,23 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should add auto generated rows if some parents do not exist', () => {
       render(<Test rows={rowsWithGap} defaultGroupingExpansionDepth={-1} />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.B', 'A.A', '', 'B.A', 'B.B']);
+    });
+
+    it('should keep the grouping column width between generations', () => {
+      render(<Test groupingColDef={{ width: 200 }} />);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
+      apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
+      apiRef.current.updateColumns([
+        {
+          field: 'name',
+          headerName: 'New name',
+        },
+      ]);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
   });
 
