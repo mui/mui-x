@@ -16,7 +16,7 @@ import {
   gridDetailPanelExpandedRowsHeightCacheSelector,
 } from './gridDetailPanelSelector';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
-import { GridRowEntry, GridRowId } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { GridDetailPanelApi } from '../../../models/api/gridDetailPanelApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -147,8 +147,8 @@ export const useGridDetailPanel = (
     [props.getDetailPanelContent],
   );
 
-  const addDetailHeight = React.useCallback(
-    (initialValue: Record<string, number>, row: GridRowEntry) => {
+  const addDetailHeight = React.useCallback<GridPreProcessor<GridPreProcessingGroup.rowHeight>>(
+    (initialValue, row) => {
       if (expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
         return { ...initialValue, detail: 0 };
       }
