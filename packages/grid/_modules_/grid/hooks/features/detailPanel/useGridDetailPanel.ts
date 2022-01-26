@@ -182,18 +182,10 @@ export const useGridDetailPanel = (
         return;
       }
 
-      apiRef.current.setState((state) => {
-        return {
-          ...state,
-          detailPanel: {
-            ...state.detailPanel,
-            expandedRowIds: state.detailPanel.expandedRowIds.includes(id)
-              ? state.detailPanel.expandedRowIds.filter((rowId) => rowId !== id)
-              : [...state.detailPanel.expandedRowIds, id],
-          },
-        };
-      });
-      apiRef.current.forceUpdate();
+      const ids = apiRef.current.getExpandedDetailPanels();
+      apiRef.current.setExpandedDetailPanels(
+        ids.includes(id) ? ids.filter((rowId) => rowId !== id) : [...ids, id],
+      );
     },
     [apiRef, contentCache, props.getDetailPanelContent],
   );
