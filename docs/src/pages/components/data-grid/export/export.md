@@ -59,7 +59,7 @@ There are a few ways to include or hide other columns:
 
 #### Exported rows
 
-By default, if some rows are selected, the CSV export will only contain those rows.
+By default, if some rows are selected, the `DataGrid` exports only those.
 If there's no selection, it exports all rows (filtered rows, if any filters are active), including the collapsed ones. 
 
 Set the `getRowsToExport` to manually pick the rows to include in the CSV export.
