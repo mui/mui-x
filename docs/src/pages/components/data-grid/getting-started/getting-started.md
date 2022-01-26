@@ -247,7 +247,7 @@ If you need to share private information, you can also use email.
 - **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
   - GitHub: [Open a new issue](https://github.com/mui-org/material-ui-x/issues/new/choose) and leave your Order ID.
   - Email (only to share private information): [Open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
-- **MUI X Premium**: Same as MUI X Pro with priority over Pro and a 48 hours SLA for the first answer.
+- **MUI X Premium**: Same as MUI X Pro, but with priority over Pro, and a 48 hour SLA for the first answer.
   - GitHub: this plan is not available yet
   - Emails: this plan is not available yet
 - **MUI X Premium Priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer.
