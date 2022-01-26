@@ -14,7 +14,7 @@ Following clicks change the column's sorting direction. You can see the applied 
 
 ## Single and multi-sorting
 
-> ⚠️ The `DataGrid` can only sort the rows according to one criterion at the time.
+> ⚠️ The `DataGrid` can only sort the rows according to one criterion at a time.
 >
 > To use multi-sorting, you need to upgrade to the [Pro plan](https://mui.com/store/items/material-ui-pro/)
 
