@@ -98,9 +98,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       fireEvent.click(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, altKey: true });
       expect(writeText.callCount).to.equal(1, "writeText wasn't called");
-      expect(writeText.firstCall.args[0]).to.equal(
-        ['id\tBrand', '0\tNike', '1\tAdidas'].join('\r\n'),
-      );
+      expect(writeText.firstCall.args[0]).to.equal(['id\tBrand', '0\tNike'].join('\r\n'));
     });
   });
 });
