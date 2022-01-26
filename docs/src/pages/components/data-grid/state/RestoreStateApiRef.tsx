@@ -126,6 +126,7 @@ const DEMO_INITIAL_STATE: DemoState = {
   newViewLabel: '',
   isMenuOpened: false,
   menuAnchorEl: null,
+  activeViewId: null,
 };
 
 const ViewListItem = (props: {
