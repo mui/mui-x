@@ -2,7 +2,13 @@ import * as React from 'react';
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { getCell, getRow, getColumnValues, getRows } from 'test/utils/helperFn';
+import {
+  getCell,
+  getRow,
+  getColumnValues,
+  getRows,
+  getColumnHeaderCell,
+} from 'test/utils/helperFn';
 import {
   GridApiRef,
   GridRowModel,
@@ -790,6 +796,66 @@ describe('<DataGridPro /> - Rows', () => {
         apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
         fireEvent.mouseLeave(cell);
       }).not.to.throw();
+    });
+  });
+
+  describe('apiRef: setRowHeight', () => {
+    const ROW_HEIGHT = 52;
+
+    beforeEach(() => {
+      baselineProps = {
+        autoHeight: isJSDOM,
+        rows: [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Adidas',
+          },
+          {
+            id: 2,
+            brand: 'Puma',
+          },
+        ],
+        columns: [{ field: 'brand', headerName: 'Brand' }],
+      };
+    });
+
+    let apiRef: GridApiRef;
+
+    const TestCase = (props: Partial<DataGridProProps>) => {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro {...baselineProps} apiRef={apiRef} rowHeight={ROW_HEIGHT} {...props} />
+        </div>
+      );
+    };
+
+    it('should change row height', () => {
+      render(<TestCase />);
+
+      expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
+
+      apiRef.current.unstable_setRowHeight(1, 100);
+      expect(getRow(1).clientHeight).to.equal(100);
+    });
+
+    it('should preserve changed row height after sorting', () => {
+      render(<TestCase />);
+
+      const row = getRow(0);
+      expect(row.clientHeight).to.equal(ROW_HEIGHT);
+
+      apiRef.current.unstable_setRowHeight(0, 100);
+      expect(row.clientHeight).to.equal(100);
+
+      // sort
+      fireEvent.click(getColumnHeaderCell(0));
+
+      expect(row.clientHeight).to.equal(100);
     });
   });
 });
