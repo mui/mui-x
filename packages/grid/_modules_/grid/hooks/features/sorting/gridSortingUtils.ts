@@ -1,14 +1,15 @@
 import { GridSortingModelApplier } from './gridSortingState';
-import {
+import type {
   GridApiRef,
+  GridCellValue,
   GridComparatorFn,
   GridRowId,
   GridRowTreeNodeConfig,
   GridSortCellParams,
+  GridSortDirection,
   GridSortItem,
   GridSortModel,
 } from '../../../models';
-import { isDesc } from '../../../utils/sortingUtils';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
@@ -19,6 +20,8 @@ interface GridParsedSortItem {
   comparator: GridComparatorFn;
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
 }
+
+const isDesc = (direction: GridSortDirection) => direction === 'desc';
 
 /**
  * Transform an item of the sorting model into a method comparing two rows.
@@ -104,4 +107,74 @@ export const buildAggregatedSortingApplier = (
       }))
       .sort((a, b) => compareRows(comparatorList, a.params, b.params))
       .map((row) => row.value.id);
+};
+
+export const getNextGridSortDirection = (
+  sortingOrder: GridSortDirection[],
+  current?: GridSortDirection,
+) => {
+  const currentIdx = sortingOrder.indexOf(current);
+  if (!current || currentIdx === -1 || currentIdx + 1 === sortingOrder.length) {
+    return sortingOrder[0];
+  }
+
+  return sortingOrder[currentIdx + 1];
+};
+
+const gridNillComparator = (v1: GridCellValue, v2: GridCellValue): number | null => {
+  if (v1 == null && v2 != null) {
+    return -1;
+  }
+  if (v2 == null && v1 != null) {
+    return 1;
+  }
+  if (v1 == null && v2 == null) {
+    return 0;
+  }
+
+  return null;
+};
+
+const collator = new Intl.Collator();
+
+export const gridStringOrNumberComparator: GridComparatorFn = (
+  value1: GridCellValue,
+  value2: GridCellValue,
+) => {
+  const nillResult = gridNillComparator(value1, value2);
+  if (nillResult !== null) {
+    return nillResult;
+  }
+
+  if (typeof value1 === 'string') {
+    return collator.compare(value1!.toString(), value2!.toString());
+  }
+  return (value1 as any) - (value2 as any);
+};
+
+export const gridNumberComparator: GridComparatorFn = (
+  value1: GridCellValue,
+  value2: GridCellValue,
+) => {
+  const nillResult = gridNillComparator(value1, value2);
+  if (nillResult !== null) {
+    return nillResult;
+  }
+
+  return Number(value1) - Number(value2);
+};
+
+export const gridDateComparator = (value1: GridCellValue, value2: GridCellValue): number => {
+  const nillResult = gridNillComparator(value1, value2);
+  if (nillResult !== null) {
+    return nillResult;
+  }
+
+  if (value1! > value2!) {
+    return 1;
+  }
+  if (value1! < value2!) {
+    return -1;
+  }
+  return 0;
 };

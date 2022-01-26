@@ -157,7 +157,7 @@ export interface GridValueFormatterParams {
    */
   field: string;
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value, if the column has valueGetter it is the value returned by it.
    */
   value: GridCellValue;
   /**
