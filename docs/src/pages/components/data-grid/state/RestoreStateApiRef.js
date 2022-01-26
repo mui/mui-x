@@ -1,12 +1,23 @@
 import * as React from 'react';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import PropTypes from 'prop-types';
+import { DataGridPro, useGridApiContext, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import Stack from '@mui/material/Stack';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DoneIcon from '@mui/icons-material/Done';
+import Divider from '@mui/material/Divider';
+import Fade from '@mui/material/Fade';
+import Popper from '@mui/material/Popper';
 
 const demoReducer = (state, action) => {
   switch (action.type) {
@@ -53,6 +64,7 @@ const demoReducer = (state, action) => {
       return {
         ...state,
         activeViewId: action.id,
+        isMenuOpened: false,
       };
     }
 
@@ -60,6 +72,21 @@ const demoReducer = (state, action) => {
       return {
         ...state,
         newViewLabel: action.label,
+      };
+    }
+
+    case 'togglePopper': {
+      return {
+        ...state,
+        isMenuOpened: !state.isMenuOpened,
+        menuAnchorEl: action.element,
+      };
+    }
+
+    case 'closePopper': {
+      return {
+        ...state,
+        isMenuOpened: false,
       };
     }
 
@@ -72,16 +99,130 @@ const demoReducer = (state, action) => {
 const DEMO_INITIAL_STATE = {
   views: {},
   newViewLabel: '',
-  activeViewId: null,
+  isMenuOpened: false,
+  menuAnchorEl: null,
 };
 
-export default function RestoreStateApiRef() {
-  const apiRef = useGridApiRef();
-  const { data, loading } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 500,
-  });
+const ViewListItem = (props) => {
+  const { view, viewId, selected, onDelete, onSelect } = props;
 
+  return (
+    <ListItem
+      disablePadding
+      selected={selected}
+      onClick={() => onSelect(viewId)}
+      secondaryAction={
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          size="small"
+          onClick={(event) => {
+            event.stopPropagation();
+            onDelete(viewId);
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      }
+    >
+      <ListItemButton>
+        <ListItemText primary={view.label} />
+      </ListItemButton>
+    </ListItem>
+  );
+};
+
+ViewListItem.propTypes = {
+  onDelete: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  selected: PropTypes.bool.isRequired,
+  view: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    value: PropTypes.shape({
+      columns: PropTypes.shape({
+        columnVisibilityModel: PropTypes.object,
+      }),
+      filter: PropTypes.shape({
+        filterModel: PropTypes.object,
+      }),
+      pagination: PropTypes.shape({
+        page: PropTypes.number,
+        pageSize: PropTypes.number,
+      }),
+      pinnedColumns: PropTypes.shape({
+        left: PropTypes.arrayOf(PropTypes.string),
+        right: PropTypes.arrayOf(PropTypes.string),
+      }),
+      preferencePanel: PropTypes.shape({
+        open: PropTypes.bool.isRequired,
+        openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
+      }),
+      rowGrouping: PropTypes.shape({
+        model: PropTypes.arrayOf(PropTypes.string),
+      }),
+      sorting: PropTypes.shape({
+        sortModel: PropTypes.arrayOf(PropTypes.object),
+      }),
+    }).isRequired,
+  }).isRequired,
+  viewId: PropTypes.string.isRequired,
+};
+
+const NewViewListItem = (props) => {
+  const { label, onLabelChange, onSubmit, isValid } = props;
+  const [isAddingView, setIsAddingView] = React.useState(false);
+
+  if (isAddingView) {
+    return (
+      <ListItem
+        secondaryAction={
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            size="small"
+            onClick={() => {
+              onSubmit();
+              setIsAddingView(false);
+            }}
+            disabled={!isValid}
+          >
+            <DoneIcon />
+          </IconButton>
+        }
+      >
+        <TextField
+          value={label}
+          onChange={onLabelChange}
+          size="small"
+          label="Custom view label"
+          variant="standard"
+        />
+      </ListItem>
+    );
+  }
+
+  return (
+    <ListItem>
+      <Button
+        size="small"
+        startIcon={<AddIcon />}
+        onClick={() => setIsAddingView(true)}
+      >
+        Add a custom view
+      </Button>
+    </ListItem>
+  );
+};
+
+NewViewListItem.propTypes = {
+  isValid: PropTypes.bool.isRequired,
+  label: PropTypes.string.isRequired,
+  onLabelChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
+const CustomToolbar = () => {
+  const apiRef = useGridApiContext();
   const [state, dispatch] = React.useReducer(demoReducer, DEMO_INITIAL_STATE);
 
   const createNewView = () => {
@@ -95,13 +236,22 @@ export default function RestoreStateApiRef() {
     dispatch({ type: 'setNewViewLabel', label: e.target.value });
   };
 
-  const handleDeleteView = (viewId) => {
+  const handleDeleteView = React.useCallback((viewId) => {
     dispatch({ type: 'deleteView', id: viewId });
-  };
+  }, []);
 
   const handleSetActiveView = (viewId) => {
     apiRef.current.restoreState(state.views[viewId].value);
     dispatch({ type: 'setActiveView', id: viewId });
+  };
+
+  const handlePopperAnchorClick = (event) => {
+    dispatch({ type: 'togglePopper', element: event.currentTarget });
+    event.stopPropagation();
+  };
+
+  const handleClosePopper = () => {
+    dispatch({ type: 'closePopper' });
   };
 
   const isNewViewLabelValid = React.useMemo(() => {
@@ -114,32 +264,74 @@ export default function RestoreStateApiRef() {
     );
   }, [state.views, state.newViewLabel]);
 
+  const canBeMenuOpened = state.isMenuOpened && Boolean(state.menuAnchorEl);
+  const popperId = canBeMenuOpened ? 'transition-popper' : undefined;
+
   return (
-    <Stack spacing={2} alignItems="flex-start" style={{ width: '100%' }}>
-      <Stack direction="row" spacing={2}>
-        <TextField
-          label="New view label"
-          value={state.newViewLabel}
-          onChange={handleNewViewLabelChange}
-          size="small"
-        />
-        <IconButton onClick={createNewView} disabled={!isNewViewLabelValid}>
-          <AddIcon />
-        </IconButton>
-      </Stack>
-      <Stack direction="row" spacing={1}>
-        {Object.entries(state.views).map(([viewId, view]) => (
-          <Chip
-            label={view.label}
-            onDelete={() => handleDeleteView(viewId)}
-            variant={viewId === state.activeViewId ? 'filled' : 'outlined'}
-            onClick={() => handleSetActiveView(viewId)}
-          />
-        ))}
-      </Stack>
-      <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
-        <DataGridPro loading={loading} apiRef={apiRef} pagination {...data} />
-      </Box>
-    </Stack>
+    <React.Fragment>
+      <Button
+        aria-describedby={popperId}
+        type="button"
+        onClick={handlePopperAnchorClick}
+      >
+        Custom views
+      </Button>
+      <ClickAwayListener onClickAway={handleClosePopper}>
+        <Popper
+          id={popperId}
+          open={state.isMenuOpened}
+          anchorEl={state.menuAnchorEl}
+          transition
+          placement="bottom-start"
+        >
+          {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={350}>
+              <Paper>
+                <List>
+                  {Object.entries(state.views).map(([viewId, view]) => (
+                    <ViewListItem
+                      key={viewId}
+                      view={view}
+                      viewId={viewId}
+                      selected={viewId === state.activeViewId}
+                      onDelete={handleDeleteView}
+                      onSelect={handleSetActiveView}
+                    />
+                  ))}
+
+                  <Divider />
+                  <NewViewListItem
+                    label={state.newViewLabel}
+                    onLabelChange={handleNewViewLabelChange}
+                    onSubmit={createNewView}
+                    isValid={isNewViewLabelValid}
+                  />
+                </List>
+              </Paper>
+            </Fade>
+          )}
+        </Popper>
+      </ClickAwayListener>
+    </React.Fragment>
+  );
+};
+
+export default function RestoreStateApiRef() {
+  const apiRef = useGridApiRef();
+  const { data, loading } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 500,
+  });
+
+  return (
+    <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
+      <DataGridPro
+        components={{ Toolbar: CustomToolbar }}
+        loading={loading}
+        apiRef={apiRef}
+        pagination
+        {...data}
+      />
+    </Box>
   );
 }
