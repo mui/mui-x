@@ -62,7 +62,7 @@ There are a few ways to include or hide other columns:
 By default, if some rows are selected, the `DataGrid` exports only those.
 If there's no selection, it exports all rows (filtered rows, if any filters are active), including the collapsed ones. 
 
-Set the `getRowsToExport` to manually pick the rows to include in the CSV export.
+Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 
 {{"demo": "pages/components/data-grid/export/CsvGetRowsToExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
