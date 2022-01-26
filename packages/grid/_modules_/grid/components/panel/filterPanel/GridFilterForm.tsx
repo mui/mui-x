@@ -44,10 +44,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['filterForm'],
     deleteIcon: ['filterFormDeleteIcon'],
-    linkOperator: ['filterFormLinkOperatorInput'],
-    column: ['filterFormColumnInput'],
-    operator: ['filterFormOperatorInput'],
-    value: ['filterFormValueInput'],
+    linkOperatorInput: ['filterFormLinkOperatorInput'],
+    columnInput: ['filterFormColumnInput'],
+    operatorInput: ['filterFormOperatorInput'],
+    valueInput: ['filterFormValueInput'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -263,6 +263,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       })({ width: 150 }),
     [rootProps.components.BaseFormControl],
   );
+
   const FilterFormOperatorInput = React.useMemo(
     () =>
       styled(rootProps.components.BaseFormControl, {
@@ -272,6 +273,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       })({ width: 120 }),
     [rootProps.components.BaseFormControl],
   );
+
   const FilterFormValueInput = React.useMemo(
     () =>
       styled(rootProps.components.BaseFormControl, {
@@ -310,7 +312,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         {...linkOperatorInputProps}
         sx={linkOperatorInputProps?.sx || {}}
         className={clsx(
-          classes.linkOperator,
+          classes.linkOperatorInput,
           baseFormControlProps.className,
           linkOperatorInputProps.className,
         )}
@@ -339,7 +341,11 @@ function GridFilterForm(props: GridFilterFormProps) {
         {...baseFormControlProps}
         {...columnInputProps}
         sx={columnInputProps?.sx || {}}
-        className={clsx(classes.column, baseFormControlProps.className, columnInputProps.className)}
+        className={clsx(
+          classes.columnInput,
+          baseFormControlProps.className,
+          columnInputProps.className,
+        )}
       >
         <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelColumns')}
@@ -365,7 +371,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         {...operatorInputProps}
         sx={operatorInputProps?.sx || {}}
         className={clsx(
-          classes.operator,
+          classes.operatorInput,
           baseFormControlProps.className,
           operatorInputProps.className,
         )}
@@ -397,7 +403,11 @@ function GridFilterForm(props: GridFilterFormProps) {
         {...baseFormControlProps}
         {...valueInputProps}
         sx={valueInputProps?.sx || {}}
-        className={clsx(classes.value, baseFormControlProps.className, valueInputProps.className)}
+        className={clsx(
+          classes.valueInput,
+          baseFormControlProps.className,
+          valueInputProps.className,
+        )}
       >
         {currentOperator?.InputComponent ? (
           <currentOperator.InputComponent
