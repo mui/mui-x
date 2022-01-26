@@ -31,7 +31,7 @@ const initialState = {
   },
 };
 
-export default function CustomFilterPanel() {
+export default function CustomFilterPanelContent() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,

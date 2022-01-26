@@ -230,7 +230,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       styled(rootProps.components.BaseFormControl, {
         name: 'MuiDataGrid',
         slot: 'FilterFormDeleteIcon',
-        overridesResolver: (props, styles) => styles.filterFormDeleteIcon,
+        overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
       })({
         flexShrink: 0,
         justifyContent: 'flex-end',
@@ -245,7 +245,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       styled(rootProps.components.BaseFormControl, {
         name: 'MuiDataGrid',
         slot: 'FilterFormLinkOperatorInput',
-        overridesResolver: (props, styles) => styles.filterFormLinkOperatorInput,
+        overridesResolver: (_, styles) => styles.filterFormLinkOperatorInput,
       })({
         minWidth: 60,
         display: hasLinkOperatorColumn ? 'block' : 'none',
@@ -259,7 +259,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       styled(rootProps.components.BaseFormControl, {
         name: 'MuiDataGrid',
         slot: 'FilterFormColumnInput',
-        overridesResolver: (props, styles) => styles.filterFormColumnInput,
+        overridesResolver: (_, styles) => styles.filterFormColumnInput,
       })({ width: 150 }),
     [rootProps.components.BaseFormControl],
   );
@@ -268,7 +268,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       styled(rootProps.components.BaseFormControl, {
         name: 'MuiDataGrid',
         slot: 'FilterFormOperatorInput',
-        overridesResolver: (props, styles) => styles.filterFormOperatorInput,
+        overridesResolver: (_, styles) => styles.filterFormOperatorInput,
       })({ width: 120 }),
     [rootProps.components.BaseFormControl],
   );
@@ -277,7 +277,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       styled(rootProps.components.BaseFormControl, {
         name: 'MuiDataGrid',
         slot: 'FilterFormValueInput',
-        overridesResolver: (props, styles) => styles.filterFormValueInput,
+        overridesResolver: (_, styles) => styles.filterFormValueInput,
       })({ width: 190 }),
     [rootProps.components.BaseFormControl],
   );
