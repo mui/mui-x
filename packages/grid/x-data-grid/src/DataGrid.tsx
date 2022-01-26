@@ -538,11 +538,6 @@ DataGridRaw.propTypes = {
    */
   paginationMode: PropTypes.oneOf(['client', 'server']),
   /**
-   * Prevents commiting a value while it is being validated.
-   * @default false
-   */
-  preventCommitWhileValidating: PropTypes.bool,
-  /**
    * Number of extra rows to be rendered before/after the visible slice.
    * @default 3
    */

@@ -302,11 +302,6 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
-  /**
-   * Prevents commiting a value while it is being validated.
-   * @default false
-   */
-  preventCommitWhileValidating: boolean; // TODO v6: remove
 }
 
 /**
@@ -352,7 +347,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   throttleRowsMs: 0,
   disableColumnReorder: false,
   disableColumnResize: false,
-  preventCommitWhileValidating: false,
 };
 
 /**

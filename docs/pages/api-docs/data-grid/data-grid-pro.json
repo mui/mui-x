@@ -163,7 +163,6 @@
         "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
       }
     },
-    "preventCommitWhileValidating": { "type": { "name": "bool" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
     "rowGroupingColumnMode": {
