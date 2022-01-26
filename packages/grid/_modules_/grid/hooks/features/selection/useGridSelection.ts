@@ -503,7 +503,7 @@ export const useGridSelection = (
 
       const firstSelectableRow = currentSelection.find((id) => {
         let isSelectable = true;
-        if (typeof isRowSelectable === 'function') {
+        if (isRowSelectable) {
           isSelectable = isRowSelectable(apiRef.current.getRowParams(id));
         }
         return isSelectable && currentPageRowsLookup[id]; // Check if the row is in the current page
