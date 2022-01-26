@@ -6,7 +6,6 @@ import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
-import { nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -21,7 +20,7 @@ import { gridRowIdsSelector, gridRowGroupingNameSelector, gridRowTreeSelector } 
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridSortingMethod, GridSortingMethodCollection } from './gridSortingState';
-import { buildAggregatedSortingApplier } from './gridSortingUtils';
+import { buildAggregatedSortingApplier, getNextGridSortDirection } from './gridSortingUtils';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
 
@@ -88,7 +87,7 @@ export const useGridSorting = (
       if (existing) {
         const nextSort =
           directionOverride === undefined
-            ? nextGridSortDirection(col.sortingOrder ?? props.sortingOrder, existing.sort)
+            ? getNextGridSortDirection(col.sortingOrder ?? props.sortingOrder, existing.sort)
             : directionOverride;
 
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
@@ -97,7 +96,7 @@ export const useGridSorting = (
         field: col.field,
         sort:
           directionOverride === undefined
-            ? nextGridSortDirection(col.sortingOrder ?? props.sortingOrder)
+            ? getNextGridSortDirection(col.sortingOrder ?? props.sortingOrder)
             : directionOverride,
       };
     },

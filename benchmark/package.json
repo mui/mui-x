@@ -13,7 +13,7 @@
     "@mui/material": "^5.3.1",
     "@mui/styles": "^5.3.0",
     "@mui/x-data-grid": "^4.0.0",
-    "@visx/xychart": "^2.5.0",
+    "@visx/xychart": "^2.8.0",
     "ag-grid-community": "^26.2.1",
     "ag-grid-react": "^26.2.0",
     "css-loader": "^6.5.1",

@@ -1,5 +1,8 @@
+import { GridRowId } from './gridRows';
+import type { GridApiRef } from './api';
+
 /**
- * The options to apply an export.
+ * The options applicable to any export format.
  */
 export interface GridExportOptions {
   /**
@@ -12,6 +15,13 @@ export interface GridExportOptions {
    * @default false
    */
   allColumns?: boolean;
+}
+
+export interface GridCsvGetRowsToExportParams {
+  /**
+   * The API of the grid.
+   */
+  apiRef: GridApiRef;
 }
 
 /**
@@ -39,6 +49,12 @@ export interface GridCsvExportOptions extends GridExportOptions {
    * @default true
    */
   includeHeaders?: boolean;
+  /**
+   * Function that returns the id of the rows to export on the order they should be exported.
+   * @param {GridCsvGetRowsToExportParams} params With all properties from [[GridCsvGetRowsToExportParams]].
+   * @returns {GridRowId[]} The id of the rows to export.
+   */
+  getRowsToExport?: (params: GridCsvGetRowsToExportParams) => GridRowId[];
 }
 
 /**

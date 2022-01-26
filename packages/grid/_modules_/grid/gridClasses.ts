@@ -254,6 +254,18 @@ export interface GridClasses {
    */
   'pinnedColumns--right': string;
   /**
+   * Styles applied to the pinned column headers.
+   */
+  pinnedColumnHeaders: string;
+  /**
+   * Styles applied to the left pinned column headers.
+   */
+  'pinnedColumnHeaders--left': string;
+  /**
+   * Styles applied to the right pinned column headers.
+   */
+  'pinnedColumnHeaders--right': string;
+  /**
    * Styles applied to the root element.
    */
   root: string;
@@ -399,6 +411,9 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'pinnedColumns',
   'pinnedColumns--left',
   'pinnedColumns--right',
+  'pinnedColumnHeaders',
+  'pinnedColumnHeaders--left',
+  'pinnedColumnHeaders--right',
   'withBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
