@@ -24,7 +24,9 @@ export const useGridRowsMeta = (
   props: Pick<DataGridProcessedProps, 'getRowHeight' | 'pagination' | 'paginationMode'>,
 ): void => {
   const { getRowHeight, pagination, paginationMode } = props;
-  const rowsHeightLookup = React.useRef<{ [key: GridRowId]: number }>({});
+  const rowsHeightLookup = React.useRef<{
+    [key: GridRowId]: { value: number; isResized: boolean };
+  }>({});
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const filterState = useGridSelector(apiRef, gridFilterStateSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
@@ -50,14 +52,25 @@ export const useGridRowsMeta = (
       const currentRowHeight = gridDensityRowHeightSelector(state);
       const currentPageTotalHeight = rows.reduce((acc: number, row) => {
         positions.push(acc);
-        let targetRowHeight = currentRowHeight;
 
-        if (getRowHeight) {
-          // Default back to base rowHeight if getRowHeight returns null or undefined.
-          targetRowHeight = getRowHeight({ ...row, densityFactor }) ?? currentRowHeight;
+        let targetRowHeight: number;
+
+        if (rowsHeightLookup.current[row.id] && rowsHeightLookup.current[row.id].isResized) {
+          // do not recalculate resized row height and use the value from the lookup
+          targetRowHeight = rowsHeightLookup.current[row.id].value;
+        } else {
+          targetRowHeight = currentRowHeight;
+
+          if (getRowHeight) {
+            // Default back to base rowHeight if getRowHeight returns null or undefined.
+            targetRowHeight = getRowHeight({ ...row, densityFactor }) ?? currentRowHeight;
+          }
+
+          rowsHeightLookup.current[row.id] = {
+            value: targetRowHeight,
+            isResized: false,
+          };
         }
-
-        rowsHeightLookup.current[row.id] = targetRowHeight;
 
         return acc + targetRowHeight;
       }, 0);
@@ -71,7 +84,18 @@ export const useGridRowsMeta = (
   }, [apiRef, pagination, paginationMode, getRowHeight]);
 
   const getTargetRowHeight = (rowId: GridRowId): number =>
-    rowsHeightLookup.current[rowId] || rowHeight;
+    rowsHeightLookup.current[rowId]?.value || rowHeight;
+
+  const setRowHeight = React.useCallback<GridRowsMetaApi['unstable_setRowHeight']>(
+    (id: GridRowId, height: number) => {
+      rowsHeightLookup.current[id] = {
+        value: height,
+        isResized: true,
+      };
+      hydrateRowsMeta();
+    },
+    [hydrateRowsMeta],
+  );
 
   // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
   // Because of variable row height this is needed for the virtualization
@@ -81,6 +105,7 @@ export const useGridRowsMeta = (
 
   const rowsMetaApi: GridRowsMetaApi = {
     unstable_getRowHeight: getTargetRowHeight,
+    unstable_setRowHeight: setRowHeight,
   };
 
   useGridApiMethod(apiRef, rowsMetaApi, 'GridRowsMetaApi');
