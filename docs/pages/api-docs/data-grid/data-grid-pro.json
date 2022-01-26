@@ -56,7 +56,10 @@
     "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ rowGrouping?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ preventCommitWhileValidating?: bool, rowGrouping?: bool }"
+      }
     },
     "filterMode": {
       "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },

@@ -70,7 +70,7 @@ export default function ValidateServerNameGrid() {
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.id === 5}
-        preventCommitWhileValidating // Prevents a 2nd call to preProcessEditCellProps while waiting for the 1st
+        experimentalFeatures={{ preventCommitWhileValidating: true }} // Prevents a 2nd call to preProcessEditCellProps while waiting for the 1st
       />
     </StyledBox>
   );

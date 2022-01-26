@@ -37,6 +37,9 @@
     },
     "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ preventCommitWhileValidating?: bool }" }
+    },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""

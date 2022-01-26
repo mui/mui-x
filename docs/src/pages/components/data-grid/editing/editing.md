@@ -113,11 +113,13 @@ The grid will wait for the promise to be resolved before exiting the edit mode.
 
 > By default, `preProcessEditCellProps` is called on each value change and during commit.
 > With column types that automatically commit the value after a selection (e.g. `singleSelect`) this means that the callback will be called twice and with the wrong value in the second call.
-> To avoid this inconsistency, add the `preventCommitWhileValidating` prop to the DataGrid.
+> To avoid this inconsistency, enable the `preventCommitWhileValidating` flag available in the experimental features.
 >
 > ```jsx
-> <DataGrid preventCommitWhileValidating />
+> <DataGrid experimentalFeatures={{ preventCommitWhileValidating: true }} />
 > ```
+>
+> It's labeled as experimental because in v6 this flag will become the default behavior.
 
 This demo shows how you can validate a username asynchronously and prevent the user from committing the value while validating.
 It's using `DataGridPro` but the same approach can be used with `DataGrid`.

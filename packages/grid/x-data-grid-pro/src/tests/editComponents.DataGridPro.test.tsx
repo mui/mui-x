@@ -414,7 +414,7 @@ describe('<DataGridPro /> - Edit Components', () => {
               },
             ]}
             rows={[{ id: 0, brand: 'Nike' }]}
-            preventCommitWhileValidating
+            experimentalFeatures={{ preventCommitWhileValidating: true }}
           />
         </div>,
       );
@@ -615,11 +615,10 @@ describe('<DataGridPro /> - Edit Components', () => {
         <TestCase
           rows={[{ id: 0, date: new Date(2021, 6, 5) }]}
           columns={[{ field: 'date', type: 'date', editable: true, preProcessEditCellProps }]}
-          preventCommitWhileValidating
+          experimentalFeatures={{ preventCommitWhileValidating: true }}
         />,
       );
       const cell = getCell(0, 0);
-      cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-01-12' } });
@@ -842,7 +841,7 @@ describe('<DataGridPro /> - Edit Components', () => {
             { id: 1, isAdmin: true },
           ]}
           columns={[{ field: 'isAdmin', type: 'boolean', editable: true, preProcessEditCellProps }]}
-          preventCommitWhileValidating
+          experimentalFeatures={{ preventCommitWhileValidating: true }}
         />,
       );
       const cell = getCell(0, 0);

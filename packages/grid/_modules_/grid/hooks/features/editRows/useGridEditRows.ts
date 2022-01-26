@@ -62,7 +62,7 @@ export function useGridEditRows(
     | 'onRowEditStop'
     | 'isCellEditable'
     | 'editMode'
-    | 'preventCommitWhileValidating'
+    | 'experimentalFeatures'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useGridEditRows');
@@ -249,7 +249,7 @@ export function useGridEditRows(
 
   const setEditCellValue = React.useCallback<GridEditRowApi['setEditCellValue']>(
     (params, event = {}) => {
-      if (props.preventCommitWhileValidating) {
+      if (props.experimentalFeatures?.preventCommitWhileValidating) {
         const row = apiRef.current.getRow(params.id)!;
 
         if (props.editMode === 'row') {
@@ -346,7 +346,13 @@ export function useGridEditRows(
       apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
       return undefined;
     },
-    [apiRef, parseValue, props.editMode, props.preventCommitWhileValidating, setEditCellProps],
+    [
+      apiRef,
+      parseValue,
+      props.editMode,
+      props.experimentalFeatures?.preventCommitWhileValidating,
+      setEditCellProps,
+    ],
   );
 
   const handleEditCellPropsChange = React.useCallback<
@@ -419,7 +425,7 @@ export function useGridEditRows(
       const column = apiRef.current.getColumn(field);
       const row = apiRef.current.getRow(id)!;
 
-      if (props.preventCommitWhileValidating) {
+      if (props.experimentalFeatures?.preventCommitWhileValidating) {
         const cellProps = model[id][field];
         if (cellProps.isValidating || cellProps.error) {
           return false;
@@ -457,7 +463,7 @@ export function useGridEditRows(
 
       return false;
     },
-    [apiRef, props.preventCommitWhileValidating, setEditCellProps],
+    [apiRef, props.experimentalFeatures?.preventCommitWhileValidating, setEditCellProps],
   );
 
   const handleCellEditCommit = React.useCallback<GridEventListener<GridEvents.cellEditCommit>>(
@@ -495,7 +501,7 @@ export function useGridEditRows(
         throw new Error(`MUI: Row at id: ${id} is not being edited.`);
       }
 
-      if (props.preventCommitWhileValidating) {
+      if (props.experimentalFeatures?.preventCommitWhileValidating) {
         const isValid = Object.keys(editRowProps).reduce((acc, field) => {
           return acc && !editRowProps[field].isValidating && !editRowProps[field].error;
         }, true);
@@ -539,7 +545,12 @@ export function useGridEditRows(
       apiRef.current.publishEvent(GridEvents.rowEditCommit, id, event);
       return true;
     },
-    [apiRef, props.editMode, props.preventCommitWhileValidating, setEditCellProps],
+    [
+      apiRef,
+      props.editMode,
+      props.experimentalFeatures?.preventCommitWhileValidating,
+      setEditCellProps,
+    ],
   );
 
   const handleCellEditStart = React.useCallback<GridEventListener<GridEvents.cellEditStart>>(
@@ -634,7 +645,7 @@ export function useGridEditRows(
         if (isEditMode) {
           if (event.key === 'Enter') {
             const isValid = await apiRef.current.commitRowChange(params.id);
-            if (!isValid && props.preventCommitWhileValidating) {
+            if (!isValid && props.experimentalFeatures?.preventCommitWhileValidating) {
               return;
             }
             apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
@@ -673,7 +684,7 @@ export function useGridEditRows(
         apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
       }
     },
-    [apiRef, props.editMode, props.preventCommitWhileValidating],
+    [apiRef, props.editMode, props.experimentalFeatures?.preventCommitWhileValidating],
   );
 
   const handleCellEditStop = React.useCallback<GridEventListener<GridEvents.cellEditStop>>(

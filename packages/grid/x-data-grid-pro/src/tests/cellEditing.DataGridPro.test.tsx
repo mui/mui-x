@@ -831,7 +831,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
             },
           ]}
           rows={[{ id: 0, brand: 'Nike' }]}
-          preventCommitWhileValidating
+          experimentalFeatures={{ preventCommitWhileValidating: true }}
         />
       </div>,
     );
@@ -867,7 +867,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
             },
           ]}
           rows={[{ id: 0, brand: 'Nike', year: 2022 }]}
-          preventCommitWhileValidating
+          experimentalFeatures={{ preventCommitWhileValidating: true }}
         />
       </div>,
     );
