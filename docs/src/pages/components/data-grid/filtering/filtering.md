@@ -235,7 +235,8 @@ In the demo below, the `rating` column only has the `<` and `>` operators.
 ### Edit an operator
 
 The value used by the operator to look for has to be entered by the user.
-On most column types, a text field is used. However, a custom component can be rendered instead.
+On most column types, a text field is used.
+However, a custom component can be rendered instead.
 
 In the demo below, the `rating` column reuses the numeric operators but the rating component is used to enter the value of the filter.
 
@@ -268,15 +269,17 @@ The props available allow to override:
 - The order of the column selector (can be `"asc"` or `"desc"`)
 - Any prop of the input components
 
-Input components can be [customized](/customization/how-to-customize/) by using two approaches. You can pass a `sx` prop to any input container or you can use css selectors on nested components of the filter panel. More details are available in the demo.
+Input components can be [customized](/customization/how-to-customize/) by using two approaches.
+You can pass a `sx` prop to any input container or you can use css selectors on nested components of the filter panel.
+More details are available in the demo.
 
-| Props                    | Class                                      |
-| :----------------------- | :----------------------------------------- |
-| `deleteIconProps`        | `MuiDataGrid-filterPanelDeleteIcon`        |
-| `linkOperatorInputProps` | `MuiDataGrid-filterPanelLinkOperatorInput` |
-| `columnInputProps`       | `MuiDataGrid-filterPanelColumnInput`       |
-| `operatorInputProps`     | `MuiDataGrid-filterPanelOperatorInput`     |
-| `valueInputProps`        | `MuiDataGrid-filterPanelValueInput`        |
+| Props                    | Class                                     |
+| :----------------------- | :---------------------------------------- |
+| `deleteIconProps`        | `MuiDataGrid-filterFormDeleteIcon`        |
+| `linkOperatorInputProps` | `MuiDataGrid-filterFormLinkOperatorInput` |
+| `columnInputProps`       | `MuiDataGrid-filterFormColumnInput`       |
+| `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
+| `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
 
 {{"demo": "pages/components/data-grid/filtering/CustomFilterPanelContent.js", "bg": "inline"}}
 
