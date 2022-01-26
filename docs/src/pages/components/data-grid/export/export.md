@@ -60,7 +60,7 @@ There are a few ways to include or hide other columns:
 #### Exported rows
 
 By default, if some rows are selected, the `DataGrid` exports only those.
-If there's no selection, it exports all rows (filtered rows, if any filters are active), including the collapsed ones.
+If there's no selection, it exports all rows (filtered and sorted rows, if any rules are active), including the collapsed ones.
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 The grid exports a few selectors that can help you get the rows for the most common use-cases:
