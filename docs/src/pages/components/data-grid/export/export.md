@@ -63,6 +63,15 @@ By default, if some rows are selected, the `DataGrid` exports only those.
 If there's no selection, it exports all rows (filtered rows, if any filters are active), including the collapsed ones.
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
+The grid exports a few selectors that can help you get the rows for the most common use-cases:
+
+| Selector                                       | Behavior                                                                                                                                                                                                                   |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gridRowIdsSelector`                           | The rows in their original order.                                                                                                                                                                                          |
+| `gridSortedRowIdsSelector`                     | The rows after applying the sorting rules.                                                                                                                                                                                 |
+| `gridFilteredSortedRowIdsSelector`             | The rows after applying the sorting rules and the filtering rules.                                                                                                                                                         |
+| `gridVisibleSortedRowIdsSelector`              | The rows after applying the sorting rules, the filtering rules and without the collapsed rows.                                                                                                                             |
+| `gridPaginatedVisibleSortedGridRowIdsSelector` | The rows after applying the sorting rules, the filtering rules, without the collapsed rows and only for the current page (**Note**: If the pagination is disabled, it will still take the value of `page` and `pageSize`). |
 
 {{"demo": "pages/components/data-grid/export/CsvGetRowsToExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
