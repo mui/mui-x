@@ -490,7 +490,7 @@ export const useGridSelection = (
   React.useEffect(() => {
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
 
-    if (!checkboxSelection && disableMultipleSelection && currentSelection.length > 1) {
+    if (!canHaveMultipleSelection && currentSelection.length > 1) {
       const { rows: currentPageRows } = getCurrentPageRows(apiRef.current.state, {
         pagination,
         paginationMode,
@@ -515,6 +515,7 @@ export const useGridSelection = (
     }
   }, [
     apiRef,
+    canHaveMultipleSelection,
     checkboxSelection,
     disableMultipleSelection,
     isRowSelectable,
