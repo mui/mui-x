@@ -11,14 +11,14 @@ import { buildCSV } from './serializers/csvSerializer';
 import { GridRowId, GridStateColDef } from '../../../models';
 
 const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
-  const visibleSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef.current.state);
+  const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef.current.state);
   const selectedRows = apiRef.current.getSelectedRows();
 
   if (selectedRows.size > 0) {
-    return visibleSortedRowIds.filter((id) => selectedRows.has(id));
+    return filteredSortedRowIds.filter((id) => selectedRows.has(id));
   }
 
-  return visibleSortedRowIds;
+  return filteredSortedRowIds;
 };
 
 /**
