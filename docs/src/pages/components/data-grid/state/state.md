@@ -59,7 +59,7 @@ Some selectors are yet to be documented.
 The current state of the grid can be exported using `apiRef.current.exportState()`.
 It can then be restored by either passing it to the `initialState` prop or to the `apiRef.current.restoreState()` method.
 
-If one of the sub-state is being controlled, the grid will call the callback linked to that model (`onFilterModelChange` if `filterModel` is being controlled for instance).
+Watch out for controlled models and their callbacks (`onFilterModelChange` if you use `filterModel` for instance), the grid will call those callbacks when restoring the state. 
 But if the callback is not defined or if calling it does not update the prop value, then the restored value will not be applied.
 
 ### Restore the state with `initialState`
