@@ -1,3 +1,4 @@
+import { gridStringOrNumberComparator } from '@mui/x-data-grid';
 import {
   randomCity,
   randomCompanyName,
@@ -104,9 +105,12 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     renderEditCell: renderEditCountry,
     type: 'singleSelect',
     valueOptions: COUNTRY_ISO_OPTIONS,
-    sortComparator: (v1, v2) =>
-      (v1 as typeof COUNTRY_ISO_OPTIONS[number]).label.localeCompare(
+    sortComparator: (v1, v2, param1, param2) =>
+      gridStringOrNumberComparator(
+        (v1 as typeof COUNTRY_ISO_OPTIONS[number]).label,
         (v2 as typeof COUNTRY_ISO_OPTIONS[number]).label,
+        param1,
+        param2,
       ),
     width: 150,
     editable: true,
