@@ -20,9 +20,12 @@ import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { getDataGridUtilityClass, gridClasses } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import {
+  GridPreProcessingGroup,
+  GridPreProcessor,
+  useGridRegisterPreProcessor,
+} from '../../core/preProcessing';
 import { GridCellModes } from '../../../models/gridEditRowModel';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -118,8 +121,10 @@ export const useGridSelection = (
   /**
    * PRE-PROCESSING
    */
-  const updateSelectionColumn = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
+  const updateSelectionColumn = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
+  >(
+    (columnsState) => {
       const selectionColumn: GridColDef = {
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
@@ -333,6 +338,10 @@ export const useGridSelection = (
         gridClasses.cell,
       );
       const field = cellClicked?.getAttribute('data-field');
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        // click on checkbox should not trigger row selection
+        return;
+      }
       if (field) {
         const column = apiRef.current.getColumn(field);
         if (column.type === 'actions') {

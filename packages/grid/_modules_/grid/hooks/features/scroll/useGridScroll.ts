@@ -10,7 +10,7 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { gridDensityRowHeightSelector } from '../density/densitySelector';
+import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -47,11 +47,11 @@ export const useGridScroll = (
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
 
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
@@ -61,7 +61,7 @@ export const useGridScroll = (
 
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
 
-      let scrollCoordinates: any = {};
+      let scrollCoordinates: Partial<GridScrollParams> = {};
 
       if (params.colIndex != null) {
         scrollCoordinates.left = scrollIntoView({
@@ -71,17 +71,20 @@ export const useGridScroll = (
           offsetTop: columnsMeta.positions[params.colIndex],
         });
       }
-
       if (params.rowIndex != null) {
         const elementIndex = !props.pagination
           ? params.rowIndex
           : params.rowIndex - paginationState.page * paginationState.pageSize;
 
+        const targetOffseHeight = rowsMeta.positions[elementIndex + 1]
+          ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
+          : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
+
         scrollCoordinates.top = scrollIntoView({
           clientHeight: windowRef.current!.clientHeight,
           scrollTop: windowRef.current!.scrollTop,
-          offsetHeight: rowHeight,
-          offsetTop: rowHeight * elementIndex,
+          offsetHeight: targetOffseHeight,
+          offsetTop: rowsMeta.positions[elementIndex],
         });
       }
 
@@ -111,7 +114,8 @@ export const useGridScroll = (
       paginationState.pageSize,
       windowRef,
       columnsMeta.positions,
-      rowHeight,
+      rowsMeta.positions,
+      rowsMeta.currentPageTotalHeight,
     ],
   );
 

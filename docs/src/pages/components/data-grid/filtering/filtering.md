@@ -188,6 +188,35 @@ In the demo below, you can see how to create a completely new operator for the R
 
 {{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Multiple values operator
+
+You can create a custom operator which accepts multiple values. To do this, provide an array of values to the `value` property of the `filterItem`.
+The `valueParser` of the `GridColDef` will be applied to each item of the array.
+
+The filtering function `getApplyFilterFn` must be adapted to handle `filterItem.value` as an array.
+Below is an example for a "between" operator, applied on the "Quantity" column.
+
+```ts
+{
+  label: 'Between',
+  value: 'between',
+  getApplyFilterFn: (filterItem: GridFilterItem) => {
+    if (!Array.isArray(filterItem.value) || filterItem.value.length !== 2) {
+      return null;
+    }
+    if (filterItem.value[0] == null || filterItem.value[1] == null) {
+      return null;
+    }
+    return ({ value }): boolean => {
+      return value != null && filterItem.value[0] <= value && value <= filterItem.value[1];
+    };
+  },
+  InputComponent: InputNumberInterval,
+}
+```
+
+{{"demo": "pages/components/data-grid/filtering/CustomMultiValueOperator.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Remove an operator
 
 To remove built-in operators, import the method to generate them and filter the output to fit your needs.

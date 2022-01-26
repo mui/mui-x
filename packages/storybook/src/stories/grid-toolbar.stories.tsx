@@ -6,7 +6,6 @@ import {
   GridToolbar,
   GridToolbarContainer,
   GridToolbarExport,
-  gridClasses,
 } from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
@@ -78,7 +77,7 @@ export const Export = () => {
 
 function CustomToolbar() {
   return (
-    <GridToolbarContainer className={gridClasses.toolbarContainer}>
+    <GridToolbarContainer>
       <GridToolbarExport
         printOptions={{
           pageStyle: '@page { margin: 0; }', // Zero the margin to hide the header and footer

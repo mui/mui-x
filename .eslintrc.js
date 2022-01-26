@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   ...baseline,
-  plugins: [...baseline.plugins, 'jsdoc'],
+  plugins: [...baseline.plugins, 'jsdoc', 'filenames'],
   settings: {
     'import/resolver': {
       webpack: {
@@ -58,6 +58,12 @@ module.exports = {
         'material-ui/no-direct-state-access': 'error',
       },
       parserOptions: { tsconfigRootDir: __dirname, project: ['./tsconfig.json'] },
+    },
+    {
+      files: ['docs/src/pages/components/**/*.js', 'docs/src/pages/components/**/*.tsx'],
+      rules: {
+        'filenames/match-exported': ['error'],
+      },
     },
   ],
 };
