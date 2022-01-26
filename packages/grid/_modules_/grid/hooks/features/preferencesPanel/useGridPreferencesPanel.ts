@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
@@ -7,7 +7,7 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export const useGridPreferencesPanel = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');

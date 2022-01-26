@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { GridEvents } from '../../models/events';
-import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../models/api/gridApiRef';
 import { isFunction } from '../../utils/utils';
 import { useGridLogger } from './useGridLogger';
 
 export const useGridNativeEventListener = <E extends Event>(
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   ref: React.MutableRefObject<HTMLDivElement | null> | (() => Element | undefined | null),
   eventName: string,
   handler?: (event: E) => any,

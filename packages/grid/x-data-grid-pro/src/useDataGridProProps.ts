@@ -1,12 +1,28 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DEFAULT_GRID_SLOTS_COMPONENTS } from '../../_modules_/grid/constants/defaultGridSlotsComponents';
+import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../_modules_/grid/models/props/DataGridProps';
 import { GRID_DEFAULT_LOCALE_TEXT, GridSlotsComponent } from '../../_modules_';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
-  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
-} from '../../_modules_/grid/models/props/DataGridProProps';
+  DataGridProPropsWithDefaultValue,
+} from './internals/models/dataGridProProps';
+
+/**
+ * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
+ */
+const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
+  ...DATA_GRID_PROPS_DEFAULT_VALUES,
+  scrollEndThreshold: 80,
+  treeData: false,
+  defaultGroupingExpansionDepth: 0,
+  disableColumnPinning: false,
+  disableRowGrouping: false,
+  disableChildrenFiltering: false,
+  disableChildrenSorting: false,
+  rowGroupingColumnMode: 'single',
+};
 
 export const useDataGridProProps = (inProps: DataGridProProps) => {
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });

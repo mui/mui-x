@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridEventListener, GridEvents, GridEventsStr } from '../../models/events';
+import { GridApiRefCommunity } from '../../models/api/gridApiRef';
+import { GridEventListener, GridEventsStr } from '../../models/events';
 import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/CleanupTracking';
 import { EventListenerOptions } from '../../utils/EventManager';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
@@ -24,7 +24,7 @@ export function createUseGridApiEventHandler(registry: CleanupTracking) {
   let cleanupTokensCounter = 0;
 
   return function useGridApiEventHandler<E extends GridEventsStr>(
-    apiRef: GridApiRef,
+    apiRef: GridApiRefCommunity,
     eventName: E,
     handler?: GridEventListener<E>,
     options?: EventListenerOptions,
@@ -108,8 +108,8 @@ export const useGridApiEventHandler = createUseGridApiEventHandler(registry);
 
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
-export function useGridApiOptionHandler<E extends GridEvents>(
-  apiRef: GridApiRef,
+export function useGridApiOptionHandler<E extends GridEventsStr>(
+  apiRef: GridApiRefCommunity,
   eventName: E,
   handler?: GridEventListener<E>,
 ) {

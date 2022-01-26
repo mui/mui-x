@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { GridApiRef, Logger } from '../../models';
+import { GridApiRefCommunity, Logger } from '../../models';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridLoggerApi } from '../../models/api/gridLoggerApi';
 import { localStorageAvailable } from '../../utils/utils';
@@ -42,7 +42,7 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
 }
 
 export const useGridLoggerFactory = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   props: Pick<DataGridProcessedProps, 'logger' | 'logLevel'>,
 ) => {
   apiRef.current.getLogger = React.useCallback<GridLoggerApi['getLogger']>(

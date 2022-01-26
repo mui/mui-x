@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { ErrorInfo } from 'react';
-import { GridApiRef } from '../models/api';
+import { GridApiRefCommunity } from '../models/api';
 import { Logger } from '../models/logger';
 
 export interface ErrorBoundaryProps {
   logger: Logger;
   render: ({ error }: any) => React.ReactNode;
-  api: GridApiRef;
+  api: GridApiRefCommunity;
   hasError: boolean;
   componentProps?: any[];
 }

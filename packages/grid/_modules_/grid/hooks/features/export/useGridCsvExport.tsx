@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
 import { gridFilteredSortedRowIdsSelector } from '../filter';
@@ -28,7 +28,7 @@ const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridR
  * @requires useGridSelection (state)
  * @requires useGridParamsApi (method)
  */
-export const useGridCsvExport = (apiRef: GridApiRef): void => {
+export const useGridCsvExport = (apiRef: GridApiRefCommunity): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
 
   const getDataAsCsv = React.useCallback(

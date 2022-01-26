@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { GridSortingMethod } from './gridSortingState';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridApiRef } from '../../../models';
+import { GridApiRefCommunity } from '../../../models';
 
 export const useGridRegisterSortingMethod = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   groupingName: string,
   filteringMethod: GridSortingMethod,
 ) => {

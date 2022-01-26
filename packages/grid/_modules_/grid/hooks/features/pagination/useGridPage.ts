@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models';
+import { GridApiRefCommunity } from '../../../models';
 import {
   useGridLogger,
   useGridSelector,
@@ -37,7 +37,7 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
  * @requires useGridFilter (state)
  */
 export const useGridPage = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');

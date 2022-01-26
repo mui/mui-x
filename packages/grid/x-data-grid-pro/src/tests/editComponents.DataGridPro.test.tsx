@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GridApiRef,
+  GridApiRefPro,
   DataGridProProps,
   useGridApiRef,
   DataGridPro,
@@ -74,7 +74,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: GridApiRefPro;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();

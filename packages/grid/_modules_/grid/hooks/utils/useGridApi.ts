@@ -1,7 +1,8 @@
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridApi } from '../../models/api/gridApi';
+import { GridApiCommon } from '../../models/api/gridApi';
 
 /**
  * @deprecated Use `apiRef.current` instead.
  */
-export const useGridApi = (apiRef: GridApiRef): GridApi => apiRef.current;
+export const useGridApi = <GridApi extends GridApiCommon>(apiRef: GridApiRef<GridApi>): GridApi =>
+  apiRef.current;

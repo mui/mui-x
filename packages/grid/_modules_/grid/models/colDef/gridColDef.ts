@@ -21,6 +21,7 @@ import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridRowModel } from '../gridRows';
 import { GridEditCellProps } from '../gridEditRowModel';
+import type { GridApiCommon, GridApiCommunity } from '../api';
 
 /**
  * Alignment used in position elements in Cells.
@@ -37,7 +38,7 @@ export type GridKeyValue = string | number | boolean;
 /**
  * Column Definition interface.
  */
-export interface GridColDef {
+export interface GridColDef<GridApi extends GridApiCommon = GridApiCommunity> {
   /**
    * The column identifier. It's used to map with [[GridRowModel]] values.
    */
@@ -113,7 +114,7 @@ export interface GridColDef {
   /**
    * A comparator function used to sort rows.
    */
-  sortComparator?: GridComparatorFn;
+  sortComparator?: GridComparatorFn<GridApi>;
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
    * @default 'string'
@@ -257,48 +258,4 @@ export type GridStateColDef = GridEnrichedColDef & { computedWidth: number };
 export interface GridColumnsMeta {
   totalWidth: number;
   positions: number[];
-}
-
-export interface GridGroupingColDefOverride
-  extends Omit<
-    GridColDef,
-    | 'editable'
-    | 'valueSetter'
-    | 'field'
-    | 'type'
-    | 'preProcessEditCellProps'
-    | 'renderEditCell'
-    | 'groupable'
-  > {
-  /**
-   * The field from which we want to apply the sorting and the filtering for the grouping column.
-   * It is only useful when `props.rowGroupingColumnMode === "multiple"` to decide which grouping criteria should be used for sorting and filtering.
-   * Do not have any effect when building the tree with the `props.treeData` feature.
-   * @default: The sorting and filtering is applied based on the leaf field in any, otherwise based on top level grouping criteria.
-   */
-  mainGroupingCriteria?: string;
-
-  /**
-   * The field from which we want to render the leaves of the tree.
-   * Do not have any effect when building the tree with the `props.treeData` feature.
-   */
-  leafField?: string;
-
-  /**
-   * If `true`, the grouping cells will not render the amount of descendants.
-   * @default: false
-   */
-  hideDescendantCount?: boolean;
-}
-
-export interface GridGroupingColDefOverrideParams {
-  /**
-   * The name of the grouping algorithm currently building the grouping column.
-   */
-  groupingName: string;
-
-  /**
-   * The fields of the columns from which we want to group the values on this new grouping column.
-   */
-  fields: string[];
 }

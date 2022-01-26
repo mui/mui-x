@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { GridFilteringMethod } from './gridFilterState';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridApiRef } from '../../../models';
+import { GridApiRefCommunity } from '../../../models';
 
 export const useGridRegisterFilteringMethod = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   groupingName: string,
   filteringMethod: GridFilteringMethod,
 ) => {

@@ -46,12 +46,12 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
 
       let isSelector = false;
 
-      if (
-        project.checker.getTypeOfSymbolAtLocation(
-          parameterSymbol,
-          parameterSymbol.valueDeclaration!,
-        ).symbol?.name === 'GridState'
-      ) {
+      const firstParamName = project.checker.getTypeOfSymbolAtLocation(
+        parameterSymbol,
+        parameterSymbol.valueDeclaration!,
+      ).symbol?.name;
+
+      if (['GridStatePro', 'GridStateCommunity'].includes(firstParamName)) {
         // Selector not wrapped in `createSelector`
         isSelector = true;
       } else if (

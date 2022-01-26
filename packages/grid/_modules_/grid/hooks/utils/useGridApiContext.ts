@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { GridApiContext } from '../../components/GridApiContext';
+import { GridApiCommon, GridApiCommunity } from '../../models/api/gridApi';
+import { GridApiRef } from '../../models/api/gridApiRef';
 
-export function useGridApiContext() {
+export function useGridApiContext<
+  GridApi extends GridApiCommon = GridApiCommunity,
+>(): GridApiRef<GridApi> {
   const apiRef = React.useContext(GridApiContext);
 
   if (apiRef === undefined) {
@@ -14,5 +18,5 @@ export function useGridApiContext() {
     );
   }
 
-  return apiRef;
+  return apiRef as GridApiRef<GridApi>;
 }

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { GridPreProcessingApi, PreProcessorCallback } from './gridPreProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../models/events';
 
-export const useGridPreProcessing = (apiRef: GridApiRef) => {
+export const useGridPreProcessing = (apiRef: GridApiRefCommunity) => {
   const preProcessorsRef = React.useRef<
     Partial<Record<string, Record<string, PreProcessorCallback>>>
   >({});

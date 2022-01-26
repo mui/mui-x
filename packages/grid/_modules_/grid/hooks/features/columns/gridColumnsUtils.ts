@@ -7,7 +7,7 @@ import {
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
   getGridDefaultColumnTypes,
-  GridApiRef,
+  GridApiRefCommunity,
   GridColDef,
   GridColType,
   GridColumnTypesRecord,
@@ -110,11 +110,11 @@ export const createColumnsState = ({
   shouldRegenColumnVisibilityModelFromColumns,
   reset,
 }: {
-  apiRef: GridApiRef;
   columnsToUpsert: GridColDef[];
   columnsTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
+  apiRef: GridApiRefCommunity;
   reset: boolean;
 }) => {
   let columnsStateWithoutColumnVisibilityModel: Omit<GridColumnsRawState, 'columnVisibilityModel'>;

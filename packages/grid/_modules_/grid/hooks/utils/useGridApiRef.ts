@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { GridApiRef } from '../../models';
+import { GridApiCommon, GridApiRef } from '../../models';
 
 /**
  * Hook that instantiate a [[GridApiRef]].
  */
-export const useGridApiRef = () => React.useRef({}) as GridApiRef;
+export const useGridApiRef = <GridApi extends GridApiCommon>() =>
+  React.useRef({}) as GridApiRef<GridApi>;

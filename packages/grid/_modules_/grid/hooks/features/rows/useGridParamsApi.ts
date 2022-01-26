@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
@@ -43,7 +43,7 @@ function warnGetValue() {
  * TODO: Impossible priority - useGridEditRows also needs to be after useGridParamsApi
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
-export function useGridParamsApi(apiRef: GridApiRef) {
+export function useGridParamsApi(apiRef: GridApiRefCommunity) {
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,
@@ -217,17 +217,15 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     [apiRef],
   );
 
-  useGridApiMethod<GridParamsApi>(
-    apiRef,
-    {
-      getCellValue,
-      getCellParams,
-      getCellElement,
-      getRowParams,
-      getRowElement,
-      getColumnHeaderParams,
-      getColumnHeaderElement,
-    },
-    'GridParamsApi',
-  );
+  const paramsApi: GridParamsApi = {
+    getCellValue,
+    getCellParams,
+    getCellElement,
+    getRowParams,
+    getRowElement,
+    getColumnHeaderParams,
+    getColumnHeaderElement,
+  };
+
+  useGridApiMethod(apiRef, paramsApi, 'GridParamsApi');
 }

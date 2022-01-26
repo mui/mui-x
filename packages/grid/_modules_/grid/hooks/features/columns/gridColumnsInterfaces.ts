@@ -2,7 +2,7 @@ import type { GridRowId, GridStateColDef, GridColDef } from '../../../models';
 
 export type GridColumnLookup = { [field: string]: GridStateColDef };
 
-export type GridColumnRawLookup = { [field: string]: GridColDef | GridStateColDef };
+export type GridColumnRawLookup = { [field: string]: GridColDef<any> | GridStateColDef };
 
 export interface GridColumnsState {
   all: string[];

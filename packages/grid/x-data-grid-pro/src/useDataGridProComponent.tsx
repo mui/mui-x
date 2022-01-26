@@ -1,19 +1,19 @@
-import type { GridApiRef } from '../../_modules_';
-import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
+import { GridApiRefPro } from './internals/models';
+import { DataGridProProcessedProps } from './internals/models/dataGridProProps';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
 
 import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
 import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
-import { useGridColumnReorder } from '../../_modules_/grid/hooks/features/columnReorder/useGridColumnReorder';
-import { useGridColumnResize } from '../../_modules_/grid/hooks/features/columnResize/useGridColumnResize';
+import { useGridColumnReorder } from './internals/hooks/features/columnReorder/useGridColumnReorder';
+import { useGridColumnResize } from './internals/hooks/features/columnResize/useGridColumnResize';
 import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useGridColumns';
 import { useGridDensity } from '../../_modules_/grid/hooks/features/density/useGridDensity';
 import { useGridCsvExport } from '../../_modules_/grid/hooks/features/export/useGridCsvExport';
 import { useGridPrintExport } from '../../_modules_/grid/hooks/features/export/useGridPrintExport';
 import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGridFilter';
 import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
-import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
+import { useGridInfiniteLoader } from './internals/hooks/features/infiniteLoader/useGridInfiniteLoader';
 import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
 import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
@@ -28,12 +28,12 @@ import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useG
 import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
-import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/useGridTreeData';
-import { useGridRowGrouping } from '../../_modules_/grid/hooks/features/rowGrouping/useGridRowGrouping';
-import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
+import { useGridTreeData } from './internals/hooks/features/treeData/useGridTreeData';
+import { useGridRowGrouping } from './internals/hooks/features/rowGrouping/useGridRowGrouping';
+import { useGridColumnPinning } from './internals/hooks/features/columnPinning/useGridColumnPinning';
 
 export const useDataGridProComponent = (
-  inputApiRef: GridApiRef | undefined,
+  inputApiRef: GridApiRefPro | undefined,
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization(inputApiRef, props);

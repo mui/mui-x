@@ -1,0 +1,17 @@
+import { createSelector } from 'reselect';
+import { gridColumnLookupSelector } from '@mui/x-data-grid';
+import { GridStatePro } from '../../../models';
+
+export const gridRowGroupingStateSelector = (state: GridStatePro) => state.rowGrouping;
+
+export const gridRowGroupingModelSelector = createSelector(
+  gridRowGroupingStateSelector,
+  (rowGrouping) => rowGrouping.model,
+);
+
+export const gridRowGroupingSanitizedModelSelector = createSelector(
+  gridRowGroupingModelSelector,
+  gridColumnLookupSelector,
+  (model, columnsLookup) =>
+    model.filter((field) => !!columnsLookup[field] && columnsLookup[field].groupable),
+);

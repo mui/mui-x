@@ -4,8 +4,6 @@ import type {
 } from '../hooks/features/columns/gridColumnsInterfaces';
 import type { GridEditRowsModel } from './gridEditRowModel';
 import type { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
-import type { GridColumnReorderState } from '../hooks/features/columnReorder';
-import type { GridColumnResizeState } from '../hooks/features/columnResize/columnResizeState';
 import type { GridDensityState } from '../hooks/features/density/densityState';
 import type { GridFocusState, GridTabIndexState } from '../hooks/features/focus/gridFocusState';
 import type {
@@ -23,24 +21,18 @@ import type {
   GridFilterState,
   GridFilterInitialState,
 } from '../hooks/features/filter/gridFilterState';
-import type {
-  GridRowGroupingState,
-  GridRowGroupingInitialState,
-} from '../hooks/features/rowGrouping';
-import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 import { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 
 /**
- * TODO: Distinguish pro and community states
+ * The state of `DataGrid`.
+ * TODO: Move to `x-data-grid` folder
  */
-export interface GridState {
+export interface GridStateCommunity {
   rows: GridRowsState;
   rowsMeta: GridRowsMetaState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
   columns: GridColumnsState;
-  columnReorder: GridColumnReorderState;
-  columnResize: GridColumnResizeState;
   columnMenu: GridColumnMenuState;
   sorting: GridSortingState;
   focus: GridFocusState;
@@ -49,17 +41,17 @@ export interface GridState {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
-  rowGrouping: GridRowGroupingState;
   error?: any;
-  pinnedColumns: GridColumnPinningState;
 }
 
-export interface GridInitialState {
+/**
+ * The initial state of `DataGrid`.
+ * TODO: Move to `x-data-grid` folder
+ */
+export interface GridInitialStateCommunity {
   pagination?: GridPaginationInitialState;
   sorting?: GridSortingInitialState;
   filter?: GridFilterInitialState;
   columns?: GridColumnsInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
-  rowGrouping?: GridRowGroupingInitialState;
-  pinnedColumns?: GridColumnPinningState;
 }

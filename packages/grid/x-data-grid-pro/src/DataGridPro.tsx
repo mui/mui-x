@@ -8,14 +8,14 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-} from '../../_modules_/grid';
+} from '@mui/x-data-grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { Watermark } from '../../_modules_/grid/components/Watermark';
-import { DataGridProProps } from '../../_modules_/grid/models/props/DataGridProProps';
+import { Watermark } from './internals/components/Watermark';
+import { DataGridProProps } from './internals';
 import { useDataGridProProps } from './useDataGridProProps';
-import { DataGridProVirtualScroller } from './DataGridProVirtualScroller';
-import { DataGridProColumnHeaders } from './DataGridProColumnHeaders';
+import { DataGridProVirtualScroller } from './internals/components/DataGridProVirtualScroller';
+import { DataGridProColumnHeaders } from './internals/components/DataGridProColumnHeaders';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -344,7 +344,7 @@ DataGridProRaw.propTypes = {
    */
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
-   * The initial state of the DataGrid.
+   * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */

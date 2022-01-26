@@ -1,9 +1,20 @@
-import { GridPinnedColumns, GridRowGroupingModel } from '../../_modules_';
-import { GridCanBeReorderedPreProcessingContext } from '../../_modules_/grid/hooks/features/columnReorder/columnReorderInterfaces';
+import { GridStateCommunity } from '@mui/x-data-grid';
+import {
+  GridPinnedColumns,
+  GridRowGroupingModel,
+  GridRowScrollEndParams,
+  GridStatePro,
+} from './internals';
+import { GridCanBeReorderedPreProcessingContext } from './internals/hooks/features/columnReorder/columnReorderInterfaces';
 
 export interface GridControlledStateEventLookupPro {
   rowGroupingModelChange: { params: GridRowGroupingModel };
   pinnedColumnsChange: { params: GridPinnedColumns };
+}
+
+export interface GridEventLookupPro {
+  rowsScrollEnd: { params: GridRowScrollEndParams };
+  stateChange: { params: GridStatePro | GridStateCommunity };
 }
 
 export interface GridPreProcessingGroupLookupPro {
@@ -13,8 +24,9 @@ export interface GridPreProcessingGroupLookupPro {
   };
 }
 
-// TODO bundle split: Declare from `@mui/x-data-grid`
-declare module '@mui/x-data-grid-pro' {
+declare module '@mui/x-data-grid' {
+  interface GridEventLookup extends GridEventLookupPro {}
+
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
 
   interface GridPreProcessingGroupLookup extends GridPreProcessingGroupLookupPro {}
