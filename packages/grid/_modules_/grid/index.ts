@@ -4,5 +4,6 @@ export * from './hooks';
 export * from './locales';
 export * from './models';
 export * from './gridClasses';
+export * from './context';
 
 export type { GridPreProcessingGroupLookup } from './hooks/core/preProcessing/gridPreProcessingApi';

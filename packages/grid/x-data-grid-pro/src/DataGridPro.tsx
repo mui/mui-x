@@ -8,8 +8,8 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
+  GridContextProvider,
 } from '@mui/x-data-grid';
-import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from './internals/components/Watermark';
 import { DataGridProProps } from './internals';
