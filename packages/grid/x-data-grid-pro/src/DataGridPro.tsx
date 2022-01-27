@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 import { LicenseInfo } from '@mui/x-license-pro';
 import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
 import {
-  // GridBody,
+  GridBody,
   GridErrorHandler,
-  // GridFooterPlaceholder,
+  GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
   GridContextProvider,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
-// import { Watermark } from './internals/components/Watermark';
+import { Watermark } from './internals/components/Watermark';
 import { DataGridProProps } from './internals';
 import { useDataGridProProps } from './useDataGridProProps';
-// import { DataGridProVirtualScroller } from './internals/components/DataGridProVirtualScroller';
-// import { DataGridProColumnHeaders } from './internals/components/DataGridProColumnHeaders';
+import { DataGridProVirtualScroller } from './internals/components/DataGridProVirtualScroller';
+import { DataGridProColumnHeaders } from './internals/components/DataGridProColumnHeaders';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -41,13 +41,13 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
-          {/*    <GridBody*/}
-          {/*      ColumnHeadersComponent={DataGridProColumnHeaders}*/}
-          {/*      VirtualScrollerComponent={DataGridProVirtualScroller}*/}
-          {/*    >*/}
-          {/*      <Watermark />*/}
-          {/*    </GridBody>*/}
-          {/*    <GridFooterPlaceholder />*/}
+          <GridBody
+            ColumnHeadersComponent={DataGridProColumnHeaders}
+            VirtualScrollerComponent={DataGridProVirtualScroller}
+          >
+            <Watermark />
+          </GridBody>
+          <GridFooterPlaceholder />
         </GridErrorHandler>
       </GridRoot>
     </GridContextProvider>
