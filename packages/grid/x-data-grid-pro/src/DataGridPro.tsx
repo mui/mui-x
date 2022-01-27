@@ -4,7 +4,7 @@ import { LicenseInfo } from '@mui/x-license-pro';
 import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
 import {
   // GridBody,
-  // GridErrorHandler,
+  GridErrorHandler,
   // GridFooterPlaceholder,
   // GridHeaderPlaceholder,
   GridRoot,
@@ -39,16 +39,16 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-      {/*  <GridErrorHandler>*/}
-      {/*    <GridHeaderPlaceholder />*/}
-      {/*    <GridBody*/}
-      {/*      ColumnHeadersComponent={DataGridProColumnHeaders}*/}
-      {/*      VirtualScrollerComponent={DataGridProVirtualScroller}*/}
-      {/*    >*/}
-      {/*      <Watermark />*/}
-      {/*    </GridBody>*/}
-      {/*    <GridFooterPlaceholder />*/}
-      {/*  </GridErrorHandler>*/}
+        <GridErrorHandler>
+          {/*    <GridHeaderPlaceholder />*/}
+          {/*    <GridBody*/}
+          {/*      ColumnHeadersComponent={DataGridProColumnHeaders}*/}
+          {/*      VirtualScrollerComponent={DataGridProVirtualScroller}*/}
+          {/*    >*/}
+          {/*      <Watermark />*/}
+          {/*    </GridBody>*/}
+          {/*    <GridFooterPlaceholder />*/}
+        </GridErrorHandler>
       </GridRoot>
     </GridContextProvider>
   );
