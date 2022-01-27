@@ -1,9 +1,9 @@
-import type {
+import {
   GridRowTreeNodeConfig,
   GridRowId,
   GridRowTreeConfig,
-} from '../../../../../_modules_/grid/models/gridRows';
-import type { GridKeyValue } from '../../../../../_modules_/grid/models/colDef/gridColDef';
+  GridKeyValue,
+} from '@mui/x-data-grid';
 import type {
   GridRowGroupingResult,
   GridRowGroupParams,

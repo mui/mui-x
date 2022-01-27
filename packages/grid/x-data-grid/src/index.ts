@@ -7,3 +7,5 @@ export { MAX_PAGE_SIZE, DATA_GRID_PROPS_DEFAULT_VALUES } from './useDataGridProp
 
 export { useGridApiRef, useGridApiContext } from './legacyCrossPlanInterfaces';
 export type { GridState, GridInitialState, GridApi } from './legacyCrossPlanInterfaces';
+
+export * from './private';

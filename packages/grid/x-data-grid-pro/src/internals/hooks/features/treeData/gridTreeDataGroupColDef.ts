@@ -1,6 +1,4 @@
-import { GridColDef } from '../../../../../../_modules_/grid/models/colDef/gridColDef';
-import { GRID_STRING_COL_DEF } from '../../../../../../_modules_/grid/models/colDef/gridStringColDef';
-import { GridValueGetterFullParams } from '../../../../../../_modules_/grid/models/params/gridCellParams';
+import { GridColDef, GRID_STRING_COL_DEF } from '@mui/x-data-grid';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount
@@ -14,7 +12,7 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
   disableReorder: true,
   align: 'left',
   width: 200,
-  valueGetter: (params) => (params as GridValueGetterFullParams).rowNode.groupingKey,
+  valueGetter: (params) => params.rowNode.groupingKey,
 };
 
 export const GRID_TREE_DATA_GROUPING_FIELD = '__tree_data_group__';

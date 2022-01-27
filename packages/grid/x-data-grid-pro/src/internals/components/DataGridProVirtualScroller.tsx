@@ -8,13 +8,11 @@ import {
   gridVisibleColumnFieldsSelector,
   useGridApiEventHandler,
   GridEvents,
+  unstable_GridVirtualScroller as GridVirtualScroller,
+  unstable_GridVirtualScrollerContent as GridVirtualScrollerContent,
+  unstable_GridVirtualScrollerRenderZone as GridVirtualScrollerRenderZone,
+  unstable_useGridVirtualScroller as useGridVirtualScroller,
 } from '@mui/x-data-grid';
-import {
-  GridVirtualScroller,
-  GridVirtualScrollerContent,
-  GridVirtualScrollerRenderZone,
-  useGridVirtualScroller,
-} from '@mui/x-data-grid/internals';
 import { useGridRootProps, useGridApiContext } from '../hooks/utils';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {

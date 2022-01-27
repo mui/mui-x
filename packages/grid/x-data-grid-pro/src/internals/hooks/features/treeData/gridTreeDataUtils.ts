@@ -1,9 +1,9 @@
-import { GridFilterState } from '../../../../../../_modules_/grid/hooks/features/filter';
 import {
   GridRowId,
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
-} from '../../../../../../_modules_/grid/models/gridRows';
+  GridFilterState,
+} from '@mui/x-data-grid';
 import { GridAggregatedFilterItemApplier } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
 
 interface FilterRowTreeFromTreeDataParams {
