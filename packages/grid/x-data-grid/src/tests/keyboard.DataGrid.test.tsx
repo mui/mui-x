@@ -190,7 +190,24 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
       expect(getActiveCell()).to.equal(`3-1`);
+    });
+
+    it('should move to the first row before moving to column header when pressing "PageUp"', function test() {
+      if (isJSDOM) {
+        // This test is not relevant if we can't choose the actual height
+        this.skip();
+      }
+
+      render(<NavigationTestCaseNoScrollX />);
+      const cell = getCell(3, 1);
+      fireClickEvent(cell);
+      expect(getActiveCell()).to.equal('3-1');
+
       fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(`0-1`, 'should focus first row');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(null);
       expect(getActiveColumnHeader()).to.equal(`1`);
     });
 
