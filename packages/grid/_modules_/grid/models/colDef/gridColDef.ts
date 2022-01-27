@@ -21,7 +21,7 @@ import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridRowModel } from '../gridRows';
 import { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApiCommon, GridApiCommunity } from '../api';
+import type { GridApiCommon } from '../api';
 
 /**
  * Alignment used in position elements in Cells.
@@ -38,7 +38,7 @@ export type GridKeyValue = string | number | boolean;
 /**
  * Column Definition interface.
  */
-export interface GridColDef<GridApi extends GridApiCommon = GridApiCommunity> {
+export interface GridColDef<GridApi extends GridApiCommon = GridApiCommon> {
   /**
    * The column identifier. It's used to map with [[GridRowModel]] values.
    */
@@ -230,7 +230,8 @@ export interface GridColDef<GridApi extends GridApiCommon = GridApiCommunity> {
   disableExport?: boolean;
 }
 
-export interface GridActionsColDef extends GridColDef {
+export interface GridActionsColDef<GridApi extends GridApiCommon = GridApiCommon>
+  extends GridColDef<GridApi> {
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
    * @default 'actions'
@@ -244,13 +245,20 @@ export interface GridActionsColDef extends GridColDef {
   getActions: (params: GridRowParams) => React.ReactElement<GridActionsCellItemProps>[];
 }
 
-export type GridEnrichedColDef = GridColDef | GridActionsColDef;
+export type GridEnrichedColDef<GridApi extends GridApiCommon = GridApiCommon> =
+  | GridColDef<GridApi>
+  | GridActionsColDef<GridApi>;
 
-export type GridColumns = GridEnrichedColDef[];
+export type GridColumns<GridApi extends GridApiCommon = GridApiCommon> =
+  GridEnrichedColDef<GridApi>[];
 
-export type GridColTypeDef = Omit<GridColDef, 'field'> & { extendType?: GridNativeColTypes };
+export type GridColTypeDef<GridApi extends GridApiCommon = GridApiCommon> = Omit<
+  GridColDef<GridApi>,
+  'field'
+> & { extendType?: GridNativeColTypes };
 
-export type GridStateColDef = GridEnrichedColDef & { computedWidth: number };
+export type GridStateColDef<GridApi extends GridApiCommon = GridApiCommon> =
+  GridEnrichedColDef<GridApi> & { computedWidth: number };
 
 /**
  * Meta Info about columns.
