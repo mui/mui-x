@@ -309,7 +309,6 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getByRole('button', { name: 'Nike' })).toHaveFocus();
     });
 
@@ -337,7 +336,6 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.keyDown(screen.queryByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
       fireEvent.keyDown(screen.queryByRole('option', { name: 'Adidas' }), { key: 'Enter' });
       await waitFor(() => {
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getCell(1, 0)).toHaveFocus();
       });
     });
@@ -539,7 +537,6 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
@@ -682,7 +679,6 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
@@ -826,7 +822,6 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getByRole('checkbox')).toHaveFocus();
     });
 
