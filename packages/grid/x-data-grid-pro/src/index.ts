@@ -1,5 +1,4 @@
 /* eslint-disable import/export */
-/* eslint-disable import/first */
 import type {} from './x-data-grid-interfaces';
 
 // Explicitly re-export the methods already exported from `@mui/x-data-grid` but with a different signature

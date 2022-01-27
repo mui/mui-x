@@ -1,5 +1,3 @@
-/* eslint-disable import/export */
-
 export * from '../../_modules_';
 export * from './DataGrid';
 export type { DataGridProps } from '../../_modules_/grid/models/props/DataGridProps';
