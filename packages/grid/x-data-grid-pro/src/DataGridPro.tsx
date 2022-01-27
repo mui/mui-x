@@ -2,14 +2,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { LicenseInfo } from '@mui/x-license-pro';
 import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
-// import {
-//   GridBody,
-//   GridErrorHandler,
-//   GridFooterPlaceholder,
-//   GridHeaderPlaceholder,
-//   GridRoot,
-//   GridContextProvider,
-// } from '@mui/x-data-grid';
+import {
+  // GridBody,
+  GridErrorHandler,
+  GridFooterPlaceholder,
+  GridHeaderPlaceholder,
+  GridRoot,
+  GridContextProvider,
+} from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
 // import { Watermark } from './internals/components/Watermark';
 import { DataGridProProps } from './internals';
@@ -36,26 +36,22 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   const props = useDataGridProProps(inProps);
   const apiRef = useDataGridProComponent(props.apiRef, props);
 
-  console.log(ref, apiRef)
-
-  return null
-
-  // return (
-  //   <GridContextProvider apiRef={apiRef} props={props}>
-  //     <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-  //       <GridErrorHandler>
-  //         <GridHeaderPlaceholder />
-  //         <GridBody
-  //           ColumnHeadersComponent={DataGridProColumnHeaders}
-  //           VirtualScrollerComponent={DataGridProVirtualScroller}
-  //         >
-  //           <Watermark />
-  //         </GridBody>
-  //         <GridFooterPlaceholder />
-  //       </GridErrorHandler>
-  //     </GridRoot>
-  //   </GridContextProvider>
-  // );
+  return (
+    <GridContextProvider apiRef={apiRef} props={props}>
+      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+        <GridErrorHandler>
+          <GridHeaderPlaceholder />
+          {/*<GridBody*/}
+          {/*  ColumnHeadersComponent={DataGridProColumnHeaders}*/}
+          {/*  VirtualScrollerComponent={DataGridProVirtualScroller}*/}
+          {/*>*/}
+          {/*  <Watermark />*/}
+          {/*</GridBody>*/}
+          <GridFooterPlaceholder />
+        </GridErrorHandler>
+      </GridRoot>
+    </GridContextProvider>
+  );
 });
 
 export const DataGridPro = React.memo(DataGridProRaw);
