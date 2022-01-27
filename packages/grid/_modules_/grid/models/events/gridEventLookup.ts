@@ -17,7 +17,6 @@ import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridEditRowsModel } from '../gridEditRowModel';
 import type { GridSelectionModel } from '../gridSelectionModel';
-import type { GridStatePro, GridStateCommunity } from '../gridState';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
@@ -142,7 +141,7 @@ export interface GridEventLookup
     GridControlledStateEventLookup {
   unmount: {};
   componentError: { params: any };
-  stateChange: { params: GridStatePro | GridStateCommunity };
+  stateChange: { params: any };
   resize: { params: ElementSize };
   viewportInnerSizeChange: { params: ElementSize };
   debouncedResize: { params: ElementSize };
