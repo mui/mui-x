@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DEFAULT_GRID_SLOTS_COMPONENTS } from '../../_modules_/grid/constants/defaultGridSlotsComponents';
-import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../_modules_/grid/models/props/DataGridProps';
+import {
+  DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
+  DATA_GRID_PROPS_DEFAULT_VALUES,
+} from '@mui/x-data-grid';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../../_modules_/grid/constants/localeTextConstants';
 import { GridSlotsComponent } from '../../_modules_/grid/models/gridSlotsComponent';
 import {
@@ -13,7 +15,7 @@ import {
 /**
  * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
  */
-const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
+export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
   ...DATA_GRID_PROPS_DEFAULT_VALUES,
   scrollEndThreshold: 80,
   treeData: false,
@@ -37,14 +39,14 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
     const overrides = themedProps.components;
 
     if (!overrides) {
-      return { ...DEFAULT_GRID_SLOTS_COMPONENTS };
+      return { ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS };
     }
 
     const mergedComponents = {} as GridSlotsComponent;
 
-    Object.keys(DEFAULT_GRID_SLOTS_COMPONENTS).forEach((key) => {
+    Object.keys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS).forEach((key) => {
       mergedComponents[key] =
-        overrides[key] === undefined ? DEFAULT_GRID_SLOTS_COMPONENTS[key] : overrides[key];
+        overrides[key] === undefined ? DATA_GRID_DEFAULT_SLOTS_COMPONENTS[key] : overrides[key];
     });
 
     return mergedComponents;
