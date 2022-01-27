@@ -326,14 +326,13 @@ To do so, we need to override both the `renderCell` of the grouping column and t
 
 ## Master detail [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-The master detail allows to expand a row to display additional information inside a panel.
-To start using this feature, pass a function to the `getDetailPanelContent` prop with the content to be rendered inside the panel.
+The master detail feature allows expanding a row to display additional information inside a panel.
+To use this feature, pass a function to the `getDetailPanelContent` prop with the content to be rendered inside the panel.
 Any valid React element can be used as the row detail, even another grid.
 
 The height of the detail panel content needs to be provided upfront.
-The grid assumes the value of 500px by default.
-However, this can be configured by passing a function to the `getDetailPanelHeight` prop.
-Both props are called with a [`GridRowParams`](/api/data-grid/grid-row-params/) object, allowing to return a different value for each row.
+The grid assumes the value of 500px by default, however this can be configured by passing a function to the `getDetailPanelHeight` prop that returns the required height.
+Both props are called with a [`GridRowParams`](/api/data-grid/grid-row-params/) object, allowing you to return a different value for each row.
 
 ```tsx
 <DataGridPro
@@ -342,13 +341,13 @@ Both props are called with a [`GridRowParams`](/api/data-grid/grid-row-params/) 
 />
 ```
 
-To expand a row, click in the "i" icon or press <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> inside one of the cells of the row.
+To expand a row click on the "i" icon, or press <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> inside one of the cells of the row.
 Returning `null` or `undefined` as the value of `getDetailPanelContent` will prevent the respective row from being expanded.
 
 {{"demo": "pages/components/data-grid/group-pivot/BasicDetailPanels.js", "bg": "inline", "defaultCodeOpen": false}}
 
 > ⚠ Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
-> The grid bases on the referential value of these props to cache their values and optimize the rendering.
+> The grid depends on the referential value of these props to cache their values and optimize the rendering.
 >
 > ```tsx
 > const getDetailPanelContent = React.useCallback(() => { ... }, []);
@@ -357,7 +356,7 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 > ```
 >
 > ⚠ Depending on the height of the detail panel, you may see a blank space when scrolling.
-> This is caused because the grid uses a lazy approach to update the rendered rows.
+> This is caused by the grid using a lazy approach to update the rendered rows.
 > Set `rowThreshold` to 0 to fix it:
 >
 > ```tsx
@@ -366,8 +365,8 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 
 ### Controlling the detail panels
 
-To control which rows are expanded, pass a list of row ids to the `detailPanelExpandedRowIds` prop.
-The `onDetailPanelExpandedRowIds` prop can be used to detect when a row is expanded or collapsed.
+To control which rows are expanded, pass a list of row IDs to the `detailPanelExpandedRowIds` prop.
+Passing a callback to the `onDetailPanelExpandedRowIds` prop can be used to detect when a row was expanded or collapsed.
 
 On the other hand, if you only want to initialize the grid with some rows already expanded, use the `initialState` prop as follow:
 
@@ -377,15 +376,15 @@ On the other hand, if you only want to initialize the grid with some rows alread
 
 {{"demo": "pages/components/data-grid/group-pivot/ControlMasterDetail.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Using a form as detail panel
+### Using a detail panel as a form
 
-As an alternative to the built-in [row editing](/components/data-grid/editing/#row-editing), a form component can be rendered inside the detail panel, allowing to edit the current row values.
+As an alternative to the built-in [row editing](/components/data-grid/editing/#row-editing), a form component can be rendered inside the detail panel, allowing the user to edit the current row values.
 
-The following demo integrates with [react-hook-form](https://react-hook-form.com/), but other form libraries can also be used instead.
+The following demo shows integration with [react-hook-form](https://react-hook-form.com/), but other form libraries can also be used instead.
 
 {{"demo": "pages/components/data-grid/group-pivot/FormDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Customize the detail panel toggle
+### Customizing the detail panel toggle
 
 To change the icon used for the toggle, you can provide a different component for the [icon slot](/components/data-grid/components/#icons) as follow:
 
@@ -393,12 +392,25 @@ To change the icon used for the toggle, you can provide a different component fo
 <DataGridPro components={{ DetailPanelToggleIcon: CustomIcon }}>
 ```
 
-Although, if this is not sufficient, the entire toggle component can be overriden.
-To fully customize it, define a column with `field: GRID_DETAIL_PANEL_TOGGLE_FIELD`.
-The new toggle component can be provided via `renderCell`.
-It is recommended to first spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column, since it provides a good set of default values to start with.
+If this is not sufficient, the entire toggle component can be overridden.
+To fully customize it, add another column with `field: GRID_DETAIL_PANEL_TOGGLE_FIELD` to your set of columns.
+The grid will detect that there is already a toggle column defined and it will not add another toggle in the default position.
+The new toggle component can be provided via [`renderCell`](/components/data-grid/columns/#render-cell) in the same as any other column.
+By only setting the `field`, is up to you to configure the remaning options (e.g. disable the column menu, filtering, sorting).
+To already start with a few suggested options configured, spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column.
 
 ```tsx
+<DataGridPro
+  columns={[
+    {
+      field: GRID_DETAIL_PANEL_TOGGLE_FIELD,
+      renderCell: (params) => <CustomDetailPanelToggle {...params}>
+    },
+  ]}
+/>
+
+// or
+
 <DataGridPro
   columns={[
     {
@@ -409,8 +421,7 @@ It is recommended to first spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defini
 />
 ```
 
-This approach can also be used to change the location of the toggle column, as showed below.
-The grid detects the special field and does not add a second column.
+This approach can also be used to change the location of the toggle column, as shown below.
 
 {{"demo": "pages/components/data-grid/group-pivot/CustomizeDetailPanelToggle.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -418,14 +429,14 @@ The grid detects the special field and does not add a second column.
 
 ### Disable detail panel content scroll
 
-By default, the detail panel has as width the sum of the widths of all columns.
-This means that, when a horizontal scrollbar is present, scrolling it will also scroll the panel content.
+By default, the detail panel has a width that is the sum of the widths of all columns.
+This means that when a horizontal scrollbar is present, scrolling it will also scroll the panel content.
 To avoid this behavior, set the size of the detail panel to the outer size of the grid.
 Use `apiRef.current.getRootDimensions()` to get the latest dimension values.
 Finally, to prevent the panel from scrolling, set `position: sticky` and `left: 0`.
 
-The following demo demonstrates how this can be achieved.
-Notice that the toggle column is pinned to make sure that it will always be visible when scrolled.
+The following demo shows how this can be achieved.
+Notice that the toggle column is pinned to make sure that it will always be visible when the grid is scrolled horizontally.
 
 {{"demo": "pages/components/data-grid/group-pivot/FullWidthDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
