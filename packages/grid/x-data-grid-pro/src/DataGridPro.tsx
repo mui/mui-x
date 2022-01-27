@@ -38,7 +38,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
-      {/*<GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>*/}
+      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
       {/*  <GridErrorHandler>*/}
       {/*    <GridHeaderPlaceholder />*/}
       {/*    <GridBody*/}
@@ -49,7 +49,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
       {/*    </GridBody>*/}
       {/*    <GridFooterPlaceholder />*/}
       {/*  </GridErrorHandler>*/}
-      {/*</GridRoot>*/}
+      </GridRoot>
     </GridContextProvider>
   );
 });
