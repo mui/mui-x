@@ -19,6 +19,8 @@ function fireClickEvent(cell: HTMLElement) {
   fireEvent.click(cell);
 }
 
+const nativeSetTimeout = setTimeout;
+
 describe('<DataGridPro /> - Cell Editing', () => {
   let baselineProps: Pick<DataGridProProps, 'autoHeight' | 'rows' | 'columns' | 'throttleRowsMs'>;
 
@@ -780,6 +782,108 @@ describe('<DataGridPro /> - Cell Editing', () => {
     await waitFor(() => {
       expect(input).to.have.attribute('aria-invalid', 'true');
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
+    });
+  });
+
+  // Confirms the bug in https://github.com/mui-org/material-ui-x/issues/3304
+  // TODO v6: remove
+  it('should call preProcessEditCellProps twice and with the wrong value in the 2nd time if preventCommitWhileValidating=false', async () => {
+    const preProcessEditCellProps = spy(({ props }) => Promise.resolve(props));
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          columns={[
+            {
+              field: 'brand',
+              editable: true,
+              preProcessEditCellProps,
+            },
+          ]}
+          rows={[{ id: 0, brand: 'Nike' }]}
+        />
+      </div>,
+    );
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    clock.tick(500);
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+
+    expect(preProcessEditCellProps.callCount).to.equal(2);
+    expect(preProcessEditCellProps.args[0][0].props).to.deep.equal({ value: 'Adidas' });
+    expect(preProcessEditCellProps.args[1][0].props).to.deep.equal({ value: 'Nike' });
+  });
+
+  it('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true', async () => {
+    const preProcessEditCellProps = spy(({ props }) => Promise.resolve({ ...props, error: true }));
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          columns={[
+            {
+              field: 'brand',
+              editable: true,
+              preProcessEditCellProps,
+            },
+          ]}
+          rows={[{ id: 0, brand: 'Nike' }]}
+          experimentalFeatures={{ preventCommitWhileValidating: true }}
+        />
+      </div>,
+    );
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    clock.tick(500);
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+
+    expect(preProcessEditCellProps.callCount).to.equal(1);
+    expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+      value: 'Adidas',
+      isValidating: true,
+    });
+    expect(cell).to.have.class('MuiDataGrid-cell--editing');
+  });
+
+  it('should call preProcessEditCellProps with the value parsed if preventCommitWhileValidating=true', async () => {
+    const preProcessEditCellProps = spy(({ props }) => Promise.resolve({ ...props }));
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          columns={[
+            {
+              field: 'brand',
+              editable: true,
+              valueParser: (value) => (value as string).toUpperCase(),
+              preProcessEditCellProps,
+            },
+          ]}
+          rows={[{ id: 0, brand: 'Nike', year: 2022 }]}
+          experimentalFeatures={{ preventCommitWhileValidating: true }}
+        />
+      </div>,
+    );
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    clock.tick(500);
+
+    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+
+    expect(preProcessEditCellProps.callCount).to.equal(1);
+    expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+      value: 'ADIDAS',
+      isValidating: true,
     });
   });
 });

@@ -41,6 +41,8 @@ const generateDate = (
   return rawDate.getTime();
 };
 
+const nativeSetTimeout = setTimeout;
+
 describe('<DataGridPro /> - Edit Components', () => {
   let baselineProps: Pick<DataGridProProps, 'autoHeight' | 'rows' | 'columns' | 'throttleRowsMs'>;
 
@@ -394,6 +396,44 @@ describe('<DataGridPro /> - Edit Components', () => {
         expect(cell.firstChild).to.have.class('Mui-error');
       });
     });
+
+    it('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true', async () => {
+      const preProcessEditCellProps = spy(({ props }) =>
+        Promise.resolve({ ...props, error: true }),
+      );
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            columns={[
+              {
+                field: 'brand',
+                type: 'singleSelect',
+                valueOptions: ['Nike', 'Adidas'],
+                editable: true,
+                preProcessEditCellProps,
+              },
+            ]}
+            rows={[{ id: 0, brand: 'Nike' }]}
+            experimentalFeatures={{ preventCommitWhileValidating: true }}
+          />
+        </div>,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      const option = screen.queryByRole('option', { name: 'Adidas' });
+      fireEvent.mouseUp(option);
+      fireEvent.click(option);
+      clock.tick(500);
+
+      await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+
+      expect(preProcessEditCellProps.callCount).to.equal(1);
+      expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+        value: 'Adidas',
+        isValidating: true,
+      });
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+    });
   });
 
   describe('column type: number', () => {
@@ -565,6 +605,33 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
         generateDate(1999, 0, 1),
       );
+    });
+
+    it('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true', async () => {
+      const preProcessEditCellProps = spy(({ props }) =>
+        Promise.resolve({ ...props, error: true }),
+      );
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5) }]}
+          columns={[{ field: 'date', type: 'date', editable: true, preProcessEditCellProps }]}
+          experimentalFeatures={{ preventCommitWhileValidating: true }}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '2022-01-12' } });
+      clock.tick(500);
+      fireEvent.keyDown(input, { key: 'Enter' });
+
+      await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+
+      expect(preProcessEditCellProps.callCount).to.equal(1);
+      expect(preProcessEditCellProps.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(2022, 0, 12),
+      );
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
     });
   });
 
@@ -761,6 +828,36 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getByRole('checkbox')).toHaveFocus();
+    });
+
+    it('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true', async () => {
+      const preProcessEditCellProps = spy(({ props }) =>
+        Promise.resolve({ ...props, error: true }),
+      );
+      render(
+        <TestCase
+          rows={[
+            { id: 0, isAdmin: false },
+            { id: 1, isAdmin: true },
+          ]}
+          columns={[{ field: 'isAdmin', type: 'boolean', editable: true, preProcessEditCellProps }]}
+          experimentalFeatures={{ preventCommitWhileValidating: true }}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.click(input);
+      fireEvent.doubleClick(getCell(1, 0));
+
+      await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+
+      expect(preProcessEditCellProps.callCount).to.equal(1);
+      expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+        value: true,
+        isValidating: true,
+      });
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
     });
   });
 });
