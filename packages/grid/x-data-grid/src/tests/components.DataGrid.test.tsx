@@ -145,7 +145,6 @@ describe('<DataGrid /> - Components', () => {
           </div>
         </div>,
       );
-      // @ts-expect-error need to migrate helpers to TypeScript
     }).not.toErrorDev();
   });
 });
