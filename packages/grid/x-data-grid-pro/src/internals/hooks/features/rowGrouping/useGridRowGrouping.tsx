@@ -16,7 +16,7 @@ import {
   gridColumnLookupSelector,
 } from '@mui/x-data-grid';
 import { GridApiRefPro } from '../../../models';
-import { GridRowGroupingPreProcessing } from '../../../../../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
+import type { GridRowGroupingPreProcessing } from '../../../../../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
 import { useFirstRender } from '../../../../../../_modules_/grid/hooks/utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {
@@ -37,14 +37,14 @@ import {
 } from './createGroupingColDef';
 import { isDeepEqual } from '../../../../../../_modules_/grid/utils/utils';
 import { useGridRegisterPreProcessor } from '../../../../../../_modules_/grid/hooks/core/preProcessing';
-import {
+import type {
   GridColumnRawLookup,
   GridColumnsRawState,
 } from '../../../../../../_modules_/grid/hooks/features/columns/gridColumnsInterfaces';
 import { useGridRegisterFilteringMethod } from '../../../../../../_modules_/grid/hooks/features/filter/useGridRegisterFilteringMethod';
-import { GridFilteringMethod } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
+import type { GridFilteringMethod } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
 import { useGridRegisterSortingMethod } from '../../../../../../_modules_/grid/hooks/features/sorting/useGridRegisterSortingMethod';
-import { GridSortingMethod } from '../../../../../../_modules_/grid/hooks/features/sorting/gridSortingState';
+import type { GridSortingMethod } from '../../../../../../_modules_/grid/hooks/features/sorting/gridSortingState';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { gridFilteredDescendantCountLookupSelector } from '../../../../../../_modules_/grid/hooks/features/filter';
 import { useGridStateInit } from '../../../../../../_modules_/grid/hooks/utils/useGridStateInit';

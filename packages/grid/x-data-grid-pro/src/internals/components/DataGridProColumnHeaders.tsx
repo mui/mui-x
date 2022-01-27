@@ -9,11 +9,13 @@ import {
   gridVisibleColumnFieldsSelector,
   GridEvents,
 } from '@mui/x-data-grid';
+import {
+  useGridColumnHeaders,
+  GridColumnHeadersInner,
+  GridColumnHeaders,
+} from '@mui/x-data-grid/internals';
 import { useGridRootProps, useGridApiContext } from '../hooks/utils';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { useGridColumnHeaders } from '../../../../_modules_/grid/hooks/features/columnHeaders/useGridColumnHeaders';
-import { GridColumnHeadersInner } from '../../../../_modules_/grid/components/columnHeaders/GridColumnHeadersInner';
-import { GridColumnHeaders } from '../../../../_modules_/grid/components/columnHeaders/GridColumnHeaders';
 import {
   gridPinnedColumnsSelector,
   GridPinnedPosition,

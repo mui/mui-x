@@ -3,9 +3,9 @@ import { useThemeProps } from '@mui/material/styles';
 import {
   DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
   DATA_GRID_PROPS_DEFAULT_VALUES,
+  GRID_DEFAULT_LOCALE_TEXT,
+  GridSlotsComponent,
 } from '@mui/x-data-grid';
-import { GRID_DEFAULT_LOCALE_TEXT } from '../../_modules_/grid/constants/localeTextConstants';
-import { GridSlotsComponent } from '../../_modules_/grid/models/gridSlotsComponent';
 import {
   DataGridProProps,
   DataGridProProcessedProps,

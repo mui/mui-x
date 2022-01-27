@@ -14,7 +14,7 @@ import {
 } from '@mui/x-data-grid';
 import { GridApiRefPro } from '../../../models';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridPreProcessor } from '../../../../../../_modules_/grid/hooks/core/preProcessing';
+import type { GridPreProcessor } from '../../../../../../_modules_/grid/hooks/core/preProcessing';
 import { useGridRegisterPreProcessor } from '../../../../../../_modules_/grid/hooks/core/preProcessing/useGridRegisterPreProcessor';
 import { GridColumnPinningMenuItems } from '../../../components/GridColumnPinningMenuItems';
 import { GridColumnPinningApi, GridPinnedPosition } from './gridColumnPinningInterface';

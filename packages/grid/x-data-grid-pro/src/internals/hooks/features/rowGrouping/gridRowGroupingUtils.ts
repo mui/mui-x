@@ -6,7 +6,7 @@ import {
   GridFilterState,
 } from '@mui/x-data-grid';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridAggregatedFilterItemApplier } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
+import type { GridAggregatedFilterItemApplier } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 

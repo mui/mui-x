@@ -8,7 +8,7 @@ import {
   GridComparatorFn,
 } from '@mui/x-data-grid';
 import { GridGroupingColDefOverride, GridApiPro } from '../../../models';
-import { GridColumnRawLookup } from '../../../../../../_modules_/grid/hooks/features/columns/gridColumnsInterfaces';
+import type { GridColumnRawLookup } from '../../../../../../_modules_/grid/hooks/features/columns/gridColumnsInterfaces';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColumnLeafCell';
 import {

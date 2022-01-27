@@ -9,11 +9,13 @@ import {
   useGridApiEventHandler,
   GridEvents,
 } from '@mui/x-data-grid';
+import {
+  GridVirtualScroller,
+  GridVirtualScrollerContent,
+  GridVirtualScrollerRenderZone,
+  useGridVirtualScroller,
+} from '@mui/x-data-grid/internals';
 import { useGridRootProps, useGridApiContext } from '../hooks/utils';
-import { GridVirtualScroller } from '../../../../_modules_/grid/components/virtualization/GridVirtualScroller';
-import { GridVirtualScrollerContent } from '../../../../_modules_/grid/components/virtualization/GridVirtualScrollerContent';
-import { GridVirtualScrollerRenderZone } from '../../../../_modules_/grid/components/virtualization/GridVirtualScrollerRenderZone';
-import { useGridVirtualScroller } from '../../../../_modules_/grid/hooks/features/virtualization/useGridVirtualScroller';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridPinnedColumnsSelector,

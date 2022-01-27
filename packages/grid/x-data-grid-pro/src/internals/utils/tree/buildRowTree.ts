@@ -3,7 +3,7 @@ import type {
   GridRowId,
   GridRowTreeConfig,
 } from '../../../../../_modules_/grid/models/gridRows';
-import { GridKeyValue } from '../../../../../_modules_/grid/models/colDef/gridColDef';
+import type { GridKeyValue } from '../../../../../_modules_/grid/models/colDef/gridColDef';
 import type {
   GridRowGroupingResult,
   GridRowGroupParams,
