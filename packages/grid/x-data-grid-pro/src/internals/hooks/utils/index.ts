@@ -1,3 +1,3 @@
 export * from './useGridRootProps';
 export * from './useGridApiContext';
-export * from './useGridApiRef'
+export * from './useGridApiRef';

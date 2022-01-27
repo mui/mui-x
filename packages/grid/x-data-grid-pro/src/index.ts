@@ -1,9 +1,9 @@
 /* eslint-disable import/export */
 /* eslint-disable import/first */
-export {} from './x-data-grid-interfaces'
+export {} from './x-data-grid-interfaces';
 
-import * as React from "react";
-import { GridApiCommon } from '@mui/x-data-grid'
+import * as React from 'react';
+import { GridApiCommon } from '@mui/x-data-grid';
 import { GridApiPro, GridInitialStatePro, GridStatePro } from './internals';
 
 // Explicitly re-export the methods already exported from `@mui/x-data-grid` but with a different signature
@@ -13,8 +13,6 @@ export * from '@mui/x-data-grid';
 export { LicenseInfo } from '@mui/x-license-pro';
 export * from './DataGridPro';
 export * from './internals';
-
-
 
 /**
  * @deprecated Use `GridApiPro`
