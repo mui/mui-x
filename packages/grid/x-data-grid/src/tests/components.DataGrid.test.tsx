@@ -129,4 +129,23 @@ describe('<DataGrid /> - Components', () => {
       'The above error occurred in the <ForwardRef(GridOverlay)> component',
     ]);
   });
+
+  // If an infinite loop occurs, this test won't trigger the timeout.
+  // Instead, it will be hanging and block other tests.
+  // See https://github.com/mochajs/mocha/issues/1609
+  it('should not cause an infinite loop with two instances in the same page', () => {
+    expect(() => {
+      render(
+        <div>
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid {...baselineProps} hideFooter />
+          </div>
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid {...baselineProps} hideFooter />
+          </div>
+        </div>,
+      );
+      // @ts-expect-error need to migrate helpers to TypeScript
+    }).not.toErrorDev();
+  });
 });
