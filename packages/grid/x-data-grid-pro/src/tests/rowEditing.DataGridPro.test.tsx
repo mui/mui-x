@@ -129,7 +129,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     expect(input!.value).to.equal('ADIDAS');
     fireEvent.keyDown(input, { key: 'Enter' });
     await waitFor(() => {
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getCell(2, 0)).toHaveFocus();
     });
   });
@@ -155,7 +154,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(getCell(1, 0).querySelector('input')).toHaveFocus();
   });
 

@@ -124,7 +124,6 @@ describe('<DataGrid /> - Components', () => {
           <GridOverlay />
         </ErrorBoundary>,
       );
-      // @ts-expect-error need to migrate helpers to TypeScript
     }).toErrorDev([
       'MUI: Could not find the data grid context.',
       'The above error occurred in the <ForwardRef(GridOverlay)> component',

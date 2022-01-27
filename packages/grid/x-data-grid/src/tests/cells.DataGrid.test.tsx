@@ -116,8 +116,7 @@ describe('<DataGrid /> - Cells', () => {
     fireEvent.click(getCell(0, 0));
 
     expect(() => {
-      fireEvent.focus(getCell(1, 0));
-      // @ts-expect-error need to migrate helpers to TypeScript
+      getCell(1, 0).focus();
     }).toErrorDev(['MUI: The cell with id=1 and field=brand received focus.']);
   });
 });

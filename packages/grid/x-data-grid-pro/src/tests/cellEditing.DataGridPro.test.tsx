@@ -650,7 +650,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
     render(<TestCase />);
     const cell = getCell(0, 0);
     fireEvent.doubleClick(cell);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(screen.getByRole('textbox')).toHaveFocus();
   });
 

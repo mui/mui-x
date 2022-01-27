@@ -459,7 +459,6 @@ describe('<DataGrid /> - Selection', () => {
             checkboxSelection
           />,
         );
-        // @ts-expect-error need to migrate helpers to TypeScript
       }).not.toErrorDev();
     });
   });
@@ -579,17 +578,13 @@ describe('<DataGrid /> - Selection', () => {
     it('should throw console error when selectionModel contains more than 1 item in DataGrid without checkbox selection', () => {
       expect(() => {
         render(<TestDataGridSelection selectionModel={[0, 1]} />);
-      })
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev('selectionModel can only be of 1 item in DataGrid');
+      }).toErrorDev('selectionModel can only be of 1 item in DataGrid');
     });
 
     it('should not throw console error when selectionModel contains more than 1 item in DataGrid with checkbox selection', () => {
       expect(() => {
         render(<TestDataGridSelection selectionModel={[0, 1]} checkboxSelection />);
-      })
-        .not // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev();
+      }).not.toErrorDev();
     });
   });
 });
