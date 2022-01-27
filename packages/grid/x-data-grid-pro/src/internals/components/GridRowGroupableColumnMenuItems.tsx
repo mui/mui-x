@@ -1,14 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import {
-  gridColumnLookupSelector,
-  useGridSelector,
-  useGridApiContext,
-  GridColDef,
-} from '@mui/x-data-grid';
+import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid';
+import { useGridApiContext } from '../hooks/utils';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
-import { GridApiPro } from '../models';
 
 interface GridRowGroupableColumnMenuItemsProps {
   column?: GridColDef;
@@ -17,7 +12,7 @@ interface GridRowGroupableColumnMenuItemsProps {
 
 const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsProps) => {
   const { column, onClick } = props;
-  const apiRef = useGridApiContext<GridApiPro>();
+  const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
 

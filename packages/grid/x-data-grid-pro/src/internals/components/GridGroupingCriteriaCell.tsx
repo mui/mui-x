@@ -5,13 +5,12 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import {
   useGridSelector,
-  useGridApiContext,
   GridRenderCellParams,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridEvents,
 } from '@mui/x-data-grid';
-import { useGridRootProps } from '../hooks/utils';
+import { useGridRootProps, useGridApiContext } from '../hooks/utils';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };

@@ -16,12 +16,11 @@ import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridEditRowsModel } from '../gridEditRowModel';
 import type { GridSelectionModel } from '../gridSelectionModel';
-import type { GridStateCommunity } from '../gridState';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridPreProcessingGroup } from '../../hooks/core/preProcessing';
-import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -137,7 +136,7 @@ export interface GridEventLookup
     GridControlledStateEventLookup {
   unmount: {};
   componentError: { params: any };
-  stateChange: { params: GridStateCommunity };
+  stateChange: { params: any };
   resize: { params: ElementSize };
   viewportInnerSizeChange: { params: ElementSize };
   debouncedResize: { params: ElementSize };

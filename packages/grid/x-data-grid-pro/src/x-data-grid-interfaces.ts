@@ -1,10 +1,4 @@
-import { GridStateCommunity } from '@mui/x-data-grid';
-import {
-  GridPinnedColumns,
-  GridRowGroupingModel,
-  GridRowScrollEndParams,
-  GridStatePro,
-} from './internals';
+import { GridPinnedColumns, GridRowGroupingModel, GridRowScrollEndParams } from './internals';
 import { GridCanBeReorderedPreProcessingContext } from './internals/hooks/features/columnReorder/columnReorderInterfaces';
 
 export interface GridControlledStateEventLookupPro {
@@ -14,7 +8,6 @@ export interface GridControlledStateEventLookupPro {
 
 export interface GridEventLookupPro {
   rowsScrollEnd: { params: GridRowScrollEndParams };
-  stateChange: { params: GridStatePro | GridStateCommunity };
 }
 
 export interface GridPreProcessingGroupLookupPro {

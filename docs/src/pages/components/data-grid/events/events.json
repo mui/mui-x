@@ -260,7 +260,7 @@
   {
     "name": "stateChange",
     "description": "Fired when the state of the grid is updated.",
-    "params": "GridStateCommunity",
+    "params": "any",
     "event": "MuiEvent<{}>"
   },
   {
