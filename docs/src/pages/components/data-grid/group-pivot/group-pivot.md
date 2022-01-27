@@ -331,7 +331,7 @@ To use this feature, pass a function to the `getDetailPanelContent` prop with th
 Any valid React element can be used as the row detail, even another grid.
 
 The height of the detail panel content needs to be provided upfront.
-The grid assumes the value of 500px by default, however this can be configured by passing a function to the `getDetailPanelHeight` prop that returns the required height.
+The grid assumes the value of 500px by default however this can be configured by passing a function to the `getDetailPanelHeight` prop that returns the required height.
 Both props are called with a [`GridRowParams`](/api/data-grid/grid-row-params/) object, allowing you to return a different value for each row.
 
 ```tsx
@@ -357,7 +357,8 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 >
 > ⚠ Depending on the height of the detail panel, you may see a blank space when scrolling.
 > This is caused by the grid using a lazy approach to update the rendered rows.
-> Set `rowThreshold` to 0 to fix it:
+> Set `rowThreshold` to 0 to force new rows to be rendered more often to fill the blank space.
+> Note that this may reduce the performance.
 >
 > ```tsx
 > <DataGridPro rowThreshold={0} />
