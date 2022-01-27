@@ -6,7 +6,7 @@ import {
   // GridBody,
   GridErrorHandler,
   // GridFooterPlaceholder,
-  // GridHeaderPlaceholder,
+  GridHeaderPlaceholder,
   GridRoot,
   GridContextProvider,
 } from '@mui/x-data-grid';
@@ -40,7 +40,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
     <GridContextProvider apiRef={apiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
-          {/*    <GridHeaderPlaceholder />*/}
+          <GridHeaderPlaceholder />
           {/*    <GridBody*/}
           {/*      ColumnHeadersComponent={DataGridProColumnHeaders}*/}
           {/*      VirtualScrollerComponent={DataGridProVirtualScroller}*/}
