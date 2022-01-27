@@ -3,7 +3,7 @@ import {
   GridRowId,
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
-} from '../../../../../../_modules_/grid/models';
+} from '../../../../../../_modules_/grid/models/gridRows';
 import { GridAggregatedFilterItemApplier } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
 
 interface FilterRowTreeFromTreeDataParams {

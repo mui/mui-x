@@ -2,8 +2,8 @@ import type {
   GridRowTreeNodeConfig,
   GridRowId,
   GridRowTreeConfig,
-  GridKeyValue,
-} from '../../../../../_modules_/grid/models';
+} from '../../../../../_modules_/grid/models/gridRows';
+import { GridKeyValue } from '../../../../../_modules_/grid/models/colDef/gridColDef';
 import type {
   GridRowGroupingResult,
   GridRowGroupParams,

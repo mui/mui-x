@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DEFAULT_GRID_SLOTS_COMPONENTS } from '../../_modules_/grid/constants/defaultGridSlotsComponents';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../_modules_/grid/models/props/DataGridProps';
-import { GRID_DEFAULT_LOCALE_TEXT, GridSlotsComponent } from '../../_modules_';
+import { GRID_DEFAULT_LOCALE_TEXT } from '../../_modules_/grid/constants/localeTextConstants';
+import { GridSlotsComponent } from '../../_modules_/grid/models/gridSlotsComponent';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
