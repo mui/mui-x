@@ -1,4 +1,4 @@
-import { GridColumns, DataGridProps, GridRowModel } from '@mui/x-data-grid';
+import { GridColumns, DataGridProps, GridRowModel } from '@mui/x-data-grid-pro';
 
 type Movie = {
   id: number;
