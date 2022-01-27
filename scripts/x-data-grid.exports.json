@@ -445,7 +445,7 @@
   { "name": "useGridApiRef", "kind": "ExportSpecifier" },
   { "name": "useGridLogger", "kind": "Function" },
   { "name": "useGridNativeEventListener", "kind": "Variable" },
-  { "name": "useGridRootProps", "kind": "Variable" },
+  { "name": "useGridRootProps", "kind": "ExportSpecifier" },
   { "name": "useGridScrollFn", "kind": "Function" },
   { "name": "useGridSelector", "kind": "Variable" },
   { "name": "useGridState", "kind": "Variable" },
