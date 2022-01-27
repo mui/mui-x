@@ -11,6 +11,7 @@ import {
   GridEvents,
   gridColumnLookupSelector,
   allGridColumnsFieldsSelector,
+  DEFAULT_GRID_COL_TYPE_KEY,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
@@ -419,5 +420,24 @@ describe('<DataGridPro /> - Columns', () => {
         'id',
       ]);
     });
+  });
+
+  it.only('should throw if unsupported column type is used', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
+
+    const singleColumns = [{ field: 'brand', type: 'str' }];
+
+    expect(() => {
+      render(<Test columns={singleColumns} />);
+      // @ts-expect-error need to migrate helpers to TypeScript
+    }).toErrorDev(
+      [
+        `MUI: The column type "str" you are using is not supported.`,
+        `Column type "${DEFAULT_GRID_COL_TYPE_KEY}" is being used instead.`,
+      ].join('\n'),
+    );
   });
 });

@@ -100,6 +100,17 @@ export const getGridColDef = (
   if (!type) {
     return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
   }
+
+  if (!columnTypes[type]) {
+    console.error(
+      [
+        `MUI: The column type "${type}" you are using is not supported.`,
+        `Column type "${DEFAULT_GRID_COL_TYPE_KEY}" is being used instead.`,
+      ].join('\n'),
+    );
+    return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
+  }
+
   return columnTypes[type];
 };
 
