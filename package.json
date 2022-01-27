@@ -64,13 +64,13 @@
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\""
   },
   "devDependencies": {
-    "@babel/core": "^7.16.7",
+    "@babel/core": "^7.16.12",
     "@babel/node": "^7.16.8",
     "@babel/plugin-transform-object-assign": "^7.16.7",
-    "@babel/plugin-transform-runtime": "^7.16.8",
+    "@babel/plugin-transform-runtime": "^7.16.10",
     "@babel/register": "^7.16.9",
     "@babel/runtime": "^7.16.7",
-    "@babel/traverse": "^7.16.8",
+    "@babel/traverse": "^7.16.10",
     "@babel/types": "^7.16.8",
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.7.1",
