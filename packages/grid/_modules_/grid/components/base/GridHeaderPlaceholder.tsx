@@ -8,7 +8,9 @@ export function GridHeaderPlaceholder() {
   const headerRef = React.useRef<HTMLDivElement>(null);
   apiRef.current.headerRef = headerRef;
 
-  console.log(rootProps);
-
-  return <div ref={headerRef}>TEST</div>;
+  return (
+    <div ref={headerRef}>
+      <rootProps.components.Header {...rootProps.componentsProps?.header} />
+    </div>
+  );
 }
