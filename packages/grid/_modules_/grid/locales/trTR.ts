@@ -62,6 +62,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'küçük eşit',
   filterOperatorIsEmpty: 'boş',
   filterOperatorIsNotEmpty: 'dolu',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',
