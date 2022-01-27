@@ -426,7 +426,7 @@ This approach can also be used to change the location of the toggle column, as s
 
 {{"demo": "pages/components/data-grid/group-pivot/CustomizeDetailPanelToggle.js", "bg": "inline", "defaultCodeOpen": false}}
 
-**Note**: As any ordinary cell renderer, the `value` prop is also available and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
+> **Note**: As any ordinary cell renderer, the `value` prop is also available and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
 
 ### Disable detail panel content scroll
 
