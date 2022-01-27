@@ -10,7 +10,7 @@ import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
 //   GridRoot,
 //   GridContextProvider,
 // } from '@mui/x-data-grid';
-// import { useDataGridProComponent } from './useDataGridProComponent';
+import { useDataGridProComponent } from './useDataGridProComponent';
 // import { Watermark } from './internals/components/Watermark';
 import { DataGridProProps } from './internals';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -33,12 +33,13 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   inProps,
   ref,
 ) {
-  useDataGridProProps(inProps);
+  const props = useDataGridProProps(inProps);
+  const apiRef = useDataGridProComponent(props.apiRef, props);
+
+  console.log(ref, apiRef)
 
   return null
-  //
-  // const apiRef = useDataGridProComponent(props.apiRef, props);
-  //
+
   // return (
   //   <GridContextProvider apiRef={apiRef} props={props}>
   //     <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
