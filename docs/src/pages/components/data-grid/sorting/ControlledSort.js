@@ -1,31 +1,29 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function MultiSortingGrid() {
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
+export default function ControlledSort() {
   const { data } = useDemoData({
-    dataSet: 'Commodity',
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
-    maxColumns: 6,
   });
 
   const [sortModel, setSortModel] = React.useState([
     {
-      field: 'commodity',
-      sort: 'asc',
-    },
-    {
-      field: 'desk',
+      field: 'rating',
       sort: 'desc',
     },
   ]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         {...data}
         sortModel={sortModel}
-        onSortModelChange={(model) => setSortModel(model)}
+        onSortModelChange={(newSortModel) => setSortModel(newSortModel)}
       />
     </div>
   );

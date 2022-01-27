@@ -33,6 +33,15 @@ export const gridVisibleRowsLookupSelector = createSelector(
  * @category Filtering
  * @ignore - do not document.
  */
+export const gridFilteredRowsLookupSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.filteredRowsLookup,
+);
+
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
 export const gridFilteredDescendantCountLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.filteredDescendantCountLookup,
@@ -40,6 +49,7 @@ export const gridFilteredDescendantCountLookupSelector = createSelector(
 
 /**
  * Get the id and the model of the rows accessible after the filtering process.
+ * Does not contain the collapsed children.
  * @category Filtering
  */
 export const gridVisibleSortedRowEntriesSelector = createSelector(
@@ -51,11 +61,34 @@ export const gridVisibleSortedRowEntriesSelector = createSelector(
 
 /**
  * Get the id of the rows accessible after the filtering process.
+ * Does not contain the collapsed children.
  * @category Filtering
  */
 export const gridVisibleSortedRowIdsSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   (visibleSortedRowEntries) => visibleSortedRowEntries.map((row) => row.id),
+);
+
+/**
+ * Get the id and the model of the rows accessible after the filtering process.
+ * Contains the collapsed children.
+ * @category Filtering
+ */
+export const gridFilteredSortedRowEntriesSelector = createSelector(
+  gridFilteredRowsLookupSelector,
+  gridSortedRowEntriesSelector,
+  (filteredRowsLookup, sortedRows) =>
+    sortedRows.filter((row) => filteredRowsLookup[row.id] !== false),
+);
+
+/**
+ * Get the id of the rows accessible after the filtering process.
+ * Contains the collapsed children.
+ * @category Filtering
+ */
+export const gridFilteredSortedRowIdsSelector = createSelector(
+  gridFilteredSortedRowEntriesSelector,
+  (filteredSortedRowEntries) => filteredSortedRowEntries.map((row) => row.id),
 );
 
 /**
