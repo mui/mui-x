@@ -4,10 +4,10 @@ import { LicenseInfo } from '@mui/x-license-pro';
 import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
 import {
   // GridBody,
-  GridErrorHandler,
-  GridFooterPlaceholder,
-  GridHeaderPlaceholder,
-  GridRoot,
+  // GridErrorHandler,
+  // GridFooterPlaceholder,
+  // GridHeaderPlaceholder,
+  // GridRoot,
   GridContextProvider,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
@@ -38,18 +38,18 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeaderPlaceholder />
-          {/*<GridBody*/}
-          {/*  ColumnHeadersComponent={DataGridProColumnHeaders}*/}
-          {/*  VirtualScrollerComponent={DataGridProVirtualScroller}*/}
-          {/*>*/}
-          {/*  <Watermark />*/}
-          {/*</GridBody>*/}
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
-      </GridRoot>
+      {/*<GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>*/}
+      {/*  <GridErrorHandler>*/}
+      {/*    <GridHeaderPlaceholder />*/}
+      {/*    <GridBody*/}
+      {/*      ColumnHeadersComponent={DataGridProColumnHeaders}*/}
+      {/*      VirtualScrollerComponent={DataGridProVirtualScroller}*/}
+      {/*    >*/}
+      {/*      <Watermark />*/}
+      {/*    </GridBody>*/}
+      {/*    <GridFooterPlaceholder />*/}
+      {/*  </GridErrorHandler>*/}
+      {/*</GridRoot>*/}
     </GridContextProvider>
   );
 });
