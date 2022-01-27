@@ -422,12 +422,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  it.only('should throw if unsupported column type is used', function test() {
-    if (isJSDOM) {
-      // Need layouting
-      this.skip();
-    }
-
+  it('should throw if unsupported column type is used', function test() {
     const singleColumns = [{ field: 'brand', type: 'str' }];
 
     expect(() => {
