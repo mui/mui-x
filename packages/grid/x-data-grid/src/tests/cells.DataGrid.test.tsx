@@ -101,7 +101,7 @@ describe('<DataGrid /> - Cells', () => {
   });
 
   it('should throw when focusing cell without updating the state', function test() {
-    // In Firefox, onFocus is not called
+    // In Firefox, onFocus is not called when calling `cell.focus()`
     if (/firefox/i.test(window.navigator.userAgent)) {
       this.skip();
     }
