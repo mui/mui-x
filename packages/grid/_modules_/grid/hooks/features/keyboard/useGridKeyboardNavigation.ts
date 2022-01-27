@@ -166,7 +166,7 @@ export const useGridKeyboardNavigation = (
     (params, event) => {
       if (
         !isGridHeaderCellRoot(event.target as HTMLElement) &&
-        !(params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field && isNavigationKey(event.key))
+        params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field
       ) {
         // When focus is on a nested input, keyboard events have no effect to avoid conflicts with native events.
         // There is on exception for the checkBoxHeader
@@ -176,9 +176,7 @@ export const useGridKeyboardNavigation = (
       if (isNavigationKey(event.key)) {
         event.preventDefault();
       }
-      if (!params.field) {
-        return;
-      }
+
       const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {
         return;
