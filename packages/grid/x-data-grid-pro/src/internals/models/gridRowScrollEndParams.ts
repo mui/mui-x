@@ -1,4 +1,4 @@
-import type { GridColumns } from '../../../../_modules_/grid/models/colDef';
+import { GridColumns } from '@mui/x-data-grid';
 
 /**
  * Object passed as parameter in the onRowsScrollEnd callback.

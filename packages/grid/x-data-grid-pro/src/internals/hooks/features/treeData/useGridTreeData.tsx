@@ -6,6 +6,7 @@ import {
   GridEvents,
   gridRowIdsSelector,
   gridRowTreeSelector,
+  gridFilteredDescendantCountLookupSelector,
 } from '@mui/x-data-grid';
 import {
   GridApiRefPro,
@@ -20,7 +21,6 @@ import {
 import { useFirstRender } from '../../../../../../_modules_/grid/hooks/utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import { GridRowGroupingPreProcessing } from '../../../../../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
-import { gridFilteredDescendantCountLookupSelector } from '../../../../../../_modules_/grid/hooks/features/filter';
 import {
   GridPreProcessor,
   useGridRegisterPreProcessor,

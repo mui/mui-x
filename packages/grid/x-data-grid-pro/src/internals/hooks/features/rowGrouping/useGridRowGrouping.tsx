@@ -14,6 +14,7 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   gridColumnLookupSelector,
+  gridFilteredDescendantCountLookupSelector,
 } from '@mui/x-data-grid';
 import { GridApiRefPro } from '../../../models';
 import type { GridRowGroupingPreProcessing } from '../../../../../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
@@ -46,7 +47,6 @@ import type { GridFilteringMethod } from '../../../../../../_modules_/grid/hooks
 import { useGridRegisterSortingMethod } from '../../../../../../_modules_/grid/hooks/features/sorting/useGridRegisterSortingMethod';
 import type { GridSortingMethod } from '../../../../../../_modules_/grid/hooks/features/sorting/gridSortingState';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
-import { gridFilteredDescendantCountLookupSelector } from '../../../../../../_modules_/grid/hooks/features/filter';
 import { useGridStateInit } from '../../../../../../_modules_/grid/hooks/utils/useGridStateInit';
 import { GridRowGroupingApi, GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
