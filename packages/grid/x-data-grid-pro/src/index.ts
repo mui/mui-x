@@ -1,8 +1,10 @@
 /* eslint-disable import/export */
 import type {} from './x-data-grid-interfaces';
 
-// Explicitly re-export the methods already exported from `@mui/x-data-grid` but with a different signature
-export { useGridApiContext, useGridRootProps, useGridApiRef } from './internals';
+export * from '@mui/x-data-grid';
+export { LicenseInfo } from '@mui/x-license-pro';
+export * from './DataGridPro';
+export * from './internals';
 
 // Explicitly re-export the types already exported from `@mui/x-data-grid` but with a different signature
 export type {
@@ -12,7 +14,5 @@ export type {
   GridState,
 } from './internals/models/legacyCrossPlanInterfaces';
 
-export * from '@mui/x-data-grid';
-export { LicenseInfo } from '@mui/x-license-pro';
-export * from './DataGridPro';
-export * from './internals';
+// Explicitly re-export the methods already exported from `@mui/x-data-grid` but with a different signature
+export { useGridApiContext, useGridRootProps, useGridApiRef } from './internals';

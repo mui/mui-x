@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@mui/utils": "^5.3.0",
+    "@mui/x-data-grid": "5.3.0",
     "@mui/x-license-pro": "5.3.0",
     "clsx": "^1.0.4",
     "prop-types": "^15.8.1",
