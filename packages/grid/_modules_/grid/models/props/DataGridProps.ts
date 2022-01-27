@@ -2,9 +2,9 @@
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
-import { GridDensity, GridDensityTypes } from '../gridDensity';
-import { GridEditMode, GridEditModes, GridEditRowsModel } from '../gridEditRowModel';
-import { GridFeatureMode, GridFeatureModeConstant } from '../gridFeatureMode';
+import { GridDensity } from '../gridDensity';
+import { GridEditMode, GridEditRowsModel } from '../gridEditRowModel';
+import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';

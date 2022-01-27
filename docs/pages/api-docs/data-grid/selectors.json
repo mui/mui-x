@@ -1,8 +1,16 @@
 [
   { "name": "allGridColumnsFieldsSelector", "returnType": "string[]", "description": "" },
-  { "name": "allGridColumnsSelector", "returnType": "GridStateColDef[]", "description": "" },
+  {
+    "name": "allGridColumnsSelector",
+    "returnType": "GridStateColDef<GridApiCommon>[]",
+    "description": ""
+  },
   { "name": "filterableGridColumnsIdsSelector", "returnType": "string[]", "description": "" },
-  { "name": "filterableGridColumnsSelector", "returnType": "GridStateColDef[]", "description": "" },
+  {
+    "name": "filterableGridColumnsSelector",
+    "returnType": "GridStateColDef<GridApiCommon>[]",
+    "description": ""
+  },
   { "name": "gridColumnLookupSelector", "returnType": "GridColumnLookup", "description": "" },
   { "name": "gridColumnMenuSelector", "returnType": "GridColumnMenuState", "description": "" },
   { "name": "gridColumnReorderDragColSelector", "returnType": "string", "description": "" },
@@ -187,5 +195,9 @@
   },
   { "name": "selectedIdsLookupSelector", "returnType": "{}", "description": "" },
   { "name": "visibleGridColumnsLengthSelector", "returnType": "number", "description": "" },
-  { "name": "visibleGridColumnsSelector", "returnType": "GridStateColDef[]", "description": "" }
+  {
+    "name": "visibleGridColumnsSelector",
+    "returnType": "GridStateColDef<GridApiCommon>[]",
+    "description": ""
+  }
 ]
