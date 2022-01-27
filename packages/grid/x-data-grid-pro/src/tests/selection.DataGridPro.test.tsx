@@ -408,5 +408,16 @@ describe('<DataGridPro /> - Selection', () => {
       apiRef.current.setSelectionModel(selectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
     });
+
+    it('should not call onSelectionModelChange on initialization if selectionModel contains more than one id and checkboxSelection=false', () => {
+      const onSelectionModelChange = spy();
+      render(
+        <TestDataGridSelection
+          onSelectionModelChange={onSelectionModelChange}
+          selectionModel={[0, 1]}
+        />,
+      );
+      expect(onSelectionModelChange.callCount).to.equal(0);
+    });
   });
 });

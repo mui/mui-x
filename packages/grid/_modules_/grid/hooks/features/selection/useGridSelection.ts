@@ -27,6 +27,7 @@ import {
 } from '../../core/preProcessing';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
+import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -59,6 +60,7 @@ export const useGridSelection = (
     | 'isRowSelectable'
     | 'checkboxSelectionVisibleOnly'
     | 'pagination'
+    | 'paginationMode'
     | 'classes'
   >,
 ): void => {
@@ -90,8 +92,14 @@ export const useGridSelection = (
     changeEvent: GridEvents.selectionChange,
   });
 
-  const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
-    props;
+  const {
+    checkboxSelection,
+    disableMultipleSelection,
+    disableSelectionOnClick,
+    isRowSelectable,
+    pagination,
+    paginationMode,
+  } = props;
 
   const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection;
 
@@ -338,10 +346,12 @@ export const useGridSelection = (
         gridClasses.cell,
       );
       const field = cellClicked?.getAttribute('data-field');
+
       if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
         // click on checkbox should not trigger row selection
         return;
       }
+
       if (field) {
         const column = apiRef.current.getColumn(field);
         if (column.type === 'actions') {
@@ -476,4 +486,40 @@ export const useGridSelection = (
       }
     }
   }, [apiRef, isRowSelectable, isStateControlled]);
+
+  React.useEffect(() => {
+    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
+
+    if (!canHaveMultipleSelection && currentSelection.length > 1) {
+      const { rows: currentPageRows } = getCurrentPageRows(apiRef.current.state, {
+        pagination,
+        paginationMode,
+      });
+
+      const currentPageRowsLookup = currentPageRows.reduce((acc, { id }) => {
+        acc[id] = true;
+        return acc;
+      }, {});
+
+      const firstSelectableRow = currentSelection.find((id) => {
+        let isSelectable = true;
+        if (isRowSelectable) {
+          isSelectable = isRowSelectable(apiRef.current.getRowParams(id));
+        }
+        return isSelectable && currentPageRowsLookup[id]; // Check if the row is in the current page
+      });
+
+      apiRef.current.setSelectionModel(
+        firstSelectableRow !== undefined ? [firstSelectableRow] : [],
+      );
+    }
+  }, [
+    apiRef,
+    canHaveMultipleSelection,
+    checkboxSelection,
+    disableMultipleSelection,
+    isRowSelectable,
+    pagination,
+    paginationMode,
+  ]);
 };
