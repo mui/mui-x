@@ -9,7 +9,6 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { isGridHeaderCellRoot } from '../../../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef/gridCheckboxSelectionColDef';
 
@@ -58,7 +57,6 @@ export const useGridKeyboardNavigation = (
     GridEventListener<GridEvents.cellNavigationKeyDown>
   >(
     (params, event) => {
-      event.preventDefault();
       const dimensions = apiRef.current.getRootDimensions();
       if (!currentPage.range || !dimensions) {
         return;
@@ -73,8 +71,8 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPage.range.lastRowIndex;
       const firstColIndex = 0;
       const lastColIndex = colCount - 1;
+      let shouldPreventDefault = true;
 
-      // eslint-disable-next-line default-case
       switch (event.key) {
         case 'ArrowDown':
         case 'Enter': {
@@ -155,6 +153,14 @@ export const useGridKeyboardNavigation = (
           }
           break;
         }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
       }
     },
     [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
@@ -173,10 +179,6 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      if (isNavigationKey(event.key)) {
-        event.preventDefault();
-      }
-
       const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {
         return;
@@ -188,8 +190,8 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPage.range?.lastRowIndex ?? null;
       const firstColIndex = 0;
       const lastColIndex = colCount - 1;
+      let shouldPreventDefault = true;
 
-      // eslint-disable-next-line default-case
       switch (event.key) {
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
@@ -238,6 +240,19 @@ export const useGridKeyboardNavigation = (
           }
           break;
         }
+
+        case ' ': {
+          // prevent Space event from scrolling
+          break;
+        }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
       }
     },
     [apiRef, colCount, currentPage, goToCell, goToHeader],

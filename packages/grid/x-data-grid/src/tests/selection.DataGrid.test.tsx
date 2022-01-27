@@ -377,7 +377,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(checkboxCell).to.have.attribute('tabindex', '-1');
     });
 
-    it('should select/unselect all rows when pressing space', async () => {
+    it('should select/unselect all rows when pressing space', () => {
       render(<TestDataGridSelection checkboxSelection disableVirtualization />);
 
       const selectAllCell = document.querySelector(
@@ -447,6 +447,20 @@ describe('<DataGrid /> - Selection', () => {
         'false',
       );
       expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+
+    it('should not crash when paginationMode="server" and some selected rows are not provided to the grid', () => {
+      expect(() => {
+        render(
+          <TestDataGridSelection
+            paginationMode="server"
+            selectionModel={[1, 4]}
+            isRowSelectable={(params) => params.id > 0}
+            checkboxSelection
+          />,
+        );
+        // @ts-expect-error need to migrate helpers to TypeScript
+      }).not.toErrorDev();
     });
   });
 
