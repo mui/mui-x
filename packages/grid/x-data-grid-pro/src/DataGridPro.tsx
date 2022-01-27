@@ -7,7 +7,7 @@ import {
   // GridErrorHandler,
   // GridFooterPlaceholder,
   // GridHeaderPlaceholder,
-  // GridRoot,
+  GridRoot,
   GridContextProvider,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
