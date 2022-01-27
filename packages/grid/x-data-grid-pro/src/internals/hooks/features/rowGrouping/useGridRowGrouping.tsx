@@ -15,10 +15,14 @@ import {
   useGridApiMethod,
   gridColumnLookupSelector,
   gridFilteredDescendantCountLookupSelector,
+  useFirstRender,
+  unstable_useGridRegisterFilteringMethod as useGridRegisterFilteringMethod,
+  unstable_useGridRegisterSortingMethod as useGridRegisterSortingMethod,
+  unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
+  unstable_useGridStateInit as useGridStateInit,
 } from '@mui/x-data-grid';
 import { GridApiRefPro } from '../../../models';
 import type { GridRowGroupingPreProcessing } from '../../../../../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
-import { useFirstRender } from '../../../../../../_modules_/grid/hooks/utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {
   gridRowGroupingModelSelector,
@@ -37,17 +41,13 @@ import {
   createGroupingColDefForAllGroupingCriteria,
 } from './createGroupingColDef';
 import { isDeepEqual } from '../../../../../../_modules_/grid/utils/utils';
-import { useGridRegisterPreProcessor } from '../../../../../../_modules_/grid/hooks/core/preProcessing';
 import type {
   GridColumnRawLookup,
   GridColumnsRawState,
 } from '../../../../../../_modules_/grid/hooks/features/columns/gridColumnsInterfaces';
-import { useGridRegisterFilteringMethod } from '../../../../../../_modules_/grid/hooks/features/filter/useGridRegisterFilteringMethod';
 import type { GridFilteringMethod } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
-import { useGridRegisterSortingMethod } from '../../../../../../_modules_/grid/hooks/features/sorting/useGridRegisterSortingMethod';
 import type { GridSortingMethod } from '../../../../../../_modules_/grid/hooks/features/sorting/gridSortingState';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
-import { useGridStateInit } from '../../../../../../_modules_/grid/hooks/utils/useGridStateInit';
 import { GridRowGroupingApi, GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
 import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';

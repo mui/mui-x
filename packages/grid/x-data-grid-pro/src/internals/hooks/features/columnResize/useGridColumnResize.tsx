@@ -11,6 +11,7 @@ import {
   useGridApiOptionHandler,
   useGridNativeEventListener,
   useGridLogger,
+  unstable_useGridStateInit as useGridStateInit,
 } from '@mui/x-data-grid';
 import {
   findGridCellElementsFromCol,
@@ -20,7 +21,6 @@ import {
 } from '../../../../../../_modules_/grid/utils/domUtils';
 import { GridApiRefPro } from '../../../models';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { useGridStateInit } from '../../../../../../_modules_/grid/hooks/utils/useGridStateInit';
 import {
   GridColumnHeaderSeparatorProps,
   GridColumnHeaderSeparatorSides,

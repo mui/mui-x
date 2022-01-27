@@ -4,7 +4,7 @@ import {
   GridRowTreeNodeConfig,
   GridFilterState,
 } from '@mui/x-data-grid';
-import { GridAggregatedFilterItemApplier } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
+import type { GridAggregatedFilterItemApplier } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;

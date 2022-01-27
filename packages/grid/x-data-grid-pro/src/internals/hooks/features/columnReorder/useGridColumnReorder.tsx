@@ -8,11 +8,11 @@ import {
   GridEvents,
   GridEventListener,
   useGridLogger,
+  unstable_useGridStateInit as useGridStateInit,
 } from '@mui/x-data-grid';
 import { GridApiRefPro } from '../../../models';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { useGridStateInit } from '../../../../../../_modules_/grid/hooks/utils/useGridStateInit';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';

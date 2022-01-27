@@ -11,7 +11,7 @@ import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
-import {
+import type {
   DataGridPropsWithoutDefaultValue,
   DataGridPropsWithDefaultValues,
   DataGridPropsWithComplexDefaultValueAfterProcessing,

@@ -8,10 +8,10 @@ import {
   useGridApiOptionHandler,
   visibleGridColumnsSelector,
   gridRowsMetaSelector,
+  unstable_useCurrentPageRows as useCurrentPageRows,
 } from '@mui/x-data-grid';
 import { GridApiRefPro, GridRowScrollEndParams } from '../../../models';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { useCurrentPageRows } from '../../../../../../_modules_/grid/hooks/utils/useCurrentPageRows';
 
 /**
  * Only available in DataGridPro

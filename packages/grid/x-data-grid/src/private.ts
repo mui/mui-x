@@ -7,6 +7,13 @@ export { useGridColumnHeaders as unstable_useGridColumnHeaders } from '../../_mo
 export { GridColumnHeadersInner as unstable_GridColumnHeadersInner } from '../../_modules_/grid/components/columnHeaders/GridColumnHeadersInner';
 export { GridColumnHeaders as unstable_GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders/GridColumnHeaders';
 
+export { useGridInitialization as unstable_useGridInitialization } from '../../_modules_/grid/hooks/core';
+export { useGridRegisterSortingMethod as unstable_useGridRegisterSortingMethod } from '../../_modules_/grid/hooks/features/sorting/useGridRegisterSortingMethod';
+export { useGridRegisterFilteringMethod as unstable_useGridRegisterFilteringMethod } from '../../_modules_/grid/hooks/features/filter/useGridRegisterFilteringMethod';
+export { useGridRegisterPreProcessor as unstable_useGridRegisterPreProcessor } from '../../_modules_/grid/hooks/core/preProcessing/useGridRegisterPreProcessor';
+export { useGridStateInit as unstable_useGridStateInit } from '../../_modules_/grid/hooks/utils/useGridStateInit';
+export { useCurrentPageRows as unstable_useCurrentPageRows } from '../../_modules_/grid/hooks/utils/useCurrentPageRows';
+
 export { useGridClipboard as unstable_useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
 export { useGridColumnMenu as unstable_useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns as unstable_useGridColumns } from '../../_modules_/grid/hooks/features/columns/useGridColumns';
