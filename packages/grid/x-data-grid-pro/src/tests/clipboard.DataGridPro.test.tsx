@@ -49,13 +49,6 @@ describe('<DataGridPro /> - Clipboard', () => {
   describe('copySelectedRowsToClipboard', () => {
     let writeText;
 
-    before(function beforeHook() {
-      if (!isJSDOM) {
-        // Needs permission to read the clipboard
-        this.skip();
-      }
-    });
-
     beforeEach(function beforeEachHook() {
       writeText = stub().resolves();
 
@@ -92,9 +85,20 @@ describe('<DataGridPro /> - Clipboard', () => {
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'c', [key]: true });
+        fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
         expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
+    });
+
+    it(`should copy the selected rows and headers to the clipboard when Alt + C is pressed`, () => {
+      render(<Test />);
+      apiRef.current.selectRows([0, 1]);
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
+      fireEvent.keyDown(cell, { key: 'c', keyCode: 67, altKey: true });
+      expect(writeText.callCount).to.equal(1, "writeText wasn't called");
+      expect(writeText.firstCall.args[0]).to.equal(['id\tBrand', '0\tNike'].join('\r\n'));
     });
   });
 });
