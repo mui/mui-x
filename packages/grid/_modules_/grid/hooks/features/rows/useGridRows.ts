@@ -10,6 +10,7 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowTreeNodeConfig,
+  GridRowTreeConfig,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -24,15 +25,15 @@ import {
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridRowGroupParams } from '../../core/rowGroupsPerProcessing';
 
-interface GridRowsInternalCacheState {
-  value: GridRowGroupParams;
+type GridRowInternalCacheValue = Omit<GridRowGroupParams, 'previousTree'>;
 
+interface GridRowsInternalCacheState {
+  value: GridRowInternalCacheValue;
   /**
    * The value of the properties used by the grouping when the internal cache was created
    * We are storing it instead of accessing it directly when storing the cache to avoid synchronization issues
    */
   props: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
-
   /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
@@ -46,6 +47,12 @@ interface GridRowsInternalCache {
   lastUpdateMs: number;
 }
 
+interface ConvertGridRowsPropToStateParams {
+  prevState: GridRowsInternalCacheState;
+  props?: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
+  rows?: GridRowsProp;
+}
+
 function getGridRowId(
   rowModel: GridRowModel,
   getRowId?: GridRowIdGetter,
@@ -56,12 +63,6 @@ function getGridRowId(
   return id;
 }
 
-interface ConvertGridRowsPropToStateParams {
-  prevState: GridRowsInternalCacheState;
-  props?: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
-  rows?: GridRowsProp;
-}
-
 const convertGridRowsPropToState = ({
   prevState,
   rows,
@@ -69,7 +70,7 @@ const convertGridRowsPropToState = ({
 }: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState => {
   const props = inputProps ?? prevState.props;
 
-  let value: GridRowGroupParams;
+  let value: GridRowInternalCacheValue;
   if (rows) {
     value = {
       idRowsLookup: {},
@@ -94,6 +95,7 @@ const convertGridRowsPropToState = ({
 
 const getRowsStateFromCache = (
   rowsCache: GridRowsInternalCache,
+  previousTree: GridRowTreeConfig | null,
   apiRef: GridApiRef,
 ): GridRowsState => {
   const {
@@ -101,7 +103,7 @@ const getRowsStateFromCache = (
     value,
   } = rowsCache.state;
 
-  const groupingResponse = apiRef.current.unstable_groupRows(value);
+  const groupingResponse = apiRef.current.unstable_groupRows({ ...value, previousTree });
 
   const dataTopLevelRowCount = Object.values(groupingResponse.tree).filter(
     (node) => node.parent == null,
@@ -157,7 +159,7 @@ export const useGridRows = (
     });
     rowsCache.current.lastUpdateMs = Date.now();
 
-    return { ...state, rows: getRowsStateFromCache(rowsCache.current, apiRef) };
+    return { ...state, rows: getRowsStateFromCache(rowsCache.current, null, apiRef) };
   });
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
@@ -172,7 +174,11 @@ export const useGridRows = (
         rowsCache.current.lastUpdateMs = Date.now();
         apiRef.current.setState((state) => ({
           ...state,
-          rows: getRowsStateFromCache(rowsCache.current, apiRef),
+          rows: getRowsStateFromCache(
+            rowsCache.current,
+            gridRowTreeSelector(apiRef.current.state),
+            apiRef,
+          ),
         }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
         apiRef.current.forceUpdate();
@@ -244,7 +250,7 @@ export const useGridRows = (
 
       const deletedRowIds: GridRowId[] = [];
 
-      const newStateValue: GridRowGroupParams = {
+      const newStateValue: GridRowInternalCacheValue = {
         idRowsLookup: { ...rowsCache.current.state.value.idRowsLookup },
         ids: [...rowsCache.current.state.value.ids],
       };

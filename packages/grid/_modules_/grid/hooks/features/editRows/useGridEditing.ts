@@ -49,12 +49,29 @@ export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps
 
   const setEditCellValue = React.useCallback<GridEditingApi['setEditCellValue']>(
     (params, event = {}) => {
+      if (props.experimentalFeatures?.preventCommitWhileValidating) {
+        if (props.editMode === 'row') {
+          return apiRef.current.unstable_setRowEditingEditCellValue(params);
+        }
+        return apiRef.current.unstable_setCellEditingEditCellValue(params);
+      }
+
       const newParams: GridEditCellPropsParams = {
         id: params.id,
         field: params.field,
         props: { value: params.value },
       };
-      apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
+      return apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
+    },
+    [apiRef, props.editMode, props.experimentalFeatures?.preventCommitWhileValidating],
+  );
+
+  const parseValue = React.useCallback<GridEditingApi['unstable_parseValue']>(
+    (id, field, value) => {
+      const column = apiRef.current.getColumn(field);
+      return column.valueParser
+        ? column.valueParser(value, apiRef.current.getCellParams(id, field))
+        : value;
     },
     [apiRef],
   );
@@ -64,19 +81,17 @@ export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps
       const { id, field, props: editProps } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
       apiRef.current.setState((state) => {
-        const column = apiRef.current.getColumn(field);
-        const parsedValue = column.valueParser
-          ? column.valueParser(editProps.value, apiRef.current.getCellParams(id, field))
-          : editProps.value;
-
         const editRowsModel: GridEditRowsModel = { ...state.editRows };
         editRowsModel[id] = { ...state.editRows[id] };
-        editRowsModel[id][field] = { ...editProps, value: parsedValue };
+        editRowsModel[id][field] = { ...editProps, value: parseValue(id, field, editProps.value) };
         return { ...state, editRows: editRowsModel };
       });
       apiRef.current.forceUpdate();
+
+      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      return editRowsState[id][field];
     },
-    [apiRef, logger],
+    [apiRef, logger, parseValue],
   );
 
   const setEditRowsModel = React.useCallback<GridEditingApi['setEditRowsModel']>(
@@ -117,6 +132,7 @@ export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps
     getEditRowsModel,
     setEditCellValue,
     unstable_setEditCellProps: setEditCellProps,
+    unstable_parseValue: parseValue,
   };
 
   useGridApiMethod<typeof editingSharedApi>(apiRef, editingSharedApi, 'EditRowApi');

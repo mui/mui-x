@@ -5,20 +5,20 @@ import {
   gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '../features/pagination/gridPaginationSelector';
 import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
-import type { GridApiRef, GridRowEntry, GridState } from '../../models';
+import type { GridApiRef, GridRowEntry } from '../../models';
 
 export const getCurrentPageRows = (
-  state: GridState,
+  apiRef: GridApiRef,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
   let rows: GridRowEntry[];
   let range: { firstRowIndex: number; lastRowIndex: number } | null;
 
   if (props.pagination && props.paginationMode === 'client') {
-    range = gridPaginationRowRangeSelector(state);
-    rows = gridPaginatedVisibleSortedGridRowEntriesSelector(state);
+    range = gridPaginationRowRangeSelector(apiRef);
+    rows = gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef);
   } else {
-    rows = gridVisibleSortedRowEntriesSelector(state);
+    rows = gridVisibleSortedRowEntriesSelector(apiRef);
     if (rows.length === 0) {
       range = null;
     } else {
@@ -39,7 +39,7 @@ export const useCurrentPageRows = (
   apiRef: GridApiRef,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
-  const response = getCurrentPageRows(apiRef.current.state, props);
+  const response = getCurrentPageRows(apiRef, props);
 
   return React.useMemo(
     () => ({

@@ -63,6 +63,7 @@ export interface GridLocaleText {
   filterOperatorOnOrBefore: string;
   filterOperatorIsEmpty: string;
   filterOperatorIsNotEmpty: string;
+  filterOperatorIsAnyOf: string;
 
   // Filter values text
   filterValueAny: string;
@@ -111,6 +112,11 @@ export interface GridLocaleText {
   treeDataGroupingHeaderName: string;
   treeDataExpand: string;
   treeDataCollapse: string;
+
+  // Grouping columns
+  groupingColumnHeaderName: string;
+  groupColumn: (name: string) => string;
+  unGroupColumn: (name: string) => string;
 
   // Used core components translation keys
   MuiTablePagination: Omit<

@@ -86,6 +86,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'менше або дорівнює',
   filterOperatorIsEmpty: 'порожній',
   filterOperatorIsNotEmpty: 'не порожній',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'будь-який',
@@ -145,6 +146,11 @@ const ukUAGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Група',
   treeDataExpand: 'показати дочірні елементи',
   treeDataCollapse: 'приховати дочірні елементи',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

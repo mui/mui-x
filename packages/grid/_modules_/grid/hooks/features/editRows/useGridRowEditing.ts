@@ -31,7 +31,7 @@ export const useGridRowEditing = (
   apiRef: GridApiRef,
   props: Pick<
     DataGridProcessedProps,
-    'editMode' | 'onRowEditCommit' | 'onRowEditStart' | 'onRowEditStop'
+    'editMode' | 'onRowEditCommit' | 'onRowEditStart' | 'onRowEditStop' | 'experimentalFeatures'
   >,
 ) => {
   const focusTimeout = React.useRef<any>(null);
@@ -95,6 +95,16 @@ export const useGridRowEditing = (
         throw new Error(`MUI: Row at id: ${id} is not being edited.`);
       }
 
+      if (props.experimentalFeatures?.preventCommitWhileValidating) {
+        const isValid = Object.keys(editRowProps).reduce((acc, field) => {
+          return acc && !editRowProps[field].isValidating && !editRowProps[field].error;
+        }, true);
+
+        if (!isValid) {
+          return false;
+        }
+      }
+
       const hasFieldWithError = Object.values(editRowProps).some((value) => !!value.error);
       if (hasFieldWithError) {
         return false;
@@ -129,13 +139,68 @@ export const useGridRowEditing = (
       apiRef.current.publishEvent(GridEvents.rowEditCommit, id, event);
       return true;
     },
-    [apiRef, props.editMode],
+    [apiRef, props.editMode, props.experimentalFeatures?.preventCommitWhileValidating],
+  );
+
+  const setRowEditingEditCellValue = React.useCallback<
+    GridRowEditingApi['unstable_setRowEditingEditCellValue']
+  >(
+    (params) => {
+      const model = apiRef.current.getEditRowsModel();
+      const editRow = model[params.id];
+      const row = apiRef.current.getRow(params.id)!;
+      let isValid = true;
+
+      return new Promise((resolve) => {
+        Object.keys(editRow).forEach(async (field) => {
+          const column = apiRef.current.getColumn(field);
+          let editCellProps = field === params.field ? { value: params.value } : editRow[field];
+
+          // setEditCellProps runs the value parser and returns the updated props
+          editCellProps = apiRef.current.unstable_setEditCellProps({
+            id: params.id,
+            field,
+            props: { ...editCellProps, isValidating: true },
+          });
+
+          if (column.preProcessEditCellProps) {
+            editCellProps = await Promise.resolve(
+              column.preProcessEditCellProps!({
+                id: params.id,
+                row,
+                props: {
+                  ...editCellProps,
+                  value:
+                    field === params.field
+                      ? apiRef.current.unstable_parseValue(params.id, field, params.value)
+                      : editCellProps.value,
+                },
+              }),
+            );
+          }
+
+          if (editCellProps.error) {
+            isValid = false;
+          }
+
+          apiRef.current.unstable_setEditCellProps({
+            id: params.id,
+            field,
+            props: { ...editCellProps, isValidating: false },
+          });
+        });
+
+        resolve(isValid);
+      });
+    },
+    [apiRef],
   );
 
   const rowEditingApi: Omit<GridRowEditingApi, keyof GridEditingSharedApi> = {
     setRowMode,
     getRowMode,
     commitRowChange,
+    unstable_setRowEditingEditCellValue: setRowEditingEditCellValue,
   };
 
   useGridApiMethod<typeof rowEditingApi>(apiRef, rowEditingApi, 'EditRowApi');
@@ -154,7 +219,10 @@ export const useGridRowEditing = (
         if (event.key === 'Enter') {
           // TODO: check the return before firing GridEvents.rowEditStop
           // On cell editing, it won't exits the edit mode with error
-          await apiRef.current.commitRowChange(params.id);
+          const isValid = await apiRef.current.commitRowChange(params.id);
+          if (!isValid && props.experimentalFeatures?.preventCommitWhileValidating) {
+            return;
+          }
           apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
         } else if (event.key === 'Escape') {
           apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
@@ -163,7 +231,7 @@ export const useGridRowEditing = (
         apiRef.current.publishEvent(GridEvents.rowEditStart, rowParams, event);
       }
     },
-    [apiRef],
+    [apiRef, props.experimentalFeatures?.preventCommitWhileValidating],
   );
 
   const handleCellDoubleClick = React.useCallback<GridEventListener<GridEvents.cellDoubleClick>>(

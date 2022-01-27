@@ -44,7 +44,7 @@ export const useCellEditing = (
   apiRef: GridApiRef,
   props: Pick<
     DataGridProcessedProps,
-    'editMode' | 'onCellEditCommit' | 'onCellEditStart' | 'onCellEditStop'
+    'editMode' | 'onCellEditCommit' | 'onCellEditStart' | 'onCellEditStop' | 'experimentalFeatures'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridEditRows');
@@ -108,6 +108,13 @@ export const useCellEditing = (
       const column = apiRef.current.getColumn(field);
       const row = apiRef.current.getRow(id)!;
 
+      if (props.experimentalFeatures?.preventCommitWhileValidating) {
+        const cellProps = model[id][field];
+        if (cellProps.isValidating || cellProps.error) {
+          return false;
+        }
+      }
+
       const commitParams: GridCellEditCommitParams = {
         ...params,
         value: editCellProps.value,
@@ -139,6 +146,51 @@ export const useCellEditing = (
 
       return false;
     },
+    [apiRef, props.experimentalFeatures?.preventCommitWhileValidating],
+  );
+
+  const setCellEditingEditCellValue = React.useCallback<
+    GridCellEditingApi['unstable_setCellEditingEditCellValue']
+  >(
+    (params) => {
+      const column = apiRef.current.getColumn(params.field);
+      const row = apiRef.current.getRow(params.id)!;
+
+      return new Promise((resolve) => {
+        let newEditCellProps: GridEditCellProps = { value: params.value };
+        const model = apiRef.current.getEditRowsModel();
+        const editCellProps = model[params.id][params.field];
+
+        if (typeof column.preProcessEditCellProps !== 'function') {
+          apiRef.current.unstable_setEditCellProps({ ...params, props: newEditCellProps });
+          resolve(true);
+          return;
+        }
+
+        // setEditCellProps runs the value parser and returns the updated props
+        newEditCellProps = apiRef.current.unstable_setEditCellProps({
+          ...params,
+          props: { ...editCellProps, isValidating: true },
+        });
+
+        Promise.resolve(
+          column.preProcessEditCellProps({
+            id: params.id,
+            row,
+            props: {
+              ...newEditCellProps,
+              value: apiRef.current.unstable_parseValue(params.id, params.field, params.value),
+            },
+          }),
+        ).then((newEditCellPropsProcessed) => {
+          apiRef.current.unstable_setEditCellProps({
+            ...params,
+            props: { ...newEditCellPropsProcessed, isValidating: false },
+          });
+          resolve(!newEditCellPropsProcessed.error);
+        });
+      });
+    },
     [apiRef],
   );
 
@@ -146,6 +198,7 @@ export const useCellEditing = (
     setCellMode,
     getCellMode,
     commitCellChange,
+    unstable_setCellEditingEditCellValue: setCellEditingEditCellValue,
   };
 
   useGridApiMethod<typeof cellEditingApi>(apiRef, cellEditingApi, 'EditRowApi');

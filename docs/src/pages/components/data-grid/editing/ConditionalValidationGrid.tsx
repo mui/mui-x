@@ -15,6 +15,9 @@ const StyledBox = styled(Box)(({ theme }) => ({
   '& .MuiDataGrid-cell--editing': {
     backgroundColor: 'rgb(255,215,115, 0.19)',
     color: '#1a3e72',
+    '& .MuiInputBase-root': {
+      height: '100%',
+    },
   },
   '& .Mui-error': {
     backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
@@ -29,6 +32,7 @@ const rows: GridRowsProp = [
     price: randomPrice(0, 1000),
     dueAt: new Date(2021, 6, 8),
     isPaid: false,
+    paymentMethod: '',
   },
   {
     id: 2,
@@ -36,6 +40,7 @@ const rows: GridRowsProp = [
     price: randomPrice(0, 1000),
     dueAt: new Date(2021, 7, 1),
     isPaid: false,
+    paymentMethod: '',
   },
   {
     id: 3,

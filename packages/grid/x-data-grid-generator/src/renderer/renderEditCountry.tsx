@@ -1,46 +1,25 @@
 import * as React from 'react';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
-import { createStyles, makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import { COUNTRY_ISO_OPTIONS } from '../services/static-data';
 
-// ISO 3166-1 alpha-2
-// ⚠️ No support for IE 11
-function countryToFlag(isoCode: string) {
-  return typeof String.fromCodePoint !== 'undefined'
-    ? isoCode
-        .toUpperCase()
-        .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-    : isoCode;
-}
-
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      option: {
-        '& > span': {
-          marginRight: 10,
-          fontSize: 18,
-        },
-      },
-      inputRoot: {
-        ...theme.typography.body2,
-        padding: '1px 0',
-        height: '100%',
-        '& input': {
-          padding: '0 16px',
-          height: '100%',
-        },
-      },
-    }),
-  { defaultTheme },
-);
+const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  height: '100%',
+  [`& .${autocompleteClasses.inputRoot}`]: {
+    ...theme.typography.body2,
+    padding: '1px 0',
+    height: '100%',
+    '& input': {
+      padding: '0 16px',
+      height: '100%',
+    },
+  },
+}));
 
 function EditCountry(props: GridRenderEditCellParams) {
-  const classes = useStyles();
   const { id, value, api, field } = props;
 
   const handleChange = React.useCallback(
@@ -55,21 +34,35 @@ function EditCountry(props: GridRenderEditCellParams) {
   );
 
   return (
-    <Autocomplete
+    <StyledAutocomplete
       value={value as any}
       onChange={handleChange}
       options={COUNTRY_ISO_OPTIONS}
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option: any) => option.label}
       autoHighlight
       fullWidth
       open
-      classes={classes}
       disableClearable
-      renderOption={(optionProps, option) => (
-        <li {...optionProps}>
-          <span>{countryToFlag(option.code)}</span>
+      renderOption={(optionProps, option: any) => (
+        <Box
+          component="li"
+          sx={{
+            '& > img': {
+              mr: 2,
+              flexShrink: 0,
+            },
+          }}
+          {...optionProps}
+        >
+          <img
+            loading="lazy"
+            width="20"
+            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+            alt=""
+          />
           {option.label}
-        </li>
+        </Box>
       )}
       renderInput={(params) => (
         <InputBase

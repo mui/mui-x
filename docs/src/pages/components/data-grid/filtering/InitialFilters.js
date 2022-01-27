@@ -19,6 +19,7 @@ export default function InitialFilters() {
           Toolbar: GridToolbar,
         }}
         initialState={{
+          ...data.initialState,
           filter: {
             filterModel: {
               items: [

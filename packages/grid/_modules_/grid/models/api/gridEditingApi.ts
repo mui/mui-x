@@ -1,5 +1,5 @@
-import { GridCellMode, GridRowMode } from '../gridCell';
-import { GridEditRowsModel } from '../gridEditRowModel';
+import { GridCellMode, GridRowMode, GridCellValue } from '../gridCell';
+import { GridEditRowsModel, GridEditCellProps } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import {
@@ -34,12 +34,20 @@ export interface GridEditingSharedApi {
    * Commonly used inside the edit cell component.
    * @param {GridEditCellValueParams} params Contains the id, field and value to set.
    * @param {React.SyntheticEvent} event The event to pass forward.
+   * @returns {Promise<boolean> | void} A promise with the validation status if `preventCommitWhileValidating` is `true`. Otherwise, void.
    */
-  setEditCellValue: (params: GridEditCellValueParams, event?: MuiBaseEvent) => void;
+  setEditCellValue: (
+    params: GridEditCellValueParams,
+    event?: MuiBaseEvent,
+  ) => Promise<boolean> | void;
   /**
    * @ignore - do not document.
    */
-  unstable_setEditCellProps: (params: GridEditCellPropsParams) => void;
+  unstable_setEditCellProps: (params: GridEditCellPropsParams) => GridEditCellProps;
+  /**
+   * @ignore - do not document.
+   */
+  unstable_parseValue: (id: GridRowId, field: string, value: GridCellValue) => GridCellValue;
 }
 
 /**
@@ -65,6 +73,10 @@ export interface GridRowEditingApi extends GridEditingSharedApi {
    * @returns {boolean} A boolean indicating if there is an error.
    */
   commitRowChange: (id: GridRowId, event?: MuiBaseEvent) => boolean | Promise<boolean>;
+  /**
+   * @ignore - do not document.
+   */
+  unstable_setRowEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
 }
 
 /**
@@ -95,6 +107,10 @@ export interface GridCellEditingApi extends GridEditingSharedApi {
    * @returns {GridCellMode} Returns `"edit"` or `"view"`.
    */
   getCellMode: (id: GridRowId, field: string) => GridCellMode;
+  /**
+   * @ignore - do not document.
+   */
+  unstable_setCellEditingEditCellValue: (params: GridEditCellValueParams) => void;
 }
 
 /**

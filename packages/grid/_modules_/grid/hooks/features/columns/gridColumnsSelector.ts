@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '../../../utils/createSelector';
 import { GridState } from '../../../models/gridState';
 
 export const gridColumnsSelector = (state: GridState) => state.columns;
@@ -14,8 +14,16 @@ export const allGridColumnsSelector = createSelector(
   (allFields, lookup) => allFields.map((field) => lookup[field]),
 );
 
-export const visibleGridColumnsSelector = createSelector(allGridColumnsSelector, (columns) =>
-  columns.filter((c) => c.field != null && !c.hide),
+export const gridColumnVisibilityModelSelector = createSelector(
+  gridColumnsSelector,
+  (columnsState) => columnsState.columnVisibilityModel,
+);
+
+export const visibleGridColumnsSelector = createSelector(
+  allGridColumnsSelector,
+  gridColumnVisibilityModelSelector,
+  (allColumns, columnVisibilityModel) =>
+    allColumns.filter((column) => columnVisibilityModel[column.field] !== false),
 );
 
 export const gridVisibleColumnFieldsSelector = createSelector(

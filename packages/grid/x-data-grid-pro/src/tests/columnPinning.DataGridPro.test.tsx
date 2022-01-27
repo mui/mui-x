@@ -109,14 +109,13 @@ describe('<DataGridPro /> - Column pinning', () => {
     const renderZone = document.querySelector(
       `.${gridClasses.virtualScrollerRenderZone}`,
     ) as HTMLDivElement;
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
     const columnHeader = getColumnHeaderCell(0);
     const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
-    // @ts-expect-error need to migrate helpers to TypeScript
+    clock.runToLast();
     expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
   });
 
@@ -129,14 +128,12 @@ describe('<DataGridPro /> - Column pinning', () => {
     const columnHeadersInner = document.querySelector(
       `.${gridClasses.columnHeadersInner}`,
     ) as HTMLDivElement;
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
     const columnHeader = getColumnHeaderCell(0);
     const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
   });
 
@@ -146,9 +143,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       this.skip();
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    clock.runToLast();
     const columnHeader = getColumnHeaderCell(2);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
     const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
@@ -156,7 +151,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     fireEvent.mouseMove(separator, { clientX: 190, buttons: 1 });
     fireEvent.mouseUp(separator);
 
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '110px' });
     expect(separator).to.have.class(gridClasses['columnSeparator--sideLeft']);
   });
@@ -167,9 +161,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       this.skip();
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    clock.runToLast();
     const columnHeader = getColumnHeaderCell(2);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
     const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
@@ -177,7 +169,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     fireEvent.mouseMove(separator, { clientX: 210, buttons: 1 });
     fireEvent.mouseUp(separator);
 
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '90px' });
     expect(separator).to.have.class(gridClasses['columnSeparator--sideLeft']);
   });

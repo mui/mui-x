@@ -57,12 +57,10 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('Compact'));
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
@@ -85,12 +83,10 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('Comfortable'));
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
@@ -104,12 +100,10 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
@@ -123,12 +117,10 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
@@ -176,7 +168,7 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
 
-    it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
+    it('should show all columns when clicking "SHOW ALL" from the column selector (deprecated)', () => {
       const customColumns = [
         {
           field: 'id',
@@ -195,6 +187,39 @@ describe('<DataGrid /> - Toolbar', () => {
             columns={customColumns}
             components={{
               Toolbar: GridToolbar,
+            }}
+          />
+        </div>,
+      );
+
+      fireEvent.click(getByText('Columns'));
+      fireEvent.click(getByText('Show all'));
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+    });
+
+    it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
+      const customColumns = [
+        {
+          field: 'id',
+        },
+        {
+          field: 'brand',
+        },
+      ];
+
+      const { getByText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={customColumns}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+            initialState={{
+              columns: {
+                columnVisibilityModel: { id: false, brand: false },
+              },
             }}
           />
         </div>,
@@ -226,7 +251,6 @@ describe('<DataGrid /> - Toolbar', () => {
       column!.focus();
       fireEvent.click(column);
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(column).toHaveFocus();
     });
   });
