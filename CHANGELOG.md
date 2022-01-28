@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 28, 2022_
 
-A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚣 Introduce [variable row height](https://mui.com/components/data-grid/rows/#variable-row-height) (#438) @DanailH
 
@@ -47,6 +47,7 @@ Allows for setting a row-specific height. Before all rows had the same height, n
 - [DataGridPro] Fix missing `styleOverrides` on pinned columns (#3733) @alexfauquette
 - [DataGridPro] Remove function overloading for `useGridApiRef` (#3666) @flaviendelangle
 - [l10n] Improve French (frFR) locale (#3739) @flaviendelangle
+- [l10n] Improve Italian (itIT) locale (#3744) @destegabry
 
 ### Docs
 
