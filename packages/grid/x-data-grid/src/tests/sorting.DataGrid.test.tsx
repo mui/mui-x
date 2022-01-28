@@ -495,11 +495,9 @@ describe('<DataGrid /> - Sorting', () => {
         );
 
         expect(getColumnValues(0)).to.deep.equal(['2', '0', '1', '3']);
-      })
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toWarnDev(
-          'MUI: The `sortModel` can only contain a single item when `prop.disableMultipleColumnsSorting` is set to `true`.',
-        );
+      }).toWarnDev(
+        'MUI: The `sortModel` can only contain a single item when `prop.disableMultipleColumnsSorting` is set to `true`.',
+      );
     });
   });
 });
