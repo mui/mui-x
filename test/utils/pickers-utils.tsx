@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { parseISO } from 'date-fns';
-import { createRenderer, fireEvent, screen, RenderOptions } from '@mui/monorepo/test/utils';
-import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  RenderOptions,
+  CreateRendererOptions,
+} from '@mui/monorepo/test/utils';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';

@@ -38,7 +38,6 @@ module.exports = {
         '*.test.js',
         '*.test.ts',
         '*.test.tsx',
-        'test/**',
       ],
       rules: {
         'no-restricted-imports': [
