@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import { useLocation } from 'react-router-dom';
 import { useFakeTimers } from 'sinon';
 
@@ -105,9 +106,31 @@ function TestViewer(props) {
   const { children, isDataGridTest } = props;
 
   return (
-    <MockTime>
-      <LoadFont isDataGridTest={isDataGridTest}>{children}</LoadFont>
-    </MockTime>
+    <React.Fragment>
+      <GlobalStyles
+        styles={{
+          html: {
+            WebkitFontSmoothing: 'antialiased', // Antialiasing.
+            MozOsxFontSmoothing: 'grayscale', // Antialiasing.
+            // Do the opposite of the docs in order to help catching issues.
+            boxSizing: 'content-box',
+          },
+          '*, *::before, *::after': {
+            boxSizing: 'inherit',
+            // Disable transitions to avoid flaky screenshots
+            transition: 'none !important',
+            animation: 'none !important',
+          },
+          body: {
+            margin: 0,
+            overflowX: 'hidden',
+          },
+        }}
+      />
+      <MockTime>
+        <LoadFont isDataGridTest={isDataGridTest}>{children}</LoadFont>
+      </MockTime>
+    </React.Fragment>
   );
 }
 
