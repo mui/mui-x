@@ -123,7 +123,7 @@ const theme = createTheme({
 
 ## Licenses
 
-While MUI Core is entirely licensed under MIT,  MUI X serves a part of its components under a commercial license.
+While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
 Please pay attention to the license.
 
 ### Plans
@@ -134,7 +134,7 @@ The component comes [in different plans](/pricing/):
 - **Pro** and **Premium**: It's a [commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/components/data-grid/#commercial-version) component.
   Features only available in the commercial version are suffixed in the documentation with the following marks:
 
-  - <span class="plan-pro"></span>: For features exclusive to Pro and Premium plans. 
+  - <span class="plan-pro"></span>: For features exclusive to Pro and Premium plans.
 
     <div class="only-light-mode">
       <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
