@@ -76,7 +76,7 @@ We provide three options:
 
 - Built with and exclusively for React ⚛️
 - High performance 🚀
-- [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#single-and-multi-filtering) <span class="plan-pro"></span>
+- [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#multi-filtering) <span class="plan-pro"></span>
 - [Pagination](/components/data-grid/pagination/)
 - [Row & Cell editing](/components/data-grid/editing/)
 - [Sorting](/components/data-grid/sorting) and [multi-sorting](/components/data-grid/sorting/#multi-sorting) <span class="plan-pro"></span>
