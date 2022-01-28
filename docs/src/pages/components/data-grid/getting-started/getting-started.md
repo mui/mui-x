@@ -237,6 +237,8 @@ This license key is meant as a reminder for developers and their team to know wh
 Once you purchase a license, you'll receive a license key by email.
 This key should be installed to remove the watermark and
 console warnings.
+You must set the license key before rendering the first component.
+You only need to install the key once in your application.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-data-grid-pro';
