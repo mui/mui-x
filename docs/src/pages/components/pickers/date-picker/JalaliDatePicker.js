@@ -4,7 +4,7 @@ import AdapterJalali from '@date-io/date-fns-jalali';
 import { DatePicker } from '@mui/x-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
 
-export default function LocalizedDatePicker() {
+export default function JalaliDatePicker() {
   const [value, setValue] = React.useState(new Date());
 
   return (
