@@ -33,7 +33,6 @@ describe('<DataGridPro /> - Detail panel', () => {
   it('should add a bottom margin to the expanded row', () => {
     render(<TestCase getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)} />);
     fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(getRow(0)).toHaveComputedStyle({ marginBottom: '500px' });
   });
 
@@ -45,7 +44,6 @@ describe('<DataGridPro /> - Detail panel', () => {
     const cell = getCell(0, 0);
     expect(cell.querySelector('[aria-label="Expand"]')).to.have.attribute('disabled');
     fireEvent.click(cell);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(getRow(0)).toHaveComputedStyle({ marginBottom: '0px' });
   });
 
@@ -94,12 +92,10 @@ describe('<DataGridPro /> - Detail panel', () => {
       />,
     );
     const detailPanels = document.querySelector('.MuiDataGrid-detailPanels');
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(detailPanels!.children[0]).toHaveComputedStyle({
       top: `${rowHeight}px`,
       height: `${evenHeight}px`,
     });
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(detailPanels!.children[1]).toHaveComputedStyle({
       top: `${rowHeight + evenHeight + rowHeight}px`,
       height: `${oddHeight}px`,
@@ -363,7 +359,6 @@ describe('<DataGridPro /> - Detail panel', () => {
         );
         apiRef.current.toggleDetailPanel(1);
         expect(document.querySelector('.MuiDataGrid-detailPanels')).to.equal(null);
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getRow(1)).not.toHaveComputedStyle({ marginBottom: '50px' });
       });
     });
