@@ -15,7 +15,7 @@ import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/k
 import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
 import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
-import { useGridEditRows } from '../../_modules_/grid/hooks/features/editRows/useGridEditRows';
+import { useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
 import { useGridParamsApi } from '../../_modules_/grid/hooks/features/rows/useGridParamsApi';
 import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
@@ -31,7 +31,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
-  useGridEditRows(apiRef, props);
+  useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
