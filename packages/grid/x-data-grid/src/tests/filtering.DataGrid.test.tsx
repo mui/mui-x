@@ -66,7 +66,7 @@ function CustomInputValue(props: GridFilterInputValueProps) {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DataGrid /> - Filter', () => {
+describe('<DataGrid /> - Filter', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
@@ -1146,7 +1146,7 @@ describe.only('<DataGrid /> - Filter', () => {
       setProps({
         filterModel: { items: [{ columnField: 'voltage', operatorValue: 'is', value: 220 }] },
       });
-      // expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
+      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
     });
 
     it('should work if valueOptions is not provided', () => {
@@ -1170,7 +1170,7 @@ describe.only('<DataGrid /> - Filter', () => {
   });
 
   it('should translate operators dynamically in toolbar without crashing ', () => {
-    const TestBis = () => {
+    expect(() => {
       return (
         <div style={{ height: 400, width: '100%' }}>
           <DataGrid
@@ -1197,9 +1197,7 @@ describe.only('<DataGrid /> - Filter', () => {
           />
         </div>
       );
-    };
-    // TODO: Fix
-    render(<TestBis />);
+    }).not.to.throw();
   });
 
   it('should apply the valueParser onto the filter value', () => {
