@@ -811,7 +811,6 @@ describe('<DataGridPro /> - Rows', () => {
 
     beforeEach(() => {
       baselineProps = {
-        autoHeight: isJSDOM,
         rows: [
           {
             id: 0,
@@ -842,27 +841,32 @@ describe('<DataGridPro /> - Rows', () => {
     };
 
     it('should change row height', () => {
+      const RESIZED_ROW_ID = 1;
       render(<TestCase />);
 
       expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
 
-      apiRef.current.unstable_setRowHeight(1, 100);
-      expect(getRow(1).clientHeight).to.equal(100);
+      apiRef.current.unstable_setRowHeight(RESIZED_ROW_ID, 100);
+      expect(getRow(RESIZED_ROW_ID).clientHeight).to.equal(100);
     });
 
     it('should preserve changed row height after sorting', () => {
-      render(<TestCase />);
+      const RESIZED_ROW_ID = 0;
+      const getRowHeight = spy();
+      render(<TestCase getRowHeight={getRowHeight} />);
 
-      const row = getRow(0);
+      const row = getRow(RESIZED_ROW_ID);
       expect(row.clientHeight).to.equal(ROW_HEIGHT);
 
-      apiRef.current.unstable_setRowHeight(0, 100);
+      getRowHeight.resetHistory();
+      apiRef.current.unstable_setRowHeight(RESIZED_ROW_ID, 100);
       expect(row.clientHeight).to.equal(100);
 
       // sort
-      fireEvent.click(getColumnHeaderCell(0));
+      fireEvent.click(getColumnHeaderCell(RESIZED_ROW_ID));
 
       expect(row.clientHeight).to.equal(100);
+      expect(getRowHeight.neverCalledWithMatch({ id: RESIZED_ROW_ID })).to.equal(true);
     });
   });
 });
