@@ -1,19 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import { useLocation } from 'react-router-dom';
-import clsx from 'clsx';
 import { useFakeTimers } from 'sinon';
-import { withStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
 
-const styles = (theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(1),
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  dataGridContainer: {
+const StyledBox = styled(Box)(({ theme, isDataGridTest }) => ({
+  backgroundColor: theme.palette.background.default,
+  display: 'flex',
+  padding: theme.spacing(1),
+  justifyContent: 'center',
+  ...(isDataGridTest && {
     minHeight: 400,
     maxWidth: 500,
     // Workaround the min-height limitation
@@ -27,8 +24,8 @@ const styles = (theme) => ({
         bottom: 0,
       },
     },
-  },
-});
+  }),
+}));
 
 let clock;
 
@@ -94,9 +91,9 @@ function LoadFont(props) {
   }, [location]);
 
   return (
-    <div aria-busy={!ready} data-testid="testcase" {...other}>
+    <StyledBox aria-busy={!ready} data-testid="testcase" {...other}>
       {children}
-    </div>
+    </StyledBox>
   );
 }
 
@@ -105,26 +102,18 @@ LoadFont.propTypes = {
 };
 
 function TestViewer(props) {
-  const { children, classes, dataGridContainer } = props;
+  const { children, isDataGridTest } = props;
 
   return (
     <MockTime>
-      <LoadFont
-        className={clsx(classes.root, {
-          [classes.dataGridContainer]: dataGridContainer,
-        })}
-      >
-        {children}
-      </LoadFont>
+      <LoadFont isDataGridTest={isDataGridTest}>{children}</LoadFont>
     </MockTime>
   );
 }
 
 TestViewer.propTypes = {
   children: PropTypes.node.isRequired,
-  classes: PropTypes.object.isRequired,
-  dataGridContainer: PropTypes.bool.isRequired,
+  isDataGridTest: PropTypes.bool.isRequired,
 };
 
-const defaultTheme = createTheme();
-export default withStyles(styles, { defaultTheme })(TestViewer);
+export default TestViewer;
