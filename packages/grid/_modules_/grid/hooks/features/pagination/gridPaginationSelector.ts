@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridState';
 import {
   gridVisibleSortedRowEntriesSelector,

@@ -80,7 +80,6 @@ describe('<DataGridPro /> - Layout', () => {
         </div>,
       );
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-root')).toHaveInlineStyle({
         mixBlendMode: 'darken',
       });
@@ -129,14 +128,12 @@ describe('<DataGridPro /> - Layout', () => {
       );
 
       let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(firstColumn).toHaveInlineStyle({
         width: '198px', // because of the 2px border
       });
 
       apiRef!.current.setColumnVisibility('age', true);
       firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(firstColumn).toHaveInlineStyle({
         width: '148px', // because of the 2px border
       });
@@ -190,14 +187,12 @@ describe('<DataGridPro /> - Layout', () => {
       );
 
       let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(firstColumn).toHaveInlineStyle({
         width: '198px', // because of the 2px border
       });
 
       apiRef!.current.setColumnVisibility('age', true);
       firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(firstColumn).toHaveInlineStyle({
         width: '148px', // because of the 2px border
       });
@@ -232,7 +227,6 @@ describe('<DataGridPro /> - Layout', () => {
       </ThemeProvider>,
     );
 
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(screen.getByRole('grid')).toHaveComputedStyle({
       color: 'rgb(0, 0, 255)',
     });

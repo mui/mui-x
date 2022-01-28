@@ -7,6 +7,8 @@ export { useGridColumnHeaders as unstable_useGridColumnHeaders } from '../../_mo
 export { GridColumnHeadersInner as unstable_GridColumnHeadersInner } from '../../_modules_/grid/components/columnHeaders/GridColumnHeadersInner';
 export { GridColumnHeaders as unstable_GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders/GridColumnHeaders';
 
+export { createSelector as unstable_createSelector } from '../../_modules_/grid/utils/createSelector';
+
 export { useGridInitialization as unstable_useGridInitialization } from '../../_modules_/grid/hooks/core';
 export { useGridRegisterSortingMethod as unstable_useGridRegisterSortingMethod } from '../../_modules_/grid/hooks/features/sorting/useGridRegisterSortingMethod';
 export { useGridRegisterFilteringMethod as unstable_useGridRegisterFilteringMethod } from '../../_modules_/grid/hooks/features/filter/useGridRegisterFilteringMethod';

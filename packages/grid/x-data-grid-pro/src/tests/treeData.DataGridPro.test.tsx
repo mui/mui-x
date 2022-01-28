@@ -395,10 +395,8 @@ describe('<DataGridPro /> - Tree Data', () => {
 
     it('should keep the grouping column width between generations', () => {
       render(<Test groupingColDef={{ width: 200 }} />);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
       apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
       apiRef.current.updateColumns([
         {
@@ -406,7 +404,6 @@ describe('<DataGridPro /> - Tree Data', () => {
           headerName: 'New name',
         },
       ]);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
   });
@@ -509,11 +506,9 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should throw an error when using filterMode="server" and treeData', () => {
       expect(() => {
         render(<Test filterMode="server" />);
-      })
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
-        );
+      }).toErrorDev(
+        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
+      );
     });
 
     it('should set the filtered descendant count on matching nodes even if the children are collapsed', () => {

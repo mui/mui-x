@@ -2,6 +2,7 @@ import { GridCellValue } from './gridCell';
 
 export interface GridEditCellProps {
   value: GridCellValue;
+  isValidating?: boolean;
   [prop: string]: any;
 }
 
