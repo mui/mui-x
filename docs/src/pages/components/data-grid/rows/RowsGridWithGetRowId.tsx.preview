@@ -5,4 +5,4 @@
     { internalId: 2, name: 'MUI' },
   ]}
   getRowId={(row) => row.internalId}
-/>;
+/>
