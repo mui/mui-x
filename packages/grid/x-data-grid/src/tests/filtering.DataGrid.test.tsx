@@ -4,12 +4,12 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   DataGrid,
-  GridToolbar,
-  GridPreferencePanelsValue,
   DataGridProps,
-  GridFilterInputValueProps,
   GridFilterInputValue,
+  GridFilterInputValueProps,
   GridFilterItem,
+  GridPreferencePanelsValue,
+  GridToolbar,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
@@ -66,7 +66,7 @@ function CustomInputValue(props: GridFilterInputValueProps) {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Filter', () => {
+describe.only('<DataGrid /> - Filter', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
@@ -147,47 +147,7 @@ describe('<DataGrid /> - Filter', () => {
     ],
   };
 
-  const TestCase = (
-    props: {
-      columns?: any[];
-      operatorValue?: string;
-      value?: any;
-      field?: string;
-    } & Partial<Omit<DataGridProps, 'columns'>>,
-  ) => {
-    const { operatorValue, value, rows, columns, field = 'brand', initialState, ...other } = props;
-    return (
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid
-          columns={columns || baselineProps.columns}
-          rows={rows || baselineProps.rows}
-          filterModel={
-            initialState
-              ? undefined
-              : {
-                  items: [
-                    {
-                      columnField: field,
-                      value,
-                      operatorValue,
-                    },
-                  ],
-                }
-          }
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-            ...initialState,
-          }}
-          {...other}
-        />
-      </div>
-    );
-  };
-
-  const Test = (props: Partial<DataGridProps>) => {
+  const TestCase = (props: Partial<DataGridProps>) => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} {...props} />
@@ -199,7 +159,7 @@ describe('<DataGrid /> - Filter', () => {
     it('should throw for more than one filter item', () => {
       expect(() => {
         render(
-          <Test
+          <TestCase
             rows={[]}
             columns={[]}
             filterModel={{
@@ -215,16 +175,16 @@ describe('<DataGrid /> - Filter', () => {
 
     it('should apply the model', () => {
       render(
-        <Test
+        <TestCase
           filterModel={{ items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }] }}
         />,
       );
-      expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
     });
 
     it('should apply the model when filtering extended columns', () => {
       render(
-        <Test
+        <TestCase
           rows={[
             { id: 0, price: 0 },
             { id: 1, price: 1 },
@@ -236,14 +196,13 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      expect(getColumnValues()).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
     it('should apply the model when row prop changes', () => {
       render(
         <TestCase
-          value="a"
-          operatorValue="contains"
+          filterModel={{ items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }] }}
           rows={[
             {
               id: 3,
@@ -260,12 +219,16 @@ describe('<DataGrid /> - Filter', () => {
           ]}
         />,
       );
-      expect(getColumnValues()).to.deep.equal(['Asics']);
+      expect(getColumnValues(0)).to.deep.equal(['Asics']);
     });
 
     it('should support new dataset', () => {
-      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
-      expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+      const { setProps } = render(
+        <TestCase
+          filterModel={{ items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }] }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
       setProps({
         rows: [
           {
@@ -282,16 +245,16 @@ describe('<DataGrid /> - Filter', () => {
           },
         ],
         columns: [{ field: 'country' }],
-        field: 'country',
+        filterModel: { items: [{ columnField: 'country', operatorValue: 'contains', value: 'a' }] },
       });
-      expect(getColumnValues()).to.deep.equal(['France']);
+      expect(getColumnValues(0)).to.deep.equal(['France']);
     });
   });
 
   describe('props: initialState.filter', () => {
     it('should allow to initialize the filterModel', () => {
       render(
-        <Test
+        <TestCase
           initialState={{
             filter: {
               filterModel: {
@@ -307,7 +270,7 @@ describe('<DataGrid /> - Filter', () => {
 
     it('should use the control state upon the initialize state when both are defined', () => {
       render(
-        <Test
+        <TestCase
           filterModel={{
             items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'false' }],
           }}
@@ -326,7 +289,7 @@ describe('<DataGrid /> - Filter', () => {
 
     it('should not update the filters when updating the initial state', () => {
       const { setProps } = render(
-        <Test
+        <TestCase
           initialState={{
             filter: {
               filterModel: {
@@ -352,7 +315,7 @@ describe('<DataGrid /> - Filter', () => {
 
     it('should allow to update the filters when initialized with initialState', () => {
       render(
-        <Test
+        <TestCase
           initialState={{
             preferencePanel: {
               open: true,
@@ -376,7 +339,7 @@ describe('<DataGrid /> - Filter', () => {
   describe('column type: string', () => {
     const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
       const { unmount } = render(
-        <Test
+        <TestCase
           filterModel={{
             items: [{ columnField: 'country', ...item }],
           }}
@@ -457,18 +420,28 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal(['United States', 'Germany']);
     });
 
+    // TODO: Clean
     describe('RegExp', () => {
       ['contains', 'startsWith', 'endsWith'].forEach((operatorValue) => {
         it('should escape RegExp characters if applied as filter values', () => {
           const regExpToEscape = '[-[]{}()*+?.,\\^$|#s]';
-          render(<TestCase value={regExpToEscape} operatorValue={operatorValue} />);
-          expect(getColumnValues()).to.deep.equal([]);
+          render(
+            <TestCase
+              filterModel={{
+                items: [{ columnField: 'brand', operatorValue, value: regExpToEscape }],
+              }}
+            />,
+          );
+          expect(getColumnValues(0)).to.deep.equal([]);
         });
       });
 
       it('should allow regex special as literals and return rows with the matched input', () => {
         render(
           <TestCase
+            filterModel={{
+              items: [{ columnField: 'brand', operatorValue: 'contains', value: '.com,' }],
+            }}
             rows={[
               {
                 id: 0,
@@ -483,11 +456,9 @@ describe('<DataGrid /> - Filter', () => {
                 brand: 'Amazon.com,',
               },
             ]}
-            value=".com,"
-            operatorValue="contains"
           />,
         );
-        expect(getColumnValues()).to.deep.equal(['Amazon.com, Inc.', 'Amazon.com,']);
+        expect(getColumnValues(0)).to.deep.equal(['Amazon.com, Inc.', 'Amazon.com,']);
       });
     });
   });
@@ -495,7 +466,7 @@ describe('<DataGrid /> - Filter', () => {
   describe('column type: number', () => {
     const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
       const { unmount } = render(
-        <Test
+        <TestCase
           filterModel={{
             items: [{ columnField: 'year', ...item }],
           }}
@@ -628,7 +599,7 @@ describe('<DataGrid /> - Filter', () => {
   describe('column type: date', () => {
     const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
       const { unmount } = render(
-        <Test
+        <TestCase
           filterModel={{
             items: [{ columnField: 'date', ...item }],
           }}
@@ -777,7 +748,7 @@ describe('<DataGrid /> - Filter', () => {
   describe('column type: dateTime', () => {
     const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
       const { unmount } = render(
-        <Test
+        <TestCase
           filterModel={{
             items: [{ columnField: 'date', ...item }],
           }}
@@ -917,7 +888,7 @@ describe('<DataGrid /> - Filter', () => {
   describe('column type: boolean', () => {
     const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
       const { unmount } = render(
-        <Test
+        <TestCase
           filterModel={{
             items: [{ columnField: 'isPublished', ...item }],
           }}
@@ -979,7 +950,7 @@ describe('<DataGrid /> - Filter', () => {
   describe('column type: singleSelect', () => {
     const getRows = (item: GridFilterItem) => {
       const { unmount } = render(
-        <Test
+        <TestCase
           filterModel={{
             items: [item],
           }}
@@ -1115,7 +1086,7 @@ describe('<DataGrid /> - Filter', () => {
       ];
 
       const { setProps } = render(
-        <Test
+        <TestCase
           filterModel={{
             items: [{ columnField: 'status', operatorValue: 'is', value: 0 }],
           }}
@@ -1150,7 +1121,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
-    it('should access a function for `valueOptions`', () => {
+    it('should support a function for `valueOptions`', () => {
       const { setProps } = render(
         <TestCase
           rows={[
@@ -1166,13 +1137,16 @@ describe('<DataGrid /> - Filter', () => {
               valueOptions: ({ row }) => (row && row.name === 'Dishwasher' ? [110] : [220, 110]),
             },
           ]}
-          field="voltage"
-          operatorValue="is"
+          filterModel={{
+            items: [{ columnField: 'voltage', operatorValue: 'is' }],
+          }}
         />,
       );
-      expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
-      setProps({ value: 220 });
-      expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Microwave']);
+      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+      setProps({
+        filterModel: { items: [{ columnField: 'voltage', operatorValue: 'is', value: 220 }] },
+      });
+      // expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
     });
 
     it('should work if valueOptions is not provided', () => {
@@ -1184,13 +1158,14 @@ describe('<DataGrid /> - Filter', () => {
             { id: 3, name: 'Microwave', voltage: 220 },
           ]}
           columns={[{ field: 'name' }, { field: 'voltage', type: 'singleSelect' }]}
-          field="voltage"
-          operatorValue="is"
+          filterModel={{ items: [{ columnField: 'voltage', operatorValue: 'is' }] }}
         />,
       );
-      expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
-      setProps({ value: 220 });
-      expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Microwave']);
+      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+      setProps({
+        filterModel: { items: [{ columnField: 'voltage', operatorValue: 'is', value: 220 }] },
+      });
+      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
     });
   });
 
@@ -1247,38 +1222,31 @@ describe('<DataGrid /> - Filter', () => {
             valueParser: (value) => (value as number) / 100,
           },
         ]}
-        operatorValue="="
-        value={50}
-        field="amount"
+        filterModel={{
+          items: [
+            {
+              columnField: 'amount',
+              operatorValue: '=',
+              value: 50,
+            },
+          ],
+        }}
       />,
     );
-    expect(getColumnValues()).to.deep.equal(['0.5']);
+    expect(getColumnValues(0)).to.deep.equal(['0.5']);
   });
 
   it('should include value-less operators when displaying the number of active filters', () => {
-    const rows = [
-      {
-        id: 0,
-        brand: 'Nike',
-        country: 'United States',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-        country: null,
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-        country: '',
-      },
-    ];
     render(
       <TestCase
-        operatorValue="isNotEmpty"
-        field="country"
-        columns={[{ field: 'brand' }, { field: 'country' }]}
-        rows={rows}
+        filterModel={{
+          items: [
+            {
+              columnField: 'brand',
+              operatorValue: 'isNotEmpty',
+            },
+          ],
+        }}
       />,
     );
     expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
@@ -1286,7 +1254,17 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('Filter panel', () => {
     it('should show an empty string as the default filter input value', () => {
-      render(<TestCase field="brand" operatorValue="contains" />);
+      render(
+        <TestCase
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+          filterModel={{ items: [{ columnField: 'brand', operatorValue: 'contains' }] }}
+        />,
+      );
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
     });
 
@@ -1305,16 +1283,20 @@ describe('<DataGrid /> - Filter', () => {
                 ],
               },
             },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
           }}
         />,
       );
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
       expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
-      expect(getColumnValues()).to.deep.equal(['Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
       setColumnValue('slogan');
 
-      expect(getColumnValues()).to.deep.equal([]);
+      expect(getColumnValues(0)).to.deep.equal([]);
       expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
     });
@@ -1334,16 +1316,20 @@ describe('<DataGrid /> - Filter', () => {
                 ],
               },
             },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
           }}
         />,
       );
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
       expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
-      expect(getColumnValues()).to.deep.equal(['Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
       setColumnValue('slogan');
 
-      expect(getColumnValues()).to.deep.equal([]);
+      expect(getColumnValues(0)).to.deep.equal([]);
       expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('from');
       expect(screen.getByTestId('customInput').value).to.equal('');
     });
@@ -1365,13 +1351,17 @@ describe('<DataGrid /> - Filter', () => {
                 ],
               },
             },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
           }}
           onFilterModelChange={onFilterModelChange}
         />,
       );
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
       expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
-      expect(getColumnValues()).to.deep.equal(['Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
       expect(onFilterModelChange.callCount).to.equal(0);
 
@@ -1406,14 +1396,18 @@ describe('<DataGrid /> - Filter', () => {
                 items: [{ columnField: 'destination', operatorValue: 'is', value: 'UK' }],
               },
             },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
           }}
         />,
       );
-      expect(getColumnValues()).to.deep.equal(['REF_2']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_2']);
 
       setColumnValue('origin');
 
-      expect(getColumnValues()).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
     });
 
     it('should keep the value if available in the new valueOptions', () => {
@@ -1438,15 +1432,19 @@ describe('<DataGrid /> - Filter', () => {
                 items: [{ columnField: 'destination', operatorValue: 'is', value: 'GE' }],
               },
             },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
           }}
         />,
       );
 
-      expect(getColumnValues()).to.deep.equal(['REF_1']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_1']);
 
       setColumnValue('origin');
 
-      expect(getColumnValues()).to.deep.equal(['REF_2', 'REF_3']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_2', 'REF_3']);
     });
 
     it('should reset filter value if not available in the new valueOptions with isAnyOperator', () => {
@@ -1472,13 +1470,17 @@ describe('<DataGrid /> - Filter', () => {
                 items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['UK'] }],
               },
             },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
           }}
         />,
       );
 
-      expect(getColumnValues()).to.deep.equal(['REF_2']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_2']);
       setColumnValue('origin');
-      expect(getColumnValues()).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
     });
 
     it('should keep the value if available in the new valueOptions with isAnyOperator', () => {
@@ -1503,13 +1505,17 @@ describe('<DataGrid /> - Filter', () => {
                 items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['GE'] }],
               },
             },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
           }}
         />,
       );
 
-      expect(getColumnValues()).to.deep.equal(['REF_1']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_1']);
       setColumnValue('origin');
-      expect(getColumnValues()).to.deep.equal(['REF_2', 'REF_3']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_2', 'REF_3']);
     });
 
     it('should reset filter value if moving from multiple to single value operator', () => {
@@ -1535,14 +1541,18 @@ describe('<DataGrid /> - Filter', () => {
                 items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['UK'] }],
               },
             },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
           }}
         />,
       );
-      expect(getColumnValues()).to.deep.equal(['REF_2']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_2']);
 
       setOperatorValue('is');
 
-      expect(getColumnValues()).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
+      expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
     });
   });
 });
