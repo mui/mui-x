@@ -232,7 +232,7 @@ For commercially licensed software, a license key is provided.
 This removes the watermark and console warning when valid.
 This license key is meant as a reminder for developers and their team to know when they forgot to license the software or renew the license.
 
-### Installation
+### License key installation
 
 Once you purchase a license, you'll receive a license key by email.
 This key should be installed to remove the watermark and
