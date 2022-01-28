@@ -39,7 +39,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Fix `isRowSelectable` when `paginationMode='server'` (#3647) @flaviendelangle
 - [DataGrid] Fix browser keyboard shortcuts not working when header cell is focused (#3692) @valenfv
 - [DataGrid] Fix focus on checkbox cells (#3501) @alexfauquette
-- [DataGrid] Only update the visibility status of the updates columns when calling `apiRef.current.updateRows` (#3735) @flaviendelangle
+- [DataGrid] Only update the visibility status of the updated columns when calling `apiRef.current.updateRows` (#3735) @flaviendelangle
 - [DataGrid] Prevent commit if `preProcessEditCellProps` resolves with an error (#3612) @m4theushw
 - [DataGrid] Update selected rows when turning off `checkboxSelection` (#3684) @m4theushw
 - [DataGrid] Variable row height (#3218) @DanailH
@@ -63,15 +63,15 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 ### Core
 
 - [core] Add ESLint rule to force default export equals to filename in documentation (#3674) @alexfauquette
-- [core] Fix `l10n` script not updating csCZ locale (#3748) @cherniavskii
+- [core] Fix `l10n` script not updating `csCZ` locale (#3748) @cherniavskii
 - [core] Generate CHANGELOG from GitHub API (#3313) @alexfauquette
-- [core] Isolate selectors from different instances (#3663) @m4theushw
+- [core] Isolate selectors from different grid instances (#3663) @m4theushw
 - [test] Improve test detection (#3728) @m4theushw
 - [test] Include module augmentation for Chai custom matchers (#3754) @m4theushw
 - [test] Remove a useless async (#3675) @alexfauquette
-- [test] Remove last @ts-expect-error (#3762) @m4theushw
+- [test] Remove remaining `@ts-expect-error` (#3762) @m4theushw
 - [test] Skip test on Firefox (#3752) @m4theushw
-- [test] Wait for flags to load (#3726) @m4theushw
+- [test] Wait for flags to load before creating snapshots (#3726) @m4theushw
 - [test] Warn when focusing cells without syncing the state (#3486) @m4theushw
 
 ## 5.3.0
