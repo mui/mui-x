@@ -22,16 +22,18 @@ Some state keys can be initialized with the `initialState` prop.
 The state is exposed on the `apiRef` object.
 It is strongly advised not to access the state values directly because the state itself is not considered a public API and its structure can change.
 
-The `x-data-grid-pro` package exposes a set of state selectors that take the `apiRef.current.state` as an argument and return a value.
+The `@mui/x-data-grid-pro` package exposes a set of state selectors that take the `apiRef.current.state` as an argument and return a value.
 You can use them to get data from the state without worrying about its internal structure.
 
 ### Direct selector access
 
-The simplest way to use a selector is to call it as a function with the state as its first argument.
+The simplest way to use a selector is to call it as a function with `apiRef` as its first argument.
 
 ```tsx
-const pageSize = gridPageSizeSelector(apiRef.current.state);
+const pageSize = gridPageSizeSelector(apiRef);
 ```
+
+**Note:** Calling with `apiRef.current.state` also works but it may cause side effects when multiple grid instances are in the same page.
 
 {{"demo": "pages/components/data-grid/state/DirectSelector.js", "bg": "inline"}}
 
