@@ -11,15 +11,16 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - 🚣 Introduce [variable row height](https://mui.com/components/data-grid/rows/#variable-row-height) (#438) @DanailH
 
-Allows for setting a row-specific height. Before all rows had the same height, now you can set the height on a per-row basis.
+  Allows for setting a row-specific height.
+  By default, all rows have the same height, but now you can set the height on a per-row basis.
 
-```tsx
-<DataGrid 
-  getRowHeight={
-    ({ id }: GridRowHeightParams) => (id % 2 === 0 ? 100 : null)
-  }
-/>
-```
+  ```tsx
+  <DataGrid 
+    getRowHeight={
+      ({ id }: GridRowHeightParams) => (id % 2 === 0 ? 100 : null)
+    }
+  />
+  ```
 
 - 🎁 Add new CSV export option: [`getRowsToExport`](https://mui.com/components/data-grid/export/#custom-exported-content) (#3687) @flaviendelangle
 
@@ -61,7 +62,7 @@ Allows for setting a row-specific height. Before all rows had the same height, n
 
 ### Core
 
-- [core] Add eslint rule to force default export equals to filename in doc (#3674) @alexfauquette
+- [core] Add ESLint rule to force default export equals to filename in documentation (#3674) @alexfauquette
 - [core] Fix `l10n` script not updating csCZ locale (#3748) @cherniavskii
 - [core] Generate CHANGELOG from GitHub API (#3313) @alexfauquette
 - [core] Isolate selectors from different instances (#3663) @m4theushw
