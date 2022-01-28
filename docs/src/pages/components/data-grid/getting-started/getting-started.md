@@ -123,18 +123,18 @@ const theme = createTheme({
 
 ## Licenses
 
-While all the code is licensed MIT with MUI Core, it's not the case with MUI X.
+While MUI Core is entirely licensed under MIT,  MUI X serves a part of its components under a commercial license.
 Please pay attention to the license.
 
 ### Plans
 
 The component comes [in different plans](/pricing/):
 
-- **Community**. It's [MIT license](https://tldrlegal.com/license/mit-license). It's available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid) and includes the [DataGrid](/components/data-grid/#mit-version) component.
-- **Pro** and **Premium**. It's a [commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/components/data-grid/#commercial-version) component.
-  The features only available in the commercial version are suffixed in the documentation for clarity:
+- **Community**: It's [MIT license](https://tldrlegal.com/license/mit-license). It's [free forever](https://www.notion.so/mui-org/Stewardship-542a2226043d4f4a96dfb429d16cf5bd) and available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid). It currently includes the [DataGrid](/components/data-grid/#mit-version) component.
+- **Pro** and **Premium**: It's a [commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/components/data-grid/#commercial-version) component.
+  Features only available in the commercial version are suffixed in the documentation with the following marks:
 
-  - For features only available in the Pro plan and upward: <span class="plan-pro"></span>
+  - <span class="plan-pro"></span>: For features exclusive to Pro and Premium plans. 
 
     <div class="only-light-mode">
       <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
@@ -143,7 +143,7 @@ The component comes [in different plans](/pricing/):
       <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
     </div>
 
-  - For features only available in the Premium plan: <span class="plan-premium"></span>
+  - <span class="plan-premium"></span>: For features exclusive to the Premium plan.
 
   You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
   See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
@@ -279,7 +279,7 @@ The licenses are perpetual, the license key will work forever with the current v
 
 However, **access to updates/upgrades** is not perpetual.
 Installing a version of the component released after the license key has expired will trigger a watermark and console message.
-For example, if you have just purchased a one-year license, you are not licensed to install a version that is two years in the future but you can upgrade to the next major that will be released 6 months later or use a version that is 6 months old.
+For example, if you purchase a one-year license today, you are not licensed to install a version released two years in the future, but you can optionally update to any version, including major versions, if it's released in the next 12 months.
 
 #### Invalid license key
 
