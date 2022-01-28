@@ -63,6 +63,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'em ou antes de',
   filterOperatorIsEmpty: 'está vazio',
   filterOperatorIsNotEmpty: 'não está vazio',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'qualquer',

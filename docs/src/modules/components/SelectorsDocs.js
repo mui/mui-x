@@ -32,13 +32,13 @@ export const SelectorExample = styled(HighlightedCode)(({ theme }) => ({
 const SELECTOR_NAME_PATTERN = /^grid(.*)Selector/;
 
 const SelectorAccordion = ({ selector }) => {
-  const signature = `${selector.name}: (state: GridState) => ${selector.returnType}`;
+  const signature = `${selector.name}: (apiRef: GridApiRef) => ${selector.returnType}`;
 
   const match = selector.name.match(SELECTOR_NAME_PATTERN);
   const valueName =
     match == null ? 'value' : `${match[1][0].toLocaleLowerCase()}${match[1].slice(1)}`;
 
-  const example = `const ${valueName} = ${selector.name}(\n  apiRef.current.state\n);`;
+  const example = `const ${valueName} = ${selector.name}(apiRef);`;
 
   return (
     <Accordion>

@@ -182,9 +182,7 @@ describe('<DataGrid /> - Filter', () => {
           />
         </div>,
       );
-    })
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toWarnDev(
+    }).toWarnDev(
         'MUI: The `filterModel` can only contain a single item when `prop.disableMultipleColumnsFiltering` is set to `true`.',
       );
   });

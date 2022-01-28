@@ -62,6 +62,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: '...以前',
   filterOperatorIsEmpty: '...空である',
   filterOperatorIsNotEmpty: '...空でない',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',

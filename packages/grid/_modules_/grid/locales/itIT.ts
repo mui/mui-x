@@ -63,6 +63,7 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'fino al',
   filterOperatorIsEmpty: 'è vuoto',
   filterOperatorIsNotEmpty: 'non è vuoto',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',

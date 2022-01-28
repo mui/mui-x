@@ -39,7 +39,7 @@ export const useGridRowsMeta = (
   }));
 
   const hydrateRowsMeta = React.useCallback(() => {
-    const { rows } = getCurrentPageRows(apiRef.current.state, {
+    const { rows } = getCurrentPageRows(apiRef, {
       pagination,
       paginationMode,
     });
