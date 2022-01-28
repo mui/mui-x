@@ -63,6 +63,7 @@ export interface GridLocaleText {
   filterOperatorOnOrBefore: string;
   filterOperatorIsEmpty: string;
   filterOperatorIsNotEmpty: string;
+  filterOperatorIsAnyOf: string;
 
   // Filter values text
   filterValueAny: string;

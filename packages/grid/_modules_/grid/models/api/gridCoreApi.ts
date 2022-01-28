@@ -70,4 +70,9 @@ export interface GridCoreApi {
    * @param {any} props Props to be passed to the `ErrorOverlay` component.
    */
   showError: (props: any) => void;
+  /**
+   * Unique identifier for each component instance in a page.
+   * @ignore - do not document.
+   */
+  instanceId: number;
 }

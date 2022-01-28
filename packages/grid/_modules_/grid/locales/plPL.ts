@@ -62,6 +62,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'mniejsze lub równe',
   filterOperatorIsEmpty: 'jest pusty',
   filterOperatorIsNotEmpty: 'nie jest pusty',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',

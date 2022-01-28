@@ -63,6 +63,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'es en o anterior',
   filterOperatorIsEmpty: 'está vacío',
   filterOperatorIsNotEmpty: 'no esta vacío',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',

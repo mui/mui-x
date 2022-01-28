@@ -63,6 +63,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'معادل یا قبلش',
   filterOperatorIsEmpty: 'خالی است',
   filterOperatorIsNotEmpty: 'خالی نیست',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'هرچیزی',

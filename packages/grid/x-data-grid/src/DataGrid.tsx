@@ -169,6 +169,13 @@ DataGridRaw.propTypes = {
    */
   error: PropTypes.any,
   /**
+   * Features under development.
+   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures: PropTypes.shape({
+    preventCommitWhileValidating: PropTypes.bool,
+  }),
+  /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"

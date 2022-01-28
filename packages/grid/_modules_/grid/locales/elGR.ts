@@ -62,6 +62,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'είναι ίσο ή πριν',
   filterOperatorIsEmpty: 'είναι κενό',
   filterOperatorIsNotEmpty: 'δεν είναι κενό',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',

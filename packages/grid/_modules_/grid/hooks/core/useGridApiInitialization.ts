@@ -11,6 +11,8 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
+let globalId = 0;
+
 export function useGridApiInitialization(
   inputApiRef: GridApiRef | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
@@ -21,7 +23,10 @@ export function useGridApiInitialization(
     apiRef.current = {
       unstable_eventManager: new EventManager(),
       state: {} as GridState,
+      instanceId: globalId,
     } as GridApi;
+
+    globalId += 1;
   }
 
   React.useImperativeHandle(inputApiRef, () => apiRef.current, [apiRef]);
