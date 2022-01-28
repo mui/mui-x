@@ -23,7 +23,6 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   ```
 
 - 🎁 Add new CSV export option: [`getRowsToExport`](https://mui.com/components/data-grid/export/#custom-exported-content) (#3687) @flaviendelangle
-
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -31,8 +30,8 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 #### Changes
 
-- [DataGrid] Add l10n support for 'is any of' (#3746) @alexfauquette
-- [DataGrid] Add new CSV export option: `getRowsToExport` (#3687) @flaviendelangle
+- [DataGrid] Add l10n support for `is any of` (#3746) @alexfauquette
+- [DataGrid] Add new CSV `getRowsToExport` option (#3687) @flaviendelangle
 - [DataGrid] Clean params of `onCellEditCommit` (#3693) @valenfv
 - [DataGrid] Create a new lookup with all the filtered rows, collapsed or not (#3736) @flaviendelangle
 - [DataGrid] Fix Alt+c being ignored on some systems (#3660) @cherniavskii
@@ -43,7 +42,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Prevent commit if `preProcessEditCellProps` resolves with an error (#3612) @m4theushw
 - [DataGrid] Update selected rows when turning off `checkboxSelection` (#3684) @m4theushw
 - [DataGrid] Variable row height (#3218) @DanailH
-- [DataGridPro] Call useGridColumnPinning before useGridColumns (#3676) @flaviendelangle
+- [DataGridPro] Call `useGridColumnPinning` before `useGridColumns` (#3676) @flaviendelangle
 - [DataGridPro] Fix grid cell losing focus when scrolling with keyboard (#3667) @cherniavskii
 - [DataGridPro] Fix missing `styleOverrides` on pinned columns (#3733) @alexfauquette
 - [DataGridPro] Remove function overloading for `useGridApiRef` (#3666) @flaviendelangle
@@ -56,9 +55,9 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [docs] Fix typo in column visibility example (#3734) @flaviendelangle
 - [docs] Fix typo on `columnVisibilityModel` (#3723) @alexfauquette
 - [docs] Improve sorting documentation page (#3564) @flaviendelangle
-- [docs] Improve v5.3.0 release notes (#3722) @cherniavskii
-- [docs] Prepare scripts + E2E tests for migration (#3515) @siriwatknp
-- [docs] Update to the kind of support provided (#3530) @oliviertassinari
+- [docs] Improve `v5.3.0` release notes (#3722) @cherniavskii
+- [docs] Prepare scripts and E2E tests for migration (#3515) @siriwatknp
+- [docs] Clarify what is the professional support (#3530) @oliviertassinari
 
 ### Core
 
@@ -68,7 +67,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Isolate selectors from different grid instances (#3663) @m4theushw
 - [test] Improve test detection (#3728) @m4theushw
 - [test] Include module augmentation for Chai custom matchers (#3754) @m4theushw
-- [test] Remove a useless async (#3675) @alexfauquette
+- [test] Remove a useless `async` (#3675) @alexfauquette
 - [test] Remove remaining `@ts-expect-error` (#3762) @m4theushw
 - [test] Skip test on Firefox (#3752) @m4theushw
 - [test] Wait for flags to load before creating snapshots (#3726) @m4theushw
