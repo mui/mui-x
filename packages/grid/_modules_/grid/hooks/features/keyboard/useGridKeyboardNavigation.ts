@@ -55,7 +55,6 @@ export const useGridKeyboardNavigation = (
     GridEventListener<GridEvents.cellNavigationKeyDown>
   >(
     (params, event) => {
-      event.preventDefault();
       const dimensions = apiRef.current.getRootDimensions();
       if (!currentPage.range || !dimensions) {
         return;
@@ -70,8 +69,8 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPage.range.lastRowIndex;
       const firstColIndex = 0;
       const lastColIndex = colCount - 1;
+      let shouldPreventDefault = true;
 
-      // eslint-disable-next-line default-case
       switch (event.key) {
         case 'ArrowDown':
         case 'Enter': {
@@ -152,6 +151,14 @@ export const useGridKeyboardNavigation = (
           }
           break;
         }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
       }
     },
     [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
@@ -161,7 +168,6 @@ export const useGridKeyboardNavigation = (
     GridEventListener<GridEvents.columnHeaderNavigationKeyDown>
   >(
     (params, event) => {
-      event.preventDefault();
       if (!params.field) {
         return;
       }
@@ -176,8 +182,8 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPage.range?.lastRowIndex ?? null;
       const firstColIndex = 0;
       const lastColIndex = colCount - 1;
+      let shouldPreventDefault = true;
 
-      // eslint-disable-next-line default-case
       switch (event.key) {
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
@@ -228,9 +234,17 @@ export const useGridKeyboardNavigation = (
         }
 
         case ' ': {
-          event.preventDefault(); // prevent Space event from scrolling
+          // prevent Space event from scrolling
           break;
         }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
       }
     },
     [apiRef, colCount, currentPage, goToCell, goToHeader],

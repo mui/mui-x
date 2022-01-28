@@ -28,7 +28,6 @@ export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
     InputComponent: GridFilterInputSingleSelect,
   },
   {
-    label: 'is any of',
     value: 'isAnyOf',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {

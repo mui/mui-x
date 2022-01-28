@@ -1,11 +1,16 @@
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApiCommon } from '../../models/api/gridApi';
+import { OutputSelector } from '../../utils/createSelector';
 
 let warnedOnceStateNotInitialized = false;
 
-export const useGridSelector = <GridApi extends GridApiCommon, T>(
+function isOutputSelector<S, T>(selector: any): selector is OutputSelector<S, T> {
+  return selector.cache;
+}
+
+export const useGridSelector = <S, GridApi extends GridApiCommon & { state: S }, T>(
   apiRef: GridApiRef<GridApi>,
-  selector: (state: GridApi['state']) => T,
+  selector: ((state: S) => T) | OutputSelector<S, T>,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceStateNotInitialized && !apiRef.current.state) {
@@ -17,6 +22,10 @@ export const useGridSelector = <GridApi extends GridApiCommon, T>(
         ].join('\n'),
       );
     }
+  }
+
+  if (isOutputSelector<S, T>(selector)) {
+    return selector(apiRef);
   }
 
   return selector(apiRef.current.state);

@@ -5,20 +5,20 @@ import {
   gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '../features/pagination/gridPaginationSelector';
 import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
-import type { GridApiRefCommunity, GridRowEntry, GridStateCommunity } from '../../models';
+import type { GridApiCommon, GridApiRef, GridRowEntry } from '../../models';
 
-export const getCurrentPageRows = (
-  state: GridStateCommunity,
+export const getCurrentPageRows = <GridApi extends GridApiCommon>(
+  apiRef: GridApiRef<GridApi>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
   let rows: GridRowEntry[];
   let range: { firstRowIndex: number; lastRowIndex: number } | null;
 
   if (props.pagination && props.paginationMode === 'client') {
-    range = gridPaginationRowRangeSelector(state);
-    rows = gridPaginatedVisibleSortedGridRowEntriesSelector(state);
+    range = gridPaginationRowRangeSelector(apiRef);
+    rows = gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef);
   } else {
-    rows = gridVisibleSortedRowEntriesSelector(state);
+    rows = gridVisibleSortedRowEntriesSelector(apiRef);
     if (rows.length === 0) {
       range = null;
     } else {
@@ -35,11 +35,11 @@ export const getCurrentPageRows = (
  * - If the row tree has several layers, it contains up to `state.pageSize` top level rows and all their descendants
  * - If the row tree is flat, it only contains up to `state.pageSize` rows
  */
-export const useCurrentPageRows = (
-  apiRef: GridApiRefCommunity,
+export const useCurrentPageRows = <GridApi extends GridApiCommon>(
+  apiRef: GridApiRef<GridApi>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
-  const response = getCurrentPageRows(apiRef.current.state, props);
+  const response = getCurrentPageRows(apiRef, props);
 
   return React.useMemo(
     () => ({

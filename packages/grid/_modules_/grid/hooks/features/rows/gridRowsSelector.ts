@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridState';
 
 export const gridRowsStateSelector = (state: GridStateCommunity) => state.rows;
