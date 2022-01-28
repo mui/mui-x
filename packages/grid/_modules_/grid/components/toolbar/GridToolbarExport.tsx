@@ -23,7 +23,7 @@ interface GridExportDisplayOptions {
   disableToolbarButton?: boolean;
 }
 
-interface GridExportOption {
+interface GridExportMenuItemsParams {
   label: React.ReactNode;
   format: ExportTypes;
   formatOptions?: (GridCsvExportOptions | GridPrintExportOptions) & GridExportDisplayOptions;
@@ -46,7 +46,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const handleRef = useForkRef(ref, buttonRef);
 
-    const exportOptions: Array<GridExportOption> = [
+    const exportOptions: GridExportMenuItemsParams[] = [
       {
         label: apiRef.current.getLocaleText('toolbarExportCSV'),
         format: 'csv',
@@ -64,7 +64,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
       onClick?.(event);
     };
     const handleMenuClose = () => setOpen(false);
-    const handleExport = (option: GridExportOption) => () => {
+    const handleExport = (option: GridExportMenuItemsParams) => () => {
       switch (option.format) {
         case 'csv':
           apiRef.current.exportDataAsCsv(option.formatOptions);

@@ -7,7 +7,6 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-  useGridApiRef,
 } from '../../_modules_/grid';
 import { DataGridProps } from '../../_modules_/grid/models/props/DataGridProps';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
@@ -21,8 +20,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   ref,
 ) {
   const props = useDataGridProps(inProps);
-  const apiRef = useGridApiRef();
-  useDataGridComponent(apiRef, props);
+  const apiRef = useDataGridComponent(props);
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
@@ -171,6 +169,13 @@ DataGridRaw.propTypes = {
    */
   error: PropTypes.any,
   /**
+   * Features under development.
+   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures: PropTypes.shape({
+    preventCommitWhileValidating: PropTypes.bool,
+  }),
+  /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
@@ -204,6 +209,12 @@ DataGridRaw.propTypes = {
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
+  /**
+   * Function that sets the row height per row.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   */
+  getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
    */

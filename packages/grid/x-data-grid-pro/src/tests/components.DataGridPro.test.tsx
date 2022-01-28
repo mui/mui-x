@@ -33,11 +33,9 @@ describe('<DataGridPro/> - Components', () => {
     });
 
     it('should throw a console error if hideFooterRowCount is used with pagination', () => {
-      expect(() => render(<TestCase hideFooterRowCount pagination />))
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
-        );
+      expect(() => render(<TestCase hideFooterRowCount pagination />)).toErrorDev(
+        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+      );
     });
   });
 
@@ -62,7 +60,13 @@ describe('<DataGridPro/> - Components', () => {
         expect(eventHandler.callCount).to.equal(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) => match.slice(2).toLowerCase()); // e.g. onDoubleClick -> doubleClick
-        fireEvent[eventToFire](getCell(0, 0));
+        const cell = getCell(0, 0);
+
+        if (event !== 'cellMouseUp') {
+          fireEvent.mouseUp(cell);
+        }
+
+        fireEvent[eventToFire](cell);
 
         expect(propHandler.callCount).to.equal(1);
         expect(propHandler.lastCall.args[0]).not.to.equal(undefined);

@@ -63,11 +63,12 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorIsEmpty: 'est vide',
   filterOperatorIsNotEmpty: "n'est pas vide",
+  filterOperatorIsAnyOf: 'fait parti de',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'tous',
+  filterValueTrue: 'vrai',
+  filterValueFalse: 'faux',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -101,16 +102,16 @@ const frFRGrid: Partial<GridLocaleText> = {
   checkboxSelectionHeaderName: 'Sélection',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'true',
-  // booleanCellFalseLabel: 'false',
+  booleanCellTrueLabel: 'vrai',
+  booleanCellFalseLabel: 'faux',
 
   // Actions cell more text
   actionsCellMore: 'Plus',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Épingler à gauche',
+  pinToRight: 'Épingler à droite',
+  unpin: 'Désépingler',
 
   // Tree Data
   treeDataGroupingHeaderName: 'Groupe',
@@ -118,9 +119,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   treeDataCollapse: 'masquer les enfants',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Groupe',
+  groupColumn: (name) => `Grouper par ${name}`,
+  unGroupColumn: (name) => `Arrêter de grouper par ${name}`,
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

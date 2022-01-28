@@ -56,8 +56,12 @@ export interface GridEditRowApi {
    * Commonly used inside the edit cell component.
    * @param {GridEditCellValueParams} params Contains the id, field and value to set.
    * @param {React.SyntheticEvent} event The event to pass forward.
+   * @returns {Promise<boolean> | void} A promise with the validation status if `preventCommitWhileValidating` is `true`. Otherwise, void.
    */
-  setEditCellValue: (params: GridEditCellValueParams, event?: MuiBaseEvent) => void;
+  setEditCellValue: (
+    params: GridEditCellValueParams,
+    event?: MuiBaseEvent,
+  ) => Promise<boolean> | void;
   /**
    * Updates the field at the given id with the value stored in the edit row model.
    * @param {GridCommitCellChangeParams} params The id and field to commit to.

@@ -61,6 +61,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterOperatorOnOrBefore: 'is on or before',
   filterOperatorIsEmpty: 'is empty',
   filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'any',
