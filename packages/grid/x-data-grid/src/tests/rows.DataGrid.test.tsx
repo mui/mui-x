@@ -139,12 +139,11 @@ describe('<DataGrid /> - Rows', () => {
       }
       expect(() => {
         render(<TestCase />);
-      }) // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev([
-          'MUI: Missing the `getActions` property in the `GridColDef`.',
-          'The above error occurred in the <GridActionsCell> component',
-          'MUI: GridErrorHandler - An unexpected error occurred.',
-        ]);
+      }).toErrorDev([
+        'MUI: Missing the `getActions` property in the `GridColDef`.',
+        'The above error occurred in the <GridActionsCell> component',
+        'MUI: GridErrorHandler - An unexpected error occurred.',
+      ]);
     });
 
     it('should call getActions with the row params', () => {

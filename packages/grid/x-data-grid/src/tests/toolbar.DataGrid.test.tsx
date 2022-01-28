@@ -57,12 +57,10 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('Compact'));
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
@@ -85,12 +83,10 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('Comfortable'));
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
@@ -104,12 +100,10 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
@@ -123,12 +117,10 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
@@ -259,7 +251,6 @@ describe('<DataGrid /> - Toolbar', () => {
       column!.focus();
       fireEvent.click(column);
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(column).toHaveFocus();
     });
   });
