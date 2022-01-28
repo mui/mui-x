@@ -182,9 +182,7 @@ describe('<DataGrid /> - Filter', () => {
           />
         </div>,
       );
-    })
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toErrorDev('`model.items` has more than 1 item');
+    }).toErrorDev('`model.items` has more than 1 item');
   });
 
   it('should apply the filterModel prop correctly', () => {

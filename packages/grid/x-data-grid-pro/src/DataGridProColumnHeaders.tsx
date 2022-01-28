@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
-import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../_modules_/grid/gridClasses';
 import { useGridRootProps } from '../../_modules_/grid/hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
 import { useGridColumnHeaders } from '../../_modules_/grid/hooks/features/columnHeaders/useGridColumnHeaders';
@@ -61,7 +61,11 @@ const getOverlayAlpha = (elevation) => {
 const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PinnedColumnHeaders',
-  overridesResolver: (props, styles) => styles.pinnedColumnHeaders,
+  overridesResolver: (props, styles) => [
+    { [`&.${gridClasses['pinnedColumnHeaders--left']}`]: styles['pinnedColumnHeaders--left'] },
+    { [`&.${gridClasses['pinnedColumnHeaders--right']}`]: styles['pinnedColumnHeaders--right'] },
+    styles.pinnedColumnHeaders,
+  ],
 })<{ ownerState: GridColumnHeadersPinnedColumnHeadersProps }>(({ theme, ownerState }) => ({
   position: 'absolute',
   overflow: 'hidden',

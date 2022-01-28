@@ -373,6 +373,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the right pinned columns"
     },
+    "pinnedColumnHeaders": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pinned column headers"
+    },
+    "pinnedColumnHeaders--left": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the left pinned column headers"
+    },
+    "pinnedColumnHeaders--right": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the right pinned column headers"
+    },
     "root": { "description": "Styles applied to the root element." },
     "row--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
