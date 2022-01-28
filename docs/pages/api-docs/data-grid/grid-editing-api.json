@@ -40,7 +40,7 @@
     {
       "name": "setEditCellValue",
       "description": "Sets the value of the edit cell.\nCommonly used inside the edit cell component.",
-      "type": "(params: GridEditCellValueParams, event?: MuiBaseEvent) => void"
+      "type": "(params: GridEditCellValueParams, event?: MuiBaseEvent) => Promise<boolean> | void"
     },
     {
       "name": "setEditRowsModel",
