@@ -90,7 +90,10 @@ Use the arrow keys to move the focus.
 ### Key assignment conventions
 
 The above key assignments are for Windows and Linux.
-On macOS, replace <kbd class="key">CTRL</kbd> with <kbd class="key">⌘ Command</kbd>.
+On macOS:
+
+- replace <kbd class="key">CTRL</kbd> with <kbd class="key">⌘ Command</kbd>
+- replace <kbd class="key">ALT</kbd> with <kbd class="key">⌥ Option</kbd>
 
 ## API
 

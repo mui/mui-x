@@ -1,15 +1,25 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { useGridSelector } from '../../utils/useGridSelector';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
-import { gridVisibleSortedRowIdsSelector } from '../filter';
+import { gridFilteredSortedRowIdsSelector } from '../filter';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
-import { GridCsvExportOptions } from '../../../models/gridExport';
+import { GridCsvExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
-import { GridStateColDef } from '../../../models';
+import { GridRowId, GridStateColDef } from '../../../models';
+
+const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
+  const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef.current.state);
+  const selectedRows = apiRef.current.getSelectedRows();
+
+  if (selectedRows.size > 0) {
+    return filteredSortedRowIds.filter((id) => selectedRows.has(id));
+  }
+
+  return filteredSortedRowIds;
+};
 
 /**
  * @requires useGridColumns (state)
@@ -20,40 +30,36 @@ import { GridStateColDef } from '../../../models';
  */
 export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const visibleSortedRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
-  const columns = useGridSelector(apiRef, allGridColumnsSelector);
 
   const getDataAsCsv = React.useCallback(
-    (options?: GridCsvExportOptions): string => {
+    (options: GridCsvExportOptions = {}): string => {
       logger.debug(`Get data as CSV`);
+      const columns = allGridColumnsSelector(apiRef.current.state);
 
       let exportedColumns: GridStateColDef[];
-
-      if (options?.fields) {
+      if (options.fields) {
         exportedColumns = options.fields
           .map((field) => columns.find((column) => column.field === field))
           .filter((column): column is GridStateColDef => !!column);
       } else {
-        const validColumns = options?.allColumns ? columns : visibleColumns;
+        const validColumns = options.allColumns
+          ? columns
+          : visibleGridColumnsSelector(apiRef.current.state);
         exportedColumns = validColumns.filter((column) => !column.disableExport);
       }
 
-      const selectedRows = apiRef.current.getSelectedRows();
-      const exportedRowIds =
-        selectedRows.size > 0
-          ? visibleSortedRowIds.filter((id) => selectedRows.has(id))
-          : visibleSortedRowIds;
+      const getRowsToExport = options.getRowsToExport ?? defaultGetRowsToExport;
+      const exportedRowIds = getRowsToExport({ apiRef });
 
       return buildCSV({
         columns: exportedColumns,
         rowIds: exportedRowIds,
         getCellParams: apiRef.current.getCellParams,
-        delimiterCharacter: options?.delimiter || ',',
-        includeHeaders: options?.includeHeaders ?? true,
+        delimiterCharacter: options.delimiter || ',',
+        includeHeaders: options.includeHeaders ?? true,
       });
     },
-    [logger, visibleColumns, columns, visibleSortedRowIds, apiRef],
+    [logger, apiRef],
   );
 
   const exportDataAsCsv = React.useCallback(

@@ -63,6 +63,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'في أو قبل',
   filterOperatorIsEmpty: 'فارغ',
   filterOperatorIsNotEmpty: 'ليس فارغا',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'أي',
