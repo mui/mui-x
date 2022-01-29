@@ -20,7 +20,7 @@ interface CreateSelectorFunction {
   ): OutputSelector<Result>;
 }
 
-const cache = {};
+const cache: Record<number | string, Map<any[], any>> = {};
 
 function isApiRef(stateOrApiRef: any): stateOrApiRef is GridApiRef {
   return stateOrApiRef.current;
@@ -48,18 +48,18 @@ export const createSelector: CreateSelectorFunction = (...args: any) => {
       }
     }
 
-    if (cache[cacheKey] && cache[cacheKey][args]) {
+    if (cache[cacheKey] && cache[cacheKey].get(args)) {
       // We pass the cache key because the called selector might have as
       // dependency another selector created with this `createSelector`.
-      return cache[cacheKey][args](state, cacheKey);
+      return cache[cacheKey].get(args)(state, cacheKey);
     }
 
     const newSelector = reselectCreateSelector(...args);
 
     if (!cache[cacheKey]) {
-      cache[cacheKey] = {};
+      cache[cacheKey] = new Map();
     }
-    cache[cacheKey][args] = newSelector;
+    cache[cacheKey].set(args, newSelector);
 
     return newSelector(state, cacheKey);
   };
