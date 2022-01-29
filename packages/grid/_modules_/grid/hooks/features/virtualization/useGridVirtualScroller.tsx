@@ -176,7 +176,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       });
 
       const top = gridRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
-      const left = gridColumnsMetaSelector(apiRef.current.state).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
+      const left = gridColumnsMetaSelector(apiRef).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
       renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
 
       if (typeof onRenderZonePositioning === 'function') {

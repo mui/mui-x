@@ -107,7 +107,7 @@ export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
   columnsTypes,
-  currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef.current.state),
+  currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   shouldRegenColumnVisibilityModelFromColumns,
   reset,
 }: {

@@ -3,7 +3,8 @@ import { GridState } from '../models/gridState';
 import { GridApiRef } from '../models/api/gridApiRef';
 
 export interface OutputSelector<Result> {
-  (stateOrApiRef: GridApiRef | GridState): Result;
+  (apiRef: GridApiRef): Result;
+  (state: GridState, instanceId?: number): Result;
   cache: object;
 }
 
@@ -25,13 +26,32 @@ function isApiRef(stateOrApiRef: any): stateOrApiRef is GridApiRef {
   return stateOrApiRef.current;
 }
 
+let warnedOnce = false;
+
 export const createSelector: CreateSelectorFunction = (...args: any) => {
-  const selector = (stateOrApiRef: GridApiRef | GridState) => {
-    const cacheKey = isApiRef(stateOrApiRef) ? stateOrApiRef.current.instanceId : 'default';
+  const selector = (...selectorArgs: any[]) => {
+    const [stateOrApiRef, instanceId] = selectorArgs;
+    const cacheKey = isApiRef(stateOrApiRef)
+      ? stateOrApiRef.current.instanceId
+      : instanceId ?? 'default';
     const state = isApiRef(stateOrApiRef) ? stateOrApiRef.current.state : stateOrApiRef;
 
+    if (process.env.NODE_ENV !== 'production') {
+      if (!warnedOnce && cacheKey === 'default') {
+        console.warn(
+          [
+            'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
+            'To fix, call it with `apiRef`, e.g. `mySelector(apiRef)`, or pass the instance ID explicitly, e.g `mySelector(state, apiRef.current.instanceId)`.',
+          ].join('\n'),
+        );
+        warnedOnce = true;
+      }
+    }
+
     if (cache[cacheKey] && cache[cacheKey][args]) {
-      return cache[cacheKey][args](state);
+      // We pass the cache key because the called selector might have as
+      // dependency another selector created with this `createSelector`.
+      return cache[cacheKey][args](state, cacheKey);
     }
 
     const newSelector = reselectCreateSelector(...args);
@@ -41,7 +61,7 @@ export const createSelector: CreateSelectorFunction = (...args: any) => {
     }
     cache[cacheKey][args] = newSelector;
 
-    return newSelector(state);
+    return newSelector(state, cacheKey);
   };
 
   // We use this property to detect if the selector was created with createSelector

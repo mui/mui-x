@@ -104,7 +104,7 @@ export const useGridColumnPinning = (
         return initialValue;
       }
 
-      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef.current.state);
+      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,
@@ -114,8 +114,8 @@ export const useGridColumnPinning = (
         return initialValue;
       }
 
-      const visibleColumns = visibleGridColumnsSelector(apiRef.current.state);
-      const columnsMeta = gridColumnsMetaSelector(apiRef.current.state);
+      const visibleColumns = visibleGridColumnsSelector(apiRef);
+      const columnsMeta = gridColumnsMetaSelector(apiRef);
       const clientWidth = apiRef.current.windowRef!.current!.clientWidth;
       const scrollLeft = apiRef.current.windowRef!.current!.scrollLeft;
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
@@ -190,7 +190,7 @@ export const useGridColumnPinning = (
     GridPreProcessor<GridPreProcessingGroup.canBeReordered>
   >(
     (initialValue, { targetIndex }) => {
-      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef.current.state);
+      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,
@@ -205,7 +205,7 @@ export const useGridColumnPinning = (
       }
 
       if (rightPinnedColumns.length > 0) {
-        const visibleColumns = visibleGridColumnsSelector(apiRef.current.state);
+        const visibleColumns = visibleGridColumnsSelector(apiRef);
         const firstRightPinnedColumnIndex = visibleColumns.length - rightPinnedColumns.length;
         return targetIndex >= firstRightPinnedColumnIndex ? false : initialValue;
       }

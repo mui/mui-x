@@ -91,7 +91,7 @@ export const useGridRowGrouping = (
 
   const updateRowGrouping = React.useCallback(() => {
     const groupRows: GridRowGroupingPreProcessing = (params) => {
-      const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef.current.state);
+      const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const columnsLookup = gridColumnLookupSelector(apiRef.current.state);
       sanitizedModelOnLastRowPreProcessing.current = rowGroupingModel;
 
@@ -222,7 +222,7 @@ export const useGridRowGrouping = (
       const groupingColDefProp = props.groupingColDef;
 
       // We can't use `gridGroupingRowsSanitizedModelSelector` here because the new columns are not in the state yet
-      const rowGroupingModel = gridRowGroupingModelSelector(apiRef.current.state).filter(
+      const rowGroupingModel = gridRowGroupingModelSelector(apiRef).filter(
         (field) => !!columnsState.lookup[field],
       );
 
@@ -326,7 +326,7 @@ export const useGridRowGrouping = (
 
   const filteringMethod = React.useCallback<GridFilteringMethod>(
     (params) => {
-      const rowTree = gridRowTreeSelector(apiRef.current.state);
+      const rowTree = gridRowTreeSelector(apiRef);
 
       return filterRowTreeFromGroupingColumns({
         rowTree,
@@ -338,8 +338,8 @@ export const useGridRowGrouping = (
 
   const sortingMethod = React.useCallback<GridSortingMethod>(
     (params) => {
-      const rowTree = gridRowTreeSelector(apiRef.current.state);
-      const rowIds = gridRowIdsSelector(apiRef.current.state);
+      const rowTree = gridRowTreeSelector(apiRef);
+      const rowIds = gridRowIdsSelector(apiRef);
 
       return sortRowTree({
         rowTree,
@@ -361,7 +361,7 @@ export const useGridRowGrouping = (
    */
   const setRowGroupingModel = React.useCallback<GridRowGroupingApi['setRowGroupingModel']>(
     (model) => {
-      const currentModel = gridRowGroupingModelSelector(apiRef.current.state);
+      const currentModel = gridRowGroupingModelSelector(apiRef);
       if (currentModel !== model) {
         apiRef.current.setState((state) => ({
           ...state,
@@ -376,7 +376,7 @@ export const useGridRowGrouping = (
 
   const addRowGroupingCriteria = React.useCallback<GridRowGroupingApi['addRowGroupingCriteria']>(
     (field, groupingIndex) => {
-      const currentModel = gridRowGroupingModelSelector(apiRef.current.state);
+      const currentModel = gridRowGroupingModelSelector(apiRef);
       if (currentModel.includes(field)) {
         return;
       }
@@ -398,7 +398,7 @@ export const useGridRowGrouping = (
     GridRowGroupingApi['removeRowGroupingCriteria']
   >(
     (field) => {
-      const currentModel = gridRowGroupingModelSelector(apiRef.current.state);
+      const currentModel = gridRowGroupingModelSelector(apiRef);
       if (!currentModel.includes(field)) {
         return;
       }
@@ -411,7 +411,7 @@ export const useGridRowGrouping = (
     GridRowGroupingApi['setRowGroupingCriteriaIndex']
   >(
     (field, targetIndex) => {
-      const currentModel = gridRowGroupingModelSelector(apiRef.current.state);
+      const currentModel = gridRowGroupingModelSelector(apiRef);
       const currentTargetIndex = currentModel.indexOf(field);
 
       if (currentTargetIndex === -1) {
@@ -448,7 +448,7 @@ export const useGridRowGrouping = (
         event.preventDefault();
 
         const filteredDescendantCount =
-          gridFilteredDescendantCountLookupSelector(apiRef.current.state)[params.id] ?? 0;
+          gridFilteredDescendantCountLookupSelector(apiRef)[params.id] ?? 0;
 
         const isOnGroupingCell =
           props.rowGroupingColumnMode === 'single' ||
@@ -466,7 +466,7 @@ export const useGridRowGrouping = (
   const checkGroupingColumnsModelDiff = React.useCallback<
     GridEventListener<GridEvents.columnsChange>
   >(() => {
-    const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef.current.state);
+    const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
     const lastGroupingColumnsModelApplied = sanitizedModelOnLastRowPreProcessing.current;
 
     if (!isDeepEqual(lastGroupingColumnsModelApplied, rowGroupingModel)) {
