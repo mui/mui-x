@@ -4839,10 +4839,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
 
-"@visx/annotation@2.8.0":
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/@visx/annotation/-/annotation-2.8.0.tgz#516e78092be4925916dbdde2e5db320a15672cf8"
-  integrity sha512-NrvyIWmHGryNITC2xzKHAlxSGqjY/9tdnw7zhm+o/npPRgMhkxE+uwF3l1zYGNyy84bR6c9wHHVxvxm6Ku6hVg==
+"@visx/annotation@2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@visx/annotation/-/annotation-2.9.0.tgz#99c216a3ef9eab8b2d19f38e34d4ab6c9f1e93b0"
+  integrity sha512-bZiV1I6sDixRP4uPTtKR7fui52GhmkoZzIXGMhQwXtkwrCu/UkMYNvYeRbFYjkMNsjjVD7ULcIteeXcamIOrpw==
   dependencies:
     "@types/react" "*"
     "@visx/drag" "2.6.0"
@@ -5031,14 +5031,14 @@
     d3-voronoi "^1.1.2"
     prop-types "^15.6.1"
 
-"@visx/xychart@^2.8.0":
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/@visx/xychart/-/xychart-2.8.0.tgz#a3a73a0e278094141e2981559793e26c4a74a4a3"
-  integrity sha512-zmH9Pa6Tf6Yp98Lf7cHmYDyXFVlZOWfx8R276SP5KlDOEAv07Fu5XtcRdU2f+tEdYLLWGryAAnpQmurt7w0o2g==
+"@visx/xychart@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@visx/xychart/-/xychart-2.9.0.tgz#74bbe56de3f3a923aff7d06d73473dc0559503d4"
+  integrity sha512-WC5qY6GrOwuwwmnwZVZgv8x766P0X18bj8pj1jKKeAHed9Bx1mo/huO8QRQZHZoR5pR/r1/L6QTTem6WxFqeSQ==
   dependencies:
     "@types/lodash" "^4.14.172"
     "@types/react" "*"
-    "@visx/annotation" "2.8.0"
+    "@visx/annotation" "2.9.0"
     "@visx/axis" "2.6.0"
     "@visx/event" "2.6.0"
     "@visx/glyph" "2.1.2"
