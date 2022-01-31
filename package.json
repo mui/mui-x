@@ -161,7 +161,7 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "typescript": "^4.5.5",
     "webpack": "^5.67.0",
-    "webpack-cli": "^4.9.1",
+    "webpack-cli": "^4.9.2",
     "yargs": "^17.3.1",
     "yarn-deduplicate": "^3.1.0"
   },
