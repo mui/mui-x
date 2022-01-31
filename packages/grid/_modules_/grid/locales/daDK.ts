@@ -9,7 +9,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   errorOverlayDefaultLabel: 'Der skete en fejl.',
 
   // Density selector toolbar button text
-  toolbarDensity: 'Density',
+  // toolbarDensity: 'Density',
   toolbarDensityLabel: 'Tæthed',
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
@@ -20,7 +20,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarColumnsLabel: 'Vælg kolonne',
 
   // Filters toolbar button text
-  toolbarFilters: 'Filtre',
+  // toolbarFilters: 'Filters',
   toolbarFiltersLabel: 'Vis filtre',
   toolbarFiltersTooltipHide: 'Skjul filtre',
   toolbarFiltersTooltipShow: 'Vis filtre',
@@ -28,7 +28,7 @@ const daDKGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive filtre` : `${count} aktivt filter`,
 
   // Export selector toolbar button text
-  toolbarExport: 'Export',
+  // toolbarExport: 'Export',
   toolbarExportLabel: 'Eksporter',
   toolbarExportCSV: 'Download som CSV',
   // toolbarExportPrint: 'Print',
@@ -44,8 +44,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Tilføj filter',
   filterPanelDeleteIconLabel: 'Slet',
   filterPanelOperators: 'Operatorer',
-  filterPanelOperatorAnd: 'And',
-  filterPanelOperatorOr: 'Or',
+  // filterPanelOperatorAnd: 'And',
+  // filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Kolonne',
   filterPanelInputLabel: 'Værdi',
   filterPanelInputPlaceholder: 'Filter værdi',
@@ -66,14 +66,14 @@ const daDKGrid: Partial<GridLocaleText> = {
   // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
-  filterValueAny: 'any',
-  filterValueTrue: 'true',
-  filterValueFalse: 'false',
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
-  columnMenuLabel: 'Menu',
+  // columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Vis Kolonner',
-  columnMenuFilter: 'Filter',
+  // columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Fjern sortering',
   columnMenuSortAsc: 'Sorter stigende',
@@ -102,8 +102,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   checkboxSelectionHeaderName: 'Afkrydsningsvalg',
 
   // Boolean cell text
-  booleanCellTrueLabel: 'true',
-  booleanCellFalseLabel: 'false',
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
 
   // Actions cell more text
   actionsCellMore: 'mere',
