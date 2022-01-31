@@ -15,9 +15,14 @@ The rows can be defined with the `rows` prop, which expects an array of objects.
 
 {{"demo": "pages/components/data-grid/rows/RowsGrid.js", "bg": "inline"}}
 
-Note that `DataGrid` requires all rows to have a unique `id` property.
-
-Alternatively, you can pass `getRowId` prop to generate an id for each row.
+> ⚠️ Each row should have a unique id.
+> By default, the grid will use the `id` property of the row.
+>
+> When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
+>
+> ```tsx
+> <DataGrid getRowId={(row) => row.internalId} />
+> ```
 
 {{"demo": "pages/components/data-grid/rows/RowsGridWithGetRowId.js", "bg": "inline"}}
 
