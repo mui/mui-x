@@ -209,6 +209,10 @@ const columns: GridColDef[] = [
 
 **Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#export-custom-rendered-cells) the data.
 
+> ⚠️ When using `renderCell` with object cell values
+> remember to handle [sorting](/components/data-grid/sorting/#custom-comparator).
+> Otherwise, sorting won't work.
+
 #### Render edit cell
 
 The `renderCell` render function allows customizing the rendered in "view mode" only.
@@ -298,6 +302,8 @@ However, some types require additional properties to be set to make them work co
     valueOptions: ['United Kingdom', 'Spain', 'Brazil']
   }
   ```
+
+  > ⚠️ When using objects values for `valueOptions` you need to provide `value` and `label` fields for each option: `{ value: string, label: string }`
 
 - If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
   You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.

@@ -31,7 +31,7 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Esporta',
   toolbarExportLabel: 'Esporta',
   toolbarExportCSV: 'Esporta in CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'Stampa',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Cerca colonna',
@@ -63,12 +63,12 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'fino al',
   filterOperatorIsEmpty: 'è vuoto',
   filterOperatorIsNotEmpty: 'non è vuoto',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'è uno tra',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'qualunque',
+  filterValueTrue: 'vero',
+  filterValueFalse: 'falso',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -102,8 +102,8 @@ const itITGrid: Partial<GridLocaleText> = {
   checkboxSelectionHeaderName: 'Seleziona',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'true',
-  // booleanCellFalseLabel: 'false',
+  booleanCellTrueLabel: 'vero',
+  booleanCellFalseLabel: 'falso',
 
   // Actions cell more text
   actionsCellMore: 'più',
@@ -114,14 +114,14 @@ const itITGrid: Partial<GridLocaleText> = {
   unpin: 'Sblocca',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Gruppo',
+  treeDataExpand: 'mostra figli',
+  treeDataCollapse: 'nascondi figli',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Gruppo',
+  groupColumn: (name) => `Raggruppa per ${name}`,
+  unGroupColumn: (name) => `Annulla raggruppamento per ${name}`,
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

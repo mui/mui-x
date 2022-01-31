@@ -129,11 +129,9 @@ describe('<DataGridPro /> - Selection', () => {
         render(
           <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
         );
-      })
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
-        );
+      }).toErrorDev(
+        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+      );
     });
 
     it('should select all the rows of the current page if no row of the current page is selected', () => {

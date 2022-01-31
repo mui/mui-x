@@ -491,7 +491,7 @@ export const useGridSelection = (
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
 
     if (!canHaveMultipleSelection && currentSelection.length > 1) {
-      const { rows: currentPageRows } = getCurrentPageRows(apiRef.current.state, {
+      const { rows: currentPageRows } = getCurrentPageRows(apiRef, {
         pagination,
         paginationMode,
       });

@@ -101,7 +101,7 @@ describe('<DataGrid /> - Cells', () => {
   });
 
   it('should throw when focusing cell without updating the state', function test() {
-    // In Firefox, onFocus is not called
+    // In Firefox, onFocus is not called when calling `cell.focus()`
     if (/firefox/i.test(window.navigator.userAgent)) {
       this.skip();
     }
@@ -116,8 +116,7 @@ describe('<DataGrid /> - Cells', () => {
     fireEvent.click(getCell(0, 0));
 
     expect(() => {
-      fireEvent.focus(getCell(1, 0));
-      // @ts-expect-error need to migrate helpers to TypeScript
+      getCell(1, 0).focus();
     }).toErrorDev(['MUI: The cell with id=1 and field=brand received focus.']);
   });
 });
