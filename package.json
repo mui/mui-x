@@ -106,7 +106,7 @@
     "babel-plugin-optimize-clsx": "^2.6.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babel-plugin-transform-rename-import": "^2.3.0",
-    "chai": "^4.3.4",
+    "chai": "^4.3.6",
     "chai-dom": "^1.11.0",
     "compression-webpack-plugin": "^9.2.0",
     "concurrently": "^7.0.0",
