@@ -20,11 +20,7 @@ import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { getDataGridUtilityClass, gridClasses } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
@@ -129,9 +125,7 @@ export const useGridSelection = (
   /**
    * PRE-PROCESSING
    */
-  const updateSelectionColumn = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
-  >(
+  const updateSelectionColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
     (columnsState) => {
       const selectionColumn: GridColDef = {
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
@@ -156,7 +150,7 @@ export const useGridSelection = (
     [apiRef, classes, props.checkboxSelection],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, updateSelectionColumn);
+  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
 
   /**
    * API METHODS
