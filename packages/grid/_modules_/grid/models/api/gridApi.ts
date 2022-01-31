@@ -75,9 +75,3 @@ export interface GridApiPro
     GridStateApi<GridStatePro>,
     GridRowGroupingApi,
     GridColumnPinningApi {}
-
-/**
- * The full grid API.
- * @deprecated Use `GridApiCommunity` or `GridApiPro` instead.
- */
-export interface GridApi extends GridApiPro {}

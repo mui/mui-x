@@ -21,3 +21,9 @@ export const useGridApiContext = useUntypedGridApiContext as <
 export const useGridApiRef = useUntypedGridApiRef as <
   GridApi extends GridApiCommon = GridApiPro,
 >() => GridApiRef<GridApi>;
+
+/**
+ * The full grid API.
+ * @deprecated Use `GridApiPro` instead.
+ */
+export type GridApi = GridApiPro;

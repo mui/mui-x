@@ -23,3 +23,9 @@ export const useGridApiContext = useUntypedGridApiContext as <
 export const useGridApiRef = useUntypedGridApiRef as <
   GridApi extends GridApiCommon = GridApiCommunity,
 >() => GridApiRef<GridApi>;
+
+/**
+ * The full grid API.
+ * @deprecated Use `GridApiCommunity` instead.
+ */
+export type GridApi = GridApiCommunity;

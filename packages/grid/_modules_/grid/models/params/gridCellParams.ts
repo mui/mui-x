@@ -109,6 +109,7 @@ export type GridValueGetterFullParams<V = any, R = any> = GridValueGetterParams<
 
 /**
  * Parameters passed to `colDef.groupingValueGetter`.
+ * TODO: Move to `x-data-grid-pro` folder
  */
 export interface GridGroupingValueGetterParams<V = any, R = any> {
   /**
