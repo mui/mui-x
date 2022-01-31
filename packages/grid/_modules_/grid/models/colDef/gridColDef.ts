@@ -139,7 +139,9 @@ export interface GridColDef<GridApi extends GridApiCommon = GridApiCommon> {
    * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
-  groupingValueGetter?: (params: GridGroupingValueGetterParams) => GridKeyValue | null | undefined;
+  groupingValueGetter?: (
+    params: GridGroupingValueGetterParams<any, any, GridApi>,
+  ) => GridKeyValue | null | undefined;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
@@ -152,14 +154,14 @@ export interface GridColDef<GridApi extends GridApiCommon = GridApiCommon> {
    * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
    * @returns {GridCellValue} The formatted value.
    */
-  valueFormatter?: (params: GridValueFormatterParams) => GridCellValue;
+  valueFormatter?: (params: GridValueFormatterParams<GridApi>) => GridCellValue;
   /**
    * Function that takes the user-entered value and converts it to a value used internally.
    * @param {GridCellValue} value The user-entered value.
    * @param {GridCellParams} params The params when called before saving the value.
    * @returns {GridCellValue} The converted value to use internally.
    */
-  valueParser?: (value: GridCellValue, params?: GridCellParams) => GridCellValue;
+  valueParser?: (value: GridCellValue, params?: GridCellParams<GridApi>) => GridCellValue;
   /**
    * Class name that will be added in cells for that column.
    */
@@ -169,7 +171,7 @@ export interface GridColDef<GridApi extends GridApiCommon = GridApiCommon> {
    * @param {GridRenderCellParams} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderCell?: (params: GridRenderCellParams) => React.ReactNode;
+  renderCell?: (params: GridRenderCellParams<any, any, any, GridApi>) => React.ReactNode;
   /**
    * Allows to override the component rendered in edit cell mode for this column.
    * @param {GridRenderEditCellParams} params Object containing parameters for the renderer.
@@ -179,7 +181,7 @@ export interface GridColDef<GridApi extends GridApiCommon = GridApiCommon> {
   /**
    * Callback fired when the edit props of the cell changes.
    * It allows to process the props that saved into the state.
-   * @param {GridPreProcessEditCellProps} params Object contaning parameters of the cell being editted.
+   * @param {GridPreProcessEditCellProps} params Object containing parameters of the cell being edited.
    * @returns {GridEditCellProps | Promise<GridEditCellProps>} The new edit cell props.
    */
   preProcessEditCellProps?: (

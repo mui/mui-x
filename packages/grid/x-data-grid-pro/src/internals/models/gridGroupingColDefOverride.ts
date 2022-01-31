@@ -1,8 +1,9 @@
 import { GridColDef } from '@mui/x-data-grid';
+import { GridApiPro } from './gridApiPro';
 
 export interface GridGroupingColDefOverride
   extends Omit<
-    GridColDef,
+    GridColDef<GridApiPro>,
     | 'editable'
     | 'valueSetter'
     | 'field'

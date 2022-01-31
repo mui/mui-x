@@ -8,6 +8,7 @@ import {
   useGridApiEventHandler,
   gridVisibleColumnFieldsSelector,
   GridEvents,
+  GridColumnHeaderSeparatorSides,
   unstable_useGridColumnHeaders as useGridColumnHeaders,
   unstable_GridColumnHeadersInner as GridColumnHeadersInner,
   unstable_GridColumnHeaders as GridColumnHeaders,
@@ -20,7 +21,6 @@ import {
   GridPinnedColumns,
 } from '../hooks/features/columnPinning';
 import { filterColumns } from './DataGridProVirtualScroller';
-import { GridColumnHeaderSeparatorSides } from '../../../../_modules_/grid/components/columnHeaders/GridColumnHeaderSeparator';
 
 type OwnerState = {
   classes?: DataGridProProcessedProps['classes'];

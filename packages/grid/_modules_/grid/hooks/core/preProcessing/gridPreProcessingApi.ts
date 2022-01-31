@@ -9,13 +9,13 @@ export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
 export interface GridPreProcessingGroupLookup {
   hydrateColumns: {
-    value: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+    value: Omit<GridColumnsRawState<any>, 'columnVisibilityModel'>;
   };
   scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
-  columnMenu: { value: JSX.Element[]; context: GridColDef };
+  columnMenu: { value: JSX.Element[]; context: GridColDef<any> };
   filteringMethod: { value: GridFilteringMethodCollection };
   sortingMethod: { value: GridSortingMethodCollection };
 }

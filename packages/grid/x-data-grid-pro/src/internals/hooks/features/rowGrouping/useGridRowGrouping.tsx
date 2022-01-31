@@ -21,7 +21,7 @@ import {
   unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
   unstable_useGridStateInit as useGridStateInit,
 } from '@mui/x-data-grid';
-import { GridApiRefPro } from '../../../models';
+import { GridApiPro, GridApiRefPro } from '../../../models';
 import type { GridRowGroupingPreProcessing } from '../../../../../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {
@@ -219,7 +219,7 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const getGroupingColDefs = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
+    (columnsState: GridColumnsRawState<GridApiPro>) => {
       if (props.disableRowGrouping) {
         return [];
       }
@@ -267,10 +267,10 @@ export const useGridRowGrouping = (
   );
 
   const updateGroupingColumn = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
+    (columnsState: GridColumnsRawState<GridApiPro>) => {
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
-      const newColumnsLookup: GridColumnRawLookup = {};
+      const newColumnsLookup: GridColumnRawLookup<GridApiPro> = {};
 
       // We only keep the non-grouping columns
       columnsState.all.forEach((field) => {

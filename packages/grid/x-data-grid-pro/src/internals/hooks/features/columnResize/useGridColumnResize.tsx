@@ -6,6 +6,7 @@ import {
   GridEventListener,
   gridClasses,
   CursorCoordinates,
+  GridColumnHeaderSeparatorSides,
   GridColumnResizeParams,
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -21,10 +22,7 @@ import {
 } from '../../../../../../_modules_/grid/utils/domUtils';
 import { GridApiRefPro } from '../../../models';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import {
-  GridColumnHeaderSeparatorProps,
-  GridColumnHeaderSeparatorSides,
-} from '../../../../../../_modules_/grid/components/columnHeaders/GridColumnHeaderSeparator';
+import type { GridColumnHeaderSeparatorProps } from '../../../../../../_modules_/grid/components/columnHeaders/GridColumnHeaderSeparator';
 import { clamp } from '../../../../../../_modules_/grid/utils/utils';
 
 // TODO: remove support for Safari < 13.
