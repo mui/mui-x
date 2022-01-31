@@ -24,7 +24,7 @@ The rows can be defined with the `rows` prop, which expects an array of objects.
 > <DataGrid getRowId={(row) => row.internalId} />
 > ```
 
-{{"demo": "pages/components/data-grid/rows/RowsGridWithGetRowId.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/rows/RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Updating rows
 
