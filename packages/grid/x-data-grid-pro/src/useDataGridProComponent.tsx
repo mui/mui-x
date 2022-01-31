@@ -13,7 +13,7 @@ import {
   unstable_useGridPageSize as useGridPageSize,
   unstable_useGridPage as useGridPage,
   unstable_useGridPreferencesPanel as useGridPreferencesPanel,
-  unstable_useGridEditRows as useGridEditRows,
+  unstable_useGridEditing as useGridEditing,
   unstable_useGridRows as useGridRows,
   unstable_useGridRowsMeta as useGridRowsMeta,
   unstable_useGridParamsApi as useGridParamsApi,
@@ -47,7 +47,7 @@ export const useDataGridProComponent = (
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
-  useGridEditRows(apiRef, props);
+  useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);

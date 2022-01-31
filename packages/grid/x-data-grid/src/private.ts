@@ -29,7 +29,7 @@ export { useGridKeyboardNavigation as unstable_useGridKeyboardNavigation } from 
 export { useGridPageSize as unstable_useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
 export { useGridPage as unstable_useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
 export { useGridPreferencesPanel as unstable_useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
-export { useGridEditRows as unstable_useGridEditRows } from '../../_modules_/grid/hooks/features/editRows/useGridEditRows';
+export { useGridEditing as unstable_useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
 export { useGridRows as unstable_useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
 export { useGridRowsMeta as unstable_useGridRowsMeta } from '../../_modules_/grid/hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi as unstable_useGridParamsApi } from '../../_modules_/grid/hooks/features/rows/useGridParamsApi';
