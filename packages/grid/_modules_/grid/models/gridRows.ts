@@ -88,7 +88,7 @@ export function checkGridRowIdIsValid(
     throw new Error(
       [
         'MUI: The data grid component requires all rows to have a unique `id` property.',
-        'Alternatively, you can pass `getRowId` prop to generate an id for each row',
+        'Alternatively, you can use the `getRowId` prop to specify a custom id for each row.',
         detailErrorMessage,
         JSON.stringify(row),
       ].join('\n'),
