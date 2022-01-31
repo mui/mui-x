@@ -4,7 +4,7 @@ import { GridCoreApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
-import { GridEditRowApi } from './gridEditRowApi';
+import { GridEditingApi } from './gridEditingApi';
 import { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
@@ -39,7 +39,7 @@ export interface GridApiCommon
     GridDimensionsApi,
     GridRowApi,
     GridRowsMetaApi,
-    GridEditRowApi,
+    GridEditingApi,
     GridParamsApi,
     GridColumnApi,
     GridSelectionApi,

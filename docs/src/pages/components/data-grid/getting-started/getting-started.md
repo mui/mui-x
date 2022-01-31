@@ -29,7 +29,7 @@ npm install @mui/material
 yarn add @mui/material
 ```
 
-## Quick start
+## Quickstart
 
 First, you have to import the component as below.
 To avoid name conflicts the component is named `DataGridPro` for the full-featured enterprise grid, and `DataGrid` for the free community version.
@@ -123,27 +123,48 @@ const theme = createTheme({
 
 ## Licenses
 
-The data grid comes with two different licenses:
+While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
+Please pay attention to the license.
 
-- [DataGrid](/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
-- [DataGridPro](/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
-  The features only available in the commercial version are suffixed with a <span class="plan-pro"></span> icon for the Pro plan or a <span class="plan-premium"></span> icon for the Premium plan.
+### Plans
 
-  <img src="/static/x/header-icon.png" style="width: 431px; height: 123px; object-fit: contain; margin-bottom: 2rem;" alt="" loading="lazy">
+The component comes [in different plans](/pricing/):
 
-  You can check the [feature comparison](#feature-comparison) for more details.
+- **Community**: It's [MIT license](https://tldrlegal.com/license/mit-license). It's [free forever](https://www.notion.so/mui-org/Stewardship-542a2226043d4f4a96dfb429d16cf5bd) and available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid). It currently includes the [DataGrid](/components/data-grid/#mit-version) component.
+- **Pro** and **Premium**: It's a [commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/components/data-grid/#commercial-version) component.
+  Features only available in the commercial version are suffixed in the documentation with the following marks:
+
+  - <span class="plan-pro"></span>: For features exclusive to Pro and Premium plans.
+
+    <div class="only-light-mode">
+      <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
+    </div>
+    <div class="only-dark-mode">
+      <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
+    </div>
+
+  - <span class="plan-premium"></span>: For features exclusive to the Premium plan.
+
+  You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
   See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
-### Try DataGridPro for free
+### MIT vs. commercial
 
-You are free to install and try `DataGridPro` as long as it is not used for development of a feature intended for production.
-Please take the component for a test run, no need to contact us.
+_How do we decide if a feature is MIT or commercial?_
 
-### Invalid license
+We have been building MIT React components since 2014,
+and have learned much about the strengths and weaknesses of the MIT license model.
+The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
+However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT licensed components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
 
-If you have an enterprise grid running with an expired or missing license key, the grid displays a watermark, and a warning is shown in the console (_MUI Unlicensed product_).
+We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
+A solution to a problem should only be commercial if it has no MIT alternatives.
 
-<img src="/static/x/watermark.png" style="width: 658px; height: 175px; object-fit: contain; margin-bottom: 3rem" alt="" loading="lazy">
+We provide three plans:
+
+- **Community**. This plan contains the MIT components that are sustainable by the contributions of the open-source community. Free forever.
+- **Pro**. This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components. From a price perspective, the plan is designed to be accessible to most professionals.
+- **Premium**. This plan contains the most advanced features.
 
 ### Feature comparison
 
@@ -200,11 +221,24 @@ The enterprise components come in two plans: Pro and Premium.
 | [Keyboard navigation](/components/data-grid/accessibility/#keyboard-navigation)           |    ✅     |                 ✅                 |                     ✅                     |
 | [Localization](/components/data-grid/localization/)                                       |    ✅     |                 ✅                 |                     ✅                     |
 
+### Evaluation (trial) licenses
+
+You are [free to install](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses) and try `DataGridPro` as long as it is not used for development of a feature intended for production.
+Please take the component for a test run, no need to contact us.
+
+## License key
+
+For commercially licensed software, a license key is provided.
+This removes the watermark and console warning when valid.
+This license key is meant as a reminder for developers and their team to know when they forgot to license the software or renew the license.
+
 ### License key installation
 
-Once you purchase a license, you'll receive a license key.
-This key should be provided to the enterprise package to remove the watermark and
-the warnings in the console.
+Once you purchase a license, you'll receive a license key by email.
+This key should be installed to remove the watermark and
+console warnings.
+You must set the license key before rendering the first component.
+You only need to install the key once in your application.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-data-grid-pro';
@@ -214,14 +248,44 @@ LicenseInfo.setLicenseKey(
 );
 ```
 
-The grid checks the key without making any network requests.
+### Security
 
-#### What's the expiration policy?
+The check of the license key is done without making any network requests.
 
-The licenses are perpetual, the license key will work forever.
-However, access to updates is not.
-If you install a new version of the component for which the license key has expired, you will trigger a [watermark and console message](#invalid-license).
-For instance, if you have a one-year license (default), you are not licensed to install a version that is two years in the future.
+The license key is designed to be public, the only thing we ask of licensed users is to not proactively publicize their license key.
+Exposing the license key in a JavaScript bundle is expected.
+
+### Validation errors
+
+If the validation of the license key fails, the component displays a watermark and provides a console warning in both development and production.
+End users can still use the component.
+
+Here are the different possible validation errors:
+
+#### Missing license key
+
+If the license key is missing, the component will look something like this:
+
+<div class="only-light-mode">
+  <img src="/static/x/watermark-light.png" style="width: 653px; margin-bottom: 2rem;" alt="" loading="lazy">
+</div>
+<div class="only-dark-mode">
+  <img src="/static/x/watermark-dark.png" style="width: 645px; margin-bottom: 2rem;" alt="" loading="lazy">
+</div>
+
+> Note that you are still allowed to use the component for [evaluation purposes](#evaluation-trial-licenses) in this case.
+
+#### License key expired
+
+The licenses are perpetual, the license key will work forever with the current version of the software.
+
+However, **access to updates/upgrades** is not perpetual.
+Installing a version of the component released after the license key has expired will trigger a watermark and console message.
+For example, if you purchase a one-year license today, you are not licensed to install a version released two years in the future, but you can optionally update to any version, including major versions, if it's released in the next 12 months.
+
+#### Invalid license key
+
+The license key you have installed is not as issued by MUI.
 
 ## Support
 
