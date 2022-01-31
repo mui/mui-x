@@ -2,7 +2,7 @@ import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridColDef, GridStateColDef } from '../colDef';
 import { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApiCommon, GridApiCommunity } from '../api/gridApi';
+import type { GridApiCommon } from '../api/gridApi';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
@@ -69,7 +69,7 @@ export interface GridRenderCellParams<
   V = any,
   R = any,
   F = V,
-  GridApi extends GridApiCommon = GridApiCommunity,
+  GridApi extends GridApiCommon = GridApiCommon,
 > extends GridCellParams<V, R, F> {
   /**
    * GridApi that let you manipulate the grid.
@@ -80,7 +80,7 @@ export interface GridRenderCellParams<
 /**
  * GridEditCellProps containing api.
  */
-export interface GridRenderEditCellParams<GridApi extends GridApiCommon = GridApiCommunity>
+export interface GridRenderEditCellParams<GridApi extends GridApiCommon = GridApiCommon>
   extends GridEditCellProps {
   /**
    * GridApi that let you manipulate the grid.
@@ -94,7 +94,7 @@ export interface GridRenderEditCellParams<GridApi extends GridApiCommon = GridAp
 export interface GridValueGetterParams<
   V = any,
   R = any,
-  GridApi extends GridApiCommon = GridApiCommunity,
+  GridApi extends GridApiCommon = GridApiCommon,
 > extends Omit<GridCellParams<V, R>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
@@ -156,7 +156,7 @@ export interface GridValueSetterParams {
 /**
  * Object passed as parameter in the column [[GridColDef]] value formatter callback.
  */
-export interface GridValueFormatterParams<GridApi extends GridApiCommon = GridApiCommunity> {
+export interface GridValueFormatterParams<GridApi extends GridApiCommon = GridApiCommon> {
   /**
    * The grid row id.
    * It is not available when the value formatter is called by the filter panel.
