@@ -19,7 +19,7 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef<GridApiPro>, 'fiel
 export const GRID_TREE_DATA_GROUPING_FIELD = '__tree_data_group__';
 
 export const GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
-  GridColDef,
+  GridColDef<GridApiPro>,
   'field' | 'editable' | 'groupable'
 > = {
   field: GRID_TREE_DATA_GROUPING_FIELD,
