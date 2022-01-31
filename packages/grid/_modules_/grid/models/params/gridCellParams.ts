@@ -7,7 +7,12 @@ import type { GridApiCommon } from '../api/gridApi';
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
-export interface GridCellParams<V = any, R = any, F = V> {
+export interface GridCellParams<
+  V = any,
+  R = any,
+  F = V,
+  GridApi extends GridApiCommon = GridApiCommon,
+> {
   /**
    * The grid row id.
    */
@@ -35,7 +40,7 @@ export interface GridCellParams<V = any, R = any, F = V> {
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridStateColDef;
+  colDef: GridStateColDef<GridApi>;
   /**
    * If true, the cell is editable.
    */
@@ -111,7 +116,11 @@ export type GridValueGetterFullParams<V = any, R = any> = GridValueGetterParams<
  * Parameters passed to `colDef.groupingValueGetter`.
  * TODO: Move to `x-data-grid-pro` folder
  */
-export interface GridGroupingValueGetterParams<V = any, R = any> {
+export interface GridGroupingValueGetterParams<
+  V = any,
+  R = any,
+  GridApi extends GridApiCommon = GridApiCommon,
+> {
   /**
    * The grid row id.
    */
@@ -131,7 +140,7 @@ export interface GridGroupingValueGetterParams<V = any, R = any> {
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridColDef | GridStateColDef;
+  colDef: GridColDef<GridApi> | GridStateColDef<GridApi>;
   /**
    * The node of the row that the current cell belongs to.
    * It only contains the information available before the actual grouping.
