@@ -32,6 +32,7 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Esporta',
   toolbarExportCSV: 'Esporta in CSV',
   toolbarExportPrint: 'Stampa',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Cerca colonna',

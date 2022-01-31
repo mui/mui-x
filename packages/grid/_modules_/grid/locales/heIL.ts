@@ -32,6 +32,7 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'ייצוא',
   toolbarExportCSV: 'הורדה כ- CSV',
   toolbarExportPrint: 'הדפסה',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'חפש עמודה',
