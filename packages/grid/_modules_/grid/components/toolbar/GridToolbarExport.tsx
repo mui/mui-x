@@ -11,9 +11,12 @@ import {
   GridCsvExportOptions,
   GridExportFormat as ExportTypes,
   GridPrintExportOptions,
+  GridExcelExportOptions,
 } from '../../models/gridExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
+import { GridSignature } from '../../hooks/utils/useGridApiEventHandler';
+import { DataGridProProps } from '../../models/props/DataGridProProps';
 
 interface GridExportDisplayOptions {
   /**
@@ -32,11 +35,12 @@ interface GridExportMenuItemsParams {
 export interface GridToolbarExportProps extends ButtonProps {
   csvOptions?: GridCsvExportOptions & GridExportDisplayOptions;
   printOptions?: GridPrintExportOptions & GridExportDisplayOptions;
+  excelOptions?: GridExcelExportOptions & GridExportDisplayOptions;
 }
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
-    const { csvOptions, printOptions, onClick, ...other } = props;
+    const { csvOptions, printOptions, excelOptions = {}, onClick, ...other } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const buttonId = useId();
@@ -57,6 +61,11 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
         format: 'print',
         formatOptions: printOptions,
       },
+      {
+        label: apiRef.current.getLocaleText('toolbarExportExcel'),
+        format: 'excel',
+        formatOptions: excelOptions,
+      },
     ];
 
     const handleMenuOpen = (event) => {
@@ -71,6 +80,9 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
           break;
         case 'print':
           apiRef.current.exportDataAsPrint(option.formatOptions);
+          break;
+        case 'excel':
+          apiRef.current.exportDataAsExcel(option.formatOptions);
           break;
         default:
           break;
@@ -88,7 +100,17 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
       }
     };
 
-    if (csvOptions?.disableToolbarButton && printOptions?.disableToolbarButton) {
+    const allowsExcelExport =
+      rootProps.signature === GridSignature.DataGridPro &&
+      (rootProps as DataGridProProps)?.experimentalFeatures?.excelExport;
+    if (!allowsExcelExport) {
+      excelOptions.disableToolbarButton = true;
+    }
+    if (
+      csvOptions?.disableToolbarButton &&
+      printOptions?.disableToolbarButton &&
+      excelOptions?.disableToolbarButton
+    ) {
       return null;
     }
 

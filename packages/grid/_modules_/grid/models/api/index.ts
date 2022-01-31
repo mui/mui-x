@@ -13,6 +13,7 @@ export * from './gridSortApi';
 export * from './gridStateApi';
 export * from './gridLocaleTextApi';
 export * from './gridCsvExportApi';
+export * from './gridExcelExportApi';
 export * from './gridFocusApi';
 export * from './gridFilterApi';
 export * from './gridColumnMenuApi';

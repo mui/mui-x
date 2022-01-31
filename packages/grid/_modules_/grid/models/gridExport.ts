@@ -93,6 +93,33 @@ export interface GridPrintExportOptions extends GridExportOptions {
 }
 
 /**
+ * The options to apply on the Excel export.
+ */
+export interface GridExcelExportOptions extends GridExportOptions {
+  /**
+   * The string used as the file name.
+   * @default `document.title`
+   */
+  fileName?: string;
+  /**
+   * If `true`, the first row of the excel will include the headers of the grid.
+   * @default true
+   */
+  includeHeaders?: boolean;
+  /**
+   * Function that returns the id of the rows to export on the order they should be exported.
+   * @param {GridCsvGetRowsToExportParams} params With all properties from [[GridCsvGetRowsToExportParams]].
+   * @returns {GridRowId[]} The id of the rows to export.
+   */
+  getRowsToExport?: (params: GridCsvGetRowsToExportParams) => GridRowId[];
+}
+
+/**
  * Available export formats.
  */
-export type GridExportFormat = 'csv' | 'print';
+export type GridExportFormat = 'csv' | 'print' | 'excel';
+
+/**
+ * Available export extensions.
+ */
+export type GridExportExtension = 'csv' | 'xls';

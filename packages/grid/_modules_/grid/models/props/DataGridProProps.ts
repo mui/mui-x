@@ -18,6 +18,7 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
    * Will be part of the premium-plan when fully ready.
    */
   rowGrouping: boolean;
+  excelExport: boolean;
 }
 
 /**

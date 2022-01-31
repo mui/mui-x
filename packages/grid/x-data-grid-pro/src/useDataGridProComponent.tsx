@@ -11,6 +11,7 @@ import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useG
 import { useGridDensity } from '../../_modules_/grid/hooks/features/density/useGridDensity';
 import { useGridCsvExport } from '../../_modules_/grid/hooks/features/export/useGridCsvExport';
 import { useGridPrintExport } from '../../_modules_/grid/hooks/features/export/useGridPrintExport';
+import { useGridExcelExport } from '../../_modules_/grid/hooks/features/export/useGridExcelExport';
 import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGridFilter';
 import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
 import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
@@ -62,6 +63,7 @@ export const useDataGridProComponent = (
   useGridKeyboardNavigation(apiRef, props);
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);
+  useGridExcelExport(apiRef, props);
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
