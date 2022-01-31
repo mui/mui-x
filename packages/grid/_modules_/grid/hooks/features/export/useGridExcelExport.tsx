@@ -46,7 +46,7 @@ const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridR
  */
 export const useGridExcelExport = (
   apiRef: GridApiRef,
-  props: Pick<DataGridProProps, 'experimentalFeatures'>,
+  props: Partial<Pick<DataGridProProps, 'experimentalFeatures'>>,
 ): void => {
   const featureIsActivated = props?.experimentalFeatures?.excelExport === true;
 
