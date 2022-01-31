@@ -165,6 +165,14 @@ GridToolbarExport.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   csvOptions: PropTypes.object,
+  excelOptions: PropTypes.shape({
+    allColumns: PropTypes.bool,
+    disableToolbarButton: PropTypes.bool,
+    fields: PropTypes.arrayOf(PropTypes.string),
+    fileName: PropTypes.string,
+    getRowsToExport: PropTypes.func,
+    includeHeaders: PropTypes.bool,
+  }),
   printOptions: PropTypes.object,
 } as any;
 
