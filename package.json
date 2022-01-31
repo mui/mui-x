@@ -155,7 +155,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.31.1",
     "serve": "^13.0.2",
-    "sinon": "^12.0.1",
+    "sinon": "^13.0.0",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-processor-styled-components": "^1.10.0",
