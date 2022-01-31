@@ -326,3 +326,7 @@ export const COUNTRY_ISO_OPTIONS = [
   { value: 'ZM', code: 'ZM', label: 'Zambia', phone: '260' },
   { value: 'ZW', code: 'ZW', label: 'Zimbabwe', phone: '263' },
 ];
+
+export const COUNTRY_ISO_OPTIONS_SORTED = [...COUNTRY_ISO_OPTIONS].sort((v1, v2) =>
+  v1.label.localeCompare(v2.label),
+);
