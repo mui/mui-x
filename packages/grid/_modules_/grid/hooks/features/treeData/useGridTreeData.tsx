@@ -8,6 +8,7 @@ import {
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import {
+  GridApiPro,
   GridColDef,
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
@@ -108,7 +109,7 @@ export const useGridTreeData = (
   /**
    * PRE-PROCESSING
    */
-  const getGroupingColDef = React.useCallback((): GridColDef => {
+  const getGroupingColDef = React.useCallback((): GridColDef<GridApiPro> => {
     const groupingColDefProp = props.groupingColDef;
 
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
@@ -125,7 +126,7 @@ export const useGridTreeData = (
 
     const { hideDescendantCount, ...colDefOverrideProperties } = colDefOverride ?? {};
 
-    const commonProperties: Omit<GridColDef, 'field' | 'editable'> = {
+    const commonProperties: Omit<GridColDef<GridApiPro>, 'field' | 'editable'> = {
       ...GRID_TREE_DATA_GROUPING_COL_DEF,
       renderCell: (params) => (
         <GridTreeDataGroupingCell {...params} hideDescendantCount={hideDescendantCount} />

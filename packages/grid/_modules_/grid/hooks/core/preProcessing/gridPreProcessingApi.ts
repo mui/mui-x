@@ -17,7 +17,7 @@ export enum GridPreProcessingGroup {
 
 interface GridPreProcessingGroupLookup {
   [GridPreProcessingGroup.hydrateColumns]: {
-    value: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+    value: Omit<GridColumnsRawState<any>, 'columnVisibilityModel'>;
   };
   [GridPreProcessingGroup.scrollToIndexes]: {
     value: Partial<GridScrollParams>;

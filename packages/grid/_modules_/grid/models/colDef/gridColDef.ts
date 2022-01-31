@@ -21,7 +21,7 @@ import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridRowModel } from '../gridRows';
 import { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApiCommon } from '../api';
+import type { GridApiCommon, GridApiPro } from '../api';
 
 /**
  * Alignment used in position elements in Cells.
@@ -272,7 +272,7 @@ export interface GridColumnsMeta {
 
 export interface GridGroupingColDefOverride
   extends Omit<
-    GridColDef,
+    GridColDef<GridApiPro>,
     | 'editable'
     | 'valueSetter'
     | 'field'

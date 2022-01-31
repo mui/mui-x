@@ -8,6 +8,7 @@ import type {
   GridKeyValue,
   GridGroupingValueGetterParams,
   GridStateColDef,
+  GridApiPro,
 } from '../../../models';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
@@ -214,7 +215,7 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const getGroupingColDefs = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
+    (columnsState: GridColumnsRawState<GridApiPro>) => {
       if (props.disableRowGrouping) {
         return [];
       }
@@ -262,10 +263,10 @@ export const useGridRowGrouping = (
   );
 
   const updateGroupingColumn = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
+    (columnsState: GridColumnsRawState<GridApiPro>) => {
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
-      const newColumnsLookup: GridColumnRawLookup = {};
+      const newColumnsLookup: GridColumnRawLookup<GridApiPro> = {};
 
       // We only keep the non-grouping columns
       columnsState.all.forEach((field) => {
