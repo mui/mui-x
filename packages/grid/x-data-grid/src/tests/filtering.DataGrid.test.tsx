@@ -1,73 +1,19 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { spy } from 'sinon';
 import {
   DataGrid,
   DataGridProps,
-  GridFilterInputValue,
-  GridFilterInputValueProps,
   GridFilterItem,
   GridPreferencePanelsValue,
   GridToolbar,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
-function setColumnValue(columnValue: string) {
-  fireEvent.change(screen.getByRole('combobox', { name: 'Columns' }), {
-    target: { value: columnValue },
-  });
-}
-
-function setOperatorValue(operatorValue: string) {
-  fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
-    target: { value: operatorValue },
-  });
-}
-
-function setValue(field: string, value: string) {
-  const numberInput = screen.queryByRole('spinbutton', { name: 'Value' });
-  if (numberInput) {
-    return fireEvent.change(numberInput, { target: { value } });
-  }
-
-  const textInput = screen.queryByRole('textbox', { name: 'Value' });
-  if (textInput) {
-    return fireEvent.change(textInput, { target: { value } });
-  }
-
-  const selectInput = screen.queryByRole('combobox', { name: 'Value' });
-  if (selectInput) {
-    return fireEvent.change(selectInput, {
-      target: { value },
-    });
-  }
-
-  throw new Error("Can't update the UI for this type");
-}
-
-function CustomInputValue(props: GridFilterInputValueProps) {
-  const { item, applyValue } = props;
-
-  const handleFilterChange = (event) => {
-    applyValue({ ...item, value: event.target.value });
-  };
-
-  return (
-    <input
-      name="custom-filter-operator"
-      placeholder="Filter value"
-      value={item.value}
-      onChange={handleFilterChange}
-      data-testid="customInput"
-    />
-  );
-}
-
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -76,75 +22,17 @@ describe('<DataGrid /> - Filter', () => {
       {
         id: 0,
         brand: 'Nike',
-        slogan: 'just do it',
-        isPublished: false,
-        country: 'United States',
-        status: 0,
       },
       {
         id: 1,
         brand: 'Adidas',
-        slogan: 'is all in',
-        isPublished: true,
-        country: 'Germany',
-        status: 0,
       },
       {
         id: 2,
         brand: 'Puma',
-        slogan: 'Forever Faster',
-        isPublished: true,
-        country: 'Germany',
-        status: 2,
       },
     ],
-    columns: [
-      { field: 'brand' },
-      {
-        field: 'slogan',
-        filterOperators: [
-          {
-            label: 'From',
-            value: 'from',
-            getApplyFilterFn: () => {
-              return () => false;
-            },
-            InputComponent: CustomInputValue,
-          },
-          {
-            value: 'equals',
-            getApplyFilterFn: (filterItem) => {
-              if (!filterItem.value) {
-                return null;
-              }
-              const collator = new Intl.Collator(undefined, {
-                sensitivity: 'base',
-                usage: 'search',
-              });
-              return ({ value }): boolean => {
-                return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
-              };
-            },
-            InputComponent: GridFilterInputValue,
-          },
-        ],
-      },
-      { field: 'isPublished', type: 'boolean' },
-      {
-        field: 'country',
-        type: 'singleSelect',
-        valueOptions: ['United States', 'Germany', 'France'],
-      },
-      {
-        field: 'status',
-        type: 'singleSelect',
-        valueOptions: [
-          { value: 0, label: 'Payment Pending' },
-          { value: 1, label: 'Shipped' },
-          { value: 2, label: 'Delivered' },
-        ],
-      },
-    ],
+    columns: [{ field: 'brand' }],
   };
 
   const TestCase = (props: Partial<DataGridProps>) => {
@@ -258,33 +146,33 @@ describe('<DataGrid /> - Filter', () => {
           initialState={{
             filter: {
               filterModel: {
-                items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'true' }],
+                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Adidas' }],
               },
             },
           }}
         />,
       );
 
-      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     });
 
     it('should use the control state upon the initialize state when both are defined', () => {
       render(
         <TestCase
           filterModel={{
-            items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'false' }],
+            items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Adidas' }],
           }}
           initialState={{
             filter: {
               filterModel: {
-                items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'true' }],
+                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Puma' }],
               },
             },
           }}
         />,
       );
 
-      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     });
 
     it('should not update the filters when updating the initial state', () => {
@@ -293,7 +181,7 @@ describe('<DataGrid /> - Filter', () => {
           initialState={{
             filter: {
               filterModel: {
-                items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'true' }],
+                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Adidas' }],
               },
             },
           }}
@@ -304,13 +192,13 @@ describe('<DataGrid /> - Filter', () => {
         initialState: {
           filter: {
             filterModel: {
-              items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'false' }],
+              items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Puma' }],
             },
           },
         },
       });
 
-      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     });
 
     it('should allow to update the filters when initialized with initialState', () => {
@@ -323,16 +211,19 @@ describe('<DataGrid /> - Filter', () => {
             },
             filter: {
               filterModel: {
-                items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'true' }],
+                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Adidas' }],
               },
             },
           }}
         />,
       );
 
-      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
-      setValue('isPublished', 'false');
-      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), {
+        target: { value: 'Puma' },
+      });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Puma']);
     });
   });
 
@@ -347,7 +238,7 @@ describe('<DataGrid /> - Filter', () => {
             { id: 0, country: undefined },
             { id: 1, country: null },
             { id: 2, country: '' },
-            { id: 3, country: 'United States' },
+            { id: 3, country: 'France (fr)' },
             { id: 4, country: 'Germany' },
           ]}
           columns={[
@@ -364,50 +255,79 @@ describe('<DataGrid /> - Filter', () => {
       return values;
     };
 
-    const ALL_ROWS = ['', '', '', 'United States', 'Germany'];
+    const ALL_ROWS = ['', '', '', 'France (fr)', 'Germany'];
 
     it('should filter with operator "contains"', () => {
-      expect(getRows({ operatorValue: 'contains', value: 'United' })).to.deep.equal([
-        'United States',
-      ]);
-      expect(getRows({ operatorValue: 'contains', value: 'united' })).to.deep.equal([
-        'United States',
-      ]);
+      expect(getRows({ operatorValue: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
+
+      // Case-insensitive
+      expect(getRows({ operatorValue: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
+
+      // Empty values
       expect(getRows({ operatorValue: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operatorValue: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
+
+      // Value with regexp special literal
+      expect(getRows({ operatorValue: 'contains', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal(
+        [],
+      );
+      expect(getRows({ operatorValue: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
     });
 
     it('should filter with operator "equals"', () => {
-      expect(getRows({ operatorValue: 'equals', value: 'United States' })).to.deep.equal([
-        'United States',
+      expect(getRows({ operatorValue: 'equals', value: 'France (fr)' })).to.deep.equal([
+        'France (fr)',
       ]);
-      expect(getRows({ operatorValue: 'equals', value: 'united states' })).to.deep.equal([
-        'United States',
+
+      // Case-insensitive
+      expect(getRows({ operatorValue: 'equals', value: 'france (fr)' })).to.deep.equal([
+        'France (fr)',
       ]);
+
+      // Empty values
       expect(getRows({ operatorValue: 'equals', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operatorValue: 'equals', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "startsWith"', () => {
-      expect(getRows({ operatorValue: 'startsWith', value: 'unit' })).to.deep.equal([
-        'United States',
-      ]);
+      expect(getRows({ operatorValue: 'startsWith', value: 'Fra' })).to.deep.equal(['France (fr)']);
+
+      // Case-insensitive
+      expect(getRows({ operatorValue: 'startsWith', value: 'fra' })).to.deep.equal(['France (fr)']);
+
+      // Empty values
       expect(getRows({ operatorValue: 'startsWith', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operatorValue: 'startsWith', value: '' })).to.deep.equal(ALL_ROWS);
+
+      // Value with regexp special literal
+      expect(
+        getRows({ operatorValue: 'startsWith', value: '[-[]{}()*+?.,\\^$|#s]' }),
+      ).to.deep.equal([]);
+      expect(getRows({ operatorValue: 'contains', value: 'France (' })).to.deep.equal([
+        'France (fr)',
+      ]);
     });
 
     it('should filter with operator "endWith"', () => {
-      expect(getRows({ operatorValue: 'endsWith', value: 'ates' })).to.deep.equal([
-        'United States',
-      ]);
+      expect(getRows({ operatorValue: 'endsWith', value: 'many' })).to.deep.equal(['Germany']);
+
+      // Empty values
       expect(getRows({ operatorValue: 'endsWith', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operatorValue: 'endsWith', value: '' })).to.deep.equal(ALL_ROWS);
+
+      // Value with regexp special literal
+      expect(getRows({ operatorValue: 'endsWith', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal(
+        [],
+      );
+      expect(getRows({ operatorValue: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
     });
 
     it('should filter with operator "isAnyOf"', () => {
-      expect(getRows({ operatorValue: 'isAnyOf', value: ['United States'] })).to.deep.equal([
-        'United States',
+      expect(getRows({ operatorValue: 'isAnyOf', value: ['France (fr)'] })).to.deep.equal([
+        'France (fr)',
       ]);
+
+      // Empty values
       expect(getRows({ operatorValue: 'isAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operatorValue: 'isAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
     });
@@ -417,49 +337,7 @@ describe('<DataGrid /> - Filter', () => {
     });
 
     it('should filter with operator "isNotEmpty"', () => {
-      expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal(['United States', 'Germany']);
-    });
-
-    // TODO: Clean
-    describe('RegExp', () => {
-      ['contains', 'startsWith', 'endsWith'].forEach((operatorValue) => {
-        it('should escape RegExp characters if applied as filter values', () => {
-          const regExpToEscape = '[-[]{}()*+?.,\\^$|#s]';
-          render(
-            <TestCase
-              filterModel={{
-                items: [{ columnField: 'brand', operatorValue, value: regExpToEscape }],
-              }}
-            />,
-          );
-          expect(getColumnValues(0)).to.deep.equal([]);
-        });
-      });
-
-      it('should allow regex special as literals and return rows with the matched input', () => {
-        render(
-          <TestCase
-            filterModel={{
-              items: [{ columnField: 'brand', operatorValue: 'contains', value: '.com,' }],
-            }}
-            rows={[
-              {
-                id: 0,
-                brand: 'Amazon',
-              },
-              {
-                id: 1,
-                brand: 'Amazon.com, Inc.',
-              },
-              {
-                id: 2,
-                brand: 'Amazon.com,',
-              },
-            ]}
-          />,
-        );
-        expect(getColumnValues(0)).to.deep.equal(['Amazon.com, Inc.', 'Amazon.com,']);
-      });
+      expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal(['France (fr)', 'Germany']);
     });
   });
 
@@ -1078,7 +956,7 @@ describe('<DataGrid /> - Filter', () => {
       ).to.deep.equal(ALL_ROWS_YEAR);
     });
 
-    it('should works with valueParser', () => {
+    it('should support `valueParser`', () => {
       const valueOptions = [
         { value: 0, label: 'Payment Pending' },
         { value: 1, label: 'Shipped' },
@@ -1090,8 +968,13 @@ describe('<DataGrid /> - Filter', () => {
           filterModel={{
             items: [{ columnField: 'status', operatorValue: 'is', value: 0 }],
           }}
+          rows={[
+            { id: 0, status: 0 },
+            { id: 1, status: 1 },
+            { id: 2, status: 2 },
+          ]}
           columns={[
-            { field: 'brand' },
+            { field: 'id' },
             {
               field: 'status',
               type: 'singleSelect',
@@ -1106,19 +989,19 @@ describe('<DataGrid /> - Filter', () => {
           ]}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
       setProps({
         filterModel: {
           items: [{ columnField: 'status', operatorValue: 'not', value: 0 }],
         },
       });
-      expect(getColumnValues(0)).to.deep.equal(['Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['1', '2']);
       setProps({
         filterModel: {
           items: [{ columnField: 'status', operatorValue: 'isAnyOf', value: [0, 2] }],
         },
       });
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '2']);
     });
 
     it('should support a function for `valueOptions`', () => {
@@ -1248,309 +1131,5 @@ describe('<DataGrid /> - Filter', () => {
       />,
     );
     expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
-  });
-
-  describe('Filter panel', () => {
-    it('should show an empty string as the default filter input value', () => {
-      render(
-        <TestCase
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-          filterModel={{ items: [{ columnField: 'brand', operatorValue: 'contains' }] }}
-        />,
-      );
-      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
-    });
-
-    it('should keep filter operator and value if available', () => {
-      render(
-        <TestCase
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [
-                  {
-                    columnField: 'brand',
-                    value: 'Puma',
-                    operatorValue: 'equals',
-                  },
-                ],
-              },
-            },
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
-      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
-      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
-      expect(getColumnValues(0)).to.deep.equal(['Puma']);
-
-      setColumnValue('slogan');
-
-      expect(getColumnValues(0)).to.deep.equal([]);
-      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
-      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
-    });
-
-    it('should reset value if operator is not available for the new column', () => {
-      render(
-        <TestCase
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [
-                  {
-                    columnField: 'brand',
-                    operatorValue: 'contains',
-                    value: 'Pu',
-                  },
-                ],
-              },
-            },
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
-      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
-      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
-      expect(getColumnValues(0)).to.deep.equal(['Puma']);
-
-      setColumnValue('slogan');
-
-      expect(getColumnValues(0)).to.deep.equal([]);
-      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('from');
-      expect(screen.getByTestId('customInput').value).to.equal('');
-    });
-
-    it('should reset value if the new operator has no input component', () => {
-      const onFilterModelChange = spy();
-
-      render(
-        <TestCase
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [
-                  {
-                    columnField: 'brand',
-                    operatorValue: 'contains',
-                    value: 'Pu',
-                  },
-                ],
-              },
-            },
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-          onFilterModelChange={onFilterModelChange}
-        />,
-      );
-      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
-      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
-      expect(getColumnValues(0)).to.deep.equal(['Puma']);
-
-      expect(onFilterModelChange.callCount).to.equal(0);
-
-      setOperatorValue('isEmpty');
-
-      expect(onFilterModelChange.callCount).to.equal(1);
-      expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
-
-      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('isEmpty');
-    });
-
-    it('should reset filter value if not available in the new valueOptions', () => {
-      render(
-        <TestCase
-          rows={[
-            { id: 1, reference: 'REF_1', origin: 'Italy', destination: 'Germany' },
-            { id: 2, reference: 'REF_2', origin: 'Germany', destination: 'UK' },
-            { id: 3, reference: 'REF_3', origin: 'Germany', destination: 'Italy' },
-          ]}
-          columns={[
-            { field: 'reference' },
-            { field: 'origin', type: 'singleSelect', valueOptions: ['Italy', 'Germany'] },
-            {
-              field: 'destination',
-              type: 'singleSelect',
-              valueOptions: ['Italy', 'Germany', 'UK'],
-            },
-          ]}
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [{ columnField: 'destination', operatorValue: 'is', value: 'UK' }],
-              },
-            },
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
-      expect(getColumnValues(0)).to.deep.equal(['REF_2']);
-
-      setColumnValue('origin');
-
-      expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
-    });
-
-    it('should keep the value if available in the new valueOptions', () => {
-      const IT = { value: 'IT', label: 'Italy' };
-      const GE = { value: 'GE', label: 'Germany' };
-
-      render(
-        <TestCase
-          rows={[
-            { id: 1, reference: 'REF_1', origin: 'IT', destination: 'GE' },
-            { id: 2, reference: 'REF_2', origin: 'GE', destination: 'UK' },
-            { id: 3, reference: 'REF_3', origin: 'GE', destination: 'IT' },
-          ]}
-          columns={[
-            { field: 'reference' },
-            { field: 'origin', type: 'singleSelect', valueOptions: [IT, GE] },
-            { field: 'destination', type: 'singleSelect', valueOptions: ['IT', 'GE', 'UK'] },
-          ]}
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [{ columnField: 'destination', operatorValue: 'is', value: 'GE' }],
-              },
-            },
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
-
-      expect(getColumnValues(0)).to.deep.equal(['REF_1']);
-
-      setColumnValue('origin');
-
-      expect(getColumnValues(0)).to.deep.equal(['REF_2', 'REF_3']);
-    });
-
-    it('should reset filter value if not available in the new valueOptions with isAnyOperator', () => {
-      render(
-        <TestCase
-          rows={[
-            { id: 1, reference: 'REF_1', origin: 'Italy', destination: 'Germany' },
-            { id: 2, reference: 'REF_2', origin: 'Germany', destination: 'UK' },
-            { id: 3, reference: 'REF_3', origin: 'Germany', destination: 'Italy' },
-          ]}
-          columns={[
-            { field: 'reference' },
-            { field: 'origin', type: 'singleSelect', valueOptions: ['Italy', 'Germany'] },
-            {
-              field: 'destination',
-              type: 'singleSelect',
-              valueOptions: ['Italy', 'Germany', 'UK'],
-            },
-          ]}
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['UK'] }],
-              },
-            },
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
-
-      expect(getColumnValues(0)).to.deep.equal(['REF_2']);
-      setColumnValue('origin');
-      expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
-    });
-
-    it('should keep the value if available in the new valueOptions with isAnyOperator', () => {
-      const IT = { value: 'IT', label: 'Italy' };
-      const GE = { value: 'GE', label: 'Germany' };
-
-      render(
-        <TestCase
-          rows={[
-            { id: 1, reference: 'REF_1', origin: 'IT', destination: 'GE' },
-            { id: 2, reference: 'REF_2', origin: 'GE', destination: 'UK' },
-            { id: 3, reference: 'REF_3', origin: 'GE', destination: 'IT' },
-          ]}
-          columns={[
-            { field: 'reference' },
-            { field: 'origin', type: 'singleSelect', valueOptions: [IT, GE] },
-            { field: 'destination', type: 'singleSelect', valueOptions: ['IT', 'GE', 'UK'] },
-          ]}
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['GE'] }],
-              },
-            },
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
-
-      expect(getColumnValues(0)).to.deep.equal(['REF_1']);
-      setColumnValue('origin');
-      expect(getColumnValues(0)).to.deep.equal(['REF_2', 'REF_3']);
-    });
-
-    it('should reset filter value if moving from multiple to single value operator', () => {
-      render(
-        <TestCase
-          rows={[
-            { id: 1, reference: 'REF_1', origin: 'Italy', destination: 'Germany' },
-            { id: 2, reference: 'REF_2', origin: 'Germany', destination: 'UK' },
-            { id: 3, reference: 'REF_3', origin: 'Germany', destination: 'Italy' },
-          ]}
-          columns={[
-            { field: 'reference' },
-            { field: 'origin', type: 'singleSelect', valueOptions: ['Italy', 'Germany'] },
-            {
-              field: 'destination',
-              type: 'singleSelect',
-              valueOptions: ['Italy', 'Germany', 'UK'],
-            },
-          ]}
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['UK'] }],
-              },
-            },
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
-      expect(getColumnValues(0)).to.deep.equal(['REF_2']);
-
-      setOperatorValue('is');
-
-      expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
-    });
   });
 });
