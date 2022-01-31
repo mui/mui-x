@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Workbook } from 'exceljs';
-import { DataGridProProps } from 'packages/grid/x-data-grid-pro/build/x-data-grid-pro';
+import { DataGridProProps } from '../../../models/props/DataGridProProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
