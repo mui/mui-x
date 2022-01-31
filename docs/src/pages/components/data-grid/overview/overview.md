@@ -15,20 +15,12 @@ The component leverages the power of React and TypeScript, to provide the best U
 
 ## Overview
 
-Data tables display information in a grid-like format of rows and columns. They organize information in a way that’s easy to scan so that users can look for patterns and insights. The data grid comes in 2 versions, both in MUI X:
-
-The data grid comes with two different licenses:
-
-- [DataGrid](/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
-- [DataGridPro](/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
-  The features only available in the commercial version are suffixed with a <span class="plan-pro"></span> icon for the Pro plan or a <span class="plan-premium"></span> icon for the Premium plan.
-
-  <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
-
-  You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
-  See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
-
 > Visit the [installation guide](/components/data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+
+Data tables display information in a grid-like format of rows and columns.
+They organize information in a way that’s easy to scan so that users can look for patterns and insights.
+
+The data grid comes in two different versions:
 
 ### MIT version
 
@@ -51,26 +43,9 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 {{"demo": "pages/components/data-grid/overview/DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
-You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
-See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
-
 ### MIT vs. commercial
 
-_How do we decide if a feature is MIT or commercial?_
-
-We have been building MIT React components since 2014,
-and have learned much about the strengths and weaknesses of the MIT license model.
-The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
-However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT licensed components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
-
-We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
-A solution to a problem should only be commercial if it has no MIT alternatives.
-
-We provide three options:
-
-- **Community**. This plan contains the MIT components that are sustainable by the contributions of the open-source community. Free forever.
-- **Pro**. This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components. From a price perspective, the plan is designed to be accessible to most professionals.
-- **Premium**. This plan contains the most advanced features.
+> Please check the [Licenses section](/components/data-grid/getting-started/#licenses) for more details between the different versions.
 
 ## Features
 

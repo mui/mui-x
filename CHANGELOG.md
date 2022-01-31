@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.4.0
+
+_Jan 28, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚣 Introduce [variable row height](https://mui.com/components/data-grid/rows/#variable-row-height) (#438) @DanailH
+
+  Allows for setting a row-specific height.
+  By default, all rows have the same height, but now you can set the height on a per-row basis.
+
+  ```tsx
+  <DataGrid 
+    getRowHeight={
+      ({ id }: GridRowHeightParams) => (id % 2 === 0 ? 100 : null)
+    }
+  />
+  ```
+
+- 🎁 Add new CSV export option: [`getRowsToExport`](https://mui.com/components/data-grid/export/#custom-exported-content) (#3687) @flaviendelangle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.4.0` / `@mui/x-data-grid-pro@v5.4.0`
+
+#### Changes
+
+- [DataGrid] Add l10n support for `is any of` (#3746) @alexfauquette
+- [DataGrid] Add new CSV `getRowsToExport` option (#3687) @flaviendelangle
+- [DataGrid] Clean params of `onCellEditCommit` (#3693) @valenfv
+- [DataGrid] Create a new lookup with all the filtered rows, collapsed or not (#3736) @flaviendelangle
+- [DataGrid] Fix Alt+c being ignored on some systems (#3660) @cherniavskii
+- [DataGrid] Fix `isRowSelectable` when `paginationMode='server'` (#3647) @flaviendelangle
+- [DataGrid] Fix browser keyboard shortcuts not working when header cell is focused (#3692) @valenfv
+- [DataGrid] Fix focus on checkbox cells (#3501) @alexfauquette
+- [DataGrid] Only update the visibility status of the updated columns when calling `apiRef.current.updateRows` (#3735) @flaviendelangle
+- [DataGrid] Prevent commit if `preProcessEditCellProps` resolves with an error (#3612) @m4theushw
+- [DataGrid] Update selected rows when turning off `checkboxSelection` (#3684) @m4theushw
+- [DataGrid] Variable row height (#3218) @DanailH
+- [DataGridPro] Call `useGridColumnPinning` before `useGridColumns` (#3676) @flaviendelangle
+- [DataGridPro] Fix grid cell losing focus when scrolling with keyboard (#3667) @cherniavskii
+- [DataGridPro] Fix missing `styleOverrides` on pinned columns (#3733) @alexfauquette
+- [DataGridPro] Remove function overloading for `useGridApiRef` (#3666) @flaviendelangle
+- [l10n] Improve French (frFR) locale (#3739) @flaviendelangle
+- [l10n] Improve Italian (itIT) locale (#3744) @destegabry
+
+### Docs
+
+- [docs] Fix broken code example on the localization page (#3742) @flaviendelangle
+- [docs] Fix typo in column visibility example (#3734) @flaviendelangle
+- [docs] Fix typo on `columnVisibilityModel` (#3723) @alexfauquette
+- [docs] Improve sorting documentation page (#3564) @flaviendelangle
+- [docs] Improve `v5.3.0` release notes (#3722) @cherniavskii
+- [docs] Prepare scripts and E2E tests for migration (#3515) @siriwatknp
+- [docs] Clarify what is the professional support (#3530) @oliviertassinari
+
+### Core
+
+- [core] Add ESLint rule to force default export equals to filename in documentation (#3674) @alexfauquette
+- [core] Fix `l10n` script not updating `csCZ` locale (#3748) @cherniavskii
+- [core] Generate CHANGELOG from GitHub API (#3313) @alexfauquette
+- [core] Isolate selectors from different grid instances (#3663) @m4theushw
+- [test] Improve test detection (#3728) @m4theushw
+- [test] Include module augmentation for Chai custom matchers (#3754) @m4theushw
+- [test] Remove a useless `async` (#3675) @alexfauquette
+- [test] Remove remaining `@ts-expect-error` (#3762) @m4theushw
+- [test] Skip test on Firefox (#3752) @m4theushw
+- [test] Wait for flags to load before creating snapshots (#3726) @m4theushw
+- [test] Warn when focusing cells without syncing the state (#3486) @m4theushw
+
 ## 5.3.0
 
 _Jan 21, 2022_
