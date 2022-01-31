@@ -4,6 +4,7 @@ import { GridApiRef } from '../models/api/gridApiRef';
 
 export interface OutputSelector<Result> {
   (apiRef: GridApiRef): Result;
+  // TODO v6: make instanceId require
   (state: GridState, instanceId?: number): Result;
   cache: object;
 }
