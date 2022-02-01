@@ -963,9 +963,9 @@ describe('<DataGrid /> - Filter', () => {
 
     it('should support `valueParser`', () => {
       const valueOptions = [
-        { value: 0, label: 'Payment Pending' },
-        { value: 1, label: 'Shipped' },
-        { value: 2, label: 'Delivered' },
+        { value: 'Status 0', label: 'Payment Pending' },
+        { value: 'Status 1', label: 'Shipped' },
+        { value: 'Status 2', label: 'Delivered' },
       ];
 
       const { setProps } = render(
@@ -974,9 +974,9 @@ describe('<DataGrid /> - Filter', () => {
             items: [{ columnField: 'status', operatorValue: 'is', value: 0 }],
           }}
           rows={[
-            { id: 0, status: 0 },
-            { id: 1, status: 1 },
-            { id: 2, status: 2 },
+            { id: 0, status: 'Status 0' },
+            { id: 1, status: 'Status 1' },
+            { id: 2, status: 'Status 2' },
           ]}
           columns={[
             { field: 'id' },
@@ -985,10 +985,7 @@ describe('<DataGrid /> - Filter', () => {
               type: 'singleSelect',
               valueOptions,
               valueParser: (value) => {
-                if (typeof value === 'number') {
-                  return valueOptions.find((option) => option.value === value);
-                }
-                return value;
+                return `Status ${value}`;
               },
             },
           ]}
