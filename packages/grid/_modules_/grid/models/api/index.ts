@@ -1,9 +1,10 @@
+import type { GridEditingApi } from './gridEditingApi';
+
 export * from './gridApiRef';
 export * from './gridParamsApi';
 export * from './gridCoreApi';
 export * from './gridColumnApi';
 export * from './gridDensityApi';
-export * from './gridEditRowApi';
 export * from './gridApi';
 export * from './gridRowApi';
 export * from './gridRowsMetaApi';
@@ -23,3 +24,6 @@ export * from './gridCallbackDetails';
 export * from './gridScrollApi';
 export * from './gridColumnPinningApi';
 export * from './gridVirtualScrollerApi';
+
+export type { GridEditingApi };
+export type GridEditRowApi = GridEditingApi;
