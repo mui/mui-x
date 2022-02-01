@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   GRID_STRING_COL_DEF,
-  GridApiRef,
   GridColDef,
   GridGroupingColDefOverride,
   GridRenderCellParams,
