@@ -326,7 +326,7 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(getColumnValues(0)).to.deep.equal(['REF_2', 'REF_3']);
   });
 
-  it('should reset filter value if not available in the new valueOptions with isAnyOperator', () => {
+  it('should reset filter value if not available in the new valueOptions with operator "isAnyOf"', () => {
     render(
       <TestCase
         rows={[
@@ -362,7 +362,7 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
   });
 
-  it('should keep the value if available in the new valueOptions with isAnyOperator', () => {
+  it('should keep the value if available in the new valueOptions with operator "isAnyOf"', () => {
     const IT = { value: 'IT', label: 'Italy' };
     const GE = { value: 'GE', label: 'Germany' };
 

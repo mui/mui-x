@@ -327,6 +327,11 @@ describe('<DataGrid /> - Filter', () => {
         'France (fr)',
       ]);
 
+      // `isAnyOf` has a `or` behavior
+      expect(
+        getRows({ operatorValue: 'isAnyOf', value: ['France (fr)', 'Germany'] }),
+      ).to.deep.equal(['France (fr)', 'Germany']);
+
       // Empty values
       expect(getRows({ operatorValue: 'isAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operatorValue: 'isAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
@@ -391,7 +396,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operatorValue: '=', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
-    it('should filter with operator "!"', () => {
+    it('should filter with operator "!="', () => {
       expect(getRows({ operatorValue: '!=', value: 1974 })).to.deep.equal([
         '',
         '',
@@ -792,7 +797,7 @@ describe('<DataGrid /> - Filter', () => {
             {
               field: 'isPublished',
               type: 'boolean',
-              // The boolean cell does not handle the formatted value to we override it
+              // The boolean cell does not handle the formatted value so we override it
               renderCell: (params) => {
                 const value = params.value as boolean | null | undefined;
 
@@ -1052,6 +1057,63 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
+  describe('toolbar active filter count', () => {
+    it('should not include operators with value when the value is empty', () => {
+      const getFilterCount = (item: GridFilterItem) => {
+        const { unmount } = render(
+          <TestCase
+            rows={[]}
+            columns={[
+              { field: 'brand', type: 'string' },
+              { field: 'year', type: 'number' },
+              { field: 'status', type: 'singleSelect' },
+            ]}
+            filterModel={{
+              items: [item],
+            }}
+          />,
+        );
+
+        const hasNoActiveFilter = screen.queryByLabelText('0 active filter') == null;
+        unmount();
+
+        return hasNoActiveFilter ? 0 : 1;
+      };
+
+      expect(
+        getFilterCount({ columnField: 'brand', operatorValue: 'contains', value: '' }),
+      ).to.equal(0);
+      expect(
+        getFilterCount({ columnField: 'brand', operatorValue: 'contains', value: undefined }),
+      ).to.equal(0);
+      expect(
+        getFilterCount({ columnField: 'brand', operatorValue: 'isAnyOf', value: [] }),
+      ).to.equal(0);
+      expect(
+        getFilterCount({ columnField: 'year', operatorValue: '=', value: undefined }),
+      ).to.equal(0);
+      expect(getFilterCount({ columnField: 'year', operatorValue: '=', value: '' })).to.equal(0);
+    });
+
+    it('should include value-less operators', () => {
+      render(
+        <TestCase
+          rows={[]}
+          columns={[{ field: 'brand', type: 'string' }]}
+          filterModel={{
+            items: [
+              {
+                columnField: 'brand',
+                operatorValue: 'isNotEmpty',
+              },
+            ],
+          }}
+        />,
+      );
+      expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
+    });
+  });
+
   it('should translate operators dynamically in toolbar without crashing ', () => {
     expect(() => {
       return (
@@ -1081,55 +1143,5 @@ describe('<DataGrid /> - Filter', () => {
         </div>
       );
     }).not.to.throw();
-  });
-
-  it('should apply the valueParser onto the filter value', () => {
-    render(
-      <TestCase
-        rows={[
-          {
-            id: 1,
-            amount: 0.5,
-          },
-          {
-            id: 2,
-            amount: 1,
-          },
-        ]}
-        columns={[
-          {
-            field: 'amount',
-            type: 'number',
-            valueParser: (value) => (value as number) / 100,
-          },
-        ]}
-        filterModel={{
-          items: [
-            {
-              columnField: 'amount',
-              operatorValue: '=',
-              value: 50,
-            },
-          ],
-        }}
-      />,
-    );
-    expect(getColumnValues(0)).to.deep.equal(['0.5']);
-  });
-
-  it('should include value-less operators when displaying the number of active filters', () => {
-    render(
-      <TestCase
-        filterModel={{
-          items: [
-            {
-              columnField: 'brand',
-              operatorValue: 'isNotEmpty',
-            },
-          ],
-        }}
-      />,
-    );
-    expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
   });
 });
