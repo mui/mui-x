@@ -450,10 +450,15 @@ export const useGridRowGrouping = (
         return prevState;
       }
 
+      const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef.current.state);
+      if (rowGroupingModelToExport.length === 0) {
+        return prevState;
+      }
+
       return {
         ...prevState,
         rowGrouping: {
-          model: gridRowGroupingModelSelector(apiRef.current.state),
+          model: rowGroupingModelToExport,
         },
       };
     },

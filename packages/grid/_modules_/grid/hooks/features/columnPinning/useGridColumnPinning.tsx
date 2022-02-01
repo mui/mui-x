@@ -40,13 +40,23 @@ export const useGridColumnPinning = (
     'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
   >,
 ): void => {
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    pinnedColumns: {
-      left: !props.disableColumnPinning ? props.initialState?.pinnedColumns?.left : undefined,
-      right: !props.disableColumnPinning ? props.initialState?.pinnedColumns?.right : undefined,
-    },
-  }));
+  useGridStateInit(apiRef, (state) => {
+    let model: GridPinnedColumns;
+    if (props.disableColumnPinning) {
+      model = {};
+    } else if (props.pinnedColumns) {
+      model = props.pinnedColumns;
+    } else if (props.initialState?.pinnedColumns) {
+      model = props.initialState?.pinnedColumns;
+    } else {
+      model = {};
+    }
+
+    return {
+      ...state,
+      pinnedColumns: model,
+    };
+  });
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
 
   // Each visible row (not to be confused with a filter result) is composed of a central .MuiDataGrid-row element
@@ -228,9 +238,17 @@ export const useGridColumnPinning = (
     GridPreProcessor<GridPreProcessingGroup.exportState>
   >(
     (prevState) => {
+      const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
+      if (
+        (!pinnedColumnsToExport.left || pinnedColumnsToExport.left.length === 0) &&
+        (!pinnedColumnsToExport.right || pinnedColumnsToExport.right.length === 0)
+      ) {
+        return prevState;
+      }
+
       return {
         ...prevState,
-        pinnedColumns: gridPinnedColumnsSelector(apiRef.current.state),
+        pinnedColumns: pinnedColumnsToExport,
       };
     },
     [apiRef],

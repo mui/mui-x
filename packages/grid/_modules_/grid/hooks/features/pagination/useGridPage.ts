@@ -102,11 +102,16 @@ export const useGridPage = (
     GridPreProcessor<GridPreProcessingGroup.exportState>
   >(
     (prevState) => {
+      const pageToExport = gridPageSelector(apiRef.current.state);
+      if (pageToExport === 0) {
+        return prevState;
+      }
+
       return {
         ...prevState,
         pagination: {
           ...prevState.pagination,
-          page: gridPageSelector(apiRef.current.state),
+          page: pageToExport,
         },
       };
     },

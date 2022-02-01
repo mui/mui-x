@@ -78,9 +78,14 @@ export const useGridPreferencesPanel = (
     GridPreProcessor<GridPreProcessingGroup.exportState>
   >(
     (prevState) => {
+      const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef.current.state);
+      if (!preferencePanelToExport.open && !preferencePanelToExport.openedPanelValue) {
+        return prevState;
+      }
+
       return {
         ...prevState,
-        preferencePanel: gridPreferencePanelStateSelector(apiRef.current.state),
+        preferencePanel: preferencePanelToExport,
       };
     },
     [apiRef],

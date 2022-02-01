@@ -42,16 +42,16 @@ export const useGridPageSize = (
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
+  const defaultPageSize = props.autoPageSize ? 0 : 100;
+
   useGridStateInit(apiRef, (state) => {
     let pageSize: number;
     if (props.pageSize != null) {
       pageSize = props.pageSize;
     } else if (props.initialState?.pagination?.pageSize != null) {
       pageSize = props.initialState.pagination.pageSize;
-    } else if (props.autoPageSize) {
-      pageSize = 0;
     } else {
-      pageSize = 100;
+      pageSize = defaultPageSize;
     }
 
     return {
@@ -100,11 +100,16 @@ export const useGridPageSize = (
     GridPreProcessor<GridPreProcessingGroup.exportState>
   >(
     (prevState) => {
+      const pageSizeToExport = gridPageSizeSelector(apiRef.current.state);
+      if (pageSizeToExport === defaultPageSize) {
+        return prevState;
+      }
+
       return {
         ...prevState,
         pagination: {
           ...prevState.pagination,
-          pageSize: gridPageSizeSelector(apiRef.current.state),
+          pageSize: pageSizeToExport,
         },
       };
     },

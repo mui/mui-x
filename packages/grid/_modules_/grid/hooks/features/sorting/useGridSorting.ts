@@ -220,10 +220,15 @@ export const useGridSorting = (
     GridPreProcessor<GridPreProcessingGroup.exportState>
   >(
     (prevState) => {
+      const sortModelToExport = gridSortModelSelector(apiRef.current.state);
+      if (sortModelToExport.length === 0) {
+        return prevState;
+      }
+
       return {
         ...prevState,
         sorting: {
-          sortModel: gridSortModelSelector(apiRef.current.state),
+          sortModel: sortModelToExport,
         },
       };
     },

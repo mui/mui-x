@@ -3,6 +3,7 @@ import {
   DataGridPro,
   DataGridProProps,
   GridApiRef,
+  GridInitialState,
   GridPreferencePanelsValue,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -35,8 +36,12 @@ describe('<DataGridPro /> - State Persistence', () => {
           rowsPerPageOptions={[100, 2]}
           experimentalFeatures={{ rowGrouping: true }} // To enable the `rowGroupingModel in export / restore
           initialState={{
+            ...props.initialState,
             columns: {
-              columnVisibilityModel: {}, // To enable the `columnVisibilityModel` in export / restore
+              ...props.initialState?.columns,
+              columnVisibilityModel: {
+                ...props.initialState?.columns?.columnVisibilityModel,
+              }, // To enable the `columnVisibilityModel` in export / restore
             },
           }}
           defaultGroupingExpansionDepth={-1}
@@ -46,36 +51,42 @@ describe('<DataGridPro /> - State Persistence', () => {
   };
 
   describe('apiRef: exportState', () => {
-    it('should return the whole exportable state', () => {
+    const FULL_INITIAL_STATE: GridInitialState = {
+      columns: {
+        columnVisibilityModel: { year: false },
+      },
+      filter: {
+        filterModel: {
+          items: [{ columnField: 'gross', operatorValue: '>', value: '1500000000' }],
+        },
+      },
+      pagination: {
+        page: 1,
+        pageSize: 2,
+      },
+      pinnedColumns: {
+        left: ['company'],
+      },
+      preferencePanel: {
+        open: true,
+        openedPanelValue: GridPreferencePanelsValue.filters,
+      },
+      sorting: {
+        sortModel: [{ field: 'director', sort: 'asc' }],
+      },
+      rowGrouping: {
+        model: ['director'],
+      },
+    };
+
+    it('should not return the default values of the models', () => {
       render(<TestCase />);
-      expect(apiRef.current.exportState()).to.deep.equal({
-        columns: {
-          columnVisibilityModel: {},
-        },
-        filter: {
-          filterModel: {
-            items: [],
-            linkOperator: 'and',
-          },
-        },
-        pagination: {
-          page: 0,
-          pageSize: 100,
-        },
-        pinnedColumns: {
-          left: undefined,
-          right: undefined,
-        },
-        preferencePanel: {
-          open: false,
-        },
-        rowGrouping: {
-          model: [],
-        },
-        sorting: {
-          sortModel: [],
-        },
-      });
+      expect(apiRef.current.exportState()).to.deep.equal({});
+    });
+
+    it('should export the initial values of the models', () => {
+      render(<TestCase initialState={FULL_INITIAL_STATE} />);
+      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });
 
     it('should export the current version of the exportable state', () => {
@@ -91,33 +102,7 @@ describe('<DataGridPro /> - State Persistence', () => {
       apiRef.current.setRowGroupingModel(['director']);
       apiRef.current.setColumnVisibilityModel({ year: false });
 
-      expect(apiRef.current.exportState()).to.deep.equal({
-        columns: {
-          columnVisibilityModel: { year: false },
-        },
-        filter: {
-          filterModel: {
-            items: [{ columnField: 'gross', operatorValue: '>', value: '1500000000' }],
-          },
-        },
-        pagination: {
-          page: 1,
-          pageSize: 2,
-        },
-        pinnedColumns: {
-          left: ['company'],
-        },
-        preferencePanel: {
-          open: true,
-          openedPanelValue: GridPreferencePanelsValue.filters,
-        },
-        sorting: {
-          sortModel: [{ field: 'director', sort: 'asc' }],
-        },
-        rowGrouping: {
-          model: ['director'],
-        },
-      });
+      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });
   });
 
@@ -211,28 +196,5 @@ describe('<DataGridPro /> - State Persistence', () => {
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Titanic', 'Star Wars: The Force Awakens']);
     });
-
-    // Not sure how to make that one work, if the `pageSize` update is async, we try to update the `page` with an outdated `pageSize` which can cause problem.
-    // it('should restore when controlled pageSize but not page', () => {
-    //     const ControlledTest = () => {
-    //         const [pageSize, setPageSize] = React.useState(100)
-    //
-    //         return (
-    //             <TestCase pageSize={pageSize} onPageSizeChange={newPageSize => {
-    //                 setPageSize(newPageSize)
-    //             }} />
-    //         )
-    //     }
-    //
-    //     render(<ControlledTest />)
-    //     apiRef.current.restoreState({
-    //         pagination: {
-    //             page: 1,
-    //             pageSize: 2,
-    //         },
-    //     })
-    //   clock.runToLast();
-    //   expect(getColumnValues(0)).to.deep.equal(['Titanic', 'Star Wars: The Force Awakens']);
-    // })
   });
 });

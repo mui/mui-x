@@ -247,10 +247,18 @@ export const useGridFilter = (
     GridPreProcessor<GridPreProcessingGroup.exportState>
   >(
     (prevState) => {
+      const filterModelToExport = gridFilterModelSelector(apiRef.current.state);
+      if (
+        filterModelToExport.items.length === 0 &&
+        filterModelToExport.linkOperator === getDefaultGridFilterModel().linkOperator
+      ) {
+        return prevState;
+      }
+
       return {
         ...prevState,
         filter: {
-          filterModel: gridFilterModelSelector(apiRef.current.state),
+          filterModel: filterModelToExport,
         },
       };
     },
