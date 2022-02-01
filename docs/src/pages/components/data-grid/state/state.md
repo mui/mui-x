@@ -33,7 +33,15 @@ The simplest way to use a selector is to call it as a function with `apiRef` as 
 const pageSize = gridPageSizeSelector(apiRef);
 ```
 
-**Note:** Calling with `apiRef.current.state` also works but it may cause side effects when multiple grid instances are in the same page.
+> **Note:** Calling with `apiRef.current.state` also works but it may cause side effects when multiple grid instances are in the same page.
+> If you still need to call it with the state, do not forget to pass the instance ID as the example:
+>
+> ```tsx
+> const pageSize = gridPageSizeSelector(
+>   apiRef.current.state,
+>   apiRef.current.instanceId,
+> );
+> ```
 
 {{"demo": "pages/components/data-grid/state/DirectSelector.js", "bg": "inline"}}
 
