@@ -21,11 +21,7 @@ import {
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridColumnVisibilityChangeParams } from '../../../models';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridColumnsState, GridColumnVisibilityModel } from './gridColumnsInterfaces';
 import {
   hydrateColumnsWidth,
@@ -281,9 +277,7 @@ export function useGridColumns(
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.exportState>
-  >(
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
       if (!shouldUseVisibleColumnModel) {
         return prevState;
@@ -307,9 +301,7 @@ export function useGridColumns(
     [apiRef, shouldUseVisibleColumnModel],
   );
 
-  const stateRestorePreProcessing = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.restoreState>
-  >(
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
     (params, context) => {
       if (!shouldUseVisibleColumnModel) {
         return params;
@@ -332,12 +324,8 @@ export function useGridColumns(
     [apiRef, shouldUseVisibleColumnModel, columnsTypes],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
-  useGridRegisterPreProcessor(
-    apiRef,
-    GridPreProcessingGroup.restoreState,
-    stateRestorePreProcessing,
-  );
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
    * EVENTS
@@ -346,7 +334,7 @@ export function useGridColumns(
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
-      if (name !== GridPreProcessingGroup.hydrateColumns) {
+      if (name !== 'hydrateColumns') {
         return;
       }
 

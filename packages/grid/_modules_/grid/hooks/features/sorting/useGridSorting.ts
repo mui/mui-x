@@ -25,11 +25,7 @@ import {
   mergeStateWithSortModel,
   getNextGridSortDirection,
 } from './gridSortingUtils';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
 
 /**
@@ -216,9 +212,7 @@ export const useGridSorting = (
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.exportState>
-  >(
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
       const sortModelToExport = gridSortModelSelector(apiRef.current.state);
       if (sortModelToExport.length === 0) {
@@ -235,9 +229,7 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const stateRestorePreProcessing = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.restoreState>
-  >(
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
     (params, context) => {
       const sortModel = context.stateToRestore.sorting?.sortModel;
       if (sortModel == null) {
@@ -265,12 +257,8 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
-  useGridRegisterPreProcessor(
-    apiRef,
-    GridPreProcessingGroup.restoreState,
-    stateRestorePreProcessing,
-  );
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterSortingMethod(apiRef, 'none', flatSortingMethod);
 
   /**
@@ -318,12 +306,12 @@ export const useGridSorting = (
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
-      if (name !== GridPreProcessingGroup.sortingMethod) {
+      if (name !== 'sortingMethod') {
         return;
       }
 
       sortingMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-        GridPreProcessingGroup.sortingMethod,
+        'sortingMethod',
         {},
       );
 
@@ -350,7 +338,7 @@ export const useGridSorting = (
     // This line of pre-processor initialization should always come after the registration of `flatSortingMethod`
     // Otherwise on the 1st render there would be no sorting method registered
     sortingMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.sortingMethod,
+      'sortingMethod',
       {},
     );
     apiRef.current.applySorting();

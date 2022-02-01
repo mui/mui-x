@@ -14,7 +14,6 @@ import {
   GridState,
   GridStateColDef,
 } from '../../../models';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 
@@ -155,7 +154,7 @@ export const createColumnsState = ({
 
   const columnsStateWithPreProcessing: Omit<GridColumnsRawState, 'columnVisibilityModel'> =
     apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.hydrateColumns,
+      'hydrateColumns',
       columnsStateWithoutColumnVisibilityModel,
     );
 

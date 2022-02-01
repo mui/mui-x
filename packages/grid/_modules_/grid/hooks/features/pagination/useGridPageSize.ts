@@ -12,11 +12,7 @@ import {
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 
 const mergeStateWithPageSize =
   (pageSize: number) =>
@@ -96,9 +92,7 @@ export const useGridPageSize = (
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.exportState>
-  >(
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
       const pageSizeToExport = gridPageSizeSelector(apiRef.current.state);
       if (pageSizeToExport === defaultPageSize) {
@@ -119,9 +113,7 @@ export const useGridPageSize = (
   /**
    * TODO: Add error if `prop.autoHeight = true`
    */
-  const stateRestorePreProcessing = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.restoreState>
-  >(
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
     (params, context) => {
       const pageSize = context.stateToRestore.pagination?.pageSize;
       if (pageSize != null) {
@@ -132,12 +124,8 @@ export const useGridPageSize = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
-  useGridRegisterPreProcessor(
-    apiRef,
-    GridPreProcessingGroup.restoreState,
-    stateRestorePreProcessing,
-  );
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
    * EVENTS

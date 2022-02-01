@@ -2,14 +2,10 @@ import * as React from 'react';
 import { GridApiRef, GridInitialState } from '../../../models';
 import { GridStatePersistenceApi } from './GridStatePersistenceApi';
 import { useGridApiMethod } from '../../utils';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
 
 export const useGridStatePersistence = (apiRef: GridApiRef) => {
   const exportState = React.useCallback<GridStatePersistenceApi['exportState']>(() => {
-    const stateToExport = apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.exportState,
-      {},
-    );
+    const stateToExport = apiRef.current.unstable_applyPreProcessors('exportState', {});
 
     return stateToExport as GridInitialState;
   }, [apiRef]);
@@ -17,7 +13,7 @@ export const useGridStatePersistence = (apiRef: GridApiRef) => {
   const restoreState = React.useCallback<GridStatePersistenceApi['restoreState']>(
     (stateToRestore) => {
       const response = apiRef.current.unstable_applyPreProcessors(
-        GridPreProcessingGroup.restoreState,
+        'restoreState',
         {
           callbacks: [],
         },
