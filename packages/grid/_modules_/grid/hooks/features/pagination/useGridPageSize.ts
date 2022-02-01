@@ -113,7 +113,7 @@ export const useGridPageSize = (
         },
       };
     },
-    [apiRef],
+    [apiRef, defaultPageSize],
   );
 
   /**
