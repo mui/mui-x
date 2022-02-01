@@ -172,11 +172,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           );
 
           expect(getColumnValues(3)).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
-        })
-          // @ts-expect-error need to migrate helpers to TypeScript
-          .toWarnDev(
-            'MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.',
-          );
+        }).toWarnDev(
+          'MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.',
+        );
       });
 
       it('should support columns.valueGetter using direct row access', () => {
@@ -213,7 +211,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           );
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
-          // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev('MUI: useResizeContainer - The parent of the grid has an empty height.');
       });
 
@@ -228,7 +225,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           );
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
-          // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev('MUI: useResizeContainer - The parent of the grid has an empty width.');
       });
 
@@ -251,7 +247,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
               <DataGrid rows={rows} columns={columns} />
             </div>,
           );
-          // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(["You are calling getValue('age') but the column `age` is not defined"]);
         expect(getColumnValues(1)).to.deep.equal(['1', '2']);
       });
@@ -310,7 +305,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
 
         getAllByRole('columnheader').forEach((col) => {
-          // @ts-expect-error need to migrate helpers to TypeScript
           expect(col).toHaveInlineStyle({ width: '100px' });
         });
       });
@@ -347,7 +341,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
 
         getAllByRole('columnheader').forEach((col, index) => {
-          // @ts-expect-error need to migrate helpers to TypeScript
           expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
         });
       });
@@ -382,7 +375,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const firstColumn = getColumnHeaderCell(0);
         const secondColumn = getColumnHeaderCell(1);
         const secondColumnWidthVal = secondColumn.style.width.split('px')[0];
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: `${2 * Number(secondColumnWidthVal)}px`,
         });
@@ -447,7 +439,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
 
         const firstColumn = getColumnHeaderCell(0);
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '150px',
         });
@@ -480,7 +471,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
 
         const firstColumn = getColumnHeaderCell(0);
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '100px',
         });
@@ -545,7 +535,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
 
         const firstColumn = getColumnHeaderCell(0);
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '198px', // because of the 2px border
         });
@@ -572,7 +561,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
 
         const firstColumn = getColumnHeaderCell(0);
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '198px', // because of the 2px border
         });
@@ -613,7 +601,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
 
         let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '198px', // because of the 2px border
         });
@@ -627,7 +614,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
 
         firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '148px', // because of the 2px border
         });
@@ -669,7 +655,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
 
         let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '198px', // because of the 2px border
         });
@@ -679,7 +664,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
 
         firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '148px', // because of the 2px border
         });
@@ -699,7 +683,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         setProps();
 
         const firstColumn = getColumnHeaderCell(0);
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '198px', // because of the 2px border
         });
@@ -839,7 +822,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             <DataGrid pagination={false} columns={[]} rows={[]} />
           </div>,
         );
-        // @ts-expect-error need to migrate helpers to TypeScript
       }).toErrorDev('MUI: `<DataGrid pagination={false} />` is not a valid prop.');
     });
 
@@ -864,7 +846,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             <DataGrid {...baselineProps} rows={rows} />
           </ErrorBoundary>,
         );
-        // @ts-expect-error need to migrate helpers to TypeScript
       }).toErrorDev([
         'The data grid component requires all rows to have a unique id property',
         'The above error occurred in the <ForwardRef(DataGrid)> component',
@@ -974,7 +955,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       </ThemeProvider>,
     );
 
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(screen.getByRole('grid')).toHaveComputedStyle({
       color: 'rgb(0, 0, 255)',
     });

@@ -2,7 +2,6 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
-import { withStyles } from '@mui/styles';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import addons, { mockChannel } from '@storybook/addons';
@@ -121,27 +120,6 @@ if (unusedBlacklistPatterns.size > 0) {
   );
 }
 
-const GlobalStyles = withStyles({
-  '@global': {
-    html: {
-      WebkitFontSmoothing: 'antialiased', // Antialiasing.
-      MozOsxFontSmoothing: 'grayscale', // Antialiasing.
-      // Do the opposite of the docs in order to help catching issues.
-      boxSizing: 'content-box',
-    },
-    '*, *::before, *::after': {
-      boxSizing: 'inherit',
-      // Disable transitions to avoid flaky screenshots
-      transition: 'none !important',
-      animation: 'none !important',
-    },
-    body: {
-      margin: 0,
-      overflowX: 'hidden',
-    },
-  },
-})(() => null);
-
 function App() {
   function computeIsDev() {
     if (window.location.hash === '#dev') {
@@ -170,7 +148,6 @@ function App() {
 
   return (
     <Router>
-      <GlobalStyles />
       <Routes>
         {tests.map((test) => {
           const path = computePath(test);
@@ -180,9 +157,9 @@ function App() {
             return null;
           }
 
-          let dataGridContainer = false;
+          let isDataGridTest = false;
           if (path.indexOf('/docs-components-data-grid') === 0 || path.indexOf('/stories-') === 0) {
-            dataGridContainer = true;
+            isDataGridTest = true;
           }
 
           return (
@@ -191,7 +168,7 @@ function App() {
               exact
               path={path}
               element={
-                <TestViewer dataGridContainer={dataGridContainer}>
+                <TestViewer isDataGridTest={isDataGridTest}>
                   <TestCase />
                 </TestViewer>
               }
