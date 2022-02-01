@@ -364,12 +364,12 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 > <DataGridPro rowThreshold={0} />
 > ```
 
-### Controlling the detail panels
+### Controlling expanded detail panels
 
 To control which rows are expanded, pass a list of row IDs to the `detailPanelExpandedRowIds` prop.
-Passing a callback to the `onDetailPanelExpandedRowIds` prop can be used to detect when a row was expanded or collapsed.
+Passing a callback to the `onDetailPanelExpandedRowIds` prop can be used to detect when a row gets expanded or collapsed.
 
-On the other hand, if you only want to initialize the grid with some rows already expanded, use the `initialState` prop as follow:
+On the other hand, if you only want to initialize the grid with some rows already expanded, use the `initialState` prop as follows:
 
 ```tsx
 <DataGridPro initialState={{ detailPanel: { expandedRowIds: [1, 2, 3] } }}>
@@ -381,7 +381,7 @@ On the other hand, if you only want to initialize the grid with some rows alread
 
 As an alternative to the built-in [row editing](/components/data-grid/editing/#row-editing), a form component can be rendered inside the detail panel, allowing the user to edit the current row values.
 
-The following demo shows integration with [react-hook-form](https://react-hook-form.com/), but other form libraries can also be used instead.
+The following demo shows integration with [react-hook-form](https://react-hook-form.com/), but other form libraries are also supported.
 
 {{"demo": "pages/components/data-grid/group-pivot/FormDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 

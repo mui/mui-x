@@ -308,6 +308,7 @@ export default function FullFeaturedDemo() {
         loading={loading}
         checkboxSelection
         disableSelectionOnClick
+        rowThreshold={0}
         initialState={{
           ...data.initialState,
           pinnedColumns: { left: ['__check__', 'desk'] },
