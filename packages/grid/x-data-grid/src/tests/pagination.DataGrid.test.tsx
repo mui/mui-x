@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  DataGridProps,
-  GridFilterModel,
-  GridLinkOperator,
-  GridRowsProp,
-} from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridLinkOperator, GridRowsProp } from '@mui/x-data-grid';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy, stub, SinonStub } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -32,6 +26,13 @@ describe('<DataGrid /> - Pagination', () => {
   };
 
   describe('props: page and onPageChange', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should display the rows of page given in props', () => {
       render(<BaselineTestCase page={1} pageSize={1} rowsPerPageOptions={[1]} />);
       expect(getColumnValues()).to.deep.equal(['1']);
@@ -161,19 +162,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should go to last page when page is controlled and the current page is greater than the last page', () => {
       const onPageChange = spy();
-
-      const filterModel: GridFilterModel = {
-        linkOperator: GridLinkOperator.And,
-        items: [
-          {
-            columnField: 'id',
-            operatorValue: '<=',
-            value: '3',
-          },
-        ],
-      };
-
-      const TestCasePaginationFilteredData = () => {
+      const TestCasePaginationFilteredData = (props) => {
         const [page, setPage] = React.useState(1);
 
         const handlePageChange = (newPage: number) => {
@@ -187,11 +176,25 @@ describe('<DataGrid /> - Pagination', () => {
             onPageChange={handlePageChange}
             pageSize={5}
             rowsPerPageOptions={[5]}
-            filterModel={filterModel}
+            {...props}
           />
         );
       };
-      render(<TestCasePaginationFilteredData />);
+      const { setProps } = render(<TestCasePaginationFilteredData />);
+      expect(onPageChange.callCount).to.equal(0);
+
+      setProps({
+        filterModel: {
+          linkOperator: GridLinkOperator.And,
+          items: [
+            {
+              columnField: 'id',
+              operatorValue: '<=',
+              value: '3',
+            },
+          ],
+        },
+      });
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       expect(onPageChange.lastCall.args[0]).to.equal(0);
@@ -200,6 +203,13 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   describe('props: pageSize and onPageSizeChange', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should display the amount of rows given in props', () => {
       render(<BaselineTestCase page={0} pageSize={2} rowsPerPageOptions={[2]} />);
       expect(getColumnValues()).to.deep.equal(['0', '1']);
@@ -331,7 +341,6 @@ describe('<DataGrid /> - Pagination', () => {
 
       expect(() => {
         render(<BaselineTestCase pageSize={pageSize} rowsPerPageOptions={[25, 50, 100]} />);
-        // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([
         `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
@@ -342,7 +351,6 @@ describe('<DataGrid /> - Pagination', () => {
 
       expect(() => {
         render(<BaselineTestCase pageSize={pageSize} />);
-        // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([
         `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
@@ -351,7 +359,6 @@ describe('<DataGrid /> - Pagination', () => {
     it('should display a warning if the default pageSize given as props is not in the prop rowsPerPageOptions', () => {
       expect(() => {
         render(<BaselineTestCase rowsPerPageOptions={[25, 50]} />);
-        // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([`MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``]);
     });
 
@@ -566,6 +573,13 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   describe('prop: initialState.pagination', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should allow to initialize the pageSize', () => {
       render(
         <BaselineTestCase

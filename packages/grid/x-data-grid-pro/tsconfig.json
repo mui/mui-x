@@ -5,5 +5,5 @@
     "allowJs": true,
     "types": ["mocha", "node", "chai", "chai-dom"]
   },
-  "include": ["src"]
+  "include": ["src", "../../../node_modules/@mui/monorepo/test/utils/initMatchers.ts"]
 }

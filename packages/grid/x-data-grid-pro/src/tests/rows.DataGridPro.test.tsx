@@ -129,7 +129,13 @@ describe('<DataGridPro /> - Rows', () => {
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro {...props} columns={columns} autoHeight={isJSDOM} throttleRowsMs={100} />
+          <DataGridPro
+            {...props}
+            columns={columns}
+            autoHeight={isJSDOM}
+            throttleRowsMs={100}
+            disableVirtualization
+          />
         </div>
       );
 
@@ -169,7 +175,7 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+          <DataGridPro {...baselineProps} apiRef={apiRef} {...props} disableVirtualization />
         </div>
       );
     };
@@ -384,7 +390,9 @@ describe('<DataGridPro /> - Rows', () => {
 
       const lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
       expect(lastCell).to.have.text('995');
-      expect(renderingZone.children.length).to.equal(Math.floor(height / rowHeight) + rowBuffer);
+      expect(renderingZone.children.length).to.equal(
+        Math.floor((height - 1) / rowHeight) + rowBuffer,
+      ); // Subtracting 1 is needed because of the column header borders
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
       expect(renderingZone.style.transform).to.equal(
         `translate3d(0px, ${distanceToFirstRow}px, 0px)`,

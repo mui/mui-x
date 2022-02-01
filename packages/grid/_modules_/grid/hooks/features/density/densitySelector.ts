@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '../../../utils/createSelector';
 import { GridState } from '../../../models/gridState';
 
 export const gridDensitySelector = (state: GridState) => state.density;
@@ -16,4 +16,9 @@ export const gridDensityRowHeightSelector = createSelector(
 export const gridDensityHeaderHeightSelector = createSelector(
   gridDensitySelector,
   (density) => density.headerHeight,
+);
+
+export const gridDensityFactorSelector = createSelector(
+  gridDensitySelector,
+  (density) => density.factor,
 );

@@ -13,12 +13,24 @@ import { GridEventListener, GridEvents } from '../events';
 import { GridApiRef, GridCallbackDetails, GridLocaleText } from '../api';
 import type { GridColumns, GridColumnTypesRecord } from '../colDef';
 import { GridClasses } from '../../gridClasses';
-import { GridCellParams, GridRowParams } from '../params';
+import {
+  GridCellParams,
+  GridRowHeightParams,
+  GridRowHeightReturnValue,
+  GridRowParams,
+} from '../params';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
 import { GridInitialState } from '../gridState';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+
+export interface GridExperimentalFeatures {
+  /**
+   * Will be part of the premium-plan when fully ready.
+   */
+  preventCommitWhileValidating: boolean;
+}
 
 /**
  * The props users can give to the `DataGrid` component.
@@ -381,6 +393,12 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    */
   getRowClassName?: (params: GridRowParams) => string;
   /**
+   * Function that sets the row height per row.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   */
+  getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
+  /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
@@ -685,4 +703,9 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * Features under development.
+   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: Partial<GridExperimentalFeatures>;
 }

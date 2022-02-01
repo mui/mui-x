@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   ...baseline,
-  plugins: [...baseline.plugins, 'jsdoc'],
+  plugins: [...baseline.plugins, 'jsdoc', 'filenames'],
   settings: {
     'import/resolver': {
       webpack: {
@@ -38,6 +38,7 @@ module.exports = {
         '*.test.js',
         '*.test.ts',
         '*.test.tsx',
+        'test/**',
       ],
       rules: {
         'no-restricted-imports': [
@@ -58,6 +59,55 @@ module.exports = {
         'material-ui/no-direct-state-access': 'error',
       },
       parserOptions: { tsconfigRootDir: __dirname, project: ['./tsconfig.json'] },
+    },
+    {
+      files: ['docs/src/pages/components/**/*.js', 'docs/src/pages/components/**/*.tsx'],
+      rules: {
+        'filenames/match-exported': ['error'],
+      },
+    },
+    {
+      files: ['packages/*/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx'],
+      rules: {
+        'material-ui/mui-name-matches-component-name': [
+          'error',
+          {
+            customHooks: [
+              'useDatePickerProcessedProps',
+              'useDatePickerDefaultizedProps',
+              'useTimePickerDefaultizedProps',
+              'useDateTimePickerDefaultizedProps',
+            ],
+          },
+        ],
+      },
+    },
+    {
+      files: ['packages/x-pickers/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: ['@mui/x-pickers'],
+            patterns: ['@mui/x-pickers/*'],
+          },
+        ],
+      },
+    },
+    {
+      files: ['packages/x-pickers-pro/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: ['@mui/x-pickers-pro'],
+            patterns: ['@mui/x-pickers-pro/*'],
+          },
+        ],
+      },
     },
   ],
 };
