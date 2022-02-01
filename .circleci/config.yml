@@ -1,4 +1,6 @@
 version: 2.1
+orbs: 
+  aws-s3: circleci/aws-s3@3.0.0
 
 parameters:
   browserstack-force:
@@ -34,6 +36,7 @@ defaults: &defaults
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_DIST_TAG: << parameters.react-dist-tag >>
+    AWS_REGION_ARTIFACTS: eu-central-1
   working_directory: /tmp/mui
   docker:
     - image: circleci/node:12
@@ -267,6 +270,25 @@ jobs:
           name: Persist performance snapshot as pipeline artifact
           path: performance-snapshot.json
           destination: performance-snapshot.json
+      - when:
+          # don't run on PRs
+          condition:
+            not:
+              matches:
+                # "^pull/\d+" is not valid YAML
+                # "^pull/\\d+" matches neither 'pull/1' nor 'main'
+                # Note that we want to include 'pull/1', 'pull/1/head' and ''pull/1/merge'
+                pattern: '^pull/.+$'
+                value: << pipeline.git.branch >>
+          steps:
+            # persist performance snapshot on S3
+            - aws-s3/copy:
+                arguments: --content-type application/json
+                aws-access-key-id: AWS_ACCESS_KEY_ID_ARTIFACTS
+                aws-region: AWS_REGION_ARTIFACTS
+                aws-secret-access-key: AWS_SECRET_ACCESS_KEY_ARTIFACTS
+                from: performance-snapshot.json
+                to: s3://mui-org-ci/artifacts/$CIRCLE_BRANCH/$CIRCLE_SHA1/
       - run:
           name: Run danger on PRs
           command: yarn danger ci --fail-on-errors
