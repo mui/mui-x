@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
-import allSelectors from 'docsx/pages/api-docs/data-grid/selectors.json';
+import allSelectors from 'docsx/pages/x/api/data-grid/selectors.json';
 
 const SelectorDetails = styled(AccordionDetails)({
   display: 'block',
