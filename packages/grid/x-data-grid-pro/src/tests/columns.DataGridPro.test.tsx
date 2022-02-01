@@ -422,7 +422,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  it('should throw if unsupported column type is used', function test() {
+  it('should throw if unsupported column type is used', () => {
     const singleColumns = [{ field: 'brand', type: 'str' }];
 
     expect(() => {
