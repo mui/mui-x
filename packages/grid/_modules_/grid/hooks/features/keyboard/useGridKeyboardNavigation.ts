@@ -126,8 +126,10 @@ export const useGridKeyboardNavigation = (
         }
 
         case 'PageUp': {
-          if (rowIndexBefore - viewportPageSize >= firstRowIndexInPage) {
-            goToCell(colIndexBefore, rowIndexBefore - viewportPageSize);
+          // Go to the first row before going to header
+          const nextRowIndex = Math.max(rowIndexBefore - viewportPageSize, firstRowIndexInPage);
+          if (nextRowIndex !== rowIndexBefore && nextRowIndex >= firstRowIndexInPage) {
+            goToCell(colIndexBefore, nextRowIndex);
           } else {
             goToHeader(colIndexBefore, event);
           }

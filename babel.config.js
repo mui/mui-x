@@ -37,7 +37,11 @@ module.exports = {
   presets: defaultPresets.concat(['@babel/preset-react', '@babel/preset-typescript']),
   plugins: [
     'babel-plugin-optimize-clsx',
+    // Need the following 3 proposals for all targets in .browserslistrc.
+    // With our usage the transpiled loose mode is equivalent to spec mode.
     ['@babel/plugin-proposal-class-properties', { loose: true }],
+    ['@babel/plugin-proposal-private-methods', { loose: true }],
+    ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
     ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
     // any package needs to declare 7.4.4 as a runtime dependency. default is ^7.0.0
     ['@babel/plugin-transform-runtime', { version: '^7.4.4' }],
