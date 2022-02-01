@@ -10,7 +10,6 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
@@ -160,7 +159,7 @@ export const useGridColumnReorder = (
           }
 
           const canBeReorderedProcessed = apiRef.current.unstable_applyPreProcessors(
-            GridPreProcessingGroup.canBeReordered,
+            'canBeReordered',
             canBeReordered,
             { targetIndex: targetColVisibleIndex },
           );

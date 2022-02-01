@@ -21,7 +21,6 @@ import {
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridColumnVisibilityChangeParams } from '../../../models';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { GridColumnsState, GridColumnVisibilityModel } from './gridColumnsInterfaces';
 import { hydrateColumnsWidth, computeColumnTypes, createColumnsState } from './gridColumnsUtils';
 
@@ -276,7 +275,7 @@ export function useGridColumns(
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
-      if (name !== GridPreProcessingGroup.hydrateColumns) {
+      if (name !== 'hydrateColumns') {
         return;
       }
 
