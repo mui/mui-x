@@ -1,5 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -8,46 +9,33 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
+const PrimaryHeading = styled(Typography)(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(15),
+  flexBasis: '33.33%',
+  flexShrink: 0,
+  direction: 'ltr',
+  lineHeight: 1.4,
+  display: 'inline-block',
+  fontFamily: 'Consolas, "Liberation Mono", Menlo, Courier, monospace',
+  WebkitFontSmoothing: 'subpixel-antialiased',
+}));
+
+const SecondaryHeading = styled(Typography)(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(15),
+  color: theme.palette.text.secondary,
+  '& code': {
+    color: theme.palette.secondary.main,
   },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
-    flexShrink: 0,
-    direction: 'ltr',
-    lineHeight: 1.4,
-    display: 'inline-block',
-    fontFamily: 'Consolas, "Liberation Mono", Menlo, Courier, monospace',
-    WebkitFontSmoothing: 'subpixel-antialiased',
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
-    '& code': {
-      color: theme.palette.secondary.main,
-    },
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
-  },
-  content: {
-    display: 'block',
-  },
-  code: {
-    '& pre': {
-      marginBottom: theme.spacing(1),
-    },
+  [theme.breakpoints.down('sm')]: {
+    display: 'none',
   },
 }));
 
 function ApiDocs(props) {
   const { api } = props;
-  const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ w: 1 }}>
       {api.properties.map((property, index) => (
         <Accordion key={index}>
           <AccordionSummary
@@ -56,24 +44,25 @@ function ApiDocs(props) {
             id={`api-property-${index}-header`}
           >
             {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-            <Typography className={classes.heading}>{`${property.name}()`}</Typography>
-            <Typography
-              className={classes.secondaryHeading}
-              dangerouslySetInnerHTML={{ __html: property.description }}
-            />
+            <PrimaryHeading>{`${property.name}()`}</PrimaryHeading>
+            <SecondaryHeading dangerouslySetInnerHTML={{ __html: property.description }} />
           </AccordionSummary>
-          <AccordionDetails className={classes.content}>
+          <AccordionDetails sx={{ display: 'block' }}>
             {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <Typography variant="subtitle2">Signature:</Typography>
             <HighlightedCode
-              className={classes.code}
               code={`${property.name}: ${property.type}`}
               language="tsx"
+              sx={{
+                '& pre': {
+                  mb: 1,
+                },
+              }}
             />
           </AccordionDetails>
         </Accordion>
       ))}
-    </div>
+    </Box>
   );
 }
 

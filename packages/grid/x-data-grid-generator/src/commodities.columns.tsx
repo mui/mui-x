@@ -1,3 +1,4 @@
+import { gridStringOrNumberComparator } from '@mui/x-data-grid';
 import {
   randomCommodity,
   randomDesk,
@@ -42,7 +43,7 @@ import {
 } from './renderer';
 import {
   CONTRACT_TYPE_OPTIONS,
-  COUNTRY_ISO_OPTIONS,
+  COUNTRY_ISO_OPTIONS_SORTED,
   CURRENCY_OPTIONS,
   INCOTERM_OPTIONS,
   RATE_TYPE_OPTIONS,
@@ -237,14 +238,21 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     renderCell: renderCountry,
     valueParser: (value) => {
       if (typeof value === 'string') {
-        return COUNTRY_ISO_OPTIONS.find((country) => country.value === value);
+        return COUNTRY_ISO_OPTIONS_SORTED.find((country) => country.value === value);
       }
 
       return value;
     },
     groupingValueGetter: (params) => params.value.code,
     type: 'singleSelect',
-    valueOptions: COUNTRY_ISO_OPTIONS,
+    valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
+    sortComparator: (v1, v2, param1, param2) =>
+      gridStringOrNumberComparator(
+        (v1 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
+        (v2 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
+        param1,
+        param2,
+      ),
     editable,
     width: 120,
   },
