@@ -52,6 +52,9 @@ const serialiseRow = (
   const row = {};
   const dataValidation = {};
 
+  const firstCellParams = getCellParams(id, columns[0].field);
+  const outlineLevel = firstCellParams.rowNode.depth;
+
   columns.forEach((column) => {
     const cellParams = getCellParams(id, column.field);
     switch (cellParams.colDef.type) {
@@ -92,6 +95,7 @@ const serialiseRow = (
   return {
     row,
     dataValidation,
+    outlineLevel,
   };
 };
 
@@ -101,10 +105,10 @@ const serialiseColumn = (column: GridColDef, includeHeaders: boolean) => {
   return {
     ...(includeHeaders ? { header: headerName || field } : {}),
     key: field,
-    // TODO
+    // TODO (clean that hack)
     // the width seems to be the number of small character visible in a cell
     // could be nice to move from px width to excel width
-    width: column.width || 20,
+    width: column.width ? Math.floor(column.width / 5) : 20,
   };
 };
 
@@ -131,14 +135,23 @@ export async function buildExcel(options: BuildExcelOptions, api): Promise<Excel
   );
 
   rowIds.forEach((id) => {
-    const { row, dataValidation } = serialiseRow(id, columnsWithoutCheckbox, getCellParams, api);
-    const newRows = worksheet.addRow(row);
+    const { row, dataValidation, outlineLevel } = serialiseRow(
+      id,
+      columnsWithoutCheckbox,
+      getCellParams,
+      api,
+    );
+    const newRow = worksheet.addRow(row);
 
     Object.keys(dataValidation).forEach((field) => {
-      newRows.getCell(field).dataValidation = {
+      newRow.getCell(field).dataValidation = {
         ...dataValidation[field],
       };
     });
+
+    if (outlineLevel) {
+      newRow.outlineLevel = outlineLevel;
+    }
   });
   return workbook;
 }
