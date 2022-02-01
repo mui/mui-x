@@ -58,12 +58,12 @@ export default function CustomFilterPanelContent() {
               columnInputProps: {
                 variant: 'outlined',
                 size: 'small',
-                sx: { justifyContent: 'flex-end' },
+                sx: { mt: 'auto' },
               },
               operatorInputProps: {
                 variant: 'outlined',
                 size: 'small',
-                sx: { justifyContent: 'flex-end' },
+                sx: { mt: 'auto' },
               },
               valueInputProps: {
                 required: true,
@@ -74,12 +74,14 @@ export default function CustomFilterPanelContent() {
               '& .MuiDataGrid-filterForm': { p: 2 },
               '& .MuiDataGrid-filterForm:nth-child(even)': {
                 backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark' ? '#444' : '#ddd',
+                  theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
               },
-              '& .MuiDataGrid-filterFormDeleteIcon': { display: 'none' },
+              '& .MuiDataGrid-filterFormDeleteIcon': {
+                order: 1,
+              },
               '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
               '& .MuiDataGrid-filterFormColumnInput': { mr: 2, width: 200 },
-              '& .MuiDataGrid-filterFormOperatorInput': { mr: 5 },
+              '& .MuiDataGrid-filterFormOperatorInput': { mr: 2 },
               '& .MuiDataGrid-filterFormValueInput': { width: 300 },
             },
           },
