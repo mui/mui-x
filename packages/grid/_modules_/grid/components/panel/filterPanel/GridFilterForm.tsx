@@ -337,6 +337,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         <rootProps.components.BaseSelect
           labelId={columnSelectLabelId}
           id={columnSelectId}
+          label={apiRef.current.getLocaleText('filterPanelColumns')}
           value={item.columnField || ''}
           onChange={changeColumn}
           native
@@ -365,6 +366,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         </InputLabel>
         <rootProps.components.BaseSelect
           labelId={operatorSelectLabelId}
+          label={apiRef.current.getLocaleText('filterPanelOperators')}
           id={operatorSelectId}
           value={item.operatorValue}
           onChange={changeOperator}
