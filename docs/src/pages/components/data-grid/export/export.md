@@ -200,6 +200,8 @@ You can remove the Print export option from the toolbar by setting `disableToolb
 
 ## 🚧 Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
+{{"demo": "pages/components/data-grid/export/ExcelExport.js", "bg": "inline"}}
+
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #198](https://github.com/mui-org/material-ui-x/issues/198) if you want to see it land faster.

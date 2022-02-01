@@ -1,0 +1,8 @@
+<DataGridPro
+  {...data}
+  loading={loading}
+  components={{
+    Toolbar: CustomToolbar,
+  }}
+  experimentalFeatures={{ excelExport: true }}
+/>
