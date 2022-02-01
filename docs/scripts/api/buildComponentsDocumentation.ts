@@ -20,7 +20,7 @@ import {
   getHeaders,
 } from '@mui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
-import createGenerateClassName from '@mui/styles/createGenerateClassName';
+import generateUtilityClass from '@mui/base/generateUtilityClass';
 import {
   DocumentedInterfaces,
   getJsdocDefaultValue,
@@ -29,8 +29,6 @@ import {
   Projects,
   writePrettifiedFile,
 } from './utils';
-
-const generateClassName = createGenerateClassName();
 
 interface ReactApi extends ReactDocgenApi {
   /**
@@ -223,11 +221,8 @@ const buildComponentDocumentation = async (options: {
   reactApi.styles = await parseStyles(reactApi, project.program as any);
   reactApi.styles.name = 'MuiDataGrid'; // TODO it should not be hardcoded
   reactApi.styles.classes.forEach((key) => {
-    reactApi.styles.globalClasses[key] = generateClassName(
-      // @ts-expect-error
-      { key },
-      { options: { name: reactApi.styles.name, theme: {} } },
-    );
+    const globalClass = generateUtilityClass(reactApi.styles.name!, key);
+    reactApi.styles.globalClasses[key] = globalClass;
   });
 
   const componentApi: {
