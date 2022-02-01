@@ -25,7 +25,6 @@ import {
   checkSortModelValidity,
   getNextGridSortDirection,
 } from './gridSortingUtils';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
 
 /**
@@ -281,12 +280,12 @@ export const useGridSorting = (
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
-      if (name !== GridPreProcessingGroup.sortingMethod) {
+      if (name !== 'sortingMethod') {
         return;
       }
 
       sortingMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-        GridPreProcessingGroup.sortingMethod,
+        'sortingMethod',
         {},
       );
 
@@ -313,7 +312,7 @@ export const useGridSorting = (
     // This line of pre-processor initialization should always come after the registration of `flatSortingMethod`
     // Otherwise on the 1st render there would be no sorting method registered
     sortingMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.sortingMethod,
+      'sortingMethod',
       {},
     );
     apiRef.current.applySorting();
