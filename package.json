@@ -105,6 +105,7 @@
     "argos-cli": "^0.3.3",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-optimize-clsx": "^2.6.2",
+    "babel-plugin-search-and-replace": "^1.1.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babel-plugin-transform-rename-import": "^2.3.0",
     "chai": "^4.3.6",
