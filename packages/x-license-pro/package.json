@@ -6,7 +6,7 @@
   "main": "build/index.js",
   "module": "build/esm/index.js",
   "types": "build/index.d.ts",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "SEE LICENSE IN LICENSE.txt",
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"
   },
@@ -15,17 +15,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": [
-    "react",
-    "react-component",
-    "mui",
-    "material-ui",
-    "material design",
-    "datepicker",
-    "daterangepicker",
-    "timepicker",
-    "datetimepicker"
-  ],
   "bin": {
     "licensegen": "./bin/license-gen-script.js"
   },
