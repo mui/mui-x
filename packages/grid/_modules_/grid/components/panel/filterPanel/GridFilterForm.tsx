@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
@@ -61,6 +62,43 @@ const GridFilterFormRoot = styled('div', {
   display: 'flex',
   padding: theme.spacing(1),
 }));
+
+const FilterFormDeleteIcon = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'FilterFormDeleteIcon',
+  overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
+})(({ theme }) => ({
+  flexShrink: 0,
+  justifyContent: 'flex-end',
+  marginRight: theme.spacing(0.5),
+  marginBottom: theme.spacing(0.2),
+}));
+
+const FilterFormLinkOperatorInput = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'FilterFormLinkOperatorInput',
+  overridesResolver: (_, styles) => styles.filterFormLinkOperatorInput,
+})({
+  minWidth: 60,
+});
+
+const FilterFormColumnInput = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'FilterFormColumnInput',
+  overridesResolver: (_, styles) => styles.filterFormColumnInput,
+})({ width: 150 });
+
+const FilterFormOperatorInput = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'FilterFormOperatorInput',
+  overridesResolver: (_, styles) => styles.filterFormOperatorInput,
+})({ width: 120 });
+
+const FilterFormValueInput = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'FilterFormValueInput',
+  overridesResolver: (_, styles) => styles.filterFormValueInput,
+})({ width: 190 });
 
 const getLinkOperatorLocaleKey = (linkOperator: GridLinkOperator) => {
   switch (linkOperator) {
@@ -225,72 +263,13 @@ function GridFilterForm(props: GridFilterFormProps) {
     [currentOperator],
   );
 
-  const FilterFormDeleteIcon = React.useMemo(
-    () =>
-      styled(rootProps.components.BaseFormControl, {
-        name: 'MuiDataGrid',
-        slot: 'FilterFormDeleteIcon',
-        overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
-      })({
-        flexShrink: 0,
-        justifyContent: 'flex-end',
-        marginRight: 0.5,
-        marginBottom: 0.2,
-      }),
-    [rootProps.components.BaseFormControl],
-  );
-
-  const FilterFormLinkOperatorInput = React.useMemo(
-    () =>
-      styled(rootProps.components.BaseFormControl, {
-        name: 'MuiDataGrid',
-        slot: 'FilterFormLinkOperatorInput',
-        overridesResolver: (_, styles) => styles.filterFormLinkOperatorInput,
-      })({
-        minWidth: 60,
-        display: hasLinkOperatorColumn ? 'block' : 'none',
-        visibility: showMultiFilterOperators ? 'visible' : 'hidden',
-      }),
-    [rootProps.components.BaseFormControl, hasLinkOperatorColumn, showMultiFilterOperators],
-  );
-
-  const FilterFormColumnInput = React.useMemo(
-    () =>
-      styled(rootProps.components.BaseFormControl, {
-        name: 'MuiDataGrid',
-        slot: 'FilterFormColumnInput',
-        overridesResolver: (_, styles) => styles.filterFormColumnInput,
-      })({ width: 150 }),
-    [rootProps.components.BaseFormControl],
-  );
-
-  const FilterFormOperatorInput = React.useMemo(
-    () =>
-      styled(rootProps.components.BaseFormControl, {
-        name: 'MuiDataGrid',
-        slot: 'FilterFormOperatorInput',
-        overridesResolver: (_, styles) => styles.filterFormOperatorInput,
-      })({ width: 120 }),
-    [rootProps.components.BaseFormControl],
-  );
-
-  const FilterFormValueInput = React.useMemo(
-    () =>
-      styled(rootProps.components.BaseFormControl, {
-        name: 'MuiDataGrid',
-        slot: 'FilterFormValueInput',
-        overridesResolver: (_, styles) => styles.filterFormValueInput,
-      })({ width: 190 }),
-    [rootProps.components.BaseFormControl],
-  );
-
   return (
     <GridFilterFormRoot className={classes.root}>
       <FilterFormDeleteIcon
         variant="standard"
+        as={rootProps.components.BaseFormControl}
         {...baseFormControlProps}
         {...deleteIconProps}
-        sx={deleteIconProps?.sx || {}}
         className={clsx(
           classes.deleteIcon,
           baseFormControlProps.className,
@@ -310,7 +289,12 @@ function GridFilterForm(props: GridFilterFormProps) {
         variant="standard"
         {...baseFormControlProps}
         {...linkOperatorInputProps}
-        sx={linkOperatorInputProps?.sx || {}}
+        sx={{
+          display: hasLinkOperatorColumn ? 'block' : 'none',
+          visibility: showMultiFilterOperators ? 'visible' : 'hidden',
+          ...(baseFormControlProps.sx || {}),
+          ...(linkOperatorInputProps.sx || {}),
+        }}
         className={clsx(
           classes.linkOperatorInput,
           baseFormControlProps.className,
@@ -338,9 +322,9 @@ function GridFilterForm(props: GridFilterFormProps) {
       </FilterFormLinkOperatorInput>
       <FilterFormColumnInput
         variant="standard"
+        as={rootProps.components.BaseFormControl}
         {...baseFormControlProps}
         {...columnInputProps}
-        sx={columnInputProps?.sx || {}}
         className={clsx(
           classes.columnInput,
           baseFormControlProps.className,
@@ -367,9 +351,9 @@ function GridFilterForm(props: GridFilterFormProps) {
       </FilterFormColumnInput>
       <FilterFormOperatorInput
         variant="standard"
+        as={rootProps.components.BaseFormControl}
         {...baseFormControlProps}
         {...operatorInputProps}
-        sx={operatorInputProps?.sx || {}}
         className={clsx(
           classes.operatorInput,
           baseFormControlProps.className,
@@ -400,9 +384,9 @@ function GridFilterForm(props: GridFilterFormProps) {
       </FilterFormOperatorInput>
       <FilterFormValueInput
         variant="standard"
+        as={rootProps.components.BaseFormControl}
         {...baseFormControlProps}
         {...valueInputProps}
-        sx={valueInputProps?.sx || {}}
         className={clsx(
           classes.valueInput,
           baseFormControlProps.className,
