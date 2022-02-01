@@ -101,7 +101,7 @@ export const getGridColDef = (
     return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
   }
 
-  if (!columnTypes[type]) {
+  if (process.env.NODE_ENV !== 'production' && !columnTypes[type]) {
     console.error(
       [
         `MUI: The column type "${type}" you are using is not supported.`,
