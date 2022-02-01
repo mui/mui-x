@@ -84,14 +84,16 @@ export default function RestoreStateInitialState() {
 
   if (isMounted) {
     return (
-      <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
-        <WrappedDataGridPro unMount={unMountGrid} initialState={savedState} />
+      <React.Fragment>
+        <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
+          <WrappedDataGridPro unMount={unMountGrid} initialState={savedState} />
+        </Box>
         {!!savedState && (
           <Alert severity="info" style={{ marginBottom: 8 }}>
             <code>Initial state: {JSON.stringify(savedState)}</code>
           </Alert>
         )}
-      </Box>
+      </React.Fragment>
     );
   }
 
