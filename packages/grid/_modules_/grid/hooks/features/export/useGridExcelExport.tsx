@@ -79,12 +79,15 @@ export const useGridExcelExport = (
       const getRowsToExport = options.getRowsToExport ?? defaultGetRowsToExport;
       const exportedRowIds = getRowsToExport({ apiRef });
 
-      return buildExcel({
-        columns: exportedColumns,
-        rowIds: exportedRowIds,
-        getCellParams: apiRef.current.getCellParams,
-        includeHeaders: options.includeHeaders ?? true,
-      });
+      return buildExcel(
+        {
+          columns: exportedColumns,
+          rowIds: exportedRowIds,
+          getCellParams: apiRef.current.getCellParams,
+          includeHeaders: options.includeHeaders ?? true,
+        },
+        apiRef.current,
+      );
     },
     [featureIsActivated, logger, apiRef, inactivatedError],
   );
