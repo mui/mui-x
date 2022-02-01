@@ -60,7 +60,7 @@ export const useGridPageSize = (
    */
   const setPageSize = React.useCallback<GridPageSizeApi['setPageSize']>(
     (pageSize) => {
-      if (pageSize === gridPageSizeSelector(apiRef.current.state)) {
+      if (pageSize === gridPageSizeSelector(apiRef)) {
         return;
       }
 

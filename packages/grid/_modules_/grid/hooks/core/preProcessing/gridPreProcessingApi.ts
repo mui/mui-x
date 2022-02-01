@@ -7,32 +7,24 @@ import { GridRowEntry } from '../../../models/gridRows';
 
 export type PreProcessorCallback = (value: any, params?: any) => any;
 
-export enum GridPreProcessingGroup {
-  hydrateColumns = 'hydrateColumns',
-  scrollToIndexes = 'scrollToIndexes',
-  columnMenu = 'columnMenu',
-  canBeReordered = 'canBeReordered',
-  filteringMethod = 'filteringMethod',
-  sortingMethod = 'sortingMethod',
-  rowHeight = 'rowHeight',
-}
+export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
 interface GridPreProcessingGroupLookup {
-  [GridPreProcessingGroup.hydrateColumns]: {
+  hydrateColumns: {
     value: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
   };
-  [GridPreProcessingGroup.scrollToIndexes]: {
+  scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
-  [GridPreProcessingGroup.columnMenu]: { value: JSX.Element[]; context: GridColDef };
-  [GridPreProcessingGroup.canBeReordered]: {
+  columnMenu: { value: JSX.Element[]; context: GridColDef };
+  canBeReordered: {
     value: boolean;
     context: GridCanBeReorderedPreProcessingContext;
   };
-  [GridPreProcessingGroup.filteringMethod]: { value: GridFilteringMethodCollection };
-  [GridPreProcessingGroup.sortingMethod]: { value: GridSortingMethodCollection };
-  [GridPreProcessingGroup.rowHeight]: { value: Record<string, number>; context: GridRowEntry };
+  filteringMethod: { value: GridFilteringMethodCollection };
+  sortingMethod: { value: GridSortingMethodCollection };
+  rowHeight: { value: Record<string, number>; context: GridRowEntry };
 }
 
 export type GridPreProcessor<P extends GridPreProcessingGroup> = (

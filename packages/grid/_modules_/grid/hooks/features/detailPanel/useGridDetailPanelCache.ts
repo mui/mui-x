@@ -2,13 +2,11 @@ import * as React from 'react';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { gridRowIdsSelector } from '../rows/gridRowsSelector';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridState } from '../../../models/gridState';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { GridEvents } from '../../../models/events/gridEvents';
 
 function cacheContentAndHeight(
   apiRef: GridApiRef,
-  state: GridState,
   getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
   getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
 ) {
@@ -18,7 +16,7 @@ function cacheContentAndHeight(
 
   // TODO change to lazy approach using a Proxy
   // only call getDetailPanelContent when asked for an id
-  const rowIds = gridRowIdsSelector(state);
+  const rowIds = gridRowIdsSelector(apiRef);
   const contentCache = rowIds.reduce((acc, id) => {
     const params = apiRef.current.getRowParams(id);
     acc[id] = getDetailPanelContent(params);
@@ -47,12 +45,7 @@ export const useGridDetailPanelCache = (
         ...state,
         detailPanel: {
           ...state.detailPanel,
-          ...cacheContentAndHeight(
-            apiRef,
-            state,
-            props.getDetailPanelContent,
-            props.getDetailPanelHeight,
-          ),
+          ...cacheContentAndHeight(apiRef, props.getDetailPanelContent, props.getDetailPanelHeight),
         },
       };
     });

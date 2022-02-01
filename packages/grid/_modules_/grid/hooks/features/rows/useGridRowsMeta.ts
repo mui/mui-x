@@ -14,7 +14,6 @@ import { gridFilterStateSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortingStateSelector } from '../sorting/gridSortingSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridPreProcessingGroup } from '../../core/preProcessing/gridPreProcessingApi';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -50,8 +49,8 @@ export const useGridRowsMeta = (
 
     apiRef.current.setState((state) => {
       const positions: number[] = [];
-      const densityFactor = gridDensityFactorSelector(state);
-      const currentRowHeight = gridDensityRowHeightSelector(state);
+      const densityFactor = gridDensityFactorSelector(state, apiRef.current.instanceId);
+      const currentRowHeight = gridDensityRowHeightSelector(state, apiRef.current.instanceId);
       const currentPageTotalHeight = rows.reduce((acc: number, row) => {
         positions.push(acc);
         let baseRowHeight = currentRowHeight;
@@ -62,7 +61,7 @@ export const useGridRowsMeta = (
         }
 
         const heights = apiRef.current.unstable_applyPreProcessors(
-          GridPreProcessingGroup.rowHeight,
+          'rowHeight',
           { base: baseRowHeight }, // We use an object to make simple to check if a size was already added or not
           row,
         ) as Record<string, number>;
@@ -95,7 +94,7 @@ export const useGridRowsMeta = (
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
-      if (name !== GridPreProcessingGroup.rowHeight) {
+      if (name !== 'rowHeight') {
         return;
       }
       hydrateRowsMeta();

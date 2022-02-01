@@ -144,9 +144,6 @@ jobs:
           name: Eslint
           command: yarn eslint:ci
       - run:
-          name: Stylelint
-          command: yarn stylelint
-      - run:
           name: Lint JSON
           command: yarn jsonlint
       - run:

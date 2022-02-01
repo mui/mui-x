@@ -97,8 +97,8 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         throw new Error(`No row with id #${id} found`);
       }
 
-      const cellFocus = gridFocusCellSelector(apiRef.current.state);
-      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
+      const cellFocus = gridFocusCellSelector(apiRef);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
       const params: GridValueGetterParams = {
         id,
@@ -131,8 +131,8 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         throw new Error(`No row with id #${id} found`);
       }
 
-      const cellFocus = gridFocusCellSelector(apiRef.current.state);
-      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
+      const cellFocus = gridFocusCellSelector(apiRef);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
       const params: GridCellParams = {
         id,

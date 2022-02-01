@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import {
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
@@ -82,9 +82,7 @@ export const useGridDetailPanel = (
   useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 
-  const addToggleColumn = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
-  >(
+  const addToggleColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
     (columnsState) => {
       if (props.getDetailPanelContent == null) {
         // Remove the toggle column, when it exists
@@ -111,7 +109,7 @@ export const useGridDetailPanel = (
     [props.getDetailPanelContent],
   );
 
-  const addDetailHeight = React.useCallback<GridPreProcessor<GridPreProcessingGroup.rowHeight>>(
+  const addDetailHeight = React.useCallback<GridPreProcessor<'rowHeight'>>(
     (initialValue, row) => {
       if (expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
         return { ...initialValue, detail: 0 };
@@ -125,8 +123,8 @@ export const useGridDetailPanel = (
     [apiRef, expandedRowIds],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, addToggleColumn);
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.rowHeight, addDetailHeight);
+  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', addToggleColumn);
+  useGridRegisterPreProcessor(apiRef, 'rowHeight', addDetailHeight);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'detailPanels',

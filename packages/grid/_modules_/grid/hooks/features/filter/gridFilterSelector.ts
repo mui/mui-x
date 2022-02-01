@@ -7,7 +7,6 @@ import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 
 /**
  * @category Filtering
- * @ignore - do not document.
  */
 export const gridFilterStateSelector = (state: GridState) => state.filter;
 

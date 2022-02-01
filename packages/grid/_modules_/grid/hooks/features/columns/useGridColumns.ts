@@ -21,7 +21,6 @@ import {
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridColumnVisibilityChangeParams } from '../../../models';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { GridColumnsState, GridColumnVisibilityModel } from './gridColumnsInterfaces';
 import { hydrateColumnsWidth, computeColumnTypes, createColumnsState } from './gridColumnsUtils';
 
@@ -104,25 +103,25 @@ export function useGridColumns(
   );
 
   const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
-    () => allGridColumnsSelector(apiRef.current.state),
+    () => allGridColumnsSelector(apiRef),
     [apiRef],
   );
 
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
-    () => visibleGridColumnsSelector(apiRef.current.state),
+    () => visibleGridColumnsSelector(apiRef),
     [apiRef],
   );
 
   const getColumnsMeta = React.useCallback<GridColumnApi['getColumnsMeta']>(
-    () => gridColumnsMetaSelector(apiRef.current.state),
+    () => gridColumnsMetaSelector(apiRef),
     [apiRef],
   );
 
   const getColumnIndex = React.useCallback<GridColumnApi['getColumnIndex']>(
     (field, useVisibleColumns = true) => {
       const columns = useVisibleColumns
-        ? visibleGridColumnsSelector(apiRef.current.state)
-        : allGridColumnsSelector(apiRef.current.state);
+        ? visibleGridColumnsSelector(apiRef)
+        : allGridColumnsSelector(apiRef);
 
       return columns.findIndex((col) => col.field === field);
     },
@@ -132,14 +131,14 @@ export function useGridColumns(
   const getColumnPosition = React.useCallback<GridColumnApi['getColumnPosition']>(
     (field) => {
       const index = getColumnIndex(field);
-      return gridColumnsMetaSelector(apiRef.current.state).positions[index];
+      return gridColumnsMetaSelector(apiRef).positions[index];
     },
     [apiRef, getColumnIndex],
   );
 
   const setColumnVisibilityModel = React.useCallback<GridColumnApi['setColumnVisibilityModel']>(
     (model) => {
-      const currentModel = gridColumnVisibilityModelSelector(apiRef.current.state);
+      const currentModel = gridColumnVisibilityModelSelector(apiRef);
       if (currentModel !== model) {
         apiRef.current.setState((state) => ({
           ...state,
@@ -183,7 +182,7 @@ export function useGridColumns(
       // `updateColumns` take care of updating the model itself if needs be.
       // TODO v6: stop using the `hide` field even when the model is not defined
       if (shouldUseVisibleColumnModel) {
-        const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef.current.state);
+        const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
         const isCurrentlyVisible: boolean = columnVisibilityModel[field] ?? true;
         if (isVisible !== isCurrentlyVisible) {
           const newModel: GridColumnVisibilityModel = {
@@ -276,7 +275,7 @@ export function useGridColumns(
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
-      if (name !== GridPreProcessingGroup.hydrateColumns) {
+      if (name !== 'hydrateColumns') {
         return;
       }
 
