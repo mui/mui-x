@@ -8,7 +8,7 @@ import { GridEditingApi } from './gridEditingApi';
 import { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
-import { GridParamsApi } from './gridParamsApi';
+import type { GridParamsApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
