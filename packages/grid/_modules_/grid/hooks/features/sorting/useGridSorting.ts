@@ -20,7 +20,12 @@ import { gridRowIdsSelector, gridRowGroupingNameSelector, gridRowTreeSelector } 
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridSortingMethod, GridSortingMethodCollection } from './gridSortingState';
-import { buildAggregatedSortingApplier, getNextGridSortDirection } from './gridSortingUtils';
+import {
+  buildAggregatedSortingApplier,
+  mergeStateWithSortModel,
+  getNextGridSortDirection,
+} from './gridSortingUtils';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
 
 /**
@@ -145,10 +150,7 @@ export const useGridSorting = (
       const currentModel = gridSortModelSelector(apiRef);
       if (currentModel !== model) {
         logger.debug(`Setting sort model`);
-        apiRef.current.setState((state) => ({
-          ...state,
-          sorting: { ...state.sorting, sortModel: model },
-        }));
+        apiRef.current.setState(mergeStateWithSortModel(model));
         apiRef.current.forceUpdate();
         apiRef.current.applySorting();
       }
@@ -213,6 +215,39 @@ export const useGridSorting = (
   /**
    * PRE-PROCESSING
    */
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+    (prevState) => {
+      const sortModelToExport = gridSortModelSelector(apiRef.current.state);
+      if (sortModelToExport.length === 0) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        sorting: {
+          sortModel: sortModelToExport,
+        },
+      };
+    },
+    [apiRef],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+    (params, context) => {
+      const sortModel = context.stateToRestore.sorting?.sortModel;
+      if (sortModel == null) {
+        return params;
+      }
+      apiRef.current.setState(mergeStateWithSortModel(sortModel));
+
+      return {
+        ...params,
+        callbacks: [...params.callbacks, apiRef.current.applySorting],
+      };
+    },
+    [apiRef],
+  );
+
   const flatSortingMethod = React.useCallback<GridSortingMethod>(
     (params) => {
       if (!params.sortRowList) {
@@ -225,6 +260,8 @@ export const useGridSorting = (
     [apiRef],
   );
 
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterSortingMethod(apiRef, 'none', flatSortingMethod);
 
   /**

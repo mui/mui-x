@@ -21,8 +21,13 @@ import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
-import { buildAggregatedFilterApplier, cleanFilterItem } from './gridFilterUtils';
+import {
+  buildAggregatedFilterApplier,
+  cleanFilterItem,
+  mergeStateWithFilterModel,
+} from './gridFilterUtils';
 
 const checkFilterModelValidity = (model: GridFilterModel) => {
   if (model.items.length > 1) {
@@ -203,18 +208,10 @@ export const useGridFilter = (
       if (currentModel !== model) {
         checkFilterModelValidity(model);
 
-        if (model.items.length > 1 && props.disableMultipleColumnsFiltering) {
-          model.items = [model.items[0]];
-        }
-
         logger.debug('Setting filter model');
-        apiRef.current.setState((state) => ({
-          ...state,
-          filter: {
-            ...state.filter,
-            filterModel: model,
-          },
-        }));
+        apiRef.current.setState(
+          mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering),
+        );
         apiRef.current.unstable_applyFilters();
       }
     },
@@ -242,6 +239,44 @@ export const useGridFilter = (
   /**
    * PRE-PROCESSING
    */
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+    (prevState) => {
+      const filterModelToExport = gridFilterModelSelector(apiRef.current.state);
+      if (
+        filterModelToExport.items.length === 0 &&
+        filterModelToExport.linkOperator === getDefaultGridFilterModel().linkOperator
+      ) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        filter: {
+          filterModel: filterModelToExport,
+        },
+      };
+    },
+    [apiRef],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+    (params, context) => {
+      const filterModel = context.stateToRestore.filter?.filterModel;
+      if (filterModel == null) {
+        return params;
+      }
+      apiRef.current.setState(
+        mergeStateWithFilterModel(filterModel, props.disableMultipleColumnsFiltering),
+      );
+
+      return {
+        ...params,
+        callbacks: [...params.callbacks, apiRef.current.unstable_applyFilters],
+      };
+    },
+    [apiRef, props.disableMultipleColumnsFiltering],
+  );
+
   const flatFilteringMethod = React.useCallback<GridFilteringMethod>(
     (params) => {
       if (props.filterMode === GridFeatureModeConstant.client && params.isRowMatchingFilters) {
@@ -268,6 +303,8 @@ export const useGridFilter = (
     [apiRef, props.filterMode],
   );
 
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterFilteringMethod(apiRef, 'none', flatFilteringMethod);
 
   /**
