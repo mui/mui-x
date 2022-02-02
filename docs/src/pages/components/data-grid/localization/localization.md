@@ -79,6 +79,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Arabic (Sudan)          | ar-SD               | `arSD`      |
 | Bulgarian               | bg-BG               | `bgBG`      |
 | Czech                   | cs-CZ               | `csCZ`      |
+| Danish                  | da-DK               | `daDK`      |
 | Dutch                   | nl-NL               | `nlNL`      |
 | English (United States) | en-US               | `enUS`      |
 | Finnish                 | fi-FI               | `fiFI`      |
