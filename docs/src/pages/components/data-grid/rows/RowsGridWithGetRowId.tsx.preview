@@ -1,0 +1,8 @@
+<DataGrid
+  columns={[{ field: 'name' }]}
+  rows={[
+    { internalId: 1, name: 'React' },
+    { internalId: 2, name: 'MUI' },
+  ]}
+  getRowId={(row) => row.internalId}
+/>
