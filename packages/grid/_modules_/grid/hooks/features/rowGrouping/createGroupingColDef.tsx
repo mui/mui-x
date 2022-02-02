@@ -43,7 +43,10 @@ const groupingFieldIndexComparator: GridComparatorFn<GridApiPro> = (
   cellParams1,
   cellParams2,
 ) => {
-  const model = gridRowGroupingSanitizedModelSelector(cellParams1.api.state);
+  const model = gridRowGroupingSanitizedModelSelector(
+    cellParams1.api.state,
+    cellParams1.api.instanceId,
+  );
   const groupingField1 = cellParams1.rowNode.groupingField;
   const groupingField2 = cellParams2.rowNode.groupingField;
 

@@ -48,8 +48,11 @@ export const useGridStateInitialization = <GridApi extends GridApiCommon>(
       const updatedControlStateIds: { stateId: string; hasPropChanged: boolean }[] = [];
       Object.keys(controlStateMapRef.current).forEach((stateId) => {
         const controlState = controlStateMapRef.current[stateId];
-        const oldSubState = controlState.stateSelector(apiRef.current.state);
-        const newSubState = controlState.stateSelector(newState);
+        const oldSubState = controlState.stateSelector(
+          apiRef.current.state,
+          apiRef.current.instanceId,
+        );
+        const newSubState = controlState.stateSelector(newState, apiRef.current.instanceId);
 
         if (newSubState === oldSubState) {
           return;
@@ -90,7 +93,7 @@ export const useGridStateInitialization = <GridApi extends GridApiCommon>(
 
       updatedControlStateIds.forEach(({ stateId, hasPropChanged }) => {
         const controlState = controlStateMapRef.current[stateId];
-        const model = controlState.stateSelector(newState);
+        const model = controlState.stateSelector(newState, apiRef.current.instanceId);
 
         if (controlState.propOnChange && hasPropChanged) {
           const details =

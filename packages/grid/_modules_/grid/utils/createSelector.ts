@@ -3,7 +3,9 @@ import { GridApiRef } from '../models/api/gridApiRef';
 import { GridApiCommon } from '../models/api/gridApi';
 
 export interface OutputSelector<State, Result> {
-  (stateOrApiRef: GridApiRef | State): Result;
+  (apiRef: GridApiRef): Result;
+  // TODO v6: make instanceId require
+  (state: State, instanceId?: number): Result;
   cache: object;
 }
 
@@ -19,33 +21,48 @@ type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, R
   ...items: SelectorArgs<Selectors, Result>
 ) => OutputSelector<FirstArg<Selectors[0]>, Result>;
 
-const cache = {};
+const cache: Record<number | string, Map<any[], any>> = {};
 
-function isApiRef<GridApi extends GridApiCommon>(
-  stateOrApiRef: any,
-): stateOrApiRef is GridApiRef<GridApi> {
+function isApiRef(stateOrApiRef: any): stateOrApiRef is GridApiRef {
   return stateOrApiRef.current;
 }
 
+let warnedOnce = false;
+
 export const createSelector: CreateSelectorFunction = (...args: any) => {
-  const selector = <GridApi extends GridApiCommon>(
-    stateOrApiRef: GridApiRef<GridApi> | GridApi['state'],
-  ) => {
-    const cacheKey = isApiRef(stateOrApiRef) ? stateOrApiRef.current.instanceId : 'default';
+  const selector = (...selectorArgs: any[]) => {
+    const [stateOrApiRef, instanceId] = selectorArgs;
+    const cacheKey = isApiRef(stateOrApiRef)
+      ? stateOrApiRef.current.instanceId
+      : instanceId ?? 'default';
     const state = isApiRef(stateOrApiRef) ? stateOrApiRef.current.state : stateOrApiRef;
 
-    if (cache[cacheKey] && cache[cacheKey][args]) {
-      return cache[cacheKey][args](state);
+    if (process.env.NODE_ENV !== 'production') {
+      if (!warnedOnce && cacheKey === 'default') {
+        console.warn(
+          [
+            'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
+            'To fix, call it with `apiRef`, e.g. `mySelector(apiRef)`, or pass the instance ID explicitly, e.g `mySelector(state, apiRef.current.instanceId)`.',
+          ].join('\n'),
+        );
+        warnedOnce = true;
+      }
+    }
+
+    if (cache[cacheKey] && cache[cacheKey].get(args)) {
+      // We pass the cache key because the called selector might have as
+      // dependency another selector created with this `createSelector`.
+      return cache[cacheKey].get(args)(state, cacheKey);
     }
 
     const newSelector = reselectCreateSelector(...args);
 
     if (!cache[cacheKey]) {
-      cache[cacheKey] = {};
+      cache[cacheKey] = new Map();
     }
-    cache[cacheKey][args] = newSelector;
+    cache[cacheKey].set(args, newSelector);
 
-    return newSelector(state);
+    return newSelector(state, cacheKey);
   };
 
   // We use this property to detect if the selector was created with createSelector

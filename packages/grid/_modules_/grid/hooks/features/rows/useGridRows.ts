@@ -163,7 +163,7 @@ export const useGridRows = (
   });
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
-    (id) => gridRowsLookupSelector(apiRef.current.state)[id] ?? null,
+    (id) => gridRowsLookupSelector(apiRef)[id] ?? null,
     [apiRef],
   );
 
@@ -174,11 +174,7 @@ export const useGridRows = (
         rowsCache.current.lastUpdateMs = Date.now();
         apiRef.current.setState((state) => ({
           ...state,
-          rows: getRowsStateFromCache(
-            rowsCache.current,
-            gridRowTreeSelector(apiRef.current.state),
-            apiRef,
-          ),
+          rows: getRowsStateFromCache(rowsCache.current, gridRowTreeSelector(apiRef), apiRef),
         }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
         apiRef.current.forceUpdate();
@@ -288,19 +284,19 @@ export const useGridRows = (
   );
 
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
-    const allRows = gridRowIdsSelector(apiRef.current.state);
-    const idRowsLookup = gridRowsLookupSelector(apiRef.current.state);
+    const allRows = gridRowIdsSelector(apiRef);
+    const idRowsLookup = gridRowsLookupSelector(apiRef);
 
     return new Map(allRows.map((id) => [id, idRowsLookup[id]]));
   }, [apiRef]);
 
   const getRowsCount = React.useCallback<GridRowApi['getRowsCount']>(
-    () => gridRowCountSelector(apiRef.current.state),
+    () => gridRowCountSelector(apiRef),
     [apiRef],
   );
 
   const getAllRowIds = React.useCallback<GridRowApi['getAllRowIds']>(
-    () => gridRowIdsSelector(apiRef.current.state),
+    () => gridRowIdsSelector(apiRef),
     [apiRef],
   );
 
@@ -327,7 +323,7 @@ export const useGridRows = (
   );
 
   const getRowNode = React.useCallback<GridRowApi['getRowNode']>(
-    (id) => gridRowTreeSelector(apiRef.current.state)[id] ?? null,
+    (id) => gridRowTreeSelector(apiRef)[id] ?? null,
     [apiRef],
   );
 

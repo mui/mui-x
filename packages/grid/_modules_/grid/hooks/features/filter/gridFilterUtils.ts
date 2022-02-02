@@ -4,12 +4,31 @@ import {
   GridFilterModel,
   GridLinkOperator,
   GridRowId,
+  GridStateCommunity,
 } from '../../../models';
 import { GridAggregatedFilterItemApplier } from './gridFilterState';
 
 type GridFilterItemApplier = {
   fn: (rowId: GridRowId) => boolean;
   item: GridFilterItem;
+};
+
+export const mergeStateWithFilterModel = (
+  filterModel: GridFilterModel,
+  disableMultipleColumnsFiltering: boolean,
+) => {
+  const cleanFilterModel = { ...filterModel };
+  if (cleanFilterModel.items.length > 1 && disableMultipleColumnsFiltering) {
+    cleanFilterModel.items = [cleanFilterModel.items[0]];
+  }
+
+  return (state: GridStateCommunity): GridStateCommunity => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      filterModel,
+    },
+  });
 };
 
 /**

@@ -266,7 +266,7 @@ export const useCellEditing = (
 
   const handleColumnHeaderDragStart: GridEventListener<GridEvents.columnHeaderDragEnter> =
     useEventCallback(() => {
-      const cell = gridFocusCellSelector(apiRef.current.state);
+      const cell = gridFocusCellSelector(apiRef);
       if (!cell) {
         return;
       }
