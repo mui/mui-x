@@ -15,12 +15,8 @@ import { GridEventListener, GridEvents } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
 import { GridRenderContext } from '../../../models';
-<<<<<<< HEAD
-import { gridClasses } from '../../../gridClasses';
-=======
 import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
->>>>>>> 8c1fcc7f4049313807d4141095b32106c5c22ce0
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(
@@ -284,14 +280,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const rows: JSX.Element[] = [];
 
-    const isEmptySpace = nextRenderContext.lastRowIndex >= currentPage.rows.length;
-
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
-<<<<<<< HEAD
-      const index = currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i;
-      const isLastRow = index === currentPage.range.lastRowIndex;
-=======
+      const index = currentPage.range.firstRowIndex + i;
+      const isLastRow = index + 1 === currentPage.rows.length;
       const targetRowHeight = apiRef.current.unstable_getRowHeight(id);
 
       let isSelected: boolean;
@@ -302,7 +294,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       } else {
         isSelected = true;
       }
->>>>>>> 8c1fcc7f4049313807d4141095b32106c5c22ce0
 
       rows.push(
         <rootProps.components.Row
@@ -318,14 +309,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
+          index={index}
           containerWidth={availableSpace}
-          className={
-            isEmptySpace &&
-            isLastRow &&
-            !rootProps.autoHeight &&
-            gridClasses['row--lastBeforeEmpty']
-          }
+          isLastRow={isLastRow}
           {...rootProps.componentsProps?.row}
         />,
       );

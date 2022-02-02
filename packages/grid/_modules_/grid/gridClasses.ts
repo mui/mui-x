@@ -388,6 +388,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'row--editing',
   'row',
   'row--lastBeforeEmpty',
+  'row--last',
   'rowCount',
   'scrollArea--left',
   'scrollArea--right',
