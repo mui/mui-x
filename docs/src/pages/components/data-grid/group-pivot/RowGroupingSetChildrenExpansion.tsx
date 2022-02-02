@@ -26,7 +26,7 @@ const useKeepGroupingColumnsHidden = (
   React.useEffect(() => {
     apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
       const columnVisibilityModel = {
-        ...gridColumnVisibilityModelSelector(apiRef.current.state),
+        ...gridColumnVisibilityModelSelector(apiRef),
       };
       newModel.forEach((field) => {
         if (!prevModel.current.includes(field)) {
@@ -66,7 +66,7 @@ export default function RowGroupingSetChildrenExpansion() {
   );
 
   const toggleSecondRow = () => {
-    const rowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+    const rowIds = gridVisibleSortedRowIdsSelector(apiRef);
 
     if (rowIds.length > 1) {
       const rowId = rowIds[1];
