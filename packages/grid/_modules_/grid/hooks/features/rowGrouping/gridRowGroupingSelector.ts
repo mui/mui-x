@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '../../../utils/createSelector';
 import { GridState } from '../../../models';
 import { gridColumnLookupSelector } from '../columns';
 

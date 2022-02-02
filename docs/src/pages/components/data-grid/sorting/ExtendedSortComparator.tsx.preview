@@ -1,0 +1,14 @@
+<DataGrid
+  {...data}
+  columns={columns}
+  initialState={{
+    sorting: {
+      sortModel: [
+        {
+          field: 'nameAdmin',
+          sort: 'asc',
+        },
+      ],
+    },
+  }}
+/>

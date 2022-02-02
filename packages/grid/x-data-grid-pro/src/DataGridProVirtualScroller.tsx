@@ -12,7 +12,7 @@ import { useGridApiEventHandler } from '../../_modules_/grid/hooks/utils/useGrid
 import { GridEvents } from '../../_modules_/grid/models/events';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
 import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
-import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../_modules_/grid/gridClasses';
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import {
   GridPinnedColumns,
@@ -85,6 +85,11 @@ const getOverlayAlpha = (elevation: number) => {
 const VirtualScrollerPinnedColumns = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PinnedColumns',
+  overridesResolver: (props, styles) => [
+    { [`&.${gridClasses['pinnedColumns--left']}`]: styles['pinnedColumns--left'] },
+    { [`&.${gridClasses['pinnedColumns--right']}`]: styles['pinnedColumns--right'] },
+    styles.pinnedColumns,
+  ],
 })<{ ownerState: VirtualScrollerPinnedColumnsProps }>(({ theme, ownerState }) => ({
   position: 'sticky',
   overflow: 'hidden',
