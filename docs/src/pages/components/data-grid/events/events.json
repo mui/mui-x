@@ -20,7 +20,7 @@
   {
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
-    "params": "GridCellParams<any, any, any>",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>"
   },
   {
@@ -32,13 +32,13 @@
   {
     "name": "cellFocusIn",
     "description": "Fired when a cell gains focus.",
-    "params": "GridCellParams<any, any, any>",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<{}>"
   },
   {
     "name": "cellFocusOut",
     "description": "Fired when a cell loses focus.",
-    "params": "GridCellParams<any, any, any>",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<MuiBaseEvent>"
   },
   {

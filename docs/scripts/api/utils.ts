@@ -46,6 +46,10 @@ export function escapeCell(value: string) {
 }
 
 export const formatType = (rawType: string) => {
+  if (!rawType) {
+    return '';
+  }
+
   const prefix = 'type FakeType = ';
   const signatureWithTypeName = `${prefix}${rawType}`;
 
