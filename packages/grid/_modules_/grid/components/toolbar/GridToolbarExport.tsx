@@ -82,7 +82,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
           apiRef.current.exportDataAsPrint(option.formatOptions);
           break;
         case 'excel':
-          apiRef.current.exportDataAsExcel(option.formatOptions);
+          apiRef.current?.exportDataAsExcel(option.formatOptions);
           break;
         default:
           break;
