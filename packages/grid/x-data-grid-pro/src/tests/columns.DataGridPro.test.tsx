@@ -383,13 +383,12 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  it('should throw if unsupported column type is used', () => {
+  it('should warn if unsupported column type is used', () => {
     const singleColumns = [{ field: 'brand', type: 'str' }];
 
     expect(() => {
       render(<Test columns={singleColumns} />);
-      // @ts-expect-error need to migrate helpers to TypeScript
-    }).toErrorDev(
+    }).toWarnDev(
       [
         `MUI: The column type "str" you are using is not supported.`,
         `Column type "${DEFAULT_GRID_COL_TYPE_KEY}" is being used instead.`,

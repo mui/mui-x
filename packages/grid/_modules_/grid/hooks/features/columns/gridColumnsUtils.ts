@@ -112,9 +112,11 @@ export const getGridColDef = (
         ].join('\n'),
       );
       columnTypeWarnedOnce = true;
-
-      return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
     }
+  }
+
+  if (!columnTypes[type]) {
+    return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
   }
 
   return columnTypes[type];
