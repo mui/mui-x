@@ -2,15 +2,17 @@ import { GridSortingModelApplier } from './gridSortingState';
 import type {
   GridApiRefCommunity,
   GridCellValue,
-  GridComparatorFn,
   GridRowId,
   GridRowTreeNodeConfig,
-  GridSortCellParams,
+  GridStateCommunity,
+} from '../../../models';
+import {
+  GridComparatorFn,
   GridSortDirection,
   GridSortItem,
   GridSortModel,
-  GridStateCommunity,
-} from '../../../models';
+  GridSortCellParams,
+} from '../../../models/gridSortModel';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
@@ -98,7 +100,7 @@ const compareRows = (
 /**
  * Generates a method to easily sort a list of rows according to the current sort model.
  * @param {GridSortModel} sortModel The model with which we want to sort the rows.
- * @param {GridApiRef} apiRef The API of the grid.
+ * @param {GridApiRefCommunity} apiRef The API of the grid.
  * @returns {GridSortingModelApplier | null} A method that generates a list of sorted row ids from a list of rows according to the current sort model. If `null`, we consider that the rows should remain in the order there were provided.
  */
 export const buildAggregatedSortingApplier = (

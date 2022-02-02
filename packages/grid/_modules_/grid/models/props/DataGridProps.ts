@@ -11,14 +11,11 @@ import { GridSlotsComponent } from '../gridSlotsComponent';
 import { GridRowIdGetter, GridRowsProp } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridApiRefCommunity, GridCallbackDetails, GridLocaleText } from '../api';
-import type { GridColumns, GridColumnTypesRecord } from '../colDef';
+import type { GridColumnTypesRecord } from '../colDef';
+import type { GridColumns } from '../colDef/gridColDef';
 import { GridClasses } from '../../gridClasses';
-import {
-  GridCellParams,
-  GridRowHeightParams,
-  GridRowHeightReturnValue,
-  GridRowParams,
-} from '../params';
+import { GridRowHeightParams, GridRowHeightReturnValue, GridRowParams } from '../params';
+import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
 import { GridInitialStateCommunity } from '../gridState';
@@ -372,7 +369,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Extend native column types with your new column types.
    */
-  columnTypes?: GridColumnTypesRecord;
+  columnTypes?: GridColumnTypesRecord<any>;
   /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
    * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -387,7 +384,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
    */
-  getCellClassName?: (params: GridCellParams) => string;
+  getCellClassName?: (params: GridCellParams<any, any, any, any>) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -405,7 +402,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
-  isCellEditable?: (params: GridCellParams) => boolean;
+  isCellEditable?: (params: GridCellParams<any, any, any, any>) => boolean;
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -670,7 +667,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: GridColumns;
+  columns: GridColumns<any>;
   /**
    * An error that will turn the grid into its error state and display the error component.
    */

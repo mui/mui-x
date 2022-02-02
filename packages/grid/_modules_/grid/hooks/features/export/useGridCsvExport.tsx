@@ -8,7 +8,8 @@ import { GridCsvExportOptions, GridCsvGetRowsToExportParams } from '../../../mod
 import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
-import { GridRowId, GridStateColDef } from '../../../models';
+import { GridRowId } from '../../../models';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);

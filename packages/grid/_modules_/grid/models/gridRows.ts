@@ -1,4 +1,4 @@
-import type { GridKeyValue } from './colDef';
+import type { GridKeyValue } from './colDef/gridColDef';
 
 export type GridRowsProp = Readonly<GridRowModel[]>;
 

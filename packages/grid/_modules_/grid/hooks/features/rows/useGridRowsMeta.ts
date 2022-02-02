@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
@@ -20,7 +20,7 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
  * @requires useGridPage (method)
  */
 export const useGridRowsMeta = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   props: Pick<DataGridProcessedProps, 'getRowHeight' | 'pagination' | 'paginationMode'>,
 ): void => {
   const { getRowHeight, pagination, paginationMode } = props;

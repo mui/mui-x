@@ -7,6 +7,7 @@ import {
   GridRowsProp,
   GridSortModel,
   useGridApiRef,
+  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import { action } from '@storybook/addon-actions';
 
@@ -463,7 +464,11 @@ export const ServerSideSorting = () => {
       action('onSortModelChange')(model);
 
       setSortModel(model);
-      const newRows = await sortServerRows(rows, model, apiRef.current.getVisibleColumns());
+      const newRows = await sortServerRows(
+        rows,
+        model,
+        apiRef.current.getVisibleColumns<GridApiPro>(),
+      );
       setRows(newRows);
       setLoading(false);
     },

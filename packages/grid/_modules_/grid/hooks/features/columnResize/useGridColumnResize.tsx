@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ownerDocument, useEventCallback } from '@mui/material/utils';
-import { GridStateColDef } from '../../../models/colDef';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { useGridLogger } from '../../utils';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { gridClasses } from '../../../gridClasses';

@@ -32,6 +32,7 @@ import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/us
 import { useGridRowGrouping } from '../../_modules_/grid/hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
 import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
+import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
 
 export const useDataGridProComponent = (
   inputApiRef: GridApiRefPro | undefined,
@@ -42,7 +43,7 @@ export const useDataGridProComponent = (
   useGridRowGrouping(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridSelection(apiRef, props);
-  useGridColumns(apiRef, props);
+  useGridColumns(apiRef, props as DataGridProcessedProps);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridEditing(apiRef, props);

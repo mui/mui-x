@@ -1,6 +1,5 @@
-import React from 'react';
+import * as React from 'react';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApiCommon } from '../../models/api/gridApi';
 import { GridStateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
@@ -9,17 +8,17 @@ import { GridEvents } from '../../models/events';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
-export const useGridStateInitialization = <GridApi extends GridApiCommon>(
-  apiRef: GridApiRef<GridApi>,
-  props: DataGridProcessedProps,
+export const useGridStateInitialization = <Api extends GridApiCommon>(
+  apiRef: React.MutableRefObject<Api>,
+  props: Pick<DataGridProcessedProps, 'signature'>,
 ) => {
-  const controlStateMapRef = React.useRef<
-    Record<string, GridControlStateItem<GridApi['state'], any>>
-  >({});
-  const [, rawForceUpdate] = React.useState<GridApi['state']>();
+  const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<Api['state'], any>>>(
+    {},
+  );
+  const [, rawForceUpdate] = React.useState<Api['state']>();
 
   const updateControlState = React.useCallback<
-    GridStateApi<GridApi['state']>['unstable_updateControlState']
+    GridStateApi<Api['state']>['unstable_updateControlState']
   >((controlStateItem) => {
     const { stateId, ...others } = controlStateItem;
 
@@ -29,9 +28,9 @@ export const useGridStateInitialization = <GridApi extends GridApiCommon>(
     };
   }, []);
 
-  const setState = React.useCallback<GridStateApi<GridApi['state']>['setState']>(
+  const setState = React.useCallback<GridStateApi<Api['state']>['setState']>(
     (state) => {
-      let newState: GridApi['state'];
+      let newState: Api['state'];
       if (isFunction(state)) {
         newState = state(apiRef.current.state);
       } else {

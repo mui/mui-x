@@ -8,12 +8,11 @@ import {
   DEFAULT_GRID_COL_TYPE_KEY,
   getGridDefaultColumnTypes,
   GridApiRefCommunity,
-  GridColDef,
   GridColType,
   GridColumnTypesRecord,
   GridStateCommunity,
-  GridStateColDef,
 } from '../../../models';
+import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 

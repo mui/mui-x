@@ -1,9 +1,5 @@
-import {
-  GridCellIndexCoordinates,
-  GridColDef,
-  GridInitialState,
-  GridScrollParams,
-} from '../../../models';
+import { GridCellIndexCoordinates, GridInitialState, GridScrollParams } from '../../../models';
+import { GridColDef } from '../../../models/colDef/gridColDef';
 import {
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,

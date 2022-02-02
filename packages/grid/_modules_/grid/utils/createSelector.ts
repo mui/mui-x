@@ -1,11 +1,10 @@
+import * as React from 'react';
 import { createSelector as reselectCreateSelector, Selector, SelectorResultArray } from 'reselect';
-import { GridApiRef } from '../models/api/gridApiRef';
-import { GridApiCommon } from '../models/api/gridApi';
 
-export interface OutputSelector<State, Result> {
-  (apiRef: GridApiRef): Result;
+export interface OutputSelector<Api extends { state: any; instanceId: string }, Result> {
+  (apiRef: React.MutableRefObject<Api>): Result;
   // TODO v6: make instanceId require
-  (state: State, instanceId?: number): Result;
+  (state: Api['state'], instanceId?: number): Result;
   cache: object;
 }
 
@@ -23,19 +22,14 @@ type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, R
 
 const cache: Record<number | string, Map<any[], any>> = {};
 
-function isApiRef(stateOrApiRef: any): stateOrApiRef is GridApiRef {
-  return stateOrApiRef.current;
-}
-
 let warnedOnce = false;
 
 export const createSelector: CreateSelectorFunction = (...args: any) => {
   const selector = (...selectorArgs: any[]) => {
     const [stateOrApiRef, instanceId] = selectorArgs;
-    const cacheKey = isApiRef(stateOrApiRef)
-      ? stateOrApiRef.current.instanceId
-      : instanceId ?? 'default';
-    const state = isApiRef(stateOrApiRef) ? stateOrApiRef.current.state : stateOrApiRef;
+    const isApiRef = !!stateOrApiRef.current;
+    const cacheKey = isApiRef ? stateOrApiRef.current.instanceId : instanceId ?? 'default';
+    const state = isApiRef ? stateOrApiRef.current.state : stateOrApiRef;
 
     if (process.env.NODE_ENV !== 'production') {
       if (!warnedOnce && cacheKey === 'default') {

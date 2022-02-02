@@ -1,9 +1,5 @@
-import type {
-  GridRowTreeNodeConfig,
-  GridRowId,
-  GridRowTreeConfig,
-  GridKeyValue,
-} from '../../models';
+import type { GridRowTreeNodeConfig, GridRowId, GridRowTreeConfig } from '../../models';
+import type { GridKeyValue } from '../../models/colDef/gridColDef';
 import type {
   GridRowGroupingResult,
   GridRowGroupParams,

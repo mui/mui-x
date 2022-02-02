@@ -2,7 +2,7 @@
 import { GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridApiRefPro, GridCallbackDetails, GridPinnedColumns } from '../api';
-import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef';
+import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef/gridColDef';
 import {
   DataGridPropsWithoutDefaultValue,
   DataGridPropsWithDefaultValues,

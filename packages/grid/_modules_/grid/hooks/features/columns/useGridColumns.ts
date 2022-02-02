@@ -29,6 +29,7 @@ import {
   createColumnsState,
   setColumnsState,
 } from './gridColumnsUtils';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 /**
  * @requires useGridParamsApi (method)
@@ -104,17 +105,17 @@ export function useGridColumns(
    * API METHODS
    */
   const getColumn = React.useCallback<GridColumnApi['getColumn']>(
-    (field) => gridColumnLookupSelector(apiRef.current.state)[field],
+    (field) => gridColumnLookupSelector(apiRef.current.state)[field] as GridStateColDef<any>,
     [apiRef],
   );
 
   const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
-    () => allGridColumnsSelector(apiRef),
+    () => allGridColumnsSelector(apiRef) as GridStateColDef<any>[],
     [apiRef],
   );
 
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
-    () => visibleGridColumnsSelector(apiRef),
+    () => visibleGridColumnsSelector(apiRef) as GridStateColDef<any>[],
     [apiRef],
   );
 

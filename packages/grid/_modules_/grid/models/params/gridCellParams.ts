@@ -1,8 +1,8 @@
 import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
-import type { GridColDef, GridStateColDef } from '../colDef';
+import type { GridColDef, GridStateColDef } from '../colDef/gridColDef';
 import { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApiCommon } from '../api/gridApi';
+import type { GridApiCommon, GridApiCommunity, GridApiPro } from '../api/gridApi';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
@@ -11,7 +11,7 @@ export interface GridCellParams<
   V = any,
   R = any,
   F = V,
-  GridApi extends GridApiCommon = GridApiCommon,
+  Api extends GridApiCommon = GridApiCommunity,
 > {
   /**
    * The grid row id.
@@ -40,7 +40,7 @@ export interface GridCellParams<
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridStateColDef<GridApi>;
+  colDef: GridStateColDef<Api>;
   /**
    * If true, the cell is editable.
    */
@@ -74,23 +74,23 @@ export interface GridRenderCellParams<
   V = any,
   R = any,
   F = V,
-  GridApi extends GridApiCommon = GridApiCommon,
+  Api extends GridApiCommon = GridApiCommunity,
 > extends GridCellParams<V, R, F> {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApi;
+  api: Api;
 }
 
 /**
  * GridEditCellProps containing api.
  */
-export interface GridRenderEditCellParams<GridApi extends GridApiCommon = GridApiCommon>
+export interface GridRenderEditCellParams<Api extends GridApiCommon = GridApiCommunity>
   extends GridEditCellProps {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApi;
+  api: Api;
 }
 
 /**
@@ -99,28 +99,28 @@ export interface GridRenderEditCellParams<GridApi extends GridApiCommon = GridAp
 export interface GridValueGetterParams<
   V = any,
   R = any,
-  GridApi extends GridApiCommon = GridApiCommon,
+  Api extends GridApiCommon = GridApiCommunity,
 > extends Omit<GridCellParams<V, R>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApi;
+  api: Api;
 }
 
 /**
  * @deprecated Use `GridValueGetterParams` instead.
  */
-export type GridValueGetterFullParams<V = any, R = any> = GridValueGetterParams<V, R>;
+export type GridValueGetterFullParams<
+  V = any,
+  R = any,
+  Api extends GridApiCommon = GridApiCommunity,
+> = GridValueGetterParams<V, R, Api>;
 
 /**
  * Parameters passed to `colDef.groupingValueGetter`.
  * TODO: Move to `x-data-grid-pro` folder
  */
-export interface GridGroupingValueGetterParams<
-  V = any,
-  R = any,
-  GridApi extends GridApiCommon = GridApiCommon,
-> {
+export interface GridGroupingValueGetterParams<V = any, R = any> {
   /**
    * The grid row id.
    */
@@ -140,7 +140,7 @@ export interface GridGroupingValueGetterParams<
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridColDef<GridApi> | GridStateColDef<GridApi>;
+  colDef: GridColDef<GridApiPro> | GridStateColDef<GridApiPro>;
   /**
    * The node of the row that the current cell belongs to.
    * It only contains the information available before the actual grouping.
@@ -165,7 +165,7 @@ export interface GridValueSetterParams {
 /**
  * Object passed as parameter in the column [[GridColDef]] value formatter callback.
  */
-export interface GridValueFormatterParams<GridApi extends GridApiCommon = GridApiCommon> {
+export interface GridValueFormatterParams<Api extends GridApiCommon = GridApiCommunity> {
   /**
    * The grid row id.
    * It is not available when the value formatter is called by the filter panel.
@@ -182,7 +182,7 @@ export interface GridValueFormatterParams<GridApi extends GridApiCommon = GridAp
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApi;
+  api: Api;
 }
 
 /**
@@ -194,7 +194,7 @@ export interface GridPreProcessEditCellProps {
    */
   id: GridRowId;
   /**
-   * The row that is being editted.
+   * The row that is being edited.
    */
   row: GridRowModel;
   /**

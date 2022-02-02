@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Logger } from '../../models/logger';
 import { GridApiCommon } from '../../models/api/gridApi';
-import { GridApiRef } from '../../models/api/gridApiRef';
 
-export function useGridLogger<GridApi extends GridApiCommon>(
-  apiRef: GridApiRef<GridApi>,
+export function useGridLogger<Api extends GridApiCommon>(
+  apiRef: React.MutableRefObject<Api>,
   name: string,
 ): Logger {
   const logger = React.useRef<Logger | null>(null);

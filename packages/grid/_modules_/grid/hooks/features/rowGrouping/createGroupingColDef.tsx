@@ -1,14 +1,12 @@
 import * as React from 'react';
+import { GRID_STRING_COL_DEF, GridApiPro, GridApiRefPro } from '../../../models';
+import { GridRenderCellParams } from '../../../models/params/gridCellParams';
+import { GridComparatorFn } from '../../../models/gridSortModel';
 import {
-  GRID_STRING_COL_DEF,
   GridColDef,
-  GridGroupingColDefOverride,
-  GridRenderCellParams,
   GridStateColDef,
-  GridComparatorFn,
-  GridApiPro,
-  GridApiRefPro,
-} from '../../../models';
+  GridGroupingColDefOverride,
+} from '../../../models/colDef/gridColDef';
 import { GridColumnRawLookup } from '../columns/gridColumnsInterfaces';
 import { GridGroupingCriteriaCell } from '../../../components/cell/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/cell/GridGroupingColumnLeafCell';

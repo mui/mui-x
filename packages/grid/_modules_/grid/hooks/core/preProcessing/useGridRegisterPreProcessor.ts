@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridApiCommon } from '../../../models/api/gridApi';
 import { GridPreProcessingGroup, PreProcessorCallback } from './gridPreProcessingApi';
 
-export const useGridRegisterPreProcessor = <GridApi extends GridApiCommon>(
-  apiRef: GridApiRef<GridApi>,
+export const useGridRegisterPreProcessor = <Api extends GridApiCommon>(
+  apiRef: React.MutableRefObject<Api>,
   group: GridPreProcessingGroup,
   callback: PreProcessorCallback,
 ) => {

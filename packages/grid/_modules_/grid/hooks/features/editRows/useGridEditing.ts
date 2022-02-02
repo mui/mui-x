@@ -23,7 +23,24 @@ import { useGridRowEditing } from './useGridRowEditing';
  * @requires useGridParamsApi (method)
  * @requires useGridColumns (state)
  */
-export function useGridEditing(apiRef: GridApiRefCommunity, props: DataGridProcessedProps) {
+export function useGridEditing(
+  apiRef: GridApiRefCommunity,
+  props: Pick<
+    DataGridProcessedProps,
+    | 'editRowsModel'
+    | 'onEditRowsModelChange'
+    | 'isCellEditable'
+    | 'onEditCellPropsChange'
+    | 'editMode'
+    | 'onRowEditCommit'
+    | 'onRowEditStart'
+    | 'onRowEditStop'
+    | 'onCellEditCommit'
+    | 'onCellEditStart'
+    | 'onCellEditStop'
+    | 'experimentalFeatures'
+  >,
+) {
   const logger = useGridLogger(apiRef, 'useGridEditRows');
   useCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);

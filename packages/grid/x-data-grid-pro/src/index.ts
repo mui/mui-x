@@ -1,9 +1,10 @@
+import * as React from 'react';
+
 /* eslint-disable import/export */
 import {
   useGridApiContext as useUntypedGridApiContext,
   useGridApiRef as useUntypedGridApiRef,
   GridApiPro,
-  GridApiRef,
   GridApiCommon,
 } from '../../_modules_';
 
@@ -15,15 +16,11 @@ export * from './DataGridPro';
 // Typing override to avoid breaking change until `__modules__` is removed
 
 export const useGridApiContext = useUntypedGridApiContext as <
-  GridApi extends GridApiCommon = GridApiPro,
->() => GridApiRef<GridApi>;
+  Api extends GridApiCommon = GridApiPro,
+>() => React.MutableRefObject<Api>;
 
 export const useGridApiRef = useUntypedGridApiRef as <
-  GridApi extends GridApiCommon = GridApiPro,
->() => GridApiRef<GridApi>;
+  Api extends GridApiCommon = GridApiPro,
+>() => React.MutableRefObject<Api>;
 
-/**
- * The full grid API.
- * @deprecated Use `GridApiPro` instead.
- */
-export type GridApi = GridApiPro;
+export * from './typeOverload';

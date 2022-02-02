@@ -29,6 +29,6 @@ const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
   );
 });
 
-export function renderIncoterm(params: GridCellParams) {
+export function renderIncoterm(params: GridCellParams<string, any, any, any>) {
   return <Incoterm value={params.value!} />;
 }

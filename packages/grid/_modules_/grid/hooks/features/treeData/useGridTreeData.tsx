@@ -7,12 +7,12 @@ import {
 } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridApiPro } from '../../../models';
 import {
-  GridApiPro,
   GridColDef,
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
-} from '../../../models';
+} from '../../../models/colDef/gridColDef';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';

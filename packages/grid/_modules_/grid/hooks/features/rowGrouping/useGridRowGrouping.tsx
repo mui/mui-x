@@ -1,15 +1,8 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-import type {
-  GridApiRefPro,
-  GridRowModel,
-  GridRowId,
-  GridColDef,
-  GridKeyValue,
-  GridGroupingValueGetterParams,
-  GridStateColDef,
-  GridApiPro,
-} from '../../../models';
+import type { GridApiRefPro, GridRowModel, GridRowId, GridApiPro } from '../../../models';
+import { GridGroupingValueGetterParams } from '../../../models/params/gridCellParams';
+import { GridColDef, GridKeyValue, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { useFirstRender } from '../../utils/useFirstRender';
@@ -34,7 +27,11 @@ import {
 } from './createGroupingColDef';
 import { isDeepEqual } from '../../../utils/utils';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridColumnRawLookup, GridColumnsRawState } from '../columns/gridColumnsInterfaces';
+import {
+  GridColumnLookup,
+  GridColumnRawLookup,
+  GridColumnsRawState,
+} from '../columns/gridColumnsInterfaces';
 import { useGridRegisterFilteringMethod } from '../filter/useGridRegisterFilteringMethod';
 import { GridFilteringMethod } from '../filter/gridFilterState';
 import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
@@ -94,7 +91,9 @@ export const useGridRowGrouping = (
   const updateRowGrouping = React.useCallback(() => {
     const groupRows: GridRowGroupingPreProcessing = (params) => {
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-      const columnsLookup = gridColumnLookupSelector(apiRef.current.state);
+      const columnsLookup = gridColumnLookupSelector(
+        apiRef.current.state,
+      ) as any as GridColumnLookup<GridApiPro>;
       sanitizedModelOnLastRowPreProcessing.current = rowGroupingModel;
 
       if (props.disableRowGrouping || rowGroupingModel.length === 0) {
@@ -114,7 +113,7 @@ export const useGridRowGrouping = (
       }: {
         row: GridRowModel;
         id: GridRowId;
-        colDef: GridColDef;
+        colDef: GridColDef<GridApiPro>;
       }) => {
         let key: GridKeyValue | null | undefined;
         if (colDef.groupingValueGetter) {
