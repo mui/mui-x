@@ -29,9 +29,10 @@ import { getGridStringOperators as getGridStringOperatorsUntyped } from '../../_
 import { getGridSingleSelectOperators as getGridSingleSelectOperatorsUntyped } from '../../_modules_/grid/models/colDef/gridSingleSelectOperators';
 import { getGridDateOperators as getGridDateOperatorsUntyped } from '../../_modules_/grid/models/colDef/gridDateOperators';
 import type { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
-import type { GridApiCommon } from '../../_modules_/grid/models/api/gridApiCommon';
-import type { GridFilterOperator } from '../../_modules_';
+import type { GridFilterOperator, GridApiCommon } from '../../_modules_';
 import { GridInitialStatePro, GridStatePro } from '../../_modules_/grid/models/gridStatePro';
+import { useGridApiContext as useUntypedGridApiContext } from '../../_modules_/grid/hooks/utils/useGridApiContext';
+import { useGridApiRef as useUntypedGridApiRef } from '../../_modules_/grid/hooks/utils/useGridApiRef';
 
 export type {
   GridAlignment,
@@ -58,6 +59,9 @@ export type {
  */
 export type GridApi = GridApiPro;
 
+/**
+ * @deprecated Use `React.MutableRefObject<GridApi>` instead
+ */
 export type GridApiRef = React.MutableRefObject<GridApiPro>;
 
 /**
@@ -163,3 +167,11 @@ export type GridSortCellParams<Api extends GridApiCommon = GridApiPro> =
   GridSortCellParamsUntyped<Api>;
 
 export type GridComparatorFn<Api extends GridApiCommon = GridApiPro> = GridComparatorFnUntyped<Api>;
+
+export const useGridApiContext = useUntypedGridApiContext as <
+  Api extends GridApiCommon = GridApiPro,
+>() => React.MutableRefObject<Api>;
+
+export const useGridApiRef = useUntypedGridApiRef as <
+  Api extends GridApiCommon = GridApiPro,
+>() => React.MutableRefObject<Api>;

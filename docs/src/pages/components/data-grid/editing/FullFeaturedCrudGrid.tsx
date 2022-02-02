@@ -10,6 +10,7 @@ import {
   GridRowsProp,
   useGridApiRef,
   DataGridPro,
+  GridApiRef,
   GridColumns,
   GridRowParams,
   MuiEvent,
@@ -17,7 +18,6 @@ import {
   GridActionsCellItem,
   GridEventListener,
   GridEvents,
-  GridApiRef,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
