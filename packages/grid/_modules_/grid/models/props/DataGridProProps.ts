@@ -1,4 +1,5 @@
 // TODO: Move to `x-data-grid-pro` folder
+import * as React from 'react';
 import { GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridPinnedColumns } from '../api';

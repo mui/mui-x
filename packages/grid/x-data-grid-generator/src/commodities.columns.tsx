@@ -159,7 +159,6 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator<any>[
     type: 'number',
     width: 80,
     editable,
-
     valueParser: (value) => Number(value),
   },
   {

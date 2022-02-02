@@ -77,7 +77,7 @@ export interface GridRenderCellParams<
   R = any,
   F = V,
   Api extends GridApiCommon = GridApiCommunity,
-> extends GridCellParams<V, R, F> {
+> extends GridCellParams<V, R, F, Api> {
   /**
    * GridApi that let you manipulate the grid.
    */
@@ -102,7 +102,7 @@ export interface GridValueGetterParams<
   V = any,
   R = any,
   Api extends GridApiCommon = GridApiCommunity,
-> extends Omit<GridCellParams<V, R>, 'formattedValue' | 'isEditable'> {
+> extends Omit<GridCellParams<V, R, any, Api>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
    */

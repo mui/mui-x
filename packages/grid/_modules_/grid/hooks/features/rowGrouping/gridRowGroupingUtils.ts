@@ -1,14 +1,14 @@
-import {
+import type {
   GridFilterItem,
   GridRowId,
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
 } from '../../../models';
-import { GridStatePro } from '../../../models/gridStatePro';
-import { GridFilterState } from '../filter';
-import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
-import { GridAggregatedFilterItemApplier } from '../filter/gridFilterState';
-import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
+import type { GridStatePro } from '../../../models/gridStatePro';
+import type { GridFilterState } from '../filter';
+import type { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
+import type { GridAggregatedFilterItemApplier } from '../filter/gridFilterState';
+import type { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
