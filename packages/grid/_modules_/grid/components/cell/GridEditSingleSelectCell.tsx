@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
-import Select, { SelectProps } from '@mui/material/Select';
+import { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {
   GridRenderEditCellParams,
@@ -39,6 +39,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
     className,
     getValue,
     hasFocus,
+    isValidating,
     error,
     ...other
   } = props;
@@ -71,14 +72,15 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
 
   const handleChange = async (event) => {
     setOpen(false);
-    api.setEditCellValue({ id, field, value: event.target.value }, event);
+    const isValid = await api.setEditCellValue({ id, field, value: event.target.value }, event);
 
-    if (rootProps.editMode === GridEditModes.Row) {
+    // We use isValid === false because the default return is undefined which evaluates to true with !isValid
+    if (rootProps.editMode === GridEditModes.Row || isValid === false) {
       return;
     }
 
-    const isValid = await Promise.resolve(api.commitCellChange({ id, field }, event));
-    if (isValid) {
+    const canCommit = await Promise.resolve(api.commitCellChange({ id, field }, event));
+    if (canCommit) {
       api.setCellMode(id, field, 'view');
 
       if (event.key) {
@@ -110,7 +112,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
   }, [hasFocus]);
 
   return (
-    <Select
+    <rootProps.components.BaseSelect
       ref={ref}
       inputRef={inputRef}
       value={value}
@@ -123,9 +125,10 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
       error={error}
       fullWidth
       {...other}
+      {...rootProps.componentsProps?.baseSelect}
     >
       {valueOptionsFormatted.map(renderSingleSelectOptions)}
-    </Select>
+    </rootProps.components.BaseSelect>
   );
 }
 
@@ -138,6 +141,7 @@ GridEditSingleSelectCell.propTypes = {
    * GridApi that let you manipulate the grid.
    */
   api: PropTypes.object.isRequired,
+  isValidating: PropTypes.bool,
 } as any;
 
 export { GridEditSingleSelectCell };

@@ -4,9 +4,32 @@ import {
   GridFilterModel,
   GridLinkOperator,
   GridRowId,
+  GridState,
 } from '../../../models';
+import { GridAggregatedFilterItemApplier } from './gridFilterState';
 
-type GridFilterItemApplier = (rowId: GridRowId) => boolean;
+type GridFilterItemApplier = {
+  fn: (rowId: GridRowId) => boolean;
+  item: GridFilterItem;
+};
+
+export const mergeStateWithFilterModel = (
+  filterModel: GridFilterModel,
+  disableMultipleColumnsFiltering: boolean,
+) => {
+  const cleanFilterModel = { ...filterModel };
+  if (cleanFilterModel.items.length > 1 && disableMultipleColumnsFiltering) {
+    cleanFilterModel.items = [cleanFilterModel.items[0]];
+  }
+
+  return (state: GridState): GridState => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      filterModel,
+    },
+  });
+};
 
 /**
  * Adds default values to the optional fields of a filter items.
@@ -35,12 +58,12 @@ export const cleanFilterItem = (item: GridFilterItem, apiRef: GridApiRef) => {
  * Generates a method to easily check if a row is matching the current filter model.
  * @param {GridFilterModel} filterModel The model with which we want to filter the rows.
  * @param {GridApiRef} apiRef The API of the grid.
- * @returns {GridFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
+ * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
 export const buildAggregatedFilterApplier = (
   filterModel: GridFilterModel,
   apiRef: GridApiRef,
-): GridFilterItemApplier | null => {
+): GridAggregatedFilterItemApplier | null => {
   const { items, linkOperator = GridLinkOperator.And } = filterModel;
 
   const getFilterCallbackFromItem = (filterItem: GridFilterItem): GridFilterItemApplier | null => {
@@ -52,10 +75,16 @@ export const buildAggregatedFilterApplier = (
     if (!column) {
       return null;
     }
+    let parsedValue;
 
-    const parsedValue = column.valueParser
-      ? column.valueParser(filterItem.value)
-      : filterItem.value;
+    if (column.valueParser) {
+      const parser = column.valueParser;
+      parsedValue = Array.isArray(filterItem.value)
+        ? filterItem.value?.map((x) => parser(x))
+        : parser(filterItem.value);
+    } else {
+      parsedValue = filterItem.value;
+    }
     const newFilterItem: GridFilterItem = { ...filterItem, value: parsedValue };
 
     const filterOperators = column.filterOperators;
@@ -77,11 +106,13 @@ export const buildAggregatedFilterApplier = (
       return null;
     }
 
-    return (rowId: GridRowId) => {
+    const fn = (rowId: GridRowId) => {
       const cellParams = apiRef.current.getCellParams(rowId, newFilterItem.columnField!);
 
       return applyFilterOnRow(cellParams);
     };
+
+    return { fn, item: newFilterItem };
   };
 
   const appliers = items
@@ -92,13 +123,17 @@ export const buildAggregatedFilterApplier = (
     return null;
   }
 
-  return (rowId: GridRowId) => {
+  return (rowId, shouldApplyFilter) => {
+    const filteredAppliers = shouldApplyFilter
+      ? appliers.filter((applier) => shouldApplyFilter(applier.item))
+      : appliers;
+
     // Return `false` as soon as we have a failing filter
     if (linkOperator === GridLinkOperator.And) {
-      return appliers.every((applier) => applier(rowId));
+      return filteredAppliers.every((applier) => applier.fn(rowId));
     }
 
     // Return `true` as soon as we have a passing filter
-    return appliers.some((applier) => applier(rowId));
+    return filteredAppliers.some((applier) => applier.fn(rowId));
   };
 };

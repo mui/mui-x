@@ -2,14 +2,18 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
 import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
 
+/**
+ * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
+ */
 export const useGridPreferencesPanel = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'initialState'>,
+  props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 
@@ -17,15 +21,17 @@ export const useGridPreferencesPanel = (
     ...state,
     preferencePanel: props.initialState?.preferencePanel ?? { open: false },
   }));
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const hideTimeout = React.useRef<any>();
   const immediateTimeout = React.useRef<any>();
 
+  /**
+   * API METHODS
+   */
   const hidePreferences = React.useCallback(() => {
     logger.debug('Hiding Preferences Panel');
-    setGridState((state) => ({ ...state, preferencePanel: { open: false } }));
-    forceUpdate();
-  }, [forceUpdate, logger, setGridState]);
+    apiRef.current.setState((state) => ({ ...state, preferencePanel: { open: false } }));
+    apiRef.current.forceUpdate();
+  }, [apiRef, logger]);
 
   // This is to prevent the preferences from closing when you open a select box or another panel,
   // The issue is in MUI core V4 => Fixed in V5
@@ -43,13 +49,13 @@ export const useGridPreferencesPanel = (
     (newValue: GridPreferencePanelsValue) => {
       logger.debug('Opening Preferences Panel');
       doNotHidePanel();
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         preferencePanel: { ...state.preferencePanel, open: true, openedPanelValue: newValue },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [doNotHidePanel, forceUpdate, logger, setGridState],
+    [doNotHidePanel, apiRef, logger],
   );
 
   useGridApiMethod(
@@ -61,6 +67,45 @@ export const useGridPreferencesPanel = (
     'ColumnMenuApi',
   );
 
+  /**
+   * PRE-PROCESSING
+   */
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+    (prevState) => {
+      const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef.current.state);
+      if (!preferencePanelToExport.open && !preferencePanelToExport.openedPanelValue) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        preferencePanel: preferencePanelToExport,
+      };
+    },
+    [apiRef],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+    (params, context) => {
+      const preferencePanel = context.stateToRestore.preferencePanel;
+      if (preferencePanel != null) {
+        apiRef.current.setState((state) => ({
+          ...state,
+          preferencePanel,
+        }));
+      }
+
+      return params;
+    },
+    [apiRef],
+  );
+
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+
+  /**
+   * EFFECTS
+   */
   React.useEffect(() => {
     return () => {
       clearTimeout(hideTimeout.current);

@@ -1,18 +1,28 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { GridApiRef, GridState } from '../../../models';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
 import { GridEvents } from '../../../models/events';
 import {
   useGridLogger,
   useGridApiMethod,
-  useGridState,
   useGridApiEventHandler,
   useGridSelector,
 } from '../../utils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+
+const mergeStateWithPageSize =
+  (pageSize: number) =>
+  (state: GridState): GridState => ({
+    ...state,
+    pagination: {
+      ...state.pagination,
+      pageSize,
+    },
+  });
 
 /**
  * @requires useGridDimensions (event) - can be after
@@ -20,16 +30,33 @@ import { gridDensityRowHeightSelector } from '../density';
  */
 export const useGridPageSize = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState'
+  >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    pagination: { pageSize: props.pageSize ?? (props.autoPageSize ? 0 : 100) },
-  }));
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const defaultPageSize = props.autoPageSize ? 0 : 100;
+
+  useGridStateInit(apiRef, (state) => {
+    let pageSize: number;
+    if (props.pageSize != null) {
+      pageSize = props.pageSize;
+    } else if (props.initialState?.pagination?.pageSize != null) {
+      pageSize = props.initialState.pagination.pageSize;
+    } else {
+      pageSize = defaultPageSize;
+    }
+
+    return {
+      ...state,
+      pagination: {
+        pageSize,
+      },
+    };
+  });
 
   apiRef.current.unstable_updateControlState({
     stateId: 'pageSize',
@@ -44,22 +71,16 @@ export const useGridPageSize = (
    */
   const setPageSize = React.useCallback<GridPageSizeApi['setPageSize']>(
     (pageSize) => {
-      if (pageSize === gridPageSizeSelector(apiRef.current.state)) {
+      if (pageSize === gridPageSizeSelector(apiRef)) {
         return;
       }
 
       logger.debug(`Setting page size to ${pageSize}`);
 
-      setGridState((state) => ({
-        ...state,
-        pagination: {
-          ...state.pagination,
-          pageSize,
-        },
-      }));
-      forceUpdate();
+      apiRef.current.setState(mergeStateWithPageSize(pageSize));
+      apiRef.current.forceUpdate();
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, logger],
   );
 
   const pageSizeApi: GridPageSizeApi = {
@@ -67,6 +88,44 @@ export const useGridPageSize = (
   };
 
   useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
+
+  /**
+   * PRE-PROCESSING
+   */
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+    (prevState) => {
+      const pageSizeToExport = gridPageSizeSelector(apiRef);
+      if (pageSizeToExport === defaultPageSize) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        pagination: {
+          ...prevState.pagination,
+          pageSize: pageSizeToExport,
+        },
+      };
+    },
+    [apiRef, defaultPageSize],
+  );
+
+  /**
+   * TODO: Add error if `prop.autoHeight = true`
+   */
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+    (params, context) => {
+      const pageSize = context.stateToRestore.pagination?.pageSize;
+      if (pageSize != null) {
+        apiRef.current.setState(mergeStateWithPageSize(pageSize));
+      }
+      return params;
+    },
+    [apiRef],
+  );
+
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
    * EVENTS

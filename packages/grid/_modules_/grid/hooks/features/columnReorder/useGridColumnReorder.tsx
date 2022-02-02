@@ -7,11 +7,9 @@ import { getDataGridUtilityClass } from '../../../gridClasses';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { useGridState } from '../../utils/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
@@ -31,7 +29,7 @@ const hasCursorPositionChanged = (
 ): boolean =>
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -49,7 +47,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'disableColumnReorder' | 'classes'>,
+  props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 
@@ -58,7 +56,6 @@ export const useGridColumnReorder = (
     columnReorder: { dragCol: '' },
   }));
 
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const dragColField = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
@@ -92,11 +89,11 @@ export const useGridColumnReorder = (
       dragColNode.current = event.currentTarget;
       dragColNode.current.classList.add(classes.columnHeaderDragging);
 
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: params.field },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
         dragColNode.current!.classList.remove(classes.columnHeaderDragging);
@@ -104,14 +101,7 @@ export const useGridColumnReorder = (
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
     },
-    [
-      props.disableColumnReorder,
-      classes.columnHeaderDragging,
-      logger,
-      setGridState,
-      forceUpdate,
-      apiRef,
-    ],
+    [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
   );
 
   const handleDragEnter = React.useCallback<
@@ -147,17 +137,7 @@ export const useGridColumnReorder = (
         const targetColVisibleIndex = apiRef.current.getColumnIndex(params.field, true);
         const targetCol = apiRef.current.getColumn(params.field);
         const dragColIndex = apiRef.current.getColumnIndex(dragColField, false);
-        const visibleColumnAmount = apiRef.current.getVisibleColumns().length;
-
-        const canBeReordered =
-          !targetCol.disableReorder ||
-          (targetColVisibleIndex > 0 && targetColVisibleIndex < visibleColumnAmount - 1);
-
-        const canBeReorderedProcessed = apiRef.current.unstable_applyPreProcessors(
-          GridPreProcessingGroup.canBeReordered,
-          canBeReordered,
-          { targetIndex: targetColVisibleIndex },
-        );
+        const visibleColumns = apiRef.current.getVisibleColumns();
 
         const cursorMoveDirectionX = getCursorMoveDirectionX(cursorPosition.current, coordinates);
         const hasMovedLeft =
@@ -165,8 +145,28 @@ export const useGridColumnReorder = (
         const hasMovedRight =
           cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT && dragColIndex < targetColIndex;
 
-        if (canBeReorderedProcessed && (hasMovedLeft || hasMovedRight)) {
-          apiRef.current.setColumnIndex(dragColField, targetColIndex);
+        if (hasMovedLeft || hasMovedRight) {
+          let canBeReordered: boolean;
+          if (!targetCol.disableReorder) {
+            canBeReordered = true;
+          } else if (hasMovedLeft) {
+            canBeReordered =
+              targetColIndex > 0 && !visibleColumns[targetColIndex - 1].disableReorder;
+          } else {
+            canBeReordered =
+              targetColIndex < visibleColumns.length - 1 &&
+              !visibleColumns[targetColIndex + 1].disableReorder;
+          }
+
+          const canBeReorderedProcessed = apiRef.current.unstable_applyPreProcessors(
+            'canBeReordered',
+            canBeReordered,
+            { targetIndex: targetColVisibleIndex },
+          );
+
+          if (canBeReorderedProcessed) {
+            apiRef.current.setColumnIndex(dragColField, targetColIndex);
+          }
         }
 
         cursorPosition.current = coordinates;
@@ -197,13 +197,13 @@ export const useGridColumnReorder = (
         originColumnIndex.current = null;
       }
 
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: '' },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [props.disableColumnReorder, logger, setGridState, forceUpdate, apiRef, dragColField],
+    [props.disableColumnReorder, logger, apiRef, dragColField],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnHeaderDragStart);

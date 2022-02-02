@@ -1,6 +1,7 @@
+import * as React from 'react';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
-import { makeStyles } from '@mui/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import Rating from '@mui/material/Rating';
 import {
@@ -9,7 +10,7 @@ import {
   GridFilterInputValueProps,
   GridFilterItem,
   GridFilterModel,
-  getGridNumericColumnOperators,
+  getGridNumericOperators,
   GridLinkOperator,
   GridPreferencePanelsValue,
   GridRowModel,
@@ -19,7 +20,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useDemoData, randomArrayItem } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
-import * as React from 'react';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
@@ -431,18 +431,7 @@ export function CommodityWithNewRowsViaApi() {
   );
 }
 
-const useStyles = makeStyles({
-  ratingContainer: {
-    display: 'inline-flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 48,
-    paddingLeft: 20,
-  },
-});
-
 function RatingInputValue(props: GridFilterInputValueProps) {
-  const classes = useStyles();
   const { item, applyValue } = props;
 
   const onFilterChange = React.useCallback(
@@ -454,14 +443,22 @@ function RatingInputValue(props: GridFilterInputValueProps) {
   );
 
   return (
-    <div className={classes.ratingContainer}>
+    <Box
+      sx={{
+        display: 'inline-flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 48,
+        pl: '20px',
+      }}
+    >
       <Rating
         placeholder={'Filter value'}
         value={Number(item.value)}
         onChange={onFilterChange}
         precision={0.1}
       />
-    </div>
+    </Box>
   );
 }
 
@@ -474,7 +471,7 @@ export function CustomFilterOperator() {
       let newColumns: GridColDef[] = [...data.columns];
       const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
-      const ratingOperators = getGridNumericColumnOperators();
+      const ratingOperators = getGridNumericOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;
@@ -596,7 +593,7 @@ export function ColumnsAlign() {
 const priceColumnType: GridColTypeDef = {
   extendType: 'number',
   valueFormatter: ({ value }) => `${value} USD`,
-  filterOperators: getGridNumericColumnOperators()
+  filterOperators: getGridNumericOperators()
     .filter((operator) => operator.value === '>' || operator.value === '<')
     .map((operator) => {
       return {
@@ -658,7 +655,7 @@ export function DemoCustomRatingFilterOperator() {
       let newColumns = [...data.columns];
       const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
-      const ratingOperators = getGridNumericColumnOperators();
+      const ratingOperators = getGridNumericOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;

@@ -63,6 +63,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'on sama tai ennen',
   filterOperatorIsEmpty: 'on tyhjä',
   filterOperatorIsNotEmpty: 'ei ole tyhjä',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'mikä tahansa',
@@ -75,7 +76,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnMenuFilter: 'Suodata',
   columnMenuHideColumn: 'Piilota',
   columnMenuUnsort: 'Poista järjestys',
-  columnMenuSortAsc: 'Järjestä lasvevasti',
+  columnMenuSortAsc: 'Järjestä laskevasti',
   columnMenuSortDesc: 'Järjestä nousevasti',
 
   // Column header text
@@ -116,6 +117,11 @@ const fiFIGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Ryhmä',
   treeDataExpand: 'Laajenna',
   treeDataCollapse: 'Supista',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid, fiFICore);

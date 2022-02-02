@@ -10,12 +10,12 @@ import { isNavigationKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
 import { gridVisibleSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -42,13 +42,20 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       gridPaginatedVisibleSortedGridRowIdsSelector,
     );
 
-    const filteredSelection = React.useMemo(
-      () =>
-        typeof rootProps.isRowSelectable === 'function'
-          ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
-          : selection,
-      [apiRef, rootProps.isRowSelectable, selection],
-    );
+    const filteredSelection = React.useMemo(() => {
+      if (typeof rootProps.isRowSelectable !== 'function') {
+        return selection;
+      }
+
+      return selection.filter((id) => {
+        // The row might have been deleted
+        if (!apiRef.current.getRow(id)) {
+          return false;
+        }
+
+        return rootProps.isRowSelectable!(apiRef.current.getRowParams(id));
+      });
+    }, [apiRef, rootProps.isRowSelectable, selection]);
 
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {

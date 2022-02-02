@@ -6,7 +6,7 @@ import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 
@@ -23,7 +23,7 @@ import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
  */
 export const useGridKeyboardNavigation = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
@@ -55,7 +55,6 @@ export const useGridKeyboardNavigation = (
     GridEventListener<GridEvents.cellNavigationKeyDown>
   >(
     (params, event) => {
-      event.preventDefault();
       const dimensions = apiRef.current.getRootDimensions();
       if (!currentPage.range || !dimensions) {
         return;
@@ -70,8 +69,8 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPage.range.lastRowIndex;
       const firstColIndex = 0;
       const lastColIndex = colCount - 1;
+      let shouldPreventDefault = true;
 
-      // eslint-disable-next-line default-case
       switch (event.key) {
         case 'ArrowDown':
         case 'Enter': {
@@ -127,8 +126,10 @@ export const useGridKeyboardNavigation = (
         }
 
         case 'PageUp': {
-          if (rowIndexBefore - viewportPageSize >= firstRowIndexInPage) {
-            goToCell(colIndexBefore, rowIndexBefore - viewportPageSize);
+          // Go to the first row before going to header
+          const nextRowIndex = Math.max(rowIndexBefore - viewportPageSize, firstRowIndexInPage);
+          if (nextRowIndex !== rowIndexBefore && nextRowIndex >= firstRowIndexInPage) {
+            goToCell(colIndexBefore, nextRowIndex);
           } else {
             goToHeader(colIndexBefore, event);
           }
@@ -152,6 +153,14 @@ export const useGridKeyboardNavigation = (
           }
           break;
         }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
       }
     },
     [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
@@ -161,7 +170,6 @@ export const useGridKeyboardNavigation = (
     GridEventListener<GridEvents.columnHeaderNavigationKeyDown>
   >(
     (params, event) => {
-      event.preventDefault();
       if (!params.field) {
         return;
       }
@@ -176,8 +184,8 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPage.range?.lastRowIndex ?? null;
       const firstColIndex = 0;
       const lastColIndex = colCount - 1;
+      let shouldPreventDefault = true;
 
-      // eslint-disable-next-line default-case
       switch (event.key) {
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
@@ -228,9 +236,17 @@ export const useGridKeyboardNavigation = (
         }
 
         case ' ': {
-          event.preventDefault(); // prevent Space event from scrolling
+          // prevent Space event from scrolling
           break;
         }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
       }
     },
     [apiRef, colCount, currentPage, goToCell, goToHeader],

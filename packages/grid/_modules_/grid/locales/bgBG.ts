@@ -62,6 +62,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'е на или преди',
   // filterOperatorIsEmpty: 'is empty',
   // filterOperatorIsNotEmpty: 'is not empty',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',
@@ -113,6 +114,11 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

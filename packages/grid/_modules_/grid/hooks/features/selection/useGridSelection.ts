@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import {
@@ -21,12 +20,12 @@ import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { getDataGridUtilityClass, gridClasses } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridCellModes } from '../../../models/gridEditRowModel';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
+import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -48,7 +47,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export const useGridSelection = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     | 'checkboxSelection'
     | 'selectionModel'
     | 'onSelectionModelChange'
@@ -57,6 +56,7 @@ export const useGridSelection = (
     | 'isRowSelectable'
     | 'checkboxSelectionVisibleOnly'
     | 'pagination'
+    | 'paginationMode'
     | 'classes'
   >,
 ): void => {
@@ -76,8 +76,6 @@ export const useGridSelection = (
 
   useGridStateInit(apiRef, (state) => ({ ...state, selection: propSelectionModel ?? [] }));
 
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const lastRowToggled = React.useRef<GridRowId | null>(null);
@@ -90,8 +88,14 @@ export const useGridSelection = (
     changeEvent: GridEvents.selectionChange,
   });
 
-  const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
-    props;
+  const {
+    checkboxSelection,
+    disableMultipleSelection,
+    disableSelectionOnClick,
+    isRowSelectable,
+    pagination,
+    paginationMode,
+  } = props;
 
   const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection;
 
@@ -101,7 +105,7 @@ export const useGridSelection = (
       const startId = lastRowToggled.current ?? id;
       const isSelected = apiRef.current.isRowSelected(id);
       if (isSelected) {
-        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
         const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
         const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
         if (startIndex > endIndex) {
@@ -121,8 +125,8 @@ export const useGridSelection = (
   /**
    * PRE-PROCESSING
    */
-  const updateSelectionColumn = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
+  const updateSelectionColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
+    (columnsState) => {
       const selectionColumn: GridColDef = {
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
@@ -146,7 +150,7 @@ export const useGridSelection = (
     [apiRef, classes, props.checkboxSelection],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, updateSelectionColumn);
+  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
 
   /**
    * API METHODS
@@ -156,11 +160,11 @@ export const useGridSelection = (
       const currentModel = gridSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
-        setGridState((state) => ({ ...state, selection: model }));
-        forceUpdate();
+        apiRef.current.setState((state) => ({ ...state, selection: model }));
+        apiRef.current.forceUpdate();
       }
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, logger],
   );
 
   const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(
@@ -169,7 +173,7 @@ export const useGridSelection = (
   );
 
   const getSelectedRows = React.useCallback<GridSelectionApi['getSelectedRows']>(
-    () => selectedGridRowsSelector(apiRef.current.state),
+    () => selectedGridRowsSelector(apiRef),
     [apiRef],
   );
 
@@ -217,7 +221,7 @@ export const useGridSelection = (
         newSelection = isSelected ? selectableIds : [];
       } else {
         // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-        const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
+        const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
 
         selectableIds.forEach((id) => {
           if (isSelected) {
@@ -256,7 +260,7 @@ export const useGridSelection = (
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+      const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
       const startIndex = visibleRowIds.indexOf(startId);
       const endIndex = visibleRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
@@ -283,10 +287,10 @@ export const useGridSelection = (
    */
   const removeOutdatedSelection = React.useCallback(() => {
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
-    const rowsLookup = gridRowsLookupSelector(apiRef.current.state);
+    const rowsLookup = gridRowsLookupSelector(apiRef);
 
     // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-    const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
+    const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
 
     let hasChanged = false;
     currentSelection.forEach((id: GridRowId) => {
@@ -336,6 +340,12 @@ export const useGridSelection = (
         gridClasses.cell,
       );
       const field = cellClicked?.getAttribute('data-field');
+
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        // click on checkbox should not trigger row selection
+        return;
+      }
+
       if (field) {
         const column = apiRef.current.getColumn(field);
         if (column.type === 'actions') {
@@ -389,8 +399,8 @@ export const useGridSelection = (
         props.checkboxSelectionVisibleOnly && props.pagination;
 
       const rowsToBeSelected = shouldLimitSelectionToCurrentPage
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
-        : gridVisibleSortedRowIdsSelector(apiRef.current.state);
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+        : gridVisibleSortedRowIdsSelector(apiRef);
 
       apiRef.current.selectRows(rowsToBeSelected, params.value);
     },
@@ -470,4 +480,40 @@ export const useGridSelection = (
       }
     }
   }, [apiRef, isRowSelectable, isStateControlled]);
+
+  React.useEffect(() => {
+    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
+
+    if (!canHaveMultipleSelection && currentSelection.length > 1) {
+      const { rows: currentPageRows } = getCurrentPageRows(apiRef, {
+        pagination,
+        paginationMode,
+      });
+
+      const currentPageRowsLookup = currentPageRows.reduce((acc, { id }) => {
+        acc[id] = true;
+        return acc;
+      }, {});
+
+      const firstSelectableRow = currentSelection.find((id) => {
+        let isSelectable = true;
+        if (isRowSelectable) {
+          isSelectable = isRowSelectable(apiRef.current.getRowParams(id));
+        }
+        return isSelectable && currentPageRowsLookup[id]; // Check if the row is in the current page
+      });
+
+      apiRef.current.setSelectionModel(
+        firstSelectableRow !== undefined ? [firstSelectableRow] : [],
+      );
+    }
+  }, [
+    apiRef,
+    canHaveMultipleSelection,
+    checkboxSelection,
+    disableMultipleSelection,
+    isRowSelectable,
+    pagination,
+    paginationMode,
+  ]);
 };

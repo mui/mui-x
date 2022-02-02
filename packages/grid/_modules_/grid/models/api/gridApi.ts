@@ -4,7 +4,7 @@ import { GridCoreApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
-import { GridEditRowApi } from './gridEditRowApi';
+import { GridEditingApi } from './gridEditingApi';
 import { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
@@ -13,16 +13,20 @@ import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
+import { GridRowsMetaApi } from './gridRowsMetaApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import { GridColumnPinningApi } from './gridColumnPinningApi';
+import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
 import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
+import type { GridRowGroupingApi } from '../../hooks/features/rowGrouping';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
+import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 
 /**
  * The full grid API.
@@ -36,7 +40,8 @@ export interface GridApi
     GridDensityApi,
     GridDimensionsApi,
     GridRowApi,
-    GridEditRowApi,
+    GridRowsMetaApi,
+    GridEditingApi,
     GridParamsApi,
     GridColumnApi,
     GridSelectionApi,
@@ -52,4 +57,7 @@ export interface GridApi
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
-    GridColumnPinningApi {}
+    GridRowGroupingApi,
+    GridVirtualScrollerApi,
+    GridColumnPinningApi,
+    GridStatePersistenceApi {}

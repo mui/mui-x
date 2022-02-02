@@ -1,9 +1,1 @@
-<DataGrid
-  {...data}
-  columns={data.columns.map((column) => ({
-    ...column,
-    sortingOrder:
-      column.field === 'quantity' ? ['desc', 'asc', null] : undefined,
-  }))}
-  sortingOrder={['asc', 'desc', null]}
-/>
+<DataGrid {...data} columns={columns} sortingOrder={['asc', 'desc', null]} />

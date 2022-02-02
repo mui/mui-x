@@ -1,3 +1,4 @@
+import { gridStringOrNumberComparator } from '@mui/x-data-grid';
 import {
   randomCity,
   randomCompanyName,
@@ -14,6 +15,7 @@ import {
   randomBoolean,
   randomName,
   randomColor,
+  randomInt,
 } from './services';
 import {
   renderAvatar,
@@ -24,7 +26,7 @@ import {
   renderEditRating,
   renderEditCountry,
 } from './renderer';
-import { COUNTRY_ISO_OPTIONS } from './services/static-data';
+import { COUNTRY_ISO_OPTIONS_SORTED } from './services/static-data';
 import { GridColDefGenerator } from './services/gridColDefGenerator';
 
 export const getEmployeeColumns = (): GridColDefGenerator[] => [
@@ -102,7 +104,14 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     renderCell: renderCountry,
     renderEditCell: renderEditCountry,
     type: 'singleSelect',
-    valueOptions: COUNTRY_ISO_OPTIONS,
+    valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
+    sortComparator: (v1, v2, param1, param2) =>
+      gridStringOrNumberComparator(
+        (v1 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
+        (v2 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
+        param1,
+        param2,
+      ),
     width: 150,
     editable: true,
   },
@@ -133,7 +142,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     headerName: 'Created on',
     generateData: randomCreatedDate,
     type: 'date',
-    width: 150,
+    width: 120,
     editable: true,
   },
   {
@@ -143,5 +152,10 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     type: 'boolean',
     width: 150,
     editable: true,
+  },
+  {
+    field: 'salary',
+    headerName: 'Salary',
+    generateData: () => randomInt(30000, 80000),
   },
 ];

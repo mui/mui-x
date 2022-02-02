@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
-import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../_modules_/grid/gridClasses';
 import { useGridRootProps } from '../../_modules_/grid/hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
+import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
 import { useGridColumnHeaders } from '../../_modules_/grid/hooks/features/columnHeaders/useGridColumnHeaders';
 import { useGridApiContext } from '../../_modules_/grid/hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
@@ -14,13 +14,14 @@ import { GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import { GridEvents } from '../../_modules_/grid/models/events';
 import { filterColumns } from './DataGridProVirtualScroller';
+import { GridColumnHeaderSeparatorSides } from '../../_modules_/grid/components/columnHeaders/GridColumnHeaderSeparator';
 import {
   GridPinnedPosition,
   GridPinnedColumns,
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
 
 type OwnerState = {
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProProcessedProps['classes'];
   leftPinnedColumns: GridPinnedColumns['left'];
   rightPinnedColumns: GridPinnedColumns['right'];
 };
@@ -60,7 +61,11 @@ const getOverlayAlpha = (elevation) => {
 const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PinnedColumnHeaders',
-  overridesResolver: (props, styles) => styles.pinnedColumnHeaders,
+  overridesResolver: (props, styles) => [
+    { [`&.${gridClasses['pinnedColumnHeaders--left']}`]: styles['pinnedColumnHeaders--left'] },
+    { [`&.${gridClasses['pinnedColumnHeaders--right']}`]: styles['pinnedColumnHeaders--right'] },
+    styles.pinnedColumnHeaders,
+  ],
 })<{ ownerState: GridColumnHeadersPinnedColumnHeadersProps }>(({ theme, ownerState }) => ({
   position: 'absolute',
   overflow: 'hidden',
@@ -180,7 +185,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
               minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
             },
-            { disableReorder: true },
+            { disableReorder: true, separatorSide: GridColumnHeaderSeparatorSides.Left },
           )}
         </GridColumnHeadersPinnedColumnHeaders>
       )}

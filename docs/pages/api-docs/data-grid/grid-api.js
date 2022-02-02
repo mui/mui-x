@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MarkdownDocs from '@material-ui/monorepo/docs/src/modules/components/MarkdownDocs';
+import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
 import { demos, docs, demoComponents } from './grid-api.md?@mui/markdown';
 
 export default function Page() {

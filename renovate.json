@@ -10,6 +10,10 @@
   "labels": ["dependencies"],
   "packageRules": [
     {
+      "matchDepTypes": ["peerDependencies"],
+      "rangeStrategy": "widen"
+    },
+    {
       "groupName": "babel",
       "matchPackagePatterns": "@babel/*"
     },
@@ -69,8 +73,13 @@
       "matchPackagePatterns": "@storybook/*"
     },
     {
-      "groupName": "ag-grid",
+      "groupName": "AG Grid",
       "matchPackagePatterns": "ag-grid-*"
+    },
+    {
+      "groupName": "node",
+      "matchPackageNames": ["node"],
+      "enabled": false
     },
     {
       "groupName": "MUI Core",

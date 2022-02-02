@@ -1,4 +1,4 @@
-import type { GridComponentProps, GridApiRef } from '../../_modules_';
+import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
 
@@ -15,7 +15,7 @@ import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/k
 import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
 import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
-import { useGridEditRows } from '../../_modules_/grid/hooks/features/editRows/useGridEditRows';
+import { useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
 import { useGridParamsApi } from '../../_modules_/grid/hooks/features/rows/useGridParamsApi';
 import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
@@ -23,14 +23,16 @@ import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useG
 import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
+import { useGridRowsMeta } from '../../_modules_/grid/hooks/features/rows/useGridRowsMeta';
+import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 
-export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
-  useGridInitialization(apiRef, props);
+export const useDataGridComponent = (props: DataGridProcessedProps) => {
+  const apiRef = useGridInitialization(undefined, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
-  useGridEditRows(apiRef, props);
+  useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
@@ -38,6 +40,7 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridDensity(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
+  useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);
@@ -47,4 +50,7 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
+  useGridStatePersistence(apiRef);
+
+  return apiRef;
 };

@@ -8,6 +8,7 @@ import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
+import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 
 /**
  * @requires useGridSelection (method)
@@ -21,7 +22,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     (params: GridCellParams, event: React.KeyboardEvent<HTMLElement>) => {
       apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
 
-      const focusCell = apiRef.current.state.focus.cell;
+      const focusCell = gridFocusCellSelector(apiRef);
 
       if (!focusCell) {
         return;
@@ -33,7 +34,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       )! as HTMLElement;
 
       const startRowIndex = Number(rowEl.getAttribute('data-rowindex'));
-      const startId = gridVisibleSortedRowIdsSelector(apiRef.current.state)[startRowIndex];
+      const startId = gridVisibleSortedRowIdsSelector(apiRef)[startRowIndex];
 
       if (startId === focusCell.id) {
         return;

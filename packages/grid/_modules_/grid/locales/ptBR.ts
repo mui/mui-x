@@ -63,6 +63,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'em ou antes de',
   filterOperatorIsEmpty: 'está vazio',
   filterOperatorIsNotEmpty: 'não está vazio',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'qualquer',
@@ -116,6 +117,11 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  groupingColumnHeaderName: 'Grupo',
+  groupColumn: (name) => `Agrupar por ${name}`,
+  unGroupColumn: (name) => `Parar agrupamento por ${name}`,
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

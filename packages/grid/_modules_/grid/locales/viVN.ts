@@ -63,6 +63,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'bằng hoặc trước',
   filterOperatorIsEmpty: 'Rỗng',
   filterOperatorIsNotEmpty: 'Khác rỗng',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'bất kỳ giá trị nào',
@@ -114,6 +115,11 @@ const viVNGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Nhóm',
   treeDataExpand: 'mở rộng',
   treeDataCollapse: 'ẩn đi',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);

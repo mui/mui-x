@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, ErrorBoundary } from '@material-ui/monorepo/test/utils';
+import { createRenderer, ErrorBoundary } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -124,10 +124,27 @@ describe('<DataGrid /> - Components', () => {
           <GridOverlay />
         </ErrorBoundary>,
       );
-      // @ts-expect-error need to migrate helpers to TypeScript
     }).toErrorDev([
       'MUI: Could not find the data grid context.',
       'The above error occurred in the <ForwardRef(GridOverlay)> component',
     ]);
+  });
+
+  // If an infinite loop occurs, this test won't trigger the timeout.
+  // Instead, it will be hanging and block other tests.
+  // See https://github.com/mochajs/mocha/issues/1609
+  it('should not cause an infinite loop with two instances in the same page', () => {
+    expect(() => {
+      render(
+        <div>
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid {...baselineProps} hideFooter />
+          </div>
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid {...baselineProps} hideFooter />
+          </div>
+        </div>,
+      );
+    }).not.toErrorDev();
   });
 });

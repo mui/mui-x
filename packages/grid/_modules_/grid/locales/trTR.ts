@@ -62,6 +62,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'küçük eşit',
   filterOperatorIsEmpty: 'boş',
   filterOperatorIsNotEmpty: 'dolu',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',
@@ -111,6 +112,11 @@ const trTRGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);

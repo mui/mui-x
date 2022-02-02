@@ -1,10 +1,11 @@
 import { GridFilterState } from '../filter';
 import { GridRowId, GridRowTreeConfig, GridRowTreeNodeConfig } from '../../../models';
+import { GridAggregatedFilterItemApplier } from '../filter/gridFilterState';
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   disableChildrenFiltering: boolean;
-  isRowMatchingFilters: ((rowId: GridRowId) => boolean) | null;
+  isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
 }
 
 /**
@@ -14,9 +15,10 @@ interface FilterRowTreeFromTreeDataParams {
  */
 export const filterRowTreeFromTreeData = (
   params: FilterRowTreeFromTreeDataParams,
-): Pick<GridFilterState, 'visibleRowsLookup' | 'filteredDescendantCountLookup'> => {
+): Omit<GridFilterState, 'filterModel'> => {
   const { rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
   const visibleRowsLookup: Record<GridRowId, boolean> = {};
+  const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
   const filterTreeNode = (
@@ -64,6 +66,7 @@ export const filterRowTreeFromTreeData = (
     }
 
     visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
+    filteredRowsLookup[node.id] = shouldPassFilters;
 
     if (!shouldPassFilters) {
       return 0;
@@ -83,6 +86,7 @@ export const filterRowTreeFromTreeData = (
 
   return {
     visibleRowsLookup,
+    filteredRowsLookup,
     filteredDescendantCountLookup,
   };
 };

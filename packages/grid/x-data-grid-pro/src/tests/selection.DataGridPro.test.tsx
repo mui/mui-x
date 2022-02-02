@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
-import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import {
   GridApiRef,
   useGridApiRef,
@@ -11,8 +11,6 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { getData } from 'storybook/src/data/data-service';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
@@ -41,7 +39,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...data} {...other} apiRef={apiRef} autoHeight={isJSDOM} />
+        <DataGridPro {...data} {...other} apiRef={apiRef} disableVirtualization />
       </div>
     );
   };
@@ -73,7 +71,7 @@ describe('<DataGridPro /> - Selection', () => {
           rowsPerPageOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
@@ -118,8 +116,8 @@ describe('<DataGridPro /> - Selection', () => {
         name: /select all rows checkbox/i,
       });
 
-      fireEvent.click(getCell(0, 0));
-      fireEvent.click(getCell(1, 0));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(1, 0).querySelector('input'));
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'true');
     });
@@ -131,11 +129,9 @@ describe('<DataGridPro /> - Selection', () => {
         render(
           <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
         );
-      })
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
-        );
+      }).toErrorDev(
+        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+      );
     });
 
     it('should select all the rows of the current page if no row of the current page is selected', () => {
@@ -148,7 +144,7 @@ describe('<DataGridPro /> - Selection', () => {
           rowsPerPageOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
@@ -169,10 +165,10 @@ describe('<DataGridPro /> - Selection', () => {
           rowsPerPageOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      fireEvent.click(getCell(2, 0));
+      fireEvent.click(getCell(2, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
       const selectAllCheckbox = screen.getByRole('checkbox', {
         name: /select all rows checkbox/i,
@@ -409,6 +405,17 @@ describe('<DataGridPro /> - Selection', () => {
       apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
       apiRef.current.setSelectionModel(selectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
+    });
+
+    it('should not call onSelectionModelChange on initialization if selectionModel contains more than one id and checkboxSelection=false', () => {
+      const onSelectionModelChange = spy();
+      render(
+        <TestDataGridSelection
+          onSelectionModelChange={onSelectionModelChange}
+          selectionModel={[0, 1]}
+        />,
+      );
+      expect(onSelectionModelChange.callCount).to.equal(0);
     });
   });
 });

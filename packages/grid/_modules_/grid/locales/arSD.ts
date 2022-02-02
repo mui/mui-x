@@ -63,6 +63,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'في أو قبل',
   filterOperatorIsEmpty: 'فارغ',
   filterOperatorIsNotEmpty: 'ليس فارغا',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'أي',
@@ -114,6 +115,11 @@ const arSDGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);

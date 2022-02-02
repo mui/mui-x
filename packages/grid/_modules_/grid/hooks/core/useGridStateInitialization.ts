@@ -1,5 +1,5 @@
 import React from 'react';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridStateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
@@ -8,7 +8,7 @@ import { GridState } from '../../models/gridState';
 import { GridEvents } from '../../models/events';
 import { useGridApiMethod } from '../utils';
 
-export const useGridStateInitialization = (apiRef: GridApiRef, props: GridComponentProps) => {
+export const useGridStateInitialization = (apiRef: GridApiRef, props: DataGridProcessedProps) => {
   const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<any>>>({});
   const [, rawForceUpdate] = React.useState<GridState>();
 
@@ -43,8 +43,11 @@ export const useGridStateInitialization = (apiRef: GridApiRef, props: GridCompon
       const updatedControlStateIds: { stateId: string; hasPropChanged: boolean }[] = [];
       Object.keys(controlStateMapRef.current).forEach((stateId) => {
         const controlState = controlStateMapRef.current[stateId];
-        const oldSubState = controlState.stateSelector(apiRef.current.state);
-        const newSubState = controlState.stateSelector(newState);
+        const oldSubState = controlState.stateSelector(
+          apiRef.current.state,
+          apiRef.current.instanceId,
+        );
+        const newSubState = controlState.stateSelector(newState, apiRef.current.instanceId);
 
         if (newSubState === oldSubState) {
           return;
@@ -85,7 +88,7 @@ export const useGridStateInitialization = (apiRef: GridApiRef, props: GridCompon
 
       updatedControlStateIds.forEach(({ stateId, hasPropChanged }) => {
         const controlState = controlStateMapRef.current[stateId];
-        const model = controlState.stateSelector(newState);
+        const model = controlState.stateSelector(newState, apiRef.current.instanceId);
 
         if (controlState.propOnChange && hasPropChanged) {
           const details =

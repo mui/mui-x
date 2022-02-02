@@ -6,7 +6,7 @@ const CI = Boolean(process.env.CI);
 // Their CI run will be a branch based run not PR run and therefore won't have a CIRCLE_PR_NUMBER
 const isPR = Boolean(process.env.CIRCLE_PULL_REQUEST);
 
-let build = `material-ui-x local ${new Date().toISOString()}`;
+let build = `mui-x local ${new Date().toISOString()}`;
 
 if (process.env.CIRCLECI) {
   const buildPrefix =
@@ -26,7 +26,7 @@ const browserStack = {
   accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
   build,
   // https://github.com/browserstack/api#timeout300
-  timeout: 6 * 60, // Maximum time before a worker is terminated. Default 5 minutes.
+  timeout: 10 * 60, // Maximum time before a worker is terminated. Default 5 minutes.
 };
 
 process.env.CHROME_BIN = playwright.chromium.executablePath();
@@ -100,7 +100,7 @@ module.exports = function setKarmaConfig(config) {
           {
             test: /\.(js|ts|tsx)$/,
             loader: 'babel-loader',
-            exclude: /node_modules\/(?!@material-ui\/monorepo)/,
+            exclude: /node_modules\/(?!@mui\/monorepo)/,
           },
         ],
       },

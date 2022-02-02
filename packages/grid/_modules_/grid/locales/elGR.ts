@@ -62,6 +62,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'είναι ίσο ή πριν',
   filterOperatorIsEmpty: 'είναι κενό',
   filterOperatorIsNotEmpty: 'δεν είναι κενό',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',
@@ -115,6 +116,11 @@ const elGRGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const elGR: Localization = getGridLocalization(elGRGrid);

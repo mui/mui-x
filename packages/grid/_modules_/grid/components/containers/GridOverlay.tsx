@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
@@ -7,13 +8,12 @@ import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/de
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
-import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridEvents } from '../../models/events';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -57,14 +57,24 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
     () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
   );
 
-  const handleViewportSizeChangeTest = () =>
+  const handleViewportSizeChange = React.useCallback(() => {
     setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
+  }, [apiRef]);
 
-  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleViewportSizeChangeTest);
+  useEnhancedEffect(() => {
+    return apiRef.current.subscribeEvent(
+      GridEvents.viewportInnerSizeChange,
+      handleViewportSizeChange,
+    );
+  }, [apiRef, handleViewportSizeChange]);
 
   let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
   if (rootProps.autoHeight && height === 0) {
     height = 'auto';
+  }
+
+  if (!viewportInnerSize) {
+    return null;
   }
 
   return (

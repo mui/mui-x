@@ -122,6 +122,14 @@ export interface GridClasses {
    */
   'columnSeparator--resizing': string;
   /**
+   * Styles applied to the column header separator if the side is "left".
+   */
+  'columnSeparator--sideLeft': string;
+  /**
+   * Styles applied to the column header separator if the side is "right".
+   */
+  'columnSeparator--sideRight': string;
+  /**
    * Styles applied to the column header separator element.
    */
   columnSeparator: string;
@@ -238,6 +246,18 @@ export interface GridClasses {
    */
   'pinnedColumns--right': string;
   /**
+   * Styles applied to the pinned column headers.
+   */
+  pinnedColumnHeaders: string;
+  /**
+   * Styles applied to the left pinned column headers.
+   */
+  'pinnedColumnHeaders--left': string;
+  /**
+   * Styles applied to the right pinned column headers.
+   */
+  'pinnedColumnHeaders--right': string;
+  /**
    * Styles applied to the root element.
    */
   root: string;
@@ -338,6 +358,8 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'columnHeadersInner--scrollable',
   'columnSeparator--resizable',
   'columnSeparator--resizing',
+  'columnSeparator--sideLeft',
+  'columnSeparator--sideRight',
   'columnSeparator',
   'columnsPanel',
   'columnsPanelRow',
@@ -380,7 +402,12 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'pinnedColumns',
   'pinnedColumns--left',
   'pinnedColumns--right',
+  'pinnedColumnHeaders',
+  'pinnedColumnHeaders--left',
+  'pinnedColumnHeaders--right',
   'withBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
+  'groupingCriteriaCell',
+  'groupingCriteriaCellToggle',
 ]);

@@ -4,10 +4,10 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled, alpha, lighten, darken } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type OwnerState = {
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

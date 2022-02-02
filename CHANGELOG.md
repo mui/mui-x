@@ -3,6 +3,268 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.4.0
+
+_Jan 28, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚣 Introduce [variable row height](https://mui.com/components/data-grid/rows/#variable-row-height) (#438) @DanailH
+
+  Allows for setting a row-specific height.
+  By default, all rows have the same height, but now you can set the height on a per-row basis.
+
+  ```tsx
+  <DataGrid 
+    getRowHeight={
+      ({ id }: GridRowHeightParams) => (id % 2 === 0 ? 100 : null)
+    }
+  />
+  ```
+
+- 🎁 Add new CSV export option: [`getRowsToExport`](https://mui.com/components/data-grid/export/#custom-exported-content) (#3687) @flaviendelangle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.4.0` / `@mui/x-data-grid-pro@v5.4.0`
+
+#### Changes
+
+- [DataGrid] Add l10n support for `is any of` (#3746) @alexfauquette
+- [DataGrid] Add new CSV `getRowsToExport` option (#3687) @flaviendelangle
+- [DataGrid] Clean params of `onCellEditCommit` (#3693) @valenfv
+- [DataGrid] Create a new lookup with all the filtered rows, collapsed or not (#3736) @flaviendelangle
+- [DataGrid] Fix Alt+c being ignored on some systems (#3660) @cherniavskii
+- [DataGrid] Fix `isRowSelectable` when `paginationMode='server'` (#3647) @flaviendelangle
+- [DataGrid] Fix browser keyboard shortcuts not working when header cell is focused (#3692) @valenfv
+- [DataGrid] Fix focus on checkbox cells (#3501) @alexfauquette
+- [DataGrid] Only update the visibility status of the updated columns when calling `apiRef.current.updateRows` (#3735) @flaviendelangle
+- [DataGrid] Prevent commit if `preProcessEditCellProps` resolves with an error (#3612) @m4theushw
+- [DataGrid] Update selected rows when turning off `checkboxSelection` (#3684) @m4theushw
+- [DataGrid] Variable row height (#3218) @DanailH
+- [DataGridPro] Call `useGridColumnPinning` before `useGridColumns` (#3676) @flaviendelangle
+- [DataGridPro] Fix grid cell losing focus when scrolling with keyboard (#3667) @cherniavskii
+- [DataGridPro] Fix missing `styleOverrides` on pinned columns (#3733) @alexfauquette
+- [DataGridPro] Remove function overloading for `useGridApiRef` (#3666) @flaviendelangle
+- [l10n] Improve French (frFR) locale (#3739) @flaviendelangle
+- [l10n] Improve Italian (itIT) locale (#3744) @destegabry
+
+### Docs
+
+- [docs] Fix broken code example on the localization page (#3742) @flaviendelangle
+- [docs] Fix typo in column visibility example (#3734) @flaviendelangle
+- [docs] Fix typo on `columnVisibilityModel` (#3723) @alexfauquette
+- [docs] Improve sorting documentation page (#3564) @flaviendelangle
+- [docs] Improve `v5.3.0` release notes (#3722) @cherniavskii
+- [docs] Prepare scripts and E2E tests for migration (#3515) @siriwatknp
+- [docs] Clarify what is the professional support (#3530) @oliviertassinari
+
+### Core
+
+- [core] Add ESLint rule to force default export equals to filename in documentation (#3674) @alexfauquette
+- [core] Fix `l10n` script not updating `csCZ` locale (#3748) @cherniavskii
+- [core] Generate CHANGELOG from GitHub API (#3313) @alexfauquette
+- [core] Isolate selectors from different grid instances (#3663) @m4theushw
+- [test] Improve test detection (#3728) @m4theushw
+- [test] Include module augmentation for Chai custom matchers (#3754) @m4theushw
+- [test] Remove a useless `async` (#3675) @alexfauquette
+- [test] Remove remaining `@ts-expect-error` (#3762) @m4theushw
+- [test] Skip test on Firefox (#3752) @m4theushw
+- [test] Wait for flags to load before creating snapshots (#3726) @m4theushw
+- [test] Warn when focusing cells without syncing the state (#3486) @m4theushw
+
+## 5.3.0
+
+_Jan 21, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Allow to group rows based on column value (#3277) @flaviendelangle
+
+  ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
+
+  To avoid future regression for users of the Pro plan, the feature needs to be explicitly activated using the rowGrouping experimental feature flag.
+
+  ```tsx
+  // To fully control
+  <DataGridPro
+    rowGroupingModel={rowGroupingModel}
+    onRowGroupingModel={newModel => setRowGroupingModel(newModel)}
+    experimentalFeatures={{ rowGrouping: true }}
+  />
+
+  // To initialize without controlling
+  <DataGridPro
+    initialState={{
+      rowGrouping: {
+        model: rowGroupingModel,
+      },
+    }}
+    experimentalFeatures={{ rowGrouping: true }}
+  />
+  ```
+
+  For more details see the [introduction blog post](https://mui.com/blog/introducing-the-row-grouping-feature/) and [documentation](https://mui.com/components/data-grid/group-pivot/#row-grouping).
+
+- ⚡ Add `is any of` filter operator (#2874) @alexfauquette
+
+  The new filter operator `is any of` allows the user to provide multiple values. It opens access to complex filtering pattern mixing `AND` and `OR` logic connectors, such as `status is any of filled or rejected, and currency is any of EUR or USD`.
+
+  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="770">
+
+- ✨ Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
+
+  You can now limit the width of the flex columns and the resizable columns with the new `maxWidth` property on `GridColDef`.
+
+  ```tsx
+  const columns: GridColDef[] = [
+    { field: 'director', flex: 1, maxWidth: 200 }, // will take the free space up to 200px and will not be resizable above 200px
+    { field: 'year', maxWidth: 150 }, // will not be resizable above 150px
+  ]
+  ```
+
+- 🚀 Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
+
+  To make the grid more flexible we added component slots for base `@mui/material` components that we use. Those component slots are prefixed with `Base` to differentiate them from the other grid specific components
+
+  For more information check the documentation [documentation](https://mui.com/api/data-grid/data-grid/#slots).
+
+- 🔥 Allow to pass `csvOptions` and `printOptions` to `toolbar` component prop (#3623) @flaviendelangle
+
+  ```tsx
+  const CustomDataGrid = (props: DataGridProps) => {
+    return (
+      <DataGrid {...props} componentsProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />
+    )
+  }
+  ```
+
+- 🙈 Add controlled behavior for the visible columns (#3554) @flaviendelangle
+
+  ```tsx
+  // To fully control
+  <DataGrid
+    columnVisibilityModel={columnVisibilityModel}
+    onColumnVisilibilityModelChange={newModel => setColumnVisibilityModel(newModel)}
+  />
+
+  // To initialize without controlling
+  <DataGrid
+    initialState={{
+      columns: {
+        columnVisibilityModel
+      }
+    }}
+  />
+  ```
+
+  See the [documentation](https://mui.com/components/data-grid/columns/#column-visibility) for more details.
+
+  The `hide` property from `GridColDef` still works but has been deprecated.
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.3.0` / `@mui/x-data-grid-pro@v5.3.0`
+
+#### Changes
+
+- [DataGrid] Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
+- [DataGrid] Add controlled behavior for the visible columns (#3554) @flaviendelangle
+- [DataGrid] Add debounce to text input (#3617) @m4theushw
+- [DataGrid] Add `is any of` filter operator (#2874) @alexfauquette
+- [DataGrid] Allow to pass `csvOptions` and `printOptions` to `GridToolbar` (#3623) @flaviendelangle
+- [DataGrid] Disable `Hide` button if there's only one visible column (#3607) @cherniavskii
+- [DataGrid] Fix line break characters breaking CSV rows (#3590) @cherniavskii
+- [DataGrid] Fix potential memory leak warning (#3558) @m4theushw
+- [DataGrid] Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
+- [DataGrid] Make row editing work with `preProcessEditCellProps` (#3562) @flaviendelangle
+- [DataGridPro] Export the column pinning selector (#3594) @flaviendelangle
+- [DataGridPro] Keep row children expansion when updating the rows (#3604) @flaviendelangle
+- [DataGridPro] Keep tree data grouping column width when regenerating the columns (#3603) @flaviendelangle
+- [DataGridPremium] Allow to group rows based on column value (#3277) @flaviendelangle
+- [l10n] Improve Finnish (fiFI) locale (#3621) @MijMa
+- [l10n] Improve Ukrainian (ukUA) locale (#3586) @Neonin
+- [l10n] Improve Czech (csCZ) and Slovak (skSK) locale (#3678) @Haaxor1689
+
+### Docs
+
+- [docs] Add doc example for tree data children lazy loading (#3657) @flaviendelangle
+- [docs] Fix typo exchanging `false` and `true` on columns hiding section (#3561) @alexfauquette
+- [docs] Improve filtering documentation page (#3437) @flaviendelangle
+- [docs] Include header badges as in the other components (#3606) @oliviertassinari
+- [docs] Lint markdown in the CI (#3504) @oliviertassinari
+- [docs] Make inputs to extend full height of the cell (#3567) @m4theushw
+- [docs] Add documentation page about the grid state (#3431) @flaviendelangle
+- [docs] Replace `@mui/styles` in `x-data-grid-generator` (#3560) @m4theushw
+- [docs] Update usage of prop/property naming (#3649) @cherniavskii
+
+### Core
+
+- [core] Log the output of the script (#3527) @oliviertassinari
+- [core] Add ESLint rule to prevent direct state access (#3521) @m4theushw
+- [core] Add language to markdown code block (#3651) @m4theushw
+- [core] Add typing to the pre-processors methods (#3595) @flaviendelangle
+- [core] Don't bump peer dependency ranges on dependency updates (#3646) @oliviertassinari
+- [core] Rename more instances of Material-UI to MUI (#3525) @oliviertassinari
+- [core] Renovate should not try to update node (#3645) @oliviertassinari
+- [core] Report performance test results on each PR (#3551) @m4theushw
+- [core] Update monorepo (#3653) @m4theushw
+- [core] Update `l10n` issue with a single command line (#3588) @alexfauquette
+- [test] Wait for promise to resolve before expect (#3597) @m4theushw
+- [test] Split cell/row editing tests (#3618) @m4theushw
+- [test] Skip tests on Safari (#3679) @m4theushw
+
+## 5.2.2
+
+_Jan 6, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `hideable` option to `GridColDef` (#3433) @m4theushw
+- ⚡ Add support for column-based `sortingOrder` with the new `sortingOrder` option in `GridColDef` (#3449) @Quppa
+- ✨ Allow to initialize the `page` and `pageSize` without controlling them with the `initialState` prop (#3495) @flaviendelangle
+- 🙈 Allow to precisely control which children rows to expand with the new `isGroupExpandedByDefault` prop (#3444) @flaviendelangle
+- 🌍 Add Finnish (fiFI) locale (#3485) @kurkle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.2.2` / `@mui/x-data-grid-pro@v5.2.2`
+
+#### Changes
+
+- [DataGrid] Add `hideable` option to GridColDef (#3433) @alexfauquette
+- [DataGrid] Add `sortingOrder` to GridColDef (#3449) @Quppa
+- [DataGrid] Add the page and pageSize to the initialState prop (#3495) @flaviendelangle
+- [DataGrid] Avoid re-render when pressing key inside already focused cell (#3484) @m4theushw
+- [DataGrid] Close other actions menus when opening a new one (#3492) @m4theushw
+- [DataGrid] Deprecate `getValue` param from the cell and row params (#3369) @flaviendelangle
+- [DataGrid] Fix value parsing in date input (#3307) @alexfauquette
+- [DataGrid] Fix can't enter 0 on numeric column (#3491) @m4theushw
+- [DataGrid] Fix scrolling bug when an action is focused (#3483) @alexfauquette
+- [DataGrid] Remove `line-height` from `GridCell` (#3446) @DanailH
+- [DataGridPro] Block edition for auto-generated rows (#3547) @flaviendelangle
+- [DataGridPro] Expose the field of the tree data grouping column as a constant (#3549) @flaviendelangle
+- [DataGridPro] Fix resizing of right pinned columns (#3502) @m4theushw
+- [DataGridPro] Add new prop `isGroupExpandedByDefault` (#3444) @flaviendelangle
+- [l10n] Add Finnish (fiFI) locale (#3485) @kurkle
+- [l10n] Improve French (frFR) locale (#3494) @Zenoo
+- [l10n] Improve Italian (itIT) locale (#3452) @destegabry
+- [l10n] Improve Vietnamese (viVN) locale (#3493) @hckhanh
+
+### Docs
+
+- [docs] Generate imports dynamically from the packages export list (#3488) @flaviendelangle
+- [docs] Make demos compatible with `preProcessEditCellProps` (#3453) @m4theushw
+
+### Core
+
+- [test] Add test for row checkbox toggling using the Space key (#3262) @alexfauquette
+- [core] Increase CI efficiency (#3441) @oliviertassinari
+- [core] Refactor sorting comparator (#3390) @flaviendelangle
+- [core] Update dependency on the core (#3526) @oliviertassinari
+- [core] Update tweet example in release readme (#3481) @DanailH
+
 ## 5.2.1
 
 _Dec 17, 2021_
@@ -25,17 +287,10 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [DataGrid] Refactor keyboard/click event management (#3275) @alexfauquette
 - [DataGrid] Fire change event when the state changes, instead of when the prop changes (#3388) @flaviendelangle
 - [DataGrid] Unsubscribe event listeners registered in uncommitted renders (#3310) @m4theushw
+- [DataGrid] Rework state update methods and deprecate `useGridApi` and `useGridState` (#3325) @flaviendelangle
 - [l10n] Improve German (deDE) locale (#3430) @sebastianfrey
 - [l10n] Improve Hebrew (heIL) locale (#3445) @ColdAtNight
 - [l10n] Improve Dutch (nlNL) locale (#3429) @jaapjr
-
-### Core
-
-- [core] Rework state update methods and deprecate `useGridApi` and `useGridState` (#3325) @flaviendelangle
-- [core] Add sections to some of the feature hooks (#3391) @flaviendelangle
-- [core] Generate exports snapshot for both `x-data-grid` and `x-data-grid-pro` packages (#3427) @flaviendelangle
-- [core] Remove 'x-data-grid' folder from DataGridPro bundle (#3394) @m4theushw
-- [core] Add link to OpenCollective (#3392) @oliviertassinari
 
 ### Docs
 
@@ -43,6 +298,13 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [docs] Include @mui/x-data-grid as dependency in the CodeSandbox (#3396) @m4theushw
 - [docs] Stop using TypeDoc to generate the API documentation (#3320) @flaviendelangle
 - [docs] Remove column pinning from "Upcoming features" (#3443) @alexfauquette
+
+### Core
+
+- [core] Add sections to some of the feature hooks (#3391) @flaviendelangle
+- [core] Generate exports snapshot for both `x-data-grid` and `x-data-grid-pro` packages (#3427) @flaviendelangle
+- [core] Remove 'x-data-grid' folder from DataGridPro bundle (#3394) @m4theushw
+- [core] Add link to OpenCollective (#3392) @oliviertassinari
 
 ## 5.2.0
 
@@ -103,20 +365,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] Fix `DatePicker` bug by limiting years to 4 digits (#3222) @alexfauquette
 - [DataGrid] Fix column menu position when closing (#3289) @m4theushw
 - [DataGrid] Fix to not crash when a sort item uses a non-existing column (#3224) @flaviendelangle
-
-### Core
-
-- [core] Add funding field (#3331) @oliviertassinari
-- [core] Fix missing LICENSE file (#3330) @oliviertassinari
-- [core] Fix release month in CHANGELOG (#3367) @m4theushw
-- [core] Fix `yarn prettier` script (#3292) @oliviertassinari
-- [core] Improve tests for Tree Data (#3366) @flaviendelangle
-- [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
-- [core] Transition to a new StackOverflow tag (#3308) @oliviertassinari
-- [core] Type the `api` param in callback interfaces (#3315) @flaviendelangle
-- [core] Update monorepo (#3370) @flaviendelangle
-- [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
-- [test] Replace `useFakeTimers` (#3323) @m4theushw
+- [DataGrid] Type the `api` param in callback interfaces (#3315) @flaviendelangle
 
 ### Docs
 
@@ -128,6 +377,19 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [docs] Fix double MUI in the title (#3332) @oliviertassinari
 - [docs] Fix duplicate "the" (#3365) @noam-honig
 - [docs] Update branch to deploy docs (#3321) @m4theushw
+
+### Core
+
+- [core] Add funding field (#3331) @oliviertassinari
+- [core] Fix missing LICENSE file (#3330) @oliviertassinari
+- [core] Fix release month in CHANGELOG (#3367) @m4theushw
+- [core] Fix `yarn prettier` script (#3292) @oliviertassinari
+- [core] Improve tests for Tree Data (#3366) @flaviendelangle
+- [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
+- [core] Transition to a new StackOverflow tag (#3308) @oliviertassinari
+- [core] Update monorepo (#3370) @flaviendelangle
+- [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
+- [test] Replace `useFakeTimers` (#3323) @m4theushw
 
 ## 5.1.0
 
@@ -260,11 +522,13 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 
 ### `@mui/x-data-grid@v5.0.1` / `@mui/x-data-grid-pro@v5.0.1`
 
-#### Changes
-
 - [DataGrid] New API to validate the editing values (#3006) @m4theushw
 - [DataGrid] Use color-scheme to set dark mode on native components (#3146) @alexfauquette
 - [DataGrid] Fix the `@mui/x-data-grid` type entrypoint (#3196) @flaviendelangle
+
+### Docs
+
+- [docs] Move sentence about disabling multi rows selection (#3167) @alexfauquette
 
 ### Core
 
@@ -273,10 +537,6 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 - [core] Polish v5 CHANGELOG (#3194) @oliviertassinari
 - [core] Remove the `index.ts` of the export hooks (#3165) @flaviendelangle
 - [core] Set the correct release date for v5.0.0 in the CHANGELOG.md (#3192) @flaviendelangle
-
-### Docs
-
-- [docs] Move sentence about disabling multi rows selection (#3167) @alexfauquette
 
 ## 5.0.0
 
@@ -1378,6 +1638,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   - The `onEditCellChange` prop was renamed to `onEditCellPropsChange`.
   - The `onEditCellChangeCommitted` prop was renamed to `onCellEditCommit`.
   - The `onEditRowModelChange` prop was removed. Use the new `onEditRowsModelChange` prop.
+
     ```diff
     -onEditRowModelChange?: (params: GridEditRowModelParams)
     +onEditRowsModelChange?: (editRowsModel: GridEditRowsModel)
@@ -2616,7 +2877,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.19](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.18...v4.0.0-alpha.19)
 
-###### _Feb 5, 2021_
+_Feb 5, 2021_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2659,7 +2920,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.18](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.17...v4.0.0-alpha.18)
 
-###### _Jan 26, 2021_
+_Jan 26, 2021_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2746,7 +3007,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.17](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.15...v4.0.0-alpha.17)
 
-###### _Jan 14, 2021_
+_Jan 14, 2021_
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2776,7 +3037,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.15](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.14...v4.0.0-alpha.15)
 
-###### _Jan 7, 2021_
+_Jan 7, 2021_
 
 Big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2799,7 +3060,7 @@ Big thanks to the 2 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.14](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.13...v4.0.0-alpha.14)
 
-###### _Dec 31, 2020_
+_Dec 31, 2020_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2833,7 +3094,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.13](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13)
 
-###### _Dec 16, 2020_
+_Dec 16, 2020_
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2862,7 +3123,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.12](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12)
 
-###### _Dec 9, 2020_
+_Dec 9, 2020_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2899,7 +3160,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.11](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11)
 
-###### _Dec 2, 2020_
+_Dec 2, 2020_
 
 Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2957,7 +3218,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.10](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10)
 
-###### _Nov 20, 2020_
+_Nov 20, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.10 / @material-ui/data-grid@v4.0.0-alpha.10
 
@@ -2979,7 +3240,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.9](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9)
 
-###### _Nov 9, 2020_
+_Nov 9, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.9 / @material-ui/data-grid@v4.0.0-alpha.9
 
@@ -3017,7 +3278,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8)
 
-###### _Oct 23, 2020_
+_Oct 23, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.8 / @material-ui/data-grid@v4.0.0-alpha.8
 
@@ -3034,7 +3295,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.7](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7)
 
-###### _Oct 19, 2020_
+_Oct 19, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.7 / @material-ui/data-grid@v4.0.0-alpha.7
 
@@ -3063,7 +3324,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6)
 
-###### _Sep 25, 2020_
+_Sep 25, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.6 / @material-ui/data-grid@v4.0.0-alpha.6
 
@@ -3080,13 +3341,13 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.2](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2)
 
-###### _Sep 18, 2020_
+_Sep 18, 2020_
 
 - [DataGrid] Fix wrongly exported types (#298) @dtassone
 
 ## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1)
 
-###### _Sep 17, 2020_
+_Sep 17, 2020_
 
 This is the first public alpha release of the component after 6 months of development since the initial commit (March 15th 2020).
 `@material-ui/data-grid` is licensed under MIT while `@material-ui/x-grid` is licensed under a commercial license.

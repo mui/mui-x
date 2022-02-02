@@ -63,6 +63,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'is gelijk of er voor',
   filterOperatorIsEmpty: 'is leeg',
   filterOperatorIsNotEmpty: 'is niet leeg',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'alles',
@@ -116,6 +117,11 @@ const nlNLGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Groep',
   treeDataExpand: 'Uitvouwen',
   treeDataCollapse: 'Inklappen',
+
+  // Grouping columns
+  groupingColumnHeaderName: 'Groep',
+  groupColumn: (name) => `Groepeer op ${name}`,
+  unGroupColumn: (name) => `Stop groeperen op ${name}`,
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

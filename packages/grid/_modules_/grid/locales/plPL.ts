@@ -62,6 +62,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'mniejsze lub równe',
   filterOperatorIsEmpty: 'jest pusty',
   filterOperatorIsNotEmpty: 'nie jest pusty',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',
@@ -111,6 +112,11 @@ const plPLGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

@@ -1,13 +1,59 @@
+import {
+  GridCellIndexCoordinates,
+  GridColDef,
+  GridInitialState,
+  GridScrollParams,
+} from '../../../models';
+import {
+  GridRestoreStatePreProcessingContext,
+  GridRestoreStatePreProcessingValue,
+} from '../../features/statePersistence';
+import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
+import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
+import { GridCanBeReorderedPreProcessingContext } from '../../features/columnReorder/columnReorderInterfaces';
+import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
+
 export type PreProcessorCallback = (value: any, params?: any) => any;
 
-export enum GridPreProcessingGroup {
-  hydrateColumns = 'hydrateColumns',
-  scrollToIndexes = 'scrollToIndexes',
-  columnMenu = 'columnMenu',
-  canBeReordered = 'canBeReordered',
-  filteringMethod = 'filteringMethod',
-  sortingMethod = 'sortingMethod',
+export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
+
+interface GridPreProcessingGroupLookup {
+  hydrateColumns: {
+    value: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+  };
+  scrollToIndexes: {
+    value: Partial<GridScrollParams>;
+    context: Partial<GridCellIndexCoordinates>;
+  };
+  columnMenu: { value: JSX.Element[]; context: GridColDef };
+  canBeReordered: {
+    value: boolean;
+    context: GridCanBeReorderedPreProcessingContext;
+  };
+  filteringMethod: { value: GridFilteringMethodCollection };
+  sortingMethod: { value: GridSortingMethodCollection };
+  exportState: { value: GridInitialState };
+  restoreState: {
+    value: GridRestoreStatePreProcessingValue;
+    context: GridRestoreStatePreProcessingContext;
+  };
 }
+
+export type GridPreProcessor<P extends GridPreProcessingGroup> = (
+  value: GridPreProcessingGroupLookup[P]['value'],
+  context: GridPreProcessingGroupLookup[P] extends { context: any }
+    ? GridPreProcessingGroupLookup[P]['context']
+    : undefined,
+) => GridPreProcessingGroupLookup[P]['value'];
+
+type GridPreProcessorsApplierArg<
+  P extends GridPreProcessingGroup,
+  T extends { value: any },
+> = T extends { context: any } ? [P, T['value'], T['context']] : [P, T['value']];
+
+type GridPreProcessorsApplier = <P extends GridPreProcessingGroup>(
+  ...params: GridPreProcessorsApplierArg<P, GridPreProcessingGroupLookup[P]>
+) => GridPreProcessingGroupLookup[P]['value'];
 
 export interface GridPreProcessingApi {
   /**
@@ -31,5 +77,5 @@ export interface GridPreProcessingApi {
    * @returns {any} The value after passing through all pre-processors.
    * @ignore - do not document.
    */
-  unstable_applyPreProcessors: (group: GridPreProcessingGroup, value: any, params?: any) => any;
+  unstable_applyPreProcessors: GridPreProcessorsApplier;
 }

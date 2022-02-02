@@ -63,6 +63,7 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'ב- או לפני',
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
+  filterOperatorIsAnyOf: 'הוא אחד מ-',
 
   // Filter values text
   filterValueAny: 'כל ערך',
@@ -114,6 +115,11 @@ const heILGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'קבוצה',
   treeDataExpand: 'הרחב',
   treeDataCollapse: 'כווץ',
+
+  // Grouping columns
+  groupingColumnHeaderName: 'קבוצה',
+  groupColumn: (name) => `קבץ לפי ${name}`,
+  unGroupColumn: (name) => `הפסק לקבץ לפי ${name}`,
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

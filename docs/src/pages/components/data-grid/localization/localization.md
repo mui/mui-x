@@ -69,7 +69,7 @@ If you want to pass language translations directly to the grid without using `cr
 ```jsx
 import { DataGrid, nlNL } from '@mui/x-data-grid';
 
-<DataGrid localeText={nlNL.props.MuiDataGrid.localeText} />;
+<DataGrid localeText={nlNL.components.MuiDataGrid.defaultProps.localeText} />;
 ```
 
 ### Supported locales
@@ -79,6 +79,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Arabic (Sudan)          | ar-SD               | `arSD`      |
 | Bulgarian               | bg-BG               | `bgBG`      |
 | Czech                   | cs-CZ               | `csCZ`      |
+| Danish                  | da-DK               | `daDK`      |
 | Dutch                   | nl-NL               | `nlNL`      |
 | English (United States) | en-US               | `enUS`      |
 | Finnish                 | fi-FI               | `fiFI`      |

@@ -2,6 +2,7 @@
 export * from './arSD';
 export * from './bgBG';
 export * from './csCZ';
+export * from './daDK';
 export * from './deDE';
 export * from './elGR';
 export * from './enUS';

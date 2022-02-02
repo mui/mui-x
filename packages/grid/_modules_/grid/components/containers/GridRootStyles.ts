@@ -139,12 +139,17 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses.columnSeparator}`]: {
       position: 'absolute',
-      right: -12,
       zIndex: 100,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       color: borderColor,
+    },
+    [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
+      left: -12,
+    },
+    [`& .${gridClasses['columnSeparator--sideRight']}`]: {
+      right: -12,
     },
     [`& .${gridClasses['columnSeparator--resizable']}`]: {
       cursor: 'col-resize',
@@ -287,6 +292,16 @@ export const GridRootStyles = styled('div', {
       width: '100%',
     },
     [`& .${gridClasses.treeDataGroupingCellToggle}`]: {
+      flex: '0 0 28px',
+      alignSelf: 'stretch',
+      marginRight: theme.spacing(2),
+    },
+    [`& .${gridClasses.groupingCriteriaCell}`]: {
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%',
+    },
+    [`& .${gridClasses.groupingCriteriaCellToggle}`]: {
       flex: '0 0 28px',
       alignSelf: 'stretch',
       marginRight: theme.spacing(2),

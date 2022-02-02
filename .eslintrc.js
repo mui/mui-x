@@ -1,9 +1,9 @@
-const baseline = require('@material-ui/monorepo/.eslintrc');
+const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
 module.exports = {
   ...baseline,
-  plugins: [...baseline.plugins, 'jsdoc'],
+  plugins: [...baseline.plugins, 'jsdoc', 'filenames'],
   settings: {
     'import/resolver': {
       webpack: {
@@ -20,7 +20,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
-    // TODO move rule into main repo to allow deep @material-ui/monorepo imports
+    // TODO move rule into main repo to allow deep @mui/monorepo imports
     'no-restricted-imports': 'off',
     'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-param-type': ['error', { contexts: ['TSFunctionType'] }],
@@ -38,12 +38,73 @@ module.exports = {
         '*.test.js',
         '*.test.ts',
         '*.test.tsx',
+        'test/**',
       ],
       rules: {
         'no-restricted-imports': [
           'error',
           {
             paths: ['@testing-library/react', 'test/utils/index'],
+          },
+        ],
+      },
+    },
+    {
+      files: ['packages/grid/**/*.ts', 'packages/grid/**/*.js', 'docs/src/pages/**/*.tsx'],
+      excludedFiles: [
+        'packages/grid/x-data-grid/src/themeAugmentation/index.js', // TypeScript ignores JS files with the same name as the TS file
+        'packages/grid/x-data-grid-pro/src/themeAugmentation/index.js',
+      ],
+      rules: {
+        'material-ui/no-direct-state-access': 'error',
+      },
+      parserOptions: { tsconfigRootDir: __dirname, project: ['./tsconfig.json'] },
+    },
+    {
+      files: ['docs/src/pages/components/**/*.js', 'docs/src/pages/components/**/*.tsx'],
+      rules: {
+        'filenames/match-exported': ['error'],
+      },
+    },
+    {
+      files: ['packages/*/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx'],
+      rules: {
+        'material-ui/mui-name-matches-component-name': [
+          'error',
+          {
+            customHooks: [
+              'useDatePickerProcessedProps',
+              'useDatePickerDefaultizedProps',
+              'useTimePickerDefaultizedProps',
+              'useDateTimePickerDefaultizedProps',
+            ],
+          },
+        ],
+      },
+    },
+    {
+      files: ['packages/x-pickers/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: ['@mui/x-pickers'],
+            patterns: ['@mui/x-pickers/*'],
+          },
+        ],
+      },
+    },
+    {
+      files: ['packages/x-pickers-pro/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: ['@mui/x-pickers-pro'],
+            patterns: ['@mui/x-pickers-pro/*'],
           },
         ],
       },

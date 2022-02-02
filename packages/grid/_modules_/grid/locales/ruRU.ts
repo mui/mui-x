@@ -73,6 +73,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'меньше или равно',
   filterOperatorIsEmpty: 'пустой',
   filterOperatorIsNotEmpty: 'не пустой',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'любой',
@@ -144,6 +145,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Группа',
   treeDataExpand: 'показать дочерние элементы',
   treeDataCollapse: 'скрыть дочерние элементы',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

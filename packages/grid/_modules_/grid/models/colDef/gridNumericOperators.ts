@@ -1,6 +1,8 @@
 import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFilterInputValue';
+import { GridFilterInputMultipleValue } from '../../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
+import { wrapWithDeprecationWarning } from '../../utils/deprecation';
 
 const parseNumericValue = (value: string | number | null) => {
   if (value == null) {
@@ -10,7 +12,7 @@ const parseNumericValue = (value: string | number | null) => {
   return Number(value);
 };
 
-export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
+export const getGridNumericOperators = (): GridFilterOperator[] => [
   {
     label: '=',
     value: '=',
@@ -133,4 +135,26 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
       };
     },
   },
+  {
+    value: 'isAnyOf',
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
+      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
+        return null;
+      }
+
+      return ({ value }): boolean => {
+        return value != null && filterItem.value.includes(Number(value));
+      };
+    },
+    InputComponent: GridFilterInputMultipleValue,
+    InputComponentProps: { type: 'number' },
+  },
 ];
+
+/**
+ * @deprecated Use `getGridNumericOperators` instead.
+ */
+export const getGridNumericColumnOperators = wrapWithDeprecationWarning(
+  getGridNumericOperators,
+  'MUI: Using getGridNumericColumnOperators is deprecated, use getGridNumericOperators instead.',
+);
