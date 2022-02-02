@@ -141,6 +141,7 @@ ViewListItem.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.shape({
       columns: PropTypes.shape({
+        columns: PropTypes.arrayOf(PropTypes.object),
         columnVisibilityModel: PropTypes.object,
       }),
       filter: PropTypes.shape({

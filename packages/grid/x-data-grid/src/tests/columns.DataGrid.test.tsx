@@ -25,7 +25,7 @@ describe('<DataGridPro /> - Columns', () => {
     </div>
   );
 
-  describe.only('prop: initialState.columns.columns', () => {
+  describe('prop: initialState.columns.columns', () => {
     it('should allow to initialize the columns order and dimensions', () => {
       render(
         <TestDataGrid
