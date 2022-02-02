@@ -21,18 +21,19 @@ import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import { GridColumnPinningApi } from './gridColumnPinningApi';
 import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
+import { GridExcelExportApi } from './gridExcelExportApi';
 import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridRowGroupingApi } from '../../hooks/features/rowGrouping';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
-import { GridExcelExportApi } from './gridExcelExportApi';
+import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 
 /**
  * The full grid API.
  */
 export interface GridApi
-  extends GridCoreApi,
+    extends GridCoreApi,
     GridStateApi,
     GridLoggerApi,
     GridPreProcessingApi,
@@ -60,4 +61,5 @@ export interface GridApi
     GridRowGroupingApi,
     GridVirtualScrollerApi,
     GridExcelExportApi,
-    GridColumnPinningApi {}
+    GridColumnPinningApi,
+    GridStatePersistenceApi { }

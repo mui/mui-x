@@ -31,14 +31,14 @@ export default function ScrollPlayground() {
   React.useEffect(() => {
     const { rowIndex, colIndex } = coordinates;
     apiRef.current.scrollToIndexes(coordinates);
-    const id = gridVisibleSortedRowIdsSelector(apiRef.current.state)[rowIndex];
-    const column = visibleGridColumnsSelector(apiRef.current.state)[colIndex];
+    const id = gridVisibleSortedRowIdsSelector(apiRef)[rowIndex];
+    const column = visibleGridColumnsSelector(apiRef)[colIndex];
     apiRef.current.setCellFocus(id, column.field);
   }, [apiRef, coordinates]);
 
   const handleClick = (position: string) => () => {
-    const maxRowIndex = gridVisibleRowCountSelector(apiRef.current.state) - 1;
-    const maxColIndex = visibleGridColumnsLengthSelector(apiRef.current.state) - 1;
+    const maxRowIndex = gridVisibleRowCountSelector(apiRef) - 1;
+    const maxColIndex = visibleGridColumnsLengthSelector(apiRef) - 1;
 
     setCoordinates((coords) => {
       switch (position) {
@@ -57,10 +57,10 @@ export default function ScrollPlayground() {
   };
 
   const handleCellClick = (params: GridCellParams) => {
-    const rowIndex = gridVisibleSortedRowIdsSelector(apiRef.current.state).findIndex(
+    const rowIndex = gridVisibleSortedRowIdsSelector(apiRef).findIndex(
       (id) => id === params.id,
     );
-    const colIndex = visibleGridColumnsSelector(apiRef.current.state).findIndex(
+    const colIndex = visibleGridColumnsSelector(apiRef).findIndex(
       (column) => column.field === params.field,
     );
     setCoordinates({ rowIndex, colIndex });

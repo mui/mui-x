@@ -213,7 +213,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('props: onPinnedColumnsChange', () => {
-    it('shoull call when a column is pinned', () => {
+    it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
       apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
@@ -228,7 +228,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       });
     });
 
-    it('shoull not change the pinned columns when it is called', () => {
+    it('should not change the pinned columns when it is called', () => {
       const handlePinnedColumnsChange = spy();
       render(
         <TestCase
@@ -251,7 +251,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('props: pinnedColumns', () => {
-    it('shoull pin the columns specified', () => {
+    it('should pin the columns specified', () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'] }} />);
       const leftColumns = document.querySelector(
         `.${gridClasses['pinnedColumns--left']}`,
@@ -274,7 +274,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('shoull filter our duplicated columns', () => {
+    it('should filter our duplicated columns', () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'], right: ['currencyPair'] }} />);
       const leftColumns = document.querySelector(
         `.${gridClasses['pinnedColumns--left']}`,

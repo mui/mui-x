@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models';
+import { GridApiRef, GridState } from '../../../models';
 import {
   useGridLogger,
   useGridSelector,
@@ -12,6 +12,7 @@ import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSelector } from './gridPaginationSelector';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 
 const getPageCount = (rowCount: number, pageSize: number): number => {
   if (pageSize > 0 && rowCount > 0) {
@@ -31,6 +32,16 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
     page: Math.max(Math.min(paginationState.page, paginationState.pageCount - 1), 0),
   };
 };
+
+const mergeStateWithPage =
+  (page: number) =>
+  (state: GridState): GridState => ({
+    ...state,
+    pagination: applyValidPage({
+      ...state.pagination,
+      page,
+    }),
+  });
 
 /**
  * @requires useGridPageSize (state, event)
@@ -68,14 +79,7 @@ export const useGridPage = (
   const setPage = React.useCallback(
     (page) => {
       logger.debug(`Setting page to ${page}`);
-
-      apiRef.current.setState((state) => ({
-        ...state,
-        pagination: applyValidPage({
-          ...state.pagination,
-          page,
-        }),
-      }));
+      apiRef.current.setState(mergeStateWithPage(page));
       apiRef.current.forceUpdate();
     },
     [apiRef, logger],
@@ -86,6 +90,41 @@ export const useGridPage = (
   };
 
   useGridApiMethod(apiRef, pageApi, 'GridPageApi');
+
+  /**
+   * PRE-PROCESSING
+   */
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+    (prevState) => {
+      const pageToExport = gridPageSelector(apiRef.current.state);
+      if (pageToExport === 0) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        pagination: {
+          ...prevState.pagination,
+          page: pageToExport,
+        },
+      };
+    },
+    [apiRef],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+    (params, context) => {
+      // We apply the constraint even if the page did not change in case the pageSize changed.
+      const page =
+        context.stateToRestore.pagination?.page ?? gridPageSelector(apiRef.current.state);
+      apiRef.current.setState(mergeStateWithPage(page));
+      return params;
+    },
+    [apiRef],
+  );
+
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
    * EVENTS

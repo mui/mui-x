@@ -12,7 +12,7 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
   const rootProps = useGridRootProps();
   const timeoutRef = React.useRef<any>();
 
-  const visibleColumns = visibleGridColumnsSelector(apiRef.current.state);
+  const visibleColumns = visibleGridColumnsSelector(apiRef);
   const columnsWithMenu = visibleColumns.filter((col) => col.disableColumnMenu !== true);
   // do not allow to hide the last column with menu
   const disabled = columnsWithMenu.length === 1;
