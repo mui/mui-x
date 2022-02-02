@@ -120,8 +120,8 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
     [apiRef, getCellValueWithDeprecationWarning],
   );
 
-  const getCellParams = React.useCallback(
-    (id: GridRowId, field: string) => {
+  const getCellParams = React.useCallback<GridApiCommunity['getCellParams']>(
+    (id, field) => {
       const colDef = apiRef.current.getColumn(field);
       const value = apiRef.current.getCellValue(id, field);
       const row = apiRef.current.getRow(id);
@@ -134,7 +134,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
       const cellFocus = gridFocusCellSelector(apiRef);
       const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
-      const params: GridCellParams = {
+      const params: GridCellParams<any, any, any, any> = {
         id,
         field,
         row,

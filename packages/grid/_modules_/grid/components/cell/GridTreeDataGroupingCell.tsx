@@ -27,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridTreeDataGroupingCellProps extends GridRenderCellParams {
+interface GridTreeDataGroupingCellProps extends GridRenderCellParams<any, any, any, GridApiPro> {
   hideDescendantCount?: boolean;
 }
 

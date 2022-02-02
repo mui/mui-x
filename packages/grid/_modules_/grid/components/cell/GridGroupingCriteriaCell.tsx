@@ -11,6 +11,7 @@ import { gridFilteredDescendantCountLookupSelector } from '../../hooks/features/
 import { GridEvents } from '../../models/events';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { DataGridProProcessedProps } from '../../models/props/DataGridProProps';
+import { GridApiPro } from '../../models/api/gridApiPro';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -25,7 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridGroupingCriteriaCellProps extends GridRenderCellParams {
+interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, any, GridApiPro> {
   hideDescendantCount?: boolean;
 }
 
