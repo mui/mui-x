@@ -9,6 +9,7 @@
   { "name": "createUseGridApiEventHandler", "kind": "Function" },
   { "name": "csCZ", "kind": "Variable" },
   { "name": "CursorCoordinates", "kind": "Interface" },
+  { "name": "daDK", "kind": "Variable" },
   { "name": "DataGridPro", "kind": "Variable" },
   { "name": "DataGridProProps", "kind": "ExportSpecifier" },
   { "name": "deDE", "kind": "Variable" },
