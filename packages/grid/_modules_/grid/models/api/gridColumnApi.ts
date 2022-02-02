@@ -1,6 +1,6 @@
 import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
-import type { GridApiCommon } from './gridApi';
+import type { GridApiCommon } from './gridApiCommon';
 
 /**
  * The column API interface that is available in the grid [[apiRef]].

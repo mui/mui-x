@@ -1,6 +1,5 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
-import { GridApiRefPro } from '../../../models/api/gridApiRef';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   visibleGridColumnsSelector,
@@ -25,16 +24,17 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVirtualScroller';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { MuiEvent } from '../../../models/muiEvent';
-import { GridState } from '../../../models';
+import { GridStatePro } from '../../../models';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
 const mergeStateWithPinnedColumns =
   (pinnedColumns: GridPinnedColumns) =>
-  (state: GridState): GridState => ({ ...state, pinnedColumns });
+  (state: GridStatePro): GridStatePro => ({ ...state, pinnedColumns });
 
 export const useGridColumnPinning = (
-  apiRef: GridApiRefPro,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'

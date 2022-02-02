@@ -4,10 +4,9 @@ import * as React from 'react';
 import {
   useGridApiContext as useUntypedGridApiContext,
   useGridApiRef as useUntypedGridApiRef,
-  GridApiCommunity,
   GridApiCommon,
-  GridApiRefCommunity,
 } from '../../_modules_';
+import { GridApiCommunity } from '../../_modules_/grid/models/api/gridApiCommunity';
 
 export * from '../../_modules_';
 export * from './DataGrid';
@@ -31,7 +30,7 @@ export const useGridApiRef = useUntypedGridApiRef as <
  */
 export type GridApi = GridApiCommunity;
 
-export type GridApiRef = GridApiRefCommunity;
+export type GridApiRef = React.MutableRefObject<GridApiCommunity>;
 
 export * from '../../_modules_/grid/models/colDef/gridColDef';
 export * from '../../_modules_/grid/models/colDef/gridDateOperators';

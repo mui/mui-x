@@ -7,7 +7,7 @@ import {
   useGridApiRef,
   DataGridPro,
   GridCellParams,
-  GridApiRefPro,
+  GridApiRef,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -16,7 +16,7 @@ import {
 } from '@mui/x-data-grid-generator';
 
 interface EditToolbarProps {
-  apiRef: GridApiRefPro;
+  apiRef: GridApiRef;
   selectedCellParams?: any;
   setSelectedCellParams: (value: any) => void;
 }

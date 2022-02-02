@@ -19,15 +19,12 @@ import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
-import { GridColumnPinningApi } from './gridColumnPinningApi';
 import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
 import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
-import type { GridRowGroupingApi } from '../../hooks/features/rowGrouping';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
-import { GridStateCommunity, GridStatePro } from '../gridState';
 
 type GridStateApiUntyped = { [key in keyof GridStateApi<any>]: any };
 
@@ -59,21 +56,3 @@ export interface GridApiCommon
     GridScrollApi,
     GridStatePersistenceApi,
     GridStateApiUntyped {}
-
-/**
- * The api of `DataGrid`.
- * TODO: Move to `x-data-grid` folder
- */
-export interface GridApiCommunity
-  extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
-    GridStateApi<GridStateCommunity> {}
-
-/**
- * The api of `DataGridPro`.
- * TODO: Move to `x-data-grid-pro` folder
- */
-export interface GridApiPro
-  extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
-    GridStateApi<GridStatePro>,
-    GridRowGroupingApi,
-    GridColumnPinningApi {}

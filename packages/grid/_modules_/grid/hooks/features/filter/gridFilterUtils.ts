@@ -1,11 +1,12 @@
+import * as React from 'react';
 import {
-  GridApiRefCommunity,
   GridFilterItem,
   GridFilterModel,
   GridLinkOperator,
   GridRowId,
   GridStateCommunity,
 } from '../../../models';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridAggregatedFilterItemApplier } from './gridFilterState';
 
 type GridFilterItemApplier = {
@@ -34,11 +35,14 @@ export const mergeStateWithFilterModel = (
 /**
  * Adds default values to the optional fields of a filter items.
  * @param {GridFilterItem} item The raw filter item.
- * @param {GridApiRefCommunity} apiRef The API of the grid.
+ * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
  * @return {GridFilterItem} The clean filter item with an uniq ID and an always-defined operatorValue.
  * TODO: Make the typing reflect the different between GridFilterInputItem and GridFilterItem.
  */
-export const cleanFilterItem = (item: GridFilterItem, apiRef: GridApiRefCommunity) => {
+export const cleanFilterItem = (
+  item: GridFilterItem,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => {
   const cleanItem: GridFilterItem = { ...item };
 
   if (cleanItem.id == null) {
@@ -57,12 +61,12 @@ export const cleanFilterItem = (item: GridFilterItem, apiRef: GridApiRefCommunit
 /**
  * Generates a method to easily check if a row is matching the current filter model.
  * @param {GridFilterModel} filterModel The model with which we want to filter the rows.
- * @param {GridApiRefCommunity} apiRef The API of the grid.
+ * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
 export const buildAggregatedFilterApplier = (
   filterModel: GridFilterModel,
-  apiRef: GridApiRefCommunity,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridAggregatedFilterItemApplier | null => {
   const { items, linkOperator = GridLinkOperator.And } = filterModel;
 

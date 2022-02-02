@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRefPro, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub } from 'sinon';
@@ -16,7 +16,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
   const columns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
-  let apiRef: GridApiRefPro;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();

@@ -57,7 +57,7 @@
   { "name": "GridApiContext", "kind": "Variable" },
   { "name": "GridApiPro", "kind": "Interface" },
   { "name": "GridApiRef", "kind": "TypeAlias" },
-  { "name": "GridApiRefCommunity", "kind": "TypeAlias" },
+  { "name": "React.MutableRefObject<GridApiCommunity>", "kind": "TypeAlias" },
   { "name": "GridApiRefPro", "kind": "TypeAlias" },
   { "name": "GridArrowDownwardIcon", "kind": "Variable" },
   { "name": "GridArrowUpwardIcon", "kind": "Variable" },

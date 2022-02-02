@@ -2,7 +2,9 @@ import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridColDef, GridStateColDef } from '../colDef/gridColDef';
 import { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApiCommon, GridApiCommunity, GridApiPro } from '../api/gridApi';
+import type { GridApiCommon } from '../api/gridApiCommon';
+import type { GridApiCommunity } from '../api/gridApiCommunity';
+import type { GridApiPro } from '../api/gridApiPro';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.

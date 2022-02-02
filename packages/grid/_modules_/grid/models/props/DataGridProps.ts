@@ -10,7 +10,8 @@ import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
 import { GridRowIdGetter, GridRowsProp } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
-import { GridApiRefCommunity, GridCallbackDetails, GridLocaleText } from '../api';
+import { GridCallbackDetails, GridLocaleText } from '../api';
+import { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridColumnTypesRecord } from '../colDef';
 import type { GridColumns } from '../colDef/gridColDef';
 import { GridClasses } from '../../gridClasses';
@@ -355,7 +356,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * TODO: Remove `@internal` when opening `apiRef` to Community plan
    * @internal
    */
-  apiRef?: GridApiRefCommunity;
+  apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].

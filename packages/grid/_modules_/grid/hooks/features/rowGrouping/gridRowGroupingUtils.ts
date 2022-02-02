@@ -3,7 +3,7 @@ import {
   GridRowId,
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
-  GridState,
+  GridStatePro,
 } from '../../../models';
 import { GridFilterState } from '../filter';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
@@ -151,7 +151,7 @@ export const getColDefOverrides = (
 
 export const mergeStateWithRowGroupingModel =
   (rowGroupingModel: GridRowGroupingModel) =>
-  (state: GridState): GridState => ({
+  (state: GridStatePro): GridStatePro => ({
     ...state,
     rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
   });

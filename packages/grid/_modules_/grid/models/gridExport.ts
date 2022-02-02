@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GridRowId } from './gridRows';
-import type { GridApiCommon, GridApiCommunity } from './api';
+import type { GridApiCommon } from './api';
+import type { GridApiCommunity } from './api/gridApiCommunity';
 
 /**
  * The options applicable to any export format.

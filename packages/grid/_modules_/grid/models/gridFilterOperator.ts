@@ -5,7 +5,8 @@ import { GridFilterInputMultipleSingleSelectProps } from '../components/panel/fi
 import { GridFilterItem } from './gridFilterItem';
 import { GridCellParams } from './params/gridCellParams';
 import type { GridStateColDef } from './colDef/gridColDef';
-import type { GridApiCommon, GridApiCommunity } from './api/gridApi';
+import type { GridApiCommunity } from './api/gridApiCommunity';
+import type { GridApiCommon } from './api/gridApiCommon';
 
 /**
  * Filter operator definition interface.

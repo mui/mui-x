@@ -12,7 +12,7 @@ import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridEvents } from '../../models/events';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { DataGridProProcessedProps } from '../../models/props/DataGridProProps';
-import { GridApiPro } from '../../models/api/gridApi';
+import { GridApiPro } from '../../models/api/gridApiPro';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 

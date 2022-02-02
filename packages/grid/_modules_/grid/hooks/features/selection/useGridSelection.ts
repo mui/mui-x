@@ -2,7 +2,7 @@ import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -46,7 +46,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridParamsApi (method)
  */
 export const useGridSelection = (
-  apiRef: GridApiRefCommunity,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'checkboxSelection'

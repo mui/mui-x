@@ -10,7 +10,7 @@ import {
   GridColumns,
   gridColumnLookupSelector,
   gridColumnVisibilityModelSelector,
-  GridApiRefPro,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -25,7 +25,7 @@ const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRefPro;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestDataGridPro = (
     props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &

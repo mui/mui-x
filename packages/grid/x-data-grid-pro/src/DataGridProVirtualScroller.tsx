@@ -18,7 +18,7 @@ import {
   GridPinnedColumns,
   GridPinnedPosition,
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
-import { GridApiPro } from '../../_modules_';
+import { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
 
 export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type {
   GridColDef as GridColDefUntyped,
   GridActionsColDef as GridActionsColDefUntyped,
@@ -27,7 +28,9 @@ import { getGridBooleanOperators as getGridBooleanOperatorsUntyped } from '../..
 import { getGridStringOperators as getGridStringOperatorsUntyped } from '../../_modules_/grid/models/colDef/gridStringOperators';
 import { getGridSingleSelectOperators as getGridSingleSelectOperatorsUntyped } from '../../_modules_/grid/models/colDef/gridSingleSelectOperators';
 import { getGridDateOperators as getGridDateOperatorsUntyped } from '../../_modules_/grid/models/colDef/gridDateOperators';
-import type { GridApiCommon, GridApiPro, GridFilterOperator } from '../../_modules_';
+import type { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
+import type { GridApiCommon } from '../../_modules_/grid/models/api/gridApiCommon';
+import type { GridFilterOperator } from '../../_modules_';
 
 export type {
   GridAlignment,
@@ -53,6 +56,8 @@ export type {
  * The full grid API.
  */
 export type GridApi = GridApiPro;
+
+export type GridApiRef = React.MutableRefObject<GridApiPro>;
 
 /**
  * Column Definition interface.

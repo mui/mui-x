@@ -11,7 +11,7 @@ import {
   isGroupingColumn,
 } from '../../../hooks/features/rowGrouping/gridRowGroupingUtils';
 import { gridColumnLookupSelector } from '../../../hooks/features/columns/gridColumnsSelector';
-import { GridApiPro } from '../../../models';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 
 interface GridRowGroupingColumnMenuItemsProps {
   column?: GridColDef;

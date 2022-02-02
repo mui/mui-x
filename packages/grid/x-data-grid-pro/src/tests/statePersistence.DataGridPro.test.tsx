@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   DataGridProProps,
-  GridApiRefPro,
+  GridApi,
   GridInitialStatePro,
   GridPreferencePanelsValue,
   useGridApiRef,
@@ -17,7 +17,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - State Persistence', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRefPro;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = (props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) => {
     const data = useMovieData();

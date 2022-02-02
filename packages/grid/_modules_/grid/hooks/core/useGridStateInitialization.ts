@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridApiCommon } from '../../models/api/gridApi';
+import { GridApiCommon } from '../../models/api/gridApiCommon';
 import { GridStateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
 import { GridSignature } from '../utils/useGridApiEventHandler';

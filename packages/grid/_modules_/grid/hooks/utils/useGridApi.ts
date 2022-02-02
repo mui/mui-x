@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommon } from '../../models/api/gridApi';
+import { GridApiCommon } from '../../models/api/gridApiCommon';
 
 /**
  * @deprecated Use `apiRef.current` instead.

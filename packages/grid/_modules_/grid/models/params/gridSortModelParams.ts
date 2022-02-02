@@ -1,6 +1,7 @@
 import { GridColumns } from '../colDef/gridColDef';
 import { GridSortModel } from '../gridSortModel';
-import type { GridApiCommon, GridApiCommunity } from '../api';
+import type { GridApiCommon } from '../api';
+import type { GridApiCommunity } from '../api/gridApiCommunity';
 
 /**
  * Object passed as parameter of the column sorted event.

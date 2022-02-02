@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { GridApiCommon } from '../../../models/api/gridApi';
+import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridPreProcessingGroup, PreProcessorCallback } from './gridPreProcessingApi';
 
 export const useGridRegisterPreProcessor = <Api extends GridApiCommon>(

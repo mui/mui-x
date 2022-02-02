@@ -1,6 +1,6 @@
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
-import { GridApiPro } from '../../../models';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount

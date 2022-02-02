@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-import type { GridApiRefPro, GridRowModel, GridRowId, GridApiPro } from '../../../models';
+import type { GridRowModel, GridRowId } from '../../../models';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 import { GridGroupingValueGetterParams } from '../../../models/params/gridCellParams';
 import { GridColDef, GridKeyValue, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { GridEvents, GridEventListener } from '../../../models/events';
@@ -54,7 +55,7 @@ import { GridRowGroupingColumnMenuItems } from '../../../components/menu/columnM
  * TODO: Move the the Premium plan once available and remove the `experimentalFeatures.rowGrouping` flag
  */
 export const useGridRowGrouping = (
-  apiRef: GridApiRefPro,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'initialState'

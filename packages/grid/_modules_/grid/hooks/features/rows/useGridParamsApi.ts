@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
@@ -43,7 +43,7 @@ function warnGetValue() {
  * TODO: Impossible priority - useGridEditRows also needs to be after useGridParamsApi
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
-export function useGridParamsApi(apiRef: GridApiRefCommunity) {
+export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity>) {
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,

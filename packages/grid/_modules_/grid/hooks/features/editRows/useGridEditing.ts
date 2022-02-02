@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEvents } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
 import { GridCellModes, GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -24,7 +24,7 @@ import { useGridRowEditing } from './useGridRowEditing';
  * @requires useGridColumns (state)
  */
 export function useGridEditing(
-  apiRef: GridApiRefCommunity,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editRowsModel'

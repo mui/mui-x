@@ -1,8 +1,8 @@
+import * as React from 'react';
 import { expect } from 'chai';
 import { createSelector, OutputSelector } from './createSelector';
 import { GridStateCommunity } from '../models/gridState';
-import { GridApiRefCommunity } from '../models/api/gridApiRef';
-import { GridApiCommunity } from '../models/api/gridApi';
+import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('createSelector', () => {
   describe('state as argument', () => {
@@ -45,15 +45,23 @@ describe('createSelector', () => {
   describe('apiRef as argument', () => {
     it('should return different selectors for different cache keys', () => {
       const selector = createSelector([], () => []) as OutputSelector<GridApiCommunity, any>;
-      const apiRef1 = { current: { state: {}, instanceId: 0 } } as GridApiRefCommunity;
-      const apiRef2 = { current: { state: {}, instanceId: 1 } } as GridApiRefCommunity;
+      const apiRef1 = {
+        current: { state: {}, instanceId: 0 },
+      } as React.MutableRefObject<GridApiCommunity>;
+      const apiRef2 = {
+        current: { state: {}, instanceId: 1 },
+      } as React.MutableRefObject<GridApiCommunity>;
       expect(selector(apiRef1)).not.to.equal(selector(apiRef2));
     });
 
     it('should not clear the cache of one selector when another key is passed', () => {
       const selector = createSelector([], () => []) as OutputSelector<GridApiCommunity, any>;
-      const apiRef1 = { current: { state: {}, instanceId: 0 } } as GridApiRefCommunity;
-      const apiRef2 = { current: { state: {}, instanceId: 1 } } as GridApiRefCommunity;
+      const apiRef1 = {
+        current: { state: {}, instanceId: 0 },
+      } as React.MutableRefObject<GridApiCommunity>;
+      const apiRef2 = {
+        current: { state: {}, instanceId: 1 },
+      } as React.MutableRefObject<GridApiCommunity>;
       const value1 = selector(apiRef1);
       selector(apiRef2);
       const value2 = selector(apiRef1);

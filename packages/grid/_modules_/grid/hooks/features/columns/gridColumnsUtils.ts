@@ -7,11 +7,11 @@ import {
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
   getGridDefaultColumnTypes,
-  GridApiRefCommunity,
   GridColType,
   GridColumnTypesRecord,
   GridStateCommunity,
 } from '../../../models';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
@@ -114,7 +114,7 @@ export const createColumnsState = ({
   columnsTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
-  apiRef: GridApiRefCommunity;
+  apiRef: React.MutableRefObject<GridApiCommunity>;
   reset: boolean;
 }) => {
   let columnsStateWithoutColumnVisibilityModel: Omit<GridColumnsRawState, 'columnVisibilityModel'>;

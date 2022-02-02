@@ -1,4 +1,4 @@
-import { GridApiCommon, GridApiPro, GridColDef, GridRowId } from '@mui/x-data-grid-pro';
+import { GridApiCommon, GridApi, GridColDef, GridRowId } from '@mui/x-data-grid-pro';
 import { currencyPairs } from './currency-pairs';
 
 export interface DataRowModel {
@@ -12,7 +12,7 @@ export interface GridData<Api extends GridApiCommon> {
   rows: DataRowModel[];
 }
 
-export function getData<Api extends GridApiCommon = GridApiPro>(
+export function getData<Api extends GridApiCommon = GridApi>(
   rowLength: number,
   colLength: number,
 ): GridData<Api> {

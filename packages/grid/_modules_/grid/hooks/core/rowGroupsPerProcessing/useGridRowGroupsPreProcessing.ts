@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowTreeConfig } from '../../../models/gridRows';
 import {
   GridRowGroupsPreProcessingApi,
@@ -25,7 +25,7 @@ const getFlatRowTree: GridRowGroupingPreProcessing = ({ ids, idRowsLookup }) => 
   };
 };
 
-export const useGridRowGroupsPreProcessing = (apiRef: GridApiRefCommunity) => {
+export const useGridRowGroupsPreProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
   const rowGroupsPreProcessingRef = React.useRef(
     new Map<string, GridRowGroupingPreProcessing | null>(),
   );

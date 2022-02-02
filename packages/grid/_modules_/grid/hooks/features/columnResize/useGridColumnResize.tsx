@@ -10,7 +10,8 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
-import { CursorCoordinates, GridColumnResizeParams, GridApiRefPro } from '../../../models';
+import { GridApiPro } from '../../../models/api/gridApiPro';
+import { CursorCoordinates, GridColumnResizeParams } from '../../../models';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -105,7 +106,7 @@ function getSeparatorSide(element: HTMLElement) {
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
-  apiRef: GridApiRefPro,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<DataGridProProcessedProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');

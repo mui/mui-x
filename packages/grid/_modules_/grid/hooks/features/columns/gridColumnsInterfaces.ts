@@ -1,4 +1,5 @@
-import type { GridRowId, GridApiCommon, GridApiCommunity } from '../../../models';
+import type { GridRowId, GridApiCommon } from '../../../models';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export type GridColumnLookup<Api extends GridApiCommon = GridApiCommunity> = {

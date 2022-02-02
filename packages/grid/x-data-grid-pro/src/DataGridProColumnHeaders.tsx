@@ -19,7 +19,7 @@ import {
   GridPinnedPosition,
   GridPinnedColumns,
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
-import { GridApiPro } from '../../_modules_';
+import { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
 
 type OwnerState = {
   classes?: DataGridProProcessedProps['classes'];

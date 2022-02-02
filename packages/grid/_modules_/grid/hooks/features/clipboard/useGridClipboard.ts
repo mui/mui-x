@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod, useGridNativeEventListener } from '../../utils';
 
@@ -29,7 +29,7 @@ function writeToClipboardPolyfill(data: string) {
  * @requires useGridCsvExport (method)
  * @requires useGridSelection (method)
  */
-export const useGridClipboard = (apiRef: GridApiRefCommunity): void => {
+export const useGridClipboard = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
   const copySelectedRowsToClipboard = React.useCallback(
     (includeHeaders = false) => {
       if (apiRef.current.getSelectedRows().size === 0) {

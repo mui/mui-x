@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { GridApiRefCommunity, GridStateCommunity } from '../../../models';
+import { GridStateCommunity } from '../../../models';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridLogger,
   useGridSelector,
@@ -48,7 +49,7 @@ const mergeStateWithPage =
  * @requires useGridFilter (state)
  */
 export const useGridPage = (
-  apiRef: GridApiRefCommunity,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');

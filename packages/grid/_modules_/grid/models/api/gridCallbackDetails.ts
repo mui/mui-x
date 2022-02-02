@@ -1,4 +1,5 @@
-import type { GridApiCommon, GridApiCommunity } from './gridApi';
+import type { GridApiCommon } from './gridApiCommon';
+import type { GridApiCommunity } from './gridApiCommunity';
 
 /**
  * Additional details passed to the callbacks

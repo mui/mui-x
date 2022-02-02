@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridPinnedPosition } from '../../../models/api/gridColumnPinningApi';
-import { GridApiPro } from '../../../models/api/gridApi';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 
 interface GridColumnPinningMenuItemsProps {
   column?: GridColDef;

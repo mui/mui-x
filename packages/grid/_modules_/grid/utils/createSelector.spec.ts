@@ -1,6 +1,6 @@
 import { createSelector } from './createSelector';
 import { GridStateCommunity } from '../models/gridState';
-import { GridApiRefCommunity } from '../models/api/gridApiRef';
+import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 interface GridCustomState extends GridStateCommunity {
   customKey: { customKeyBis: number };
@@ -27,7 +27,7 @@ createSelector(
 createSelector(
   (state: GridStateCommunity) => state.columns.all,
   (fields) => fields,
-)({} as GridApiRefCommunity);
+)({} as React.MutableRefObject<GridApiCommunity>);
 
 createSelector(
   (state: GridStateCommunity) => state.columns.all,

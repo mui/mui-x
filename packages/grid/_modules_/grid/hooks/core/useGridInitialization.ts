@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { GridApiCommon } from '../../models/api/gridApi';
+import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 import { useGridLoggerFactory } from './useGridLoggerFactory';

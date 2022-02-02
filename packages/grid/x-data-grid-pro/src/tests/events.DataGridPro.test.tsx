@@ -12,7 +12,7 @@ import {
   GridColumns,
   GridEvents,
   gridClasses,
-  GridApiRefPro,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -57,7 +57,7 @@ describe('<DataGridPro /> - Events Params', () => {
     }
   });
 
-  let apiRef: GridApiRefPro;
+  let apiRef: React.MutableRefObject<GridApi>;
   const TestEvents = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     return (

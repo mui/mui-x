@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { GRID_STRING_COL_DEF, GridApiPro, GridApiRefPro } from '../../../models';
+import { GRID_STRING_COL_DEF } from '../../../models';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 import { GridRenderCellParams } from '../../../models/params/gridCellParams';
 import { GridComparatorFn } from '../../../models/gridSortModel';
 import {
@@ -261,7 +262,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 };
 
 interface CreateGroupingColDefSeveralCriteriaParams {
-  apiRef: GridApiRefPro;
+  apiRef: React.MutableRefObject<GridApiPro>;
   columnsLookup: GridColumnRawLookup<GridApiPro>;
 
   /**

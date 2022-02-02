@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRefPro,
+  GridApiRef,
   GridColumns,
   gridColumnVisibilityModelSelector,
   GridEvents,
@@ -18,7 +18,7 @@ import Select from '@mui/material/Select';
 const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
 
 const useKeepGroupingColumnsHidden = (
-  apiRef: GridApiRefPro,
+  apiRef: GridApiRef,
   columns: GridColumns,
   initialModel: GridRowGroupingModel,
   leafField?: string,

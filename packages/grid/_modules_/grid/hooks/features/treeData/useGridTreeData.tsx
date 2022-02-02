@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridApiRefPro } from '../../../models/api/gridApiRef';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
@@ -7,7 +6,7 @@ import {
 } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener, GridEvents } from '../../../models/events';
-import { GridApiPro } from '../../../models';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 import {
   GridColDef,
   GridGroupingColDefOverride,
@@ -36,7 +35,7 @@ const TREE_DATA_GROUPING_NAME = 'tree-data';
  * @requires useGridRowGroupsPreProcessing (method)
  */
 export const useGridTreeData = (
-  apiRef: GridApiRefPro,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'

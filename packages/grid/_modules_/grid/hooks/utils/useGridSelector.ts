@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommon } from '../../models/api/gridApi';
+import { GridApiCommon } from '../../models/api/gridApiCommon';
 import { OutputSelector } from '../../utils/createSelector';
 
 let warnedOnceStateNotInitialized = false;

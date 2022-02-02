@@ -4,9 +4,9 @@ import * as React from 'react';
 import {
   useGridApiContext as useUntypedGridApiContext,
   useGridApiRef as useUntypedGridApiRef,
-  GridApiPro,
-  GridApiCommon,
 } from '../../_modules_';
+import { GridApiCommon } from '../../_modules_/grid/models/api/gridApiCommon';
+import { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
 
 export { LicenseInfo } from '@mui/x-license-pro';
 export * from '../../_modules_';

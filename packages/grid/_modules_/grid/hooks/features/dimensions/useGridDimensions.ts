@@ -5,7 +5,8 @@ import {
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/material/utils';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { ElementSize, GridApiRefCommunity } from '../../../models';
+import { ElementSize } from '../../../models';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -50,7 +51,7 @@ const hasScroll = ({
 };
 
 export function useGridDimensions(
-  apiRef: GridApiRefCommunity,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'

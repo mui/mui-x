@@ -1,7 +1,7 @@
 // TODO: Move to `x-data-grid-pro` folder
 import { GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
-import { GridApiRefPro, GridCallbackDetails, GridPinnedColumns } from '../api';
+import { GridCallbackDetails, GridPinnedColumns } from '../api';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef/gridColDef';
 import {
   DataGridPropsWithoutDefaultValue,
@@ -13,6 +13,7 @@ import {
 } from './DataGridProps';
 import type { GridRowGroupingModel } from '../../hooks/features/rowGrouping';
 import { GridInitialStatePro } from '../gridState';
+import { GridApiPro } from '../api/gridApiPro';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -125,7 +126,7 @@ export interface DataGridProPropsWithoutDefaultValue
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
-  apiRef?: GridApiRefPro;
+  apiRef?: React.MutableRefObject<GridApiPro>;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
