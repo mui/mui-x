@@ -10,8 +10,14 @@ export interface GridColumnsState {
   columnVisibilityModel: GridColumnVisibilityModel;
 }
 
+export type GridPortableColDef = Pick<
+  GridStateColDef,
+  'field' | 'maxWidth' | 'minWidth' | 'width' | 'flex'
+>;
+
 export interface GridColumnsInitialState {
   columnVisibilityModel?: GridColumnVisibilityModel;
+  columns?: GridPortableColDef[];
 }
 
 export type GridColumnsRawState = Omit<GridColumnsState, 'lookup'> & {

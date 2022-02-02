@@ -3,6 +3,8 @@ import {
   GridColumnsState,
   GridColumnsRawState,
   GridColumnVisibilityModel,
+  GridPortableColDef,
+  GridColumnRawLookup,
 } from './gridColumnsInterfaces';
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
@@ -91,6 +93,48 @@ export const hydrateColumnsWidth = (
 };
 
 /**
+ * Apply the order and the dimensions of the portable columns.
+ * The columns not registered in `columnsToImport` will keep there default dimensions and be placed after the imported columns.
+ */
+export const applyPortableColDef = (
+  columnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'>,
+  columnsToImport: GridPortableColDef[] | undefined,
+) => {
+  if (!columnsToImport || columnsToImport.length === 0) {
+    return columnsState;
+  }
+
+  const portableColumnsLookup: Record<string, GridPortableColDef> = {};
+  const fieldsToImport: string[] = [];
+
+  for (let i = 0; i < columnsToImport.length; i += 1) {
+    const portableColumn = columnsToImport[i];
+    if (columnsState.lookup[portableColumn.field]) {
+      portableColumnsLookup[portableColumn.field] = portableColumn;
+      fieldsToImport.push(portableColumn.field);
+    }
+  }
+
+  const newFieldList = [
+    ...fieldsToImport,
+    ...columnsState.all.filter((field) => !portableColumnsLookup[field]),
+  ];
+
+  const newColumnLookup: GridColumnRawLookup = {};
+  for (let i = 0; i < newFieldList.length; i += 1) {
+    const field = newFieldList[i];
+    newColumnLookup[field] = { ...columnsState.lookup[field], ...portableColumnsLookup[field] };
+  }
+
+  const newColumnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'> = {
+    all: newFieldList,
+    lookup: newColumnLookup,
+  };
+
+  return newColumnsState;
+};
+
+/**
  * @deprecated Should have been internal only, you can inline the logic.
  */
 export const getGridColDef = (
@@ -106,6 +150,7 @@ export const getGridColDef = (
 export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
+  columnsToImport,
   columnsTypes,
   currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   shouldRegenColumnVisibilityModelFromColumns,
@@ -113,6 +158,7 @@ export const createColumnsState = ({
 }: {
   apiRef: GridApiRef;
   columnsToUpsert: GridColDef[];
+  columnsToImport: GridPortableColDef[] | undefined;
   columnsTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
@@ -199,8 +245,13 @@ export const createColumnsState = ({
     columnVisibilityModel = currentColumnVisibilityModel;
   }
 
+  const columnsStateWithPortableColumns = applyPortableColDef(
+    columnsStateWithPreProcessing,
+    columnsToImport,
+  );
+
   const columnsState: GridColumnsRawState = {
-    ...columnsStateWithPreProcessing,
+    ...columnsStateWithPortableColumns,
     columnVisibilityModel,
   };
 
