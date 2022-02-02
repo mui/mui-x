@@ -1,7 +1,7 @@
 import {
   GridRowModel,
   GridColumnVisibilityModel,
-  GridInitialStatePro,
+  GridInitialState,
   GridApiCommon,
 } from '@mui/x-data-grid-pro';
 import asyncWorker from '../asyncWorker';
@@ -10,7 +10,7 @@ import { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGener
 export interface GridDemoData<Api extends GridApiCommon> {
   rows: GridRowModel[];
   columns: GridColDefGenerator<Api>[];
-  initialState?: GridInitialStatePro;
+  initialState?: GridInitialState;
 }
 
 export function getRealGridData<Api extends GridApiCommon>(

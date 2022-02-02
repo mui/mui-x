@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridStateCommunity } from '../../../models';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridLogger,

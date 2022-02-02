@@ -3,8 +3,8 @@ import {
   GridRowId,
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
-  GridStatePro,
 } from '../../../models';
+import { GridStatePro } from '../../../models/gridStatePro';
 import { GridFilterState } from '../filter';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { GridAggregatedFilterItemApplier } from '../filter/gridFilterState';

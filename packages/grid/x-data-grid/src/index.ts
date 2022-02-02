@@ -7,6 +7,10 @@ import {
   GridApiCommon,
 } from '../../_modules_';
 import { GridApiCommunity } from '../../_modules_/grid/models/api/gridApiCommunity';
+import {
+  GridStateCommunity,
+  GridInitialStateCommunity,
+} from '../../_modules_/grid/models/gridStateCommunity';
 
 export * from '../../_modules_';
 export * from './DataGrid';
@@ -29,6 +33,16 @@ export const useGridApiRef = useUntypedGridApiRef as <
  * The full grid API.
  */
 export type GridApi = GridApiCommunity;
+
+/**
+ * The state of `DataGrid`.
+ */
+export type GridState = GridStateCommunity;
+
+/**
+ * The initial state of `DataGrid`.
+ */
+export type GridInitialState = GridInitialStateCommunity;
 
 export type GridApiRef = React.MutableRefObject<GridApiCommunity>;
 

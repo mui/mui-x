@@ -1,7 +1,7 @@
 import { GridCallbackDetails } from './api/gridCallbackDetails';
 import type { GridEventLookup, GridControlledStateEventLookup } from './events';
 import type { OutputSelector } from '../utils/createSelector';
-import { GridStateCommunity } from './gridState';
+import { GridStateCommunity } from './gridStateCommunity';
 
 export interface GridControlStateItem<
   State extends GridStateCommunity,

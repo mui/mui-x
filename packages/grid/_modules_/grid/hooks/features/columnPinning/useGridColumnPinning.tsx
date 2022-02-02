@@ -24,7 +24,7 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVirtualScroller';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { MuiEvent } from '../../../models/muiEvent';
-import { GridStatePro } from '../../../models';
+import { GridStatePro } from '../../../models/gridStatePro';
 import { GridApiPro } from '../../../models/api/gridApiPro';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;

@@ -12,7 +12,7 @@ import {
   GridExperimentalFeatures,
 } from './DataGridProps';
 import type { GridRowGroupingModel } from '../../hooks/features/rowGrouping';
-import { GridInitialStatePro } from '../gridState';
+import { GridInitialStatePro } from '../gridStatePro';
 import { GridApiPro } from '../api/gridApiPro';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {

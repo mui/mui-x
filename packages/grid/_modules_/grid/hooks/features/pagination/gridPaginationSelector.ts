@@ -1,5 +1,5 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridVisibleSortedRowEntriesSelector,
   gridVisibleSortedRowIdsSelector,

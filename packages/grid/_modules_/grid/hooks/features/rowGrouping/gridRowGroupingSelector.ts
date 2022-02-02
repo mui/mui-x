@@ -1,5 +1,5 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridStatePro } from '../../../models';
+import { GridStatePro } from '../../../models/gridStatePro';
 import { gridColumnLookupSelector } from '../columns';
 
 export const gridRowGroupingStateSelector = (state: GridStatePro) => state.rowGrouping;

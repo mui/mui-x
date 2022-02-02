@@ -1,5 +1,5 @@
 import { GridStateApi } from './gridStateApi';
-import { GridStatePro } from '../gridState';
+import { GridStatePro } from '../gridStatePro';
 import { GridRowGroupingApi } from '../../hooks';
 import { GridColumnPinningApi } from './gridColumnPinningApi';
 import { GridApiCommon } from './gridApiCommon';

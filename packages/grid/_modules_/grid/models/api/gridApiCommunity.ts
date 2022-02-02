@@ -1,5 +1,5 @@
 import type { GridStateApi } from './gridStateApi';
-import type { GridStateCommunity } from '../gridState';
+import type { GridStateCommunity } from '../gridStateCommunity';
 import type { GridApiCommon } from './gridApiCommon';
 
 type GridStateApiUntyped = { [key in keyof GridStateApi<any>]: any };

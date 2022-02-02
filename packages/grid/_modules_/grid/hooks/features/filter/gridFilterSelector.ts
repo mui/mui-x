@@ -1,6 +1,6 @@
 import { createSelector } from '../../../utils/createSelector';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridStateCommunity } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';

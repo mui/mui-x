@@ -1,4 +1,4 @@
-import { GridInitialState } from '../../../models';
+import { GridInitialStatePro } from '../../../models/gridStatePro';
 
 export interface GridStatePersistenceApi {
   /**
@@ -6,12 +6,12 @@ export interface GridStatePersistenceApi {
    * These values can then be passed to the `initialState` prop or injected using the `restoreState` method.
    * @returns {GridInitialState} The exported state.
    */
-  exportState: () => GridInitialState;
+  exportState: () => GridInitialStatePro;
   /**
    * Inject the given values into the state of the DataGrid.
    * @param {GridInitialState} stateToRestore The exported state to restore.
    */
-  restoreState: (stateToRestore: GridInitialState) => void;
+  restoreState: (stateToRestore: GridInitialStatePro) => void;
 }
 
 export interface GridRestoreStatePreProcessingValue {
@@ -23,5 +23,5 @@ export interface GridRestoreStatePreProcessingValue {
 }
 
 export interface GridRestoreStatePreProcessingContext {
-  stateToRestore: GridInitialState;
+  stateToRestore: GridInitialStatePro;
 }

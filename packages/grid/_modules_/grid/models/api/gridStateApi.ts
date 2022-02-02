@@ -1,4 +1,4 @@
-import { GridStateCommunity } from '../gridState';
+import { GridStateCommunity } from '../gridStateCommunity';
 import { GridControlledStateEventLookup } from '../events';
 import { GridControlStateItem } from '../controlStateItem';
 

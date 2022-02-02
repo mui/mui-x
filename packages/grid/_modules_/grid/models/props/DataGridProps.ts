@@ -19,7 +19,7 @@ import { GridRowHeightParams, GridRowHeightReturnValue, GridRowParams } from '..
 import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
-import { GridInitialStateCommunity } from '../gridState';
+import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 

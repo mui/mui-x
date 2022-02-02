@@ -1,4 +1,6 @@
-import { GridCellIndexCoordinates, GridInitialState, GridScrollParams } from '../../../models';
+import { GridCellIndexCoordinates, GridScrollParams } from '../../../models';
+import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
+import { GridInitialStatePro } from '../../../models/gridStatePro';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import {
   GridRestoreStatePreProcessingContext,
@@ -28,7 +30,7 @@ interface GridPreProcessingGroupLookup {
   };
   filteringMethod: { value: GridFilteringMethodCollection };
   sortingMethod: { value: GridSortingMethodCollection };
-  exportState: { value: GridInitialState };
+  exportState: { value: GridInitialStateCommunity | GridInitialStatePro };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;
     context: GridRestoreStatePreProcessingContext;

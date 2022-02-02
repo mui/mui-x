@@ -3,7 +3,7 @@ import {
   DataGridPro,
   DataGridProProps,
   GridApi,
-  GridInitialStatePro,
+  GridInitialState,
   GridPreferencePanelsValue,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -51,7 +51,7 @@ describe('<DataGridPro /> - State Persistence', () => {
   };
 
   describe('apiRef: exportState', () => {
-    const FULL_INITIAL_STATE: GridInitialStatePro = {
+    const FULL_INITIAL_STATE: GridInitialState = {
       columns: {
         columnVisibilityModel: { year: false },
       },

@@ -1,6 +1,6 @@
 import { createSelector } from '../../../utils/createSelector';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { GridStateCommunity } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 
 export const gridSelectionStateSelector = (state: GridStateCommunity) => state.selection;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createSelector, OutputSelector } from './createSelector';
-import { GridStateCommunity } from '../models/gridState';
+import { GridStateCommunity } from '../models/gridStateCommunity';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('createSelector', () => {

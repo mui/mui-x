@@ -1,5 +1,5 @@
 import { createSelector } from './createSelector';
-import { GridStateCommunity } from '../models/gridState';
+import { GridStateCommunity } from '../models/gridStateCommunity';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 interface GridCustomState extends GridStateCommunity {

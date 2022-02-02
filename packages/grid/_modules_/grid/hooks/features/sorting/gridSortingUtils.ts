@@ -1,11 +1,7 @@
 import { GridSortingModelApplier } from './gridSortingState';
-import type {
-  GridCellValue,
-  GridRowId,
-  GridRowTreeNodeConfig,
-  GridStateCommunity,
-} from '../../../models';
+import type { GridCellValue, GridRowId, GridRowTreeNodeConfig } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridComparatorFn,
   GridSortDirection,

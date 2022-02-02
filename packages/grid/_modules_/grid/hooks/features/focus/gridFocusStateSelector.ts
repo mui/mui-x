@@ -1,5 +1,5 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridFocusState, GridTabIndexState } from './gridFocusState';
 
 export const gridFocusStateSelector = (state: GridStateCommunity) => state.focus;

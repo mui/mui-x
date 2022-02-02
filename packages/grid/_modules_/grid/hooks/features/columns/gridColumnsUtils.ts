@@ -9,8 +9,8 @@ import {
   getGridDefaultColumnTypes,
   GridColType,
   GridColumnTypesRecord,
-  GridStateCommunity,
 } from '../../../models';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';

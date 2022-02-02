@@ -1,12 +1,7 @@
 import * as React from 'react';
-import {
-  GridFilterItem,
-  GridFilterModel,
-  GridLinkOperator,
-  GridRowId,
-  GridStateCommunity,
-} from '../../../models';
+import { GridFilterItem, GridFilterModel, GridLinkOperator, GridRowId } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridAggregatedFilterItemApplier } from './gridFilterState';
 
 type GridFilterItemApplier = {

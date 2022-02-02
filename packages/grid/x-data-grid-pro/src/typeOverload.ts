@@ -31,6 +31,7 @@ import { getGridDateOperators as getGridDateOperatorsUntyped } from '../../_modu
 import type { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
 import type { GridApiCommon } from '../../_modules_/grid/models/api/gridApiCommon';
 import type { GridFilterOperator } from '../../_modules_';
+import { GridInitialStatePro, GridStatePro } from '../../_modules_/grid/models/gridStatePro';
 
 export type {
   GridAlignment,
@@ -58,6 +59,16 @@ export type {
 export type GridApi = GridApiPro;
 
 export type GridApiRef = React.MutableRefObject<GridApiPro>;
+
+/**
+ * The state of `DataGridPro`.
+ */
+export type GridState = GridStatePro;
+
+/**
+ * The initial state of `DataGridPro`.
+ */
+export type GridInitialState = GridInitialStatePro;
 
 /**
  * Column Definition interface.
