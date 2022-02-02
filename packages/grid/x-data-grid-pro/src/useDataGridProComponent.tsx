@@ -31,6 +31,7 @@ import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimension
 import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/useGridTreeData';
 import { useGridRowGrouping } from '../../_modules_/grid/hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
+import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 
 export const useDataGridProComponent = (
   inputApiRef: GridApiRef | undefined,
@@ -65,6 +66,7 @@ export const useDataGridProComponent = (
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
+  useGridStatePersistence(apiRef);
 
   return apiRef;
 };

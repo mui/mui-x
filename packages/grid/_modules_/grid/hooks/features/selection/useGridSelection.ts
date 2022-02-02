@@ -105,7 +105,7 @@ export const useGridSelection = (
       const startId = lastRowToggled.current ?? id;
       const isSelected = apiRef.current.isRowSelected(id);
       if (isSelected) {
-        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
         const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
         const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
         if (startIndex > endIndex) {
@@ -173,7 +173,7 @@ export const useGridSelection = (
   );
 
   const getSelectedRows = React.useCallback<GridSelectionApi['getSelectedRows']>(
-    () => selectedGridRowsSelector(apiRef.current.state),
+    () => selectedGridRowsSelector(apiRef),
     [apiRef],
   );
 
@@ -221,7 +221,7 @@ export const useGridSelection = (
         newSelection = isSelected ? selectableIds : [];
       } else {
         // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-        const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
+        const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
 
         selectableIds.forEach((id) => {
           if (isSelected) {
@@ -260,7 +260,7 @@ export const useGridSelection = (
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+      const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
       const startIndex = visibleRowIds.indexOf(startId);
       const endIndex = visibleRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
@@ -287,10 +287,10 @@ export const useGridSelection = (
    */
   const removeOutdatedSelection = React.useCallback(() => {
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
-    const rowsLookup = gridRowsLookupSelector(apiRef.current.state);
+    const rowsLookup = gridRowsLookupSelector(apiRef);
 
     // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-    const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
+    const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
 
     let hasChanged = false;
     currentSelection.forEach((id: GridRowId) => {
@@ -399,8 +399,8 @@ export const useGridSelection = (
         props.checkboxSelectionVisibleOnly && props.pagination;
 
       const rowsToBeSelected = shouldLimitSelectionToCurrentPage
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
-        : gridVisibleSortedRowIdsSelector(apiRef.current.state);
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+        : gridVisibleSortedRowIdsSelector(apiRef);
 
       apiRef.current.selectRows(rowsToBeSelected, params.value);
     },
