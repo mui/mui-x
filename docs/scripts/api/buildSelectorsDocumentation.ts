@@ -69,11 +69,10 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
       }
 
       const returnType = formatType(
-        project.checker.typeToString(
-          signature.getReturnType(),
-          undefined,
-          ts.TypeFormatFlags.NoTruncation,
-        ),
+        project.checker
+          .typeToString(signature.getReturnType(), undefined, ts.TypeFormatFlags.NoTruncation)
+          // For now the community selectors are not overloading when exported from the pro
+          .replace(/<GridApi(Community|Pro)>/g, ''),
       );
       const category = tags.category?.text?.[0].text;
       const deprecated = tags.deprecated?.text?.[0].text;
