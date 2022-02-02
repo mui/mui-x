@@ -95,11 +95,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       ? firstRowIndex + currentPage.rows.length
       : getIndexFromScroll(top + rootRef.current!.clientHeight!, rowsMeta.positions);
 
-    // Manually call the selector here to avoid an infinite loop if it's listed as a dependency
-    // The reference to `columnsMeta.positions` is not the same across renders
-    const { positions: columnPositions } = gridColumnsMetaSelector(apiRef.current.state);
-    const firstColumnIndex = getIndexFromScroll(left, columnPositions);
-    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnPositions);
+    const firstColumnIndex = getIndexFromScroll(left, columnsMeta.positions);
+    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnsMeta.positions);
 
     return {
       firstRowIndex,
@@ -112,7 +109,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     rowsMeta.positions,
     rootProps.autoHeight,
     currentPage.rows.length,
-    apiRef,
+    columnsMeta.positions,
     containerWidth,
     visibleColumns.length,
   ]);
@@ -179,7 +176,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       });
 
       const top = gridRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
-      const left = gridColumnsMetaSelector(apiRef.current.state).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
+      const left = gridColumnsMetaSelector(apiRef).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
       renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
 
       if (typeof onRenderZonePositioning === 'function') {

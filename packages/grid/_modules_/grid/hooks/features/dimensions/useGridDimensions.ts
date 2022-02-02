@@ -71,7 +71,7 @@ export function useGridDimensions(
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
-    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef.current.state);
+    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
 
     if (!rootDimensionsRef.current) {
       return;
@@ -157,7 +157,7 @@ export function useGridDimensions(
       return 0;
     }
 
-    const currentPage = getCurrentPageRows(apiRef.current.state, {
+    const currentPage = getCurrentPageRows(apiRef, {
       pagination: props.pagination,
       paginationMode: props.paginationMode,
     });
@@ -172,7 +172,7 @@ export function useGridDimensions(
     }
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef.current.state),
+      dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef),
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);

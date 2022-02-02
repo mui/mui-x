@@ -62,6 +62,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'е на или преди',
   // filterOperatorIsEmpty: 'is empty',
   // filterOperatorIsNotEmpty: 'is not empty',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',

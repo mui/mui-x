@@ -32,6 +32,7 @@ const rows: GridRowsProp = [
     price: randomPrice(0, 1000),
     dueAt: new Date(2021, 6, 8),
     isPaid: false,
+    paymentMethod: '',
   },
   {
     id: 2,
@@ -39,6 +40,7 @@ const rows: GridRowsProp = [
     price: randomPrice(0, 1000),
     dueAt: new Date(2021, 7, 1),
     isPaid: false,
+    paymentMethod: '',
   },
   {
     id: 3,

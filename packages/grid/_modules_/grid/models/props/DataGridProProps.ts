@@ -9,14 +9,16 @@ import {
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   DATA_GRID_PROPS_DEFAULT_VALUES,
+  GridExperimentalFeatures,
 } from './DataGridProps';
 import type { GridRowGroupingModel } from '../../hooks/features/rowGrouping';
 
-export type GridExperimentalProFeatures =
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
    * Will be part of the premium-plan when fully ready.
    */
-  'rowGrouping';
+  rowGrouping: boolean;
+}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -32,7 +34,7 @@ export interface DataGridProProps
    * Features under development.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
-  experimentalFeatures?: { [key in GridExperimentalProFeatures]?: boolean };
+  experimentalFeatures?: Partial<GridExperimentalProFeatures>;
 }
 
 /**
