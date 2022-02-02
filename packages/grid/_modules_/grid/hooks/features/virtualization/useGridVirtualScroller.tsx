@@ -77,6 +77,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const scrollPosition = React.useRef({ top: 0, left: 0 });
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
   const prevTotalWidth = React.useRef(columnsMeta.totalWidth);
+  const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
 
   const computeRenderContext = React.useCallback(() => {
     if (disableVirtualization) {
@@ -149,6 +150,26 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }, []);
 
   useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
+
+  const handleContentSizeChange = React.useCallback(() => {
+    if (!apiRef.current.windowRef?.current) {
+      return;
+    }
+    setShouldExtendContent(
+      apiRef.current.windowRef.current.scrollHeight <=
+        apiRef.current.windowRef.current.clientHeight,
+    );
+  }, [apiRef]);
+
+  const contentStyle = {
+    minHeight: shouldExtendContent ? '100%' : 'auto',
+  };
+
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.virtualScrollerContentSizeChange,
+    handleContentSizeChange,
+  );
 
   const getRenderableIndexes = ({ firstIndex, lastIndex, buffer, minFirstIndex, maxLastIndex }) => {
     return [
@@ -371,7 +392,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       style: { ...style, ...rootStyle },
       ...other,
     }),
-    getContentProps: ({ style = {} } = {}) => ({ style: { ...style, ...contentSize } }),
+    getContentProps: ({ style = {} } = {}) => ({
+      style: { ...contentStyle, ...style, ...contentSize },
+    }),
     getRenderZoneProps: () => ({ ref: renderZoneRef }),
+    shouldExtendContent,
   };
 };
