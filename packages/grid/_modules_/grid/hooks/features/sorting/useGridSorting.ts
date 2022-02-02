@@ -217,7 +217,7 @@ export const useGridSorting = (
    */
   const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
-      const sortModelToExport = gridSortModelSelector(apiRef.current.state);
+      const sortModelToExport = gridSortModelSelector(apiRef);
       if (sortModelToExport.length === 0) {
         return prevState;
       }

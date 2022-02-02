@@ -284,7 +284,7 @@ export function useGridColumns(
         return prevState;
       }
 
-      const columnVisibilityModelToExport = gridColumnVisibilityModelSelector(apiRef.current.state);
+      const columnVisibilityModelToExport = gridColumnVisibilityModelSelector(apiRef);
       const hasHiddenColumns = Object.values(columnVisibilityModelToExport).some(
         (value) => value === false,
       );

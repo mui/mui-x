@@ -94,7 +94,7 @@ export const useGridPageSize = (
    */
   const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
-      const pageSizeToExport = gridPageSizeSelector(apiRef.current.state);
+      const pageSizeToExport = gridPageSizeSelector(apiRef);
       if (pageSizeToExport === defaultPageSize) {
         return prevState;
       }

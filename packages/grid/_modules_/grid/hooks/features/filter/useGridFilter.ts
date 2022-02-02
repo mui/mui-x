@@ -241,7 +241,7 @@ export const useGridFilter = (
    */
   const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
-      const filterModelToExport = gridFilterModelSelector(apiRef.current.state);
+      const filterModelToExport = gridFilterModelSelector(apiRef);
       if (
         filterModelToExport.items.length === 0 &&
         filterModelToExport.linkOperator === getDefaultGridFilterModel().linkOperator
