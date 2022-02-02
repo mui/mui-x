@@ -7,7 +7,7 @@
   },
   {
     "name": "allGridColumnsSelector",
-    "returnType": "GridStateColDef[]",
+    "returnType": "GridStateColDef<GridApiCommunity>[]",
     "description": "",
     "supportsApiRef": true
   },
@@ -19,13 +19,13 @@
   },
   {
     "name": "filterableGridColumnsSelector",
-    "returnType": "GridStateColDef[]",
+    "returnType": "GridStateColDef<GridApiCommunity>[]",
     "description": "",
     "supportsApiRef": true
   },
   {
     "name": "gridColumnLookupSelector",
-    "returnType": "GridColumnLookup",
+    "returnType": "GridColumnLookup<GridApiCommunity>",
     "description": "",
     "supportsApiRef": false
   },
@@ -67,7 +67,7 @@
   },
   {
     "name": "gridColumnsSelector",
-    "returnType": "GridColumnsState",
+    "returnType": "GridColumnsState<GridApiCommunity>",
     "description": "",
     "supportsApiRef": false
   },
@@ -403,7 +403,7 @@
   },
   {
     "name": "visibleGridColumnsSelector",
-    "returnType": "GridStateColDef[]",
+    "returnType": "GridStateColDef<GridApiCommunity>[]",
     "description": "",
     "supportsApiRef": true
   }
