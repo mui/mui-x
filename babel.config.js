@@ -116,11 +116,7 @@ module.exports = function getBabelConfig(api) {
           [
             'babel-plugin-module-resolver',
             {
-              alias: {
-                ...defaultAlias,
-                modules: './modules',
-                'typescript-to-proptypes': './packages/typescript-to-proptypes/src',
-              },
+              alias: defaultAlias,
               root: ['./'],
             },
           ],
