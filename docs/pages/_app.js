@@ -43,8 +43,13 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
+    if (newDeps['@mui/x-data-grid']) {
       newDeps['@mui/material'] = versions['@mui/material'];
+    }
+
+    if (newDeps['@mui/x-data-grid-pro']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
