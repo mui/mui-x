@@ -63,7 +63,7 @@ export interface PickersCalendarHeaderProps<TDate>
   onViewChange?: (view: CalendarPickerView) => void;
 }
 
-const PickersCalendarHeaderRoot = styled('div', { skipSx: true })<{
+const PickersCalendarHeaderRoot = styled('div')<{
   ownerState: PickersCalendarHeaderProps<any>;
 }>({
   display: 'flex',
@@ -77,7 +77,7 @@ const PickersCalendarHeaderRoot = styled('div', { skipSx: true })<{
   minHeight: 30,
 });
 
-const PickersCalendarHeaderLabel = styled('div', { skipSx: true })<{
+const PickersCalendarHeaderLabel = styled('div')<{
   ownerState: PickersCalendarHeaderProps<any>;
 }>(({ theme }) => ({
   display: 'flex',
@@ -90,17 +90,17 @@ const PickersCalendarHeaderLabel = styled('div', { skipSx: true })<{
   fontWeight: theme.typography.fontWeightMedium,
 }));
 
-const PickersCalendarHeaderLabelItem = styled('div', { skipSx: true })<{
+const PickersCalendarHeaderLabelItem = styled('div')<{
   ownerState: PickersCalendarHeaderProps<any>;
 }>({
   marginRight: 6,
 });
 
-const PickersCalendarHeaderSwitchViewButton = styled(IconButton, { skipSx: true })({
+const PickersCalendarHeaderSwitchViewButton = styled(IconButton)({
   marginRight: 'auto',
 });
 
-const PickersCalendarHeaderSwitchView = styled(ArrowDropDown, { skipSx: true })<{
+const PickersCalendarHeaderSwitchView = styled(ArrowDropDown)<{
   ownerState: PickersCalendarHeaderProps<any>;
 }>(({ theme, ownerState }) => ({
   willChange: 'transform',

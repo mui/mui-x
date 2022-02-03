@@ -10,20 +10,18 @@ import { CalendarPickerView } from '../internal/models';
 
 const classes = generateUtilityClasses('PrivateDatePickerToolbar', ['penIcon']);
 
-const DatePickerToolbarRoot = styled(PickersToolbar, { skipSx: true })<{ ownerState: any }>({
+const DatePickerToolbarRoot = styled(PickersToolbar)<{ ownerState: any }>({
   [`& .${classes.penIcon}`]: {
     position: 'relative',
     top: 4,
   },
 });
 
-const DatePickerToolbarTitle = styled(Typography, { skipSx: true })<{ ownerState: any }>(
-  ({ ownerState }) => ({
-    ...(ownerState.isLandscape && {
-      margin: 'auto 16px auto auto',
-    }),
+const DatePickerToolbarTitle = styled(Typography)<{ ownerState: any }>(({ ownerState }) => ({
+  ...(ownerState.isLandscape && {
+    margin: 'auto 16px auto auto',
   }),
-);
+}));
 
 type DatePickerToolbarComponent = (<TDate>(
   props: BaseToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,

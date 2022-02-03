@@ -37,7 +37,7 @@ const useUtilityClasses = (ownerState: TimePickerToolbarProps<any> & { theme: Th
   return composeClasses(slots, getTimePickerToolbarUtilityClass, classes);
 };
 
-const TimePickerToolbarRoot = styled(PickersToolbar, { skipSx: true })<{
+const TimePickerToolbarRoot = styled(PickersToolbar)<{
   ownerState: TimePickerToolbarProps<any>;
 }>({
   [`& .${timePickerToolbarClasses.penIconLandscape}`]: {
@@ -45,13 +45,13 @@ const TimePickerToolbarRoot = styled(PickersToolbar, { skipSx: true })<{
   },
 });
 
-const TimePickerToolbarSeparator = styled(PickersToolbarText, { skipSx: true })({
+const TimePickerToolbarSeparator = styled(PickersToolbarText)({
   outline: 0,
   margin: '0 4px 0 2px',
   cursor: 'default',
 });
 
-const TimePickerToolbarHourMinuteLabel = styled('div', { skipSx: true })<{
+const TimePickerToolbarHourMinuteLabel = styled('div')<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ theme, ownerState }) => ({
   display: 'flex',
@@ -65,7 +65,7 @@ const TimePickerToolbarHourMinuteLabel = styled('div', { skipSx: true })<{
   }),
 }));
 
-const TimePickerToolbarAmPmSelection = styled('div', { skipSx: true })<{
+const TimePickerToolbarAmPmSelection = styled('div')<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ ownerState }) => ({
   display: 'flex',

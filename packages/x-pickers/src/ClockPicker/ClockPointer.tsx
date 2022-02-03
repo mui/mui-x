@@ -10,7 +10,7 @@ export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> 
   value: number;
 }
 
-const ClockPointerRoot = styled('div', { skipSx: true })<{
+const ClockPointerRoot = styled('div')<{
   ownerState: ClockPointerProps & ClockPointer['state'];
 }>(({ theme, ownerState }) => ({
   width: 2,
@@ -24,7 +24,7 @@ const ClockPointerRoot = styled('div', { skipSx: true })<{
   }),
 }));
 
-const ClockPointerThumb = styled('div', { skipSx: true })<{
+const ClockPointerThumb = styled('div')<{
   ownerState: ClockPointerProps & ClockPointer['state'];
 }>(({ theme, ownerState }) => ({
   width: 4,

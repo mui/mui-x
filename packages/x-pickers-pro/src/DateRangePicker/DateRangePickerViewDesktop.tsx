@@ -44,23 +44,23 @@ interface DesktopDateRangeCalendarProps<TDate>
   currentlySelectingRangeEnd: 'start' | 'end';
 }
 
-const DateRangePickerViewDesktopRoot = styled('div', { skipSx: true })({
+const DateRangePickerViewDesktopRoot = styled('div')({
   display: 'flex',
   flexDirection: 'row',
 });
 
-const DateRangePickerViewDesktopContainer = styled('div', { skipSx: true })(({ theme }) => ({
+const DateRangePickerViewDesktopContainer = styled('div')(({ theme }) => ({
   '&:not(:last-of-type)': {
     borderRight: `2px solid ${theme.palette.divider}`,
   },
 }));
 
-const DateRangePickerViewDesktopCalendar = styled(DayPicker, { skipSx: true })({
+const DateRangePickerViewDesktopCalendar = styled(DayPicker)({
   minWidth: 312,
   minHeight: 288,
 }) as typeof DayPicker;
 
-const DateRangePickerViewDesktopArrowSwitcher = styled(PickersArrowSwitcher, { skipSx: true })({
+const DateRangePickerViewDesktopArrowSwitcher = styled(PickersArrowSwitcher)({
   padding: '16px 16px 8px 16px',
   display: 'flex',
   alignItems: 'center',

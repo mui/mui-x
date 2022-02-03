@@ -67,13 +67,13 @@ export interface PickersCalendarProps<TDate> extends ExportedCalendarProps<TDate
 
 const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 4) * 6;
 
-const PickersCalendarDayHeader = styled('div', { skipSx: true })({
+const PickersCalendarDayHeader = styled('div')({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 });
 
-const PickersCalendarWeekDayLabel = styled(Typography, { skipSx: true })(({ theme }) => ({
+const PickersCalendarWeekDayLabel = styled(Typography)(({ theme }) => ({
   width: 36,
   height: 40,
   margin: '0 2px',
@@ -84,20 +84,20 @@ const PickersCalendarWeekDayLabel = styled(Typography, { skipSx: true })(({ them
   color: theme.palette.text.secondary,
 }));
 
-const PickersCalendarLoadingContainer = styled('div', { skipSx: true })({
+const PickersCalendarLoadingContainer = styled('div')({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: weeksContainerHeight,
 });
 
-const PickersCalendarSlideTransition = styled(PickersSlideTransition, { skipSx: true })({
+const PickersCalendarSlideTransition = styled(PickersSlideTransition)({
   minHeight: weeksContainerHeight,
 });
 
-const PickersCalendarWeekContainer = styled('div', { skipSx: true })({ overflow: 'hidden' });
+const PickersCalendarWeekContainer = styled('div')({ overflow: 'hidden' });
 
-const PickersCalendarWeek = styled('div', { skipSx: true })({
+const PickersCalendarWeek = styled('div')({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
   justifyContent: 'center',

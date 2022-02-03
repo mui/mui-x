@@ -16,7 +16,7 @@ import {
 } from '../internal/models/dateRange';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 
-const DateRangePickerInputRoot = styled('div', { skipSx: true })(({ theme }) => ({
+const DateRangePickerInputRoot = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'baseline',
   [theme.breakpoints.down('xs')]: {

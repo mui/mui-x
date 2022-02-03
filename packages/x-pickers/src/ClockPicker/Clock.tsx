@@ -34,14 +34,14 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   value: number;
 }
 
-const ClockRoot = styled('div', { skipSx: true })(({ theme }) => ({
+const ClockRoot = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   margin: theme.spacing(2),
 }));
 
-const ClockClock = styled('div', { skipSx: true })({
+const ClockClock = styled('div')({
   backgroundColor: 'rgba(0,0,0,.07)',
   borderRadius: '50%',
   height: 220,
@@ -51,7 +51,7 @@ const ClockClock = styled('div', { skipSx: true })({
   pointerEvents: 'none',
 });
 
-const ClockSquareMask = styled('div', { skipSx: true })({
+const ClockSquareMask = styled('div')({
   width: '100%',
   height: '100%',
   position: 'absolute',
@@ -69,7 +69,7 @@ const ClockSquareMask = styled('div', { skipSx: true })({
   },
 });
 
-const ClockPin = styled('div', { skipSx: true })(({ theme }) => ({
+const ClockPin = styled('div')(({ theme }) => ({
   width: 6,
   height: 6,
   borderRadius: '50%',
@@ -80,7 +80,7 @@ const ClockPin = styled('div', { skipSx: true })(({ theme }) => ({
   transform: 'translate(-50%, -50%)',
 }));
 
-const ClockAmButton = styled(IconButton, { skipSx: true })<{ ownerState: ClockProps<any> }>(
+const ClockAmButton = styled(IconButton)<{ ownerState: ClockProps<any> }>(
   ({ theme, ownerState }) => ({
     zIndex: 1,
     position: 'absolute',
@@ -96,7 +96,7 @@ const ClockAmButton = styled(IconButton, { skipSx: true })<{ ownerState: ClockPr
   }),
 );
 
-const ClockPmButton = styled(IconButton, { skipSx: true })<{ ownerState: ClockProps<any> }>(
+const ClockPmButton = styled(IconButton)<{ ownerState: ClockProps<any> }>(
   ({ theme, ownerState }) => ({
     zIndex: 1,
     position: 'absolute',
