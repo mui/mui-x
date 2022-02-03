@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.5.0
+
+_Feb 3, 2022_
+
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for master/detail (#3387) @m4theushw
+
+  TODO: Add description + example
+
+- 🌍 Add Danish (daDK) locale (#3800) @kasperfilstrup
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.5.0` / `@mui/x-data-grid-pro@v5.5.0`
+
+
+#### Changes
+
+- [DataGrid] Add methods to import and export the state (#3593) @flaviendelangle
+- [DataGrid] Fix `PageUp` jumping directly to the column header skipping the first row (#3761) @cherniavskii
+- [DataGrid] Throw an error if incorrect column type is used (#3757) @DanailH
+- [DataGridPro] Add support for master/detail (#3387) @m4theushw
+- [l10n] Add Danish (daDK) locale (#3800) @kasperfilstrup
+- [l10n] Improve Dutch (nlNL) locale (#3724) @MatthijsKok
+- [l10n] Improve Russian (ruRU) locale (#3818) @Leniorko
+
+### Docs
+
+- [docs] Add default value for `Row` slot (#3807) @cherniavskii
+- [docs] Extend full width (#3815) @m4theushw
+- [docs] Fix country column sorting not working (#3740) @cherniavskii
+- [docs] Fix custom render cell when row is auto generated (#3810) @alexfauquette
+- [docs] Fix flag layout shift (#3773) @oliviertassinari
+- [docs] Mention row `id` requirement and document `getRowId` prop (#3765) @cherniavskii
+- [docs] Refresh the license key documentation (#3529) @oliviertassinari
+
+### Core
+
+- [core] Clean `filtering.DataGrid.test.tsx` (#3768) @flaviendelangle
+- [core] Improve GitHub label workflows (#3680) @DanailH
+- [core] Isolate selectors called without `useGridSelector` (#3774) @m4theushw
+- [core] Prepare infra for pickers migration (#3714) @flaviendelangle
+- [core] Remove none code related instructions from git (#3794) @oliviertassinari
+- [core] Remove remaining usages of @mui/styles (#3769) @m4theushw
+- [core] Remove stylelint (#3811) @m4theushw
+- [core] Split cell/row editing into different hooks (#3219) @m4theushw
+- [core] Stop using an enum for `GridPreProcessingGroup` (#3798) @flaviendelangle
+- fix failing tests (#3817) @cherniavskii
+- [code] Fix `docs:api` silent crash (#3808) @cherniavskii
+- [I10n] Improve Hebrew (he-IL) locale (#3775) @ColdAtNight
+- [test] Increase timeout for Firefox (#3813) @m4theushw
+
 ## 5.4.0
 
 _Jan 28, 2022_
