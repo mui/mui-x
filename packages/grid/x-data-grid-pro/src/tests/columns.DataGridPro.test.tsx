@@ -391,7 +391,7 @@ describe('<DataGridPro /> - Columns', () => {
     }).toWarnDev(
       [
         `MUI: The column type "str" you are using is not supported.`,
-        `Column type "${DEFAULT_GRID_COL_TYPE_KEY}" is being used instead.`,
+        `Column type "string" is being used instead.`,
       ].join('\n'),
     );
   });
