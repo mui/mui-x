@@ -42,6 +42,10 @@ const pages = [
             pathname: '/x/api/data-grid/grid-print-export-options',
             title: 'GridPrintExportOptions',
           },
+          {
+            pathname: '/x/api/data-grid/grid-excel-export-options',
+            title: 'GridExcelExportOptions',
+          },
         ],
       },
     ],

@@ -214,6 +214,12 @@ The excel export allows to reproduce the column types and the tree structure of 
 
 {{"demo": "pages/components/data-grid/export/ExcelExport.js", "bg": "inline"}}
 
+### apiRef
+
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
+
+{{"demo": "pages/components/data-grid/export/ExcelExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
 ## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.

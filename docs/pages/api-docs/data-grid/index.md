@@ -15,6 +15,7 @@
 - [GridRowParams](/api/data-grid/grid-row-params/)
 - [GridCsvExportOptions](/api/data-grid/grid-csv-export-options/)
 - [GridPrintExportOptions](/api/data-grid/grid-print-export-options/)
+- [GridExcelExportOptions](/api/data-grid/grid-excel-export-options/)
 
 ## Events
 

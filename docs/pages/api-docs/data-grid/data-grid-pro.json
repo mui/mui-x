@@ -58,7 +58,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ preventCommitWhileValidating?: bool, rowGrouping?: bool }"
+        "description": "{ excelExport?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool }"
       }
     },
     "filterMode": {

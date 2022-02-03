@@ -46,6 +46,7 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridRowGroupingApi',
   'GridColumnPinningApi',
   'GridPrintExportApi',
+  'GridExcelExportApi',
   'GridDisableVirtualizationApi',
 
   // Params
@@ -56,6 +57,7 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColDef',
   'GridCsvExportOptions',
   'GridPrintExportOptions',
+  'GridExcelExportOptions',
 
   // Filters
   'GridFilterModel',

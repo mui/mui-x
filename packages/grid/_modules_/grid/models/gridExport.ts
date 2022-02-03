@@ -46,7 +46,7 @@ export interface GridGetRowsToExportParams {
   apiRef: GridApiRef;
 }
 
-export interface GridCsvGetRowsToExportParams extends GridGetRowsToExportParams { }
+export interface GridCsvGetRowsToExportParams extends GridGetRowsToExportParams {}
 
 /**
  * The options to apply on the CSV export.
@@ -103,7 +103,7 @@ export interface GridPrintExportOptions extends GridExportOptions {
 /**
  * The options to apply on the Excel export.
  */
-export interface GridExcelExportOptions extends GridFileExportOptions { }
+export interface GridExcelExportOptions extends GridFileExportOptions {}
 
 /**
  * Available export formats.
