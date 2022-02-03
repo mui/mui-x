@@ -1,6 +1,6 @@
 <DataGrid
   components={{
-    LoadingOverlay: CustomLoadingOverlay,
+    LoadingOverlay: LinearProgress,
   }}
   loading
   {...data}
