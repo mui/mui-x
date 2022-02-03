@@ -37,7 +37,7 @@ import {
   GridExpandMoreIcon,
   GridKeyboardArrowRight,
   GridAddIcon,
-  GridRemoveIcon
+  GridRemoveIcon,
 } from '../components';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { ErrorOverlay } from '../components/ErrorOverlay';
