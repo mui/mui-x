@@ -108,7 +108,7 @@ export const getGridColDef = (
       console.warn(
         [
           `MUI: The column type "${type}" you are using is not supported.`,
-          `Column type "${DEFAULT_GRID_COL_TYPE_KEY}" is being used instead.`,
+          `Column type "string" is being used instead.`,
         ].join('\n'),
       );
       columnTypeWarnedOnce = true;
