@@ -1,4 +1,4 @@
-export enum LicenseStatus {
+enum LicenseStatus {
   NotFound = 'NotFound',
   Invalid = 'Invalid',
   Expired = 'Expired',
@@ -6,3 +6,5 @@ export enum LicenseStatus {
 }
 
 export const TestLicense = 2;
+
+export { LicenseStatus };
