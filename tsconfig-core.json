@@ -1,4 +1,5 @@
-{ // TODO: Replace the `tsconfig.json` with this one when migrating to the new bundling structure
+{
+  // TODO: Replace the `tsconfig.json` with this one when migrating to the new bundling structure
   "extends": "@mui/monorepo/tsconfig.json",
   "compilerOptions": {
     // Already tested with eslint
@@ -19,5 +20,5 @@
       "@mui/x-pickers-pro": ["./packages/x-pickers-pro/src"],
       "@mui/x-pickers-pro/*": ["./packages/x-pickers-pro/src/*"]
     }
-  },
+  }
 }
