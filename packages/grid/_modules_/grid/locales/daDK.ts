@@ -122,6 +122,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const daDK: Localization = getGridLocalization(daDKGrid, daDKCore);
