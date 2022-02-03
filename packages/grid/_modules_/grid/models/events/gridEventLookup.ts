@@ -133,6 +133,7 @@ export interface GridControlledStateEventLookup {
   rowGroupingModelChange: { params: GridRowGroupingModel };
   pinnedColumnsChange: { params: GridPinnedColumns };
   columnVisibilityModelChange: { params: GridColumnVisibilityModel };
+  detailPanelsExpandedRowIdsChange: { params: GridRowId[] };
 }
 
 export interface GridEventLookup

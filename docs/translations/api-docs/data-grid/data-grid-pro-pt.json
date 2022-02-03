@@ -18,6 +18,7 @@
     "componentsProps": "Overrideable components props dynamically passed to the component at rendering.",
     "defaultGroupingExpansionDepth": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded.",
     "density": "Set the density of the grid.",
+    "detailPanelExpandedRowIds": "The row ids to show the detail panel.",
     "disableChildrenFiltering": "If <code>true</code>, the filtering will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
     "disableChildrenSorting": "If <code>true</code>, the sorting will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
     "disableColumnFilter": "If <code>true</code>, column filters are disabled.",
@@ -41,6 +42,8 @@
     "filterMode": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side.",
     "filterModel": "Set the filter model of the grid.",
     "getCellClassName": "Function that applies CSS classes dynamically on cells.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the cell.",
+    "getDetailPanelContent": "Function that returns the element to render in row detail.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; JSX.Element</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (JSX.Element): The row detail element.",
+    "getDetailPanelHeight": "Function that returns the height of the row detail panel.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; number</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (number): The height in pixels.",
     "getRowClassName": "Function that applies CSS classes dynamically on rows.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the row.",
     "getRowHeight": "Function that sets the row height per row.<br><br><strong>Signature:</strong><br><code>function(params: GridRowHeightParams) =&gt; GridRowHeightReturnValue</code><br><em>params:</em> With all properties from GridRowHeightParams.<br> <em>returns</em> (GridRowHeightReturnValue): The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied.",
     "getRowId": "Return the id of a given GridRowModel.",
@@ -78,6 +81,7 @@
     "onColumnVisibilityChange": "Callback fired when a column visibility changes. Only works when no <code>columnVisibilityModel</code> is provided and if we change the visibility of a single column at a time.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnVisibilityChangeParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnVisibilityChangeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onColumnVisibilityModelChange": "Callback fired when the column visibility model changes.<br><br><strong>Signature:</strong><br><code>function(model: GridColumnVisibilityModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> The new model.<br><em>details:</em> Additional details for this callback.",
     "onColumnWidthChange": "Callback fired when the width of a column is changed.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnResizeParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnResizeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
+    "onDetailPanelExpandedRowIdsChange": "Callback fired when the detail panel of a row is opened or closed.<br><br><strong>Signature:</strong><br><code>function(ids: Array&lt;GridRowId&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>ids:</em> The ids of the rows which have the detail panel open.<br><em>details:</em> Additional details for this callback.",
     "onEditCellPropsChange": "Callback fired when the edit cell value changes.<br><br><strong>Signature:</strong><br><code>function(params: GridEditCellPropsParams, event: MuiEvent&lt;React.SyntheticEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridEditCellPropsParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
     "onEditRowsModelChange": "Callback fired when the <code>editRowsModel</code> changes.<br><br><strong>Signature:</strong><br><code>function(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) =&gt; void</code><br><em>editRowsModel:</em> With all properties from GridEditRowsModel.<br><em>details:</em> Additional details for this callback.",
     "onError": "Callback fired when an exception is thrown in the grid.<br><br><strong>Signature:</strong><br><code>function(args: any, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>args:</em> The arguments passed to the <code>showError</code> call.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -276,6 +280,23 @@
     "columnsPanelRow": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns panel row element"
+    },
+    "detailPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the detail panel element"
+    },
+    "detailPanels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the detail panels wrapper element"
+    },
+    "detailPanelToggleCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the detail panel toggle cell element"
+    },
+    "detailPanelToggleCell--expanded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the detail panel toggle cell element",
+      "conditions": "expanded"
     },
     "panel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the panel element" },
     "panelHeader": {
@@ -485,6 +506,8 @@
     "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
     "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
     "GroupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
-    "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded"
+    "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
+    "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
+    "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded."
   }
 }

@@ -122,6 +122,10 @@ const itITGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Gruppo',
   groupColumn: (name) => `Raggruppa per ${name}`,
   unGroupColumn: (name) => `Annulla raggruppamento per ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

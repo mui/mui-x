@@ -150,6 +150,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Группа',
   groupColumn: (name) => `Сгруппировать по ${name}`,
   unGroupColumn: (name) => `Разгруппировать по ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

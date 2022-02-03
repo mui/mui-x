@@ -204,6 +204,12 @@ DataGridRaw.propTypes = {
    */
   getCellClassName: PropTypes.func,
   /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent: PropTypes.func,
+  /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {string} The CSS class to apply to the row.

@@ -122,6 +122,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Groupe',
   groupColumn: (name) => `Grouper par ${name}`,
   unGroupColumn: (name) => `Arrêter de grouper par ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
