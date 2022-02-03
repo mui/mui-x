@@ -5,6 +5,6 @@ export enum LicenseStatus {
   Valid = 'Valid',
 }
 
-console.log(LicenseStatus)
+console.log('In', LicenseStatus)
 
 export const TestLicense = 2

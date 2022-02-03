@@ -2,6 +2,8 @@ import { base64Decode, base64Encode } from './encoding/base64';
 import { md5 } from './encoding/md5';
 import { LicenseStatus } from './licenseStatus';
 
+console.log('Out', LicenseStatus)
+
 export function generateReleaseInfo() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
