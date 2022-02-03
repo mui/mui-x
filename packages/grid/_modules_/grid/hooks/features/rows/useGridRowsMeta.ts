@@ -46,8 +46,8 @@ export const useGridRowsMeta = (
 
     apiRef.current.setState((state) => {
       const positions: number[] = [];
-      const densityFactor = gridDensityFactorSelector(state);
-      const currentRowHeight = gridDensityRowHeightSelector(state);
+      const densityFactor = gridDensityFactorSelector(state, apiRef.current.instanceId);
+      const currentRowHeight = gridDensityRowHeightSelector(state, apiRef.current.instanceId);
       const currentPageTotalHeight = rows.reduce((acc: number, row) => {
         positions.push(acc);
         let targetRowHeight = currentRowHeight;

@@ -1,4 +1,13 @@
-import { GridCellIndexCoordinates, GridColDef, GridScrollParams } from '../../../models';
+import {
+  GridCellIndexCoordinates,
+  GridColDef,
+  GridInitialState,
+  GridScrollParams,
+} from '../../../models';
+import {
+  GridRestoreStatePreProcessingContext,
+  GridRestoreStatePreProcessingValue,
+} from '../../features/statePersistence';
 import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
 import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
 import { GridCanBeReorderedPreProcessingContext } from '../../features/columnReorder/columnReorderInterfaces';
@@ -6,30 +15,28 @@ import { GridColumnsRawState } from '../../features/columns/gridColumnsInterface
 
 export type PreProcessorCallback = (value: any, params?: any) => any;
 
-export enum GridPreProcessingGroup {
-  hydrateColumns = 'hydrateColumns',
-  scrollToIndexes = 'scrollToIndexes',
-  columnMenu = 'columnMenu',
-  canBeReordered = 'canBeReordered',
-  filteringMethod = 'filteringMethod',
-  sortingMethod = 'sortingMethod',
-}
+export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
 interface GridPreProcessingGroupLookup {
-  [GridPreProcessingGroup.hydrateColumns]: {
+  hydrateColumns: {
     value: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
   };
-  [GridPreProcessingGroup.scrollToIndexes]: {
+  scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
-  [GridPreProcessingGroup.columnMenu]: { value: JSX.Element[]; context: GridColDef };
-  [GridPreProcessingGroup.canBeReordered]: {
+  columnMenu: { value: JSX.Element[]; context: GridColDef };
+  canBeReordered: {
     value: boolean;
     context: GridCanBeReorderedPreProcessingContext;
   };
-  [GridPreProcessingGroup.filteringMethod]: { value: GridFilteringMethodCollection };
-  [GridPreProcessingGroup.sortingMethod]: { value: GridSortingMethodCollection };
+  filteringMethod: { value: GridFilteringMethodCollection };
+  sortingMethod: { value: GridSortingMethodCollection };
+  exportState: { value: GridInitialState };
+  restoreState: {
+    value: GridRestoreStatePreProcessingValue;
+    context: GridRestoreStatePreProcessingContext;
+  };
 }
 
 export type GridPreProcessor<P extends GridPreProcessingGroup> = (

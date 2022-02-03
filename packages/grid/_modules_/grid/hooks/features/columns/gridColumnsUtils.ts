@@ -11,9 +11,9 @@ import {
   GridColDef,
   GridColType,
   GridColumnTypesRecord,
+  GridState,
   GridStateColDef,
 } from '../../../models';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 
@@ -107,7 +107,7 @@ export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
   columnsTypes,
-  currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef.current.state),
+  currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   shouldRegenColumnVisibilityModelFromColumns,
   reset,
 }: {
@@ -154,7 +154,7 @@ export const createColumnsState = ({
 
   const columnsStateWithPreProcessing: Omit<GridColumnsRawState, 'columnVisibilityModel'> =
     apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.hydrateColumns,
+      'hydrateColumns',
       columnsStateWithoutColumnVisibilityModel,
     );
 
@@ -209,3 +209,10 @@ export const createColumnsState = ({
     apiRef.current.getRootDimensions?.()?.viewportInnerSize.width ?? 0,
   );
 };
+
+export const setColumnsState =
+  (columnsState: GridColumnsState) =>
+  (state: GridState): GridState => ({
+    ...state,
+    columns: columnsState,
+  });

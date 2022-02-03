@@ -1,0 +1,1 @@
+<Button onClick={restoreGrid}>Remount the grid</Button>
