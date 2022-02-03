@@ -126,6 +126,7 @@ describe('<DataGrid /> - Components', () => {
       );
     }).toErrorDev([
       'MUI: useGridRootProps should only be used inside the DataGrid/DataGridPro component.',
+      'The above error occurred in the <ForwardRef(GridOverlay)> component',
     ]);
   });
 
