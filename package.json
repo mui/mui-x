@@ -113,6 +113,7 @@
     "babel-plugin-react-remove-properties": "^0.3.0",
     "babel-plugin-search-and-replace": "^1.1.0",
     "babel-plugin-tester": "^10.1.0",
+    "babel-plugin-transform-rename-import": "^2.3.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "chai": "^4.3.6",
     "chai-dom": "^1.11.0",
