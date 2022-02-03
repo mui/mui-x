@@ -23,11 +23,12 @@ A big thanks to the 10 contributors who made this release possible. Here are som
 #### Changes
 
 - [DataGrid] Add methods to import and export the state (#3593) @flaviendelangle
-- [DataGrid] Fix `PageUp` jumping directly to the column header skipping the first row (#3761) @cherniavskii
+- [DataGrid] Fix <kbd>PageUp</kbd> jumping directly to the column header skipping the first row (#3761) @cherniavskii
 - [DataGrid] Throw an error if incorrect column type is used (#3757) @DanailH
 - [DataGridPro] Add support for master/detail (#3387) @m4theushw
 - [l10n] Add Danish (daDK) locale (#3800) @kasperfilstrup
 - [l10n] Improve Dutch (nlNL) locale (#3724) @MatthijsKok
+- [l10n] Improve Hebrew (heIL) locale (#3775) @ColdAtNight
 - [l10n] Improve Russian (ruRU) locale (#3818) @Leniorko
 
 ### Docs
@@ -47,13 +48,12 @@ A big thanks to the 10 contributors who made this release possible. Here are som
 - [core] Isolate selectors called without `useGridSelector` (#3774) @m4theushw
 - [core] Prepare infra for pickers migration (#3714) @flaviendelangle
 - [core] Remove none code related instructions from git (#3794) @oliviertassinari
-- [core] Remove remaining usages of @mui/styles (#3769) @m4theushw
-- [core] Remove stylelint (#3811) @m4theushw
-- [core] Split cell/row editing into different hooks (#3219) @m4theushw
+- [core] Remove remaining usages of `@mui/styles` (#3769) @m4theushw
+- [core] Remove Stylelint (#3811) @m4theushw
+- [core] Split cell / row editing into different hooks (#3219) @m4theushw
 - [core] Stop using an enum for `GridPreProcessingGroup` (#3798) @flaviendelangle
-- fix failing tests (#3817) @cherniavskii
+- [core] Fix failing tests (#3817) @cherniavskii
 - [code] Fix `docs:api` silent crash (#3808) @cherniavskii
-- [I10n] Improve Hebrew (he-IL) locale (#3775) @ColdAtNight
 - [test] Increase timeout for Firefox (#3813) @m4theushw
 
 ## 5.4.0
