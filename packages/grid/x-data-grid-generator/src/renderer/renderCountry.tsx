@@ -19,13 +19,15 @@ const Country = React.memo(function Country(props: CountryProps) {
         display: 'flex',
         alignItems: 'center',
         '&  > img': {
-          mr: '4px',
+          mr: 0.5,
+          flexShrink: 0,
           width: '20px',
         },
       }}
     >
       <img
         loading="lazy"
+        width="20"
         src={`https://flagcdn.com/w20/${value.code.toLowerCase()}.png`}
         srcSet={`https://flagcdn.com/w40/${value.code.toLowerCase()}.png 2x`}
         alt=""

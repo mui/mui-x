@@ -15,7 +15,7 @@ import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/k
 import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
 import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
-import { useGridEditRows } from '../../_modules_/grid/hooks/features/editRows/useGridEditRows';
+import { useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
 import { useGridParamsApi } from '../../_modules_/grid/hooks/features/rows/useGridParamsApi';
 import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
@@ -24,6 +24,7 @@ import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGri
 import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
 import { useGridRowsMeta } from '../../_modules_/grid/hooks/features/rows/useGridRowsMeta';
+import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization(undefined, props);
@@ -31,7 +32,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
-  useGridEditRows(apiRef, props);
+  useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
@@ -49,6 +50,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
+  useGridStatePersistence(apiRef);
 
   return apiRef;
 };

@@ -1,7 +1,7 @@
 name: 'Pro plan: support ❔'
 description: As a Pro plan user, I need support with MUI X.
 title: "[question] "
-labels: ['status: needs triage', 'pro plan', 'question']
+labels: ['status: needs triage', 'pro plan', 'support: commercial']
 body:
   - type: markdown
     attributes:
@@ -35,14 +35,7 @@ body:
           required: true
   - type: textarea
     attributes:
-      label: Summary 💡
-  - type: textarea
-    attributes:
       label: The problem in depth 🔍
-  - type: textarea
-    attributes:
-      label: Context 🔦
-      description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with a solution that is more useful in the real world.
   - type: textarea
     attributes:
       label: Your environment 🌎
