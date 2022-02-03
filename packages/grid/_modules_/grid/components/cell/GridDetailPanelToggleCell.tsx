@@ -33,6 +33,10 @@ const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
   const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
   const hasContent = React.isValidElement(contentCache[id]);
 
+  const Icon = isExpanded
+    ? rootProps.components.DetailPanelCollapseIcon
+    : rootProps.components.DetailPanelExpandIcon;
+
   return (
     <IconButton
       size="small"
@@ -45,7 +49,7 @@ const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
           : apiRef.current.getLocaleText('expandDetailPanel')
       }
     >
-      <rootProps.components.DetailPanelToggleIcon fontSize="inherit" />
+      <Icon fontSize="inherit" />
     </IconButton>
   );
 };

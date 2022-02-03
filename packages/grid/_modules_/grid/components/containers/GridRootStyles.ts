@@ -308,9 +308,6 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: theme.spacing(2),
     },
-    [`& .${gridClasses['detailPanelToggleCell--expanded']}`]: {
-      opacity: 0.8,
-    },
   };
 
   return gridStyle;

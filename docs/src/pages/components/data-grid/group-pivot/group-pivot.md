@@ -390,7 +390,12 @@ The following demo shows integration with [react-hook-form](https://react-hook-f
 To change the icon used for the toggle, you can provide a different component for the [icon slot](/components/data-grid/components/#icons) as follow:
 
 ```tsx
-<DataGridPro components={{ DetailPanelToggleIcon: CustomIcon }}>
+<DataGridPro
+  components={{
+    DetailPanelExpandIcon: CustomExpandIcon,
+    DetailPanelCollapseIcon: CustomCollapseIcon,
+  }}
+/>
 ```
 
 If this is not sufficient, the entire toggle component can be overridden.

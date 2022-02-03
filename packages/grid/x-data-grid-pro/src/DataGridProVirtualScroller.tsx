@@ -96,11 +96,13 @@ const getOverlayAlpha = (elevation: number) => {
 const VirtualScrollerDetailPanels = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanels',
+  overridesResolver: (props, styles) => styles.detailPanels,
 })({});
 
 const VirtualScrollerDetailPanel = styled(Box, {
   name: 'MuiDataGrid',
   slot: 'DetailPanel',
+  overridesResolver: (props, styles) => styles.detailPanel,
 })(({ theme }) => ({
   zIndex: 2,
   width: '100%',
