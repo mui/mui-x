@@ -5,6 +5,4 @@ enum LicenseStatus {
   Valid = 'Valid',
 }
 
-export const TestLicense = 2;
-
 export { LicenseStatus };
