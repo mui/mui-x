@@ -26,5 +26,5 @@ export * from './gridScrollApi';
 export * from './gridColumnPinningApi';
 export * from './gridVirtualScrollerApi';
 
-export type { GridEditingApi };
+export type { GridEditingApi } from './gridEditingApi';
 export type GridEditRowApi = GridEditingApi;
