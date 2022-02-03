@@ -17,44 +17,52 @@ export interface GridExportOptions {
   allColumns?: boolean;
 }
 
-export interface GridCsvGetRowsToExportParams {
-  /**
-   * The API of the grid.
-   */
-  apiRef: GridApiRef;
-}
-
 /**
- * The options to apply on the CSV export.
+ * The options applicable to any document export format (CSV and Excel).
  */
-export interface GridCsvExportOptions extends GridExportOptions {
-  /**
-   * The character used to separate fields.
-   * @default ','
-   */
-  delimiter?: string;
+export interface GridFileExportOptions extends GridExportOptions {
   /**
    * The string used as the file name.
    * @default `document.title`
    */
   fileName?: string;
   /**
-   * If `true`, the UTF-8 Byte Order Mark (BOM) prefixes the exported file.
-   * This can allow Excel to automatically detect file encoding as UTF-8.
-   * @default false
-   */
-  utf8WithBom?: boolean;
-  /**
-   * If `true`, the first row of the CSV will include the headers of the grid.
+   * If `true`, the first row of the file will include the headers of the grid.
    * @default true
    */
   includeHeaders?: boolean;
   /**
    * Function that returns the id of the rows to export on the order they should be exported.
-   * @param {GridCsvGetRowsToExportParams} params With all properties from [[GridCsvGetRowsToExportParams]].
+   * @param {GridGetRowsToExportParams} params With all properties from [[GridGetRowsToExportParams]].
    * @returns {GridRowId[]} The id of the rows to export.
    */
-  getRowsToExport?: (params: GridCsvGetRowsToExportParams) => GridRowId[];
+  getRowsToExport?: (params: GridGetRowsToExportParams) => GridRowId[];
+}
+
+export interface GridGetRowsToExportParams {
+  /**
+   * The API of the grid.
+   */
+  apiRef: GridApiRef;
+}
+
+export interface GridCsvGetRowsToExportParams extends GridGetRowsToExportParams { }
+
+/**
+ * The options to apply on the CSV export.
+ */
+export interface GridCsvExportOptions extends GridFileExportOptions {
+  /**
+   * The character used to separate fields.
+   * @default ','
+   */
+  delimiter?: string;
+  /**
+   * If `true`, the UTF-8 Byte Order Mark (BOM) prefixes the exported file.
+   * This can allow Excel to automatically detect file encoding as UTF-8.
+   * @default false
+   */
+  utf8WithBom?: boolean;
 }
 
 /**
@@ -95,24 +103,7 @@ export interface GridPrintExportOptions extends GridExportOptions {
 /**
  * The options to apply on the Excel export.
  */
-export interface GridExcelExportOptions extends GridExportOptions {
-  /**
-   * The string used as the file name.
-   * @default `document.title`
-   */
-  fileName?: string;
-  /**
-   * If `true`, the first row of the excel will include the headers of the grid.
-   * @default true
-   */
-  includeHeaders?: boolean;
-  /**
-   * Function that returns the id of the rows to export on the order they should be exported.
-   * @param {GridCsvGetRowsToExportParams} params With all properties from [[GridCsvGetRowsToExportParams]].
-   * @returns {GridRowId[]} The id of the rows to export.
-   */
-  getRowsToExport?: (params: GridCsvGetRowsToExportParams) => GridRowId[];
-}
+export interface GridExcelExportOptions extends GridFileExportOptions { }
 
 /**
  * Available export formats.

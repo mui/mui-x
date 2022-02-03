@@ -1,10 +1,4 @@
-import {
-  GridCellParams,
-  GRID_CHECKBOX_SELECTION_COL_DEF,
-  GridStateColDef,
-  GridRowId,
-  GridCellValue,
-} from '../../../../models';
+import { GridCellParams, GridStateColDef, GridRowId, GridCellValue } from '../../../../models';
 
 const serialiseCellValue = (value: GridCellValue, delimiterCharacter: string) => {
   if (typeof value === 'string') {
@@ -57,7 +51,6 @@ export function buildCSV(options: BuildCSVOptions): string {
   }
 
   const CSVHead = `${columns
-    .filter((column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field)
     .map((column) => serialiseCellValue(column.headerName || column.field, delimiterCharacter))
     .join(delimiterCharacter)}\r\n`;
 

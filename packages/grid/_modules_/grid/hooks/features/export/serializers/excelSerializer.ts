@@ -1,7 +1,6 @@
 import type * as Excel from 'exceljs';
 import {
   GridCellParams,
-  GRID_CHECKBOX_SELECTION_COL_DEF,
   GridStateColDef,
   GridRowId,
   GridColDef,
@@ -35,7 +34,7 @@ const getFormattedValueOptions = (
       }
 
       const params: GridValueFormatterParams = { field, api, value: option };
-      return String(colDef.valueFormatter(params));
+      return String(colDef.valueFormatter!(params));
     });
   }
   return valueOptionsFormatted.map((option) =>
@@ -122,25 +121,14 @@ interface BuildExcelOptions {
 export async function buildExcel(options: BuildExcelOptions, api): Promise<Excel.Workbook> {
   const { columns, rowIds, getCellParams, includeHeaders } = options;
 
-  const columnsWithoutCheckbox = columns.filter(
-    (column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field,
-  );
-
   const excelJS = await getExcelJs();
   const workbook: Excel.Workbook = new excelJS.Workbook();
   const worksheet = workbook.addWorksheet('Sheet1');
 
-  worksheet.columns = columnsWithoutCheckbox.map((column) =>
-    serialiseColumn(column, includeHeaders),
-  );
+  worksheet.columns = columns.map((column) => serialiseColumn(column, includeHeaders));
 
   rowIds.forEach((id) => {
-    const { row, dataValidation, outlineLevel } = serialiseRow(
-      id,
-      columnsWithoutCheckbox,
-      getCellParams,
-      api,
-    );
+    const { row, dataValidation, outlineLevel } = serialiseRow(id, columns, getCellParams, api);
     const newRow = worksheet.addRow(row);
 
     Object.keys(dataValidation).forEach((field) => {

@@ -3,14 +3,12 @@ import type { Workbook } from 'exceljs';
 import { DataGridProProps } from '../../../models/props/DataGridProProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
-import { gridFilteredSortedRowIdsSelector } from '../filter';
 import { GridExcelExportApi } from '../../../models/api/gridExcelExportApi';
-import { GridExcelExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
+import { GridExcelExportOptions } from '../../../models/gridExport';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildExcel } from './serializers/excelSerializer';
-import { GridRowId, GridStateColDef } from '../../../models';
+import { defaultGetRowsToExport, getColumns } from './utils';
 
 // TODO: import from https://github.com/mui-org/material-ui-x/pull/3671 when merged
 const buildError = (message: string | string[]) => {
@@ -24,17 +22,6 @@ const buildError = (message: string | string[]) => {
       throw new Error(cleanMessage);
     }
   };
-};
-
-const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
-  const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef.current.state);
-  const selectedRows = apiRef.current.getSelectedRows();
-
-  if (selectedRows.size > 0) {
-    return filteredSortedRowIds.filter((id) => selectedRows.has(id));
-  }
-
-  return filteredSortedRowIds;
 };
 
 /**
@@ -62,22 +49,11 @@ export const useGridExcelExport = (
         inactivatedError();
       }
       logger.debug(`Get data as excel`);
-      const columns = allGridColumnsSelector(apiRef.current.state);
-
-      let exportedColumns: GridStateColDef[];
-      if (options.fields) {
-        exportedColumns = options.fields
-          .map((field) => columns.find((column) => column.field === field))
-          .filter((column): column is GridStateColDef => !!column);
-      } else {
-        const validColumns = options.allColumns
-          ? columns
-          : visibleGridColumnsSelector(apiRef.current.state);
-        exportedColumns = validColumns.filter((column) => !column.disableExport);
-      }
 
       const getRowsToExport = options.getRowsToExport ?? defaultGetRowsToExport;
       const exportedRowIds = getRowsToExport({ apiRef });
+
+      const exportedColumns = getColumns({ apiRef, options });
 
       return buildExcel(
         {
