@@ -4,3 +4,7 @@ export enum LicenseStatus {
   Expired = 'Expired',
   Valid = 'Valid',
 }
+
+export const TestLicense = 2;
+
+console.log(LicenseStatus, TestLicense);
