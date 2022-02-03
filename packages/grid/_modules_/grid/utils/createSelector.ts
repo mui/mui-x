@@ -1,14 +1,27 @@
 import * as React from 'react';
 import { createSelector as reselectCreateSelector, Selector, SelectorResultArray } from 'reselect';
 
-export interface OutputSelector<Api extends { state: any; instanceId: string }, Result> {
-  (apiRef: React.MutableRefObject<Api>): Result;
+export interface OutputSelector<State, Result> {
+  (apiRef: React.MutableRefObject<{ state: State; instanceId: number }>): Result;
   // TODO v6: make instanceId require
-  (state: Api['state'], instanceId?: number): Result;
+  (state: State, instanceId?: number): Result;
   cache: object;
 }
 
-type FirstArg<T> = T extends (first: infer F, ...args: any[]) => any ? F : never;
+type StateFromSelector<T> = T extends (first: infer F, ...args: any[]) => any
+  ? F extends { state: infer F2 }
+    ? F2
+    : F
+  : never;
+
+type StateFromSelectorList<Selectors extends readonly any[]> = Selectors extends [
+  f: infer F,
+  ...rest: infer R
+]
+  ? StateFromSelector<F> extends StateFromSelectorList<R>
+    ? StateFromSelector<F>
+    : StateFromSelectorList<R>
+  : {};
 
 type SelectorArgs<Selectors extends ReadonlyArray<Selector<any>>, Result> =
   // Input selectors as a separate array
@@ -18,7 +31,7 @@ type SelectorArgs<Selectors extends ReadonlyArray<Selector<any>>, Result> =
 
 type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, Result>(
   ...items: SelectorArgs<Selectors, Result>
-) => OutputSelector<FirstArg<Selectors[0]>, Result>;
+) => OutputSelector<StateFromSelectorList<Selectors>, Result>;
 
 const cache: Record<number | string, Map<any[], any>> = {};
 
