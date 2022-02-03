@@ -43,6 +43,13 @@ export interface GridEditingSharedApi {
   /**
    * @ignore - do not document.
    */
+  unstable_runPendingEditCellValueChangeDebounce: (
+    id: GridRowId,
+    field?: string,
+  ) => Promise<void> | void;
+  /**
+   * @ignore - do not document.
+   */
   unstable_setEditCellProps: (params: GridEditCellPropsParams) => GridEditCellProps;
   /**
    * @ignore - do not document.
@@ -110,7 +117,7 @@ export interface GridCellEditingApi extends GridEditingSharedApi {
   /**
    * @ignore - do not document.
    */
-  unstable_setCellEditingEditCellValue: (params: GridEditCellValueParams) => void;
+  unstable_setCellEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
 }
 
 /**
