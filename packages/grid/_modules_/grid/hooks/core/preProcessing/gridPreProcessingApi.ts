@@ -1,6 +1,5 @@
 import { GridCellIndexCoordinates, GridScrollParams } from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
-import { GridInitialStatePro } from '../../../models/gridStatePro';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import {
   GridRestoreStatePreProcessingContext,
@@ -31,10 +30,10 @@ interface GridPreProcessingGroupLookup {
   };
   filteringMethod: { value: GridFilteringMethodCollection };
   sortingMethod: { value: GridSortingMethodCollection };
-  exportState: { value: GridInitialStateCommunity | GridInitialStatePro };
+  exportState: { value: GridInitialStateCommunity };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;
-    context: GridRestoreStatePreProcessingContext;
+    context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
   };
   rowHeight: { value: Record<string, number>; context: GridRowEntry };
 }

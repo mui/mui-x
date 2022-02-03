@@ -24,8 +24,9 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVirtualScroller';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { MuiEvent } from '../../../models/muiEvent';
-import { GridStatePro } from '../../../models/gridStatePro';
+import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { GridApiPro } from '../../../models/api/gridApiPro';
+import { GridRestoreStatePreProcessingContext } from '../statePersistence';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -248,7 +249,7 @@ export const useGridColumnPinning = (
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
-    (params, context) => {
+    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
       const newPinnedColumns = context.stateToRestore.pinnedColumns;
       if (newPinnedColumns != null) {
         apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));

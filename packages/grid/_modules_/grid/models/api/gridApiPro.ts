@@ -1,12 +1,13 @@
 import { GridStateApi } from './gridStateApi';
-import { GridStatePro } from '../gridStatePro';
+import { GridInitialStatePro, GridStatePro } from '../gridStatePro';
 import { GridColumnPinningApi } from './gridColumnPinningApi';
 import { GridApiCommon } from './gridApiCommon';
 import { GridDetailPanelApi } from './gridDetailPanelApi';
-import type { GridRowGroupingApi } from '../../hooks';
+import type { GridRowGroupingApi, GridStatePersistenceApi } from '../../hooks';
 
-type GridStateApiUntyped = { [key in keyof GridStateApi<any>]: any };
-
+type GridStateApiUntyped = {
+  [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
+};
 /**
  * The api of `DataGridPro`.
  * TODO: Move to `x-data-grid-pro` folder
@@ -14,6 +15,7 @@ type GridStateApiUntyped = { [key in keyof GridStateApi<any>]: any };
 export interface GridApiPro
   extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
     GridStateApi<GridStatePro>,
+    GridStatePersistenceApi<GridInitialStatePro>,
     GridRowGroupingApi,
     GridColumnPinningApi,
     GridDetailPanelApi {}

@@ -46,6 +46,8 @@ import { useGridApiMethod } from '../../utils';
 import { gridColumnLookupSelector } from '../columns';
 import { GridRowGroupableColumnMenuItems } from '../../../components/menu/columnMenu/GridRowGroupableColumnMenuItems';
 import { GridRowGroupingColumnMenuItems } from '../../../components/menu/columnMenu/GridRowGroupingColumnMenuItems';
+import { GridRestoreStatePreProcessingContext } from '../statePersistence';
+import { GridInitialStatePro } from '../../../models/gridStatePro';
 
 /**
  * Only available in DataGridPro
@@ -459,7 +461,7 @@ export const useGridRowGrouping = (
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
-    (params, context) => {
+    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
       if (props.disableRowGrouping) {
         return params;
       }
