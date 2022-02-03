@@ -1,25 +1,26 @@
 import { GridCellValue } from './gridCell';
 import { GridRowId, GridRowTreeNodeConfig } from './gridRows';
 import type { GridApiCommon } from './api';
+import type { GridApiCommunity } from './api/gridApiCommunity';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
-export interface GridSortCellParams<GridApi extends GridApiCommon = GridApiCommon> {
+export interface GridSortCellParams<Api extends GridApiCommon = GridApiCommunity> {
   id: GridRowId;
   field: string;
   value: GridCellValue;
   rowNode: GridRowTreeNodeConfig;
-  api: GridApi;
+  api: Api;
 }
 
 /**
  * The type of the sort comparison function.
  */
-export type GridComparatorFn<GridApi extends GridApiCommon = GridApiCommon> = (
+export type GridComparatorFn<Api extends GridApiCommon = GridApiCommunity> = (
   v1: GridCellValue,
   v2: GridCellValue,
-  cellParams1: GridSortCellParams<GridApi>,
-  cellParams2: GridSortCellParams<GridApi>,
+  cellParams1: GridSortCellParams<Api>,
+  cellParams2: GridSortCellParams<Api>,
 ) => number;
 
 /**

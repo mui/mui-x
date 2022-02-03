@@ -1,13 +1,18 @@
 import * as React from 'react';
-import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
 
+/**
+ * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
+ */
 export const useGridPreferencesPanel = (
-  apiRef: GridApiRefCommunity,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
@@ -19,6 +24,9 @@ export const useGridPreferencesPanel = (
   const hideTimeout = React.useRef<any>();
   const immediateTimeout = React.useRef<any>();
 
+  /**
+   * API METHODS
+   */
   const hidePreferences = React.useCallback(() => {
     logger.debug('Hiding Preferences Panel');
     apiRef.current.setState((state) => ({ ...state, preferencePanel: { open: false } }));
@@ -59,6 +67,45 @@ export const useGridPreferencesPanel = (
     'ColumnMenuApi',
   );
 
+  /**
+   * PRE-PROCESSING
+   */
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+    (prevState) => {
+      const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef.current.state);
+      if (!preferencePanelToExport.open && !preferencePanelToExport.openedPanelValue) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        preferencePanel: preferencePanelToExport,
+      };
+    },
+    [apiRef],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+    (params, context) => {
+      const preferencePanel = context.stateToRestore.preferencePanel;
+      if (preferencePanel != null) {
+        apiRef.current.setState((state) => ({
+          ...state,
+          preferencePanel,
+        }));
+      }
+
+      return params;
+    },
+    [apiRef],
+  );
+
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+
+  /**
+   * EFFECTS
+   */
   React.useEffect(() => {
     return () => {
       clearTimeout(hideTimeout.current);

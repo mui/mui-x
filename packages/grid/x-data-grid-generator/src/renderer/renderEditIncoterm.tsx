@@ -66,6 +66,6 @@ function EditIncoterm(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditIncoterm(params: GridRenderEditCellParams) {
+export function renderEditIncoterm(params: GridRenderEditCellParams<any>) {
   return <EditIncoterm {...params} />;
 }

@@ -10,9 +10,11 @@ import {
   getDataGridUtilityClass,
   GridEvents,
 } from '@mui/x-data-grid';
-import { useGridRootProps, useGridApiContext } from '../hooks/utils';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { isNavigationKey } from '../../../../_modules_/grid/utils/keyboardUtils';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { GridApiPro } from '../models/gridApiPro';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -27,7 +29,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridTreeDataGroupingCellProps extends GridRenderCellParams {
+interface GridTreeDataGroupingCellProps extends GridRenderCellParams<any, any, any, GridApiPro> {
   hideDescendantCount?: boolean;
 }
 

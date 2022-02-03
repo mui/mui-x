@@ -1,4 +1,10 @@
-import { GridCellIndexCoordinates, GridColDef, GridScrollParams } from '../../../models';
+import { GridCellIndexCoordinates, GridScrollParams } from '../../../models';
+import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
+import { GridColDef } from '../../../models/colDef/gridColDef';
+import {
+  GridRestoreStatePreProcessingContext,
+  GridRestoreStatePreProcessingValue,
+} from '../../features/statePersistence/gridStatePersistenceInterface';
 import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
 import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
 import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
@@ -18,6 +24,11 @@ export interface GridPreProcessingGroupLookup {
   columnMenu: { value: JSX.Element[]; context: GridColDef<any> };
   filteringMethod: { value: GridFilteringMethodCollection };
   sortingMethod: { value: GridSortingMethodCollection };
+  exportState: { value: GridInitialStateCommunity };
+  restoreState: {
+    value: GridRestoreStatePreProcessingValue;
+    context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
+  };
 }
 
 export type GridPreProcessor<P extends GridPreProcessingGroup> = (

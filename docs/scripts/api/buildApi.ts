@@ -56,7 +56,7 @@ async function run() {
   const outputDirectories = FEATURE_TOGGLE.enable_product_scope
     ? ['./docs/pages/api-docs/data-grid', './docs/pages/x/api/data-grid']
     : ['./docs/pages/api-docs/data-grid'];
-  await Promise.allSettled(
+  await Promise.all(
     outputDirectories.map(async (dir) => {
       const outputDirectory = path.resolve(dir);
       fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });

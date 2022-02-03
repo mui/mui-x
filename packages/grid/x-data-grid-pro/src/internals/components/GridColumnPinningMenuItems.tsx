@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import { GridColDef } from '@mui/x-data-grid';
 import { GridPinnedPosition } from '../hooks/features/columnPinning';
-import { useGridApiContext } from '../hooks/utils';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 
 interface GridColumnPinningMenuItemsProps {
   column?: GridColDef;

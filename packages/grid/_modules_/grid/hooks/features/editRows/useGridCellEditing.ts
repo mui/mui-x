@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEventCallback } from '@mui/material/utils';
-import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   useGridApiOptionHandler,
@@ -41,7 +41,7 @@ function isPromise(promise: any): promise is Promise<GridEditCellProps> {
 }
 
 export const useCellEditing = (
-  apiRef: GridApiRefCommunity,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'editMode' | 'onCellEditCommit' | 'onCellEditStart' | 'onCellEditStop' | 'experimentalFeatures'
@@ -266,7 +266,7 @@ export const useCellEditing = (
 
   const handleColumnHeaderDragStart: GridEventListener<GridEvents.columnHeaderDragEnter> =
     useEventCallback(() => {
-      const cell = gridFocusCellSelector(apiRef.current.state);
+      const cell = gridFocusCellSelector(apiRef);
       if (!cell) {
         return;
       }

@@ -4,7 +4,7 @@ import { GridHeaderCheckbox } from '../../components/columnSelection/GridHeaderC
 import { selectedIdsLookupSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { GridColDef } from './gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
-import { GridValueGetterFullParams } from '../params';
+import { GridValueGetterFullParams } from '../params/gridCellParams';
 
 export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
@@ -20,6 +20,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   valueGetter: (params) => {
     const selectionLookup = selectedIdsLookupSelector(
       (params as GridValueGetterFullParams).api.state,
+      (params as GridValueGetterFullParams).api.instanceId,
     );
     return selectionLookup[params.id] !== undefined;
   },

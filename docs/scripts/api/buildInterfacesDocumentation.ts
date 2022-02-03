@@ -49,8 +49,7 @@ const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
 
 const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   // apiRef
-  'GridApiCommunity',
-  'GridApiPro',
+  'GridApi',
 
   // Params
   'GridCellParams',

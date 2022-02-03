@@ -1,8 +1,10 @@
 import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+import type { GridApiCommon } from './gridApiCommon';
 
 /**
  * The column API interface that is available in the grid [[apiRef]].
+ * TODO: Differentiate interfaces based on the plan
  */
 export interface GridColumnApi {
   /**
@@ -10,17 +12,17 @@ export interface GridColumnApi {
    * @param {string} field The column field.
    * @returns {{GridStateColDef}} The [[GridStateColDef]].
    */
-  getColumn: (field: string) => GridStateColDef;
+  getColumn: <Api extends GridApiCommon = GridApiCommon>(field: string) => GridStateColDef<Api>;
   /**
    * Returns an array of [[GridColDef]] containing all the column definitions.
    * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
    */
-  getAllColumns: () => GridStateColDef[];
+  getAllColumns: <Api extends GridApiCommon = GridApiCommon>() => GridStateColDef<Api>[];
   /**
    * Returns the currently visible columns.
    * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
    */
-  getVisibleColumns: () => GridStateColDef[];
+  getVisibleColumns: <Api extends GridApiCommon = GridApiCommon>() => GridStateColDef<Api>[];
   /**
    * Returns the [[GridColumnsMeta]] for each column.
    * @returns {GridColumnsMeta[]} All [[GridColumnsMeta]] objects.

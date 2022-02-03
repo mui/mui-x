@@ -9,8 +9,7 @@
 
 ## Interfaces
 
-- [GridApiCommunity](/api/data-grid/grid-api-community/)
-- [GridApiPro](/api/data-grid/grid-api-pro/)
+- [GridApi](/api/data-grid/grid-api/)
 - [GridCellParams](/api/data-grid/grid-cell-params/)
 - [GridColDef](/api/data-grid/grid-col-def/)
 - [GridRowParams](/api/data-grid/grid-row-params/)

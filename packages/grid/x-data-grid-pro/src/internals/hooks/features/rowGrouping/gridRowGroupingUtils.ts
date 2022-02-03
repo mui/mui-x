@@ -1,4 +1,4 @@
-import {
+import type {
   GridFilterItem,
   GridRowId,
   GridRowTreeConfig,
@@ -6,6 +6,8 @@ import {
   GridFilterState,
 } from '@mui/x-data-grid';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
+import { GridStatePro } from '../../../models/gridStatePro';
 import type { GridAggregatedFilterItemApplier } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
@@ -146,3 +148,10 @@ export const getColDefOverrides = (
 
   return groupingColDefProp;
 };
+
+export const mergeStateWithRowGroupingModel =
+  (rowGroupingModel: GridRowGroupingModel) =>
+  (state: GridStatePro): GridStatePro => ({
+    ...state,
+    rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
+  });

@@ -5,7 +5,8 @@ import {
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/material/utils';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { ElementSize, GridApiRefCommunity } from '../../../models';
+import { ElementSize } from '../../../models';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -50,7 +51,7 @@ const hasScroll = ({
 };
 
 export function useGridDimensions(
-  apiRef: GridApiRefCommunity,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'
@@ -71,7 +72,7 @@ export function useGridDimensions(
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
-    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef.current.state);
+    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
 
     if (!rootDimensionsRef.current) {
       return;
@@ -172,7 +173,7 @@ export function useGridDimensions(
     }
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef.current.state),
+      dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef),
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);

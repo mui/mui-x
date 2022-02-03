@@ -13,7 +13,8 @@ import {
   unstable_GridVirtualScrollerRenderZone as GridVirtualScrollerRenderZone,
   unstable_useGridVirtualScroller as useGridVirtualScroller,
 } from '@mui/x-data-grid';
-import { useGridRootProps, useGridApiContext } from '../hooks/utils';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridPinnedColumnsSelector,

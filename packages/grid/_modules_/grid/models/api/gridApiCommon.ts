@@ -8,7 +8,7 @@ import { GridEditingApi } from './gridEditingApi';
 import { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
-import { GridParamsApi } from './gridParamsApi';
+import type { GridParamsApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
@@ -24,9 +24,11 @@ import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
-import { GridStateCommunity } from '../gridState';
+import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 
-type GridStateApiUntyped = { [key in keyof GridStateApi<any>]: any };
+type GridStateApiUntyped = {
+  [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
+};
 
 export interface GridApiCommon
   extends GridCoreApi,
@@ -55,11 +57,3 @@ export interface GridApiCommon
     GridClipboardApi,
     GridScrollApi,
     GridStateApiUntyped {}
-
-/**
- * The api of `DataGrid`.
- * TODO: Move to `x-data-grid` folder
- */
-export interface GridApiCommunity
-  extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
-    GridStateApi<GridStateCommunity> {}

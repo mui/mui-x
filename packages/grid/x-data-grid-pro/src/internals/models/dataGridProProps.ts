@@ -7,7 +7,7 @@ import {
   GridExperimentalFeatures,
 } from '@mui/x-data-grid';
 import type { GridPinnedColumns } from '../hooks/features/columnPinning';
-import { GridApiRefPro } from './gridApiPro';
+import { GridApiPro } from './gridApiPro';
 import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
@@ -117,7 +117,7 @@ export interface DataGridProPropsWithoutDefaultValue
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
-  apiRef?: GridApiRefPro;
+  apiRef?: React.MutableRefObject<GridApiPro>;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.

@@ -6,7 +6,8 @@ import {
   GridStateColDef,
   GridComparatorFn,
 } from '@mui/x-data-grid';
-import { GridGroupingColDefOverride, GridApiPro, GridApiRefPro } from '../../../models';
+import { GridGroupingColDefOverride } from '../../../models';
+import { GridApiPro } from '../../../models/gridApiPro';
 import type { GridColumnRawLookup } from '../../../../../../_modules_/grid/hooks/features/columns/gridColumnsInterfaces';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColumnLeafCell';
@@ -41,7 +42,10 @@ const groupingFieldIndexComparator: GridComparatorFn<GridApiPro> = (
   cellParams1,
   cellParams2,
 ) => {
-  const model = gridRowGroupingSanitizedModelSelector(cellParams1.api.state);
+  const model = gridRowGroupingSanitizedModelSelector(
+    cellParams1.api.state,
+    cellParams1.api.instanceId,
+  );
   const groupingField1 = cellParams1.rowNode.groupingField;
   const groupingField2 = cellParams2.rowNode.groupingField;
 
@@ -258,7 +262,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 };
 
 interface CreateGroupingColDefSeveralCriteriaParams {
-  apiRef: GridApiRefPro;
+  apiRef: React.MutableRefObject<GridApiPro>;
   columnsLookup: GridColumnRawLookup<GridApiPro>;
 
   /**

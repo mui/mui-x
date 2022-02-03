@@ -1,5 +1,5 @@
-import type { GridApiRef } from '../../models/api/gridApiRef';
-import type { GridApiCommon } from '../../models/api/gridApi';
+import * as React from 'react';
+import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 import { useGridLoggerFactory } from './useGridLoggerFactory';
@@ -13,9 +13,9 @@ import { useGridStateInitialization } from './useGridStateInitialization';
 /**
  * Initialize the technical pieces of the DataGrid (logger, state, ...) that any DataGrid implementation needs
  */
-export const useGridInitialization = <GridApi extends GridApiCommon>(
-  inputApiRef: GridApiRef<GridApi> | undefined,
-  props: DataGridProcessedProps,
+export const useGridInitialization = <Api extends GridApiCommon>(
+  inputApiRef: React.MutableRefObject<Api> | undefined,
+  props: Pick<DataGridProcessedProps, 'signature' | 'logger' | 'logLevel' | 'error' | 'localeText'>,
 ) => {
   const apiRef = useGridApiInitialization(inputApiRef, props);
   useGridLoggerFactory(apiRef, props);

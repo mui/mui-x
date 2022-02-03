@@ -1,5 +1,5 @@
 import { GridColDef, GRID_STRING_COL_DEF } from '@mui/x-data-grid';
-import { GridApiPro } from '../../../models';
+import type { GridApiPro } from '../../../models/gridApiPro';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount

@@ -38,3 +38,4 @@ export { useGridSorting as unstable_useGridSorting } from '../../_modules_/grid/
 export { useGridScroll as unstable_useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGridScroll';
 export { useGridEvents as unstable_useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 export { useGridDimensions as unstable_useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
+export { useGridStatePersistence as unstable_useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';

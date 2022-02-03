@@ -13,7 +13,8 @@ import {
   unstable_GridColumnHeadersInner as GridColumnHeadersInner,
   unstable_GridColumnHeaders as GridColumnHeaders,
 } from '@mui/x-data-grid';
-import { useGridRootProps, useGridApiContext } from '../hooks/utils';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridPinnedColumnsSelector,

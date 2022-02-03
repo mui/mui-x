@@ -85,6 +85,6 @@ function EditStatus(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditStatus(params: GridRenderEditCellParams) {
+export function renderEditStatus(params: GridRenderEditCellParams<any>) {
   return <EditStatus {...params} />;
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { gridClasses } from '../../../gridClasses';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
@@ -17,12 +17,12 @@ import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
  * @requires useGridParamsApi (method)
  * @requires useGridColumnMenu (method)
  */
-export const useGridKeyboard = (apiRef: GridApiRefCommunity): void => {
+export const useGridKeyboard = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent<HTMLElement>) => {
       apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
 
-      const focusCell = gridFocusCellSelector(apiRef.current.state);
+      const focusCell = gridFocusCellSelector(apiRef);
 
       if (!focusCell) {
         return;
@@ -34,7 +34,7 @@ export const useGridKeyboard = (apiRef: GridApiRefCommunity): void => {
       )! as HTMLElement;
 
       const startRowIndex = Number(rowEl.getAttribute('data-rowindex'));
-      const startId = gridVisibleSortedRowIdsSelector(apiRef.current.state)[startRowIndex];
+      const startId = gridVisibleSortedRowIdsSelector(apiRef)[startRowIndex];
 
       if (startId === focusCell.id) {
         return;

@@ -10,7 +10,8 @@ import {
   gridRowsMetaSelector,
   unstable_useCurrentPageRows as useCurrentPageRows,
 } from '@mui/x-data-grid';
-import { GridApiRefPro, GridRowScrollEndParams } from '../../../models';
+import { GridRowScrollEndParams } from '../../../models';
+import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 /**
@@ -20,7 +21,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
-  apiRef: GridApiRefPro,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'

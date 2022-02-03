@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   unstable_useGridInitialization as useGridInitialization,
   unstable_useGridClipboard as useGridClipboard,
@@ -22,9 +23,10 @@ import {
   unstable_useGridScroll as useGridScroll,
   unstable_useGridEvents as useGridEvents,
   unstable_useGridDimensions as useGridDimensions,
+  unstable_useGridStatePersistence as useGridStatePersistence,
 } from '@mui/x-data-grid';
 
-import { GridApiRefPro } from './internals/models';
+import { GridApiPro } from './internals/models/gridApiPro';
 import { DataGridProProcessedProps } from './internals/models/dataGridProProps';
 
 // Pro-only features
@@ -36,7 +38,7 @@ import { useGridRowGrouping } from './internals/hooks/features/rowGrouping/useGr
 import { useGridColumnPinning } from './internals/hooks/features/columnPinning/useGridColumnPinning';
 
 export const useDataGridProComponent = (
-  inputApiRef: GridApiRefPro | undefined,
+  inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization(inputApiRef, props);
@@ -68,6 +70,7 @@ export const useDataGridProComponent = (
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
+  useGridStatePersistence(apiRef);
 
   return apiRef;
 };

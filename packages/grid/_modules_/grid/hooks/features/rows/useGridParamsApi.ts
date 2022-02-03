@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
@@ -43,7 +43,7 @@ function warnGetValue() {
  * TODO: Impossible priority - useGridEditRows also needs to be after useGridParamsApi
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
-export function useGridParamsApi(apiRef: GridApiRefCommunity) {
+export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity>) {
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,
@@ -97,8 +97,8 @@ export function useGridParamsApi(apiRef: GridApiRefCommunity) {
         throw new Error(`No row with id #${id} found`);
       }
 
-      const cellFocus = gridFocusCellSelector(apiRef.current.state);
-      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
+      const cellFocus = gridFocusCellSelector(apiRef);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
       const params: GridValueGetterParams = {
         id,
@@ -120,8 +120,8 @@ export function useGridParamsApi(apiRef: GridApiRefCommunity) {
     [apiRef, getCellValueWithDeprecationWarning],
   );
 
-  const getCellParams = React.useCallback(
-    (id: GridRowId, field: string) => {
+  const getCellParams = React.useCallback<GridApiCommunity['getCellParams']>(
+    (id, field) => {
       const colDef = apiRef.current.getColumn(field);
       const value = apiRef.current.getCellValue(id, field);
       const row = apiRef.current.getRow(id);
@@ -131,10 +131,10 @@ export function useGridParamsApi(apiRef: GridApiRefCommunity) {
         throw new Error(`No row with id #${id} found`);
       }
 
-      const cellFocus = gridFocusCellSelector(apiRef.current.state);
-      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
+      const cellFocus = gridFocusCellSelector(apiRef);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
-      const params: GridCellParams = {
+      const params: GridCellParams<any, any, any, any> = {
         id,
         field,
         row,

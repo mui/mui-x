@@ -1,4 +1,7 @@
-import { GridInitialStateCommunity, GridStateCommunity } from '@mui/x-data-grid';
+import {
+  GridInitialState as GridInitialStateCommunity,
+  GridState as GridStateCommunity,
+} from '@mui/x-data-grid';
 import type {
   GridRowGroupingState,
   GridRowGroupingInitialState,
@@ -18,19 +21,9 @@ export interface GridStatePro extends GridStateCommunity {
 }
 
 /**
- * @deprecated Use `GridStateCommunity` or `GridStatePro` instead.
- */
-export interface GridState extends GridStatePro {}
-
-/**
  * The initial state of `DataGridPro`.
  */
 export interface GridInitialStatePro extends GridInitialStateCommunity {
   rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
 }
-
-/**
- * @deprecated Use `GridInitialStateCommunity` or `GridInitialStatePro` instead.
- */
-export interface GridInitialState extends GridInitialStatePro {}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRefPro,
+  GridApiRef,
   GridColumns,
   gridColumnVisibilityModelSelector,
   GridEvents,
@@ -16,7 +16,7 @@ import Button from '@mui/material/Button';
 const INITIAL_GROUPING_COLUMN_MODEL = ['company'];
 
 const useKeepGroupingColumnsHidden = (
-  apiRef: GridApiRefPro,
+  apiRef: GridApiRef,
   columns: GridColumns,
   initialModel: GridRowGroupingModel,
   leafField?: string,
@@ -26,7 +26,7 @@ const useKeepGroupingColumnsHidden = (
   React.useEffect(() => {
     apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
       const columnVisibilityModel = {
-        ...gridColumnVisibilityModelSelector(apiRef.current.state),
+        ...gridColumnVisibilityModelSelector(apiRef),
       };
       newModel.forEach((field) => {
         if (!prevModel.current.includes(field)) {
@@ -66,7 +66,7 @@ export default function RowGroupingSetChildrenExpansion() {
   );
 
   const toggleSecondRow = () => {
-    const rowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+    const rowIds = gridVisibleSortedRowIdsSelector(apiRef);
 
     if (rowIds.length > 1) {
       const rowId = rowIds[1];

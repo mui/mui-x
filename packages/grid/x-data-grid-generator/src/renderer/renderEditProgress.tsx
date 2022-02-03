@@ -105,6 +105,6 @@ function EditProgress(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditProgress(params: GridRenderEditCellParams) {
+export function renderEditProgress(params: GridRenderEditCellParams<any>) {
   return <EditProgress {...params} />;
 }

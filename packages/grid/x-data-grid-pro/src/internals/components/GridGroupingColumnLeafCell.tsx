@@ -2,8 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { GridApiPro } from '../models/gridApiPro';
 
-const GridGroupingColumnLeafCell = (props: GridRenderCellParams) => {
+const GridGroupingColumnLeafCell = (props: GridRenderCellParams<any, any, any, GridApiPro>) => {
   const { rowNode } = props;
 
   const rootProps = useGridRootProps();

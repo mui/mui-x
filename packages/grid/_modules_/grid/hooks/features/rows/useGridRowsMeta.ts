@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
@@ -20,7 +20,7 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
  * @requires useGridPage (method)
  */
 export const useGridRowsMeta = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'getRowHeight' | 'pagination' | 'paginationMode'>,
 ): void => {
   const { getRowHeight, pagination, paginationMode } = props;
@@ -46,8 +46,8 @@ export const useGridRowsMeta = (
 
     apiRef.current.setState((state) => {
       const positions: number[] = [];
-      const densityFactor = gridDensityFactorSelector(state);
-      const currentRowHeight = gridDensityRowHeightSelector(state);
+      const densityFactor = gridDensityFactorSelector(state, apiRef.current.instanceId);
+      const currentRowHeight = gridDensityRowHeightSelector(state, apiRef.current.instanceId);
       const currentPageTotalHeight = rows.reduce((acc: number, row) => {
         positions.push(acc);
         let targetRowHeight = currentRowHeight;

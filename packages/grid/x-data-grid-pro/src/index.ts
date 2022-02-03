@@ -5,14 +5,35 @@ export * from '@mui/x-data-grid';
 export { LicenseInfo } from '@mui/x-license-pro';
 export * from './DataGridPro';
 export * from './internals';
-
-// Explicitly re-export the types already exported from `@mui/x-data-grid` but with a different signature
+export {
+  getGridBooleanOperators,
+  getGridDateOperators,
+  getGridNumericOperators,
+  getGridNumericColumnOperators,
+  getGridStringOperators,
+  getGridSingleSelectOperators,
+  useGridApiContext,
+  useGridApiRef,
+  useGridRootProps,
+} from './typeOverload';
 export type {
-  GridApi,
   GridApiRef,
+  GridApi,
   GridInitialState,
   GridState,
-} from './internals/models/legacyCrossPlanInterfaces';
-
-// Explicitly re-export the methods already exported from `@mui/x-data-grid` but with a different signature
-export { useGridApiContext, useGridRootProps, useGridApiRef } from './internals';
+  GridStateColDef,
+  GridRenderCellParams,
+  GridRenderEditCellParams,
+  GridValueFormatterParams,
+  GridValueGetterParams,
+  GridValueGetterFullParams,
+  GridSortCellParams,
+  GridSortModelParams,
+  GridCellParams,
+  GridColDef,
+  GridActionsColDef,
+  GridColTypeDef,
+  GridEnrichedColDef,
+  GridColumns,
+  GridComparatorFn,
+} from './typeOverload';
