@@ -6,5 +6,3 @@ export enum LicenseStatus {
 }
 
 export const TestLicense = 2;
-
-console.log(LicenseStatus, TestLicense);

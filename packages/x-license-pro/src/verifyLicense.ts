@@ -1,8 +1,8 @@
 import { base64Decode, base64Encode } from './encoding/base64';
 import { md5 } from './encoding/md5';
-import { LicenseStatus, TestLicense } from './licenseStatus';
+import * as test from './licenseStatus';
 
-console.log('Out', LicenseStatus, TestLicense);
+console.log('Out', test);
 
 export function generateReleaseInfo() {
   const today = new Date();
@@ -19,14 +19,14 @@ export function verifyLicense(releaseInfo: string, encodedLicense: string) {
   }
 
   if (!encodedLicense) {
-    return LicenseStatus.NotFound;
+    return test.LicenseStatus.NotFound;
   }
 
   const hash = encodedLicense.substr(0, 32);
   const encoded = encodedLicense.substr(32);
 
   if (hash !== md5(encoded)) {
-    return LicenseStatus.Invalid;
+    return test.LicenseStatus.Invalid;
   }
 
   const clearLicense = base64Decode(encoded);
@@ -35,11 +35,11 @@ export function verifyLicense(releaseInfo: string, encodedLicense: string) {
     expiryTimestamp = parseInt(clearLicense.match(expiryReg)![1], 10);
     if (!expiryTimestamp || Number.isNaN(expiryTimestamp)) {
       console.error('Error checking license. Expiry timestamp not found or invalid!');
-      return LicenseStatus.Invalid;
+      return test.LicenseStatus.Invalid;
     }
   } catch (err) {
     console.error('Error extracting license expiry timestamp.', err);
-    return LicenseStatus.Invalid;
+    return test.LicenseStatus.Invalid;
   }
 
   const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
@@ -48,8 +48,8 @@ export function verifyLicense(releaseInfo: string, encodedLicense: string) {
   }
 
   if (expiryTimestamp < pkgTimestamp) {
-    return LicenseStatus.Expired;
+    return test.LicenseStatus.Expired;
   }
 
-  return LicenseStatus.Valid;
+  return test.LicenseStatus.Valid;
 }
