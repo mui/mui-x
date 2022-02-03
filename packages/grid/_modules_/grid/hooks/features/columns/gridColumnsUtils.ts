@@ -11,6 +11,7 @@ import {
   GridColDef,
   GridColType,
   GridColumnTypesRecord,
+  GridState,
   GridStateColDef,
 } from '../../../models';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
@@ -208,3 +209,10 @@ export const createColumnsState = ({
     apiRef.current.getRootDimensions?.()?.viewportInnerSize.width ?? 0,
   );
 };
+
+export const setColumnsState =
+  (columnsState: GridColumnsState) =>
+  (state: GridState): GridState => ({
+    ...state,
+    columns: columnsState,
+  });

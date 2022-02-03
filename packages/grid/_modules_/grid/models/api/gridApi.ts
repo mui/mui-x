@@ -26,6 +26,7 @@ import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPe
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridRowGroupingApi } from '../../hooks/features/rowGrouping';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
+import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 import type { GridDetailPanelApi } from './gridDetailPanelApi';
 
 /**
@@ -60,4 +61,5 @@ export interface GridApi
     GridRowGroupingApi,
     GridVirtualScrollerApi,
     GridColumnPinningApi,
+    GridStatePersistenceApi,
     GridDetailPanelApi {}
