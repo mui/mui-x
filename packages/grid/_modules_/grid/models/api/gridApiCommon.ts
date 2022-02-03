@@ -25,6 +25,7 @@ import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPe
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
+import type { GridDetailPanelApi } from './gridDetailPanelApi';
 
 type GridStateApiUntyped = { [key in keyof GridStateApi<any>]: any };
 

@@ -4,6 +4,8 @@ import type {
   GridColumnResizeState,
   GridRowGroupingInitialState,
   GridRowGroupingState,
+  GridDetailPanelState,
+  GridDetailPanelInitialState,
 } from '../hooks';
 import type { GridStateCommunity, GridInitialStateCommunity } from './gridStateCommunity';
 
@@ -16,6 +18,7 @@ export interface GridStatePro extends GridStateCommunity {
   columnResize: GridColumnResizeState;
   pinnedColumns: GridColumnPinningState;
   rowGrouping: GridRowGroupingState;
+  detailPanel: GridDetailPanelState;
 }
 
 /**
@@ -25,4 +28,5 @@ export interface GridStatePro extends GridStateCommunity {
 export interface GridInitialStatePro extends GridInitialStateCommunity {
   rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
+  detailPanel?: GridDetailPanelInitialState;
 }

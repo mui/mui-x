@@ -22,6 +22,7 @@ export * from './gridCallbackDetails';
 export * from './gridScrollApi';
 export * from './gridColumnPinningApi';
 export * from './gridVirtualScrollerApi';
+export * from './gridDetailPanelApi';
 export * from './gridApiCommon';
 
 export type { GridEditingApi } from './gridEditingApi';

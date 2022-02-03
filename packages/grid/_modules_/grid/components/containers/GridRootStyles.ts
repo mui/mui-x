@@ -45,6 +45,11 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.withBorder}`]: styles.withBorder },
     { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     { [`& .${gridClasses.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
+    { [`& .${gridClasses.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
+    {
+      [`& .${gridClasses['detailPanelToggleCell--expanded']}`]:
+        styles['detailPanelToggleCell--expanded'],
+    },
     styles.root,
   ],
 })(({ theme }) => {

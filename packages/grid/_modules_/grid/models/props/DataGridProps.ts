@@ -399,6 +399,12 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    */
   getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
   /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
+  /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.

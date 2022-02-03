@@ -100,4 +100,14 @@ export interface GridIconSlotsComponent {
    * @default GridExpandMoreIcon
    */
   GroupingCriteriaCollapseIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed on the detail panel toggle column when collapsed.
+   * @default GridAddIcon
+   */
+  DetailPanelExpandIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed on the detail panel toggle column when expanded.
+   * @default GridRemoveIcon
+   */
+  DetailPanelCollapseIcon: React.JSXElementConstructor<any>;
 }

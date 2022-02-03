@@ -89,6 +89,8 @@ export const hydrateColumnsWidth = (
   };
 };
 
+let columnTypeWarnedOnce = false;
+
 /**
  * @deprecated Should have been internal only, you can inline the logic.
  */
@@ -99,6 +101,23 @@ export const getGridColDef = (
   if (!type) {
     return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
   }
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (!columnTypeWarnedOnce && !columnTypes[type]) {
+      console.warn(
+        [
+          `MUI: The column type "${type}" you are using is not supported.`,
+          `Column type "string" is being used instead.`,
+        ].join('\n'),
+      );
+      columnTypeWarnedOnce = true;
+    }
+  }
+
+  if (!columnTypes[type]) {
+    return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
+  }
+
   return columnTypes[type];
 };
 

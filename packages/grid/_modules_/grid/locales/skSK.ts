@@ -154,6 +154,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Skupina',
   groupColumn: (name) => `Zoskupiť podľa ${name}`,
   unGroupColumn: (name) => `Prestať zoskupovať podľa ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

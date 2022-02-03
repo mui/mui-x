@@ -32,6 +32,8 @@ import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/us
 import { useGridRowGrouping } from '../../_modules_/grid/hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
 import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
+import { useGridDetailPanel } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanel';
+import { useGridDetailPanelCache } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanelCache';
 import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
 import { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
 
@@ -44,9 +46,11 @@ export const useDataGridProComponent = (
   useGridRowGrouping(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridSelection(apiRef, props);
+  useGridDetailPanel(apiRef, props);
   useGridColumns(apiRef, props as DataGridProcessedProps);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridDetailPanelCache(apiRef, props);
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);

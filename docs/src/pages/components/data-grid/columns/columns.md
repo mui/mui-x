@@ -400,6 +400,8 @@ const usdPrice: GridColTypeDef = {
 
 {{"demo": "pages/components/data-grid/columns/CustomColumnTypesGrid.js", "bg": "inline"}}
 
+> ⚠ If an unsupported column type is used the `string` column type will be used instead.
+
 ## Column menu
 
 By default, each column header displays a column menu. The column menu allows actions to be performed in the context of the target column, e.g. filtering. To disable the column menu, set the prop `disableColumnMenu={true}`.
