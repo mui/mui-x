@@ -4,7 +4,3 @@ export enum LicenseStatus {
   Expired = 'Expired',
   Valid = 'Valid',
 }
-
-console.log('In', LicenseStatus)
-
-export const TestLicense = 2
