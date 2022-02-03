@@ -11,7 +11,6 @@ import {
   GridEvents,
   gridColumnLookupSelector,
   allGridColumnsFieldsSelector,
-  DEFAULT_GRID_COL_TYPE_KEY,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
