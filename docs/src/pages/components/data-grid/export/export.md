@@ -200,6 +200,18 @@ You can remove the Print export option from the toolbar by setting `disableToolb
 
 ## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
+> ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
+>
+> To avoid future regression for users of the Pro plan, the feature needs to be explicitly activated using the `excelExport` experimental feature flag.
+>
+> ```tsx
+> <DataGridPro experimentalFeatures={{ excelExport: true }} {...otherProps} />
+> ```
+>
+> The feature is stable in its current form, and we encourage users willing to migrate to the Premium plan once available to start using it.
+
+The excel export allows to reproduce the column types and the tree structure of the DataGrid.
+
 {{"demo": "pages/components/data-grid/export/ExcelExport.js", "bg": "inline"}}
 
 ## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)

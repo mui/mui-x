@@ -1,6 +1,8 @@
 <DataGridPro
-  {...data}
-  loading={loading}
+  treeData
+  rows={rows}
+  columns={columns}
+  getTreeDataPath={getTreeDataPath}
   components={{
     Toolbar: CustomToolbar,
   }}
