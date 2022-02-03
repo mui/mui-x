@@ -119,6 +119,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   Panel: React.JSXElementConstructor<any>;
   /**
    * Component rendered for each row.
+   * @default GridRow
    */
   Row: React.JSXElementConstructor<any>;
 }

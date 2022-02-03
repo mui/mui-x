@@ -444,7 +444,7 @@ export const useGridRowGrouping = (
         return prevState;
       }
 
-      const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef.current.state);
+      const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef);
       if (rowGroupingModelToExport.length === 0) {
         return prevState;
       }
