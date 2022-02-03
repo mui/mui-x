@@ -137,9 +137,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'ещё',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Закрепить слева',
+  pinToRight: 'Закрепить справа',
+  unpin: 'Открепить',
 
   // Tree Data
   treeDataGroupingHeaderName: 'Группа',
@@ -147,9 +147,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
   treeDataCollapse: 'скрыть дочерние элементы',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Группа',
+  groupColumn: (name) => `Сгруппировать по ${name}`,
+  unGroupColumn: (name) => `Разгруппировать по ${name}`,
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);
