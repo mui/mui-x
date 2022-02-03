@@ -64,6 +64,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 - Server-side data
 - [Column hiding](/components/data-grid/columns/#hiding)
 - [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
+- [Excel export](/components/data-grid/export/) <span class="plan-premium"></span>
 - [Accessible](/components/data-grid/accessibility/)
 - [Localization](/components/data-grid/localization/)
 
@@ -72,7 +73,6 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
 - Headless (hooks only)
-- [Excel export](/components/data-grid/export/) <span class="plan-premium"></span>
 - [Range selection](/components/data-grid/selection/#range-selection) <span class="plan-premium"></span>
 - [Pivot, Aggregation](/components/data-grid/group-pivot/) <span class="plan-premium"></span>
 

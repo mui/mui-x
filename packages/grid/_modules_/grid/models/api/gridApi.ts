@@ -33,7 +33,7 @@ import type { GridStatePersistenceApi } from '../../hooks/features/statePersiste
  * The full grid API.
  */
 export interface GridApi
-    extends GridCoreApi,
+  extends GridCoreApi,
     GridStateApi,
     GridLoggerApi,
     GridPreProcessingApi,
@@ -62,4 +62,4 @@ export interface GridApi
     GridVirtualScrollerApi,
     GridExcelExportApi,
     GridColumnPinningApi,
-    GridStatePersistenceApi { }
+    GridStatePersistenceApi {}

@@ -205,7 +205,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [CSV export](/components/data-grid/export/#csv-export)                                    |    ✅     |                 ✅                 |                     ✅                     |
 | [Print](/components/data-grid/export/#print)                                              |    ✅     |                 ✅                 |                     ✅                     |
 | [Clipboard](/components/data-grid/export/#clipboard)                                      |    ❌     |                 🚧                 |                     🚧                     |
-| [Excel export](/components/data-grid/export/#excel-export)                                |    ❌     |                 ❌                 |                     🚧                     |
+| [Excel export](/components/data-grid/export/#excel-export)                                |    ❌     |                 ❌                 |                     ✅                     |
 | **Rendering**                                                                             |           |                                    |                                            |
 | [Customizable components](/components/data-grid/components/)                              |    ✅     |                 ✅                 |                     ✅                     |
 | [Column virtualization](/components/data-grid/virtualization/#column-virtualization)      |    ✅     |                 ✅                 |                     ✅                     |
