@@ -12,6 +12,8 @@ const defaultAlias = {
   '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
   'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
+  test: resolveAliasPath('./test'),
+  packages: resolveAliasPath('./packages'),
 };
 
 const productionPlugins = [
@@ -84,13 +86,18 @@ module.exports = function getBabelConfig(api) {
     },
     presets,
     plugins,
-    ignore: [/@babel[\\|/]runtime/], // Fix a Windows issue.
-    overrides: [
-      {
-        exclude: /\.test\.(js|ts|tsx)$/,
-        plugins: ['@babel/plugin-transform-react-constant-elements'],
-      },
+    ignore: [
+      // Fix a Windows issue.
+      /@babel[\\|/]runtime/,
+      // Fix const foo = /{{(.+?)}}/gs; crashing.
+      /prettier/,
     ],
+    // overrides: [
+    //   {
+    //     exclude: /\.test\.(js|ts|tsx)$/,
+    //     plugins: ['@babel/plugin-transform-react-constant-elements'],
+    //   },
+    // ],
     env: {
       coverage: {
         plugins: [
