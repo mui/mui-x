@@ -400,7 +400,7 @@ const usdPrice: GridColTypeDef = {
 
 {{"demo": "pages/components/data-grid/columns/CustomColumnTypesGrid.js", "bg": "inline"}}
 
-> ⚠ If an unsupported column type is used the `string` column type will be used instead.
+> ⚠ If an unsupported column type is used the `'string'` column type will be used instead.
 
 ## Column menu
 
