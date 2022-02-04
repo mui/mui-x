@@ -4,7 +4,7 @@ import {
   demos,
   docs,
   demoComponents,
-} from 'docsx/data/data-grid/components/components.md?@mui/markdown';
+} from 'docsx/src/pages/components/data-grid/components/components.md?@mui/markdown';
 
 export default function Page() {
   return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
