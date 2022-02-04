@@ -1,5 +1,4 @@
 /* eslint-disable react/no-danger */
-/* eslint-disable react/prop-types */
 import * as React from 'react';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
