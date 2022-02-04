@@ -25,7 +25,7 @@ interface BuildRowTreeParams extends GridRowGroupParams {
   defaultGroupingExpansionDepth: number;
   isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
   groupingName: string;
-  onDuplicatePath: (
+  onDuplicatePath?: (
     firstId: GridRowId,
     secondId: GridRowId,
     path: BuildRowTreeGroupingCriteria[],
