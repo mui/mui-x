@@ -122,6 +122,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);

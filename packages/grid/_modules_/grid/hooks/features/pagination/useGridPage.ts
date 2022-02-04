@@ -96,7 +96,7 @@ export const useGridPage = (
    */
   const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
-      const pageToExport = gridPageSelector(apiRef.current.state);
+      const pageToExport = gridPageSelector(apiRef);
       if (pageToExport === 0) {
         return prevState;
       }
@@ -115,8 +115,7 @@ export const useGridPage = (
   const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
     (params, context) => {
       // We apply the constraint even if the page did not change in case the pageSize changed.
-      const page =
-        context.stateToRestore.pagination?.page ?? gridPageSelector(apiRef.current.state);
+      const page = context.stateToRestore.pagination?.page ?? gridPageSelector(apiRef);
       apiRef.current.setState(mergeStateWithPage(page));
       return params;
     },

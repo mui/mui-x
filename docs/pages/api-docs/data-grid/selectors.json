@@ -108,6 +108,24 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridDetailPanelExpandedRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
+    "name": "gridDetailPanelExpandedRowsContentCacheSelector",
+    "returnType": "Record<GridRowId, ReactNode>",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
+    "name": "gridDetailPanelExpandedRowsHeightCacheSelector",
+    "returnType": "Record<GridRowId, number>",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridEditRowsStateSelector",
     "returnType": "GridEditRowsModel",
     "description": "",

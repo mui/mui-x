@@ -154,6 +154,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Skupina',
   groupColumn: (name) => `Zoskupit podle ${name}`,
   unGroupColumn: (name) => `Přestat zoskupovat podle ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);

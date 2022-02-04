@@ -29,6 +29,7 @@
     "filterMode": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side.",
     "filterModel": "Set the filter model of the grid.",
     "getCellClassName": "Function that applies CSS classes dynamically on cells.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the cell.",
+    "getDetailPanelContent": "Function that returns the element to render in row detail.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; JSX.Element</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (JSX.Element): The row detail element.",
     "getRowClassName": "Function that applies CSS classes dynamically on rows.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the row.",
     "getRowHeight": "Function that sets the row height per row.<br><br><strong>Signature:</strong><br><code>function(params: GridRowHeightParams) =&gt; GridRowHeightReturnValue</code><br><em>params:</em> With all properties from GridRowHeightParams.<br> <em>returns</em> (GridRowHeightReturnValue): The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied.",
     "getRowId": "Return the id of a given GridRowModel.",
@@ -249,6 +250,23 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns panel row element"
     },
+    "detailPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the detail panel element"
+    },
+    "detailPanels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the detail panels wrapper element"
+    },
+    "detailPanelToggleCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the detail panel toggle cell element"
+    },
+    "detailPanelToggleCell--expanded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the detail panel toggle cell element",
+      "conditions": "expanded"
+    },
     "panel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the panel element" },
     "panelHeader": {
       "description": "Styles applied to {{nodeName}}.",
@@ -457,6 +475,8 @@
     "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
     "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
     "GroupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
-    "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded"
+    "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
+    "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
+    "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded."
   }
 }
