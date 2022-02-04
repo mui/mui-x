@@ -43,7 +43,7 @@ export function GridPanelWrapper(
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <TrapFocus open disableEnforceFocus isEnabled={isEnabled}>
+    <TrapFocus open disableEnforceFocus disableRestoreFocus isEnabled={isEnabled}>
       <GridPanelWrapperRoot tabIndex={-1} className={clsx(className, classes.root)} {...other} />
     </TrapFocus>
   );
