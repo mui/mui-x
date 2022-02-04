@@ -199,7 +199,6 @@ ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 
 TODO WRITE THE VERSION
 ### \`@mui/x-data-grid@v\` / \`@mui/x-data-grid-pro@v\`
-
 ${logChangelogSection(changeCommits, '#### Changes')}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
