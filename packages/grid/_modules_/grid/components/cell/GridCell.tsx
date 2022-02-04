@@ -178,7 +178,7 @@ function GridCell(props: GridCellProps) {
         apiRef.current.scroll(scrollPosition);
       }
     }
-  });
+  }, [hasFocus, cellMode, apiRef]);
 
   let handleFocus: any = other.onFocus;
 
