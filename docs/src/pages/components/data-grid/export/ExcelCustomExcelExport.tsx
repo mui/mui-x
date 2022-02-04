@@ -7,6 +7,7 @@ import {
   GridEvents,
   GridToolbarContainer,
   GridToolbarExport,
+  GridRenderCellParams
 } from '@mui/x-data-grid-pro';
 import { styled } from '@mui/material/styles';
 import { Box, Button } from '@mui/material';
@@ -25,7 +26,7 @@ const isNavigationKey = (key) =>
   key.indexOf('Page') === 0 ||
   key === ' ';
 
-const CustomGridTreeDataGroupingCell = (props) => {
+const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   const { id, field, rowNode, row, value } = props;
   const apiRef = useGridApiContext();
   const filteredDescendantCountLookup = useGridSelector(
