@@ -118,6 +118,10 @@ export interface GridLocaleText {
   groupColumn: (name: string) => string;
   unGroupColumn: (name: string) => string;
 
+  // Master/detail
+  expandDetailPanel: string;
+  collapseDetailPanel: string;
+
   // Used core components translation keys
   MuiTablePagination: Omit<
     ComponentsPropsList['MuiTablePagination'],

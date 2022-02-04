@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.5.0
+
+_Feb 3, 2022_
+
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for [master/detail](https://mui.com/components/data-grid/group-pivot/#master-detail) (#3387) @m4theushw
+
+  <img src="https://user-images.githubusercontent.com/42154031/152379354-47120aac-2b37-4a90-b311-64b4522283b9.gif" width="814">
+
+- 🌍 Add Danish (daDK) locale (#3800) @kasperfilstrup
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.5.0` / `@mui/x-data-grid-pro@v5.5.0`
+
+#### Changes
+
+- [DataGrid] Add methods to import and export the state (#3593) @flaviendelangle
+- [DataGrid] Fix <kbd>PageUp</kbd> jumping directly to the column header skipping the first row (#3761) @cherniavskii
+- [DataGrid] Throw an error if incorrect column type is used (#3757) @DanailH
+- [DataGridPro] Add support for master/detail (#3387) @m4theushw
+- [l10n] Add Danish (daDK) locale (#3800) @kasperfilstrup
+- [l10n] Improve Dutch (nlNL) locale (#3724) @MatthijsKok
+- [l10n] Improve Hebrew (heIL) locale (#3775) @ColdAtNight
+- [l10n] Improve Russian (ruRU) locale (#3818) @Leniorko
+
+### Docs
+
+- [docs] Add default value for `Row` slot (#3807) @cherniavskii
+- [docs] Extend full width (#3815) @m4theushw
+- [docs] Fix country column sorting not working (#3740) @cherniavskii
+- [docs] Fix custom render cell when row is auto generated (#3810) @alexfauquette
+- [docs] Fix flag layout shift (#3773) @oliviertassinari
+- [docs] Mention row `id` requirement and document `getRowId` prop (#3765) @cherniavskii
+- [docs] Refresh the license key documentation (#3529) @oliviertassinari
+
+### Core
+
+- [core] Clean `filtering.DataGrid.test.tsx` (#3768) @flaviendelangle
+- [core] Improve GitHub label workflows (#3680) @DanailH
+- [core] Isolate selectors called without `useGridSelector` (#3774) @m4theushw
+- [core] Prepare infra for pickers migration (#3714) @flaviendelangle
+- [core] Remove none code related instructions from git (#3794) @oliviertassinari
+- [core] Remove remaining usages of `@mui/styles` (#3769) @m4theushw
+- [core] Remove Stylelint (#3811) @m4theushw
+- [core] Split cell / row editing into different hooks (#3219) @m4theushw
+- [core] Stop using an enum for `GridPreProcessingGroup` (#3798) @flaviendelangle
+- [core] Fix failing tests (#3817) @cherniavskii
+- [code] Fix `docs:api` silent crash (#3808) @cherniavskii
+- [test] Increase timeout for Firefox (#3813) @m4theushw
+
 ## 5.4.0
 
 _Jan 28, 2022_
@@ -15,11 +67,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   By default, all rows have the same height, but now you can set the height on a per-row basis.
 
   ```tsx
-  <DataGrid 
-    getRowHeight={
-      ({ id }: GridRowHeightParams) => (id % 2 === 0 ? 100 : null)
-    }
-  />
+  <DataGrid getRowHeight={({ id }: GridRowHeightParams) => (id % 2 === 0 ? 100 : null)} />
   ```
 
 - 🎁 Add new CSV export option: [`getRowsToExport`](https://mui.com/components/data-grid/export/#custom-exported-content) (#3687) @flaviendelangle
@@ -120,7 +168,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   const columns: GridColDef[] = [
     { field: 'director', flex: 1, maxWidth: 200 }, // will take the free space up to 200px and will not be resizable above 200px
     { field: 'year', maxWidth: 150 }, // will not be resizable above 150px
-  ]
+  ];
   ```
 
 - 🚀 Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
@@ -135,8 +183,8 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   const CustomDataGrid = (props: DataGridProps) => {
     return (
       <DataGrid {...props} componentsProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />
-    )
-  }
+    );
+  };
   ```
 
 - 🙈 Add controlled behavior for the visible columns (#3554) @flaviendelangle
@@ -333,12 +381,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - 🙈 Add a new option to hide the amount of descendant on the grouping cells of the Tree Data (#3368) @flaviendelangle
 
   ```tsx
-  <DataGridPro
-    treeData
-    rows={rows}
-    columns={columns}
-    groupingColDef={{ hideDescendantCount }}
-  />
+  <DataGridPro treeData rows={rows} columns={columns} groupingColDef={{ hideDescendantCount }} />
   ```
 
 - ⚠️ Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
@@ -507,8 +550,8 @@ A big thanks to the 3 contributors who made this release possible. Here are some
         const userWithEmail = await fetchUserByEmail(params.value);
         const hasError = !!userWithEmail;
         return { ...params.props, error: hasError };
-      }
-    }
+      },
+    },
   ];
   ```
 
@@ -931,7 +974,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Remove outdated hooks requirements (#2939) @flaviendelangle
 - [core] Remove test event (#2912) @m4theushw
 - [core] Remove unused `GridSlotComponentProps` interface (#2911) @flaviendelangle
-- [core] Rename 'UNSTABLE_' prefix to 'unstable_' (#2931) @flaviendelangle
+- [core] Rename 'UNSTABLE*' prefix to 'unstable*' (#2931) @flaviendelangle
 - [core] Replace usage of `GridRowData` with `GridRowModel` (#2936) @flaviendelangle
 - [core] Revert hardcoded typings (#2907) @DanailH
 - [core] Simplify the CSV export (#2941) @flaviendelangle

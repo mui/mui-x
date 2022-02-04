@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { GridFilteringMethod } from './gridFilterState';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridApiRef } from '../../../models';
 
 export const useGridRegisterFilteringMethod = (
@@ -12,9 +8,7 @@ export const useGridRegisterFilteringMethod = (
   groupingName: string,
   filteringMethod: GridFilteringMethod,
 ) => {
-  const updateRegistration = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.filteringMethod>
-  >(
+  const updateRegistration = React.useCallback<GridPreProcessor<'filteringMethod'>>(
     (filteringMethodCollection) => {
       filteringMethodCollection[groupingName] = filteringMethod;
       return filteringMethodCollection;
@@ -22,5 +16,5 @@ export const useGridRegisterFilteringMethod = (
     [groupingName, filteringMethod],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.filteringMethod, updateRegistration);
+  useGridRegisterPreProcessor(apiRef, 'filteringMethod', updateRegistration);
 };

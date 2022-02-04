@@ -59,6 +59,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 - [Column virtualization](/components/data-grid/virtualization/#column-virtualization) and [rows virtualization](/components/data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
 - [Row grouping](/components/data-grid/group-pivot/#row-grouping) <span class="plan-pro"></span>
 - [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="plan-pro"></span>
+- [Master detail](/components/data-grid/group-pivot/#master-detail) <span class="plan-pro"></span>
 - [Resizable columns](/components/data-grid/columns/#column-resizing) <span class="plan-pro"></span>
 - [100% customizable](/components/data-grid/style/)
 - Server-side data

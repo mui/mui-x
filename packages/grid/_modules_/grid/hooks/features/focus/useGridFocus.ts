@@ -38,7 +38,7 @@ export const useGridFocus = (
         return;
       }
 
-      const focusedCell = gridFocusCellSelector(apiRef.current.state);
+      const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === id && focusedCell.field === field) {
         return;
       }
@@ -59,7 +59,7 @@ export const useGridFocus = (
 
   const setColumnHeaderFocus = React.useCallback<GridFocusApi['setColumnHeaderFocus']>(
     (field, event = {}) => {
-      const cell = gridFocusCellSelector(apiRef.current.state);
+      const cell = gridFocusCellSelector(apiRef);
       if (cell) {
         apiRef.current.publishEvent(
           GridEvents.cellFocusOut,
@@ -133,7 +133,7 @@ export const useGridFocus = (
       const cellParams = lastClickedCell.current;
       lastClickedCell.current = null;
 
-      const focusedCell = gridFocusCellSelector(apiRef.current.state);
+      const focusedCell = gridFocusCellSelector(apiRef);
 
       if (!focusedCell) {
         if (cellParams) {
@@ -182,7 +182,7 @@ export const useGridFocus = (
       if (params.cellMode === 'view') {
         return;
       }
-      const cell = gridFocusCellSelector(apiRef.current.state);
+      const cell = gridFocusCellSelector(apiRef);
       if (cell?.id !== params.id || cell?.field !== params.field) {
         apiRef.current.setCellFocus(params.id, params.field);
       }
@@ -200,7 +200,7 @@ export const useGridFocus = (
   );
 
   React.useEffect(() => {
-    const cell = gridFocusCellSelector(apiRef.current.state);
+    const cell = gridFocusCellSelector(apiRef);
 
     if (cell) {
       const updatedRow = apiRef.current.getRow(cell.id);
