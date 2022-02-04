@@ -85,6 +85,17 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
           enabled: false,
         },
         {
+          name: 'preventOverflow',
+          enabled: true,
+          options: {
+            altAxis: true,
+            altBoundary: true,
+            tether: true,
+            rootBoundary: 'document',
+            padding: 8,
+          },
+        },
+        {
           name: 'isPlaced',
           enabled: true,
           phase: 'main',
