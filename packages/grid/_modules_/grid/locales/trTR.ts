@@ -5,7 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const trTRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Satır yok',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Sonuç bulunamadı.',
   errorOverlayDefaultLabel: 'Bir hata oluştu.',
 
   // Density selector toolbar button text
@@ -30,7 +30,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
   toolbarExportCSV: 'CSV olarak aktar',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'Yazdır',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Sütun ara',
@@ -62,7 +62,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'küçük eşit',
   filterOperatorIsEmpty: 'boş',
   filterOperatorIsNotEmpty: 'dolu',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'herhangi biri',
 
   // Filter values text
   // filterValueAny: 'any',
@@ -94,33 +94,33 @@ const trTRGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
+  checkboxSelectionHeaderName: 'Seçim',
 
   // Boolean cell text
   // booleanCellTrueLabel: 'true',
   // booleanCellFalseLabel: 'false',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'daha fazla',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Sola sabitle',
+  pinToRight: 'Sağa sabitle',
+  unpin: 'Sabitlemeyi kaldır',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Grup',
+  treeDataExpand: 'göster',
+  treeDataCollapse: 'gizle',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Grup',
+  groupColumn: (name) => `${name} için grupla`,
+  unGroupColumn: (name) => `${name} için gruplamayı kaldır`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'Genişlet',
+  collapseDetailPanel: 'Gizle',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);
