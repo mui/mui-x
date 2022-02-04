@@ -12,13 +12,13 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface GridToolbarProps
   extends GridToolbarContainerProps,
-    Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {}
+    Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions' | 'excelOptions'> {}
 
 const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function GridToolbar(
   props,
   ref,
 ) {
-  const { className, csvOptions, printOptions, ...other } = props;
+  const { className, csvOptions, printOptions, excelOptions, ...other } = props;
   const rootProps = useGridRootProps();
 
   if (
@@ -34,7 +34,11 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function 
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
-      <GridToolbarExport csvOptions={csvOptions} printOptions={printOptions} />
+      <GridToolbarExport
+        csvOptions={csvOptions}
+        printOptions={printOptions}
+        excelOptions={excelOptions}
+      />
     </GridToolbarContainer>
   );
 });
@@ -45,6 +49,16 @@ GridToolbar.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   csvOptions: PropTypes.object,
+  excelOptions: PropTypes.shape({
+    allColumns: PropTypes.bool,
+    disableToolbarButton: PropTypes.bool,
+    exceljsPostprocess: PropTypes.func,
+    exceljsPreprocess: PropTypes.func,
+    fields: PropTypes.arrayOf(PropTypes.string),
+    fileName: PropTypes.string,
+    getRowsToExport: PropTypes.func,
+    includeHeaders: PropTypes.bool,
+  }),
   printOptions: PropTypes.object,
 } as any;
 

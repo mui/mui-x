@@ -1,3 +1,4 @@
+import type * as Excel from 'exceljs';
 import { GridRowId } from './gridRows';
 import type { GridApiRef } from './api';
 
@@ -100,10 +101,17 @@ export interface GridPrintExportOptions extends GridExportOptions {
   pageStyle?: string | Function;
 }
 
+export interface GridExceljsProcessInput {
+  workbook: Excel.Workbook;
+  worksheet: Excel.Worksheet;
+}
 /**
  * The options to apply on the Excel export.
  */
-export interface GridExcelExportOptions extends GridFileExportOptions {}
+export interface GridExcelExportOptions extends GridFileExportOptions {
+  exceljsPreprocess?: (processInput: GridExceljsProcessInput) => Promise<void>;
+  exceljsPostprocess?: (processInput: GridExceljsProcessInput) => Promise<void>;
+}
 
 /**
  * Available export formats.

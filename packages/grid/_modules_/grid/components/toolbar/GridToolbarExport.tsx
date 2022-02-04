@@ -168,6 +168,8 @@ GridToolbarExport.propTypes = {
   excelOptions: PropTypes.shape({
     allColumns: PropTypes.bool,
     disableToolbarButton: PropTypes.bool,
+    exceljsPostprocess: PropTypes.func,
+    exceljsPreprocess: PropTypes.func,
     fields: PropTypes.arrayOf(PropTypes.string),
     fileName: PropTypes.string,
     getRowsToExport: PropTypes.func,

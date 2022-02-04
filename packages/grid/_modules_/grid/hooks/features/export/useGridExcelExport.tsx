@@ -61,6 +61,8 @@ export const useGridExcelExport = (
           rowIds: exportedRowIds,
           getCellParams: apiRef.current.getCellParams,
           includeHeaders: options.includeHeaders ?? true,
+          exceljsPreprocess: options?.exceljsPreprocess,
+          exceljsPostprocess: options?.exceljsPostprocess,
         },
         apiRef.current,
       );

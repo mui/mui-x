@@ -7,6 +7,7 @@ import {
   GridValueOptionsParams,
   GridValueFormatterParams,
   GridApi,
+  GridExceljsProcessInput,
 } from '../../../../models';
 
 const getExcelJs = () => import('exceljs');
@@ -98,11 +99,10 @@ const serialiseRow = (
   };
 };
 
-const serialiseColumn = (column: GridColDef, includeHeaders: boolean) => {
-  const { field, headerName } = column;
+const serialiseColumn = (column: GridColDef) => {
+  const { field } = column;
 
   return {
-    ...(includeHeaders ? { header: headerName || field } : {}),
     key: field,
     // TODO (clean that hack)
     // the width seems to be the number of small character visible in a cell
@@ -116,17 +116,30 @@ interface BuildExcelOptions {
   rowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   includeHeaders: boolean;
+  exceljsPreprocess?: (processInput: GridExceljsProcessInput) => Promise<void>;
+  exceljsPostprocess?: (processInput: GridExceljsProcessInput) => Promise<void>;
 }
 
 export async function buildExcel(options: BuildExcelOptions, api): Promise<Excel.Workbook> {
-  const { columns, rowIds, getCellParams, includeHeaders } = options;
+  const { columns, rowIds, getCellParams, includeHeaders, exceljsPreprocess, exceljsPostprocess } =
+    options;
 
   const excelJS = await getExcelJs();
   const workbook: Excel.Workbook = new excelJS.Workbook();
   const worksheet = workbook.addWorksheet('Sheet1');
 
-  worksheet.columns = columns.map((column) => serialiseColumn(column, includeHeaders));
+  worksheet.columns = columns.map((column) => serialiseColumn(column));
 
+  if (exceljsPreprocess) {
+    await exceljsPreprocess({
+      workbook,
+      worksheet,
+    });
+  }
+
+  if (includeHeaders) {
+    worksheet.addRow(columns.map((column) => column.headerName || column.field));
+  }
   rowIds.forEach((id) => {
     const { row, dataValidation, outlineLevel } = serialiseRow(id, columns, getCellParams, api);
     const newRow = worksheet.addRow(row);
@@ -141,5 +154,13 @@ export async function buildExcel(options: BuildExcelOptions, api): Promise<Excel
       newRow.outlineLevel = outlineLevel;
     }
   });
+
+  if (exceljsPostprocess) {
+    await exceljsPostprocess({
+      workbook,
+      worksheet,
+    });
+  }
+
   return workbook;
 }

@@ -214,6 +214,16 @@ The excel export allows to reproduce the column types and the tree structure of 
 
 {{"demo": "pages/components/data-grid/export/ExcelExport.js", "bg": "inline"}}
 
+### Template Excel
+
+To manage excel file creation, the DataGrid use [exceljs](https://github.com/exceljs/exceljs) internally.
+You can customize the document before and after the creation of trows containing data by using `exceljsPreprocess` and `exceljsPostprocess`.
+This two functions input is an object `{workbook, worksheet}` which are the `exceljs` object allowing you to manipulate the excel file.
+
+Thanks to this two methods, you can add metadata to your documents, and add custom content on top or bottom of the worksheet.
+
+{{"demo": "pages/components/data-grid/export/ExcelCustomExcelExport.js", "bg": "inline"}}
+
 ### apiRef
 
 > ⚠️ Only use this API as the last option. Give preference to the props to control the grid.

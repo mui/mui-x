@@ -178,6 +178,7 @@
   { "name": "GridEventsStr", "kind": "TypeAlias" },
   { "name": "GridExcelExportApi", "kind": "Interface" },
   { "name": "GridExcelExportOptions", "kind": "Interface" },
+  { "name": "GridExceljsProcessInput", "kind": "Interface" },
   { "name": "GridExpandMoreIcon", "kind": "Variable" },
   { "name": "GridExportExtension", "kind": "TypeAlias" },
   { "name": "GridExportFormat", "kind": "TypeAlias" },
