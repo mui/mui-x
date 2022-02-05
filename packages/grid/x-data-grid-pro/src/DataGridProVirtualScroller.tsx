@@ -254,17 +254,6 @@ const DataGridProVirtualScroller = React.forwardRef<
     minHeight: shouldExtendContent ? '100%' : 'auto',
   };
 
-  const rowsLookup = React.useMemo(() => {
-    if (rootProps.getDetailPanelContent == null) {
-      return null;
-    }
-
-    return currentPage.rows.reduce((acc, { id }, index) => {
-      acc[id] = index;
-      return acc;
-    }, {} as Record<GridRowId, number>);
-  }, [currentPage.rows, rootProps.getDetailPanelContent]);
-
   const getDetailPanels = () => {
     const panels: React.ReactNode[] = [];
 
@@ -280,11 +269,11 @@ const DataGridProVirtualScroller = React.forwardRef<
       const content = detailPanelsContent[id];
 
       // Check if the id exists in the current page
-      const exists = rowsLookup![id] !== undefined;
+      const exists = currentPage.lookup![id] !== undefined;
 
       if (React.isValidElement(content) && exists) {
         const height = detailPanelsHeights[id];
-        const rowIndex = rowsLookup![id];
+        const rowIndex = currentPage.lookup[id];
         const top = rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id);
 
         panels.push(

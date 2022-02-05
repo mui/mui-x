@@ -52,6 +52,8 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   // Params
   'GridCellParams',
   'GridRowParams',
+  'GridRowClassNameParams',
+  'GridRowSpacingParams',
 
   // Others
   'GridColDef',

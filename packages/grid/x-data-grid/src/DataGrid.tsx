@@ -211,7 +211,7 @@ DataGridRaw.propTypes = {
   getDetailPanelContent: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
@@ -225,6 +225,12 @@ DataGridRaw.propTypes = {
    * Return the id of a given [[GridRowModel]].
    */
   getRowId: PropTypes.func,
+  /**
+   * Function that allows to specify margins between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row margin values.
+   */
+  getRowSpacing: PropTypes.func,
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56

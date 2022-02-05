@@ -100,6 +100,15 @@ If you need some rows to have different row heights this can be achieved using t
 > <DataGridPro getRowHeight={handleGetRowHeight} />
 > ```
 
+## Row spacing
+
+By using the `getRowSpacing` prop you can specify the vertical space between rows.
+This prop is called with a [`GridRowSpacingParams`](/api/data-grid/grid-row-spacing-params/) object.
+Observe that the value specified will only be used internally to calculate which rows to render during scroll and for space allocation.
+Use it with CSS to add a margin or border between rows, as shown in the demo below:
+
+{{"demo": "pages/components/data-grid/rows/RowMarginGrid.js", "bg": "inline"}}
+
 ## Styling rows
 
 You can check the [styling rows](/components/data-grid/style/#styling-rows) section for more information.

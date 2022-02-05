@@ -18,6 +18,9 @@ import {
   GridRowHeightParams,
   GridRowHeightReturnValue,
   GridRowParams,
+  GridRowClassNameParams,
+  GridRowSpacing,
+  GridRowSpacingParams,
 } from '../params';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
@@ -388,16 +391,22 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   getCellClassName?: (params: GridCellParams) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
-  getRowClassName?: (params: GridRowParams) => string;
+  getRowClassName?: (params: GridRowClassNameParams) => string;
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
    * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
    */
   getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
+  /**
+   * Function that allows to specify margins between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row margin values.
+   */
+  getRowSpacing?: (params: GridRowSpacingParams) => GridRowSpacing;
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].

@@ -304,7 +304,7 @@ DataGridProRaw.propTypes = {
   getDetailPanelHeight: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
@@ -318,6 +318,12 @@ DataGridProRaw.propTypes = {
    * Return the id of a given [[GridRowModel]].
    */
   getRowId: PropTypes.func,
+  /**
+   * Function that allows to specify margins between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row margin values.
+   */
+  getRowSpacing: PropTypes.func,
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].

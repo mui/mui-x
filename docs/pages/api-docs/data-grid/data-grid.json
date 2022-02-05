@@ -50,6 +50,7 @@
     "getRowClassName": { "type": { "name": "func" } },
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
+    "getRowSpacing": { "type": { "name": "func" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },

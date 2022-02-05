@@ -3,7 +3,13 @@ import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
-import { DataGrid, DataGridProps, GridActionsCellItem } from '@mui/x-data-grid';
+import clsx from 'clsx';
+import {
+  DataGrid,
+  DataGridProps,
+  GridActionsCellItem,
+  GridRowClassNameParams,
+} from '@mui/x-data-grid';
 import { getColumnValues, getRow } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { COMPACT_DENSITY_FACTOR } from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
@@ -97,17 +103,44 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(1);
   });
 
-  it('should apply the CSS class returned by getRowClassName', () => {
-    const getRowId = (row) => `${row.clientId}`;
-    const handleRowClassName = (params) => (params.row.age < 20 ? 'under-age' : '');
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid getRowClassName={handleRowClassName} getRowId={getRowId} {...baselineProps} />
-      </div>,
-    );
-    expect(getRow(0)).to.have.class('under-age');
-    expect(getRow(1)).to.have.class('under-age');
-    expect(getRow(2)).not.to.have.class('under-age');
+  describe('prop: getRowClassName', () => {
+    it('should apply the CSS class returned by getRowClassName', () => {
+      const getRowId = (row: any) => `${row.clientId}`;
+      const handleRowClassName = (params: GridRowClassNameParams) =>
+        params.row.age < 20 ? 'under-age' : '';
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid getRowClassName={handleRowClassName} getRowId={getRowId} {...baselineProps} />
+        </div>,
+      );
+      expect(getRow(0)).to.have.class('under-age');
+      expect(getRow(1)).to.have.class('under-age');
+      expect(getRow(2)).not.to.have.class('under-age');
+    });
+
+    it('should call with isFirstVisible=true in the first row and isLastVisible=true in the last', () => {
+      const { rows, columns } = getData(4, 2);
+      const getRowClassName = (params: GridRowClassNameParams) =>
+        clsx({ first: params.isFirstVisible, last: params.isLastVisible });
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            getRowClassName={getRowClassName}
+            pageSize={3}
+            rowsPerPageOptions={[3]}
+          />
+        </div>,
+      );
+      expect(getRow(0)).to.have.class('first');
+      expect(getRow(1)).not.to.have.class('first');
+      expect(getRow(1)).not.to.have.class('last');
+      expect(getRow(2)).to.have.class('last');
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getRow(3)).to.have.class('first');
+      expect(getRow(3)).to.have.class('last');
+    });
   });
 
   describe('columnType: actions', () => {
@@ -221,7 +254,7 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
-  describe('Row height', () => {
+  describe('prop: getRowHeight', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting
@@ -291,6 +324,101 @@ describe('<DataGrid /> - Rows', () => {
       expect(getRow(0).clientHeight).to.equal(30);
       expect(getRow(1).clientHeight).to.equal(100);
       expect(getRow(2).clientHeight).to.equal(30);
+    });
+  });
+
+  describe('prop: getRowSpacing', () => {
+    const { rows, columns } = getData(4, 2);
+
+    const TestCase = (props: Partial<DataGridProps>) => {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={rows} columns={columns} {...props} />
+        </div>
+      );
+    };
+
+    it('should call with the correct params', () => {
+      const getRowSpacing = stub().returns({});
+      render(<TestCase getRowSpacing={getRowSpacing} pageSize={2} rowsPerPageOptions={[2]} />);
+
+      expect(getRowSpacing.args[0][0]).to.deep.equal({
+        isFirstVisible: true,
+        isLastVisible: false,
+        id: 0,
+        model: rows[0],
+      });
+      expect(getRowSpacing.args[1][0]).to.deep.equal({
+        isFirstVisible: false,
+        isLastVisible: true,
+        id: 1,
+        model: rows[1],
+      });
+
+      getRowSpacing.resetHistory();
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+
+      expect(getRowSpacing.args[0][0]).to.deep.equal({
+        isFirstVisible: true,
+        isLastVisible: false,
+        id: 2,
+        model: rows[2],
+      });
+      expect(getRowSpacing.args[1][0]).to.deep.equal({
+        isFirstVisible: false,
+        isLastVisible: true,
+        id: 3,
+        model: rows[3],
+      });
+    });
+
+    it('should consider the spacing when computing the content size', function test() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+      const spacingTop = 5;
+      const spacingBottom = 10;
+      const rowHeight = 50;
+      render(
+        <TestCase
+          rowHeight={rowHeight}
+          getRowSpacing={() => ({ top: spacingTop, bottom: spacingBottom })}
+        />,
+      );
+      const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent');
+      const expectedHeight = rows.length * (rowHeight + spacingTop + spacingBottom);
+      expect(virtualScrollerContent).toHaveInlineStyle({
+        width: 'auto',
+        height: `${expectedHeight}px`,
+      });
+    });
+
+    it('should update the content size when getRowSpacing is removed', function test() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+      const spacingTop = 5;
+      const spacingBottom = 10;
+      const rowHeight = 50;
+      const { setProps } = render(
+        <TestCase
+          rowHeight={rowHeight}
+          getRowSpacing={() => ({ top: spacingTop, bottom: spacingBottom })}
+        />,
+      );
+      const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent');
+      const expectedHeight = rows.length * (rowHeight + spacingTop + spacingBottom);
+      expect(virtualScrollerContent).toHaveInlineStyle({
+        width: 'auto',
+        height: `${expectedHeight}px`,
+      });
+      setProps({ getRowSpacing: null });
+      expect(virtualScrollerContent).toHaveInlineStyle({
+        width: 'auto',
+        height: `${rows.length * rowHeight}px`,
+      });
     });
   });
 });

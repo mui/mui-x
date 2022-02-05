@@ -34,6 +34,7 @@ import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/column
 import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 import { useGridDetailPanel } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelCache } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanelCache';
+import { useGridRowSpacing } from '../../_modules_/grid/hooks/features/rows/useGridRowSpacing';
 
 export const useDataGridProComponent = (
   inputApiRef: GridApiRef | undefined,
@@ -59,6 +60,7 @@ export const useDataGridProComponent = (
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
+  useGridRowSpacing(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
