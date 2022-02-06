@@ -9,7 +9,7 @@
     "build:clean": "rimraf .next && yarn build",
     "build-sw": "node ./scripts/buildServiceWorker.js",
     "dev": "rimraf ./node_modules/.cache/babel-loader && next dev --port 3001",
-    "deploy": "git push upstream next:docs-v5",
+    "deploy": "git push upstream master:docs-v5",
     "export": "rimraf docs/export && next export --threads=3 -o export && yarn build-sw",
     "icons": "rimraf public/static/icons/* && node ./scripts/buildIcons.js",
     "typescript": "tsc -p tsconfig.json",
