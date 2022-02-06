@@ -8,8 +8,8 @@ import * as babelTypes from '@babel/types';
 import * as yargs from 'yargs';
 import { Octokit } from '@octokit/rest';
 
-const GIT_ORGANIZATION = 'mui-org';
-const GIT_REPO = 'material-ui-x';
+const GIT_ORGANIZATION = 'mui';
+const GIT_REPO = 'mui-x';
 const L10N_ISSUE_ID = 3211;
 const SOURCE_CODE_REPO = `https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}`;
 

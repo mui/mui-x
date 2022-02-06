@@ -111,7 +111,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       (event) => {
         // Ignore portal
         // The target is not an element when triggered by a Select inside the cell
-        // See https://github.com/mui-org/material-ui/issues/10534
+        // See https://github.com/mui/material-ui/issues/10534
         if (
           (event.target as any).nodeType === 1 &&
           !event.currentTarget.contains(event.target as Element)
