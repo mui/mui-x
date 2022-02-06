@@ -310,7 +310,7 @@ You can limit the sorting to the top level rows with the `disableChildrenSorting
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #3377](https://github.com/mui-org/material-ui-x/issues/3377) if you want to see it land faster.
+> 👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
 
 Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown bellow.
 This implementation does not support every feature of the grid but can be a good starting point for large datasets.
@@ -454,7 +454,7 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #213](https://github.com/mui-org/material-ui-x/issues/213) if you want to see it land faster.
+> 👍 Upvote [issue #213](https://github.com/mui/mui-x/issues/213) if you want to see it land faster.
 
 When grouping, you will be able to apply an aggregation function to populate the group row with values.
 
@@ -462,7 +462,7 @@ When grouping, you will be able to apply an aggregation function to populate the
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #214](https://github.com/mui-org/material-ui-x/issues/214) if you want to see it land faster.
+> 👍 Upvote [issue #214](https://github.com/mui/mui-x/issues/214) if you want to see it land faster.
 
 Pivoting will allow you to take a columns values and turn them into columns.
 

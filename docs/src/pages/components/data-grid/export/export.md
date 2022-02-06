@@ -202,7 +202,7 @@ You can remove the Print export option from the toolbar by setting `disableToolb
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #198](https://github.com/mui-org/material-ui-x/issues/198) if you want to see it land faster.
+> 👍 Upvote [issue #198](https://github.com/mui/mui-x/issues/198) if you want to see it land faster.
 
 You will be able to export the displayed data to Excel with an API call, or using the grid UI.
 
@@ -210,7 +210,7 @@ You will be able to export the displayed data to Excel with an API call, or usin
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #199](https://github.com/mui-org/material-ui-x/issues/199) if you want to see it land faster.
+> 👍 Upvote [issue #199](https://github.com/mui/mui-x/issues/199) if you want to see it land faster.
 
 You will be able to copy and paste items to and from the grid using the system clipboard.
 

@@ -2,8 +2,8 @@
 const { Octokit } = require('@octokit/rest');
 const yargs = require('yargs');
 
-const GIT_ORGANIZATION = 'mui-org';
-const GIT_REPO = 'material-ui-x';
+const GIT_ORGANIZATION = 'mui';
+const GIT_REPO = 'mui-x';
 
 /**
  * @param {string} commitMessage

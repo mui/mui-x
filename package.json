@@ -77,7 +77,7 @@
     "@emotion/styled": "^11.6.0",
     "@eps1lon/enzyme-adapter-react-17": "^0.1.0",
     "@mui/icons-material": "^5.3.1",
-    "@mui/monorepo": "https://github.com/mui-org/material-ui.git#master",
+    "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
     "@mui/material": "^5.3.1",
     "@mui/utils": "^5.3.0",
     "@playwright/test": "1.17.1",

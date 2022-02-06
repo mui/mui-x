@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui-org/material-ui-x.git",
+    "url": "https://github.com/mui/mui-x.git",
     "directory": "packages/x-license-pro"
   },
   "bugs": {
-    "url": "https://github.com/mui-org/material-ui-x/issues"
+    "url": "https://github.com/mui/mui-x/issues"
   },
   "homepage": "https://mui.com/components/data-grid/",
   "license": "See LICENSE file",
