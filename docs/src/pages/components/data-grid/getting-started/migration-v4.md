@@ -8,7 +8,7 @@ title: MUI X - Migration from v4 to v5
 
 ## Introduction
 
-This a reference for upgrading your site from MUI X v4 to v5.
+This is a reference guide for upgrading your site from MUI X v4 to v5.
 MUI X v5 is fully compatible with MUI Core (includes Material UI) v5 and can be used with MUI Core v4 with some additional steps.
 Most breaking changes are renaming of CSS classes or variables to improve the consistency of the grid.
 
@@ -85,12 +85,12 @@ export default function DataGridDemo() {
 }
 ```
 
-**Done!** Now, you can render any dependencies that rely on MUI Core v5 with v4.
+**Done!** Now, you can render any dependencies that rely on MUI Core v5 without upgrading from v4, and they will both run seamlessly alongside.
 For example, the following interactive demo shows how these steps tie together with the data grid:
 
 {{"demo": "pages/components/data-grid/getting-started/CoreV5WithCoreV4.js", "hideToolbar": true, "bg": true}}
 
-## Migrating MUI X from v4
+## Migrating MUI X
 
 ### Update MUI version
 
