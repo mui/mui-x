@@ -170,10 +170,11 @@ export const useGridKeyboardNavigation = (
     GridEventListener<GridEvents.columnHeaderKeyDown>
   >(
     (params, event) => {
-      let isFromCustomHeader = false
+      let isFromCustomHeader = false;
       if (params.colDef.renderHeader) {
-        const headerTitleNode = event.currentTarget.querySelector(".MuiDataGrid-columnHeaderTitle")
-        isFromCustomHeader = !!headerTitleNode && headerTitleNode.contains(event.target as Node | null)
+        const headerTitleNode = event.currentTarget.querySelector('.MuiDataGrid-columnHeaderTitle');
+        isFromCustomHeader =
+          !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
       }
 
       if (
@@ -182,7 +183,7 @@ export const useGridKeyboardNavigation = (
       ) {
         if (!isFromCustomHeader) {
           // prevent page scroll from keyboard when focus on our buttons
-          event.preventDefault()
+          event.preventDefault();
         }
         // When focus is on a nested input, keyboard events have no effect to avoid conflicts with native events.
         // There is on exception for the checkBoxHeader
