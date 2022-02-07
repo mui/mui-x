@@ -130,7 +130,7 @@ Please pay attention to the license.
 
 The component comes [in different plans](/pricing/):
 
-- **Community**: It's [MIT license](https://tldrlegal.com/license/mit-license). It's [free forever](https://www.notion.so/mui-org/Stewardship-542a2226043d4f4a96dfb429d16cf5bd) and available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid). It currently includes the [DataGrid](/components/data-grid/#mit-version) component.
+- **Community**: It's [MIT license](https://tldrlegal.com/license/mit-license). It's [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd) and available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid). It currently includes the [DataGrid](/components/data-grid/#mit-version) component.
 - **Pro** and **Premium**: It's a [commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/components/data-grid/#commercial-version) component.
   Features only available in the commercial version are suffixed in the documentation with the following marks:
 
@@ -291,9 +291,9 @@ The license key you have installed is not as issued by MUI.
 
 ### GitHub
 
-We use GitHub issues as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui-org/material-ui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
+We use GitHub issues as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 
-[Open an issue](https://github.com/mui-org/material-ui-x/issues/new/choose)
+[Open an issue](https://github.com/mui/mui-x/issues/new/choose)
 
 ### StackOverflow
 
@@ -309,7 +309,7 @@ Support is available on multiple channels, but the recommended channel is GitHub
 If you need to share private information, you can also use email.
 
 - **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
-  - GitHub: [Open a new issue](https://github.com/mui-org/material-ui-x/issues/new/choose) and leave your Order ID.
+  - GitHub: [Open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID.
   - Email (only to share private information): [Open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
 - **MUI X Premium**: Same as MUI X Pro, but with priority over Pro, and a 48 hour SLA for the first answer.
   - GitHub: this plan is not available yet
@@ -320,7 +320,7 @@ If you need to share private information, you can also use email.
 
 ## Roadmap
 
-Here is [the public roadmap](https://github.com/mui-org/material-ui-x/projects/1). It's organized by quarter.
+Here is [the public roadmap](https://github.com/mui/mui-x/projects/1). It's organized by quarter.
 
 > ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of MUI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
 

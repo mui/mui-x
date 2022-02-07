@@ -68,7 +68,7 @@ Some selectors are yet to be documented.
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #820](https://github.com/mui-org/material-ui-x/issues/820) if you want to see it land faster.
+> 👍 Upvote [issue #820](https://github.com/mui/mui-x/issues/820) if you want to see it land faster.
 
 [//]: # 'The current state of the grid can be exported using `apiRef.current.exportState()`.'
 [//]: # 'It can then be restored by either passing it to the `initialState` prop or to the `apiRef.current.restoreState()` method.'

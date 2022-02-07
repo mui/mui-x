@@ -5,7 +5,7 @@
 
 <h1 align="center">MUI X</h1>
 
-The [main repository](https://github.com/mui-org/material-ui) of MUI focuses on providing a ready-to-use design system, as well as empowering developers to build their own.
+The [main repository](https://github.com/mui/material-ui) of MUI focuses on providing a ready-to-use design system, as well as empowering developers to build their own.
 
 This MUI X mono-repo gathers the advanced MUI components – it's an extension of the core. The fundamental features are MIT licensed, and the more advanced ones commercial.
 
@@ -38,7 +38,7 @@ There is a StackOverflow tag called "mui" that you can use to tag your questions
 
 ## Bugs or feature request
 
-You can create an [issue](https://github.com/mui-org/material-ui-x/issues) on this repository.
+You can create an [issue](https://github.com/mui/mui-x/issues) on this repository.
 Please always provide a reproduction case, the following templates can be a good start:
 
 - [DataGrid free version](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1)
@@ -53,7 +53,7 @@ Although we love giving you the opportunity to put your stamp on MUI, we also ar
 
 ## Changelog
 
-If you have recently updated, please read the [changelog](https://github.com/mui-org/material-ui-x/releases) for details of what has changed.
+If you have recently updated, please read the [changelog](https://github.com/mui/mui-x/releases) for details of what has changed.
 
 ## Roadmap
 

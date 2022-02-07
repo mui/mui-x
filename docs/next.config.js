@@ -43,8 +43,8 @@ module.exports = {
     // Set by Netlify
     GRID_EXPERIMENTAL_ENABLED: process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
     // #default-branch-switch
-    SOURCE_CODE_ROOT_URL: 'https://github.com/mui-org/material-ui-x/blob/master',
-    SOURCE_CODE_REPO: 'https://github.com/mui-org/material-ui-x',
+    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
+    SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
   },
   webpack5: true,
   webpack: (config, options) => {
