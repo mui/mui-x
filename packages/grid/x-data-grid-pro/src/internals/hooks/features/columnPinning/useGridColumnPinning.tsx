@@ -26,7 +26,7 @@ import {
 } from './gridColumnPinningInterface';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
-import { GridRestoreStatePreProcessingContext } from '../../../../../../_modules_/grid/hooks/features/statePersistence/gridStatePersistenceInterface';
+import type { GridRestoreStatePreProcessingContext } from '../../../../../../_modules_/grid/hooks/features/statePersistence/gridStatePersistenceInterface';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -86,10 +86,13 @@ export const useGridColumnPinning = (
         `.${gridClasses.row}[data-rowindex="${index}"]`,
       );
       rowElements.forEach((row) => {
-        if (event.type === 'mouseenter') {
-          row.classList.add('Mui-hovered');
-        } else {
-          row.classList.remove('Mui-hovered');
+        // Ignore rows from other grid inside the hovered row
+        if (row.closest(`.${gridClasses.virtualScroller}`) === apiRef.current.windowRef!.current!) {
+          if (event.type === 'mouseenter') {
+            row.classList.add('Mui-hovered');
+          } else {
+            row.classList.remove('Mui-hovered');
+          }
         }
       });
     },

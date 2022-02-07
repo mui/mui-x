@@ -264,6 +264,11 @@ export enum GridEvents {
    */
   columnsChange = 'columnsChange',
   /**
+   * Fired when the open detail panels are changed.
+   * @ignore - do not document.
+   */
+  detailPanelsExpandedRowIdsChange = 'detailPanelsExpandedRowIdsChange',
+  /**
    * Fired when the pinned columns is changed.
    * @ignore - do not document.
    */

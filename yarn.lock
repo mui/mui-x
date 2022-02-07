@@ -2531,9 +2531,9 @@
     react-is "^17.0.2"
     react-transition-group "^4.4.2"
 
-"@mui/monorepo@https://github.com/mui-org/material-ui.git#master":
+"@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.3.1"
-  resolved "https://github.com/mui-org/material-ui.git#8efc59254540b66ec445d71d00ff75d5a78581c6"
+  resolved "https://github.com/mui/material-ui.git#8efc59254540b66ec445d71d00ff75d5a78581c6"
 
 "@mui/private-theming@^5.3.0":
   version "5.3.0"
@@ -15949,6 +15949,11 @@ react-helmet-async@^1.0.7:
     prop-types "^15.7.2"
     react-fast-compare "^3.2.0"
     shallowequal "^1.1.0"
+
+react-hook-form@^7.22.5:
+  version "7.22.5"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.22.5.tgz#85a135f3c5ae02ccf73096a03fc14b45607e9baa"
+  integrity sha512-Q2zaeQFXdVQ8l3hcywhltH+Nzj4vo50wMVujHDVN/1Xy9IOaSZJwYBXA2CYTpK6rq41fnXviw3jTLb04c7Gu9Q==
 
 react-inspector@^5.1.0:
   version "5.1.0"

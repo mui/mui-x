@@ -122,6 +122,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Groep',
   groupColumn: (name) => `Groepeer op ${name}`,
   unGroupColumn: (name) => `Stop groeperen op ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

@@ -25,6 +25,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
   rowGroupingColumnMode: 'single',
+  getDetailPanelHeight: () => 500,
 };
 
 export const useDataGridProProps = (inProps: DataGridProProps) => {

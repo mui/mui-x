@@ -1,17 +1,21 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   useGridSelector,
   getDataGridUtilityClass,
   gridClasses,
   gridVisibleColumnFieldsSelector,
+  gridRowsMetaSelector,
   useGridApiEventHandler,
   GridEvents,
+  GridRowId,
   unstable_GridVirtualScroller as GridVirtualScroller,
   unstable_GridVirtualScrollerContent as GridVirtualScrollerContent,
   unstable_GridVirtualScrollerRenderZone as GridVirtualScrollerRenderZone,
   unstable_useGridVirtualScroller as useGridVirtualScroller,
+  unstable_useCurrentPageRows as useCurrentPageRows,
 } from '@mui/x-data-grid';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -21,6 +25,11 @@ import {
   GridPinnedColumns,
   GridPinnedPosition,
 } from '../hooks/features/columnPinning';
+import {
+  gridDetailPanelExpandedRowsContentCacheSelector,
+  gridDetailPanelExpandedRowsHeightCacheSelector,
+  gridDetailPanelExpandedRowIdsSelector,
+} from '../hooks/features/detailPanel';
 
 export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
@@ -65,6 +74,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       'pinnedColumns',
       rightPinnedColumns && rightPinnedColumns.length > 0 && 'pinnedColumns--right',
     ],
+    detailPanels: ['detailPanels'],
+    detailPanel: ['detailPanel'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -84,6 +95,23 @@ const getOverlayAlpha = (elevation: number) => {
   }
   return alphaValue / 100;
 };
+
+const VirtualScrollerDetailPanels = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'DetailPanels',
+  overridesResolver: (props, styles) => styles.detailPanels,
+})({});
+
+const VirtualScrollerDetailPanel = styled(Box, {
+  name: 'MuiDataGrid',
+  slot: 'DetailPanel',
+  overridesResolver: (props, styles) => styles.detailPanel,
+})(({ theme }) => ({
+  zIndex: 2,
+  width: '100%',
+  position: 'absolute',
+  backgroundColor: theme.palette.background.default,
+}));
 
 const VirtualScrollerPinnedColumns = styled('div', {
   name: 'MuiDataGrid',
@@ -120,7 +148,17 @@ const DataGridProVirtualScroller = React.forwardRef<
   const { className, disableVirtualization, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const currentPage = useCurrentPageRows(apiRef, rootProps);
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
+  const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
+  const detailPanelsContent = useGridSelector(
+    apiRef,
+    gridDetailPanelExpandedRowsContentCacheSelector,
+  );
+  const detailPanelsHeights = useGridSelector(
+    apiRef,
+    gridDetailPanelExpandedRowsHeightCacheSelector,
+  );
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
@@ -133,6 +171,14 @@ const DataGridProVirtualScroller = React.forwardRef<
       rightColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
     }
   }, []);
+
+  const getRowProps = (id: GridRowId) => {
+    if (!expandedRowIds.includes(id)) {
+      return null;
+    }
+    const height = detailPanelsHeights[id];
+    return { style: { marginBottom: height } };
+  };
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
@@ -152,6 +198,7 @@ const DataGridProVirtualScroller = React.forwardRef<
     renderZoneMinColumnIndex: leftPinnedColumns.length,
     renderZoneMaxColumnIndex: visibleColumnFields.length - rightPinnedColumns.length,
     onRenderZonePositioning: handleRenderZonePositioning,
+    getRowProps,
     ...props,
   });
 
@@ -210,6 +257,56 @@ const DataGridProVirtualScroller = React.forwardRef<
     minHeight: shouldExtendContent ? '100%' : 'auto',
   };
 
+  const rowsLookup = React.useMemo(() => {
+    if (rootProps.getDetailPanelContent == null) {
+      return null;
+    }
+
+    return currentPage.rows.reduce((acc, { id }, index) => {
+      acc[id] = index;
+      return acc;
+    }, {} as Record<GridRowId, number>);
+  }, [currentPage.rows, rootProps.getDetailPanelContent]);
+
+  const getDetailPanels = () => {
+    const panels: React.ReactNode[] = [];
+
+    if (rootProps.getDetailPanelContent == null) {
+      return panels;
+    }
+
+    const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+    const uniqueExpandedRowIds = [...new Set([...expandedRowIds]).values()];
+
+    for (let i = 0; i < uniqueExpandedRowIds.length; i += 1) {
+      const id = uniqueExpandedRowIds[i];
+      const content = detailPanelsContent[id];
+
+      // Check if the id exists in the current page
+      const exists = rowsLookup![id] !== undefined;
+
+      if (React.isValidElement(content) && exists) {
+        const height = detailPanelsHeights[id];
+        const rowIndex = rowsLookup![id];
+        const top = rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id);
+
+        panels.push(
+          <VirtualScrollerDetailPanel
+            key={i}
+            style={{ top, height }}
+            className={classes.detailPanel}
+          >
+            {content}
+          </VirtualScrollerDetailPanel>,
+        );
+      }
+    }
+
+    return panels;
+  };
+
+  const detailPanels = getDetailPanels();
+
   return (
     <GridVirtualScroller {...getRootProps(other)}>
       <GridVirtualScrollerContent {...getContentProps({ style: contentStyle })}>
@@ -246,6 +343,11 @@ const DataGridProVirtualScroller = React.forwardRef<
         <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
           {getRows({ renderContext })}
         </GridVirtualScrollerRenderZone>
+        {detailPanels.length > 0 && (
+          <VirtualScrollerDetailPanels className={classes.detailPanels}>
+            {detailPanels}
+          </VirtualScrollerDetailPanels>
+        )}
       </GridVirtualScrollerContent>
     </GridVirtualScroller>
   );

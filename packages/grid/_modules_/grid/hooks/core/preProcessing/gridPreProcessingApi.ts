@@ -8,6 +8,7 @@ import {
 import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
 import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
 import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
+import { GridRowEntry } from '../../../models/gridRows';
 
 export type PreProcessorCallback = (value: any, params?: any) => any;
 
@@ -29,6 +30,7 @@ export interface GridPreProcessingGroupLookup {
     value: GridRestoreStatePreProcessingValue;
     context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
   };
+  rowHeight: { value: Record<string, number>; context: GridRowEntry };
 }
 
 export type GridPreProcessor<P extends GridPreProcessingGroup> = (

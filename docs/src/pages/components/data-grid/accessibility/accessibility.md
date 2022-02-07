@@ -87,6 +87,12 @@ Use the arrow keys to move the focus.
 |                                         <kbd class="key">Enter</kbd> | Sort column when column header is focused          |
 |  <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">Enter</kbd></kbd> | Open column menu when column header is focused     |
 
+### Group & pivot
+
+|                                                                Keys | Description                       |
+| ------------------------------------------------------------------: | :-------------------------------- |
+| <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">Enter</kbd></kbd> | Toggles the detail panel of a row |
+
 ### Key assignment conventions
 
 The above key assignments are for Windows and Linux.

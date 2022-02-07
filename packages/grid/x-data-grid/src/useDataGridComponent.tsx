@@ -31,6 +31,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
+  useGridDensity(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridEditing(apiRef, props);
@@ -38,7 +39,6 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
-  useGridDensity(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
   useGridRowsMeta(apiRef, props);

@@ -57,8 +57,9 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 - [Sorting](/components/data-grid/sorting) and [multi-sorting](/components/data-grid/sorting/#multi-sorting) <span class="plan-pro"></span>
 - [Selection](/components/data-grid/selection/)
 - [Column virtualization](/components/data-grid/virtualization/#column-virtualization) and [rows virtualization](/components/data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
-- [Row grouping](/components/data-grid/group-pivot/#row-grouping) <span class="plan-pro"></span>
+- [Row grouping](/components/data-grid/group-pivot/#row-grouping) <span class="plan-premium"></span>
 - [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="plan-pro"></span>
+- [Master detail](/components/data-grid/group-pivot/#master-detail) <span class="plan-pro"></span>
 - [Resizable columns](/components/data-grid/columns/#column-resizing) <span class="plan-pro"></span>
 - [100% customizable](/components/data-grid/style/)
 - Server-side data
@@ -76,14 +77,14 @@ While development of the data grid component is moving fast, there are still man
 - [Range selection](/components/data-grid/selection/#range-selection) <span class="plan-premium"></span>
 - [Pivot, Aggregation](/components/data-grid/group-pivot/) <span class="plan-premium"></span>
 
-You can find more details on, the [feature comparison](/components/data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui-org/material-ui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui-org/material-ui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
+You can find more details on, the [feature comparison](/components/data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui/mui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui/mui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
 
 ## Resources
 
 Here are some resources you might be interested in to learn more about the grid:
 
 - The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
-- The [source on GitHub](https://github.com/mui-org/material-ui-x/tree/master/packages/grid)
+- The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/grid)
 - The [Material Design specification](https://material.io/design/components/data-tables.html) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
 - The [Sketch](https://mui.com/store/items/sketch-react/) and [Figma](https://mui.com/store/items/figma-react/) design assets

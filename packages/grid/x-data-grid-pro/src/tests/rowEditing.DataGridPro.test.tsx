@@ -275,7 +275,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     expect(cell).to.have.text('Adidas');
   });
 
-  // Confirms the bug in https://github.com/mui-org/material-ui-x/issues/3304
+  // Confirms the bug in https://github.com/mui/mui-x/issues/3304
   // TODO v6: remove
   it('should call preProcessEditCellProps twice and with the wrong value in the 2nd time if preventCommitWhileValidating=false', async () => {
     const brandPreProcessEditCellProps = spy(({ props }) => Promise.resolve(props));

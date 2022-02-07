@@ -6,7 +6,6 @@ export interface GridRowsState extends GridRowGroupingResult {
    * It also count the expanded and collapsed children rows.
    */
   totalRowCount: number;
-
   /**
    * Amount of rows before applying the filtering.
    * It does not count the expanded children rows.
