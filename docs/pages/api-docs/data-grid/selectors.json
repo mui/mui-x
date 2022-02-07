@@ -146,6 +146,13 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridFilteredRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of rows accessible after the filtering process.\nContains the collapsed children.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFilteredSortedRowEntriesSelector",
     "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
     "category": "Filtering",
@@ -364,7 +371,7 @@
     "name": "gridVisibleRowCountSelector",
     "returnType": "number",
     "category": "Filtering",
-    "description": "Get the amount of rows accessible after the filtering process.",
+    "description": "Get the amount of rows accessible after the filtering process.\nDoes not contain the collapsed children.",
     "supportsApiRef": true
   },
   {

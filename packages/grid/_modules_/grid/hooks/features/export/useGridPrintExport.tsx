@@ -3,7 +3,7 @@ import { ownerDocument } from '@mui/material/utils';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridFilteredRowCountSelector } from '../filter/gridFilterSelector';
+import { gridVisibleTopLevelRowCountSelector } from '../filter/gridFilterSelector';
 
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
@@ -38,7 +38,7 @@ export const useGridPrintExport = (
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const filteredRowCount = useGridSelector(apiRef, gridFilteredRowCountSelector);
+  const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
@@ -262,7 +262,7 @@ export const useGridPrintExport = (
       previousGridState.current = apiRef.current.state;
 
       if (props.pagination) {
-        apiRef.current.setPageSize(visibleRowCount);
+        apiRef.current.setPageSize(visibleTopLevelRowCount);
       }
 
       await updateGridColumnsForPrint(options?.fields, options?.allColumns);
@@ -273,7 +273,7 @@ export const useGridPrintExport = (
       printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
     },
     [
-      visibleRowCount,
+      visibleTopLevelRowCount,
       props,
       logger,
       apiRef,
