@@ -121,6 +121,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   groupColumn: (name) => `Group by ${name}`,
   unGroupColumn: (name) => `Stop grouping by ${name}`,
 
+  // Master/detail
+  expandDetailPanel: 'Expand',
+  collapseDetailPanel: 'Collapse',
+
   // Used core components translation keys
   MuiTablePagination: {},
 };
