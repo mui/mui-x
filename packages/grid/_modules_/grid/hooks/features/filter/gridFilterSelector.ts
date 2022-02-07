@@ -92,7 +92,7 @@ export const gridFilteredSortedRowIdsSelector = createSelector(
 
 /**
  * @category Filtering
- * @deprecated Use `gridVisibleSortedRowIdsSelector` instead
+ * @deprecated Use `gridVisibleSortedRowIdsSelector` instead.
  * @ignore - do not document.
  */
 export const gridVisibleRowsSelector = gridVisibleSortedRowIdsSelector;
@@ -116,11 +116,22 @@ export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
 
 /**
  * Get the amount of rows accessible after the filtering process.
+ * Does not contain the collapsed children.
  * @category Filtering
  */
 export const gridVisibleRowCountSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   (visibleSortedRows) => visibleSortedRows.length,
+);
+
+/**
+ * Get the amount of rows accessible after the filtering process.
+ * Contains the collapsed children.
+ * @category Filtering
+ */
+export const gridFilteredRowCountSelector = createSelector(
+  gridFilteredSortedRowEntriesSelector,
+  (filteredSortedRows) => filteredSortedRows.length,
 );
 
 /**

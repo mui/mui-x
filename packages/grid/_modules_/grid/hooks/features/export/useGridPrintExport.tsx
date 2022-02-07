@@ -3,7 +3,7 @@ import { ownerDocument } from '@mui/material/utils';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
+import { gridFilteredRowCountSelector } from '../filter/gridFilterSelector';
 
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
@@ -38,7 +38,7 @@ export const useGridPrintExport = (
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const filteredRowCount = useGridSelector(apiRef, gridFilteredRowCountSelector);
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
