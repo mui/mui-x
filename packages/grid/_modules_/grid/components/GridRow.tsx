@@ -15,11 +15,40 @@ import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { GridRenderEditCellParams } from '../models';
 
-export interface GridRowProps {
+export interface GridRowIndexes {
+  /**
+   * Index of the row in the whole sorted and filtered dataset.
+   * If some rows above have expanded children, this index also take those children into account.
+   */
+  filteredRows: number;
+
+  /**
+   * Index of the row in the current page.
+   * If the pagination is disabled, this value will be equal to the `dataset` value.
+   * If some rows above have expanded children, this index also take those children into account.
+   */
+  pageRows: number;
+
+  /**
+   * Index of the row in the list of rows currently rendered by the virtualization engine.
+   * If the pagination is disabled, this value will be equal to the `page` value.
+   * If some rows above have expanded children, this index also take those children into account.
+   */
+  virtualizationEngineRows: number;
+}
+
+export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   rowId: GridRowId;
   selected: boolean;
+  /**
+   * Index of the row in the whole sorted and filtered dataset.
+   * If some rows above have expanded children, this index also take those children into account.
+   * @deprecated Use `props.indexes.filteredRows` instead.
+   */
   index: number;
+  indexes: GridRowIndexes;
   rowHeight: number;
   containerWidth: number;
   row: GridRowModel;
@@ -62,12 +91,13 @@ const EmptyCell = ({ width, height }) => {
   return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 };
 
-function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
+function GridRow(props: GridRowProps) {
   const {
     selected,
     rowId,
     row,
     index,
+    indexes,
     style: styleProp,
     rowHeight,
     className,
@@ -85,7 +115,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     onMouseLeave,
     ...other
   } = props;
-  const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
+  const ariaRowIndex = indexes.filteredRows + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
@@ -181,7 +211,11 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     }
 
     if (editCellState != null && column.renderEditCell) {
-      const params = { ...cellParams, ...editCellState, api: apiRef.current };
+      const params: GridRenderEditCellParams = {
+        ...cellParams,
+        ...editCellState,
+        api: apiRef.current,
+      };
       content = column.renderEditCell(params);
       // TODO move to GridCell
       classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));
@@ -232,7 +266,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   return (
     <div
       data-id={rowId}
-      data-rowindex={index}
+      data-rowindex={indexes.filteredRows}
       role="row"
       className={clsx(rowClassName, classes.root, className)}
       aria-rowindex={ariaRowIndex}

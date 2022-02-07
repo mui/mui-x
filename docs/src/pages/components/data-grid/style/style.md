@@ -117,6 +117,12 @@ Choose between one of the following values: 'left' | 'right' | 'center'.
 
 **Note**: You must use `headerAlign` to align the content of the header.
 
+## Striped rows
+
+The following demo illustrates how the rows of the grid can be stripped.
+
+{{"demo": "pages/components/data-grid/style/StripedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Custom theme
 
 The following demo leverages the CSS customization API to match the Ant Design specification.
