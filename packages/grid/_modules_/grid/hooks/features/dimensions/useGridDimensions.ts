@@ -109,8 +109,8 @@ export function useGridDimensions(
     });
 
     const viewportInnerSize: ElementSize = {
-      height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
       width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
+      height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
     };
 
     const newFullDimensions: GridDimensions = {

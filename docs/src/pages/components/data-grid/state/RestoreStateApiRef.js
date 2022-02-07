@@ -143,6 +143,11 @@ ViewListItem.propTypes = {
       columns: PropTypes.shape({
         columnVisibilityModel: PropTypes.object,
       }),
+      detailPanel: PropTypes.shape({
+        expandedRowIds: PropTypes.arrayOf(
+          PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ).isRequired,
+      }),
       filter: PropTypes.shape({
         filterModel: PropTypes.object,
       }),

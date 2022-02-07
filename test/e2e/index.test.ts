@@ -302,7 +302,7 @@ describe('e2e', () => {
       ).to.equal('1/31/2025, 4:05:00 PM');
     });
 
-    // https://github.com/mui-org/material-ui-x/issues/3613
+    // https://github.com/mui/mui-x/issues/3613
     it('should not lose cell focus when scrolling with arrow down', async () => {
       await renderFixture('DataGridPro/KeyboardNavigationFocus');
 

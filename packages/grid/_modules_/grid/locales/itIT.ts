@@ -100,6 +100,10 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleziona',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   booleanCellTrueLabel: 'vero',
@@ -122,6 +126,10 @@ const itITGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Gruppo',
   groupColumn: (name) => `Raggruppa per ${name}`,
   unGroupColumn: (name) => `Annulla raggruppamento per ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);
