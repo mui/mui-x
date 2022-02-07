@@ -29,7 +29,9 @@ export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps
   useGridRowEditing(apiRef, props);
   useGridStateInit(apiRef, (state) => ({ ...state, editRows: {} }));
 
-  const debounceMap = React.useRef({});
+  const debounceMap = React.useRef<Record<GridRowId, Record<string, [NodeJS.Timeout, () => void]>>>(
+    {},
+  );
 
   apiRef.current.unstable_updateControlState({
     stateId: 'editRows',
@@ -84,17 +86,19 @@ export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps
     debounceMap.current[id][field] = [timeout, callbackToRunImmediately];
   };
 
-  const runPendingEditCellValueChangeDebounce = React.useCallback((id, maybeField) => {
+  const runPendingEditCellValueChangeDebounce = React.useCallback<
+    GridEditingSharedApi['unstable_runPendingEditCellValueChangeDebounce']
+  >((id, field) => {
     if (!debounceMap.current[id]) {
       return;
     }
-    if (!maybeField) {
-      Object.keys(debounceMap.current[id]).forEach((field) => {
-        const [, callback] = debounceMap.current[id][field];
+    if (!field) {
+      Object.keys(debounceMap.current[id]).forEach((debouncedField) => {
+        const [, callback] = debounceMap.current[id][debouncedField];
         callback();
       });
-    } else if (debounceMap.current[id][maybeField]) {
-      const [, callback] = debounceMap.current[id][maybeField];
+    } else if (debounceMap.current[id][field]) {
+      const [, callback] = debounceMap.current[id][field];
       callback();
     }
   }, []);
