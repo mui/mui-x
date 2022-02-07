@@ -31,22 +31,19 @@ CustomRow.propTypes = {
   className: PropTypes.string,
   indexes: PropTypes.shape({
     /**
-     * Index of the row in the whole sorted and filtered dataset.
-     * If some rows above have expanded children, this index also take those children into account.
-     */
-    filteredRows: PropTypes.number.isRequired,
-    /**
      * Index of the row in the current page.
      * If the pagination is disabled, this value will be equal to the `dataset` value.
-     * If some rows above have expanded children, this index also take those children into account.
      */
     pageRows: PropTypes.number.isRequired,
     /**
      * Index of the row in the list of rows currently rendered by the virtualization engine.
      * If the pagination is disabled, this value will be equal to the `page` value.
-     * If some rows above have expanded children, this index also take those children into account.
      */
     virtualizationEngineRows: PropTypes.number.isRequired,
+    /**
+     * Index of the row in the whole sorted and filtered dataset.
+     */
+    visibleRows: PropTypes.number.isRequired,
   }).isRequired,
 };
 
@@ -58,7 +55,7 @@ export default function StripedGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid loading={loading} {...data} components={{ Row: CustomRow }} />
+      <StripedDataGrid loading={loading} {...data} components={{ Row: CustomRow }} />
     </div>
   );
 }

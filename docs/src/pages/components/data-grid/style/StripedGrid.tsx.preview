@@ -1,1 +1,1 @@
-<DataGrid loading={loading} {...data} components={{ Row: CustomRow }} />
+<StripedDataGrid loading={loading} {...data} components={{ Row: CustomRow }} />
