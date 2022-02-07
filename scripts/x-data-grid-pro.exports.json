@@ -320,6 +320,7 @@
   { "name": "GridRowId", "kind": "TypeAlias" },
   { "name": "GridRowIdGetter", "kind": "TypeAlias" },
   { "name": "gridRowIdsSelector", "kind": "Variable" },
+  { "name": "GridRowIndexes", "kind": "Interface" },
   { "name": "GridRowMode", "kind": "TypeAlias" },
   { "name": "GridRowModel", "kind": "TypeAlias" },
   { "name": "GridRowModelUpdate", "kind": "Interface" },
