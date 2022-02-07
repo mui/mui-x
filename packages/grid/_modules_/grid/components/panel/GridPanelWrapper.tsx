@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import TrapFocus from '@mui/material/Unstable_TrapFocus';
 import { styled, Theme } from '@mui/material/styles';
