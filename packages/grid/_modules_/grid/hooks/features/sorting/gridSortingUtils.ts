@@ -9,6 +9,7 @@ import type {
   GridSortDirection,
   GridSortItem,
   GridSortModel,
+  GridState,
 } from '../../../models';
 
 type GridSortingFieldComparator = {
@@ -20,6 +21,16 @@ interface GridParsedSortItem {
   comparator: GridComparatorFn;
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
 }
+
+export const mergeStateWithSortModel =
+  (sortModel: GridSortModel) =>
+  (state: GridState): GridState => ({
+    ...state,
+    sorting: {
+      ...state.sorting,
+      sortModel,
+    },
+  });
 
 const isDesc = (direction: GridSortDirection) => direction === 'desc';
 

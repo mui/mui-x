@@ -63,6 +63,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'ist am oder vor',
   filterOperatorIsEmpty: 'ist leer',
   filterOperatorIsNotEmpty: 'ist nicht leer',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'Beliebig',
@@ -121,6 +122,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

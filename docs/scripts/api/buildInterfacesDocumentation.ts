@@ -42,9 +42,10 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridPaginationApi',
   'GridCsvExportApi',
   'GridScrollApi',
-  'GridEditRowApi',
+  'GridEditingApi',
   'GridRowGroupingApi',
   'GridColumnPinningApi',
+  'GridDetailPanelApi',
   'GridPrintExportApi',
   'GridDisableVirtualizationApi',
 

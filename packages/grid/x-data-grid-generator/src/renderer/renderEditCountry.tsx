@@ -48,7 +48,7 @@ function EditCountry(props: GridRenderEditCellParams) {
           component="li"
           sx={{
             '& > img': {
-              mr: 2,
+              mr: 1.5,
               flexShrink: 0,
             },
           }}

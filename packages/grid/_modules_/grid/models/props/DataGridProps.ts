@@ -25,6 +25,13 @@ import { GridInitialState } from '../gridState';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
+export interface GridExperimentalFeatures {
+  /**
+   * Will be part of the premium-plan when fully ready.
+   */
+  preventCommitWhileValidating: boolean;
+}
+
 /**
  * The props users can give to the `DataGrid` component.
  */
@@ -80,7 +87,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   components?: Partial<GridSlotsComponent>;
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText?: Partial<GridLocaleText>;
 }
@@ -392,6 +399,12 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    */
   getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
   /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
+  /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
@@ -696,4 +709,9 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * Features under development.
+   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: Partial<GridExperimentalFeatures>;
 }

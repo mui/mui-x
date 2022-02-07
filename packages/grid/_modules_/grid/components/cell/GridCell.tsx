@@ -178,13 +178,13 @@ function GridCell(props: GridCellProps) {
         apiRef.current.scroll(scrollPosition);
       }
     }
-  });
+  }, [hasFocus, cellMode, apiRef]);
 
   let handleFocus: any = other.onFocus;
 
   if (process.env.NODE_ENV === 'test') {
     handleFocus = (event: React.FocusEvent) => {
-      const focusedCell = gridFocusCellSelector(apiRef.current.state);
+      const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === rowId && focusedCell.field === field) {
         if (typeof other.onFocus === 'function') {
           other.onFocus(event);

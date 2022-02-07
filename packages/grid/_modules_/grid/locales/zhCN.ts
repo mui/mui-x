@@ -62,6 +62,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: '正在前面',
   filterOperatorIsEmpty: '为空',
   filterOperatorIsNotEmpty: '不为空',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: '任何',
@@ -117,6 +118,10 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const zhCN: Localization = getGridLocalization(zhCNGrid, zhCNCore);

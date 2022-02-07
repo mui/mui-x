@@ -17,6 +17,7 @@ import { clamp } from '../../../utils/utils';
 import { GridRenderContext } from '../../../models';
 import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(
@@ -46,6 +47,7 @@ interface UseGridVirtualScrollerProps {
   renderZoneMinColumnIndex?: number;
   renderZoneMaxColumnIndex?: number;
   onRenderZonePositioning?: (params: { top: number; left: number }) => void;
+  getRowProps?: (id: GridRowId, model: GridRowModel) => any;
 }
 
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
@@ -59,6 +61,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     onRenderZonePositioning,
     renderZoneMinColumnIndex = 0,
     renderZoneMaxColumnIndex = visibleColumns.length,
+    getRowProps,
   } = props;
 
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
@@ -95,11 +98,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       ? firstRowIndex + currentPage.rows.length
       : getIndexFromScroll(top + rootRef.current!.clientHeight!, rowsMeta.positions);
 
-    // Manually call the selector here to avoid an infinite loop if it's listed as a dependency
-    // The reference to `columnsMeta.positions` is not the same across renders
-    const { positions: columnPositions } = gridColumnsMetaSelector(apiRef.current.state);
-    const firstColumnIndex = getIndexFromScroll(left, columnPositions);
-    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnPositions);
+    const firstColumnIndex = getIndexFromScroll(left, columnsMeta.positions);
+    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnsMeta.positions);
 
     return {
       firstRowIndex,
@@ -112,7 +112,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     rowsMeta.positions,
     rootProps.autoHeight,
     currentPage.rows.length,
-    apiRef,
+    columnsMeta.positions,
     containerWidth,
     visibleColumns.length,
   ]);
@@ -179,7 +179,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       });
 
       const top = gridRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
-      const left = gridColumnsMetaSelector(apiRef.current.state).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
+      const left = gridColumnsMetaSelector(apiRef).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
       renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
 
       if (typeof onRenderZonePositioning === 'function') {
@@ -312,6 +312,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           selected={isSelected}
           index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
           containerWidth={availableSpace}
+          {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}
           {...rootProps.componentsProps?.row}
         />,
       );
@@ -332,7 +333,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     };
 
     if (rootProps.autoHeight && currentPage.rows.length === 0) {
-      size.height = 2 * rowHeight; // Give room to show the overlay when there no rows.
+      size.height = 2 * rowHeight; // Give room to show the overlay when there's no row.
     }
 
     return size;

@@ -72,6 +72,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'je na nebo dříve',
   filterOperatorIsEmpty: 'je prázdný',
   filterOperatorIsNotEmpty: 'není prázdný',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',
@@ -153,6 +154,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Skupina',
   groupColumn: (name) => `Zoskupit podle ${name}`,
   unGroupColumn: (name) => `Přestat zoskupovat podle ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);

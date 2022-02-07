@@ -190,7 +190,46 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
       expect(getActiveCell()).to.equal(`3-1`);
+    });
+
+    it('should move to the first row before moving to column header when pressing "PageUp"', function test() {
+      if (isJSDOM) {
+        // This test is not relevant if we can't choose the actual height
+        this.skip();
+      }
+
+      render(<NavigationTestCaseNoScrollX />);
+      const cell = getCell(3, 1);
+      fireClickEvent(cell);
+      expect(getActiveCell()).to.equal('3-1');
+
       fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(`0-1`, 'should focus first row');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(null);
+      expect(getActiveColumnHeader()).to.equal(`1`);
+    });
+
+    it('should move to the first row before moving to column header when pressing "PageUp" on page > 0', function test() {
+      if (isJSDOM) {
+        // This test is not relevant if we can't choose the actual height
+        this.skip();
+      }
+
+      render(<NavigationTestCaseNoScrollX hideFooter={false} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+
+      const cell = getCell(13, 1);
+      fireClickEvent(cell);
+      expect(getActiveCell()).to.equal('13-1');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(`10-1`, 'should focus first row');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(null);
       expect(getActiveColumnHeader()).to.equal(`1`);
     });
 

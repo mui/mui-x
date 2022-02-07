@@ -29,6 +29,10 @@ import type {
 } from '../hooks/features/rowGrouping';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 import { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
+import {
+  GridDetailPanelInitialState,
+  GridDetailPanelState,
+} from '../hooks/features/detailPanel/gridDetailPanelState';
 
 /**
  * TODO: Distinguish pro and community states
@@ -52,6 +56,7 @@ export interface GridState {
   rowGrouping: GridRowGroupingState;
   error?: any;
   pinnedColumns: GridColumnPinningState;
+  detailPanel: GridDetailPanelState;
 }
 
 export interface GridInitialState {
@@ -62,4 +67,5 @@ export interface GridInitialState {
   preferencePanel?: GridPreferencePanelInitialState;
   rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
+  detailPanel?: GridDetailPanelInitialState;
 }

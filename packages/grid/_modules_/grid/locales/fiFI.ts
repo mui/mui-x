@@ -63,6 +63,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'on sama tai ennen',
   filterOperatorIsEmpty: 'on tyhjä',
   filterOperatorIsNotEmpty: 'ei ole tyhjä',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'mikä tahansa',
@@ -121,6 +122,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid, fiFICore);

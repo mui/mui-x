@@ -72,6 +72,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'je na alebo skôr',
   filterOperatorIsEmpty: 'je prázdny',
   filterOperatorIsNotEmpty: 'nie je prázdny',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',
@@ -153,6 +154,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Skupina',
   groupColumn: (name) => `Zoskupiť podľa ${name}`,
   unGroupColumn: (name) => `Prestať zoskupovať podľa ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

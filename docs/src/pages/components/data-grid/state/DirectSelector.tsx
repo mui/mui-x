@@ -19,9 +19,7 @@ export default function DirectSelector() {
   const apiRef = useGridApiRef();
 
   const handleSelectFirstVisibleRow = () => {
-    const visibleRows = gridPaginatedVisibleSortedGridRowIdsSelector(
-      apiRef.current.state,
-    );
+    const visibleRows = gridPaginatedVisibleSortedGridRowIdsSelector(apiRef);
     if (visibleRows.length === 0) {
       return;
     }
