@@ -68,6 +68,11 @@ export default function CustomFilterPanelContent() {
               valueInputProps: {
                 required: true,
               },
+              deleteIconProps: {
+                sx: {
+                  '& .MuiSvgIcon-root': { color: '#d32f2f' },
+                },
+              },
             },
             sx: {
               // Customize inputs using css selectors
@@ -76,7 +81,6 @@ export default function CustomFilterPanelContent() {
                 backgroundColor: (theme) =>
                   theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
               },
-              '& .MuiDataGrid-filterFormDeleteIcon': { order: 1 },
               '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
               '& .MuiDataGrid-filterFormColumnInput': { mr: 2, width: 150 },
               '& .MuiDataGrid-filterFormOperatorInput': { mr: 2 },
