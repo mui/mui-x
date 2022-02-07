@@ -22,7 +22,7 @@ The following steps must be proposed as a pull request.
 
    In case of problem, another method to generate the changelog is available at the end of this page.
 
-2. Clean the generated changelog, to match the format of [https://github.com/mui-org/material-ui-x/releases](https://github.com/mui-org/material-ui-x/releases).
+2. Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
 3. Update the root `package.json`'s version
 4. Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
 5. Open PR with changes and wait for review and green CI.
@@ -56,18 +56,16 @@ Follow the instructions in https://mui-org.notion.site/Releases-7490ef9581b4447e
 
 1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
 
-For instance: [https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master) (if you want to release `master` and the last tag is `v4.0.0-alpha.9`)
+For instance: [https://github.com/mui/mui-x/compare/v4.0.0-alpha.9...master](https://github.com/mui/mui-x/compare/v4.0.0-alpha.9...master) (if you want to release `master` and the last tag is `v4.0.0-alpha.9`)
 You can use the following script in your browser console on any GitHub page to automatically navigate to the page comparing `master` with the last tag.
 
 ```js
 (async () => {
   const releaseBranch = 'master';
-  const tagResponse = await fetch(
-    'https://api.github.com/repos/mui-org/material-ui-x/tags?per_page=1',
-  );
+  const tagResponse = await fetch('https://api.github.com/repos/mui/mui-x/tags?per_page=1');
   const tagData = await tagResponse.json();
   const lastTag = tagData[0].name;
-  const diffPage = `https://github.com/mui-org/material-ui-x/compare/${lastTag}...${releaseBranch}`;
+  const diffPage = `https://github.com/mui/mui-x/compare/${lastTag}...${releaseBranch}`;
   window.location.href = diffPage;
 })();
 ```

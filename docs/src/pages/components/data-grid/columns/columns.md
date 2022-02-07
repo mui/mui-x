@@ -513,7 +513,7 @@ To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECK
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #195](https://github.com/mui-org/material-ui-x/issues/195) if you want to see it land faster.
+> 👍 Upvote [issue #195](https://github.com/mui/mui-x/issues/195) if you want to see it land faster.
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
 
@@ -521,7 +521,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #192](https://github.com/mui-org/material-ui-x/issues/192) if you want to see it land faster.
+> 👍 Upvote [issue #192](https://github.com/mui/mui-x/issues/192) if you want to see it land faster.
 
 Each cell takes up the width of one column.
 Column spanning allows to change this default behavior.
