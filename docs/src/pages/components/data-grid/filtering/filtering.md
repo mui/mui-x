@@ -263,7 +263,7 @@ You can customize the rendering of the filter panel as shown in [the component s
 ### Customize the filter panel content
 
 The customization of the filter panel content can be performed by passing props to the default `<GridFilterPanel />` component.
-The props available allow to override:
+The available props allow to override:
 
 - The available `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
 - The order of the column selector (can be `"asc"` or `"desc"`)
