@@ -108,6 +108,10 @@ GridTreeDataGroupingCell.propTypes = {
    */
   colDef: PropTypes.object.isRequired,
   /**
+   * The cell value formatted with the column valueExportFormatter.
+   */
+  exportedValue: PropTypes.any,
+  /**
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,

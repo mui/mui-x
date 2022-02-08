@@ -156,6 +156,14 @@ export function useGridParamsApi(apiRef: GridApiRef) {
           api: apiRef.current,
         });
       }
+      if (colDef.valueExportFormatter) {
+        params.exportedValue = colDef.valueExportFormatter({
+          id,
+          field: params.field,
+          value: params.value,
+          api: apiRef.current,
+        });
+      }
       params.isEditable = colDef && apiRef.current.isCellEditable(params);
 
       return params;

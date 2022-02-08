@@ -156,6 +156,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
 
     const cellParams = apiRef.current.getCellParams(rowId, column.field);
+    delete cellParams.exportedValue;
 
     const classNames: string[] = [];
 

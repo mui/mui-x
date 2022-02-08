@@ -27,9 +27,14 @@ const serialiseRow = (
   getCellParams: (id: GridRowId, field: string) => GridCellParams,
   delimiterCharacter: string,
 ) =>
-  columns.map((column) =>
-    serialiseCellValue(getCellParams(id, column.field).formattedValue, delimiterCharacter),
-  );
+  columns.map((column) => {
+    const cellParams = getCellParams(id, column.field);
+    if (cellParams.exportedValue) {
+      return serialiseCellValue(cellParams.exportedValue, delimiterCharacter);
+    }
+
+    return serialiseCellValue(cellParams.formattedValue, delimiterCharacter);
+  });
 
 interface BuildCSVOptions {
   columns: GridStateColDef[];

@@ -7,7 +7,7 @@ import type { GridApi } from '../api/gridApi';
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
-export interface GridCellParams<V = any, R = any, F = V> {
+export interface GridCellParams<V = any, R = any, F = V, E = V> {
   /**
    * The grid row id.
    */
@@ -24,6 +24,10 @@ export interface GridCellParams<V = any, R = any, F = V> {
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: F;
+  /**
+   * The cell value formatted with the column valueExportFormatter.
+   */
+  exportedValue?: E;
   /**
    * The row model of the row that the current cell belongs to.
    */
@@ -86,7 +90,7 @@ export interface GridRenderEditCellParams extends GridEditCellProps {
  * Parameters passed to `colDef.valueGetter`.
  */
 export interface GridValueGetterParams<V = any, R = any>
-  extends Omit<GridCellParams<V, R>, 'formattedValue' | 'isEditable'> {
+  extends Omit<GridCellParams<V, R>, 'formattedValue' | 'exportedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
    */

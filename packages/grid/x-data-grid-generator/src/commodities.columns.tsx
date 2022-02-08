@@ -243,6 +243,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
 
       return value;
     },
+    valueExportFormatter: ({ value }) => (value as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
     groupingValueGetter: (params) => params.value.code,
     type: 'singleSelect',
     valueOptions: COUNTRY_ISO_OPTIONS_SORTED,

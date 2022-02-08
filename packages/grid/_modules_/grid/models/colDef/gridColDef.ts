@@ -153,6 +153,12 @@ export interface GridColDef {
    */
   valueFormatter?: (params: GridValueFormatterParams) => GridCellValue;
   /**
+   * Function that allows to apply a formatter before CSV exporting.
+   * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
+   * @returns {GridCellValue} The formatted value.
+   */
+  valueExportFormatter?: (params: GridValueFormatterParams) => GridCellValue;
+  /**
    * Function that takes the user-entered value and converts it to a value used internally.
    * @param {GridCellValue} value The user-entered value.
    * @param {GridCellParams} params The params when called before saving the value.

@@ -105,6 +105,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     renderEditCell: renderEditCountry,
     type: 'singleSelect',
     valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
+    valueExportFormatter: ({ value }) => (value as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
     sortComparator: (v1, v2, param1, param2) =>
       gridStringOrNumberComparator(
         (v1 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
