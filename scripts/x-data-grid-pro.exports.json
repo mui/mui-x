@@ -335,6 +335,7 @@
   { "name": "GridRowsMetaApi", "kind": "Interface" },
   { "name": "gridRowsMetaSelector", "kind": "Variable" },
   { "name": "GridRowSpacing", "kind": "Interface" },
+  { "name": "GridRowSpacingApi", "kind": "Interface" },
   { "name": "GridRowSpacingParams", "kind": "Interface" },
   { "name": "GridRowsProp", "kind": "TypeAlias" },
   { "name": "GridRowsState", "kind": "Interface" },

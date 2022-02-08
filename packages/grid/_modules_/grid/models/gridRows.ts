@@ -82,11 +82,11 @@ export type GridRowId = string | number;
 
 export interface GridRowEntry {
   /**
-   * The row model of the row that the current cell belongs to.
+   * The row id.
    */
   id: GridRowId;
   /**
-   * The row model of the row that the current cell belongs to.
+   * The row model.
    */
   model: GridRowModel;
 }
