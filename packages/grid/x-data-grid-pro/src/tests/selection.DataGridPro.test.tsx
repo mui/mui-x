@@ -55,7 +55,7 @@ describe('<DataGridPro /> - Selection', () => {
         />,
       );
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(4);
@@ -75,7 +75,7 @@ describe('<DataGridPro /> - Selection', () => {
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(0);
@@ -94,7 +94,7 @@ describe('<DataGridPro /> - Selection', () => {
       );
 
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(rowLength);
@@ -113,7 +113,7 @@ describe('<DataGridPro /> - Selection', () => {
       );
 
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
 
       fireEvent.click(getCell(0, 0).querySelector('input'));
@@ -148,7 +148,7 @@ describe('<DataGridPro /> - Selection', () => {
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2, 3]);
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Selection', () => {
       fireEvent.click(getCell(2, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
@@ -193,7 +193,7 @@ describe('<DataGridPro /> - Selection', () => {
       fireEvent.click(getCell(1, 0));
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'false');
     });
@@ -375,7 +375,7 @@ describe('<DataGridPro /> - Selection', () => {
   it('should select only filtered rows after filter is applied', () => {
     render(<TestDataGridSelection checkboxSelection />);
     const selectAll = screen.getByRole('checkbox', {
-      name: /select all rows checkbox/i,
+      name: /select all rows/i,
     });
     apiRef.current.setFilterModel({
       items: [

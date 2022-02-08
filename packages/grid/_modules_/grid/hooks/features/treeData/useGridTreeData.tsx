@@ -75,6 +75,15 @@ export const useGridTreeData = (
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: TREE_DATA_GROUPING_NAME,
+        onDuplicatePath: (firstId, secondId, path) => {
+          throw new Error(
+            [
+              'MUI: The path returned by `getTreeDataPath` should be unique.',
+              `The rows with id #${firstId} and #${secondId} have the same.`,
+              `Path: ${JSON.stringify(path.map((step) => step.key))}.`,
+            ].join('\n'),
+          );
+        },
       });
     };
 
