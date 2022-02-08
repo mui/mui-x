@@ -287,6 +287,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       </FilterFormDeleteIcon>
       <FilterFormLinkOperatorInput
         variant="standard"
+        as={rootProps.components.BaseFormControl}
         {...baseFormControlProps}
         {...linkOperatorInputProps}
         sx={{

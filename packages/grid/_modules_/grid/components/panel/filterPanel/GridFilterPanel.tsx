@@ -37,8 +37,8 @@ function GridFilterPanel(props: GridFilterPanelProps) {
   const {
     linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
     columnsSort,
-    sx = {},
     filterFormProps,
+    ...other
   } = props;
 
   const applyFilter = React.useCallback(
@@ -115,7 +115,7 @@ function GridFilterPanel(props: GridFilterPanelProps) {
   }, [items.length]);
 
   return (
-    <GridPanelWrapper sx={sx}>
+    <GridPanelWrapper {...other}>
       <GridPanelContent>
         {items.map((item, index) => (
           <GridFilterForm

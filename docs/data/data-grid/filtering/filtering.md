@@ -265,15 +265,15 @@ You can customize the rendering of the filter panel as shown in [the component s
 The customization of the filter panel content can be performed by passing props to the default `<GridFilterPanel />` component.
 The available props allow to override:
 
-- The available `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
+- The `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
 - The order of the column selector (can be `"asc"` or `"desc"`)
 - Any prop of the input components
 
 Input components can be [customized](/customization/how-to-customize/) by using two approaches.
-You can pass a `sx` prop to any input container or you can use css selectors on nested components of the filter panel.
+You can pass a `sx` prop to any input container or you can use CSS selectors on nested components of the filter panel.
 More details are available in the demo.
 
-| Props                    | Class                                     |
+| Props                    | CSS class                                 |
 | :----------------------- | :---------------------------------------- |
 | `deleteIconProps`        | `MuiDataGrid-filterFormDeleteIcon`        |
 | `linkOperatorInputProps` | `MuiDataGrid-filterFormLinkOperatorInput` |
