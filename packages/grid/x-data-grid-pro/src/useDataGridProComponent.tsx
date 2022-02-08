@@ -16,8 +16,7 @@ import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridF
 import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
 import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
-import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
-import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
+import { useGridPagination } from '../../_modules_/grid/hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
@@ -57,8 +56,7 @@ export const useDataGridProComponent = (
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
-  useGridPageSize(apiRef, props);
-  useGridPage(apiRef, props);
+  useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
