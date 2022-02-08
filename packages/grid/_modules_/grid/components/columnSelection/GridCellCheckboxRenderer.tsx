@@ -25,7 +25,21 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
-    const { field, id, value, tabIndex, hasFocus } = props;
+    const {
+      field,
+      id,
+      value: isChecked,
+      formattedValue,
+      row,
+      rowNode,
+      colDef,
+      isEditable,
+      cellMode,
+      hasFocus,
+      tabIndex,
+      getValue,
+      ...other
+    } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const ownerState = { classes: rootProps.classes };
@@ -68,18 +82,23 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     const isSelectable =
       !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
 
+    const label = apiRef.current.getLocaleText(
+      isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
+    );
+
     return (
       <rootProps.components.BaseCheckbox
         ref={handleRef}
         tabIndex={tabIndex}
-        checked={!!value}
+        checked={isChecked}
         onChange={handleChange}
         className={classes.root}
         color="primary"
-        inputProps={{ 'aria-label': 'Select Row checkbox' }}
+        inputProps={{ 'aria-label': label }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
         {...rootProps.componentsProps?.baseCheckbox}
+        {...other}
       />
     );
   },

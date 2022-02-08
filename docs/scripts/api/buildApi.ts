@@ -53,9 +53,13 @@ const createProject = (options: CreateProgramOptions): Project => {
 };
 
 async function run() {
-  const outputDirectories = FEATURE_TOGGLE.enable_product_scope
-    ? ['./docs/pages/api-docs/data-grid', './docs/pages/x/api/data-grid']
-    : ['./docs/pages/api-docs/data-grid'];
+  let outputDirectories = ['./docs/pages/api-docs/data-grid'];
+  if (FEATURE_TOGGLE.enable_product_scope) {
+    outputDirectories = ['./docs/pages/api-docs/data-grid', './docs/pages/x/api/data-grid'];
+  }
+  if (FEATURE_TOGGLE.enable_redirects) {
+    outputDirectories = ['./docs/pages/x/api/data-grid'];
+  }
   await Promise.all(
     outputDirectories.map(async (dir) => {
       const outputDirectory = path.resolve(dir);

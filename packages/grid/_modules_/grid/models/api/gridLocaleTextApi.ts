@@ -95,6 +95,10 @@ export interface GridLocaleText {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: string;
+  checkboxSelectionSelectAllRows: string;
+  checkboxSelectionUnselectAllRows: string;
+  checkboxSelectionSelectRow: string;
+  checkboxSelectionUnselectRow: string;
 
   // Boolean cell text
   booleanCellTrueLabel: string;
