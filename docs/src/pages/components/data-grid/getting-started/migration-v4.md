@@ -1,26 +1,29 @@
 ---
-title: Data Grid - Migration from v4 to v5
+title: MUI X - Migration from v4 to v5
 ---
 
-# Data Grid - Migration from v4 to v5
+# MUI X - Migration from v4 to v5
 
 <p class="description">MUI X v5 is now stable!</p>
 
 ## Introduction
 
-This a reference for upgrading your site from MUI X v4 to v5. MUI X v5 is fully compatible with MUI Core v5 and can be used with MUI Core v4 with some additional steps.
+This is a reference guide for upgrading your site from MUI X v4 to v5.
+MUI X v5 is fully compatible with MUI Core (includes Material UI) v5 and can be used with MUI Core v4 with some additional steps.
 Most breaking changes are renaming of CSS classes or variables to improve the consistency of the grid.
 
-## Using MUI X v5 with MUI Core v4
+## Migrating MUI Core from v4
 
-We strongly recommend you to migrate both MUI X and MUI Core to v5.
-Depending on the complexity of the application however, this might not be possible.
-An alternative is to install MUI Core v4 alongside to v5, and to configure them to avoid conflicts.
-This can be achieved with the following steps:
+> We strongly recommend you [migrate MUI Core to v5](/guides/migration-v4/) when using MUI X v5.
+> However, this might not be possible, depending on the complexity of the application.
+> The alternative is to install MUI Core v5 and configure it to keep MUI Core v4 running alongside.
 
-1. First, make sure you have MUI X v5 installed. If not, install it with these [instructions](/components/data-grid/getting-started/#installation).
+### Using MUI Core v4 with v5
 
-2. Add a custom [`createGenerateClassName`](/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
+Using MUI Core v4 with v5 can be achieved with the following steps:
+
+1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/getting-started/installation/).
+1. Add a custom [`createGenerateClassName`](/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
 ```jsx
 import { createGenerateClassName } from '@material-ui/core/styles';
@@ -52,7 +55,7 @@ const themeV4 = createThemeV4({
 const themeV5 = createThemeV5({
   palette: {
     primary: {
-      main: theme.palette.primary.main,
+      main: themeV4.palette.primary.main,
     },
   },
 });
@@ -82,11 +85,19 @@ export default function DataGridDemo() {
 }
 ```
 
-The following interactive demo shows how these steps tie together:
+**Done!** Now, you can render any dependencies that rely on MUI Core v5 without upgrading from v4, and they will both run seamlessly alongside.
+For example, the following interactive demo shows how these steps tie together with the data grid:
 
-{{"demo": "pages/components/data-grid/getting-started/DataGridV5WithCoreV4.js", "hideToolbar": true, "bg": true}}
+{{"demo": "pages/components/data-grid/getting-started/CoreV5WithCoreV4.js", "hideToolbar": true, "bg": true}}
 
-## Migrating MUI X from v4
+## Migrating MUI X
+
+### Update MUI version
+
+To use the v5 version of MUI X, you first need to update to the new package names:
+
+- `@material-ui/data-grid` is now `@mui/x-data-grid` (MIT)
+- `@material-ui/x-grid` is now `@mui/x-data-grid-pro` (Commercial)
 
 ### CSS classes
 
@@ -214,7 +225,7 @@ The following interactive demo shows how these steps tie together:
   -const state = apiRef.current.getState();
   +const state = apiRef.current.state
 
-  const filterModel = gridFilterModelSelector(state);
+   const filterModel = gridFilterModelSelector(state);
   ```
 
 - The `state` prop was not working correctly and was removed.
@@ -224,15 +235,15 @@ The following interactive demo shows how these steps tie together:
   To fully control the state, use the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
 
   ```diff
-  <DataGrid
+   <DataGrid
   -  state={{
   +  initialState={{
-      preferencePanel: {
-        open: true,
-        openedPanelValue: GridPreferencePanelsValue.filters,
-      },
-    }}
-  />
+       preferencePanel: {
+         open: true,
+         openedPanelValue: GridPreferencePanelsValue.filters,
+       },
+     }}
+   />
   ```
 
 - Some selectors have been renamed to match with our naming convention:
@@ -278,10 +289,10 @@ The following interactive demo shows how these steps tie together:
   ```diff
   -const rowModels = unorderedGridRowModelsSelector(apiRef.current.state);
 
-  // using the `apiRef`
+   // using the `apiRef`
   +const rowModels = apiRef.current.getRowModels();
 
-  // using selectors
+   // using selectors
   +const allRows = gridRowIdsSelector(apiRef.current.state);
   +const idRowsLookup = gridRowsLookupSelector(apiRef.current.state);
   +const rowModels = new Map(allRows.map((id) => [id, idRowsLookup[id]]));

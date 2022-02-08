@@ -106,7 +106,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const publish = React.useCallback(
     (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) => {
       // Ignore portal
-      // See https://github.com/mui-org/material-ui-x/issues/1721
+      // See https://github.com/mui/mui-x/issues/1721
       if (!event.currentTarget.contains(event.target as Element)) {
         return;
       }

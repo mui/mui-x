@@ -79,6 +79,8 @@ export const GridCloseIcon = createSvgIcon(
 
 export const GridAddIcon = createSvgIcon(<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />, 'Add');
 
+export const GridRemoveIcon = createSvgIcon(<path d="M19 13H5v-2h14v2z" />, 'Remove');
+
 export const GridLoadIcon = createSvgIcon(
   <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" />,
   'Load',

@@ -30,7 +30,7 @@ export interface GridRowProps {
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   editRowsState: GridEditRowsModel;
-  isLastRow?: boolean;
+  isCurrentPageLastRow?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -41,21 +41,22 @@ type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
   hasScrollY: boolean;
-  isLastRow: boolean;
+  isCurrentPageLastRow: boolean;
   autoHeight: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, hasScrollY, isLastRow, autoHeight, classes } = ownerState;
+  const { editable, editing, selected, hasScrollY, isCurrentPageLastRow, autoHeight, classes } =
+    ownerState;
   const slots = {
     root: [
       'row',
       selected && 'selected',
       editable && 'row--editable',
       editing && 'row--editing',
-      isLastRow && 'row--last',
-      isLastRow && !hasScrollY && !autoHeight && 'row--lastBeforeEmpty',
+      isCurrentPageLastRow && 'row--last',
+      isCurrentPageLastRow && !hasScrollY && !autoHeight && 'row--lastBeforeEmpty',
     ],
   };
 
@@ -89,7 +90,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     cellFocus,
     cellTabIndex,
     editRowsState,
-    isLastRow = false,
+    isCurrentPageLastRow = false,
     onClick,
     onDoubleClick,
     onMouseEnter,
@@ -107,7 +108,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   const ownerState = {
     selected,
-    isLastRow,
+    isCurrentPageLastRow,
     hasScrollY,
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
@@ -125,7 +126,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       (event) => {
         // Ignore portal
         // The target is not an element when triggered by a Select inside the cell
-        // See https://github.com/mui-org/material-ui/issues/10534
+        // See https://github.com/mui/material-ui/issues/10534
         if (
           (event.target as any).nodeType === 1 &&
           !event.currentTarget.contains(event.target as Element)
@@ -275,7 +276,7 @@ GridRow.propTypes = {
   editRowsState: PropTypes.object.isRequired,
   firstColumnToRender: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
-  isLastRow: PropTypes.bool,
+  isCurrentPageLastRow: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object.isRequired,
