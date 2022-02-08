@@ -1,0 +1,11 @@
+{
+  "name": "GridPrintExportApi",
+  "description": "The Print export API interface that is available in the grid apiRef.",
+  "properties": [
+    {
+      "name": "exportDataAsPrint",
+      "description": "Print the grid&#39;s data.",
+      "type": "(options?: GridPrintExportOptions) => void"
+    }
+  ]
+}
