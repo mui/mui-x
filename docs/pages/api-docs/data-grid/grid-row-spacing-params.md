@@ -1,6 +1,6 @@
 # GridRowSpacingParams Interface
 
-<p class="description">Object passed as parameter in the row getRowSpacing callback.</p>
+<p class="description">Object passed as parameter in the row `getRowSpacing` callback prop.</p>
 
 ## Import
 

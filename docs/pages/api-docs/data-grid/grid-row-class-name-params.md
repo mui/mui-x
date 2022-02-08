@@ -1,6 +1,6 @@
 # GridRowClassNameParams Interface
 
-<p class="description">Object passed as parameter in the row getRowClassName callback.</p>
+<p class="description">Object passed as parameter in the row `getRowClassName` callback prop.</p>
 
 ## Import
 

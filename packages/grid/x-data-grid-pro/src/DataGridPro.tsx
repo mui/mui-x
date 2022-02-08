@@ -319,9 +319,9 @@ DataGridProRaw.propTypes = {
    */
   getRowId: PropTypes.func,
   /**
-   * Function that allows to specify margins between rows.
+   * Function that allows to specify the spacing between rows.
    * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
-   * @returns {GridRowSpacing} The row margin values.
+   * @returns {GridRowSpacing} The row spacing values.
    */
   getRowSpacing: PropTypes.func,
   /**

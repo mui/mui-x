@@ -29,7 +29,7 @@ export interface GridRowParams<R extends GridRowModel = GridRowModel> {
 }
 
 /**
- * Object passed as parameter in the row getRowClassName callback.
+ * Object passed as parameter in the row `getRowClassName` callback prop.
  */
 export interface GridRowClassNameParams extends GridRowParams {
   /**
@@ -43,7 +43,7 @@ export interface GridRowClassNameParams extends GridRowParams {
 }
 
 /**
- * Object passed as parameter in the row getRowHeight callback.
+ * Object passed as parameter in the row `getRowHeight` callback prop.
  */
 export interface GridRowHeightParams extends GridRowEntry {
   /**
@@ -58,7 +58,7 @@ export interface GridRowHeightParams extends GridRowEntry {
 export type GridRowHeightReturnValue = number | null | undefined;
 
 /**
- * Object passed as parameter in the row getRowSpacing callback.
+ * Object passed as parameter in the row `getRowSpacing` callback prop.
  */
 export interface GridRowSpacingParams extends GridRowEntry {
   /**
