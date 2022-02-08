@@ -55,11 +55,21 @@ export const useGridRowsMeta = (
       const currentRowHeight = gridDensityRowHeightSelector(state, apiRef.current.instanceId);
       const currentPageTotalHeight = rows.reduce((acc: number, row) => {
         positions.push(acc);
-        let baseRowHeight = currentRowHeight;
+        let baseRowHeight: number;
 
-        if (getRowHeight) {
-          // Default back to base rowHeight if getRowHeight returns null or undefined.
-          baseRowHeight = getRowHeight({ ...row, densityFactor }) ?? currentRowHeight;
+        const isResized =
+          (rowsHeightLookup.current[row.id] && rowsHeightLookup.current[row.id].isResized) || false;
+
+        if (isResized) {
+          // do not recalculate resized row height and use the value from the lookup
+          baseRowHeight = rowsHeightLookup.current[row.id].value;
+        } else {
+          baseRowHeight = currentRowHeight;
+
+          if (getRowHeight) {
+            // Default back to base rowHeight if getRowHeight returns null or undefined.
+            baseRowHeight = getRowHeight({ ...row, densityFactor }) ?? currentRowHeight;
+          }
         }
 
         const heights = apiRef.current.unstable_applyPreProcessors(
@@ -70,7 +80,10 @@ export const useGridRowsMeta = (
 
         const finalRowHeight = Object.values(heights).reduce((acc2, value) => acc2 + value, 0);
 
-        rowsHeightLookup.current[row.id] = baseRowHeight;
+        rowsHeightLookup.current[row.id] = {
+          value: baseRowHeight,
+          isResized,
+        };
 
         return acc + finalRowHeight;
       }, 0);
