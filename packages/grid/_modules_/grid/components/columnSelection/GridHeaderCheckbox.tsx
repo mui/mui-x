@@ -29,6 +29,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
+    const { field, colDef, ...other } = props;
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
@@ -128,6 +129,10 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       return apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
+    const label = apiRef.current.getLocaleText(
+      isChecked ? 'checkboxSelectionUnselectAllRows' : 'checkboxSelectionSelectAllRows',
+    );
+
     return (
       <rootProps.components.BaseCheckbox
         ref={ref}
@@ -136,10 +141,11 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
         onChange={handleChange}
         className={classes.root}
         color="primary"
-        inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
+        inputProps={{ 'aria-label': label }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
         {...rootProps.componentsProps?.baseCheckbox}
+        {...other}
       />
     );
   },
