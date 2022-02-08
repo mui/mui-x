@@ -41,9 +41,9 @@ export const useDataGridProComponent = (
   const apiRef = useGridInitialization(inputApiRef, props);
   useGridTreeData(apiRef, props);
   useGridRowGrouping(apiRef, props);
-  useGridColumnPinning(apiRef, props);
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
+  useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
