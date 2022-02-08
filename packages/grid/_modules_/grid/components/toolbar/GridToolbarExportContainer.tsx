@@ -74,11 +74,10 @@ const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, ButtonPro
           >
             {React.Children.map(children, (child) => {
               if (!React.isValidElement(child)) {
-                return child
+                return child;
               }
-              return React.cloneElement(child, { hideMenu: handleMenuClose })
-            }
-            )}
+              return React.cloneElement(child, { hideMenu: handleMenuClose });
+            })}
           </MenuList>
         </GridMenu>
       </React.Fragment>
