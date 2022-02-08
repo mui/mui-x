@@ -297,10 +297,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         isSelected = true;
       }
 
+      // currentPage.range.firstRowIndex + firstRowToRender + i
+
       const indexes: GridRowIndexes = {
-        visibleRows: currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i,
-        pageRows: nextRenderContext.firstColumnIndex + i,
-        virtualizationEngineRows: i,
+        fromFilteredRows: currentPage.range.firstRowIndex + firstRowToRender + i,
+        fromPageRows: firstRowToRender + i,
       };
 
       rows.push(
@@ -317,7 +318,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={indexes.visibleRows}
+          index={indexes.fromFilteredRows}
           indexes={indexes}
           containerWidth={availableSpace}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}

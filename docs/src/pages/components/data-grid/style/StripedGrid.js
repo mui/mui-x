@@ -31,19 +31,14 @@ CustomRow.propTypes = {
   className: PropTypes.string,
   indexes: PropTypes.shape({
     /**
-     * Index of the row in the current page.
-     * If the pagination is disabled, this value will be equal to the `dataset` value.
-     */
-    pageRows: PropTypes.number.isRequired,
-    /**
-     * Index of the row in the list of rows currently rendered by the virtualization engine.
-     * If the pagination is disabled, this value will be equal to the `page` value.
-     */
-    virtualizationEngineRows: PropTypes.number.isRequired,
-    /**
      * Index of the row in the whole sorted and filtered dataset.
      */
-    visibleRows: PropTypes.number.isRequired,
+    fromFilteredRows: PropTypes.number.isRequired,
+    /**
+     * Index of the row in the current page.
+     * If the pagination is disabled, this value will be equal to the `fromFilteredRows` value.
+     */
+    fromPageRows: PropTypes.number.isRequired,
   }).isRequired,
 };
 

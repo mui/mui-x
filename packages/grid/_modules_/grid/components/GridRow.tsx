@@ -21,19 +21,12 @@ export interface GridRowIndexes {
   /**
    * Index of the row in the whole sorted and filtered dataset.
    */
-  visibleRows: number;
-
+  fromFilteredRows: number;
   /**
    * Index of the row in the current page.
-   * If the pagination is disabled, this value will be equal to the `dataset` value.
+   * If the pagination is disabled, this value will be equal to the `fromFilteredRows` value.
    */
-  pageRows: number;
-
-  /**
-   * Index of the row in the list of rows currently rendered by the virtualization engine.
-   * If the pagination is disabled, this value will be equal to the `page` value.
-   */
-  virtualizationEngineRows: number;
+  fromPageRows: number;
 }
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -42,7 +35,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
-   * @deprecated Use `props.indexes.visibleRows` instead.
+   * @deprecated Use `props.indexes.fromFilteredRows` instead.
    */
   index: number;
   indexes: GridRowIndexes;
@@ -112,7 +105,7 @@ function GridRow(props: GridRowProps) {
     onMouseLeave,
     ...other
   } = props;
-  const ariaRowIndex = indexes.visibleRows + 2; // 1 for the header row and 1 as it's 1-based
+  const ariaRowIndex = indexes.fromFilteredRows + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
@@ -264,7 +257,7 @@ function GridRow(props: GridRowProps) {
   return (
     <div
       data-id={rowId}
-      data-rowindex={indexes.visibleRows}
+      data-rowindex={indexes.fromFilteredRows}
       role="row"
       className={clsx(rowClassName, classes.root, className)}
       aria-rowindex={ariaRowIndex}
@@ -295,13 +288,12 @@ GridRow.propTypes = {
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
-   * @deprecated Use `props.indexes.visibleRows` instead.
+   * @deprecated Use `props.indexes.fromFilteredRows` instead.
    */
   index: PropTypes.number.isRequired,
   indexes: PropTypes.shape({
-    pageRows: PropTypes.number.isRequired,
-    virtualizationEngineRows: PropTypes.number.isRequired,
-    visibleRows: PropTypes.number.isRequired,
+    fromFilteredRows: PropTypes.number.isRequired,
+    fromPageRows: PropTypes.number.isRequired,
   }).isRequired,
   lastColumnToRender: PropTypes.number.isRequired,
   onClick: PropTypes.func,
