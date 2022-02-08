@@ -38,7 +38,7 @@ export default function RowMarginGrid() {
           '& .MuiDataGrid-row': {
             mt: '5px',
             mb: '5px',
-            bgcolor: '#efefef',
+            bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#000' : '#efefef'),
             '&.first': {
               mt: 0,
             },
