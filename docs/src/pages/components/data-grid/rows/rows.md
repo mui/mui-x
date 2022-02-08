@@ -15,6 +15,17 @@ The rows can be defined with the `rows` prop, which expects an array of objects.
 
 {{"demo": "pages/components/data-grid/rows/RowsGrid.js", "bg": "inline"}}
 
+> ⚠️ Each row object should have a field that uniquely identifies the row.
+> By default, the grid will use the `id` property of the row. Note that [column definition](/components/data-grid/columns/#column-definitions) for `id` field is not required.
+>
+> When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
+>
+> ```tsx
+> <DataGrid getRowId={(row) => row.internalId} />
+> ```
+
+{{"demo": "pages/components/data-grid/rows/RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Updating rows
 
 ### The `rows` prop
@@ -97,7 +108,7 @@ You can check the [styling rows](/components/data-grid/style/#styling-rows) sect
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #207](https://github.com/mui-org/material-ui-x/issues/207) if you want to see it land faster.
+> 👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
 
 Each cell takes up the width of one row.
 Row spanning allows to change this default behavior.
@@ -108,7 +119,7 @@ This is very close to the "row spanning" in an HTML `<table>`.
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #206](https://github.com/mui-org/material-ui-x/issues/206) if you want to see it land faster.
+> 👍 Upvote [issue #206](https://github.com/mui/mui-x/issues/206) if you want to see it land faster.
 
 Row reorder is used to rearrange rows by dragging the row with the mouse.
 
@@ -116,7 +127,7 @@ Row reorder is used to rearrange rows by dragging the row with the mouse.
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #1251](https://github.com/mui-org/material-ui-x/issues/1251) if you want to see it land faster.
+> 👍 Upvote [issue #1251](https://github.com/mui/mui-x/issues/1251) if you want to see it land faster.
 
 Pinned (or frozen, locked, or sticky) rows are rows that are visible at all times while the user scrolls the grid vertically.
 

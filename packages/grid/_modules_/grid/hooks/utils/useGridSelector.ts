@@ -1,9 +1,17 @@
 import { GridApiRef } from '../../models/api/gridApiRef';
+import { OutputSelector } from '../../utils/createSelector';
 import { GridState } from '../../models/gridState';
 
 let warnedOnceStateNotInitialized = false;
 
-export const useGridSelector = <T>(apiRef: GridApiRef, selector: (state: GridState) => T) => {
+function isOutputSelector<T>(selector: any): selector is OutputSelector<T> {
+  return selector.cache;
+}
+
+export const useGridSelector = <T>(
+  apiRef: GridApiRef,
+  selector: ((state: GridState) => T) | OutputSelector<T>,
+) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceStateNotInitialized && !apiRef.current.state) {
       warnedOnceStateNotInitialized = true;
@@ -14,6 +22,10 @@ export const useGridSelector = <T>(apiRef: GridApiRef, selector: (state: GridSta
         ].join('\n'),
       );
     }
+  }
+
+  if (isOutputSelector(selector)) {
+    return selector(apiRef);
   }
 
   return selector(apiRef.current.state);

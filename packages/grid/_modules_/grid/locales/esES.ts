@@ -63,6 +63,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'es en o anterior',
   filterOperatorIsEmpty: 'está vacío',
   filterOperatorIsNotEmpty: 'no esta vacío',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',
@@ -99,6 +100,10 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   // checkboxSelectionHeaderName: 'Checkbox selection',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   // booleanCellTrueLabel: 'true',
@@ -121,6 +126,10 @@ const esESGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);

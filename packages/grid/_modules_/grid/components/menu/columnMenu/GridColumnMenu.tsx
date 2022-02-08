@@ -6,7 +6,6 @@ import { GridColumnsMenuItem } from './GridColumnsMenuItem';
 import { GridFilterMenuItem } from './GridFilterMenuItem';
 import { HideGridColMenuItem } from './HideGridColMenuItem';
 import { SortGridMenuItems } from './SortGridMenuItems';
-import { GridPreProcessingGroup } from '../../../hooks/core/preProcessing/gridPreProcessingApi';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
 const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
@@ -22,7 +21,7 @@ const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
     ];
 
     const preProcessedButtons = apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.columnMenu,
+      'columnMenu',
       defaultButtons,
       currentColumn,
     );

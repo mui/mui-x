@@ -19,6 +19,7 @@ interface Selector {
   category?: string;
   deprecated?: string;
   description?: string;
+  supportsApiRef?: boolean;
 }
 
 export default function buildSelectorsDocumentation(options: BuildSelectorsDocumentationOptions) {
@@ -45,6 +46,7 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
       const parameterSymbol = signature.getParameters()[0];
 
       let isSelector = false;
+      let supportsApiRef = false;
 
       if (
         project.checker.getTypeOfSymbolAtLocation(
@@ -56,9 +58,10 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
         isSelector = true;
       } else if (
         // Selector wrapped in `createSelector`
-        type.getProperties().some((property) => property.escapedName === 'memoizedResultFunc')
+        type.symbol.name === 'OutputSelector'
       ) {
         isSelector = true;
+        supportsApiRef = true;
       }
 
       if (!isSelector) {
@@ -82,6 +85,7 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
         category,
         deprecated,
         description,
+        supportsApiRef,
       };
     })
     .filter((el): el is Selector => !!el)

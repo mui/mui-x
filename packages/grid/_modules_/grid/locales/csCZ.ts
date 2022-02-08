@@ -72,6 +72,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'je na nebo dříve',
   filterOperatorIsEmpty: 'je prázdný',
   filterOperatorIsNotEmpty: 'není prázdný',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',
@@ -131,6 +132,10 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Výběr řádku',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   booleanCellTrueLabel: 'ano',
@@ -153,6 +158,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Skupina',
   groupColumn: (name) => `Zoskupit podle ${name}`,
   unGroupColumn: (name) => `Přestat zoskupovat podle ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);

@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '../../../utils/createSelector';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridState } from '../../../models/gridState';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
@@ -7,7 +7,6 @@ import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 
 /**
  * @category Filtering
- * @ignore - do not document.
  */
 export const gridFilterStateSelector = (state: GridState) => state.filter;
 

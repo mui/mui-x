@@ -62,6 +62,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: '이전',
   filterOperatorIsEmpty: '값이 없는',
   filterOperatorIsNotEmpty: '값이 있는',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: '아무값',
@@ -94,6 +95,10 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: '선택',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   booleanCellTrueLabel: '참',
@@ -116,6 +121,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);

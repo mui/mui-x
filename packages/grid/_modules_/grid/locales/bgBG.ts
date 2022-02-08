@@ -62,6 +62,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'е на или преди',
   // filterOperatorIsEmpty: 'is empty',
   // filterOperatorIsNotEmpty: 'is not empty',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   // filterValueAny: 'any',
@@ -96,6 +97,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   // checkboxSelectionHeaderName: 'Checkbox selection',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   // booleanCellTrueLabel: 'true',
@@ -118,6 +123,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

@@ -3,6 +3,124 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.5.0
+
+_Feb 3, 2022_
+
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for [master/detail](https://mui.com/components/data-grid/group-pivot/#master-detail) (#3387) @m4theushw
+
+  <img src="https://user-images.githubusercontent.com/42154031/152379354-47120aac-2b37-4a90-b311-64b4522283b9.gif" width="814">
+
+- 🌍 Add Danish (daDK) locale (#3800) @kasperfilstrup
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.5.0` / `@mui/x-data-grid-pro@v5.5.0`
+
+#### Changes
+
+- [DataGrid] Add methods to import and export the state (#3593) @flaviendelangle
+- [DataGrid] Fix <kbd>PageUp</kbd> jumping directly to the column header skipping the first row (#3761) @cherniavskii
+- [DataGrid] Throw an error if incorrect column type is used (#3757) @DanailH
+- [DataGridPro] Add support for master/detail (#3387) @m4theushw
+- [l10n] Add Danish (daDK) locale (#3800) @kasperfilstrup
+- [l10n] Improve Dutch (nlNL) locale (#3724) @MatthijsKok
+- [l10n] Improve Hebrew (heIL) locale (#3775) @ColdAtNight
+- [l10n] Improve Russian (ruRU) locale (#3818) @Leniorko
+
+### Docs
+
+- [docs] Add default value for `Row` slot (#3807) @cherniavskii
+- [docs] Extend full width (#3815) @m4theushw
+- [docs] Fix country column sorting not working (#3740) @cherniavskii
+- [docs] Fix custom render cell when row is auto generated (#3810) @alexfauquette
+- [docs] Fix flag layout shift (#3773) @oliviertassinari
+- [docs] Mention row `id` requirement and document `getRowId` prop (#3765) @cherniavskii
+- [docs] Refresh the license key documentation (#3529) @oliviertassinari
+
+### Core
+
+- [core] Clean `filtering.DataGrid.test.tsx` (#3768) @flaviendelangle
+- [core] Improve GitHub label workflows (#3680) @DanailH
+- [core] Isolate selectors called without `useGridSelector` (#3774) @m4theushw
+- [core] Prepare infra for pickers migration (#3714) @flaviendelangle
+- [core] Remove none code related instructions from git (#3794) @oliviertassinari
+- [core] Remove remaining usages of `@mui/styles` (#3769) @m4theushw
+- [core] Remove Stylelint (#3811) @m4theushw
+- [core] Split cell / row editing into different hooks (#3219) @m4theushw
+- [core] Stop using an enum for `GridPreProcessingGroup` (#3798) @flaviendelangle
+- [core] Fix failing tests (#3817) @cherniavskii
+- [code] Fix `docs:api` silent crash (#3808) @cherniavskii
+- [test] Increase timeout for Firefox (#3813) @m4theushw
+
+## 5.4.0
+
+_Jan 28, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚣 Introduce [variable row height](https://mui.com/components/data-grid/rows/#variable-row-height) (#438) @DanailH
+
+  Allows for setting a row-specific height.
+  By default, all rows have the same height, but now you can set the height on a per-row basis.
+
+  ```tsx
+  <DataGrid getRowHeight={({ id }: GridRowHeightParams) => (id % 2 === 0 ? 100 : null)} />
+  ```
+
+- 🎁 Add new CSV export option: [`getRowsToExport`](https://mui.com/components/data-grid/export/#custom-exported-content) (#3687) @flaviendelangle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.4.0` / `@mui/x-data-grid-pro@v5.4.0`
+
+#### Changes
+
+- [DataGrid] Add l10n support for `is any of` (#3746) @alexfauquette
+- [DataGrid] Add new CSV `getRowsToExport` option (#3687) @flaviendelangle
+- [DataGrid] Clean params of `onCellEditCommit` (#3693) @valenfv
+- [DataGrid] Create a new lookup with all the filtered rows, collapsed or not (#3736) @flaviendelangle
+- [DataGrid] Fix Alt+c being ignored on some systems (#3660) @cherniavskii
+- [DataGrid] Fix `isRowSelectable` when `paginationMode='server'` (#3647) @flaviendelangle
+- [DataGrid] Fix browser keyboard shortcuts not working when header cell is focused (#3692) @valenfv
+- [DataGrid] Fix focus on checkbox cells (#3501) @alexfauquette
+- [DataGrid] Only update the visibility status of the updated columns when calling `apiRef.current.updateRows` (#3735) @flaviendelangle
+- [DataGrid] Prevent commit if `preProcessEditCellProps` resolves with an error (#3612) @m4theushw
+- [DataGrid] Update selected rows when turning off `checkboxSelection` (#3684) @m4theushw
+- [DataGrid] Variable row height (#3218) @DanailH
+- [DataGridPro] Call `useGridColumnPinning` before `useGridColumns` (#3676) @flaviendelangle
+- [DataGridPro] Fix grid cell losing focus when scrolling with keyboard (#3667) @cherniavskii
+- [DataGridPro] Fix missing `styleOverrides` on pinned columns (#3733) @alexfauquette
+- [DataGridPro] Remove function overloading for `useGridApiRef` (#3666) @flaviendelangle
+- [l10n] Improve French (frFR) locale (#3739) @flaviendelangle
+- [l10n] Improve Italian (itIT) locale (#3744) @destegabry
+
+### Docs
+
+- [docs] Fix broken code example on the localization page (#3742) @flaviendelangle
+- [docs] Fix typo in column visibility example (#3734) @flaviendelangle
+- [docs] Fix typo on `columnVisibilityModel` (#3723) @alexfauquette
+- [docs] Improve sorting documentation page (#3564) @flaviendelangle
+- [docs] Improve `v5.3.0` release notes (#3722) @cherniavskii
+- [docs] Prepare scripts and E2E tests for migration (#3515) @siriwatknp
+- [docs] Clarify what is the professional support (#3530) @oliviertassinari
+
+### Core
+
+- [core] Add ESLint rule to force default export equals to filename in documentation (#3674) @alexfauquette
+- [core] Fix `l10n` script not updating `csCZ` locale (#3748) @cherniavskii
+- [core] Generate CHANGELOG from GitHub API (#3313) @alexfauquette
+- [core] Isolate selectors from different grid instances (#3663) @m4theushw
+- [test] Improve test detection (#3728) @m4theushw
+- [test] Include module augmentation for Chai custom matchers (#3754) @m4theushw
+- [test] Remove a useless `async` (#3675) @alexfauquette
+- [test] Remove remaining `@ts-expect-error` (#3762) @m4theushw
+- [test] Skip test on Firefox (#3752) @m4theushw
+- [test] Wait for flags to load before creating snapshots (#3726) @m4theushw
+- [test] Warn when focusing cells without syncing the state (#3486) @m4theushw
+
 ## 5.3.0
 
 _Jan 21, 2022_
@@ -50,7 +168,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   const columns: GridColDef[] = [
     { field: 'director', flex: 1, maxWidth: 200 }, // will take the free space up to 200px and will not be resizable above 200px
     { field: 'year', maxWidth: 150 }, // will not be resizable above 150px
-  ]
+  ];
   ```
 
 - 🚀 Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
@@ -65,8 +183,8 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   const CustomDataGrid = (props: DataGridProps) => {
     return (
       <DataGrid {...props} componentsProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />
-    )
-  }
+    );
+  };
   ```
 
 - 🙈 Add controlled behavior for the visible columns (#3554) @flaviendelangle
@@ -263,12 +381,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - 🙈 Add a new option to hide the amount of descendant on the grouping cells of the Tree Data (#3368) @flaviendelangle
 
   ```tsx
-  <DataGridPro
-    treeData
-    rows={rows}
-    columns={columns}
-    groupingColDef={{ hideDescendantCount }}
-  />
+  <DataGridPro treeData rows={rows} columns={columns} groupingColDef={{ hideDescendantCount }} />
   ```
 
 - ⚠️ Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
@@ -359,7 +472,7 @@ A big thanks to the 11 contributors who made this release possible. Here are som
 
 - 🌎 Translation updates for many locales
 
-  If you are using DataGrid or DataGridPro in another language, check [this issue](https://github.com/mui-org/material-ui-x/issues/3211) to discover which translations are missing.
+  If you are using DataGrid or DataGridPro in another language, check [this issue](https://github.com/mui/mui-x/issues/3211) to discover which translations are missing.
 
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -437,8 +550,8 @@ A big thanks to the 3 contributors who made this release possible. Here are some
         const userWithEmail = await fetchUserByEmail(params.value);
         const hasError = !!userWithEmail;
         return { ...params.props, error: hasError };
-      }
-    }
+      },
+    },
   ];
   ```
 
@@ -496,7 +609,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - [DataGrid] The `props.components.Checkbox` and `props.componentsProps.checkbox` props were renamed to `props.components.BaseCheckbox` and `props.componentsProps.baseCheckbox` respectively.
 
-  As a first step for [#3066](https://github.com/mui-org/material-ui-x/issues/3066), these slots were renamed to clearly indicate that they are meant to replace a core component.
+  As a first step for [#3066](https://github.com/mui/mui-x/issues/3066), these slots were renamed to clearly indicate that they are meant to replace a core component.
 
   ```diff
    <DataGrid
@@ -861,7 +974,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Remove outdated hooks requirements (#2939) @flaviendelangle
 - [core] Remove test event (#2912) @m4theushw
 - [core] Remove unused `GridSlotComponentProps` interface (#2911) @flaviendelangle
-- [core] Rename 'UNSTABLE_' prefix to 'unstable_' (#2931) @flaviendelangle
+- [core] Rename 'UNSTABLE*' prefix to 'unstable*' (#2931) @flaviendelangle
 - [core] Replace usage of `GridRowData` with `GridRowModel` (#2936) @flaviendelangle
 - [core] Revert hardcoded typings (#2907) @DanailH
 - [core] Simplify the CSV export (#2941) @flaviendelangle
@@ -1321,9 +1434,9 @@ _Aug 27, 2021_
 
 🎉 This is the first stable release of the data grid component 🎉!
 
-We have been iterating on the component for [18 months](https://github.com/mui-org/material-ui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the introduction of the [row edit](https://mui.com/components/data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
+We have been iterating on the component for [18 months](https://github.com/mui/mui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the introduction of the [row edit](https://mui.com/components/data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
 
-The MUI X v4.0.0 release supports [MUI Core](https://github.com/mui-org/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
+The MUI X v4.0.0 release supports [MUI Core](https://github.com/mui/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
 The support for existing projects on MUI v4 won't be a priority going forward. We encourage you to migrate to MUI Core v5-beta and soon MUI X v5-beta. We don't patch, fix, or alter older versions. Using MUI Core v4 with MUI X v5 might lead to extra bundle size and configuration.
 
 A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
@@ -1334,7 +1447,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 
 - ⚡️ Rename the `XGrid` component to `DataGridPro` (#2382) @m4theushw
 
-  This should help clarify the products vs. plans separation. [MUI X](https://github.com/mui-org/material-ui-x) is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
+  This should help clarify the products vs. plans separation. [MUI X](https://github.com/mui/mui-x) is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
   The Pro suffix should help make it clear what's MIT and what's not.
 
 - ✨ Rename the `@material-ui` npm scope to `@mui` (#2341) @oliviertassinari
@@ -1637,7 +1750,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [test] Sync Karma config (#2191) @m4theushw
 - [test] Test support for theme translations (#2229) @m4theushw
 
-## [4.0.0-alpha.34](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.33...v4.0.0-alpha.34)
+## [4.0.0-alpha.34](https://github.com/mui/mui-x/compare/v4.0.0-alpha.33...v4.0.0-alpha.34)
 
 _July 21, 2021_
 
@@ -1818,7 +1931,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [test] Remove orphan async @oliviertassinari
 - [test] Test the validation before saving a value (#2087) @m4theushw
 
-## [4.0.0-alpha.33](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.32...v4.0.0-alpha.33)
+## [4.0.0-alpha.33](https://github.com/mui/mui-x/compare/v4.0.0-alpha.32...v4.0.0-alpha.33)
 
 _July 1, 2021_
 
@@ -1906,7 +2019,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Name variables according to enUS instead of enGB (#1988) @flaviendelangle
 - [test] Test vertical scrollbar (#1932) @oliviertassinari
 
-## [4.0.0-alpha.32](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.31...v4.0.0-alpha.32)
+## [4.0.0-alpha.32](https://github.com/mui/mui-x/compare/v4.0.0-alpha.31...v4.0.0-alpha.32)
 
 _June 18, 2021_
 
@@ -2018,7 +2131,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - [core] Remove dead logic (#1900) @oliviertassinari
 - [test] Fix tests (#1928) @m4theushw
 
-## [4.0.0-alpha.31](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.30...v4.0.0-alpha.31)
+## [4.0.0-alpha.31](https://github.com/mui/mui-x/compare/v4.0.0-alpha.30...v4.0.0-alpha.31)
 
 _June 9, 2021_
 
@@ -2071,7 +2184,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Add `yarn docs:api` @oliviertassinari
 - [test] Improve pagination tests (#1827) @m4theushw
 
-## [4.0.0-alpha.30](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.29...v4.0.0-alpha.30)
+## [4.0.0-alpha.30](https://github.com/mui/mui-x/compare/v4.0.0-alpha.29...v4.0.0-alpha.30)
 
 _May 31, 2021_
 
@@ -2189,7 +2302,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [test] Reduce flakiness (#1753) @oliviertassinari
 - [test] Remove skip on Edge (#1708) @m4theushw
 
-## [4.0.0-alpha.29](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.28...v4.0.0-alpha.29)
+## [4.0.0-alpha.29](https://github.com/mui/mui-x/compare/v4.0.0-alpha.28...v4.0.0-alpha.29)
 
 _May 19, 2021_
 
@@ -2306,7 +2419,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [test] Add constraints on cell render (#1662) @oliviertassinari
 - [test] Catch broken demos (#1692) @oliviertassinari
 
-## [4.0.0-alpha.28](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.27...v4.0.0-alpha.28)
+## [4.0.0-alpha.28](https://github.com/mui/mui-x/compare/v4.0.0-alpha.27...v4.0.0-alpha.28)
 
 _May 10, 2021_
 
@@ -2360,7 +2473,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [core] Update monorepo (#1530) @oliviertassinari
 - [core] Increase timeout on jsdom (#1532) @oliviertassinari
 
-## [4.0.0-alpha.27](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.26...v4.0.0-alpha.27)
+## [4.0.0-alpha.27](https://github.com/mui/mui-x/compare/v4.0.0-alpha.26...v4.0.0-alpha.27)
 
 _Apr 30, 2021_
 
@@ -2439,7 +2552,7 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 - [test] Remove jest (#1467) @dependabot-preview
 - [test] Run more tests in jsdom (#1361) @oliviertassinari
 
-## [4.0.0-alpha.26](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.25...v4.0.0-alpha.26)
+## [4.0.0-alpha.26](https://github.com/mui/mui-x/compare/v4.0.0-alpha.25...v4.0.0-alpha.26)
 
 _Apr 22, 2021_
 
@@ -2476,7 +2589,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
   This infrastructure relies on Playwright to control Chrome with the end-to-end API. It differentiates from our current end-to-end tests by running outside of the browser (Karma runs inside). It's slower and doesn't have a great DX, but it allows to test things like the <kbd>Tab</kbd> behavior.
 
-## [4.0.0-alpha.25](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.24...v4.0.0-alpha.25)
+## [4.0.0-alpha.25](https://github.com/mui/mui-x/compare/v4.0.0-alpha.24...v4.0.0-alpha.25)
 
 _Apr 14, 2021_
 
@@ -2552,7 +2665,7 @@ export interface GridFilterModelParams {
 - [core] Variable convention (#1397) @oliviertassinari
 - [license] Use a global storage rather than a module singleton (#1384) @oliviertassinari
 
-## [4.0.0-alpha.24](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.23...v4.0.0-alpha.24)
+## [4.0.0-alpha.24](https://github.com/mui/mui-x/compare/v4.0.0-alpha.23...v4.0.0-alpha.24)
 
 _Apr 2, 2021_
 
@@ -2591,7 +2704,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [core] Batch small changes (#1310) @oliviertassinari
 
-## [4.0.0-alpha.23](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.22...v4.0.0-alpha.23)
+## [4.0.0-alpha.23](https://github.com/mui/mui-x/compare/v4.0.0-alpha.22...v4.0.0-alpha.23)
 
 _Mar 22, 2021_
 
@@ -2629,7 +2742,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - [core] No top-level imports (#1257) @oliviertassinari
 - [core] Remove dead code (#1259) @oliviertassinari
 
-## [4.0.0-alpha.22](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.21...v4.0.0-alpha.22)
+## [4.0.0-alpha.22](https://github.com/mui/mui-x/compare/v4.0.0-alpha.21...v4.0.0-alpha.22)
 
 _Mar 9, 2021_
 
@@ -2663,7 +2776,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Output warnings in the rendered components (#1153) @oliviertassinari
 - [core] Update to the HEAD of the monorepo (#1138) @oliviertassinari
 
-## [4.0.0-alpha.21](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.20...v4.0.0-alpha.21)
+## [4.0.0-alpha.21](https://github.com/mui/mui-x/compare/v4.0.0-alpha.20...v4.0.0-alpha.21)
 
 _Feb 27, 2021_
 
@@ -2684,7 +2797,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - [DataGrid] Prefix all public API to fit into the global Material-UI namespace (#1069) @DanailH
   This change gets the data grid one step closer to a stable release. It allows the data grid to fit into the global namespace of Material-UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
 
-  For the mirgration, prefixing a broken import with "grid" is often enough. In the case it's not working, head to the pull request's description. It [details all the changes](https://github.com/mui-org/material-ui-x/pull/1069).
+  For the mirgration, prefixing a broken import with "grid" is often enough. In the case it's not working, head to the pull request's description. It [details all the changes](https://github.com/mui/mui-x/pull/1069).
 
 #### Changes
 
@@ -2716,7 +2829,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - [test] Improve BrowserStack configuration (#1100) @oliviertassinari
 - [test] Speed-up rebuild in Karma (#1064) @oliviertassinari
 
-## [4.0.0-alpha.20](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.19...v4.0.0-alpha.20)
+## [4.0.0-alpha.20](https://github.com/mui/mui-x/compare/v4.0.0-alpha.19...v4.0.0-alpha.20)
 
 _Feb 17, 2021_
 
@@ -2805,7 +2918,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [test] Increase yarn timeout (#1023) @oliviertassinari
 - [test] Link CircleCI URL in BS (#1060) @oliviertassinari
 
-## [4.0.0-alpha.19](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.18...v4.0.0-alpha.19)
+## [4.0.0-alpha.19](https://github.com/mui/mui-x/compare/v4.0.0-alpha.18...v4.0.0-alpha.19)
 
 _Feb 5, 2021_
 
@@ -2848,7 +2961,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [core] Improve prop-types handling (#978) @oliviertassinari
 - [core] Investigate bundle size (#954) @oliviertassinari
 
-## [4.0.0-alpha.18](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.17...v4.0.0-alpha.18)
+## [4.0.0-alpha.18](https://github.com/mui/mui-x/compare/v4.0.0-alpha.17...v4.0.0-alpha.18)
 
 _Jan 26, 2021_
 
@@ -2861,7 +2974,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
   The first prop allows to swapping specific components used in slots the grid, like the checkboxes.
   The second one allows providing extra props to each slot. It avoids the need for using the React context to access information from outside the data grid.
 
-  See the [RFC](https://github.com/mui-org/material-ui/issues/21453) for more details.
+  See the [RFC](https://github.com/mui/material-ui/issues/21453) for more details.
 
 - 🐛 Polish existing features, fix 3 issues.
 
@@ -2935,7 +3048,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [core] Replace commander with yargs (#872) @dependabot-preview
 - [core] Update monorepo (#884) @oliviertassinari
 
-## [4.0.0-alpha.17](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.15...v4.0.0-alpha.17)
+## [4.0.0-alpha.17](https://github.com/mui/mui-x/compare/v4.0.0-alpha.15...v4.0.0-alpha.17)
 
 _Jan 14, 2021_
 
@@ -2965,7 +3078,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 - [core] Add tests for Column selector feature (#845) @DanailH
 
-## [4.0.0-alpha.15](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.14...v4.0.0-alpha.15)
+## [4.0.0-alpha.15](https://github.com/mui/mui-x/compare/v4.0.0-alpha.14...v4.0.0-alpha.15)
 
 _Jan 7, 2021_
 
@@ -2988,7 +3101,7 @@ Big thanks to the 2 contributors who made this release possible. Here are some h
 - [core] Batch small changes (#800) @oliviertassinari
 - [CHANGELOG] Use the format of the main repository @oliviertassinari
 
-## [4.0.0-alpha.14](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.13...v4.0.0-alpha.14)
+## [4.0.0-alpha.14](https://github.com/mui/mui-x/compare/v4.0.0-alpha.13...v4.0.0-alpha.14)
 
 _Dec 31, 2020_
 
@@ -3022,7 +3135,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [test] We don't need to wait 100ms (#773) @oliviertassinari
 - [core] Remove useless clone (#757) @oliviertassinari
 
-## [4.0.0-alpha.13](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13)
+## [4.0.0-alpha.13](https://github.com/mui/mui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13)
 
 _Dec 16, 2020_
 
@@ -3051,7 +3164,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [test] Split data grid tests in multiple files (#722) @dtassone
 - [test] Add tests for DataGrid filtering feature (#715) @dtassone
 
-## [4.0.0-alpha.12](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12)
+## [4.0.0-alpha.12](https://github.com/mui/mui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12)
 
 _Dec 9, 2020_
 
@@ -3088,7 +3201,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [test] Add regression test (#705) @oliviertassinari
 - [test] Allow running all the tests in strict mode (#684) @oliviertassinari
 
-## [4.0.0-alpha.11](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11)
+## [4.0.0-alpha.11](https://github.com/mui/mui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11)
 
 _Dec 2, 2020_
 
@@ -3146,7 +3259,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Replace Storybook knobs for args (#601) @tooppaaa
 - [core] Update to Material-UI v4.11.1 (#636) @oliviertassinari
 
-## [4.0.0-alpha.10](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10)
+## [4.0.0-alpha.10](https://github.com/mui/mui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10)
 
 _Nov 20, 2020_
 
@@ -3168,7 +3281,7 @@ _Nov 20, 2020_
 - [core] Fix yarn prettier write @oliviertassinari
 - [test] Share karma setup (#576) @oliviertassinari
 
-## [4.0.0-alpha.9](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9)
+## [4.0.0-alpha.9](https://github.com/mui/mui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9)
 
 _Nov 9, 2020_
 
@@ -3206,7 +3319,7 @@ _Nov 9, 2020_
 - [core] Disable generation of changelogs @oliviertassinari
 - [test] Karma should fail if errors are thrown (#543) @oliviertassinari
 
-## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8)
+## [4.0.0-alpha.8](https://github.com/mui/mui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8)
 
 _Oct 23, 2020_
 
@@ -3223,7 +3336,7 @@ _Oct 23, 2020_
 - [core] Remove usage of LESS (#467) @dependabot-preview
 - [core] Update to the latest version of the main repo (#456) @oliviertassinari
 
-## [4.0.0-alpha.7](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7)
+## [4.0.0-alpha.7](https://github.com/mui/mui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7)
 
 _Oct 19, 2020_
 
@@ -3252,7 +3365,7 @@ _Oct 19, 2020_
 - [test] Add missing types linting for x-grid (#357) @oliviertassinari
 - [test] Run the karma tests in browserstack (#316) @oliviertassinari
 
-## [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6)
+## [4.0.0-alpha.6](https://github.com/mui/mui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6)
 
 _Sep 25, 2020_
 
@@ -3269,13 +3382,13 @@ _Sep 25, 2020_
 - [docs] Fix layout jump issue (#338) @oliviertassinari
 - [docs] Fix short description warning (#302) @oliviertassinari
 
-## [4.0.0-alpha.2](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2)
+## [4.0.0-alpha.2](https://github.com/mui/mui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2)
 
 _Sep 18, 2020_
 
 - [DataGrid] Fix wrongly exported types (#298) @dtassone
 
-## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1)
+## [4.0.0-alpha.1](https://github.com/mui/mui-x/compare/v0.1.67...v4.0.0-alpha.1)
 
 _Sep 17, 2020_
 

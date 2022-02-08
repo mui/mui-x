@@ -63,6 +63,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'في أو قبل',
   filterOperatorIsEmpty: 'فارغ',
   filterOperatorIsNotEmpty: 'ليس فارغا',
+  // filterOperatorIsAnyOf: 'is any of',
 
   // Filter values text
   filterValueAny: 'أي',
@@ -97,6 +98,10 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'تحديد',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   booleanCellTrueLabel: 'صحيح',
@@ -119,6 +124,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);

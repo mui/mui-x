@@ -15,7 +15,7 @@ const useKeepGroupingColumnsHidden = (apiRef, columns, initialModel, leafField) 
   React.useEffect(() => {
     apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
       const columnVisibilityModel = {
-        ...gridColumnVisibilityModelSelector(apiRef.current.state),
+        ...gridColumnVisibilityModelSelector(apiRef),
       };
 
       newModel.forEach((field) => {

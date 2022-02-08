@@ -63,6 +63,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorIsEmpty: 'est vide',
   filterOperatorIsNotEmpty: "n'est pas vide",
+  filterOperatorIsAnyOf: 'fait parti de',
 
   // Filter values text
   filterValueAny: 'tous',
@@ -99,6 +100,10 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Sélection',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   booleanCellTrueLabel: 'vrai',
@@ -121,6 +126,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'Groupe',
   groupColumn: (name) => `Grouper par ${name}`,
   unGroupColumn: (name) => `Arrêter de grouper par ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

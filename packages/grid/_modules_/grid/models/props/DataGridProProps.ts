@@ -1,22 +1,25 @@
 // TODO: Move to `x-data-grid-pro` folder
-import { GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
+import { GridRowModel, GridRowTreeNodeConfig, GridRowId } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridPinnedColumns } from '../api';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef';
+import { GridRowParams } from '../params/gridRowParams';
 import {
   DataGridPropsWithoutDefaultValue,
   DataGridPropsWithDefaultValues,
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   DATA_GRID_PROPS_DEFAULT_VALUES,
+  GridExperimentalFeatures,
 } from './DataGridProps';
 import type { GridRowGroupingModel } from '../../hooks/features/rowGrouping';
 
-export type GridExperimentalProFeatures =
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
    * Will be part of the premium-plan when fully ready.
    */
-  'rowGrouping';
+  rowGrouping: boolean;
+}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -32,7 +35,7 @@ export interface DataGridProProps
    * Features under development.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
-  experimentalFeatures?: { [key in GridExperimentalProFeatures]?: boolean };
+  experimentalFeatures?: Partial<GridExperimentalProFeatures>;
 }
 
 /**
@@ -100,6 +103,13 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default 'single'
    */
   rowGroupingColumnMode: 'single' | 'multiple';
+  /**
+   * Function that returns the height of the row detail panel.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {number} The height in pixels.
+   * @default "() => 500"
+   */
+  getDetailPanelHeight: (params: GridRowParams) => number;
 }
 
 /**
@@ -115,6 +125,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
   rowGroupingColumnMode: 'single',
+  getDetailPanelHeight: () => 500,
 };
 
 export interface DataGridProPropsWithoutDefaultValue extends DataGridPropsWithoutDefaultValue {
@@ -173,4 +184,20 @@ export interface DataGridProPropsWithoutDefaultValue extends DataGridPropsWithou
   groupingColDef?:
     | GridGroupingColDefOverride
     | ((params: GridGroupingColDefOverrideParams) => GridGroupingColDefOverride | undefined | null);
+  /**
+   * The row ids to show the detail panel.
+   */
+  detailPanelExpandedRowIds?: GridRowId[];
+  /**
+   * Callback fired when the detail panel of a row is opened or closed.
+   * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onDetailPanelExpandedRowIdsChange?: (ids: GridRowId[], details: GridCallbackDetails) => void;
+  /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
 }
