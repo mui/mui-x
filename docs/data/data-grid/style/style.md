@@ -121,7 +121,7 @@ Choose between one of the following values: 'left' | 'right' | 'center'.
 
 The following demo illustrates how the rows of the grid can be stripped.
 
-{{"demo": "pages/components/data-grid/style/StripedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "StripedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom theme
 
