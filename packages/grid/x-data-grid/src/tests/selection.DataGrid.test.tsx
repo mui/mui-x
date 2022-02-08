@@ -232,7 +232,7 @@ describe('<DataGrid /> - Selection', () => {
     it('should check the checkbox when there is no rows', () => {
       render(<TestDataGridSelection rows={[]} checkboxSelection />);
       const selectAll = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       expect(selectAll).to.have.property('checked', false);
     });
@@ -306,6 +306,24 @@ describe('<DataGrid /> - Selection', () => {
       setProps({ checkboxSelection: false });
       expect(getSelectedRowIds()).to.deep.equal([2]);
       expect(screen.getByText('1 row selected')).not.to.equal(null);
+    });
+
+    it('should set the correct aria-label on the column header checkbox', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      expect(screen.queryByRole('checkbox', { name: 'Unselect all rows' })).to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'Select all rows' })).not.to.equal(null);
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Select all rows' }));
+      expect(screen.queryByRole('checkbox', { name: 'Select all rows' })).to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'Unselect all rows' })).not.to.equal(null);
+    });
+
+    it('should set the correct aria-label on the cell checkbox', () => {
+      render(<TestDataGridSelection checkboxSelection rows={[{ id: 0, name: 'React' }]} />);
+      expect(screen.queryByRole('checkbox', { name: 'Unselect row' })).to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'Select row' })).not.to.equal(null);
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Select row' }));
+      expect(screen.queryByRole('checkbox', { name: 'Select row' })).to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'Unselect row' })).not.to.equal(null);
     });
   });
 
@@ -382,7 +400,7 @@ describe('<DataGrid /> - Selection', () => {
       }
       const data = getData(20, 1);
       render(<TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />);
-      const checkboxes = screen.queryAllByRole('checkbox', { name: /select row checkbox/i });
+      const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
       checkboxes[0].focus();
       fireEvent.keyDown(checkboxes[0], { key: 'ArrowDown' });
       fireEvent.keyDown(checkboxes[1], { key: 'ArrowDown' });
@@ -395,14 +413,13 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should set tabindex=0 on the checkbox when the it receives focus', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      const checkbox = screen.getAllByRole('checkbox', { name: /select row checkbox/i })[0];
+      const checkbox = screen.getAllByRole('checkbox', { name: /select row/i })[0];
       const checkboxCell = getCell(0, 0);
       const secondCell = getCell(0, 1);
       expect(checkbox).to.have.attribute('tabindex', '-1');
       expect(checkboxCell).to.have.attribute('tabindex', '-1');
       expect(secondCell).to.have.attribute('tabindex', '-1');
 
-      secondCell.focus();
       fireEvent.mouseUp(secondCell);
       fireEvent.click(secondCell);
       expect(secondCell).to.have.attribute('tabindex', '0');

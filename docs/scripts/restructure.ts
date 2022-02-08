@@ -52,6 +52,9 @@ function run() {
         // before: {{"demo": "pages/components/data-grid/accessibility/DensitySelectorSmallGrid.js", "bg": "inline"}}
         // after: {{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
         data = data.replace(/"pages\/?[^"]*\/([^"]+\.js)"/gm, `"$1"`);
+        if (filePath.endsWith('overview.md')) {
+          data = data.replace(/^title:[^\n]*$/, `title: React Data Grid`);
+        }
       }
       if (filePath.endsWith('.js')) {
         data = data.replace('pages/api-docs/data-grid', `pages/x/api/data-grid`);
