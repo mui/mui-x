@@ -282,7 +282,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
-      const isLastRow = currentPage.range.firstRowIndex + i === currentPage.rows.length - 1;
+      const index = currentPage.range.firstRowIndex + firstRowToRender + i;
+      const isLastRow = index === currentPage.rows.length - 1;
       const targetRowHeight = apiRef.current.unstable_getRowHeight(id);
 
       let isSelected: boolean;
@@ -308,7 +309,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
+          index={index}
           containerWidth={availableSpace}
           isLastRow={isLastRow}
           {...rootProps.componentsProps?.row}
