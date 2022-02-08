@@ -100,6 +100,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Valintaruutu',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   booleanCellTrueLabel: 'tosi',

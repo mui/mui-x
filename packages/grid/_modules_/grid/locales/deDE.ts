@@ -100,6 +100,10 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Checkbox Auswahl',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   booleanCellTrueLabel: 'Ja',
