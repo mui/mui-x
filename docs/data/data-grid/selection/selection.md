@@ -26,7 +26,7 @@ Row selection can be performed with a simple mouse click, or using the [keyboard
 
 ### Single row selection
 
-Single row selection is enable by default with the `DataGrid` component.
+Single row selection is enabled by default with the `DataGrid` component.
 To unselect a row, hold the <kbd class="key">CTRL</kbd> key and click on it.
 
 {{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
