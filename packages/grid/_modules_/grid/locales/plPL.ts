@@ -95,6 +95,10 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   // checkboxSelectionHeaderName: 'Checkbox selection',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   // booleanCellTrueLabel: 'true',
@@ -117,6 +121,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

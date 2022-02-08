@@ -285,7 +285,7 @@ const ROWS: GridRowModel<Movie>[] = [
   {
     id: 20,
     title: 'Minions',
-    gross: 11159398397,
+    gross: 1159398397,
     director: 'Pierre Coffin & Kyle Balda',
     company: 'Universal Pictures',
     year: 2015,

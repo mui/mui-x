@@ -14,15 +14,24 @@ import { gridClasses } from '../../../gridClasses';
 import { useGridRegisterPreProcessor } from '../../core/preProcessing/useGridRegisterPreProcessor';
 import { GridColumnPinningMenuItems } from '../../../components/menu/columnMenu/GridColumnPinningMenuItems';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridColumnPinningApi, GridPinnedPosition } from '../../../models/api/gridColumnPinningApi';
+import {
+  GridColumnPinningApi,
+  GridPinnedColumns,
+  GridPinnedPosition,
+} from '../../../models/api/gridColumnPinningApi';
 import { gridPinnedColumnsSelector } from './columnPinningSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVirtualScroller';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { MuiEvent } from '../../../models/muiEvent';
+import { GridState } from '../../../models';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
+
+const mergeStateWithPinnedColumns =
+  (pinnedColumns: GridPinnedColumns) =>
+  (state: GridState): GridState => ({ ...state, pinnedColumns });
 
 export const useGridColumnPinning = (
   apiRef: GridApiRef,
@@ -31,13 +40,23 @@ export const useGridColumnPinning = (
     'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
   >,
 ): void => {
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    pinnedColumns: {
-      left: !props.disableColumnPinning ? props.initialState?.pinnedColumns?.left : undefined,
-      right: !props.disableColumnPinning ? props.initialState?.pinnedColumns?.right : undefined,
-    },
-  }));
+  useGridStateInit(apiRef, (state) => {
+    let model: GridPinnedColumns;
+    if (props.disableColumnPinning) {
+      model = {};
+    } else if (props.pinnedColumns) {
+      model = props.pinnedColumns;
+    } else if (props.initialState?.pinnedColumns) {
+      model = props.initialState?.pinnedColumns;
+    } else {
+      model = {};
+    }
+
+    return {
+      ...state,
+      pinnedColumns: model,
+    };
+  });
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
 
   // Each visible row (not to be confused with a filter result) is composed of a central .MuiDataGrid-row element
@@ -66,10 +85,13 @@ export const useGridColumnPinning = (
         `.${gridClasses.row}[data-rowindex="${index}"]`,
       );
       rowElements.forEach((row) => {
-        if (event.type === 'mouseenter') {
-          row.classList.add('Mui-hovered');
-        } else {
-          row.classList.remove('Mui-hovered');
+        // Ignore rows from other grid inside the hovered row
+        if (row.closest(`.${gridClasses.virtualScroller}`) === apiRef.current.windowRef!.current!) {
+          if (event.type === 'mouseenter') {
+            row.classList.add('Mui-hovered');
+          } else {
+            row.classList.remove('Mui-hovered');
+          }
         }
       });
     },
@@ -207,10 +229,42 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns],
   );
 
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+    (prevState) => {
+      const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
+      if (
+        (!pinnedColumnsToExport.left || pinnedColumnsToExport.left.length === 0) &&
+        (!pinnedColumnsToExport.right || pinnedColumnsToExport.right.length === 0)
+      ) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        pinnedColumns: pinnedColumnsToExport,
+      };
+    },
+    [apiRef],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+    (params, context) => {
+      const newPinnedColumns = context.stateToRestore.pinnedColumns;
+      if (newPinnedColumns != null) {
+        apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));
+      }
+
+      return params;
+    },
+    [apiRef],
+  );
+
   useGridRegisterPreProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
   useGridRegisterPreProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
   useGridRegisterPreProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);
   useGridRegisterPreProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
+  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'pinnedColumns',
@@ -278,7 +332,7 @@ export const useGridColumnPinning = (
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
       checkIfEnabled('setPinnedColumns');
-      apiRef.current.setState((state) => ({ ...state, pinnedColumns: newPinnedColumns }));
+      apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));
       apiRef.current.forceUpdate();
     },
     [apiRef, checkIfEnabled],

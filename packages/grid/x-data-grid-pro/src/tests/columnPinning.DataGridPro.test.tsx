@@ -14,7 +14,7 @@ import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/
 import { useData } from 'storybook/src/hooks/useData';
 
 // TODO Move to utils
-// Fix https://github.com/mui-org/material-ui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
+// Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
 function createDragOverEvent(target: ChildNode) {
   const dragOverEvent = createEvent.dragOver(target);
   // Safari 13 doesn't have DragEvent.
@@ -213,7 +213,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('props: onPinnedColumnsChange', () => {
-    it('shoull call when a column is pinned', () => {
+    it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
       apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
@@ -228,7 +228,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       });
     });
 
-    it('shoull not change the pinned columns when it is called', () => {
+    it('should not change the pinned columns when it is called', () => {
       const handlePinnedColumnsChange = spy();
       render(
         <TestCase
@@ -251,7 +251,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('props: pinnedColumns', () => {
-    it('shoull pin the columns specified', () => {
+    it('should pin the columns specified', () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'] }} />);
       const leftColumns = document.querySelector(
         `.${gridClasses['pinnedColumns--left']}`,
@@ -274,7 +274,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('shoull filter our duplicated columns', () => {
+    it('should filter our duplicated columns', () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'], right: ['currencyPair'] }} />);
       const leftColumns = document.querySelector(
         `.${gridClasses['pinnedColumns--left']}`,
