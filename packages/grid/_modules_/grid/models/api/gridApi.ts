@@ -4,7 +4,7 @@ import { GridCoreApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
-import { GridEditRowApi } from './gridEditRowApi';
+import { GridEditingApi } from './gridEditingApi';
 import { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
@@ -26,6 +26,8 @@ import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPe
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridRowGroupingApi } from '../../hooks/features/rowGrouping';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
+import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
+import type { GridDetailPanelApi } from './gridDetailPanelApi';
 
 /**
  * The full grid API.
@@ -40,7 +42,7 @@ export interface GridApi
     GridDimensionsApi,
     GridRowApi,
     GridRowsMetaApi,
-    GridEditRowApi,
+    GridEditingApi,
     GridParamsApi,
     GridColumnApi,
     GridSelectionApi,
@@ -58,4 +60,6 @@ export interface GridApi
     GridScrollApi,
     GridRowGroupingApi,
     GridVirtualScrollerApi,
-    GridColumnPinningApi {}
+    GridColumnPinningApi,
+    GridStatePersistenceApi,
+    GridDetailPanelApi {}

@@ -17,11 +17,7 @@ import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridFilteringMethod } from '../filter/gridFilterState';
 import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
 import { useGridRegisterFilteringMethod } from '../filter/useGridRegisterFilteringMethod';
@@ -79,6 +75,15 @@ export const useGridTreeData = (
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: TREE_DATA_GROUPING_NAME,
+        onDuplicatePath: (firstId, secondId, path) => {
+          throw new Error(
+            [
+              'MUI: The path returned by `getTreeDataPath` should be unique.',
+              `The rows with id #${firstId} and #${secondId} have the same.`,
+              `Path: ${JSON.stringify(path.map((step) => step.key))}.`,
+            ].join('\n'),
+          );
+        },
       });
     };
 
@@ -140,9 +145,7 @@ export const useGridTreeData = (
     };
   }, [apiRef, props.groupingColDef]);
 
-  const updateGroupingColumn = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
-  >(
+  const updateGroupingColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
     (columnsState) => {
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
 
@@ -176,7 +179,7 @@ export const useGridTreeData = (
 
   const filteringMethod = React.useCallback<GridFilteringMethod>(
     (params) => {
-      const rowTree = gridRowTreeSelector(apiRef.current.state);
+      const rowTree = gridRowTreeSelector(apiRef);
 
       return filterRowTreeFromTreeData({
         rowTree,
@@ -189,8 +192,8 @@ export const useGridTreeData = (
 
   const sortingMethod = React.useCallback<GridSortingMethod>(
     (params) => {
-      const rowTree = gridRowTreeSelector(apiRef.current.state);
-      const rowIds = gridRowIdsSelector(apiRef.current.state);
+      const rowTree = gridRowTreeSelector(apiRef);
+      const rowIds = gridRowIdsSelector(apiRef);
 
       return sortRowTree({
         rowTree,
@@ -202,7 +205,7 @@ export const useGridTreeData = (
     [apiRef, props.disableChildrenSorting],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, updateGroupingColumn);
+  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterFilteringMethod(apiRef, TREE_DATA_GROUPING_NAME, filteringMethod);
   useGridRegisterSortingMethod(apiRef, TREE_DATA_GROUPING_NAME, sortingMethod);
 
@@ -217,7 +220,7 @@ export const useGridTreeData = (
         event.preventDefault();
 
         const filteredDescendantCount =
-          gridFilteredDescendantCountLookupSelector(apiRef.current.state)[params.id] ?? 0;
+          gridFilteredDescendantCountLookupSelector(apiRef)[params.id] ?? 0;
 
         if (filteredDescendantCount === 0) {
           return;
