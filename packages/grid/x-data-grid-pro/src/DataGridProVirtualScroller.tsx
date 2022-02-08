@@ -20,7 +20,6 @@ import {
   gridDetailPanelExpandedRowsContentCacheSelector,
   gridDetailPanelExpandedRowsHeightCacheSelector,
 } from '../../_modules_/grid/hooks/features/detailPanel/gridDetailPanelSelector';
-import { useCurrentPageRows } from '../../_modules_/grid/hooks/utils/useCurrentPageRows';
 import {
   GridPinnedColumns,
   GridPinnedPosition,
@@ -145,7 +144,6 @@ const DataGridProVirtualScroller = React.forwardRef<
   const { className, disableVirtualization, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const currentPage = useCurrentPageRows(apiRef, rootProps);
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const detailPanelsContent = useGridSelector(
@@ -269,11 +267,11 @@ const DataGridProVirtualScroller = React.forwardRef<
       const content = detailPanelsContent[id];
 
       // Check if the id exists in the current page
-      const exists = currentPage.lookup![id] !== undefined;
+      const rowIndex = apiRef.current.unstable_getRowIndexRelativeToCurrentPage(id);
+      const exists = rowIndex !== undefined;
 
       if (React.isValidElement(content) && exists) {
         const height = detailPanelsHeights[id];
-        const rowIndex = currentPage.lookup[id];
         const top = rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id);
 
         panels.push(

@@ -48,3 +48,15 @@ export interface GridRowApi {
    */
   setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
 }
+
+/**
+ * The Row API interface that is available in the grid `apiRef`.
+ */
+export interface GridRowSpacingApi {
+  /**
+   * Gets the row index of a row relative to the rows that are visible in the current page.
+   * @param {GridRowId} id The `GridRowId` of the row.
+   * @returns {number} The index of the row.
+   */
+  unstable_getRowIndexRelativeToCurrentPage: (id: GridRowId) => number;
+}

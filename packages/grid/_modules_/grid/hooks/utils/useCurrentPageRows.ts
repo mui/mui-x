@@ -6,7 +6,6 @@ import {
 } from '../features/pagination/gridPaginationSelector';
 import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
 import type { GridApiRef, GridRowEntry } from '../../models';
-import { GridRowId } from '../../models/gridRows';
 
 export const getCurrentPageRows = (
   apiRef: GridApiRef,
@@ -42,19 +41,11 @@ export const useCurrentPageRows = (
 ) => {
   const response = getCurrentPageRows(apiRef, props);
 
-  const lookup = React.useMemo(() => {
-    return response.rows.reduce((acc, { id }, index) => {
-      acc[id] = index;
-      return acc;
-    }, {} as Record<GridRowId, number>);
-  }, [response.rows]);
-
   return React.useMemo(
     () => ({
       rows: response.rows,
       range: response.range,
-      lookup,
     }),
-    [response.rows, response.range, lookup],
+    [response.rows, response.range],
   );
 };
