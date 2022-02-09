@@ -2,8 +2,8 @@
 const { Octokit } = require('@octokit/rest');
 const yargs = require('yargs');
 
-const GIT_ORGANIZATION = 'mui-org';
-const GIT_REPO = 'material-ui-x';
+const GIT_ORGANIZATION = 'mui';
+const GIT_REPO = 'mui-x';
 
 /**
  * @param {string} commitMessage
@@ -199,7 +199,6 @@ ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 
 TODO WRITE THE VERSION
 ### \`@mui/x-data-grid@v\` / \`@mui/x-data-grid-pro@v\`
-
 ${logChangelogSection(changeCommits, '#### Changes')}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}

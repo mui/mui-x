@@ -3,6 +3,7 @@ import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
 import * as ts from 'typescript';
+import FEATURE_TOGGLE from '../../src/featureToggle';
 
 export interface Project {
   name: ProjectNames;
@@ -86,7 +87,9 @@ export function linkify(
     if (!documentedInterfaces.get(content)) {
       return content;
     }
-    const url = `/api/data-grid/${kebabCase(content)}/`;
+    const url = `${FEATURE_TOGGLE.enable_redirects ? '/x' : ''}/api/data-grid/${kebabCase(
+      content,
+    )}/`;
     return format === 'markdown' ? `[${content}](${url})` : `<a href="${url}">${content}</a>`;
   });
 }

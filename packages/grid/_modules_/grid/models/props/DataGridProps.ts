@@ -87,7 +87,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   components?: Partial<GridSlotsComponent>;
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText?: Partial<GridLocaleText>;
 }
@@ -398,6 +398,12 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
    */
   getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
+  /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
   /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].

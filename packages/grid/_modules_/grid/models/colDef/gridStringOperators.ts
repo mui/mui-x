@@ -14,7 +14,7 @@ export const getGridStringOperators = (): GridFilterOperator[] => [
 
       const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
       return ({ value }): boolean => {
-        return filterRegex.test((value && value.toString()) || '');
+        return value != null ? filterRegex.test(value.toString()) : false;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -27,7 +27,7 @@ export const getGridStringOperators = (): GridFilterOperator[] => [
       }
       const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
       return ({ value }): boolean => {
-        return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
+        return value != null ? collator.compare(filterItem.value, value.toString()) === 0 : false;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -41,7 +41,7 @@ export const getGridStringOperators = (): GridFilterOperator[] => [
 
       const filterRegex = new RegExp(`^${escapeRegExp(filterItem.value)}.*$`, 'i');
       return ({ value }): boolean => {
-        return filterRegex.test((value && value.toString()) || '');
+        return value != null ? filterRegex.test(value.toString()) : false;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -55,7 +55,7 @@ export const getGridStringOperators = (): GridFilterOperator[] => [
 
       const filterRegex = new RegExp(`.*${escapeRegExp(filterItem.value)}$`, 'i');
       return ({ value }): boolean => {
-        return filterRegex.test((value && value.toString()) || '');
+        return value != null ? filterRegex.test(value.toString()) : false;
       };
     },
     InputComponent: GridFilterInputValue,

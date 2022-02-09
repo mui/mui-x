@@ -36,7 +36,7 @@ function getMuiPackageVersion(packageName, commitRef) {
     return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;
+  return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
 }
 
 ponyfillGlobal.muiDocConfig = {
@@ -211,8 +211,9 @@ function AppWrapper(props) {
     }
   }, []);
 
+  const asPathWithoutLang = router.asPath.replace(/^\/[a-z]{2}\//, '/');
   let productPages = pages;
-  if (router.asPath.startsWith('/x')) {
+  if (asPathWithoutLang.startsWith('/x')) {
     productPages = newPages;
   }
 
