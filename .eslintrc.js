@@ -111,7 +111,7 @@ module.exports = {
     },
     {
       files: ['packages/grid/**/*{.ts,.tsx,.js}'],
-      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
       rules: {
         'no-restricted-imports': [
           'error',
