@@ -211,8 +211,9 @@ function AppWrapper(props) {
     }
   }, []);
 
+  const asPathWithoutLang = router.asPath.replace(/^\/[a-z]{2}\//, '/');
   let productPages = pages;
-  if (router.asPath.startsWith('/x')) {
+  if (asPathWithoutLang.startsWith('/x')) {
     productPages = newPages;
   }
 
