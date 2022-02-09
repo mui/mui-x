@@ -44,6 +44,10 @@ const mergeStateWithPage =
     }),
   });
 
+const noRowCountInServerMode = buildWarning([
+  "MUI: the 'rowCount' prop is undefined will using paginationMode='server'",
+]);
+
 /**
  * @requires useGridPageSize (state, event)
  * @requires useGridFilter (state)
@@ -151,9 +155,6 @@ export const useGridPage = (
 
   useGridApiEventHandler(apiRef, GridEvents.pageSizeChange, handlePageSizeChange);
 
-  const noRowCountInServerMode = buildWarning([
-    "MUI: the 'rowCount' prop is undefined will using paginationMode='server'",
-  ]);
   /**
    * EFFECTS
    */
@@ -163,7 +164,7 @@ export const useGridPage = (
         noRowCountInServerMode();
       }
     }
-  }, [props.rowCount, props.paginationMode, noRowCountInServerMode]);
+  }, [props.rowCount, props.paginationMode]);
 
   React.useEffect(() => {
     apiRef.current.setState((state) => {
