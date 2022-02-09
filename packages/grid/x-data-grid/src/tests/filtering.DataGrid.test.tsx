@@ -45,7 +45,7 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('props: filterModel', () => {
     it('should throw for more than one filter item', () => {
-      expect(async () => {
+      expect(() => {
         render(
           <TestCase
             rows={[]}
