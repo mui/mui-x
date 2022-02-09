@@ -99,6 +99,9 @@ export const useCellEditing = (
   const commitCellChange = React.useCallback<GridEditingApi['commitCellChange']>(
     (params, event = {}) => {
       const { id, field } = params;
+
+      apiRef.current.unstable_runPendingEditCellValueChangeDebounce(id, field);
+
       const model = apiRef.current.getEditRowsModel();
       if (!model[id] || !model[id][field]) {
         throw new Error(`MUI: Cell at id: ${id} and field: ${field} is not in edit mode.`);
