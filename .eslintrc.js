@@ -111,7 +111,14 @@ module.exports = {
     },
     {
       files: ['packages/grid/**/*{.ts,.tsx,.js}'],
-      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+      excludedFiles: [
+        'packages/grid/x-data-grid-generator/**',
+        '*.d.ts',
+        '*.spec.ts',
+        '*.spec.tsx',
+        '**.test.tx',
+        '**.test.tsx',
+      ],
       rules: {
         'no-restricted-imports': [
           'error',

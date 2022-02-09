@@ -2,6 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import Slider, { SliderProps, sliderClasses } from '@mui/material/Slider';
+import { ValueLabelProps } from '@mui/base/SliderUnstyled';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 import { alpha, styled } from '@mui/material/styles';
@@ -42,11 +43,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-const ValueLabelComponent = (props: {
-  open: boolean;
-  value: number;
-  children: React.ReactElement;
-}) => {
+const ValueLabelComponent = (props: ValueLabelProps) => {
   const { children, open, value } = props;
 
   return (
