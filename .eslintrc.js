@@ -109,5 +109,28 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['packages/grid/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: '@mui/base',
+                message: 'Use @mui/material instead',
+              },
+            ],
+            patterns: [
+              {
+                group: ['@mui/base/*'],
+                message: 'Use @mui/material instead',
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
 };
