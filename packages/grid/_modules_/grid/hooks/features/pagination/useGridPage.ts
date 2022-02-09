@@ -167,7 +167,13 @@ export const useGridPage = (
 
   React.useEffect(() => {
     apiRef.current.setState((state) => {
-      const rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
+      let rowCount;
+      if (props.paginationMode === 'server') {
+        rowCount = props.rowCount !== undefined ? props.rowCount : state.pagination.rowCount;
+      } else {
+        rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
+      }
+
       const pageCount = getPageCount(rowCount, state.pagination.pageSize);
       const page = props.page == null ? state.pagination.page : props.page;
 
@@ -182,5 +188,5 @@ export const useGridPage = (
       };
     });
     apiRef.current.forceUpdate();
-  }, [visibleTopLevelRowCount, props.rowCount, props.page, apiRef]);
+  }, [visibleTopLevelRowCount, props.rowCount, props.page, props.paginationMode, apiRef]);
 };
