@@ -304,6 +304,20 @@ However, some types require additional properties to be set to make them work co
   ```
 
   > ⚠️ When using objects values for `valueOptions` you need to provide `value` and `label` fields for each option: `{ value: string, label: string }`
+  >
+  > ⚠️ In order for the CSV to work correctly when using objects values for `valueOptions` you need to use `valueExportFormatter` to specify the exported value.
+  >
+  > ```tsx
+  > {
+  >   field: 'country',
+  >   type: 'singleSelect',
+  >   valueOptions: [
+  >     { value: 'FR', label: 'France' },
+  >     { value: 'BR', label: 'Brazil' },
+  >   ],
+  >   valueExportFormatter: ({ value }) => value.label,
+  > }
+  > ```
 
 - If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
   You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.
