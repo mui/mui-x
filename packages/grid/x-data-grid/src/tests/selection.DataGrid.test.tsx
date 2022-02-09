@@ -508,6 +508,7 @@ describe('<DataGrid /> - Selection', () => {
         render(
           <TestDataGridSelection
             paginationMode="server"
+            rowCount={4}
             selectionModel={[1, 4]}
             isRowSelectable={(params) => params.id > 0}
             checkboxSelection

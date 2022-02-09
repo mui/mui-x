@@ -13,6 +13,7 @@ import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSelector } from './gridPaginationSelector';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { buildWarning } from '../../../utils/warning';
 
 const getPageCount = (rowCount: number, pageSize: number): number => {
   if (pageSize > 0 && rowCount > 0) {
@@ -49,7 +50,10 @@ const mergeStateWithPage =
  */
 export const useGridPage = (
   apiRef: GridApiRef,
-  props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'page' | 'onPageChange' | 'rowCount' | 'initialState' | 'paginationMode'
+  >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
 
@@ -147,9 +151,20 @@ export const useGridPage = (
 
   useGridApiEventHandler(apiRef, GridEvents.pageSizeChange, handlePageSizeChange);
 
+  const noRowCountInServerMode = buildWarning([
+    "MUI: the 'rowCount' prop is undefined will using paginationMode='server'",
+  ]);
   /**
    * EFFECTS
    */
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (props.paginationMode === 'server' && props.rowCount == null) {
+        noRowCountInServerMode();
+      }
+    }
+  }, [props.rowCount, props.paginationMode, noRowCountInServerMode]);
+
   React.useEffect(() => {
     apiRef.current.setState((state) => {
       const rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
