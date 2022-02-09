@@ -22,7 +22,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     (params: GridCellParams, event: React.KeyboardEvent<HTMLElement>) => {
       apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
 
-      const focusCell = gridFocusCellSelector(apiRef.current.state);
+      const focusCell = gridFocusCellSelector(apiRef);
 
       if (!focusCell) {
         return;
@@ -34,7 +34,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       )! as HTMLElement;
 
       const startRowIndex = Number(rowEl.getAttribute('data-rowindex'));
-      const startId = gridVisibleSortedRowIdsSelector(apiRef.current.state)[startRowIndex];
+      const startId = gridVisibleSortedRowIdsSelector(apiRef)[startRowIndex];
 
       if (startId === focusCell.id) {
         return;

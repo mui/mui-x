@@ -71,7 +71,7 @@ export function useGridDimensions(
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
-    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef.current.state);
+    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
 
     if (!rootDimensionsRef.current) {
       return;
@@ -109,8 +109,8 @@ export function useGridDimensions(
     });
 
     const viewportInnerSize: ElementSize = {
-      height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
       width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
+      height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
     };
 
     const newFullDimensions: GridDimensions = {
@@ -172,7 +172,7 @@ export function useGridDimensions(
     }
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef.current.state),
+      dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef),
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);

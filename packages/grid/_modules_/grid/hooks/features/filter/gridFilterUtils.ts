@@ -4,6 +4,7 @@ import {
   GridFilterModel,
   GridLinkOperator,
   GridRowId,
+  GridState,
 } from '../../../models';
 import { GridAggregatedFilterItemApplier } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
@@ -20,7 +21,7 @@ type GridFilterItemApplier = {
  * @return {GridFilterItem} The clean filter item with an uniq ID and an always-defined operatorValue.
  * TODO: Make the typing reflect the different between GridFilterInputItem and GridFilterItem.
  */
-export const cleanFilterItem = (item: GridFilterItem, apiRef: GridApiRef) => {
+const cleanFilterItem = (item: GridFilterItem, apiRef: GridApiRef) => {
   const cleanItem: GridFilterItem = { ...item };
 
   if (cleanItem.id == null) {
@@ -35,6 +36,70 @@ export const cleanFilterItem = (item: GridFilterItem, apiRef: GridApiRef) => {
 
   return cleanItem;
 };
+
+const filterModelDisableMultiColumnsFilteringWarning = buildWarning([
+  'MUI: The `filterModel` can only contain a single item when `prop.disableMultipleColumnsFiltering` is set to `true`.',
+  'If you are using the `DataGrid` community version, this property is always `true`.',
+]);
+
+const filterModelMissingItemIdWarning = buildWarning(
+  "MUI: The 'id' field is required on `filterModel.items` when you use multiple filters.",
+);
+
+export const sanitizeFilterModel = (
+  model: GridFilterModel,
+  disableMultipleColumnsFiltering: boolean,
+  apiRef: GridApiRef,
+) => {
+  if (model.items.length > 1) {
+    if (disableMultipleColumnsFiltering) {
+      filterModelDisableMultiColumnsFilteringWarning();
+
+      return {
+        ...model,
+        items: [model.items[0]],
+      };
+    }
+
+    let hasItemsWithoutIds = false;
+    let hasItemWithoutOperator = false;
+
+    for (let i = 0; i < model.items.length; i += 1) {
+      const item = model.items[i];
+
+      if (item.id == null) {
+        hasItemsWithoutIds = true;
+      }
+
+      if (item.operatorValue == null) {
+        hasItemWithoutOperator = true;
+      }
+    }
+
+    if (hasItemsWithoutIds) {
+      filterModelMissingItemIdWarning();
+    }
+
+    if (hasItemWithoutOperator || hasItemsWithoutIds) {
+      return {
+        ...model,
+        items: model.items.map((item) => cleanFilterItem(item, apiRef)),
+      };
+    }
+  }
+
+  return model;
+};
+
+export const mergeStateWithFilterModel =
+  (filterModel: GridFilterModel, disableMultipleColumnsFiltering: boolean, apiRef: GridApiRef) =>
+  (state: GridState): GridState => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
+    },
+  });
 
 /**
  * Generates a method to easily check if a row is matching the current filter model.
@@ -118,41 +183,4 @@ export const buildAggregatedFilterApplier = (
     // Return `true` as soon as we have a passing filter
     return filteredAppliers.some((applier) => applier.fn(rowId));
   };
-};
-
-const filterModelDisableMultiColumnsFilteringWarning = buildWarning([
-  'MUI: The `filterModel` can only contain a single item when `prop.disableMultipleColumnsFiltering` is set to `true`.',
-  'If you are using the `DataGrid` community version, this property is always `true`.',
-]);
-
-const filterModelMissingItemIdWarning = buildWarning(
-  "MUI: The 'id' field is required on `filterModel.items` when you use multiple filters.",
-);
-
-export const checkFilterModelValidity = (
-  model: GridFilterModel,
-  disableMultipleColumnsFiltering: boolean,
-) => {
-  if (model.items.length > 1) {
-    if (disableMultipleColumnsFiltering) {
-      filterModelDisableMultiColumnsFilteringWarning();
-
-      return {
-        ...model,
-        items: [model.items[0]],
-      };
-    }
-
-    const hasItemsWithoutIds = model.items.find((item) => item.id == null);
-    if (hasItemsWithoutIds) {
-      filterModelMissingItemIdWarning();
-
-      return {
-        ...model,
-        items: [model.items[0]],
-      };
-    }
-  }
-
-  return model;
 };

@@ -242,6 +242,8 @@ describe('<DataGrid /> - Filter', () => {
             { id: 2, country: '' },
             { id: 3, country: 'France (fr)' },
             { id: 4, country: 'Germany' },
+            { id: 5, country: 0 },
+            { id: 6, country: 1 },
           ]}
           columns={[
             {
@@ -257,13 +259,17 @@ describe('<DataGrid /> - Filter', () => {
       return values;
     };
 
-    const ALL_ROWS = ['', '', '', 'France (fr)', 'Germany'];
+    const ALL_ROWS = ['', '', '', 'France (fr)', 'Germany', '0', '1'];
 
     it('should filter with operator "contains"', () => {
       expect(getRows({ operatorValue: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
 
       // Case-insensitive
       expect(getRows({ operatorValue: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
+
+      // Number casting
+      expect(getRows({ operatorValue: 'contains', value: '0' })).to.deep.equal(['0']);
+      expect(getRows({ operatorValue: 'contains', value: '1' })).to.deep.equal(['1']);
 
       // Empty values
       expect(getRows({ operatorValue: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
@@ -286,6 +292,10 @@ describe('<DataGrid /> - Filter', () => {
         'France (fr)',
       ]);
 
+      // Number casting
+      expect(getRows({ operatorValue: 'equals', value: '0' })).to.deep.equal(['0']);
+      expect(getRows({ operatorValue: 'equals', value: '1' })).to.deep.equal(['1']);
+
       // Empty values
       expect(getRows({ operatorValue: 'equals', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operatorValue: 'equals', value: '' })).to.deep.equal(ALL_ROWS);
@@ -301,6 +311,10 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operatorValue: 'startsWith', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operatorValue: 'startsWith', value: '' })).to.deep.equal(ALL_ROWS);
 
+      // Number casting
+      expect(getRows({ operatorValue: 'startsWith', value: '0' })).to.deep.equal(['0']);
+      expect(getRows({ operatorValue: 'startsWith', value: '1' })).to.deep.equal(['1']);
+
       // Value with regexp special literal
       expect(
         getRows({ operatorValue: 'startsWith', value: '[-[]{}()*+?.,\\^$|#s]' }),
@@ -310,8 +324,12 @@ describe('<DataGrid /> - Filter', () => {
       ]);
     });
 
-    it('should filter with operator "endWith"', () => {
+    it('should filter with operator "endsWith"', () => {
       expect(getRows({ operatorValue: 'endsWith', value: 'many' })).to.deep.equal(['Germany']);
+
+      // Number casting
+      expect(getRows({ operatorValue: 'endsWith', value: '0' })).to.deep.equal(['0']);
+      expect(getRows({ operatorValue: 'endsWith', value: '1' })).to.deep.equal(['1']);
 
       // Empty values
       expect(getRows({ operatorValue: 'endsWith', value: undefined })).to.deep.equal(ALL_ROWS);
@@ -334,6 +352,10 @@ describe('<DataGrid /> - Filter', () => {
         getRows({ operatorValue: 'isAnyOf', value: ['France (fr)', 'Germany'] }),
       ).to.deep.equal(['France (fr)', 'Germany']);
 
+      // Number casting
+      expect(getRows({ operatorValue: 'isAnyOf', value: ['0'] })).to.deep.equal(['0']);
+      expect(getRows({ operatorValue: 'isAnyOf', value: ['1'] })).to.deep.equal(['1']);
+
       // Empty values
       expect(getRows({ operatorValue: 'isAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operatorValue: 'isAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
@@ -344,7 +366,12 @@ describe('<DataGrid /> - Filter', () => {
     });
 
     it('should filter with operator "isNotEmpty"', () => {
-      expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal(['France (fr)', 'Germany']);
+      expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal([
+        'France (fr)',
+        'Germany',
+        '0',
+        '1',
+      ]);
     });
   });
 

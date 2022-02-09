@@ -75,6 +75,15 @@ export const useGridTreeData = (
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: TREE_DATA_GROUPING_NAME,
+        onDuplicatePath: (firstId, secondId, path) => {
+          throw new Error(
+            [
+              'MUI: The path returned by `getTreeDataPath` should be unique.',
+              `The rows with id #${firstId} and #${secondId} have the same.`,
+              `Path: ${JSON.stringify(path.map((step) => step.key))}.`,
+            ].join('\n'),
+          );
+        },
       });
     };
 
@@ -170,7 +179,7 @@ export const useGridTreeData = (
 
   const filteringMethod = React.useCallback<GridFilteringMethod>(
     (params) => {
-      const rowTree = gridRowTreeSelector(apiRef.current.state);
+      const rowTree = gridRowTreeSelector(apiRef);
 
       return filterRowTreeFromTreeData({
         rowTree,
@@ -183,8 +192,8 @@ export const useGridTreeData = (
 
   const sortingMethod = React.useCallback<GridSortingMethod>(
     (params) => {
-      const rowTree = gridRowTreeSelector(apiRef.current.state);
-      const rowIds = gridRowIdsSelector(apiRef.current.state);
+      const rowTree = gridRowTreeSelector(apiRef);
+      const rowIds = gridRowIdsSelector(apiRef);
 
       return sortRowTree({
         rowTree,
@@ -211,7 +220,7 @@ export const useGridTreeData = (
         event.preventDefault();
 
         const filteredDescendantCount =
-          gridFilteredDescendantCountLookupSelector(apiRef.current.state)[params.id] ?? 0;
+          gridFilteredDescendantCountLookupSelector(apiRef)[params.id] ?? 0;
 
         if (filteredDescendantCount === 0) {
           return;

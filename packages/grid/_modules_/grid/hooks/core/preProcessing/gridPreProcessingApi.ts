@@ -1,8 +1,18 @@
-import { GridCellIndexCoordinates, GridColDef, GridScrollParams } from '../../../models';
+import {
+  GridCellIndexCoordinates,
+  GridColDef,
+  GridInitialState,
+  GridScrollParams,
+} from '../../../models';
+import {
+  GridRestoreStatePreProcessingContext,
+  GridRestoreStatePreProcessingValue,
+} from '../../features/statePersistence';
 import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
 import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
 import { GridCanBeReorderedPreProcessingContext } from '../../features/columnReorder/columnReorderInterfaces';
 import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
+import { GridRowEntry } from '../../../models/gridRows';
 
 export type PreProcessorCallback = (value: any, params?: any) => any;
 
@@ -23,6 +33,12 @@ interface GridPreProcessingGroupLookup {
   };
   filteringMethod: { value: GridFilteringMethodCollection };
   sortingMethod: { value: GridSortingMethodCollection };
+  exportState: { value: GridInitialState };
+  restoreState: {
+    value: GridRestoreStatePreProcessingValue;
+    context: GridRestoreStatePreProcessingContext;
+  };
+  rowHeight: { value: Record<string, number>; context: GridRowEntry };
 }
 
 export type GridPreProcessor<P extends GridPreProcessingGroup> = (

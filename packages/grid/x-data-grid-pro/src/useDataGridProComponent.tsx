@@ -16,8 +16,7 @@ import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridF
 import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
 import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
-import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
-import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
+import { useGridPagination } from '../../_modules_/grid/hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
@@ -31,6 +30,9 @@ import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimension
 import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/useGridTreeData';
 import { useGridRowGrouping } from '../../_modules_/grid/hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
+import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
+import { useGridDetailPanel } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanel';
+import { useGridDetailPanelCache } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanelCache';
 
 export const useDataGridProComponent = (
   inputApiRef: GridApiRef | undefined,
@@ -39,11 +41,13 @@ export const useDataGridProComponent = (
   const apiRef = useGridInitialization(inputApiRef, props);
   useGridTreeData(apiRef, props);
   useGridRowGrouping(apiRef, props);
-  useGridColumnPinning(apiRef, props);
   useGridSelection(apiRef, props);
+  useGridDetailPanel(apiRef, props);
+  useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridDetailPanelCache(apiRef, props);
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
@@ -52,8 +56,7 @@ export const useDataGridProComponent = (
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
-  useGridPageSize(apiRef, props);
-  useGridPage(apiRef, props);
+  useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
@@ -65,6 +68,7 @@ export const useDataGridProComponent = (
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
+  useGridStatePersistence(apiRef);
 
   return apiRef;
 };

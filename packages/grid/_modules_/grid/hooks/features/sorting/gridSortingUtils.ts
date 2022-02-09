@@ -9,6 +9,7 @@ import type {
   GridSortDirection,
   GridSortItem,
   GridSortModel,
+  GridState,
 } from '../../../models';
 import { buildWarning } from '../../../utils/warning';
 
@@ -21,6 +22,30 @@ interface GridParsedSortItem {
   comparator: GridComparatorFn;
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
 }
+
+const sortModelDisableMultiColumnsSortingWarning = buildWarning([
+  'MUI: The `sortModel` can only contain a single item when `prop.disableMultipleColumnsSorting` is set to `true`.',
+  'If you are using the `DataGrid` community version, this property is always `true`.',
+]);
+
+export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
+  if (disableMultipleColumnsSorting && model.length > 1) {
+    sortModelDisableMultiColumnsSortingWarning();
+    return [model[0]];
+  }
+
+  return model;
+};
+
+export const mergeStateWithSortModel =
+  (sortModel: GridSortModel, disableMultipleColumnsSorting: boolean) =>
+  (state: GridState): GridState => ({
+    ...state,
+    sorting: {
+      ...state.sorting,
+      sortModel: sanitizeSortModel(sortModel, disableMultipleColumnsSorting),
+    },
+  });
 
 const isDesc = (direction: GridSortDirection) => direction === 'desc';
 
@@ -178,21 +203,4 @@ export const gridDateComparator = (value1: GridCellValue, value2: GridCellValue)
     return -1;
   }
   return 0;
-};
-
-const sortModelDisableMultiColumnsSortingWarning = buildWarning([
-  'MUI: The `sortModel` can only contain a single item when `prop.disableMultipleColumnsSorting` is set to `true`.',
-  'If you are using the `DataGrid` community version, this property is always `true`.',
-]);
-
-export const checkSortModelValidity = (
-  model: GridSortModel,
-  disableMultipleColumnsSorting: boolean,
-) => {
-  if (disableMultipleColumnsSorting && model.length > 1) {
-    sortModelDisableMultiColumnsSortingWarning();
-    return [model[0]];
-  }
-
-  return model;
 };

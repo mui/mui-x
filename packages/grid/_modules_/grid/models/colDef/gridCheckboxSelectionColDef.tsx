@@ -20,6 +20,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   valueGetter: (params) => {
     const selectionLookup = selectedIdsLookupSelector(
       (params as GridValueGetterFullParams).api.state,
+      (params as GridValueGetterFullParams).api.instanceId,
     );
     return selectionLookup[params.id] !== undefined;
   },

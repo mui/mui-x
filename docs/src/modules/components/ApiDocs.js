@@ -35,7 +35,7 @@ function ApiDocs(props) {
   const { api } = props;
 
   return (
-    <Box sx={{ w: 1 }}>
+    <Box sx={{ width: 1 }}>
       {api.properties.map((property, index) => (
         <Accordion key={index}>
           <AccordionSummary
