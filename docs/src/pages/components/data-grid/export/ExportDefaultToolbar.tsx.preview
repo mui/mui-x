@@ -1,1 +1,6 @@
-<DataGrid {...data} loading={loading} components={{ Toolbar: GridToolbar }} />
+<DataGrid
+  {...data}
+  localeText={{ booleanCellTrueLabel: 'Yes', booleanCellFalseLabel: 'No' }}
+  loading={loading}
+  components={{ Toolbar: GridToolbar }}
+/>
