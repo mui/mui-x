@@ -10,10 +10,10 @@ import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
 import { GridRowIdGetter, GridRowsProp } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
-import { GridApiRef, GridCallbackDetails, GridLocaleText } from '../api';
+import type { GridApiRef, GridCallbackDetails, GridLocaleText } from '../api';
 import type { GridColumns, GridColumnTypesRecord } from '../colDef';
 import { GridClasses } from '../../gridClasses';
-import {
+import type {
   GridCellParams,
   GridRowHeightParams,
   GridRowHeightReturnValue,
@@ -21,7 +21,7 @@ import {
 } from '../params';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
-import { GridInitialState } from '../gridState';
+import type { GridInitialState } from '../gridState';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 

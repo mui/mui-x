@@ -14,8 +14,6 @@ import {
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridRowsState } from './gridRowsState';
 import {
   gridRowCountSelector,
   gridRowsLookupSelector,
@@ -23,29 +21,13 @@ import {
   gridRowIdsSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridRowGroupParams } from '../../core/rowGroupsPerProcessing';
-
-type GridRowInternalCacheValue = Omit<GridRowGroupParams, 'previousTree'>;
-
-interface GridRowsInternalCacheState {
-  value: GridRowInternalCacheValue;
-  /**
-   * The value of the properties used by the grouping when the internal cache was created
-   * We are storing it instead of accessing it directly when storing the cache to avoid synchronization issues
-   */
-  props: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
-  /**
-   * The rows as they were the last time all the rows have been updated at once
-   * It is used to avoid processing several time the same set of rows
-   */
-  rowsBeforePartialUpdates: GridRowsProp;
-}
-
-interface GridRowsInternalCache {
-  state: GridRowsInternalCacheState;
-  timeout: NodeJS.Timeout | null;
-  lastUpdateMs: number;
-}
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import {
+  GridRowsInternalCacheState,
+  GridRowInternalCacheValue,
+  GridRowsInternalCache,
+  GridRowsState,
+} from './gridRowsState';
 
 interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
@@ -116,6 +98,39 @@ const getRowsStateFromCache = (
   return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
 };
 
+export const rowsStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId'>
+> = (state, props, apiRef) => {
+  const rowsCache = {
+    state: convertGridRowsPropToState({
+      rows: props.rows,
+      props: {
+        rowCount: props.rowCount,
+        getRowId: props.getRowId,
+      },
+      prevState: {
+        value: {
+          idRowsLookup: {},
+          ids: [],
+        },
+        props: {
+          rowCount: undefined,
+          getRowId: undefined,
+        },
+        rowsBeforePartialUpdates: [],
+      },
+    }),
+    timeout: null,
+    lastUpdateMs: Date.now(),
+  };
+
+  return {
+    ...state,
+    rows: getRowsStateFromCache(rowsCache, null, apiRef),
+    rowsCache,
+  };
+};
+
 /**
  * @requires useGridRowGroupsPreProcessing (method)
  */
@@ -123,7 +138,13 @@ export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<
     DataGridProcessedProps,
-    'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs' | 'signature'
+    | 'rows'
+    | 'getRowId'
+    | 'rowCount'
+    | 'throttleRowsMs'
+    | 'signature'
+    | 'pagination'
+    | 'paginationMode'
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
@@ -132,35 +153,8 @@ export const useGridRows = (
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
-  const rowsCache = React.useRef<GridRowsInternalCache>({
-    state: {
-      value: {
-        idRowsLookup: {},
-        ids: [],
-      },
-      props: {
-        rowCount: undefined,
-        getRowId: undefined,
-      },
-      rowsBeforePartialUpdates: [],
-    },
-    timeout: null,
-    lastUpdateMs: 0,
-  });
-
-  useGridStateInit(apiRef, (state) => {
-    rowsCache.current.state = convertGridRowsPropToState({
-      rows: props.rows,
-      props: {
-        rowCount: props.rowCount,
-        getRowId: props.getRowId,
-      },
-      prevState: rowsCache.current.state,
-    });
-    rowsCache.current.lastUpdateMs = Date.now();
-
-    return { ...state, rows: getRowsStateFromCache(rowsCache.current, null, apiRef) };
-  });
+  // eslint-disable-next-line material-ui/no-direct-state-access
+  const rowsCache = React.useRef(apiRef.current.state.rowsCache); // To avoid listing rowsCache as useEffect dep
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef)[id] ?? null,

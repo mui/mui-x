@@ -18,7 +18,6 @@ import {
 } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
@@ -28,6 +27,7 @@ import {
   cleanFilterItem,
   mergeStateWithFilterModel,
 } from './gridFilterUtils';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 const checkFilterModelValidity = (model: GridFilterModel) => {
   if (model.items.length > 1) {
@@ -40,8 +40,26 @@ const checkFilterModelValidity = (model: GridFilterModel) => {
   }
 };
 
+export const filterStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'filterModel' | 'initialState'>
+> = (state, props) => {
+  if (props.filterModel) {
+    checkFilterModelValidity(props.filterModel);
+  }
+
+  return {
+    ...state,
+    filter: {
+      filterModel:
+        props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel(),
+      visibleRowsLookup: {},
+      filteredDescendantCountLookup: {},
+    },
+  };
+};
+
 /**
- * @requires useGridColumns (state, method, event)
+ * @requires useGridColumns (method, event)
  * @requires useGridParamsApi (method)
  * @requires useGridRows (event)
  */
@@ -59,24 +77,6 @@ export const useGridFilter = (
   const logger = useGridLogger(apiRef, 'useGridFilter');
   const filteringMethodCollectionRef = React.useRef<GridFilteringMethodCollection>({});
   const lastFilteringMethodApplied = React.useRef<GridFilteringMethod | null>(null);
-
-  useGridStateInit(apiRef, (state) => {
-    if (props.filterModel) {
-      checkFilterModelValidity(props.filterModel);
-    }
-
-    return {
-      ...state,
-      filter: {
-        filterModel:
-          props.filterModel ??
-          props.initialState?.filter?.filterModel ??
-          getDefaultGridFilterModel(),
-        visibleRowsLookup: {},
-        filteredDescendantCountLookup: {},
-      },
-    };
-  });
 
   apiRef.current.unstable_updateControlState({
     stateId: 'filter',

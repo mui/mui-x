@@ -19,16 +19,40 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridColumnVisibilityChangeParams } from '../../../models';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridColumnsState, GridColumnVisibilityModel } from './gridColumnsInterfaces';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   hydrateColumnsWidth,
   computeColumnTypes,
   createColumnsState,
   setColumnsState,
 } from './gridColumnsUtils';
+
+export const columnsStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columnTypes' | 'columns'>
+> = (state, props, apiRef) => {
+  const shouldUseVisibleColumnModel =
+    !!props.columnVisibilityModel || !!props.initialState?.columns?.columnVisibilityModel;
+
+  const columnsTypes = computeColumnTypes(props.columnTypes);
+
+  const columnsState = createColumnsState({
+    apiRef,
+    columnsTypes,
+    columnsToUpsert: props.columns,
+    shouldRegenColumnVisibilityModelFromColumns: !shouldUseVisibleColumnModel,
+    currentColumnVisibilityModel:
+      props.columnVisibilityModel ?? props.initialState?.columns?.columnVisibilityModel ?? {},
+    reset: true,
+  });
+
+  return {
+    ...state,
+    columns: columnsState,
+  };
+};
 
 /**
  * @requires useGridParamsApi (method)
@@ -63,23 +87,6 @@ export function useGridColumns(
   const shouldUseVisibleColumnModel = React.useRef(
     !!props.columnVisibilityModel || !!props.initialState?.columns?.columnVisibilityModel,
   ).current;
-
-  useGridStateInit(apiRef, (state) => {
-    const columnsState = createColumnsState({
-      apiRef,
-      columnsTypes,
-      columnsToUpsert: props.columns,
-      shouldRegenColumnVisibilityModelFromColumns: !shouldUseVisibleColumnModel,
-      currentColumnVisibilityModel:
-        props.columnVisibilityModel ?? props.initialState?.columns?.columnVisibilityModel ?? {},
-      reset: true,
-    });
-
-    return {
-      ...state,
-      columns: columnsState,
-    };
-  });
 
   apiRef.current.unstable_updateControlState({
     stateId: 'visibleColumns',

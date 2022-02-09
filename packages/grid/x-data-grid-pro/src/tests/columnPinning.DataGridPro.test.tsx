@@ -356,7 +356,6 @@ describe('<DataGridPro /> - Column pinning', () => {
           `.${gridClasses.virtualScrollerRenderZone}`,
         ) as HTMLDivElement;
         expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
-        expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
         apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
         const leftColumns = document.querySelector(
           `.${gridClasses['pinnedColumns--left']}`,

@@ -29,6 +29,7 @@ import type {
 } from '../hooks/features/rowGrouping';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 import { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
+import { GridRowsInternalCache } from '../hooks/features/rows/gridRowsState';
 import {
   GridDetailPanelInitialState,
   GridDetailPanelState,
@@ -39,6 +40,7 @@ import {
  */
 export interface GridState {
   rows: GridRowsState;
+  rowsCache: GridRowsInternalCache;
   rowsMeta: GridRowsMetaState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
