@@ -31,7 +31,7 @@ import {
 
 interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
-  props?: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
+  getRowId: DataGridProcessedProps['getRowId'];
   rows?: GridRowsProp;
 }
 
@@ -48,10 +48,8 @@ function getGridRowId(
 const convertGridRowsPropToState = ({
   prevState,
   rows,
-  props: inputProps,
+  getRowId,
 }: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState => {
-  const props = inputProps ?? prevState.props;
-
   let value: GridRowInternalCacheValue;
   if (rows) {
     value = {
@@ -60,7 +58,7 @@ const convertGridRowsPropToState = ({
     };
     for (let i = 0; i < rows.length; i += 1) {
       const row = rows[i];
-      const id = getGridRowId(row, props.getRowId);
+      const id = getGridRowId(row, getRowId);
       value.idRowsLookup[id] = row;
       value.ids.push(id);
     }
@@ -70,7 +68,6 @@ const convertGridRowsPropToState = ({
 
   return {
     value,
-    props,
     rowsBeforePartialUpdates: rows ?? prevState.rowsBeforePartialUpdates,
   };
 };
@@ -79,11 +76,10 @@ const getRowsStateFromCache = (
   rowsCache: GridRowsInternalCache,
   previousTree: GridRowTreeConfig | null,
   apiRef: GridApiRef,
+  rowCountProp: number | undefined,
 ): GridRowsState => {
-  const {
-    props: { rowCount: propRowCount = 0 },
-    value,
-  } = rowsCache.state;
+  const { value } = rowsCache.state;
+  const rowCount = rowCountProp ?? 0;
 
   const groupingResponse = apiRef.current.unstable_groupRows({ ...value, previousTree });
 
@@ -91,9 +87,8 @@ const getRowsStateFromCache = (
     (node) => node.parent == null,
   ).length;
   const totalRowCount =
-    propRowCount > groupingResponse.ids.length ? propRowCount : groupingResponse.ids.length;
-  const totalTopLevelRowCount =
-    propRowCount > dataTopLevelRowCount ? propRowCount : dataTopLevelRowCount;
+    rowCount > groupingResponse.ids.length ? rowCount : groupingResponse.ids.length;
+  const totalTopLevelRowCount = rowCount > dataTopLevelRowCount ? rowCount : dataTopLevelRowCount;
 
   return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
 };
@@ -104,18 +99,11 @@ export const rowsStateInitializer: GridStateInitializer<
   const rowsCache = {
     state: convertGridRowsPropToState({
       rows: props.rows,
-      props: {
-        rowCount: props.rowCount,
-        getRowId: props.getRowId,
-      },
+      getRowId: props.getRowId,
       prevState: {
         value: {
           idRowsLookup: {},
           ids: [],
-        },
-        props: {
-          rowCount: undefined,
-          getRowId: undefined,
         },
         rowsBeforePartialUpdates: [],
       },
@@ -126,7 +114,7 @@ export const rowsStateInitializer: GridStateInitializer<
 
   return {
     ...state,
-    rows: getRowsStateFromCache(rowsCache, null, apiRef),
+    rows: getRowsStateFromCache(rowsCache, null, apiRef, props.rowCount),
     rowsCache,
   };
 };
@@ -168,7 +156,12 @@ export const useGridRows = (
         rowsCache.current.lastUpdateMs = Date.now();
         apiRef.current.setState((state) => ({
           ...state,
-          rows: getRowsStateFromCache(rowsCache.current, gridRowTreeSelector(apiRef), apiRef),
+          rows: getRowsStateFromCache(
+            rowsCache.current,
+            gridRowTreeSelector(apiRef),
+            apiRef,
+            props.rowCount,
+          ),
         }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
         apiRef.current.forceUpdate();
@@ -195,18 +188,22 @@ export const useGridRows = (
 
       run();
     },
-    [apiRef, rowsCache, props.throttleRowsMs],
+    [props.throttleRowsMs, props.rowCount, apiRef],
   );
 
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
       throttledRowsChange(
-        convertGridRowsPropToState({ rows, prevState: rowsCache.current.state }),
+        convertGridRowsPropToState({
+          rows,
+          prevState: rowsCache.current.state,
+          getRowId: props.getRowId,
+        }),
         true,
       );
     },
-    [logger, throttledRowsChange],
+    [logger, props.getRowId, throttledRowsChange],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
@@ -348,7 +345,7 @@ export const useGridRows = (
     throttledRowsChange(
       convertGridRowsPropToState({
         rows: props.rows,
-        props: { rowCount: props.rowCount, getRowId: props.getRowId },
+        getRowId: props.getRowId,
         prevState: rowsCache.current.state,
       }),
       false,
@@ -374,12 +371,12 @@ export const useGridRows = (
     throttledRowsChange(
       convertGridRowsPropToState({
         rows,
-        props: { rowCount: props.rowCount, getRowId: props.getRowId },
+        getRowId: props.getRowId,
         prevState: rowsCache.current.state,
       }),
       false,
     );
-  }, [logger, throttledRowsChange, props.rowCount, props.getRowId, props.rows]);
+  }, [logger, throttledRowsChange, props.getRowId, props.rows]);
 
   useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
 
