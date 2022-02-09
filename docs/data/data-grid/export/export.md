@@ -92,14 +92,11 @@ There are a few ways to include or hide other columns. The exported columns are 
 
 ## Exported rows
 
-> ⚠️ This section only applies for the CSV and the Excel export.
+> ⚠️ This section only applies to the CSV and the Excel export.
 > The print export always prints rows in their current state.
-> 
-> By default, the grid exports the selected rows if an.
-> If not, it exports all rows (filtered and sorted rows, if any rules are active), including the collapsed ones.
-> It does concern, the CSV and the excel export.
-> By default, if some rows are selected, the `DataGrid` exports only those.
-> If there's no selection, it exports all rows (filtered and sorted rows, if any rules are active), including the collapsed ones.
+
+By default, the grid exports the selected rows if there are any.
+If not, it exports all rows (filtered and sorted rows, according to active rules), including the collapsed ones.
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 The grid exports a few [selectors](/components/data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
