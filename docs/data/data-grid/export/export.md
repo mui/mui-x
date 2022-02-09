@@ -68,9 +68,9 @@ In the following example, the print export is disabled.
 ## Exported columns
 
 By default, the export will only contain the visible columns of the grid.
-There are a few ways to include or hide other columns. The exported columns are chosen in the following order:
+There are a few ways to include or hide other columns.
 
-1. Set the exact columns to be exported in the export option
+- Set the exact columns to be exported in the export option
 
 ```jsx
 <DataGrid
@@ -78,13 +78,13 @@ There are a few ways to include or hide other columns. The exported columns are 
 />
 ```
 
-2. Set `allColumns` in export option to `true` to also include hidden columns.
+- Set `allColumns` in export option to `true` to also include hidden columns.
 
 ```jsx
 <DataGrid componentsProps={{ toolbar: { csvOptions: { allColumns: true } } }} />
 ```
 
-3. Set the `disableExport` attribute to `true` in each `GridColDef`.
+- Set the `disableExport` attribute to `true` in each `GridColDef`.
 
 ```jsx
 <DataGrid columns={[{ field: 'name', disableExport: true }, { field: 'brand' }]} />
