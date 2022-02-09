@@ -606,5 +606,42 @@ describe('<DataGridPro /> - Export', () => {
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
     });
+
+    it('should use `exportedValue` when exporting if `valueExportFormatter` is provided', () => {
+      const COUNTRY_ISO_OPTIONS = [
+        { value: 'FR', label: 'France' },
+        { value: 'BR', label: 'Brazil' },
+      ];
+
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[
+                { field: 'id' },
+                {
+                  field: 'country',
+                  type: 'singleSelect',
+                  valueOptions: COUNTRY_ISO_OPTIONS,
+                  valueExportFormatter: ({ value }) =>
+                    (value as typeof COUNTRY_ISO_OPTIONS[number]).label,
+                },
+              ]}
+              rows={[
+                { id: 0, country: COUNTRY_ISO_OPTIONS[0] },
+                { id: 1, country: COUNTRY_ISO_OPTIONS[1] },
+              ]}
+            />
+          </div>
+        );
+      };
+      render(<TestCaseCSVExport />);
+      expect(apiRef.current.getDataAsCsv()).to.equal(
+        ['id,country', '0,France', '1,Brazil'].join('\r\n'),
+      );
+    });
   });
 });
