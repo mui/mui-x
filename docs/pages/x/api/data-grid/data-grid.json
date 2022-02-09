@@ -44,7 +44,12 @@
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
     },
-    "filterModel": { "type": { "name": "custom", "description": "any" } },
+    "filterModel": {
+      "type": {
+        "name": "shape",
+        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or' }"
+      }
+    },
     "getCellClassName": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
