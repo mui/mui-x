@@ -212,6 +212,13 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M']);
   });
 
+  it('should not override the first left pinned column when checkboxSelection=true', () => {
+    render(
+      <TestCase nbCols={2} initialState={{ pinnedColumns: { left: ['id'] } }} checkboxSelection />,
+    );
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
+  });
+
   describe('props: onPinnedColumnsChange', () => {
     it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();

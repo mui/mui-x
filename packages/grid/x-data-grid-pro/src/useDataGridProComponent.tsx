@@ -11,8 +11,7 @@ import {
   unstable_useGridFocus as useGridFocus,
   unstable_useGridKeyboard as useGridKeyboard,
   unstable_useGridKeyboardNavigation as useGridKeyboardNavigation,
-  unstable_useGridPageSize as useGridPageSize,
-  unstable_useGridPage as useGridPage,
+  unstable_useGridPagination as useGridPagination,
   unstable_useGridPreferencesPanel as useGridPreferencesPanel,
   unstable_useGridEditing as useGridEditing,
   unstable_useGridRows as useGridRows,
@@ -46,9 +45,9 @@ export const useDataGridProComponent = (
   const apiRef = useGridInitialization(inputApiRef, props);
   useGridTreeData(apiRef, props);
   useGridRowGrouping(apiRef, props);
-  useGridColumnPinning(apiRef, props);
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
+  useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
@@ -61,8 +60,7 @@ export const useDataGridProComponent = (
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
-  useGridPageSize(apiRef, props);
-  useGridPage(apiRef, props);
+  useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);

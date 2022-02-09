@@ -26,8 +26,7 @@ export { useGridFilter as unstable_useGridFilter } from '../../_modules_/grid/ho
 export { useGridFocus as unstable_useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
 export { useGridKeyboard as unstable_useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
 export { useGridKeyboardNavigation as unstable_useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
-export { useGridPageSize as unstable_useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
-export { useGridPage as unstable_useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
+export { useGridPagination as unstable_useGridPagination } from '../../_modules_/grid/hooks/features/pagination/useGridPagination';
 export { useGridPreferencesPanel as unstable_useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
 export { useGridEditing as unstable_useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
 export { useGridRows as unstable_useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
