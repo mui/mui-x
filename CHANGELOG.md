@@ -9,7 +9,11 @@ _Feb 10, 2022_
 
 A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎛 [`FilterPanel` content customization](https://mui.com/components/data-grid/filtering/#customize-the-filter-panel-content) via props (#3497) @alexfauquette
+- 🎛 Add props to customize the behavior of the filter panel (#3497) @alexfauquette
+ 
+  // code demo
+
+  Check the [documentation](https://mui.com/components/data-grid/filtering/#customize-the-filter-panel-content) to see all available props.
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -19,17 +23,17 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 
 - [DataGrid] Add `debounceMs` option to `setEditCellValue` method (#3825) @m4theushw
 - [DataGrid] Allow to translate `checkboxSelection` labels (#3846) @m4theushw
-- [DataGrid] Customize `FilterPanel` with props (#3497) @alexfauquette
-- [DataGrid] Fix filtering of string columns for value=0 (#3843) @flaviendelangle
-- [DataGrid] Fix focus when blur event rerenders the grid (#3718) @alexfauquette
+- [DataGrid] Customize the filter panel with props (#3497) @alexfauquette
+- [DataGrid] Fix filtering of string columns for `value = 0` (#3843) @flaviendelangle
+- [DataGrid] Fix focus when `blur` event rerenders the grid (#3718) @alexfauquette
 - [DataGridPro] Add clear error when the tree data has duplicated paths (#3840) @flaviendelangle
 - [DataGridPro] Avoid imports from `@mui/base` (#3903) @cherniavskii
 - [DataGridPro] Register column pinning after selection (#3887) @m4theushw
-- [l10n] Improve Turkish (trTR) locale (#3842) @flaviendelangle
+- [l10n] Improve Turkish (trTR) locale (#3842) @atillaaliyev
 
 ### Docs
 
-- [docs] Clarify a bit the migration to v5 (#3847) @oliviertassinari
+- [docs] Update v5 migration docs (#3847) @oliviertassinari
 - [docs] Fix sorting feature link (#3877) @alexfauquette
 - [docs] Migrate content to the new location (#3730) @siriwatknp
 - [docs] Unify multi-filtering introduction with the multi-sorting introduction (#3766) @flaviendelangle
@@ -41,7 +45,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 - [core] Add hook `useGridPagination` to call `onGridPage` and `onGridPageSize` (#3880) @flaviendelangle
 - [core] Fix docs deploy script (#3874) @oliviertassinari
 - [core] Move the git repository to a new location (#3872) @oliviertassinari
-- [test] Add codecov (#3873) @oliviertassinari
+- [test] Add `codecov` (#3873) @oliviertassinari
 
 ## 5.5.0
 
