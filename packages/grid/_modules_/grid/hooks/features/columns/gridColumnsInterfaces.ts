@@ -1,5 +1,5 @@
 import type { GridRowId, GridStateColDef, GridColDef } from '../../../models';
-import type { ColumnsDimensionProperties } from './gridColumnsUtils';
+import type { GridColumnDimensionProperties } from './gridColumnsUtils';
 
 export type GridColumnLookup = { [field: string]: GridStateColDef };
 
@@ -14,7 +14,7 @@ export interface GridColumnsState {
   columnVisibilityModel: GridColumnVisibilityModel;
 }
 
-export type GridColumnDimensions = Pick<GridStateColDef, ColumnsDimensionProperties>;
+export type GridColumnDimensions = Pick<GridStateColDef, GridColumnDimensionProperties>;
 
 export interface GridColumnsInitialState {
   columnVisibilityModel?: GridColumnVisibilityModel;

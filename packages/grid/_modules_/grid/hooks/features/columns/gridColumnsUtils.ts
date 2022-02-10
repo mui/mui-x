@@ -21,7 +21,7 @@ import { clamp } from '../../../utils/utils';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
-export type ColumnsDimensionProperties = typeof COLUMNS_DIMENSION_PROPERTIES[number];
+export type GridColumnDimensionProperties = typeof COLUMNS_DIMENSION_PROPERTIES[number];
 
 export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
   const allColumnTypes = { ...getGridDefaultColumnTypes(), ...customColumnTypes };
