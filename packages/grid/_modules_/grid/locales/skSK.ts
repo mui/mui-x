@@ -52,6 +52,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
   filterPanelDeleteIconLabel: 'Odstrániť',
+  filterPanelLinkOperator: '',
   filterPanelOperators: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Alebo',

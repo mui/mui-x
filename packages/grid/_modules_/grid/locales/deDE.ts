@@ -43,6 +43,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
   filterPanelDeleteIconLabel: 'Löschen',
+  filterPanelLinkOperator: '',
   filterPanelOperators: 'Operatoren',
   filterPanelOperatorAnd: 'Und',
   filterPanelOperatorOr: 'Oder',

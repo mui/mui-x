@@ -303,7 +303,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         )}
       >
         <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
-          {apiRef.current.getLocaleText('filterPanelOperators')}
+          {apiRef.current.getLocaleText('filterPanelLinkOperator')}
         </InputLabel>
         <rootProps.components.BaseSelect
           labelId={linkOperatorSelectLabelId}

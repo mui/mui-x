@@ -42,6 +42,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Προσθήκη φίλτρου',
   filterPanelDeleteIconLabel: 'Διαγραφή',
+  filterPanelLinkOperator: '',
   filterPanelOperators: 'Τελεστές',
   filterPanelOperatorAnd: 'Καί',
   filterPanelOperatorOr: 'Ή',
