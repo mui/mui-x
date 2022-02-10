@@ -283,7 +283,7 @@ More details are available in the demo.
 | `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
 | `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
 
-{{"demo": "pages/components/data-grid/filtering/CustomFilterPanelContent.js", "bg": "inline"}}
+{{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
 
 ### Customize the filter panel position
 
