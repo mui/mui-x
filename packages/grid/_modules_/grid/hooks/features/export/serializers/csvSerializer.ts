@@ -32,7 +32,7 @@ const serialiseRow = (
   columns.map((column) => {
     const cellParams = getCellParams(id, column.field);
     if (process.env.NODE_ENV !== 'production') {
-      if (!warnedOnce && typeof cellParams.formattedValue === 'object') {
+      if (!warnedOnce && String(cellParams.formattedValue) === '[object Object]') {
         console.warn(
           [
             'MUI: When value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
