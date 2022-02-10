@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 5.6.0
+## 5.5.1
 
 _Feb 10, 2022_
 
@@ -24,7 +24,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v5.6.0` / `@mui/x-data-grid-pro@v5.6.0`
+### `@mui/x-data-grid@v5.5.1` / `@mui/x-data-grid-pro@v5.5.1`
 
 #### Changes
 
