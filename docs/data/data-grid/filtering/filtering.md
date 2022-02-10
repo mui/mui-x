@@ -11,8 +11,8 @@ The filters can be modified through the grid interface in several ways:
 - By opening the column menu and clicking the _Filter_ menu item.
 - By clicking the _Filters_ button in the grid toolbar (if enabled).
 
-Each column types has its own filter operators.
-The demo below let you explore all the operators for each built-in column type.
+Each column type has its own filter operators.
+The demo below lets you explore all the operators for each built-in column type.
 
 _See [the dedicated section](#customize-the-operators) to learn how to create your own custom filter operator._
 
@@ -269,7 +269,7 @@ The demo below shows how to anchor the filter panel to the toolbar button instea
 
 Filtering can be run server-side by setting the `filterMode` prop to `server`, and implementing the `onFilterModelChange` handler.
 
-Below is a very simple demo on how you could achieve server-side filtering.
+The example below demonstrates how to achieve server-side filtering.
 
 {{"demo": "ServerFilterGrid.js", "bg": "inline"}}
 
