@@ -143,7 +143,6 @@ const DataGridProVirtualScroller = React.forwardRef<
     getContentProps,
     getRenderZoneProps,
     updateRenderZonePosition,
-    shouldExtendContent,
   } = useGridVirtualScroller({
     ref,
     renderZoneMinColumnIndex: leftPinnedColumns.length,
@@ -183,13 +182,15 @@ const DataGridProVirtualScroller = React.forwardRef<
         }
       : null;
 
+  const contentProps = getContentProps();
+
   const pinnedColumnsStyle = {
-    minHeight: shouldExtendContent ? '100%' : 'auto',
+    minHeight: contentProps.style.minHeight,
   };
 
   return (
     <GridVirtualScroller {...getRootProps(other)}>
-      <GridVirtualScrollerContent {...getContentProps()}>
+      <GridVirtualScrollerContent {...contentProps}>
         {leftRenderContext && (
           <VirtualScrollerPinnedColumns
             ref={leftColumns}
