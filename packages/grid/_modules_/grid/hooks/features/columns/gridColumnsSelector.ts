@@ -4,7 +4,10 @@ import { GridState } from '../../../models/gridState';
 export const gridColumnsSelector = (state: GridState) => state.columns;
 
 // It includes even the hidden columns
-export const allGridColumnsFieldsSelector = (state: GridState) => state.columns.all;
+export const allGridColumnsFieldsSelector = createSelector(
+  gridColumnsSelector,
+  (columns) => columns.all,
+);
 
 export const gridColumnLookupSelector = (state: GridState) => state.columns.lookup;
 

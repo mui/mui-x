@@ -249,7 +249,13 @@ export type GridColumns = GridEnrichedColDef[];
 
 export type GridColTypeDef = Omit<GridColDef, 'field'> & { extendType?: GridNativeColTypes };
 
-export type GridStateColDef = GridEnrichedColDef & { computedWidth: number };
+export type GridStateColDef = GridEnrichedColDef & {
+  computedWidth: number;
+  /**
+   * If `true`, it means that at least one of the dimension's property of this column has been modified since the last time the column prop has changed.
+   */
+  hasBeenResized?: boolean;
+};
 
 /**
  * Meta Info about columns.

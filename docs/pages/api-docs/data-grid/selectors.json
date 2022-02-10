@@ -3,7 +3,7 @@
     "name": "allGridColumnsFieldsSelector",
     "returnType": "string[]",
     "description": "",
-    "supportsApiRef": false
+    "supportsApiRef": true
   },
   {
     "name": "allGridColumnsSelector",

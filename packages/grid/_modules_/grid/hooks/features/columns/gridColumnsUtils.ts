@@ -3,8 +3,8 @@ import {
   GridColumnsState,
   GridColumnsRawState,
   GridColumnVisibilityModel,
-  GridPortableColDef,
   GridColumnRawLookup,
+  GridColumnsInitialState,
 } from './gridColumnsInterfaces';
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
@@ -18,6 +18,10 @@ import {
 } from '../../../models';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
+
+export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
+
+export type ColumnsDimensionProperties = typeof COLUMNS_DIMENSION_PROPERTIES[number];
 
 export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
   const allColumnTypes = { ...getGridDefaultColumnTypes(), ...customColumnTypes };
@@ -95,41 +99,46 @@ export const hydrateColumnsWidth = (
 let columnTypeWarnedOnce = false;
 
 /**
- * Apply the order and the dimensions of the portable columns.
- * The columns not registered in `columnsToImport` will keep there default dimensions and be placed after the imported columns.
+ * Apply the order and the dimensions of the initial state.
+ * The columns not registered in `orderedFields` will be placed after the imported columns.
  */
-export const applyPortableColDef = (
+export const applyInitialState = (
   columnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'>,
-  columnsToImport: GridPortableColDef[] | undefined,
+  initialState: GridColumnsInitialState | undefined,
 ) => {
-  if (!columnsToImport || columnsToImport.length === 0) {
+  if (!initialState) {
     return columnsState;
   }
 
-  const portableColumnsLookup: Record<string, GridPortableColDef> = {};
-  const fieldsToImport: string[] = [];
+  const { orderedFields = [], dimensions = {} } = initialState;
 
-  for (let i = 0; i < columnsToImport.length; i += 1) {
-    const portableColumn = columnsToImport[i];
-    if (columnsState.lookup[portableColumn.field]) {
-      portableColumnsLookup[portableColumn.field] = portableColumn;
-      fieldsToImport.push(portableColumn.field);
-    }
+  const columnsWithUpdatedDimensions = Object.keys(dimensions);
+  if (columnsWithUpdatedDimensions.length === 0 && orderedFields.length === 0) {
+    return columnsState;
   }
 
-  const newFieldList = [
-    ...fieldsToImport,
-    ...columnsState.all.filter((field) => !portableColumnsLookup[field]),
-  ];
+  const orderedFieldsLookup = orderedFields.reduce((acc, field) => {
+    acc[field] = true;
+    return acc;
+  }, {} as Record<string, true>);
 
-  const newColumnLookup: GridColumnRawLookup = {};
-  for (let i = 0; i < newFieldList.length; i += 1) {
-    const field = newFieldList[i];
-    newColumnLookup[field] = { ...columnsState.lookup[field], ...portableColumnsLookup[field] };
+  const newOrderedFields =
+    orderedFields.length === 0
+      ? columnsState.all
+      : [...orderedFields, ...columnsState.all.filter((field) => !orderedFieldsLookup[field])];
+
+  const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
+  for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
+    const field = columnsWithUpdatedDimensions[i];
+    newColumnLookup[field] = {
+      ...newColumnLookup[field],
+      ...dimensions[field],
+      hasBeenResized: true,
+    };
   }
 
   const newColumnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'> = {
-    all: newFieldList,
+    all: newOrderedFields,
     lookup: newColumnLookup,
   };
 
@@ -169,7 +178,7 @@ export const getGridColDef = (
 export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
-  columnsToImport,
+  initialState,
   columnsTypes,
   currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   shouldRegenColumnVisibilityModelFromColumns,
@@ -177,13 +186,18 @@ export const createColumnsState = ({
 }: {
   apiRef: GridApiRef;
   columnsToUpsert: GridColDef[];
-  columnsToImport: GridPortableColDef[] | undefined;
+  initialState: GridColumnsInitialState | undefined;
   columnsTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
   reset: boolean;
 }) => {
-  let columnsStateWithoutColumnVisibilityModel: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+  let columnsStateWithoutColumnVisibilityModel: Omit<
+    GridColumnsRawState,
+    'columnVisibilityModel' | 'lookup'
+  > & {
+    lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
+  };
   if (reset) {
     columnsStateWithoutColumnVisibilityModel = {
       all: [],
@@ -208,10 +222,19 @@ export const createColumnsState = ({
       };
       columnsStateWithoutColumnVisibilityModel.all.push(newColumn.field);
     } else {
-      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = {
+      const mergedColumn = {
         ...columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field],
         ...newColumn,
       };
+
+      if (
+        !mergedColumn.hasBeenResized &&
+        COLUMNS_DIMENSION_PROPERTIES.some((propertyName) => newColumn[propertyName] !== undefined)
+      ) {
+        mergedColumn.hasBeenResized = true;
+      }
+
+      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = mergedColumn;
     }
   });
 
@@ -264,9 +287,9 @@ export const createColumnsState = ({
     columnVisibilityModel = currentColumnVisibilityModel;
   }
 
-  const columnsStateWithPortableColumns = applyPortableColDef(
+  const columnsStateWithPortableColumns = applyInitialState(
     columnsStateWithPreProcessing,
-    columnsToImport,
+    initialState,
   );
 
   const columnsState: GridColumnsRawState = {

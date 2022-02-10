@@ -42,18 +42,15 @@ const columns: GridColDef[] = [
 const FULL_INITIAL_STATE: GridInitialState = {
   columns: {
     columnVisibilityModel: { category1: false },
-    columns: [
-      { field: 'id', maxWidth: Infinity, minWidth: 50, width: 100, flex: undefined },
-      {
-        field: '__row_group_by_columns_group__',
+    orderedFields: ['id', '__row_group_by_columns_group__', 'idBis', 'category1'],
+    dimensions: {
+      category1: {
+        width: 75,
         maxWidth: Infinity,
         minWidth: 50,
-        width: 140,
         flex: undefined,
       },
-      { field: 'idBis', maxWidth: Infinity, minWidth: 50, width: 100, flex: undefined },
-      { field: 'category1', maxWidth: Infinity, minWidth: 50, width: 75, flex: undefined },
-    ],
+    },
   },
   filter: {
     filterModel: {
@@ -116,22 +113,20 @@ describe('<DataGridPro /> - State Persistence', () => {
   };
 
   describe('apiRef: exportState', () => {
+    // We always export the `orderedFields`,
+    // If it's something problematic we could introduce an `hasBeenReordered` property and only export if at least one column has been reordered.
     it('should not return the default values of the models', () => {
       render(<TestCase />);
       expect(apiRef.current.exportState()).to.deep.equal({
         columns: {
-          columns: [
-            { field: 'id', maxWidth: Infinity, minWidth: 50, width: 100, flex: undefined },
-            { field: 'category1', maxWidth: Infinity, minWidth: 50, width: 100, flex: undefined },
-            { field: 'idBis', maxWidth: Infinity, minWidth: 50, width: 100, flex: undefined },
-          ],
+          orderedFields: ['id', 'category1', 'idBis'],
         },
       });
     });
 
     it('should export the initial values of the models', () => {
       render(<TestCase initialState={FULL_INITIAL_STATE} />);
-      expect(apiRef.current.exportState().pagination).to.deep.equal(FULL_INITIAL_STATE.pagination);
+      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });
 
     it('should export the current version of the exportable state', () => {

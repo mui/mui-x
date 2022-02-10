@@ -358,27 +358,19 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should not loose column index when re-applying pre-processing', () => {
       render(<Test checkboxSelection columns={[{ field: 'id' }, { field: 'brand' }]} />);
-      expect(allGridColumnsFieldsSelector(apiRef.current.state).indexOf('brand')).to.equal(2);
+      expect(allGridColumnsFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       apiRef.current.setColumnIndex('brand', 1);
-      expect(allGridColumnsFieldsSelector(apiRef.current.state).indexOf('brand')).to.equal(1);
+      expect(allGridColumnsFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
       apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
-      expect(allGridColumnsFieldsSelector(apiRef.current.state).indexOf('brand')).to.equal(1);
+      expect(allGridColumnsFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
 
     it('should not loose imperatively added columns when re-applying pre-processing', () => {
       render(<Test checkboxSelection />);
       apiRef.current.updateColumn({ field: 'id' });
-      expect(allGridColumnsFieldsSelector(apiRef.current.state)).to.deep.equal([
-        '__check__',
-        'brand',
-        'id',
-      ]);
+      expect(allGridColumnsFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
       apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
-      expect(allGridColumnsFieldsSelector(apiRef.current.state)).to.deep.equal([
-        '__check__',
-        'brand',
-        'id',
-      ]);
+      expect(allGridColumnsFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
   });
 
