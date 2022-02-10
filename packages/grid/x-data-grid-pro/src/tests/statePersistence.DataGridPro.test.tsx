@@ -79,7 +79,7 @@ describe('<DataGridPro /> - State Persistence', () => {
       },
     };
 
-    it.only('should not return the default values of the models', () => {
+    it('should not return the default values of the models', () => {
       render(<TestCase />);
       expect(apiRef.current.exportState()).to.deep.equal({});
     });
