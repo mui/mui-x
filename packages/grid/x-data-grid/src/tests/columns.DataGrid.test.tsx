@@ -29,7 +29,9 @@ describe('<DataGridPro /> - Columns', () => {
     it('should allow to initialize the columns order and dimensions', () => {
       render(
         <TestDataGrid
-          initialState={{ columns: { columns: [{ field: 'idBis', width: 150 }, { field: 'id' }] } }}
+          initialState={{
+            columns: { orderedFields: ['idBis', 'id'], dimensions: { idBis: { width: 150 } } },
+          }}
         />,
       );
 
@@ -38,13 +40,13 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     it('should not add a column when present in the initial state but not in the props', () => {
-      render(<TestDataGrid initialState={{ columns: { columns: [{ field: 'idTres' }] } }} />);
+      render(<TestDataGrid initialState={{ columns: { orderedFields: ['idTres'] } }} />);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
     });
 
     it('should move the columns not present in the initial state after the one present in it', () => {
-      render(<TestDataGrid initialState={{ columns: { columns: [{ field: 'idBis' }] } }} />);
+      render(<TestDataGrid initialState={{ columns: { orderedFields: ['idBis'] } }} />);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis', 'id']);
     });
@@ -53,7 +55,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(
         <TestDataGrid
           columns={[{ field: 'id', flex: 1 }]}
-          initialState={{ columns: { columns: [{ field: 'id', flex: undefined }] } }}
+          initialState={{ columns: { dimensions: { id: { flex: undefined } } } }}
         />,
       );
 

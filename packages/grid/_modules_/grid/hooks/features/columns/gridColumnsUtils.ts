@@ -117,15 +117,23 @@ export const applyInitialState = (
     return columnsState;
   }
 
-  const orderedFieldsLookup = orderedFields.reduce((acc, field) => {
-    acc[field] = true;
-    return acc;
-  }, {} as Record<string, true>);
+  const orderedFieldsLookup: Record<string, true> = {};
+  const cleanOrderedFields: string[] = [];
+
+  for (let i = 0; i < orderedFields.length; i += 1) {
+    const field = orderedFields[i];
+
+    // Ignores the fields in the initialState that matches no field on the current column state
+    if (columnsState.lookup[field]) {
+      orderedFieldsLookup[field] = true;
+      cleanOrderedFields.push(field);
+    }
+  }
 
   const newOrderedFields =
-    orderedFields.length === 0
+    cleanOrderedFields.length === 0
       ? columnsState.all
-      : [...orderedFields, ...columnsState.all.filter((field) => !orderedFieldsLookup[field])];
+      : [...cleanOrderedFields, ...columnsState.all.filter((field) => !orderedFieldsLookup[field])];
 
   const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
