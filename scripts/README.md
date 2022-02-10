@@ -48,6 +48,10 @@ git push upstream master:docs-v5 -f
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v5)
 Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v5` deployment.
 
+### Publish GitHub release
+
+After documentation is deployed, publish new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
+
 ### Announce
 
 Follow the instructions in https://mui-org.notion.site/Releases-7490ef9581b4447ebdbf86b13164272d.
