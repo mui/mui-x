@@ -237,7 +237,8 @@ In the demo below, the `rating` column only has the `<` and `>` operators.
 ### Edit an operator
 
 The value used by the operator to look for has to be entered by the user.
-On most column types, a text field is used. However, a custom component can be rendered instead.
+On most column types, a text field is used.
+However, a custom component can be rendered instead.
 
 In the demo below, the `rating` column reuses the numeric operators but the rating component is used to enter the value of the filter.
 
@@ -261,9 +262,34 @@ const ratingColumnType: GridColTypeDef = {
 
 You can customize the rendering of the filter panel as shown in [the component section](/components/data-grid/components/#overriding-components) of the documentation.
 
+### Customize the filter panel content
+
+The customization of the filter panel content can be performed by passing props to the default `<GridFilterPanel />` component.
+The available props allow to override:
+
+- The `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
+- The order of the column selector (can be `"asc"` or `"desc"`)
+- Any prop of the input components
+
+Input components can be [customized](/customization/how-to-customize/) by using two approaches.
+You can pass a `sx` prop to any input container or you can use CSS selectors on nested components of the filter panel.
+More details are available in the demo.
+
+| Props                    | CSS class                                 |
+| :----------------------- | :---------------------------------------- |
+| `deleteIconProps`        | `MuiDataGrid-filterFormDeleteIcon`        |
+| `linkOperatorInputProps` | `MuiDataGrid-filterFormLinkOperatorInput` |
+| `columnInputProps`       | `MuiDataGrid-filterFormColumnInput`       |
+| `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
+| `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
+
+{{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
+
+### Customize the filter panel position
+
 The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.
 
-{{"demo": "CustomFilterPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "CustomFilterPanelPosition.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Server-side filter
 
