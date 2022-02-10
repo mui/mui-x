@@ -37,7 +37,7 @@
     "directory": "packages/grid/x-data-grid-pro"
   },
   "dependencies": {
-    "@mui/utils": "^5.3.0",
+    "@mui/utils": "^5.4.1",
     "@mui/x-license-pro": "5.5.0",
     "clsx": "^1.0.4",
     "prop-types": "^15.8.1",
