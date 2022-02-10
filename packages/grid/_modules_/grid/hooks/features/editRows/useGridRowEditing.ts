@@ -89,6 +89,8 @@ export const useGridRowEditing = (
         throw new Error(`MUI: You can't commit changes when the edit mode is 'cell'.`);
       }
 
+      apiRef.current.unstable_runPendingEditCellValueChangeDebounce(id);
+
       const model = apiRef.current.getEditRowsModel();
       const editRowProps = model[id];
       if (!editRowProps) {
