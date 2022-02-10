@@ -77,7 +77,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const scrollPosition = React.useRef({ top: 0, left: 0 });
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
   const prevTotalWidth = React.useRef(columnsMeta.totalWidth);
-  const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
 
   const computeRenderContext = React.useCallback(() => {
     if (disableVirtualization) {
@@ -150,26 +149,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }, []);
 
   useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
-
-  const handleContentSizeChange = React.useCallback(() => {
-    if (!apiRef.current.windowRef?.current) {
-      return;
-    }
-    setShouldExtendContent(
-      apiRef.current.windowRef.current.scrollHeight <=
-        apiRef.current.windowRef.current.clientHeight,
-    );
-  }, [apiRef]);
-
-  const contentStyle = {
-    minHeight: shouldExtendContent ? '100%' : 'auto',
-  };
-
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.virtualScrollerContentSizeChange,
-    handleContentSizeChange,
-  );
 
   const getRenderableIndexes = ({ firstIndex, lastIndex, buffer, minFirstIndex, maxLastIndex }) => {
     return [
@@ -341,12 +320,19 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const needsHorizontalScrollbar = containerWidth && columnsMeta.totalWidth > containerWidth;
 
   const contentSize = React.useMemo(() => {
+    let shouldExtendContent = false;
+    const windowRef = apiRef.current.windowRef;
+    if (windowRef?.current && windowRef.current.scrollHeight <= windowRef.current.clientHeight) {
+      shouldExtendContent = true;
+    }
+
     const size = {
       width: needsHorizontalScrollbar ? columnsMeta.totalWidth : 'auto',
       // In cases where the columns exceed the available width,
       // the horizontal scrollbar should be shown even when there're no rows.
       // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
       height: Math.max(rowsMeta.currentPageTotalHeight, 1),
+      minHeight: shouldExtendContent ? '100%' : 'auto',
     };
 
     if (rootProps.autoHeight && currentPage.rows.length === 0) {
@@ -355,6 +341,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     return size;
   }, [
+    apiRef,
     columnsMeta.totalWidth,
     rowsMeta.currentPageTotalHeight,
     currentPage.rows.length,
@@ -393,7 +380,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       ...other,
     }),
     getContentProps: ({ style = {} } = {}) => ({
-      style: { ...contentStyle, ...style, ...contentSize },
+      style: { ...style, ...contentSize },
     }),
     getRenderZoneProps: () => ({ ref: renderZoneRef }),
   };
