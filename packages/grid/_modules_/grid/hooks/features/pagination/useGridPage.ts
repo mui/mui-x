@@ -97,7 +97,16 @@ export const useGridPage = (
   const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
       const pageToExport = gridPageSelector(apiRef);
-      if (pageToExport === 0) {
+
+      const shouldExportPage =
+        // Always export if the page is controlled
+        props.page != null ||
+        // Always export if the page has been initialized
+        props.initialState?.pagination?.page != null ||
+        // Export if the page value is not equal to the default value
+        pageToExport !== 0;
+
+      if (shouldExportPage) {
         return prevState;
       }
 
