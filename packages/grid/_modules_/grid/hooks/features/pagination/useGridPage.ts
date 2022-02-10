@@ -118,7 +118,7 @@ export const useGridPage = (
         },
       };
     },
-    [apiRef],
+    [apiRef, props.page, props.initialState?.pagination?.page],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
