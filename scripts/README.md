@@ -2,7 +2,7 @@
 
 ## Release
 
-> Tip: You can copy the raw markdown checklist below to the release pull request description and mark each step as completed as you follow the steps.
+> Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
 
 A typical release goes like this:
 
@@ -54,7 +54,7 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
 
 ### Publish GitHub release
 
-- [ ] After documentation is deployed, publish new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
+- [ ] After documentation is deployed, publish a new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
 
 ### Announce
 
