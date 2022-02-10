@@ -106,7 +106,7 @@ export const useGridPage = (
         // Export if the page value is not equal to the default value
         pageToExport !== 0;
 
-      if (shouldExportPage) {
+      if (!shouldExportPage) {
         return prevState;
       }
 

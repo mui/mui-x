@@ -104,7 +104,7 @@ export const useGridPageSize = (
         // Export if the page size value is not equal to the default value
         pageSizeToExport !== defaultPageSize;
 
-      if (shouldExportPageSize) {
+      if (!shouldExportPageSize) {
         return prevState;
       }
 
