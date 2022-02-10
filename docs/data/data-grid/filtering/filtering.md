@@ -267,7 +267,7 @@ The demo below shows how to anchor the filter panel to the toolbar button instea
 
 Filtering can be run server-side by setting the `filterMode` prop to `server`, and implementing the `onFilterModelChange` handler.
 
-Below is a very simple demo about how you could achieve server-side filtering.
+The example below demonstrates how to achieve server-side filtering.
 
 {{"demo": "ServerFilterGrid.js", "bg": "inline"}}
 

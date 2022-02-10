@@ -125,7 +125,7 @@ The value generated is used for filtering, sorting, rendering, etc. unless overr
 ### Value setter
 
 The value setter is to be used when editing rows and it is the counterpart of the value getter.
-It allows customizing how the entered value is stored in the row.
+This enables you to customize how the entered value is stored in the row.
 A common use case for it is when the data is a nested structure.
 Refer to the [cell editing](/components/data-grid/editing/#saving-nested-structures) documentation to see an example using it.
 
@@ -157,7 +157,7 @@ In the following demo, a formatter is used to display the tax rate's decimal val
 {{"demo": "ValueFormatterGrid.js", "bg": "inline"}}
 
 The value generated is only used for rendering purposes.
-Filtering and sorting will not rely on the formatted value.
+Filtering and sorting do not rely on the formatted value.
 Use the [`valueParser`](/components/data-grid/columns/#value-parser) to support filtering.
 
 ### Value parser
@@ -441,7 +441,7 @@ In addition, column reordering emits the following events that can be imported:
 
 ## Column pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Pinned (or frozen, locked, or sticky) columns are columns that are visible all the time while the user scrolls the grid horizontally.
+Pinned (or frozen, locked, or sticky) columns are columns that are visible at all time while the user scrolls the grid horizontally.
 They can be pinned either to the left or right side and cannot be reordered.
 
 To pin a column, there are a few ways:
@@ -475,7 +475,7 @@ The following demos illustrates how this approach works:
 
 ### Controlling the pinned columns
 
-While the `initialState` prop only works for setting pinned columns during the initialization, the `pinnedColumns` prop allows modifying at any time which columns to pin.
+While the `initialState` prop only works for setting pinned columns during the initialization, the `pinnedColumns` prop allows you to modify which columns are pinned at any time.
 The value passed to it follows the same shape from the previous approach.
 Use it together with `onPinnedColumnsChange` to know when a column is pinned or unpinned.
 
@@ -524,7 +524,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 > 👍 Upvote [issue #192](https://github.com/mui/mui-x/issues/192) if you want to see it land faster.
 
 Each cell takes up the width of one column.
-Column spanning allows modifying this default behavior.
+You can modify this default behavior with column spanning.
 It allows cells to span multiple columns.
 This is very close to the "column spanning" in an HTML `<table>`.
 
