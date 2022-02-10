@@ -403,4 +403,32 @@ describe('<DataGridPro /> - Row Editing', () => {
       isValidating: true,
     });
   });
+
+  it('should not crash when commiting a value with Enter without waiting for debounce', async function test() {
+    if (isJSDOM) {
+      this.skip(); // It only fails in a real browser.
+    }
+    const preProcessEditCellProps = spy(({ props }) => props);
+    render(
+      <TestCase
+        editMode="row"
+        experimentalFeatures={{ preventCommitWhileValidating: true }}
+        columns={[
+          {
+            field: 'brand',
+            editable: true,
+            preProcessEditCellProps,
+          },
+        ]}
+      />,
+    );
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    clock.runToLast();
+    expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
+  });
 });

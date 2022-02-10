@@ -41,6 +41,13 @@ export interface GridEditingSharedApi {
     event?: MuiBaseEvent,
   ) => Promise<boolean> | void;
   /**
+   * Immediatelly updates the value of the cell, without waiting for the debounce.
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field to update. If not passed, updates all fields in the given row id.
+   * @ignore - do not document.
+   */
+  unstable_runPendingEditCellValueChangeDebounce: (id: GridRowId, field?: string) => void;
+  /**
    * @ignore - do not document.
    */
   unstable_setEditCellProps: (params: GridEditCellPropsParams) => GridEditCellProps;
@@ -74,6 +81,9 @@ export interface GridRowEditingApi extends GridEditingSharedApi {
    */
   commitRowChange: (id: GridRowId, event?: MuiBaseEvent) => boolean | Promise<boolean>;
   /**
+   * Updates the value of a cell and calls all `preProcessEditCellProps` if necessary.
+   * @param {GridCommitCellChangeParams} params Object with the new value and id and field to update.
+   * @returns {Promise<boolean>} Resolves with `true` when all values in the row are valid.
    * @ignore - do not document.
    */
   unstable_setRowEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
@@ -108,9 +118,12 @@ export interface GridCellEditingApi extends GridEditingSharedApi {
    */
   getCellMode: (id: GridRowId, field: string) => GridCellMode;
   /**
+   * Updates the value of a cell and calls `preProcessEditCellProps` if necessary.
+   * @param {GridCommitCellChangeParams} params Object with the new value and id and field to update.
+   * @returns {Promise<boolean>} Resolves with `true` when the new value is valid.
    * @ignore - do not document.
    */
-  unstable_setCellEditingEditCellValue: (params: GridEditCellValueParams) => void;
+  unstable_setCellEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
 }
 
 /**
