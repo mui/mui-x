@@ -12,7 +12,7 @@ export interface GridRowsMetaApi {
    */
   unstable_getRowHeight: (id: GridRowId) => number;
   /**
-   * Updates the height of a row.
+   * Updates the base height of a row.
    * @param {GridRowId} id The id of the row.
    * @param {number} height The new height.
    * @ignore - do not document.

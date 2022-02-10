@@ -841,32 +841,32 @@ describe('<DataGridPro /> - Rows', () => {
     };
 
     it('should change row height', () => {
-      const RESIZED_ROW_ID = 1;
+      const resizedRowId = 1;
       render(<TestCase />);
 
       expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
 
-      apiRef.current.unstable_setRowHeight(RESIZED_ROW_ID, 100);
-      expect(getRow(RESIZED_ROW_ID).clientHeight).to.equal(100);
+      apiRef.current.unstable_setRowHeight(resizedRowId, 100);
+      expect(getRow(resizedRowId).clientHeight).to.equal(100);
     });
 
     it('should preserve changed row height after sorting', () => {
-      const RESIZED_ROW_ID = 0;
+      const resizedRowId = 0;
       const getRowHeight = spy();
       render(<TestCase getRowHeight={getRowHeight} />);
 
-      const row = getRow(RESIZED_ROW_ID);
+      const row = getRow(resizedRowId);
       expect(row.clientHeight).to.equal(ROW_HEIGHT);
 
       getRowHeight.resetHistory();
-      apiRef.current.unstable_setRowHeight(RESIZED_ROW_ID, 100);
+      apiRef.current.unstable_setRowHeight(resizedRowId, 100);
       expect(row.clientHeight).to.equal(100);
 
       // sort
-      fireEvent.click(getColumnHeaderCell(RESIZED_ROW_ID));
+      fireEvent.click(getColumnHeaderCell(resizedRowId));
 
       expect(row.clientHeight).to.equal(100);
-      expect(getRowHeight.neverCalledWithMatch({ id: RESIZED_ROW_ID })).to.equal(true);
+      expect(getRowHeight.neverCalledWithMatch({ id: resizedRowId })).to.equal(true);
     });
   });
 });
