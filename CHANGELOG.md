@@ -10,10 +10,17 @@ _Feb 10, 2022_
 A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎛 Add props to customize the behavior of the filter panel (#3497) @alexfauquette
- 
-  // code demo
+
+  ```tsx
+  <DataGrid
+    componentsProps={{
+      filterPanel: { columnsSort: 'asc' },
+    }}
+  />
+  ```
 
   Check the [documentation](https://mui.com/components/data-grid/filtering/#customize-the-filter-panel-content) to see all available props.
+
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
