@@ -2,14 +2,16 @@
 
 ## Release
 
+> Tip: You can copy the raw markdown checklist below to the release pull request description and mark each step as completed as you follow the steps.
+
 A typical release goes like this:
 
 ### Prepare the release of the packages
 
 The following steps must be proposed as a pull request.
 
-1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
-   To do so, use `yarn release:changelog` The options are the following:
+1. - [ ] Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
+         To do so, use `yarn release:changelog` The options are the following:
 
    ```bash
    yarn release:changelog
@@ -22,24 +24,26 @@ The following steps must be proposed as a pull request.
 
    In case of problem, another method to generate the changelog is available at the end of this page.
 
-2. Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
-3. Update the root `package.json`'s version
-4. Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
-5. Open PR with changes and wait for review and green CI.
-6. Merge PR once CI is green, and it has been approved.
+2. - [ ] Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
+3. - [ ] Update the root `package.json`'s version
+4. - [ ] Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
+5. - [ ] Open PR with changes and wait for review and green CI.
+6. - [ ] Merge PR once CI is green, and it has been approved.
 
 ### Release the packages
 
-1. Checkout the last version of the working branch
-2. Make sure you have the latest dependencies installed: `yarn`.
-3. Build the packages: `yarn release:build`.
-4. Release the versions on NPM: `yarn release:publish` (you need your 2FA device).
-5. Create a new tag named with the release you just did `git tag v4.0.0-alpha.30 && git push upstream --tag`
+1. - [ ] Checkout the last version of the working branch
+2. - [ ] Make sure you have the latest dependencies installed: `yarn`.
+
+3. - [ ] Build the packages: `yarn release:build`.
+4. - [ ] Release the versions on NPM: `yarn release:publish` (you need your 2FA device).
+5. - [ ] Create a new tag named with the release you just did `git tag v4.0.0-alpha.30 && git push upstream --tag`
 
 ### Publish the documentation
 
 The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` releases, `docs-v5` for `v5.X` releases, ...)
-Push the working branch on the documentation release branch to deploy the documentation with the latest changes.
+
+- [ ] Push the working branch on the documentation release branch to deploy the documentation with the latest changes.
 
 ```sh
 git push upstream master:docs-v5 -f
@@ -50,11 +54,11 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
 
 ### Publish GitHub release
 
-After documentation is deployed, publish new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
+- [ ] After documentation is deployed, publish new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
 
 ### Announce
 
-Follow the instructions in https://mui-org.notion.site/Releases-7490ef9581b4447ebdbf86b13164272d.
+- [ ] Follow the instructions in https://mui-org.notion.site/Releases-7490ef9581b4447ebdbf86b13164272d.
 
 ## Manual changelog generation
 
