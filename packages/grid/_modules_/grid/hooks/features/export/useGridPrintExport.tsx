@@ -16,6 +16,7 @@ import { gridClasses } from '../../../gridClasses';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
+import { getColumns } from './utils';
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
@@ -59,20 +60,18 @@ export const useGridPrintExport = (
           return;
         }
 
+        const exportedColumnFields = getColumns({
+          apiRef,
+          options: { fields, allColumns },
+        }).map((column) => column.field);
+
         // Show only wanted columns.
         apiRef.current.updateColumns(
           columns.map((column) => {
             if (columnVisibilityModel[column.field] !== false) {
               previousHiddenColumns.current.push(column.field);
             }
-
-            // Show all columns
-            if (allColumns) {
-              column.hide = false;
-              return column;
-            }
-
-            column.hide = !fields?.includes(column.field) || column.disableExport;
+            column.hide = !exportedColumnFields.includes(column.field);
 
             return column;
           }),
