@@ -69,7 +69,7 @@ You can import `GridColDef` to see all column properties.
 
 ### Demo
 
-Putting it together, this all you need to get started, as you can see in this live and interactive demo:
+Putting it together, this is all you need to get started, as you can see in this live and interactive demo:
 
 ```jsx
 import React from 'react';
@@ -181,7 +181,6 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column reorder](/components/data-grid/columns/#column-reorder)                           |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                   |           |                                    |                                            |
-| [Row sorting](/components/data-grid/rows/#row-sorting)                                    |    ✅     |                 ✅                 |                     ✅                     |
 | [Row height](/components/data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |
 | [Row spanning](/components/data-grid/rows/#row-spanning)                                  |    🚧     |                 🚧                 |                     🚧                     |
 | [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |                 🚧                 |                     🚧                     |
@@ -194,16 +193,19 @@ The enterprise components come in two plans: Pro and Premium.
 | **Filtering**                                                                             |           |                                    |                                            |
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |                 🚧                 |                     🚧                     |
 | [Column filters](/components/data-grid/filtering/#column-filters)                         |    ✅     |                 ✅                 |                     ✅                     |
-| [Multi-column filtering](/components/data-grid/filtering/#multi-filtering)                |    ❌     |                 ✅                 |                     ✅                     |
+| [Multi-column filtering](/components/data-grid/filtering/#single-and-multi-filtering)     |    ❌     |                 ✅                 |                     ✅                     |
+| **Sorting**                                                                               |           |                                    |                                            |
+| [Column sorting](/components/data-grid/sorting/)                                          |    ✅     |                 ✅                 |                     ✅                     |
+| [Multi-column sorting](/components/data-grid/sorting/#multi-sorting)                      |    ❌     |                 ✅                 |                     ✅                     |
 | **Pagination**                                                                            |           |                                    |                                            |
 | [Pagination](/components/data-grid/pagination/)                                           |    ✅     |                 ✅                 |                     ✅                     |
-| [Pagination > 100 rows per page](/components/data-grid/pagination/#paginate-gt-100-rows)  |    ❌     |                 ✅                 |                     ✅                     |
+| [Pagination > 100 rows per page](/components/data-grid/pagination/#size-of-the-page)      |    ❌     |                 ✅                 |                     ✅                     |
 | **Editing**                                                                               |           |                                    |                                            |
 | [Row editing](/components/data-grid/editing/#row-editing)                                 |    ✅     |                 ✅                 |                     ✅                     |
 | [Cell editing](/components/data-grid/editing/#cell-editing)                               |    ✅     |                 ✅                 |                     ✅                     |
 | **Import & export**                                                                       |           |                                    |                                            |
 | [CSV export](/components/data-grid/export/#csv-export)                                    |    ✅     |                 ✅                 |                     ✅                     |
-| [Print](/components/data-grid/export/#print)                                              |    ✅     |                 ✅                 |                     ✅                     |
+| [Print](/components/data-grid/export/#print-export)                                       |    ✅     |                 ✅                 |                     ✅                     |
 | [Clipboard](/components/data-grid/export/#clipboard)                                      |    ❌     |                 🚧                 |                     🚧                     |
 | [Excel export](/components/data-grid/export/#excel-export)                                |    ❌     |                 ❌                 |                     🚧                     |
 | **Rendering**                                                                             |           |                                    |                                            |
@@ -223,7 +225,7 @@ The enterprise components come in two plans: Pro and Premium.
 
 ### Evaluation (trial) licenses
 
-You are [free to install](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses) and try `DataGridPro` as long as it is not used for development of a feature intended for production.
+You are [free to install](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses) and try `DataGridPro` as long as it is not used for the development of a feature intended for production.
 Please take the component for a test run, no need to contact us.
 
 ## License key
@@ -320,9 +322,14 @@ If you need to share private information, you can also use email.
 
 ## Roadmap
 
-Here is [the public roadmap](https://github.com/mui/mui-x/projects/1). It's organized by quarter.
+Here is [the public roadmap](https://github.com/mui/mui-x/projects/1).
+It's organized by quarter.
 
-> ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of MUI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+> ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change.
+> The information provided is intended to outline the general framework direction, for informational purposes only.
+> We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards.
+> The development, releases, and timing of any features or functionality remains at the sole discretion of MUI.
+> The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
 
 ## API
 
