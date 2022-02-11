@@ -98,6 +98,10 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'בחירה',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   booleanCellTrueLabel: 'כן',
@@ -120,6 +124,10 @@ const heILGrid: Partial<GridLocaleText> = {
   groupingColumnHeaderName: 'קבוצה',
   groupColumn: (name) => `קבץ לפי ${name}`,
   unGroupColumn: (name) => `הפסק לקבץ לפי ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

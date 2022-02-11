@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license-pro",
-  "version": "5.4.0",
+  "version": "5.5.1",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "build/cjs/index.js",
@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui-org/material-ui-x.git",
+    "url": "https://github.com/mui/mui-x.git",
     "directory": "packages/x-license-pro"
   },
   "bugs": {
-    "url": "https://github.com/mui-org/material-ui-x/issues"
+    "url": "https://github.com/mui/mui-x/issues"
   },
   "homepage": "https://mui.com/components/data-grid/",
   "license": "See LICENSE file",
@@ -28,7 +28,7 @@
     "licensegen": "./bin/license-gen-script.js"
   },
   "dependencies": {
-    "@mui/utils": "^5.3.0",
+    "@mui/utils": "^5.4.1",
     "esm": "^3.2.25",
     "yargs": "^17.3.1"
   },

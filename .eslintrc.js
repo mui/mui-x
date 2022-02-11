@@ -109,5 +109,35 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['packages/grid/**/*{.ts,.tsx,.js}'],
+      excludedFiles: [
+        'packages/grid/x-data-grid-generator/**',
+        '*.d.ts',
+        '*.spec.ts',
+        '*.spec.tsx',
+        '**.test.tx',
+        '**.test.tsx',
+      ],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: '@mui/base',
+                message: 'Use @mui/material instead',
+              },
+            ],
+            patterns: [
+              {
+                group: ['@mui/base/*'],
+                message: 'Use @mui/material instead',
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
 };

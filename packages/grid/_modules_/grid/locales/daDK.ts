@@ -100,6 +100,10 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Afkrydsningsvalg',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   // booleanCellTrueLabel: 'true',
@@ -122,6 +126,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const daDK: Localization = getGridLocalization(daDKGrid, daDKCore);
