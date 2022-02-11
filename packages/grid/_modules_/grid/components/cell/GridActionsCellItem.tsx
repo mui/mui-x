@@ -16,8 +16,6 @@ const GridActionsCellItem = (props: GridActionsCellItemProps) => {
   const { label, icon, showInMenu, onClick, ...other } = props;
 
   const handleClick = (event: any) => {
-    event.stopPropagation();
-
     if (onClick) {
       onClick(event);
     }
