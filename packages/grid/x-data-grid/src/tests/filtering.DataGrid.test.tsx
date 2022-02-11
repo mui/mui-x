@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
+import { SinonStub, stub } from 'sinon';
 import {
   DataGrid,
   DataGridProps,
@@ -45,6 +46,7 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('props: filterModel', () => {
     it('should throw for more than one filter item', () => {
+      stub(console, 'error');
       expect(() => {
         render(
           <TestCase
@@ -61,6 +63,7 @@ describe('<DataGrid /> - Filter', () => {
       }).toWarnDev(
         'MUI: The `filterModel` can only contain a single item when `prop.disableMultipleColumnsFiltering` is set to `true`.',
       );
+      (console.error as SinonStub).restore();
     });
 
     it('should apply the model', () => {
