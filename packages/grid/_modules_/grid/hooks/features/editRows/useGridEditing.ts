@@ -14,7 +14,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
-import { GridEventListener } from '../../../models';
+import { GridEventListener, GridRowId } from '../../../models';
 import { useCellEditing } from './useGridCellEditing';
 import { useGridRowEditing } from './useGridRowEditing';
 
@@ -28,6 +28,10 @@ export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps
   useCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
   useGridStateInit(apiRef, (state) => ({ ...state, editRows: {} }));
+
+  const debounceMap = React.useRef<Record<GridRowId, Record<string, [NodeJS.Timeout, () => void]>>>(
+    {},
+  );
 
   apiRef.current.unstable_updateControlState({
     stateId: 'editRows',
@@ -47,21 +51,75 @@ export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps
     [props.isCellEditable],
   );
 
+  const maybeDebounce = (
+    id: GridRowId,
+    field: string,
+    debounceMs: number | undefined,
+    callback: { (): void | Promise<boolean>; (): void },
+  ) => {
+    if (!debounceMs) {
+      callback();
+      return;
+    }
+
+    if (!debounceMap.current[id]) {
+      debounceMap.current[id] = {};
+    }
+
+    if (debounceMap.current[id][field]) {
+      const [timeout] = debounceMap.current[id][field];
+      clearTimeout(timeout);
+    }
+
+    const callbackToRunImmediately = () => {
+      callback();
+      const [timeout] = debounceMap.current[id][field];
+      clearTimeout(timeout);
+      delete debounceMap.current[id][field];
+    };
+
+    const timeout = setTimeout(() => {
+      callback();
+      delete debounceMap.current[id][field];
+    }, debounceMs);
+
+    debounceMap.current[id][field] = [timeout, callbackToRunImmediately];
+  };
+
+  const runPendingEditCellValueChangeDebounce = React.useCallback<
+    GridEditingSharedApi['unstable_runPendingEditCellValueChangeDebounce']
+  >((id, field) => {
+    if (!debounceMap.current[id]) {
+      return;
+    }
+    if (!field) {
+      Object.keys(debounceMap.current[id]).forEach((debouncedField) => {
+        const [, callback] = debounceMap.current[id][debouncedField];
+        callback();
+      });
+    } else if (debounceMap.current[id][field]) {
+      const [, callback] = debounceMap.current[id][field];
+      callback();
+    }
+  }, []);
+
   const setEditCellValue = React.useCallback<GridEditingApi['setEditCellValue']>(
     (params, event = {}) => {
-      if (props.experimentalFeatures?.preventCommitWhileValidating) {
-        if (props.editMode === 'row') {
-          return apiRef.current.unstable_setRowEditingEditCellValue(params);
+      maybeDebounce(params.id, params.field, params.debounceMs, () => {
+        if (props.experimentalFeatures?.preventCommitWhileValidating) {
+          if (props.editMode === 'row') {
+            return apiRef.current.unstable_setRowEditingEditCellValue(params);
+          }
+          return apiRef.current.unstable_setCellEditingEditCellValue(params);
         }
-        return apiRef.current.unstable_setCellEditingEditCellValue(params);
-      }
 
-      const newParams: GridEditCellPropsParams = {
-        id: params.id,
-        field: params.field,
-        props: { value: params.value },
-      };
-      return apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
+        const newParams: GridEditCellPropsParams = {
+          id: params.id,
+          field: params.field,
+          props: { value: params.value },
+        };
+        return apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
+      });
     },
     [apiRef, props.editMode, props.experimentalFeatures?.preventCommitWhileValidating],
   );
@@ -133,6 +191,7 @@ export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps
     setEditCellValue,
     unstable_setEditCellProps: setEditCellProps,
     unstable_parseValue: parseValue,
+    unstable_runPendingEditCellValueChangeDebounce: runPendingEditCellValueChangeDebounce,
   };
 
   useGridApiMethod<typeof editingSharedApi>(apiRef, editingSharedApi, 'EditRowApi');
