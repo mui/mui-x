@@ -20,14 +20,13 @@ type GridActionsCellProps = Pick<GridRenderCellParams, 'colDef' | 'id' | 'api' |
   Pick<GridMenuProps, 'position'>;
 
 const GridActionsCell = (props: GridActionsCellProps) => {
-  const { colDef, id, api, hasFocus, position = 'bottom-end' } = props; // TODO apply the rest to the root element
-
   const [open, setOpen] = React.useState(false);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const touchRippleRefs = React.useRef<Record<number, TouchRippleActions | null>>({});
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
+  const { colDef, id, api, hasFocus, position = 'bottom-end' } = props; // TODO apply the rest to the root element
 
   React.useLayoutEffect(() => {
     if (!hasFocus) {
