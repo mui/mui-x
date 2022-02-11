@@ -642,7 +642,7 @@ describe('<DataGridPro /> - Export', () => {
         apiRef.current.getDataAsCsv();
       }).toWarnDev(
         [
-          'MUI: When value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+          'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
           'You can provide a `valueFormatter` with a string representation to be used.',
         ].join('\n'),
       );
