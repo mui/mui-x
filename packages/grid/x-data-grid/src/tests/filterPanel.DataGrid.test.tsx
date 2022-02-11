@@ -438,7 +438,7 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
   });
 
-  it.only('should close filter panel when removing the last filter', async () => {
+  it('should close filter panel when removing the last filter', async () => {
     const onFilterModelChange = spy();
 
     render(

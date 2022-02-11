@@ -152,7 +152,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       if (item.value === undefined) {
         deleteFilter(item);
       } else {
-        // TODO v6: simplify the behavior by always removing the filter form
+        // TODO v6: simplify the behavior by always remove the filter form
         applyFilterChanges({ ...item, value: undefined });
       }
     } else {
