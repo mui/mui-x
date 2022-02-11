@@ -12,6 +12,7 @@ export interface GridEditCellValueParams {
   id: GridRowId;
   field: string;
   value: GridCellValue;
+  debounceMs?: number;
 }
 
 export interface GridCommitCellChangeParams {

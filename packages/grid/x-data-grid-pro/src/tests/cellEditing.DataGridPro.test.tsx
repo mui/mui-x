@@ -108,6 +108,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       const input = cell.querySelector('input')!;
       expect(input).not.to.have.attribute('aria-invalid');
       fireEvent.change(input, { target: { value: 'n' } });
+      clock.runToLast();
       apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
       fireEvent.keyDown(input, { key: 'Enter' });
       await waitFor(() => {
@@ -123,6 +124,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       const input = cell.querySelector('input')!;
       expect(input).not.to.have.attribute('aria-invalid');
       fireEvent.change(input, { target: { value: 'n' } });
+      clock.runToLast();
       apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
       apiRef.current.commitCellChange({ id: 1, field: 'brand' });
       apiRef.current.setCellMode(1, 'brand', 'view');
@@ -137,6 +139,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       const input = cell.querySelector('input')!;
       expect(input).not.to.have.attribute('aria-invalid');
       fireEvent.change(input, { target: { value: 'n' } });
+      clock.runToLast();
       apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
       apiRef.current.commitCellChange({ id: 1, field: 'brand' });
       apiRef.current.setCellMode(1, 'brand', 'view');
@@ -884,5 +887,32 @@ describe('<DataGridPro /> - Cell Editing', () => {
       value: 'ADIDAS',
       isValidating: true,
     });
+  });
+
+  it('should not go back to edit mode when clicking outside a cell while debouncing', async () => {
+    render(<TestCase />);
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    expect(cell).to.have.class('MuiDataGrid-cell--editing');
+    fireClickEvent(getCell(1, 0));
+    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+    clock.runToLast();
+    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+  });
+
+  it('should skip debounce when commiting', async () => {
+    const onCellEditCommit = spy();
+    render(<TestCase onCellEditCommit={onCellEditCommit} />);
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    fireClickEvent(getCell(1, 0));
+    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    // We don't need to wait for debounce when commiting
+    expect(onCellEditCommit.lastCall.args[0].value).to.equal('Adidas');
   });
 });

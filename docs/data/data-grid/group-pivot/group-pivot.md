@@ -9,7 +9,7 @@ title: Data Grid - Group & Pivot
 ## Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 For when you need to group rows based on repeated column values, and/or custom functions.
-On the following example, we're grouping all movies based on their production `company`
+In the following example, we're grouping all movies based on their production `company`
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -58,7 +58,7 @@ If you have multiple grouped columns, this column name will be set to "Group".
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
-#### Multiple grouping column
+#### Multiple grouping columns
 
 To display a column for each grouping criterion, set the `rowGroupingColumnMode` prop to `multiple`.
 
@@ -67,7 +67,7 @@ To display a column for each grouping criterion, set the `rowGroupingColumnMode`
 #### Custom grouping column
 
 To customize the rendering of the grouping column, use the `groupingColDef` prop.
-You can override the **headerName** or any property of the `GridColDef` interface, except the `field`, the `type` and the properties related to inline edition.
+You can override the **headerName** or any property of the `GridColDef` interface, except the `field`, the `type`, and the properties related to inline edition.
 
 {{"demo": "RowGroupingCustomGroupingColDefObject.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -111,7 +111,7 @@ In the example below, the `director` column can not be grouped. And in all examp
 
 ### Using `groupingValueGetter` for complex grouping value
 
-The grouping value has to be either a `string`, a `number`, `null` or `undefined`.
+The grouping value has to be either a `string`, a `number`, `null`, or `undefined`.
 If your cell value is more complex, pass a `groupingValueGetter` property to the column definition to convert it into a valid value.
 
 ```ts
@@ -126,7 +126,7 @@ const columns: GridColumns = [
 
 {{"demo": "RowGroupingGroupingValueGetter.js", "bg": "inline", "defaultCodeOpen": false}}
 
-**Note**: If your column also have a `valueGetter` property, the value passed to the `groupingValueGetter` method will still be the row value from the `row[field]`.
+**Note**: If your column also has a `valueGetter` property, the value passed to the `groupingValueGetter` method will still be the row value from the `row[field]`.
 
 ### Rows with missing groups
 
@@ -136,13 +136,13 @@ If the grouping key of a grouping criteria is `null` or `undefined` for a row, t
 
 ### Group expansion
 
-By default, all groups are initially displayed collapsed. You can change this behaviour by setting the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
+By default, all groups are initially displayed collapsed. You can change this behavior by setting the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
 If you want to expand the whole tree, set `defaultGroupingExpansionDepth = -1`
 
 {{"demo": "RowGroupingDefaultExpansionDepth.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If you want to expand groups by default according to a more complex logic, use the `isGroupExpandedByDefault` prop which is a callback receiving the node as an argument.
-When defined, this callback will always have the priority over the `defaultGroupingExpansionDepth` prop.
+When defined, this callback will always have priority over the `defaultGroupingExpansionDepth` prop.
 
 ```tsx
 isGroupExpandedByDefault={
@@ -160,7 +160,7 @@ Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the
 
 #### Single grouping column
 
-When using `rowGroupingColumnMode = "single"`, the default behavior is to apply the `sortComparator` and `filterOperators` of the top level grouping criteria.
+When using `rowGroupingColumnMode = "single"`, the default behavior is to apply the `sortComparator` and `filterOperators` of the top-level grouping criteria.
 
 If you are rendering leaves with the `leafField` property of `groupColDef`, the sorting and filtering will be applied on the leaves based on the `sortComparator` and `filterOperators` of their original column.
 
@@ -170,7 +170,7 @@ In both cases, you can force the sorting and filtering to be applied on another 
 
 {{"demo": "RowGroupingSortingSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
-#### Multiple grouping column
+#### Multiple grouping columns
 
 When using `rowGroupingColumnMode = "multiple"`, the default behavior is to apply the `sortComparator` and `filterOperators` of the grouping criteria of each grouping column.
 
@@ -185,7 +185,7 @@ In the example below:
 
 {{"demo": "RowGroupingSortingMultipleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠️ If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not automatically be cleaned-up and the sorting / filtering will not be re-applied.
+> ⚠️ If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not automatically be cleaned-up and the sorting/filtering will not be re-applied.
 
 ### Full example
 
@@ -280,7 +280,7 @@ If some entries are missing to build the full tree, the `DataGridPro` will autom
 
 A node is included if one of the following criteria is met:
 
-- at least one of its descendant is passing the filters
+- at least one of its descendants is passing the filters
 - it is passing the filters
 
 By default, the filtering is applied to every depth of the tree.
@@ -291,7 +291,7 @@ You can limit the filtering to the top-level rows with the `disableChildrenFilte
 ### Sorting
 
 By default, the sorting is applied to every depth of the tree.
-You can limit the sorting to the top level rows with the `disableChildrenSorting` prop.
+You can limit the sorting to the top-level rows with the `disableChildrenSorting` prop.
 
 {{"demo": "TreeDataDisableChildrenSorting.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -312,7 +312,7 @@ You can limit the sorting to the top level rows with the `disableChildrenSorting
 >
 > 👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
 
-Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown bellow.
+Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown below.
 This implementation does not support every feature of the grid but can be a good starting point for large datasets.
 
 The idea is to add a property `descendantCount` on the row and to use it instead of the internal grid state.
@@ -402,7 +402,7 @@ If this is not sufficient, the entire toggle component can be overridden.
 To fully customize it, add another column with `field: GRID_DETAIL_PANEL_TOGGLE_FIELD` to your set of columns.
 The grid will detect that there is already a toggle column defined and it will not add another toggle in the default position.
 The new toggle component can be provided via [`renderCell`](/components/data-grid/columns/#render-cell) in the same as any other column.
-By only setting the `field`, is up to you to configure the remaning options (e.g. disable the column menu, filtering, sorting).
+By only setting the `field`, is up to you to configure the remaining options (e.g. disable the column menu, filtering, sorting).
 To already start with a few suggested options configured, spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column.
 
 ```tsx
