@@ -32,7 +32,7 @@ function fireClickEvent(cell: HTMLElement) {
 }
 
 describe('<DataGrid /> - Selection', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer();
 
   const defaultData = getData(4, 2);
 
@@ -449,6 +449,24 @@ describe('<DataGrid /> - Selection', () => {
       });
 
       expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+
+    describe('ripple', () => {
+      clock.withFakeTimers();
+
+      it('should keep only one ripple visible when navigating between checkboxes', function test() {
+        if (isJSDOM) {
+          this.skip(); // JSDOM doesn't fire "blur" when .focus is called in another element
+        }
+        render(<TestDataGridSelection checkboxSelection />);
+        const cell = getCell(1, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: 'ArrowLeft' });
+        fireEvent.keyDown(getCell(1, 0).querySelector('input'), { key: 'ArrowUp' });
+        clock.runToLast(); // Wait for transition
+        expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
+      });
     });
   });
 
