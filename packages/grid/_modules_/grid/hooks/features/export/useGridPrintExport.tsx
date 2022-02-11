@@ -230,7 +230,11 @@ export const useGridPrintExport = (
       // We can not simply use setState(...previousGridState.current) because of this verification
       // https://github.com/alexfauquette/material-ui-x/blob/a3fefc5b451ac269d9ee7743b7ee7ce4a78d1e24/packages/grid/_modules_/grid/hooks/core/useGridStateInitialization.ts#L64-L75
       apiRef.current.setPageSize(previousGridState.current.pagination.pageSize);
-      apiRef.current.updateColumns(previousGridState.current.columns.all);
+      apiRef.current.updateColumns(
+        previousGridState.current.columns.all.map(
+          (field) => previousGridState.current.columns.lookup[field],
+        ),
+      );
 
       apiRef.current.unstable_enableVirtualization();
 
