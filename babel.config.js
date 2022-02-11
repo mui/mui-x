@@ -92,12 +92,6 @@ module.exports = function getBabelConfig(api) {
       // Fix const foo = /{{(.+?)}}/gs; crashing.
       /prettier/,
     ],
-    // overrides: [
-    //   {
-    //     exclude: /\.test\.(js|ts|tsx)$/,
-    //     plugins: ['@babel/plugin-transform-react-constant-elements'],
-    //   },
-    // ],
     env: {
       coverage: {
         plugins: [
