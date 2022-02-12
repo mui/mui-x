@@ -266,6 +266,22 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
   });
 
+  it('should not select the row when opening the detail panel', () => {
+    const handleSelectionModelChange = spy();
+    render(
+      <TestCase
+        getDetailPanelContent={() => <div>Detail</div>}
+        onSelectionModelChange={handleSelectionModelChange}
+        checkboxSelection
+      />,
+    );
+    expect(screen.queryByText('Detail')).to.equal(null);
+    const cell = getCell(1, 0);
+    fireEvent.mouseUp(cell);
+    fireEvent.click(cell);
+    expect(handleSelectionModelChange.callCount).to.equal(0);
+  });
+
   describe('props: onDetailPanelsExpandedRowIds', () => {
     it('shoull call when a row is expanded or closed', () => {
       const handleDetailPanelsExpandedRowIdsChange = spy();

@@ -60,7 +60,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
   const handleClick = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
-    event.stopPropagation();
+    event.stopPropagation(); // TODO remove event.stopPropagation
   };
 
   return (

@@ -98,6 +98,7 @@ export enum GridEvents {
   cellNavigationKeyDown = 'cellNavigationKeyDown',
   /**
    * Fired when a row is clicked.
+   * Not fired if the target clicked is an interactive element added by the built-in columns.
    */
   rowClick = 'rowClick',
   /**

@@ -6,7 +6,12 @@ import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridRowEventLookup, GridEvents } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
-import { GridEditModes, GridRowModes, GridEditRowsModel } from '../models/gridEditRowModel';
+import {
+  GridEditModes,
+  GridRowModes,
+  GridEditRowsModel,
+  GridCellModes,
+} from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -15,6 +20,10 @@ import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { findParentElementFromClassName } from '../utils/domUtils';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../models/colDef/gridCheckboxSelectionColDef';
+import { GRID_ACTIONS_COLUMN_TYPE } from '../models/colDef/gridActionsColDef';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../hooks/features/detailPanel/gridDetailPanelToggleColDef';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -133,6 +142,41 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     [apiRef, rowId],
   );
 
+  const publishClick = React.useCallback(
+    (event) => {
+      const cell = findParentElementFromClassName(event.target, gridClasses.cell);
+      const field = cell?.getAttribute('data-field');
+
+      // Check if the field is available because the cell that fills the empty
+      // space of the row has no field.
+      if (field) {
+        // User clicked in the checkbox added by checkboxSelection
+        if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+          return;
+        }
+
+        // User opened a detail panel
+        if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+          return;
+        }
+
+        // User is editing a cell
+        if (apiRef.current.getCellMode(rowId, field) === GridCellModes.Edit) {
+          return;
+        }
+
+        // User clicked a button from the "actions" column type
+        const column = apiRef.current.getColumn(field);
+        if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+          return;
+        }
+      }
+
+      publish(GridEvents.rowClick, onClick)(event);
+    },
+    [apiRef, onClick, publish, rowId],
+  );
+
   const style = {
     maxHeight: rowHeight,
     minHeight: rowHeight,
@@ -238,7 +282,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
-      onClick={publish(GridEvents.rowClick, onClick)}
+      onClick={publishClick}
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
       onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
       onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
