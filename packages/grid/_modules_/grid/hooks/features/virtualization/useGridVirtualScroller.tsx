@@ -330,8 +330,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const height = Math.max(rowsMeta.currentPageTotalHeight, 1);
 
     let shouldExtendContent = false;
-    const windowRef = apiRef.current.windowRef?.current;
-    if (windowRef && height <= windowRef.clientHeight) {
+    if (rootRef?.current && height <= rootRef?.current.clientHeight) {
       shouldExtendContent = true;
     }
 
@@ -347,7 +346,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     return size;
   }, [
-    apiRef,
+    rootRef,
     columnsMeta.totalWidth,
     rowsMeta.currentPageTotalHeight,
     currentPage.rows.length,
