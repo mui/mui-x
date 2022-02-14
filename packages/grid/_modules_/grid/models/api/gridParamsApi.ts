@@ -3,6 +3,8 @@ import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridRowParams } from '../params/gridRowParams';
+import { GridApiCommon } from './gridApiCommon';
+import { GridApiCommunity } from './gridApiCommunity';
 
 export interface GridParamsApi {
   /**
@@ -25,7 +27,10 @@ export interface GridParamsApi {
    * @param {string} field The column field.
    * @returns {GridCellParams} The cell params.
    */
-  getCellParams: (id: GridRowId, field: string) => GridCellParams;
+  getCellParams: <V = any, R = any, F = V, Api extends GridApiCommon = GridApiCommunity>(
+    id: GridRowId,
+    field: string,
+  ) => GridCellParams<V, R, F, Api>;
   /**
    * Gets the [[GridRowParams]] object that is passed as argument in events.
    * @param {GridRowId} id The id of the row.

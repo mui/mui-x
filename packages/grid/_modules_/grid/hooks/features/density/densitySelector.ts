@@ -1,7 +1,7 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridState } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-export const gridDensitySelector = (state: GridState) => state.density;
+export const gridDensitySelector = (state: GridStateCommunity) => state.density;
 
 export const gridDensityValueSelector = createSelector(
   gridDensitySelector,

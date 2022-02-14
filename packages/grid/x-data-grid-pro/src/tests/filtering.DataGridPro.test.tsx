@@ -1,6 +1,6 @@
 import {
   getDefaultGridFilterModel,
-  GridApiRef,
+  GridApi,
   DataGridProProps,
   GridFilterModel,
   GridLinkOperator,
@@ -21,7 +21,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,

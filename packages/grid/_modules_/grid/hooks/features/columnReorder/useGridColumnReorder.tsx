@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
@@ -46,7 +46,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
@@ -83,7 +83,7 @@ export const useGridColumnReorder = (
 
       logger.debug(`Start dragging col ${params.field}`);
       // Prevent drag events propagation.
-      // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
+      // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
       dragColNode.current = event.currentTarget;
@@ -109,7 +109,7 @@ export const useGridColumnReorder = (
   >((params, event) => {
     event.preventDefault();
     // Prevent drag events propagation.
-    // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
+    // For more information check here https://github.com/mui/mui-x/issues/2680.
     event.stopPropagation();
   }, []);
 
@@ -124,7 +124,7 @@ export const useGridColumnReorder = (
       logger.debug(`Dragging over col ${params.field}`);
       event.preventDefault();
       // Prevent drag events propagation.
-      // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
+      // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
       const coordinates = { x: event.clientX, y: event.clientY };
@@ -184,7 +184,7 @@ export const useGridColumnReorder = (
       logger.debug('End dragging col');
       event.preventDefault();
       // Prevent drag events propagation.
-      // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
+      // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
       clearTimeout(removeDnDStylesTimeout.current);

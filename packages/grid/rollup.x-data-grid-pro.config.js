@@ -1,5 +1,4 @@
 import { generateReleaseInfo } from '@mui/x-license-pro';
-import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import cleaner from 'rollup-plugin-cleaner';
@@ -32,9 +31,6 @@ export default [
       return new RegExp(`(${packageName}|${packageName}\\/.*)`);
     }),
     plugins: [
-      replace({
-        __RELEASE_INFO__: generateReleaseInfo(),
-      }),
       production &&
         cleaner({
           targets: ['./x-data-grid-pro/build/'],
@@ -42,12 +38,23 @@ export default [
       typescript({ tsconfig: 'tsconfig.build.json' }),
       babel({
         babelHelpers: 'bundled',
-        extensions: ['.tsx'],
+        extensions: ['.tsx', '.ts'],
         plugins: [
           [
             'transform-react-remove-prop-types',
             {
               ignoreFilenames: ['DataGridPro.tsx'],
+            },
+          ],
+          [
+            'search-and-replace',
+            {
+              rules: [
+                {
+                  search: '__RELEASE_INFO__',
+                  replace: generateReleaseInfo(),
+                },
+              ],
             },
           ],
         ],

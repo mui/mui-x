@@ -16,3 +16,5 @@ export * from './sorting';
 export * from './dimensions';
 export * from './treeData';
 export * from './rowGrouping';
+export * from './detailPanel';
+export * from './statePersistence';

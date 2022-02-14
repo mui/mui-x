@@ -16,7 +16,7 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridEvents } from '../../../models/events/gridEvents';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -28,7 +28,7 @@ import {
 } from '../../utils/useGridApiEventHandler';
 
 export const useGridRowEditing = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'editMode' | 'onRowEditCommit' | 'onRowEditStart' | 'onRowEditStop' | 'experimentalFeatures'
@@ -88,6 +88,8 @@ export const useGridRowEditing = (
       if (props.editMode === GridEditModes.Cell) {
         throw new Error(`MUI: You can't commit changes when the edit mode is 'cell'.`);
       }
+
+      apiRef.current.unstable_runPendingEditCellValueChangeDebounce(id);
 
       const model = apiRef.current.getEditRowsModel();
       const editRowProps = model[id];
@@ -203,7 +205,7 @@ export const useGridRowEditing = (
     unstable_setRowEditingEditCellValue: setRowEditingEditCellValue,
   };
 
-  useGridApiMethod<typeof rowEditingApi>(apiRef, rowEditingApi, 'EditRowApi');
+  useGridApiMethod(apiRef, rowEditingApi, 'EditRowApi');
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
     async (params, event) => {

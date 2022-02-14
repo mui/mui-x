@@ -18,6 +18,7 @@ import {
   GridEvents,
   MuiEvent,
   GridEventListener,
+  GridRenderCellParams,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
@@ -284,7 +285,7 @@ const GridCellExpand = React.memo(function CellExpand(props: GridCellExpandProps
   );
 });
 
-function RenderCellExpand(params: GridCellParams) {
+function RenderCellExpand(params: GridRenderCellParams) {
   return (
     <GridCellExpand
       value={params.value ? params.value.toString() : ''}
@@ -933,16 +934,13 @@ export function EditCellWithMessageGrid() {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(
-      GridEvents.cellEditStart,
-      (params: GridCellParams, event) => {
-        setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
-          params.field
-        },
+    return apiRef.current.subscribeEvent(GridEvents.cellEditStart, (params, event) => {
+      setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
+        params.field
+      },
                         triggered by ${(event as React.SyntheticEvent)!.type}
       `);
-      },
-    );
+    });
   }, [apiRef]);
 
   React.useEffect(() => {

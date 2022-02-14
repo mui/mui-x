@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridProProps,
   gridClasses,
@@ -14,7 +14,7 @@ import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/
 import { useData } from 'storybook/src/hooks/useData';
 
 // TODO Move to utils
-// Fix https://github.com/mui-org/material-ui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
+// Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
 function createDragOverEvent(target: ChildNode) {
   const dragOverEvent = createEvent.dragOver(target);
   // Safari 13 doesn't have DragEvent.
@@ -30,7 +30,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Column pinning', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
     apiRef = useGridApiRef();
@@ -210,6 +210,13 @@ describe('<DataGridPro /> - Column pinning', () => {
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M']);
+  });
+
+  it('should not override the first left pinned column when checkboxSelection=true', () => {
+    render(
+      <TestCase nbCols={2} initialState={{ pinnedColumns: { left: ['id'] } }} checkboxSelection />,
+    );
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
   });
 
   describe('props: onPinnedColumnsChange', () => {

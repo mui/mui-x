@@ -1,9 +1,5 @@
-import type {
-  GridRowTreeNodeConfig,
-  GridRowId,
-  GridRowTreeConfig,
-  GridKeyValue,
-} from '../../models';
+import type { GridRowTreeNodeConfig, GridRowId, GridRowTreeConfig } from '../../models';
+import type { GridKeyValue } from '../../models/colDef/gridColDef';
 import type {
   GridRowGroupingResult,
   GridRowGroupParams,
@@ -25,6 +21,11 @@ interface BuildRowTreeParams extends GridRowGroupParams {
   defaultGroupingExpansionDepth: number;
   isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
   groupingName: string;
+  onDuplicatePath?: (
+    firstId: GridRowId,
+    secondId: GridRowId,
+    path: BuildRowTreeGroupingCriteria[],
+  ) => void;
 }
 
 interface TempRowTreeNode extends Omit<GridRowTreeNodeConfig, 'children' | 'childrenExpanded'> {
@@ -108,19 +109,24 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowGroupingResult 
       }
 
       let keyConfig = fieldSubTree[key.toString()];
-      if (!keyConfig) {
-        nodeId =
-          depth === row.path.length - 1
-            ? row.id
-            : `auto-generated-row-${row.path
-                .map((groupingCriteria) => `${groupingCriteria.field}/${groupingCriteria.key}`)
-                .slice(0, depth + 1)
-                .join('-')}`;
+
+      if (keyConfig) {
+        if (depth === row.path.length - 1) {
+          params.onDuplicatePath?.(keyConfig.id, row.id, row.path);
+        }
+        nodeId = keyConfig.id;
+      } else {
+        if (depth === row.path.length - 1) {
+          nodeId = row.id;
+        } else {
+          nodeId = `auto-generated-row-${row.path
+            .map((groupingCriteria) => `${groupingCriteria.field}/${groupingCriteria.key}`)
+            .slice(0, depth + 1)
+            .join('-')}`;
+        }
 
         keyConfig = { id: nodeId, children: {} };
         fieldSubTree[key.toString()] = keyConfig;
-      } else {
-        nodeId = keyConfig.id;
       }
       keyToIdSubTree = keyConfig.children;
 

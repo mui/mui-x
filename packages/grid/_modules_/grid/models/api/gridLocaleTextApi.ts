@@ -95,6 +95,10 @@ export interface GridLocaleText {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: string;
+  checkboxSelectionSelectAllRows: string;
+  checkboxSelectionUnselectAllRows: string;
+  checkboxSelectionSelectRow: string;
+  checkboxSelectionUnselectRow: string;
 
   // Boolean cell text
   booleanCellTrueLabel: string;
@@ -117,6 +121,10 @@ export interface GridLocaleText {
   groupingColumnHeaderName: string;
   groupColumn: (name: string) => string;
   unGroupColumn: (name: string) => string;
+
+  // Master/detail
+  expandDetailPanel: string;
+  collapseDetailPanel: string;
 
   // Used core components translation keys
   MuiTablePagination: Omit<

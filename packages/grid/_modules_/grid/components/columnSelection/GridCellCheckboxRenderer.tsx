@@ -25,13 +25,28 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
-    const { field, id, value, tabIndex, hasFocus } = props;
+    const {
+      field,
+      id,
+      value: isChecked,
+      formattedValue,
+      row,
+      rowNode,
+      colDef,
+      isEditable,
+      cellMode,
+      hasFocus,
+      tabIndex,
+      getValue,
+      ...other
+    } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
+    const rippleRef = React.useRef<any>();
     const handleRef = useForkRef(checkboxElement, ref);
     const element = apiRef.current.getCellElement(id, field);
 
@@ -47,9 +62,12 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     }, [element, tabIndex]);
 
     React.useLayoutEffect(() => {
-      if (hasFocus && checkboxElement.current) {
-        const input = checkboxElement.current.querySelector('input')!;
-        input!.focus();
+      if (hasFocus) {
+        const input = checkboxElement.current?.querySelector('input');
+        input?.focus();
+      } else if (rippleRef.current) {
+        // Only available in @mui/material v5.4.1 or later
+        rippleRef.current.stop({});
       }
     }, [hasFocus]);
 
@@ -68,18 +86,24 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     const isSelectable =
       !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
 
+    const label = apiRef.current.getLocaleText(
+      isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
+    );
+
     return (
       <rootProps.components.BaseCheckbox
         ref={handleRef}
         tabIndex={tabIndex}
-        checked={!!value}
+        checked={isChecked}
         onChange={handleChange}
         className={classes.root}
         color="primary"
-        inputProps={{ 'aria-label': 'Select Row checkbox' }}
+        inputProps={{ 'aria-label': label }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
+        touchRippleRef={rippleRef}
         {...rootProps.componentsProps?.baseCheckbox}
+        {...other}
       />
     );
   },

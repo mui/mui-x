@@ -1,12 +1,18 @@
-import type { GridRowId, GridStateColDef, GridColDef } from '../../../models';
+import type { GridRowId, GridApiCommon } from '../../../models';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
-export type GridColumnLookup = { [field: string]: GridStateColDef };
+export type GridColumnLookup<Api extends GridApiCommon = GridApiCommunity> = {
+  [field: string]: GridStateColDef<Api>;
+};
 
-export type GridColumnRawLookup = { [field: string]: GridColDef | GridStateColDef };
+export type GridColumnRawLookup<Api extends GridApiCommon = GridApiCommunity> = {
+  [field: string]: GridColDef<Api> | GridStateColDef<Api>;
+};
 
-export interface GridColumnsState {
+export interface GridColumnsState<Api extends GridApiCommon = GridApiCommunity> {
   all: string[];
-  lookup: GridColumnLookup;
+  lookup: GridColumnLookup<Api>;
   columnVisibilityModel: GridColumnVisibilityModel;
 }
 
@@ -14,8 +20,11 @@ export interface GridColumnsInitialState {
   columnVisibilityModel?: GridColumnVisibilityModel;
 }
 
-export type GridColumnsRawState = Omit<GridColumnsState, 'lookup'> & {
-  lookup: GridColumnRawLookup;
+export type GridColumnsRawState<Api extends GridApiCommon = GridApiCommunity> = Omit<
+  GridColumnsState<Api>,
+  'lookup'
+> & {
+  lookup: GridColumnRawLookup<Api>;
 };
 
 export type GridColumnVisibilityModel = Record<GridRowId, boolean>;
