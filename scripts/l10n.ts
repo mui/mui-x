@@ -207,7 +207,7 @@ async function generateReport(
     if (info.locations.length === 0) {
       return;
     }
-    lines.push(`### ${countryToFlag(code.slice(2))} ${code}`);
+    lines.push(`### ${countryToFlag(code.slice(2))} ${code.slice(0, 2)}-${code.slice(2)}`);
     info.locations.forEach((location) => {
       const permalink = `${SOURCE_CODE_REPO}/blob/${lastCommitRef}/${info.path}#L${location}`;
       lines.push(permalink);
