@@ -36,13 +36,17 @@ const cleanFilterItem = (
   return cleanItem;
 };
 
-const filterModelDisableMultiColumnsFilteringWarning = buildWarning([
-  'MUI: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
-  'If you are using the community version of the `DataGrid`, this prop is always `true`.',
-]);
+const filterModelDisableMultiColumnsFilteringWarning = buildWarning(
+  [
+    'MUI: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+    'If you are using the community version of the `DataGrid`, this prop is always `true`.',
+  ],
+  'error',
+);
 
 const filterModelMissingItemIdWarning = buildWarning(
   "MUI: The 'id' field is required on `filterModel.items` when you use multiple filters.",
+  'error',
 );
 
 export const sanitizeFilterModel = (

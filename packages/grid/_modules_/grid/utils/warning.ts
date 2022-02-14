@@ -1,4 +1,7 @@
-export const buildWarning = (message: string | string[]) => {
+export const buildWarning = (
+  message: string | string[],
+  gravity: 'warning' | 'error' = 'warning',
+) => {
   let alreadyWarned = false;
 
   const cleanMessage = Array.isArray(message) ? message.join('\n') : message;
@@ -6,7 +9,11 @@ export const buildWarning = (message: string | string[]) => {
   return () => {
     if (!alreadyWarned) {
       alreadyWarned = true;
-      console.warn(cleanMessage);
+      if (gravity === 'error') {
+        console.error(cleanMessage);
+      } else {
+        console.warn(cleanMessage);
+      }
     }
   };
 };

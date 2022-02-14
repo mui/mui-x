@@ -492,7 +492,7 @@ describe('<DataGrid /> - Sorting', () => {
         );
 
         expect(getColumnValues(0)).to.deep.equal(['2', '0', '1', '3']);
-      }).toWarnDev(
+      }).toErrorDev(
         'MUI: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
       );
     });
