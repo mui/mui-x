@@ -92,8 +92,8 @@ If your dataset is too big, and you only want to fetch the current page, you can
 ### Basic implementation
 
 - Set the prop `paginationMode` to `server`
-- Provide a `rowCount` prop to let the grid know how many pages there is
-- Add a `onPageChange` callback ot load the rows when the page changes
+- Provide a `rowCount` prop to let the grid know how many pages there are
+- Add an `onPageChange` callback to load the rows when the page changes
 
 {{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
 

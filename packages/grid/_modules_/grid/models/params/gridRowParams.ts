@@ -1,6 +1,6 @@
 import { GridCellValue } from '../gridCell';
 import { GridRowEntry, GridRowId, GridRowModel } from '../gridRows';
-import type { GridColumns } from '../colDef';
+import type { GridColumns } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter in the row callbacks.

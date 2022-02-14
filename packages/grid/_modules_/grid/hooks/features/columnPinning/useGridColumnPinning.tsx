@@ -1,6 +1,5 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
-import { GridApiRef } from '../../../models/api/gridApiRef';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   visibleGridColumnsSelector,
@@ -25,16 +24,18 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVirtualScroller';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { MuiEvent } from '../../../models/muiEvent';
-import { GridState } from '../../../models';
+import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
+import { GridApiPro } from '../../../models/api/gridApiPro';
+import { GridRestoreStatePreProcessingContext } from '../statePersistence';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
 const mergeStateWithPinnedColumns =
   (pinnedColumns: GridPinnedColumns) =>
-  (state: GridState): GridState => ({ ...state, pinnedColumns });
+  (state: GridStatePro): GridStatePro => ({ ...state, pinnedColumns });
 
 export const useGridColumnPinning = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
@@ -248,7 +249,7 @@ export const useGridColumnPinning = (
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
-    (params, context) => {
+    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
       const newPinnedColumns = context.stateToRestore.pinnedColumns;
       if (newPinnedColumns != null) {
         apiRef.current.setState(mergeStateWithPinnedColumns(newPinnedColumns));

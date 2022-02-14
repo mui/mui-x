@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   DataGridProProps,
-  GridApiRef,
+  GridApi,
   GridColDef,
   GridInitialState,
   GridPreferencePanelsValue,
@@ -79,7 +79,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
 describe('<DataGridPro /> - State Persistence', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = (props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) => {
     apiRef = useGridApiRef();

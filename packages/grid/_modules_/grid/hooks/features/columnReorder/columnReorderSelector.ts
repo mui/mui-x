@@ -1,7 +1,7 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridState } from '../../../models/gridState';
+import { GridStatePro } from '../../../models/gridStatePro';
 
-export const gridColumnReorderSelector = (state: GridState) => state.columnReorder;
+export const gridColumnReorderSelector = (state: GridStatePro) => state.columnReorder;
 
 export const gridColumnReorderDragColSelector = createSelector(
   gridColumnReorderSelector,

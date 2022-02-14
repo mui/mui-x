@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../../models/events';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -35,6 +35,7 @@ import {
   setColumnsState,
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 /**
  * @requires useGridParamsApi (method)
@@ -42,7 +43,7 @@ import {
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
  */
 export function useGridColumns(
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -111,17 +112,17 @@ export function useGridColumns(
    * API METHODS
    */
   const getColumn = React.useCallback<GridColumnApi['getColumn']>(
-    (field) => gridColumnLookupSelector(apiRef.current.state)[field],
+    (field) => gridColumnLookupSelector(apiRef.current.state)[field] as GridStateColDef<any>,
     [apiRef],
   );
 
   const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
-    () => allGridColumnsSelector(apiRef),
+    () => allGridColumnsSelector(apiRef) as GridStateColDef<any>[],
     [apiRef],
   );
 
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
-    () => visibleGridColumnsSelector(apiRef),
+    () => visibleGridColumnsSelector(apiRef) as GridStateColDef<any>[],
     [apiRef],
   );
 
