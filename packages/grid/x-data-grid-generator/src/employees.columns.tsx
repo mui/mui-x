@@ -42,6 +42,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     generateData: randomColor,
     renderCell: renderAvatar,
     filterable: false,
+    disableExport: true,
   },
   {
     field: 'name',
