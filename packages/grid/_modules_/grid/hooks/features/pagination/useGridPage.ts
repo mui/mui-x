@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { GridApiRef, GridState } from '../../../models';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridLogger,
   useGridSelector,
@@ -35,7 +36,7 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
 
 const mergeStateWithPage =
   (page: number) =>
-  (state: GridState): GridState => ({
+  (state: GridStateCommunity): GridStateCommunity => ({
     ...state,
     pagination: applyValidPage({
       ...state.pagination,
@@ -48,7 +49,7 @@ const mergeStateWithPage =
  * @requires useGridFilter (state)
  */
 export const useGridPage = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');

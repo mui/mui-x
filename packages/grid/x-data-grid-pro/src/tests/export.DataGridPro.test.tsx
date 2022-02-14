@@ -1,4 +1,4 @@
-import { GridApiRef, GridColumns, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import { GridColumns, useGridApiRef, DataGridPro, GridApi } from '@mui/x-data-grid-pro';
 import { createRenderer } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -12,7 +12,7 @@ describe('<DataGridPro /> - Export', () => {
     autoHeight: isJSDOM,
   };
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const columns: GridColumns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
@@ -20,6 +20,7 @@ describe('<DataGridPro /> - Export', () => {
     it('should work with basic strings', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
+
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro

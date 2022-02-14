@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { gridClasses } from '../../../gridClasses';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
@@ -17,7 +17,7 @@ import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
  * @requires useGridParamsApi (method)
  * @requires useGridColumnMenu (method)
  */
-export const useGridKeyboard = (apiRef: GridApiRef): void => {
+export const useGridKeyboard = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent<HTMLElement>) => {
       apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);

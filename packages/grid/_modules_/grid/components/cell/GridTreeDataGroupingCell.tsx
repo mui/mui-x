@@ -12,6 +12,7 @@ import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridEvents } from '../../models/events';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { DataGridProProcessedProps } from '../../models/props/DataGridProProps';
+import { GridApiPro } from '../../models/api/gridApiPro';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -26,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridTreeDataGroupingCellProps extends GridRenderCellParams {
+interface GridTreeDataGroupingCellProps extends GridRenderCellParams<any, any, any, GridApiPro> {
   hideDescendantCount?: boolean;
 }
 
@@ -34,7 +35,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
   const { id, field, rowNode, hideDescendantCount } = props;
 
   const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
   const ownerState: OwnerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
   const filteredDescendantCountLookup = useGridSelector(

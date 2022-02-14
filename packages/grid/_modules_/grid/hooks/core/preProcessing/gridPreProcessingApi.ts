@@ -1,9 +1,6 @@
-import {
-  GridCellIndexCoordinates,
-  GridColDef,
-  GridInitialState,
-  GridScrollParams,
-} from '../../../models';
+import { GridCellIndexCoordinates, GridScrollParams } from '../../../models';
+import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
+import { GridColDef } from '../../../models/colDef/gridColDef';
 import {
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
@@ -20,7 +17,7 @@ export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
 interface GridPreProcessingGroupLookup {
   hydrateColumns: {
-    value: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+    value: Omit<GridColumnsRawState<any>, 'columnVisibilityModel'>;
   };
   scrollToIndexes: {
     value: Partial<GridScrollParams>;
@@ -33,10 +30,10 @@ interface GridPreProcessingGroupLookup {
   };
   filteringMethod: { value: GridFilteringMethodCollection };
   sortingMethod: { value: GridSortingMethodCollection };
-  exportState: { value: GridInitialState };
+  exportState: { value: GridInitialStateCommunity };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;
-    context: GridRestoreStatePreProcessingContext;
+    context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
   };
   rowHeight: { value: Record<string, number>; context: GridRowEntry };
 }

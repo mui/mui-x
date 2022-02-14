@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEventCallback } from '@mui/material/utils';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   useGridApiOptionHandler,
@@ -41,7 +41,7 @@ function isPromise(promise: any): promise is Promise<GridEditCellProps> {
 }
 
 export const useCellEditing = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'editMode' | 'onCellEditCommit' | 'onCellEditStart' | 'onCellEditStop' | 'experimentalFeatures'
@@ -204,7 +204,7 @@ export const useCellEditing = (
     unstable_setCellEditingEditCellValue: setCellEditingEditCellValue,
   };
 
-  useGridApiMethod<typeof cellEditingApi>(apiRef, cellEditingApi, 'EditRowApi');
+  useGridApiMethod(apiRef, cellEditingApi, 'EditRowApi');
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
     async (params, event) => {

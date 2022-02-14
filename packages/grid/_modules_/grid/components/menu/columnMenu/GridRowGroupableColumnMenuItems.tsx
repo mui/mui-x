@@ -6,6 +6,7 @@ import { GridColDef } from '../../../models/colDef/gridColDef';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';
 import { gridColumnLookupSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 
 interface GridRowGroupableColumnMenuItemsProps {
   column?: GridColDef;
@@ -14,7 +15,7 @@ interface GridRowGroupableColumnMenuItemsProps {
 
 const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsProps) => {
   const { column, onClick } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
 
