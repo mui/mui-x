@@ -1,41 +1,48 @@
+import * as React from 'react';
 import { createSelector as reselectCreateSelector, Selector, SelectorResultArray } from 'reselect';
-import { GridState } from '../models/gridState';
-import { GridApiRef } from '../models/api/gridApiRef';
 
-export interface OutputSelector<Result> {
-  (apiRef: GridApiRef): Result;
+export interface OutputSelector<State, Result> {
+  (apiRef: React.MutableRefObject<{ state: State; instanceId: number }>): Result;
   // TODO v6: make instanceId require
-  (state: GridState, instanceId?: number): Result;
+  (state: State, instanceId?: number): Result;
   cache: object;
 }
 
-interface CreateSelectorFunction {
-  // Input selectors as separate inline arguments
-  <Selectors extends ReadonlyArray<Selector<GridState>>, Result>(
-    ...items: [...Selectors, (...args: SelectorResultArray<Selectors>) => Result]
-  ): OutputSelector<Result>;
+type StateFromSelector<T> = T extends (first: infer F, ...args: any[]) => any
+  ? F extends { state: infer F2 }
+    ? F2
+    : F
+  : never;
+
+type StateFromSelectorList<Selectors extends readonly any[]> = Selectors extends [
+  f: infer F,
+  ...rest: infer R
+]
+  ? StateFromSelector<F> extends StateFromSelectorList<R>
+    ? StateFromSelector<F>
+    : StateFromSelectorList<R>
+  : {};
+
+type SelectorArgs<Selectors extends ReadonlyArray<Selector<any>>, Result> =
   // Input selectors as a separate array
-  <Selectors extends ReadonlyArray<Selector<GridState>>, Result>(
-    selectors: [...Selectors],
-    combiner: (...args: SelectorResultArray<Selectors>) => Result,
-  ): OutputSelector<Result>;
-}
+  | [selectors: [...Selectors], combiner: (...args: SelectorResultArray<Selectors>) => Result]
+  // Input selectors as separate inline arguments
+  | [...Selectors, (...args: SelectorResultArray<Selectors>) => Result];
+
+type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, Result>(
+  ...items: SelectorArgs<Selectors, Result>
+) => OutputSelector<StateFromSelectorList<Selectors>, Result>;
 
 const cache: Record<number | string, Map<any[], any>> = {};
-
-function isApiRef(stateOrApiRef: any): stateOrApiRef is GridApiRef {
-  return stateOrApiRef.current;
-}
 
 let warnedOnce = false;
 
 export const createSelector: CreateSelectorFunction = (...args: any) => {
   const selector = (...selectorArgs: any[]) => {
     const [stateOrApiRef, instanceId] = selectorArgs;
-    const cacheKey = isApiRef(stateOrApiRef)
-      ? stateOrApiRef.current.instanceId
-      : instanceId ?? 'default';
-    const state = isApiRef(stateOrApiRef) ? stateOrApiRef.current.state : stateOrApiRef;
+    const isApiRef = !!stateOrApiRef.current;
+    const cacheKey = isApiRef ? stateOrApiRef.current.instanceId : instanceId ?? 'default';
+    const state = isApiRef ? stateOrApiRef.current.state : stateOrApiRef;
 
     if (process.env.NODE_ENV !== 'production') {
       if (!warnedOnce && cacheKey === 'default') {

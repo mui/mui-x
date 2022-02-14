@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridPinnedPosition } from '../../../models/api/gridColumnPinningApi';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 
 interface GridColumnPinningMenuItemsProps {
   column?: GridColDef;
@@ -12,7 +13,7 @@ interface GridColumnPinningMenuItemsProps {
 
 const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
   const { column, onClick } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
 
   const pinColumn = (side: GridPinnedPosition) => (event: React.MouseEvent<HTMLElement>) => {
     apiRef.current.pinColumn(column!.field, side);

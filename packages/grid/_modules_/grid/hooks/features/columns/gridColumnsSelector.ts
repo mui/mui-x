@@ -1,12 +1,12 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridState } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-export const gridColumnsSelector = (state: GridState) => state.columns;
+export const gridColumnsSelector = (state: GridStateCommunity) => state.columns;
 
 // It includes even the hidden columns
-export const allGridColumnsFieldsSelector = (state: GridState) => state.columns.all;
+export const allGridColumnsFieldsSelector = (state: GridStateCommunity) => state.columns.all;
 
-export const gridColumnLookupSelector = (state: GridState) => state.columns.lookup;
+export const gridColumnLookupSelector = (state: GridStateCommunity) => state.columns.lookup;
 
 export const allGridColumnsSelector = createSelector(
   allGridColumnsFieldsSelector,

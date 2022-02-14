@@ -128,7 +128,7 @@ To disable the filter of a single column, set the `filterable` property in `Grid
 In the example below, the _rating_ column can not be filtered.
 
 ```js
-<Datagrid columns={[...columns, { field: 'rating', filterable: false }]} />
+<DataGrid columns={[...columns, { field: 'rating', filterable: false }]} />
 ```
 
 {{"demo": "DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}

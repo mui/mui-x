@@ -53,7 +53,7 @@ import {
 
 import { GridColDefGenerator } from './services/gridColDefGenerator';
 
-export const getCommodityColumns = (editable = false): GridColDefGenerator[] => [
+export const getCommodityColumns = (editable = false): GridColDefGenerator<any>[] => [
   {
     field: 'id',
     generateData: randomId,
@@ -159,7 +159,6 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     type: 'number',
     width: 80,
     editable,
-
     valueParser: (value) => Number(value),
   },
   {

@@ -1,7 +1,7 @@
 import { createSelector } from '../../../utils/createSelector';
-import { GridState } from '../../../models/gridState';
+import { GridStatePro } from '../../../models/gridStatePro';
 
-export const gridColumnResizeSelector = (state: GridState) => state.columnResize;
+export const gridColumnResizeSelector = (state: GridStatePro) => state.columnResize;
 
 export const gridResizingColumnFieldSelector = createSelector(
   gridColumnResizeSelector,

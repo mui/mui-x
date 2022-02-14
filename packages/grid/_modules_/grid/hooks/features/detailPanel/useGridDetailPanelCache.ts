@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { gridRowIdsSelector } from '../rows/gridRowsSelector';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { GridEvents } from '../../../models/events/gridEvents';
 
 function cacheContentAndHeight(
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiPro>,
   getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
   getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
 ) {
@@ -36,7 +36,7 @@ function cacheContentAndHeight(
 }
 
 export const useGridDetailPanelCache = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<DataGridProProcessedProps, 'getDetailPanelContent' | 'getDetailPanelHeight'>,
 ) => {
   const updateCaches = React.useCallback(() => {
