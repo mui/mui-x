@@ -38,8 +38,8 @@ const cleanFilterItem = (item: GridFilterItem, apiRef: GridApiRef) => {
 };
 
 const filterModelDisableMultiColumnsFilteringWarning = buildWarning([
-  'MUI: The `filterModel` can only contain a single item when `prop.disableMultipleColumnsFiltering` is set to `true`.',
-  'If you are using the `DataGrid` community version, this property is always `true`.',
+  'MUI: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+  'If you are using the community version of the `DataGrid`, this prop is always `true`.',
 ]);
 
 const filterModelMissingItemIdWarning = buildWarning(
