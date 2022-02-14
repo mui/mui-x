@@ -4,6 +4,7 @@ import {
   GridEvents,
   GridEventListener,
   GridScrollParams,
+  GridColumns,
   useGridApiEventHandler,
   useGridApiOptionHandler,
   visibleGridColumnsSelector,
@@ -53,7 +54,7 @@ export const useGridInfiniteLoader = (
         !isInScrollBottomArea.current
       ) {
         const rowScrollEndParam: GridRowScrollEndParams = {
-          visibleColumns,
+          visibleColumns: visibleColumns as GridColumns<GridApiPro>,
           viewportPageSize,
           virtualRowsCount: currentPage.rows.length,
         };
