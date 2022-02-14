@@ -1,4 +1,4 @@
-import type { GridApiRef } from '../../_modules_';
+import * as React from 'react';
 import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
@@ -16,8 +16,7 @@ import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridF
 import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
 import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
-import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
-import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
+import { useGridPagination } from '../../_modules_/grid/hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
@@ -34,18 +33,20 @@ import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/column
 import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 import { useGridDetailPanel } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelCache } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanelCache';
+import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
+import { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
 
 export const useDataGridProComponent = (
-  inputApiRef: GridApiRef | undefined,
+  inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization(inputApiRef, props);
   useGridTreeData(apiRef, props);
   useGridRowGrouping(apiRef, props);
-  useGridColumnPinning(apiRef, props);
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
-  useGridColumns(apiRef, props);
+  useGridColumnPinning(apiRef, props);
+  useGridColumns(apiRef, props as DataGridProcessedProps);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridDetailPanelCache(apiRef, props);
@@ -57,8 +58,7 @@ export const useDataGridProComponent = (
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
-  useGridPageSize(apiRef, props);
-  useGridPage(apiRef, props);
+  useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);

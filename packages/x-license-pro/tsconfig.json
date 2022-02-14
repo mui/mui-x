@@ -1,8 +1,7 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig-core.json",
   "compilerOptions": {
-    "noEmit": true,
-    "types": ["mocha", "node", "chai"]
+    "types": ["react", "mocha", "node"]
   },
-  "include": ["src"]
+  "include": ["src/**/*"]
 }

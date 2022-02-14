@@ -1,3 +1,4 @@
-import { GridState } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-export const gridPreferencePanelStateSelector = (state: GridState) => state.preferencePanel;
+export const gridPreferencePanelStateSelector = (state: GridStateCommunity) =>
+  state.preferencePanel;

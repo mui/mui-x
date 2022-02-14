@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem } from '../../../models/gridFilterItem';
@@ -46,7 +46,7 @@ const checkFilterModelValidity = (model: GridFilterModel) => {
  * @requires useGridRows (event)
  */
 export const useGridFilter = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -234,7 +234,7 @@ export const useGridFilter = (
     getVisibleRowModels,
   };
 
-  useGridApiMethod<GridFilterApi>(apiRef, filterApi, 'GridFilterApi');
+  useGridApiMethod(apiRef, filterApi, 'GridFilterApi');
 
   /**
    * PRE-PROCESSING

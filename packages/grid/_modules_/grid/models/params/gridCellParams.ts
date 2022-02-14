@@ -1,13 +1,20 @@
 import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
-import type { GridColDef, GridStateColDef } from '../colDef';
+import type { GridColDef, GridStateColDef } from '../colDef/gridColDef';
 import { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApi } from '../api/gridApi';
+import type { GridApiCommon } from '../api/gridApiCommon';
+import type { GridApiCommunity } from '../api/gridApiCommunity';
+import type { GridApiPro } from '../api/gridApiPro';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
-export interface GridCellParams<V = any, R = any, F = V> {
+export interface GridCellParams<
+  V = any,
+  R = any,
+  F = V,
+  Api extends GridApiCommon = GridApiCommunity,
+> {
   /**
    * The grid row id.
    */
@@ -35,7 +42,7 @@ export interface GridCellParams<V = any, R = any, F = V> {
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridStateColDef;
+  colDef: GridStateColDef<Api>;
   /**
    * If true, the cell is editable.
    */
@@ -65,41 +72,55 @@ export interface GridCellParams<V = any, R = any, F = V> {
 /**
  * GridCellParams containing api.
  */
-export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
+export interface GridRenderCellParams<
+  V = any,
+  R = any,
+  F = V,
+  Api extends GridApiCommon = GridApiCommunity,
+> extends GridCellParams<V, R, F, Api> {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApi;
+  api: Api;
 }
 
 /**
  * GridEditCellProps containing api.
  */
-export interface GridRenderEditCellParams extends GridEditCellProps {
+export interface GridRenderEditCellParams<Api extends GridApiCommon = GridApiCommunity>
+  extends GridEditCellProps {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApi;
+  api: Api;
 }
 
 /**
  * Parameters passed to `colDef.valueGetter`.
  */
-export interface GridValueGetterParams<V = any, R = any>
-  extends Omit<GridCellParams<V, R>, 'formattedValue' | 'isEditable'> {
+export interface GridValueGetterParams<
+  V = any,
+  R = any,
+  Api extends GridApiCommon = GridApiCommunity,
+> extends Omit<GridCellParams<V, R, any, Api>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApi;
+  api: Api;
 }
 
 /**
  * @deprecated Use `GridValueGetterParams` instead.
  */
-export type GridValueGetterFullParams<V = any, R = any> = GridValueGetterParams<V, R>;
+export type GridValueGetterFullParams<
+  V = any,
+  R = any,
+  Api extends GridApiCommon = GridApiCommunity,
+> = GridValueGetterParams<V, R, Api>;
 
 /**
  * Parameters passed to `colDef.groupingValueGetter`.
+ * TODO: Move to `x-data-grid-pro` folder
  */
 export interface GridGroupingValueGetterParams<V = any, R = any> {
   /**
@@ -121,7 +142,7 @@ export interface GridGroupingValueGetterParams<V = any, R = any> {
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridColDef | GridStateColDef;
+  colDef: GridColDef<GridApiPro> | GridStateColDef<GridApiPro>;
   /**
    * The node of the row that the current cell belongs to.
    * It only contains the information available before the actual grouping.
@@ -146,7 +167,7 @@ export interface GridValueSetterParams {
 /**
  * Object passed as parameter in the column [[GridColDef]] value formatter callback.
  */
-export interface GridValueFormatterParams {
+export interface GridValueFormatterParams<Api extends GridApiCommon = GridApiCommunity> {
   /**
    * The grid row id.
    * It is not available when the value formatter is called by the filter panel.
@@ -163,7 +184,7 @@ export interface GridValueFormatterParams {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApi;
+  api: Api;
 }
 
 /**
@@ -175,7 +196,7 @@ export interface GridPreProcessEditCellProps {
    */
   id: GridRowId;
   /**
-   * The row that is being editted.
+   * The row that is being edited.
    */
   row: GridRowModel;
   /**

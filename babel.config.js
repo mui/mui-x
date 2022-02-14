@@ -1,24 +1,5 @@
 const path = require('path');
 
-let defaultPresets;
-
-// We release a ES version of MUI.
-// It's something that matches the latest official supported features of JavaScript.
-// Nothing more (stage-1, etc), nothing less (require, etc).
-if (process.env.BABEL_ENV === 'es') {
-  defaultPresets = [];
-} else {
-  defaultPresets = [
-    [
-      '@babel/preset-env',
-      {
-        bugfixes: true,
-        modules: ['esm', 'production-umd'].includes(process.env.BABEL_ENV) ? false : 'commonjs',
-      },
-    ],
-  ];
-}
-
 function resolveAliasPath(relativeToBabelConf) {
   const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
   return `./${resolvedPath.replace('\\', '/')}`;
@@ -31,11 +12,38 @@ const defaultAlias = {
   '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
   'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
+  test: resolveAliasPath('./test'),
+  packages: resolveAliasPath('./packages'),
 };
 
-module.exports = {
-  presets: defaultPresets.concat(['@babel/preset-react', '@babel/preset-typescript']),
-  plugins: [
+const productionPlugins = [
+  ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
+];
+
+module.exports = function getBabelConfig(api) {
+  const useESModules = api.env(['legacy', 'modern', 'stable', 'rollup']);
+
+  const presets = [
+    [
+      '@babel/preset-env',
+      {
+        bugfixes: true,
+        browserslistEnv: process.env.BABEL_ENV || process.env.NODE_ENV,
+        debug: process.env.MUI_BUILD_VERBOSE === 'true',
+        modules: useESModules ? false : 'commonjs',
+        shippedProposals: api.env('modern'),
+      },
+    ],
+    [
+      '@babel/preset-react',
+      {
+        runtime: 'automatic',
+      },
+    ],
+    '@babel/preset-typescript',
+  ];
+
+  const plugins = [
     'babel-plugin-optimize-clsx',
     // Need the following 3 proposals for all targets in .browserslistrc.
     // With our usage the transpiled loose mode is equivalent to spec mode.
@@ -43,41 +51,100 @@ module.exports = {
     ['@babel/plugin-proposal-private-methods', { loose: true }],
     ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
     ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
-    // any package needs to declare 7.4.4 as a runtime dependency. default is ^7.0.0
-    ['@babel/plugin-transform-runtime', { version: '^7.4.4' }],
-    // for IE 11 support
-    '@babel/plugin-transform-object-assign',
     [
-      'babel-plugin-module-resolver',
+      '@babel/plugin-transform-runtime',
       {
-        root: ['./'],
-        extensions: ['.js', '.ts', '.tsx'],
-        alias: defaultAlias,
+        useESModules,
+        // any package needs to declare 7.4.4 as a runtime dependency. default is ^7.0.0
+        version: '^7.4.4',
       },
     ],
-  ],
-  ignore: [
-    // Fix a Windows issue.
-    /@babel[\\|/]runtime/,
-    // Fix const foo = /{{(.+?)}}/gs; crashing.
-    /prettier/,
-  ],
-  env: {
-    coverage: {
-      plugins: ['babel-plugin-istanbul'],
+    [
+      'babel-plugin-transform-react-remove-prop-types',
+      {
+        mode: 'unsafe-wrap',
+      },
+    ],
+  ];
+
+  if (process.env.NODE_ENV === 'production') {
+    plugins.push(...productionPlugins);
+  }
+  if (process.env.NODE_ENV === 'test') {
+    plugins.push([
+      'babel-plugin-module-resolver',
+      {
+        alias: defaultAlias,
+        root: ['./'],
+      },
+    ]);
+  }
+
+  return {
+    assumptions: {
+      noDocumentAll: true,
     },
-    test: {
-      sourceMaps: 'both',
-    },
-    benchmark: {
-      plugins: [
-        [
-          'babel-plugin-module-resolver',
-          {
-            alias: defaultAlias,
-          },
+    presets,
+    plugins,
+    ignore: [
+      // Fix a Windows issue.
+      /@babel[\\|/]runtime/,
+      // Fix const foo = /{{(.+?)}}/gs; crashing.
+      /prettier/,
+    ],
+    env: {
+      coverage: {
+        plugins: [
+          'babel-plugin-istanbul',
+          [
+            'babel-plugin-module-resolver',
+            {
+              root: ['./'],
+              alias: defaultAlias,
+            },
+          ],
         ],
-      ],
+      },
+      development: {
+        plugins: [
+          [
+            'babel-plugin-module-resolver',
+            {
+              alias: defaultAlias,
+              root: ['./'],
+            },
+          ],
+        ],
+      },
+      legacy: {
+        plugins: [
+          // IE11 support
+          '@babel/plugin-transform-object-assign',
+        ],
+      },
+      test: {
+        sourceMaps: 'both',
+        plugins: [
+          [
+            'babel-plugin-module-resolver',
+            {
+              root: ['./'],
+              alias: defaultAlias,
+            },
+          ],
+        ],
+      },
+      benchmark: {
+        plugins: [
+          ...productionPlugins,
+          [
+            'babel-plugin-module-resolver',
+            {
+              alias: defaultAlias,
+            },
+          ],
+        ],
+      },
     },
-  },
+  };
 };

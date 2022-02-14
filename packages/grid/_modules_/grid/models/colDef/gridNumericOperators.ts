@@ -3,6 +3,8 @@ import { GridFilterInputMultipleValue } from '../../components/panel/filterPanel
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 import { wrapWithDeprecationWarning } from '../../utils/deprecation';
+import { GridApiCommon } from '../api';
+import { GridApiCommunity } from '../api/gridApiCommunity';
 
 const parseNumericValue = (value: string | number | null) => {
   if (value == null) {
@@ -12,7 +14,9 @@ const parseNumericValue = (value: string | number | null) => {
   return Number(value);
 };
 
-export const getGridNumericOperators = (): GridFilterOperator[] => [
+export const getGridNumericOperators = <
+  Api extends GridApiCommon = GridApiCommunity,
+>(): GridFilterOperator<Api>[] => [
   {
     label: '=',
     value: '=',
