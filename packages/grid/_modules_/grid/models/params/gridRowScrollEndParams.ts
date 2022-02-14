@@ -1,4 +1,4 @@
-import type { GridColumns } from '../colDef';
+import type { GridColumns } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter in the onRowsScrollEnd callback.

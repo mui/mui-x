@@ -2,7 +2,6 @@ import * as React from 'react';
 import Alert from '@mui/material/Alert';
 import {
   GridEvents,
-  GridCellParams,
   GridColumns,
   GridRowsProp,
   useGridApiRef,
@@ -21,7 +20,7 @@ export default function CatchEditingEventsGrid() {
   React.useEffect(() => {
     return apiRef.current.subscribeEvent(
       GridEvents.cellEditStart,
-      (params: GridCellParams, event) => {
+      (params, event) => {
         setMessage(
           `Editing cell with value: ${params.value} and row id: ${
             params.id

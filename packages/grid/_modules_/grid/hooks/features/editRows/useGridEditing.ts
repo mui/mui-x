@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEvents } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
 import { GridCellModes, GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -23,7 +23,24 @@ import { useGridRowEditing } from './useGridRowEditing';
  * @requires useGridParamsApi (method)
  * @requires useGridColumns (state)
  */
-export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps) {
+export function useGridEditing(
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  props: Pick<
+    DataGridProcessedProps,
+    | 'editRowsModel'
+    | 'onEditRowsModelChange'
+    | 'isCellEditable'
+    | 'onEditCellPropsChange'
+    | 'editMode'
+    | 'onRowEditCommit'
+    | 'onRowEditStart'
+    | 'onRowEditStop'
+    | 'onCellEditCommit'
+    | 'onCellEditStart'
+    | 'onCellEditStop'
+    | 'experimentalFeatures'
+  >,
+) {
   const logger = useGridLogger(apiRef, 'useGridEditRows');
   useCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
@@ -194,7 +211,7 @@ export function useGridEditing(apiRef: GridApiRef, props: DataGridProcessedProps
     unstable_runPendingEditCellValueChangeDebounce: runPendingEditCellValueChangeDebounce,
   };
 
-  useGridApiMethod<typeof editingSharedApi>(apiRef, editingSharedApi, 'EditRowApi');
+  useGridApiMethod(apiRef, editingSharedApi, 'EditRowApi');
 
   React.useEffect(() => {
     if (props.editRowsModel !== undefined) {

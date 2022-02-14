@@ -11,6 +11,7 @@ import {
   isGroupingColumn,
 } from '../../../hooks/features/rowGrouping/gridRowGroupingUtils';
 import { gridColumnLookupSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 
 interface GridRowGroupingColumnMenuItemsProps {
   column?: GridColDef;
@@ -19,7 +20,7 @@ interface GridRowGroupingColumnMenuItemsProps {
 
 const GridRowGroupingColumnMenuItems = (props: GridRowGroupingColumnMenuItemsProps) => {
   const { column, onClick } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
 

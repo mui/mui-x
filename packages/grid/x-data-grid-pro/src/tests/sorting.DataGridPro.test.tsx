@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   DataGridProProps,
-  GridApiRef,
+  GridApi,
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -38,7 +38,7 @@ describe('<DataGridPro /> - Sorting', () => {
 
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     const { rows, ...other } = props;

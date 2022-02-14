@@ -1,11 +1,7 @@
-import {
-  GridApiRef,
-  GridFilterItem,
-  GridFilterModel,
-  GridLinkOperator,
-  GridRowId,
-  GridState,
-} from '../../../models';
+import * as React from 'react';
+import { GridFilterItem, GridFilterModel, GridLinkOperator, GridRowId } from '../../../models';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridAggregatedFilterItemApplier } from './gridFilterState';
 
 type GridFilterItemApplier = {
@@ -22,7 +18,7 @@ export const mergeStateWithFilterModel = (
     cleanFilterModel.items = [cleanFilterModel.items[0]];
   }
 
-  return (state: GridState): GridState => ({
+  return (state: GridStateCommunity): GridStateCommunity => ({
     ...state,
     filter: {
       ...state.filter,
@@ -34,11 +30,14 @@ export const mergeStateWithFilterModel = (
 /**
  * Adds default values to the optional fields of a filter items.
  * @param {GridFilterItem} item The raw filter item.
- * @param {GridApiRef} apiRef The API of the grid.
+ * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
  * @return {GridFilterItem} The clean filter item with an uniq ID and an always-defined operatorValue.
  * TODO: Make the typing reflect the different between GridFilterInputItem and GridFilterItem.
  */
-export const cleanFilterItem = (item: GridFilterItem, apiRef: GridApiRef) => {
+export const cleanFilterItem = (
+  item: GridFilterItem,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => {
   const cleanItem: GridFilterItem = { ...item };
 
   if (cleanItem.id == null) {
@@ -57,12 +56,12 @@ export const cleanFilterItem = (item: GridFilterItem, apiRef: GridApiRef) => {
 /**
  * Generates a method to easily check if a row is matching the current filter model.
  * @param {GridFilterModel} filterModel The model with which we want to filter the rows.
- * @param {GridApiRef} apiRef The API of the grid.
+ * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
 export const buildAggregatedFilterApplier = (
   filterModel: GridFilterModel,
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridAggregatedFilterItemApplier | null => {
   const { items, linkOperator = GridLinkOperator.And } = filterModel;
 

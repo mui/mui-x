@@ -9,6 +9,7 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridDetailPanelExpandedRowsContentCacheSelector } from '../../hooks/features/detailPanel/gridDetailPanelSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { GridApiPro } from '../../models/api/gridApiPro';
 
 type OwnerState = { classes: DataGridProcessedProps['classes']; isExpanded: boolean };
 
@@ -22,11 +23,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
+const GridDetailPanelToggleCell = (props: GridRenderCellParams<any, any, any, GridApiPro>) => {
   const { id, value: isExpanded } = props;
 
   const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
   const ownerState: OwnerState = { classes: rootProps.classes, isExpanded };
   const classes = useUtilityClasses(ownerState);
 

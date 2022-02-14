@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 import { useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import {
@@ -23,7 +23,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridPreProcessor } from '../../core/preProcessing/gridPreProcessingApi';
 
 export const useGridDetailPanel = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'initialState'
