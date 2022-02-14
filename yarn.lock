@@ -2676,7 +2676,7 @@
   version "5.4.0"
   resolved "https://github.com/mui/material-ui.git#88ef72fc756f74693a6590aebddd408c2b4c02e0"
 
-"@mui/private-theming@^5.3.0", "@mui/private-theming@^5.4.1":
+"@mui/private-theming@^5.4.1":
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.4.1.tgz#5fa6490f35e78781239f1944ae80a7006c5a7648"
   integrity sha512-Xbc4MXFZxv0A3hoc4TSDBhzjhstppKfc+gQcTMqqBZQP7KjnmxF+wO7rEPQuYRBihjCqQBdrHIGMLsKWrhkZkQ==
@@ -2694,16 +2694,16 @@
     "@emotion/cache" "^11.7.1"
     prop-types "^15.7.2"
 
-"@mui/styles@^5.3.0":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.3.0.tgz#9b4901b338259554ef38065d8d5b038e61c4ae56"
-  integrity sha512-TPfK8c8Zpydpynl4deNv43c0puriXSjf44eadyYle7veVQt5dnT3vgyIqXjP8Ypia653kEVe++GpXTvXnylU7A==
+"@mui/styles@^5.4.1":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.4.1.tgz#994171da902267184fffa19896ee5bbb07d4d783"
+  integrity sha512-ekw2NBC06re0H9SvCA1XgtFcghB8AQdGPXD3mjIz5ik+X+LvR+f2TeoCpJpkKp7UQdcNn6uuYi6BO6irTiQhdw==
   dependencies:
-    "@babel/runtime" "^7.16.7"
+    "@babel/runtime" "^7.17.0"
     "@emotion/hash" "^0.8.0"
-    "@mui/private-theming" "^5.3.0"
-    "@mui/types" "^7.1.0"
-    "@mui/utils" "^5.3.0"
+    "@mui/private-theming" "^5.4.1"
+    "@mui/types" "^7.1.1"
+    "@mui/utils" "^5.4.1"
     clsx "^1.1.1"
     csstype "^3.0.10"
     hoist-non-react-statics "^3.3.2"
@@ -2731,12 +2731,12 @@
     csstype "^3.0.10"
     prop-types "^15.7.2"
 
-"@mui/types@^7.1.0", "@mui/types@^7.1.1":
+"@mui/types@^7.1.1":
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.1.1.tgz#9cf159dc60a101ee336e6ec74193a4f5f97f6160"
   integrity sha512-33hbHFLCwenTpS+T4m4Cz7cQ/ng5g+IgtINkw1uDBVvi1oM83VNt/IGzWIQNPK8H2pr0WIfkmboD501bVdYsPw==
 
-"@mui/utils@^5.3.0", "@mui/utils@^5.4.1":
+"@mui/utils@^5.4.1":
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.4.1.tgz#feb365ce9a4426587510f0943fd6d6e1889e06e6"
   integrity sha512-5HzM+ZjlQqbSp7UTOvLlhAjkWB+o9Z4NzO0W+yhZ1KnxITr+zr/MBzYmmQ3kyvhui8pyhgRDoTcVgwb+02ZUZA==
