@@ -11,7 +11,7 @@ const columns = [
   { field: 'column6', width: 100 },
 ];
 
-export default function ConcurrentReactUpdate() {
+export default function EmptyGrid() {
   return (
     <div style={{ width: 300, height: 300 }}>
       <DataGrid columns={columns} rows={[]} />
