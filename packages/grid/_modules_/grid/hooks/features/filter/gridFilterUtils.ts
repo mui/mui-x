@@ -61,20 +61,8 @@ export const sanitizeFilterModel = (
       };
     }
 
-    let hasItemsWithoutIds = false;
-    let hasItemWithoutOperator = false;
-
-    for (let i = 0; i < model.items.length; i += 1) {
-      const item = model.items[i];
-
-      if (item.id == null) {
-        hasItemsWithoutIds = true;
-      }
-
-      if (item.operatorValue == null) {
-        hasItemWithoutOperator = true;
-      }
-    }
+    const hasItemsWithoutIds = model.items.some((item) => item.id == null);
+    const hasItemWithoutOperator = model.items.some((item) => item.operatorValue == null);
 
     if (hasItemsWithoutIds) {
       filterModelMissingItemIdWarning();

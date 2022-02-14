@@ -348,9 +348,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   describe('prop: initialState.sorting', () => {
-    const Test = (
-      props: Partial<DataGridProps>,
-    ) => (
+    const Test = (props: Partial<DataGridProps>) => (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} {...props} />
       </div>
@@ -495,7 +493,7 @@ describe('<DataGrid /> - Sorting', () => {
 
         expect(getColumnValues(0)).to.deep.equal(['2', '0', '1', '3']);
       }).toWarnDev(
-        'MUI: The `sortModel` can only contain a single item when `prop.disableMultipleColumnsSorting` is set to `true`.',
+        'MUI: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
       );
     });
   });
