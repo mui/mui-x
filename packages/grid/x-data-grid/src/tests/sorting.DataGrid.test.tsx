@@ -349,8 +349,7 @@ describe('<DataGrid /> - Sorting', () => {
 
   describe('prop: initialState.sorting', () => {
     const Test = (
-      props: Omit<DataGridProps, 'rows' | 'columns'> &
-        Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
+      props: Partial<DataGridProps>,
     ) => (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} {...props} />
