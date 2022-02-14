@@ -829,7 +829,7 @@ describe('<DataGridPro /> - Rows', () => {
       };
     });
 
-    let apiRef: GridApiRef;
+    let apiRef: React.MutableRefObject<GridApi>;
 
     const TestCase = (props: Partial<DataGridProProps>) => {
       apiRef = useGridApiRef();
