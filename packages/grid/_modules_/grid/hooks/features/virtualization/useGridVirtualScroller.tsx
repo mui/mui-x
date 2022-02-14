@@ -384,9 +384,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       style: { ...style, ...rootStyle },
       ...other,
     }),
-    getContentProps: ({ style = {} } = {}) => ({
-      style: { ...style, ...contentSize },
-    }),
+    getContentProps: ({ style = {} } = {}) => ({ style: { ...style, ...contentSize } }),
     getRenderZoneProps: () => ({ ref: renderZoneRef }),
   };
 };
