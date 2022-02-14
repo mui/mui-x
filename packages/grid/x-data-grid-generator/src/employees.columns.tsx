@@ -1,4 +1,4 @@
-import { gridStringOrNumberComparator } from '@mui/x-data-grid';
+import { gridStringOrNumberComparator } from '@mui/x-data-grid-pro';
 import {
   randomCity,
   randomCompanyName,

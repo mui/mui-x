@@ -15,6 +15,8 @@ import {
   GridSortModelParams as GridSortModelParamsUntyped,
   GridSortCellParams as GridSortCellParamsUntyped,
   GridComparatorFn as GridComparatorFnUntyped,
+  GridApiCommon,
+  GridFilterOperator,
   getGridNumericOperators as getGridNumericOperatorsUntyped,
   getGridNumericColumnOperators as getGridNumericColumnOperatorsUnTyped,
   getGridBooleanOperators as getGridBooleanOperatorsUntyped,
@@ -24,7 +26,6 @@ import {
 } from '@mui/x-data-grid';
 
 import type { GridApiPro } from './internals/models/gridApiPro';
-import type { GridFilterOperator, GridApiCommon } from '../../_modules_';
 import { GridInitialStatePro, GridStatePro } from './internals/models/gridStatePro';
 
 export { useGridApiContext } from './internals/hooks/utils/useGridApiContext';
