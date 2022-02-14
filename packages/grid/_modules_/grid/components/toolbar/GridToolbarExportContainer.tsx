@@ -8,7 +8,7 @@ import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
 
-const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function GridToolbarExportContainer(props, ref) {
     const { children, onClick, ...other } = props;
 
@@ -84,5 +84,3 @@ const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, ButtonPro
     );
   },
 );
-
-export { GridToolbarExportContainer };

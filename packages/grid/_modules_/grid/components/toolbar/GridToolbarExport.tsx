@@ -14,22 +14,21 @@ interface GridExportDisplayOptions {
   disableToolbarButton?: boolean;
 }
 
-export interface GridCSVExportMenuItemProps {
+export interface GridExportMenuItemProps<Options extends {}> {
   hideMenu?: () => void;
-  options: GridCsvExportOptions & GridExportDisplayOptions;
+  options: Options & GridExportDisplayOptions;
 }
 
-export interface GridPrintExportMenuItemProps {
-  hideMenu?: () => void;
-  options: GridPrintExportOptions & GridExportDisplayOptions;
-}
+export type GridCsvExportMenuItemProps = GridExportMenuItemProps<GridCsvExportOptions>;
+
+export type GridPrintExportMenuItemProps = GridExportMenuItemProps<GridPrintExportOptions>;
 
 export interface GridToolbarExportProps extends ButtonProps {
   csvOptions?: GridCsvExportOptions & GridExportDisplayOptions;
   printOptions?: GridPrintExportOptions & GridExportDisplayOptions;
 }
 
-export const GridCSVExportMenuItem = (props: GridCSVExportMenuItemProps) => {
+export const GridCsvExportMenuItem = (props: GridCsvExportMenuItemProps) => {
   const apiRef = useGridApiContext();
   const { hideMenu, options } = props;
 
@@ -77,7 +76,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
 
     return (
       <GridToolbarExportContainer {...other} ref={ref}>
-        <GridCSVExportMenuItem options={csvOptions} />
+        <GridCsvExportMenuItem options={csvOptions} />
         <GridPrintExportMenuItem options={printOptions} />
       </GridToolbarExportContainer>
     );
