@@ -286,6 +286,14 @@ export interface GridClasses {
    */
   'row--editing': string;
   /**
+   * Styles applied to the last row element if the content doesn't extend to the full height of the grid.
+   */
+  'row--lastBeforeEmpty': string;
+  /**
+   * Styles applied to the last row element on every page of the grid.
+   */
+  'row--last': string;
+  /**
    * Styles applied to the row element.
    */
   row: string;

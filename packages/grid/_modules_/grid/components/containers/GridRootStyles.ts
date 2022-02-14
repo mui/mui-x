@@ -224,7 +224,7 @@ export const GridRootStyles = styled('div', {
       },
       [`&.${gridClasses['row--last']}:not(.${gridClasses['row--lastBeforeEmpty']}) .${gridClasses.cell}`]:
         {
-          borderBottom: 'none',
+          borderColor: 'transparent',
         },
     },
     [`& .${gridClasses.cell}`]: {
