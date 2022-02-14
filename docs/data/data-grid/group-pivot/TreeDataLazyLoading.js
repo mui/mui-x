@@ -8,7 +8,7 @@ import {
   useGridApiRef,
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
-import { unstable_composeClasses as composeClasses } from '@mui/base';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 

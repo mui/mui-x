@@ -16,7 +16,7 @@ const CustomToolbar: React.FunctionComponent<{
   </GridToolbarContainer>
 );
 
-export default function CustomFilterPanel() {
+export default function CustomFilterPanelPosition() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,

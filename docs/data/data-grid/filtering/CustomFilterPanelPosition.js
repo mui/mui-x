@@ -19,7 +19,7 @@ CustomToolbar.propTypes = {
   setFilterButtonEl: PropTypes.func.isRequired,
 };
 
-export default function CustomFilterPanel() {
+export default function CustomFilterPanelPosition() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,

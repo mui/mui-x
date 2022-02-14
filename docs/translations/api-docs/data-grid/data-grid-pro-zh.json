@@ -324,6 +324,26 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
     },
+    "filterFormDeleteIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the delete icon of the filter form component"
+    },
+    "filterFormLinkOperatorInput": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the link operator inout of the filter form component"
+    },
+    "filterFormColumnInput": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column input of the filter form component"
+    },
+    "filterFormOperatorInput": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the operator input of the filter form component"
+    },
+    "filterFormValueInput": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the value input of the filter form component"
+    },
     "editInputCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
