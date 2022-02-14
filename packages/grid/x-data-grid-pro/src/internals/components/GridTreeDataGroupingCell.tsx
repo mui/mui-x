@@ -9,10 +9,10 @@ import {
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridEvents,
+  unstable_isNavigationKey as isNavigationKey,
 } from '@mui/x-data-grid';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { isNavigationKey } from '../../../../_modules_/grid/utils/keyboardUtils';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridApiPro } from '../models/gridApiPro';
 

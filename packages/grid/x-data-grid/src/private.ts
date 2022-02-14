@@ -1,3 +1,7 @@
+// Temporary file
+// Will be removed when we will be able to do `import { GridVirtualScroller } from '@mui/x-data-grid/internals/components/virtualization/GridVirtualScroller'
+// Or `import { GridVirtualScroller } from '@mui/x-data-grid/internals'
+
 export { GridVirtualScroller as unstable_GridVirtualScroller } from '../../_modules_/grid/components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent as unstable_GridVirtualScrollerContent } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerContent';
 export { GridVirtualScrollerRenderZone as unstable_GridVirtualScrollerRenderZone } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerRenderZone';
@@ -38,3 +42,33 @@ export { useGridScroll as unstable_useGridScroll } from '../../_modules_/grid/ho
 export { useGridEvents as unstable_useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 export { useGridDimensions as unstable_useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
 export { useGridStatePersistence as unstable_useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
+
+export { isNavigationKey as unstable_isNavigationKey } from '../../_modules_/grid/utils/keyboardUtils';
+export {
+  clamp as unstable_clamp,
+  isDeepEqual as unstable_isDeepEqual,
+} from '../../_modules_/grid/utils/utils';
+export { findParentElementFromClassName as unstable_findParentElementFromClassName } from '../../_modules_/grid/utils/domUtils';
+
+export type { GridFilteringMethod as Unstable_GridFilteringMethod } from '../../_modules_/grid/hooks/features/filter/gridFilterState';
+export type { GridSortingMethod as Unstable_GridSortingMethod } from '../../_modules_/grid/hooks/features/sorting/gridSortingState';
+export type { GridSortingModelApplier as Unstable_GridSortingModelApplier } from '../../_modules_/grid/hooks/features/sorting/gridSortingState';
+export type { GridAggregatedFilterItemApplier as Unstable_GridAggregatedFilterItemApplier } from '../../_modules_/grid/hooks/features/filter/gridFilterState';
+export type { GridColumnHeaderSeparatorProps as Unstable_GridColumnHeaderSeparatorProps } from '../../_modules_/grid/components/columnHeaders/GridColumnHeaderSeparator';
+export type { GridPreProcessor as Unstable_GridPreProcessor } from '../../_modules_/grid/hooks/core/preProcessing/gridPreProcessingApi';
+export type { GridRowGroupingPreProcessing as Unstable_GridRowGroupingPreProcessing } from '../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
+export type { GridRestoreStatePreProcessingContext as Unstable_GridRestoreStatePreProcessingContext } from '../../_modules_/grid/hooks/features/statePersistence/gridStatePersistenceInterface';
+export type {
+  GridColumnRawLookup as Unstable_GridColumnRawLookup,
+  GridColumnsRawState as Unstable_GridColumnsRawState,
+} from '../../_modules_/grid/hooks/features/columns/gridColumnsInterfaces';
+export type {
+  GridRowGroupingResult as Unstable_GridRowGroupingResult,
+  GridRowGroupParams as Unstable_GridRowGroupParams,
+} from '../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
+export type {
+  DataGridPropsWithoutDefaultValue as Unstable_DataGridPropsWithoutDefaultValue,
+  DataGridPropsWithDefaultValues as Unstable_DataGridPropsWithDefaultValues,
+  DataGridPropsWithComplexDefaultValueAfterProcessing as Unstable_DataGridPropsWithComplexDefaultValueAfterProcessing,
+  DataGridPropsWithComplexDefaultValueBeforeProcessing as Unstable_DataGridPropsWithComplexDefaultValueBeforeProcessing,
+} from '../../_modules_/grid/models/props/DataGridProps';

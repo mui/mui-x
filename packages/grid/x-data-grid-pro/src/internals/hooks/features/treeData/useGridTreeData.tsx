@@ -11,6 +11,10 @@ import {
   unstable_useGridRegisterFilteringMethod as useGridRegisterFilteringMethod,
   unstable_useGridRegisterSortingMethod as useGridRegisterSortingMethod,
   unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
+  Unstable_GridFilteringMethod as GridFilteringMethod,
+  Unstable_GridSortingMethod as GridSortingMethod,
+  Unstable_GridPreProcessor as GridPreProcessor,
+  Unstable_GridRowGroupingPreProcessing as GridRowGroupingPreProcessing,
 } from '@mui/x-data-grid';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
@@ -20,10 +24,6 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
-import type { GridRowGroupingPreProcessing } from '../../../../../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
-import type { GridPreProcessor } from '../../../../../../_modules_/grid/hooks/core/preProcessing';
-import type { GridFilteringMethod } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
-import type { GridSortingMethod } from '../../../../../../_modules_/grid/hooks/features/sorting/gridSortingState';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { filterRowTreeFromTreeData } from './gridTreeDataUtils';
 import { GridTreeDataGroupingCell } from '../../../components/GridTreeDataGroupingCell';

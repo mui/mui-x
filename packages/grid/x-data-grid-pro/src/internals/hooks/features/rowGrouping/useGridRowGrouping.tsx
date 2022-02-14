@@ -20,11 +20,17 @@ import {
   unstable_useGridRegisterSortingMethod as useGridRegisterSortingMethod,
   unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
   unstable_useGridStateInit as useGridStateInit,
+  unstable_isDeepEqual as isDeepEqual,
+  Unstable_GridFilteringMethod as GridFilteringMethod,
+  Unstable_GridSortingMethod as GridSortingMethod,
+  Unstable_GridPreProcessor as GridPreProcessor,
+  Unstable_GridColumnRawLookup as GridColumnRawLookup,
+  Unstable_GridColumnsRawState as GridColumnsRawState,
+  Unstable_GridRestoreStatePreProcessingContext as GridRestoreStatePreProcessingContext,
+  Unstable_GridRowGroupingPreProcessing as GridRowGroupingPreProcessing,
 } from '@mui/x-data-grid';
 import { GridGroupingValueGetterParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
-import type { GridRowGroupingPreProcessing } from '../../../../../../_modules_/grid/hooks/core/rowGroupsPerProcessing';
-import type { GridRestoreStatePreProcessingContext } from '../../../../../../_modules_/grid/hooks/features/statePersistence/gridStatePersistenceInterface';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {
   gridRowGroupingModelSelector,
@@ -43,14 +49,6 @@ import {
   createGroupingColDefForOneGroupingCriteria,
   createGroupingColDefForAllGroupingCriteria,
 } from './createGroupingColDef';
-import { isDeepEqual } from '../../../../../../_modules_/grid/utils/utils';
-import type {
-  GridColumnRawLookup,
-  GridColumnsRawState,
-} from '../../../../../../_modules_/grid/hooks/features/columns/gridColumnsInterfaces';
-import type { GridFilteringMethod } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
-import type { GridSortingMethod } from '../../../../../../_modules_/grid/hooks/features/sorting/gridSortingState';
-import type { GridPreProcessor } from '../../../../../../_modules_/grid/hooks/core/preProcessing';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { GridRowGroupingApi, GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';

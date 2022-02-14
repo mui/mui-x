@@ -13,17 +13,17 @@ import {
   useGridNativeEventListener,
   useGridLogger,
   unstable_useGridStateInit as useGridStateInit,
+  unstable_clamp as clamp,
+  unstable_findParentElementFromClassName as findParentElementFromClassName,
+  Unstable_GridColumnHeaderSeparatorProps as GridColumnHeaderSeparatorProps,
 } from '@mui/x-data-grid';
 import {
   findGridCellElementsFromCol,
-  findParentElementFromClassName,
   getFieldFromHeaderElem,
   findHeaderElementFromField,
-} from '../../../../../../_modules_/grid/utils/domUtils';
+} from '../../../utils/domUtils';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import type { GridColumnHeaderSeparatorProps } from '../../../../../../_modules_/grid/components/columnHeaders/GridColumnHeaderSeparator';
-import { clamp } from '../../../../../../_modules_/grid/utils/utils';
 
 // TODO: remove support for Safari < 13.
 // https://caniuse.com/#search=touch-action

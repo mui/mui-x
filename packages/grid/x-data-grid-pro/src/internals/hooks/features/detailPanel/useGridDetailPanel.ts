@@ -9,6 +9,7 @@ import {
   useGridApiMethod,
   unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
   unstable_useGridStateInit as useGridStateInit,
+  Unstable_GridPreProcessor as GridPreProcessor,
 } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import {
@@ -22,7 +23,6 @@ import {
 } from './gridDetailPanelSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridDetailPanelApi } from './gridDetailPanelInterface';
-import type { GridPreProcessor } from '../../../../../../_modules_/grid/hooks/core/preProcessing';
 
 export const useGridDetailPanel = (
   apiRef: React.MutableRefObject<GridApiPro>,

@@ -5,10 +5,10 @@ import {
   GridRenderCellParams,
   GridStateColDef,
   GridComparatorFn,
+  Unstable_GridColumnRawLookup as GridColumnRawLookup,
 } from '@mui/x-data-grid';
 import { GridGroupingColDefOverride } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
-import type { GridColumnRawLookup } from '../../../../../../_modules_/grid/hooks/features/columns/gridColumnsInterfaces';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColumnLeafCell';
 import {

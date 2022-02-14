@@ -4,11 +4,11 @@ import type {
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
   GridFilterState,
+  Unstable_GridAggregatedFilterItemApplier as GridAggregatedFilterItemApplier,
 } from '@mui/x-data-grid';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridStatePro } from '../../../models/gridStatePro';
-import type { GridAggregatedFilterItemApplier } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 

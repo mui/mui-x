@@ -3,8 +3,8 @@ import {
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
   GridFilterState,
+  Unstable_GridAggregatedFilterItemApplier as GridAggregatedFilterItemApplier,
 } from '@mui/x-data-grid';
-import type { GridAggregatedFilterItemApplier } from '../../../../../../_modules_/grid/hooks/features/filter/gridFilterState';
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;

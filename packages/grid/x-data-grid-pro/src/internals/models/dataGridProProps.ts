@@ -8,6 +8,10 @@ import {
   GridExperimentalFeatures,
   GridRowParams,
   GridRowId,
+  Unstable_DataGridPropsWithoutDefaultValue as DataGridPropsWithoutDefaultValue,
+  Unstable_DataGridPropsWithDefaultValues as DataGridPropsWithDefaultValues,
+  Unstable_DataGridPropsWithComplexDefaultValueAfterProcessing as DataGridPropsWithComplexDefaultValueAfterProcessing,
+  Unstable_DataGridPropsWithComplexDefaultValueBeforeProcessing as DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '@mui/x-data-grid';
 import type { GridPinnedColumns } from '../hooks/features/columnPinning';
 import { GridApiPro } from './gridApiPro';
@@ -15,12 +19,6 @@ import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
-import type {
-  DataGridPropsWithoutDefaultValue,
-  DataGridPropsWithDefaultValues,
-  DataGridPropsWithComplexDefaultValueAfterProcessing,
-  DataGridPropsWithComplexDefaultValueBeforeProcessing,
-} from '../../../../_modules_/grid/models/props/DataGridProps';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridInitialStatePro } from './gridStatePro';
 

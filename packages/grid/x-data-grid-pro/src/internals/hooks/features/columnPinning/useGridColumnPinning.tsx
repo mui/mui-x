@@ -13,11 +13,12 @@ import {
   useGridApiEventHandler,
   unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
   unstable_useGridStateInit as useGridStateInit,
+  Unstable_GridPreProcessor as GridPreProcessor,
+  Unstable_GridRestoreStatePreProcessingContext as GridRestoreStatePreProcessingContext,
 } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import type { GridPreProcessor } from '../../../../../../_modules_/grid/hooks/core/preProcessing';
 import { GridColumnPinningMenuItems } from '../../../components/GridColumnPinningMenuItems';
 import {
   GridColumnPinningApi,
@@ -26,7 +27,6 @@ import {
 } from './gridColumnPinningInterface';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
-import type { GridRestoreStatePreProcessingContext } from '../../../../../../_modules_/grid/hooks/features/statePersistence/gridStatePersistenceInterface';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
