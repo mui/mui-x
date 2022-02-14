@@ -24,8 +24,8 @@ interface GridParsedSortItem {
 }
 
 const sortModelDisableMultiColumnsSortingWarning = buildWarning([
-  'MUI: The `sortModel` can only contain a single item when `prop.disableMultipleColumnsSorting` is set to `true`.',
-  'If you are using the `DataGrid` community version, this property is always `true`.',
+  'MUI: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
+  'If you are using the community version of the `DataGrid`, this prop is always `true`.',
 ]);
 
 export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
