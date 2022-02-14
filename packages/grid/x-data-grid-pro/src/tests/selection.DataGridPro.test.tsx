@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import {
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridPro,
   GridEvents,
@@ -26,7 +26,7 @@ function getSelectedRowIds() {
 describe('<DataGridPro /> - Selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestDataGridSelection = ({
     rowLength = 4,

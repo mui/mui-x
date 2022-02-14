@@ -1,11 +1,11 @@
-import { GridColDef } from '../../../models/colDef/gridColDef';
+import type { GridColDef } from '../../../models/colDef/gridColDef';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
-import { GridValueGetterFullParams } from '../../../models';
+import type { GridApiPro } from '../../../models/api/gridApiPro';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount
  */
-export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editable'> = {
+export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef<GridApiPro>, 'field' | 'editable'> = {
   ...GRID_STRING_COL_DEF,
   type: 'treeDataGroup',
   sortable: false,
@@ -14,13 +14,13 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
   disableReorder: true,
   align: 'left',
   width: 200,
-  valueGetter: (params) => (params as GridValueGetterFullParams).rowNode.groupingKey,
+  valueGetter: (params) => params.rowNode.groupingKey,
 };
 
 export const GRID_TREE_DATA_GROUPING_FIELD = '__tree_data_group__';
 
 export const GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
-  GridColDef,
+  GridColDef<GridApiPro>,
   'field' | 'editable' | 'groupable'
 > = {
   field: GRID_TREE_DATA_GROUPING_FIELD,

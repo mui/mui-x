@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ownerDocument, useEventCallback } from '@mui/material/utils';
-import { GridStateColDef } from '../../../models/colDef';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { useGridLogger } from '../../utils';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { gridClasses } from '../../../gridClasses';
@@ -10,7 +10,8 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
-import { GridApiRef, CursorCoordinates, GridColumnResizeParams } from '../../../models';
+import { GridApiPro } from '../../../models/api/gridApiPro';
+import { CursorCoordinates, GridColumnResizeParams } from '../../../models';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -105,7 +106,7 @@ function getSeparatorSide(element: HTMLElement) {
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<DataGridProProcessedProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');

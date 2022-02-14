@@ -8,7 +8,7 @@ import { GridEditingApi } from './gridEditingApi';
 import { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
-import { GridParamsApi } from './gridParamsApi';
+import type { GridParamsApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
@@ -19,22 +19,19 @@ import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
-import { GridColumnPinningApi } from './gridColumnPinningApi';
 import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
 import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
-import type { GridRowGroupingApi } from '../../hooks/features/rowGrouping';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
-import type { GridDetailPanelApi } from './gridDetailPanelApi';
 
-/**
- * The full grid API.
- */
-export interface GridApi
+type GridStateApiUntyped = {
+  [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
+};
+
+export interface GridApiCommon
   extends GridCoreApi,
-    GridStateApi,
     GridLoggerApi,
     GridPreProcessingApi,
     GridRowGroupsPreProcessingApi,
@@ -55,11 +52,8 @@ export interface GridApi
     GridPreferencesPanelApi,
     GridPrintExportApi,
     GridDisableVirtualizationApi,
+    GridVirtualScrollerApi,
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
-    GridRowGroupingApi,
-    GridVirtualScrollerApi,
-    GridColumnPinningApi,
-    GridStatePersistenceApi,
-    GridDetailPanelApi {}
+    GridStateApiUntyped {}

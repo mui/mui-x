@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
@@ -7,11 +6,12 @@ import {
 } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 import {
   GridColDef,
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
-} from '../../../models';
+} from '../../../models/colDef/gridColDef';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
@@ -35,7 +35,7 @@ const TREE_DATA_GROUPING_NAME = 'tree-data';
  * @requires useGridRowGroupsPreProcessing (method)
  */
 export const useGridTreeData = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'
@@ -113,7 +113,7 @@ export const useGridTreeData = (
   /**
    * PRE-PROCESSING
    */
-  const getGroupingColDef = React.useCallback((): GridColDef => {
+  const getGroupingColDef = React.useCallback((): GridColDef<GridApiPro> => {
     const groupingColDefProp = props.groupingColDef;
 
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
@@ -130,7 +130,7 @@ export const useGridTreeData = (
 
     const { hideDescendantCount, ...colDefOverrideProperties } = colDefOverride ?? {};
 
-    const commonProperties: Omit<GridColDef, 'field' | 'editable'> = {
+    const commonProperties: Omit<GridColDef<GridApiPro>, 'field' | 'editable'> = {
       ...GRID_TREE_DATA_GROUPING_COL_DEF,
       renderCell: (params) => (
         <GridTreeDataGroupingCell {...params} hideDescendantCount={hideDescendantCount} />
