@@ -4,6 +4,7 @@ import type {} from './x-data-grid-interfaces';
 export * from '@mui/x-data-grid';
 export { LicenseInfo } from '@mui/x-license-pro';
 export * from './DataGridPro';
+export { DATA_GRID_PRO_PROPS_DEFAULT_VALUES } from './useDataGridProProps';
 export * from './internals';
 export {
   getGridBooleanOperators,
