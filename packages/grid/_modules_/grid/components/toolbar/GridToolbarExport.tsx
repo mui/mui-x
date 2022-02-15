@@ -16,7 +16,7 @@ interface GridExportDisplayOptions {
 
 export interface GridExportMenuItemProps<Options extends {}> {
   hideMenu?: () => void;
-  options: Options & GridExportDisplayOptions;
+  options?: Options & GridExportDisplayOptions;
 }
 
 export type GridCsvExportMenuItemProps = GridExportMenuItemProps<GridCsvExportOptions>;
