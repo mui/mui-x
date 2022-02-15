@@ -1,8 +1,9 @@
 // TODO: Move to `x-data-grid-pro` folder
+import * as React from 'react';
 import { GridRowModel, GridRowTreeNodeConfig, GridRowId } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridPinnedColumns } from '../api';
-import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef';
+import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef/gridColDef';
 import { GridRowParams } from '../params/gridRowParams';
 import {
   DataGridPropsWithoutDefaultValue,
@@ -13,6 +14,8 @@ import {
   GridExperimentalFeatures,
 } from './DataGridProps';
 import type { GridRowGroupingModel } from '../../hooks/features/rowGrouping';
+import { GridInitialStatePro } from '../gridStatePro';
+import { GridApiPro } from '../api/gridApiPro';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -128,7 +131,18 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   getDetailPanelHeight: () => 500,
 };
 
-export interface DataGridProPropsWithoutDefaultValue extends DataGridPropsWithoutDefaultValue {
+export interface DataGridProPropsWithoutDefaultValue
+  extends Omit<DataGridPropsWithoutDefaultValue, 'initialState'> {
+  /**
+   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   */
+  apiRef?: React.MutableRefObject<GridApiPro>;
+  /**
+   * The initial state of the DataGridPro.
+   * The data in it will be set in the state on initialization but will not be controlled.
+   * If one of the data in `initialState` is also being controlled, then the control state wins.
+   */
+  initialState?: GridInitialStatePro;
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].

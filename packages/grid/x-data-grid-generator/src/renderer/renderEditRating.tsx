@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { GridRenderEditCellParams } from '@mui/x-data-grid';
+import { GridRenderEditCellParams } from '@mui/x-data-grid-pro';
 
 function EditRating(props: GridRenderEditCellParams) {
   const { id, value, api, field } = props;

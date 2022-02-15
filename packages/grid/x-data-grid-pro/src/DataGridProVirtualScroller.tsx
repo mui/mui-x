@@ -27,6 +27,7 @@ import {
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
 import { gridRowsMetaSelector } from '../../_modules_/grid/hooks/features/rows/gridRowsMetaSelector';
 import { GridRowId } from '../../_modules_/grid/models/gridRows';
+import { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
 
 export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
@@ -143,7 +144,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
   const { className, disableVirtualization, ...other } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
   const rootProps = useGridRootProps();
   const currentPage = useCurrentPageRows(apiRef, rootProps);
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
@@ -158,7 +159,6 @@ const DataGridProVirtualScroller = React.forwardRef<
   );
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
-  const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
 
   const handleRenderZonePositioning = React.useCallback(({ top }) => {
     if (leftColumns.current) {
@@ -212,22 +212,6 @@ const DataGridProVirtualScroller = React.forwardRef<
     refreshRenderZonePosition();
   }, [refreshRenderZonePosition]);
 
-  const handleContentSizeChange = React.useCallback(() => {
-    if (!apiRef.current.windowRef?.current) {
-      return;
-    }
-    setShouldExtendContent(
-      apiRef.current.windowRef.current.scrollHeight <=
-        apiRef.current.windowRef.current.clientHeight,
-    );
-  }, [apiRef]);
-
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.virtualScrollerContentSizeChange,
-    handleContentSizeChange,
-  );
-
   const leftRenderContext =
     renderContext && leftPinnedColumns.length > 0
       ? {
@@ -246,12 +230,10 @@ const DataGridProVirtualScroller = React.forwardRef<
         }
       : null;
 
-  const contentStyle = {
-    minHeight: shouldExtendContent ? '100%' : 'auto',
-  };
+  const contentProps = getContentProps();
 
   const pinnedColumnsStyle = {
-    minHeight: shouldExtendContent ? '100%' : 'auto',
+    minHeight: contentProps.style.minHeight,
   };
 
   const rowsLookup = React.useMemo(() => {
@@ -306,7 +288,7 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   return (
     <GridVirtualScroller {...getRootProps(other)}>
-      <GridVirtualScrollerContent {...getContentProps({ style: contentStyle })}>
+      <GridVirtualScrollerContent {...contentProps}>
         {leftRenderContext && (
           <VirtualScrollerPinnedColumns
             ref={leftColumns}

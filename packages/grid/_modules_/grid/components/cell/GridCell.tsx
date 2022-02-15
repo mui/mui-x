@@ -6,7 +6,6 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { ownerDocument, capitalize } from '@mui/material/utils';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import {
-  GridAlignment,
   GridCellEventLookup,
   GridEvents,
   GridCellMode,
@@ -14,6 +13,7 @@ import {
   GridCellValue,
   GridRowId,
 } from '../../models';
+import { GridAlignment } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';

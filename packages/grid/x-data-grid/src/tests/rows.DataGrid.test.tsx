@@ -3,8 +3,8 @@ import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
-import { DataGrid, DataGridProps, GridActionsCellItem } from '@mui/x-data-grid';
-import { getActiveCell, getCell, getColumnValues, getRow } from 'test/utils/helperFn';
+import { DataGrid, DataGridProps, GridActionsCellItem, GridApi } from '@mui/x-data-grid';
+import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { COMPACT_DENSITY_FACTOR } from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
 
@@ -49,7 +49,7 @@ describe('<DataGrid /> - Rows', () => {
 
   describe('props: rows', () => {
     it('should support new dataset', () => {
-      const { rows, columns } = getData(5, 2);
+      const { rows, columns } = getData<GridApi>(5, 2);
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
