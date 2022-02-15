@@ -1,0 +1,9 @@
+<CssBaseline>
+  <div style={{ height: 300, width: '100%' }}>
+    <DataGridPro
+      {...data}
+      loading={loading}
+      components={{ Toolbar: CustomToolbar }}
+    />
+  </div>
+</CssBaseline>
