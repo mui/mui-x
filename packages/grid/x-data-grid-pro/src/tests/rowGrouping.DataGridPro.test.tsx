@@ -1938,7 +1938,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -1965,7 +1965,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2058,7 +2058,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2085,7 +2085,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
