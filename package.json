@@ -57,7 +57,7 @@
     "build:codesandbox": "yarn release:build",
     "release:changelog": "node scripts/releaseChangelog",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
-    "release:build": "yarn release:build:next && cd packages/grid/x-data-grid-pro && yarn build && cd ../x-data-grid && yarn build && cd ../x-data-grid-generator && yarn build",
+    "release:build": "yarn release:build:next && cd packages/grid/x-data-grid && yarn build && cd ../x-data-grid-pro && yarn build && cd ../x-data-grid-generator && yarn build",
     "release:build:next": "lerna run --parallel --scope \"@mui/x-license-pro\" build",
     "release:publish": "lerna publish from-package --dist-tag latest --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\""

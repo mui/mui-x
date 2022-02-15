@@ -5,7 +5,6 @@ import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
-  GridGroupingValueGetterParams,
   GridRenderCellParams,
   GridRenderEditCellParams,
   GridValueFormatterParams,
@@ -21,7 +20,6 @@ import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridRowModel } from '../gridRows';
 import { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApiPro } from '../api/gridApiPro';
 import type { GridApiCommon } from '../api/gridApiCommon';
 import type { GridApiCommunity } from '../api/gridApiCommunity';
 
@@ -136,12 +134,6 @@ export interface GridColDef<Api extends GridApiCommon = GridApiCommunity> {
    * @returns {GridCellValue} The cell value.
    */
   valueGetter?: (params: GridValueGetterParams<any, any, Api>) => GridCellValue;
-  /**
-   * Function that transforms a complex cell value into a key that be used for grouping the rows.
-   * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.
-   * @returns {GridKeyValue | null | undefined} The cell key.
-   */
-  groupingValueGetter?: (params: GridGroupingValueGetterParams) => GridKeyValue | null | undefined;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
@@ -269,48 +261,4 @@ export type GridStateColDef<Api extends GridApiCommon = GridApiCommunity> =
 export interface GridColumnsMeta {
   totalWidth: number;
   positions: number[];
-}
-
-export interface GridGroupingColDefOverride
-  extends Omit<
-    GridColDef<GridApiPro>,
-    | 'editable'
-    | 'valueSetter'
-    | 'field'
-    | 'type'
-    | 'preProcessEditCellProps'
-    | 'renderEditCell'
-    | 'groupable'
-  > {
-  /**
-   * The field from which we want to apply the sorting and the filtering for the grouping column.
-   * It is only useful when `props.rowGroupingColumnMode === "multiple"` to decide which grouping criteria should be used for sorting and filtering.
-   * Do not have any effect when building the tree with the `props.treeData` feature.
-   * @default: The sorting and filtering is applied based on the leaf field in any, otherwise based on top level grouping criteria.
-   */
-  mainGroupingCriteria?: string;
-
-  /**
-   * The field from which we want to render the leaves of the tree.
-   * Do not have any effect when building the tree with the `props.treeData` feature.
-   */
-  leafField?: string;
-
-  /**
-   * If `true`, the grouping cells will not render the amount of descendants.
-   * @default: false
-   */
-  hideDescendantCount?: boolean;
-}
-
-export interface GridGroupingColDefOverrideParams {
-  /**
-   * The name of the grouping algorithm currently building the grouping column.
-   */
-  groupingName: string;
-
-  /**
-   * The fields of the columns from which we want to group the values on this new grouping column.
-   */
-  fields: string[];
 }
