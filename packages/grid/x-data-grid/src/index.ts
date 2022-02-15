@@ -4,7 +4,6 @@ export type {
   DataGridProps,
   GridExperimentalFeatures,
 } from './internals/models/props/DataGridProps';
-export * from './useDataGridComponent';
 export { MAX_PAGE_SIZE, DATA_GRID_PROPS_DEFAULT_VALUES } from './useDataGridProps';
 export * from './typeOverload';
 export * from './private';
