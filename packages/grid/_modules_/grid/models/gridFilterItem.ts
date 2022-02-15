@@ -19,7 +19,6 @@ export interface GridFilterItem {
   /**
    * The name of the operator we want to apply.
    * Will become required on `@mui/x-data-grid@6.X`.
-   * TODO v6: Make required.
    */
   operatorValue?: string;
 }
