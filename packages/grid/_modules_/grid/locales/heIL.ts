@@ -90,7 +90,7 @@ const heILGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count.toLocaleString()} שורות נבחרו` : `שורה אחת נבחרה`,
 
   // Total rows footer text
-  footerTotalRows: 'סך הכל שורות: ',
+  footerTotalRows: 'סך הכל:',
 
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
@@ -98,10 +98,10 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'בחירה',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'בחר הכל',
+  checkboxSelectionUnselectAllRows: 'בטל הכל',
+  checkboxSelectionSelectRow: 'בחר שורה',
+  checkboxSelectionUnselectRow: 'בטל בחירת שורה',
 
   // Boolean cell text
   booleanCellTrueLabel: 'כן',
@@ -126,8 +126,8 @@ const heILGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `הפסק לקבץ לפי ${name}`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'הרחב',
+  collapseDetailPanel: 'כווץ',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);
