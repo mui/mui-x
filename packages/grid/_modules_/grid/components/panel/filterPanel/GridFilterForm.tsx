@@ -136,8 +136,6 @@ function GridFilterForm(props: GridFilterFormProps) {
   } = props;
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
-  const linkOperatorSelectId = useId();
-  const linkOperatorSelectLabelId = useId();
   const columnSelectId = useId();
   const columnSelectLabelId = useId();
   const operatorSelectId = useId();
@@ -302,12 +300,10 @@ function GridFilterForm(props: GridFilterFormProps) {
           linkOperatorInputProps.className,
         )}
       >
-        <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
-          {apiRef.current.getLocaleText('filterPanelLinkOperator')}
-        </InputLabel>
         <rootProps.components.BaseSelect
-          labelId={linkOperatorSelectLabelId}
-          id={linkOperatorSelectId}
+          inputProps={{
+            'aria-label': apiRef.current.getLocaleText('filterPanelLinkOperator'),
+          }}
           value={multiFilterOperator}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator || linkOperators.length === 1}
