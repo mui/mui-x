@@ -101,6 +101,8 @@ InputNumberInterval.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     /**
      * The name of the operator we want to apply.
+     * Will become required on `@mui/x-data-grid@6.X`.
+     * TODO v6: Make required.
      */
     operatorValue: PropTypes.string,
     /**
