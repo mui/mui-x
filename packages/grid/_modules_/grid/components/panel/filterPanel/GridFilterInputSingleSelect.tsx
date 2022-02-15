@@ -6,6 +6,7 @@ import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { getValueFromValueOptions } from './filterPanelUtils';
 
 const renderSingleSelectOptions = (
   { valueOptions, valueFormatter, field }: GridColDef,
@@ -28,24 +29,6 @@ const renderSingleSelectOptions = (
     ),
   );
 };
-
-function getValueFromOption(option) {
-  if (typeof option === 'object' && option !== null) {
-    return option.value;
-  }
-  return option;
-}
-
-function getValueFromValueOptions(value, valueOptions) {
-  if (valueOptions === undefined) {
-    return undefined;
-  }
-  const result = valueOptions.find((option) => {
-    const optionValue = getValueFromOption(option);
-    return String(optionValue) === String(value);
-  });
-  return getValueFromOption(result);
-}
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps & { type?: 'singleSelect' };
