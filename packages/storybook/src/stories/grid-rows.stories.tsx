@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import {
   GridCellValue,
   GridCellParams,
@@ -19,6 +20,7 @@ import {
   MuiEvent,
   GridEventListener,
   GridRenderCellParams,
+  GridSelectionModel,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
@@ -1062,6 +1064,70 @@ export function VariableRowHeight() {
             model.commodity.includes('Rice')
           ) {
             return 100;
+          }
+
+          return null;
+        }}
+      />
+    </div>
+  );
+}
+
+export function SetRowHeight() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 1000,
+  });
+
+  const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
+  React.useEffect(() => {
+    if (data.rows.length > 0) {
+      setSelectionModel([data.rows[0].id]);
+    }
+  }, [data.rows]);
+
+  const apiRef = useGridApiRef();
+
+  const handleSubmit = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    const target = event.target as typeof event.target & {
+      height: { value: string };
+    };
+
+    const height = Number(target.height.value);
+
+    selectionModel.forEach((id) => {
+      apiRef.current.unstable_setRowHeight(id, height);
+    });
+  };
+
+  return (
+    <div style={{ height: 600 }}>
+      <form style={{ display: 'flex', margin: '16px 0' }} onSubmit={handleSubmit}>
+        <TextField
+          name="height"
+          label="Row height"
+          size="small"
+          defaultValue="120"
+          sx={{ mr: 1 }}
+        />
+        <Button type="submit" variant="outlined">
+          Set row height
+        </Button>
+      </form>
+      <DataGridPro
+        {...data}
+        apiRef={apiRef}
+        selectionModel={selectionModel}
+        onSelectionModelChange={(newModel) => setSelectionModel(newModel)}
+        getRowHeight={({ model }) => {
+          if (
+            model.commodity.includes('Oats') ||
+            model.commodity.includes('Milk') ||
+            model.commodity.includes('Soybean') ||
+            model.commodity.includes('Rice')
+          ) {
+            return 80;
           }
 
           return null;

@@ -161,7 +161,6 @@ const DataGridProVirtualScroller = React.forwardRef<
   );
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
-  const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
 
   const handleRenderZonePositioning = React.useCallback(({ top }) => {
     if (leftColumns.current) {
@@ -215,22 +214,6 @@ const DataGridProVirtualScroller = React.forwardRef<
     refreshRenderZonePosition();
   }, [refreshRenderZonePosition]);
 
-  const handleContentSizeChange = React.useCallback(() => {
-    if (!apiRef.current.windowRef?.current) {
-      return;
-    }
-    setShouldExtendContent(
-      apiRef.current.windowRef.current.scrollHeight <=
-        apiRef.current.windowRef.current.clientHeight,
-    );
-  }, [apiRef]);
-
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.virtualScrollerContentSizeChange,
-    handleContentSizeChange,
-  );
-
   const leftRenderContext =
     renderContext && leftPinnedColumns.length > 0
       ? {
@@ -249,12 +232,10 @@ const DataGridProVirtualScroller = React.forwardRef<
         }
       : null;
 
-  const contentStyle = {
-    minHeight: shouldExtendContent ? '100%' : 'auto',
-  };
+  const contentProps = getContentProps();
 
   const pinnedColumnsStyle = {
-    minHeight: shouldExtendContent ? '100%' : 'auto',
+    minHeight: contentProps.style.minHeight,
   };
 
   const rowsLookup = React.useMemo(() => {
@@ -309,7 +290,7 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   return (
     <GridVirtualScroller {...getRootProps(other)}>
-      <GridVirtualScrollerContent {...getContentProps({ style: contentStyle })}>
+      <GridVirtualScrollerContent {...contentProps}>
         {leftRenderContext && (
           <VirtualScrollerPinnedColumns
             ref={leftColumns}
