@@ -73,6 +73,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEditable && 'cell--editable',
       showRightBorder && 'withBorder',
     ],
+    content: ['cellContent'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -106,6 +107,7 @@ function GridCell(props: GridCellProps) {
     onKeyDown,
     onDragEnter,
     onDragOver,
+    touchRippleRef,
     ...other
   } = props;
 
@@ -227,7 +229,11 @@ function GridCell(props: GridCellProps) {
       {...other}
       onFocus={handleFocus}
     >
-      {children != null ? children : valueToRender?.toString()}
+      {children != null ? (
+        children
+      ) : (
+        <div className={classes.content}>{valueToRender?.toString()}</div>
+      )}
     </div>
   );
 }

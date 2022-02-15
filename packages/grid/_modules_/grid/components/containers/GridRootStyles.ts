@@ -15,6 +15,7 @@ export const GridRootStyles = styled('div', {
     // TODO: v6 - remove
     { [`& .${gridClasses['cell--withRenderer']}`]: styles['cell--withRenderer'] },
     { [`& .${gridClasses.cell}`]: styles.cell },
+    { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${gridClasses.checkboxInput}`]: styles.checkboxInput },
     { [`& .${gridClasses['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
@@ -227,9 +228,12 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
       overflow: 'hidden',
+      borderBottom: `1px solid ${borderColor}`,
+    },
+    [`& .${gridClasses.cellContent}`]: {
+      overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      borderBottom: `1px solid ${borderColor}`,
     },
     [`& .${gridClasses.cell}.${gridClasses['cell--editing']}`]: {
       padding: 1,
