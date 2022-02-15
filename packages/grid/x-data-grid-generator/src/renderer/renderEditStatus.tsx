@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderEditCellParams, GridEvents } from '@mui/x-data-grid';
+import { GridRenderEditCellParams, GridEvents } from '@mui/x-data-grid-pro';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { MenuProps } from '@mui/material/Menu';
@@ -85,6 +85,6 @@ function EditStatus(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditStatus(params: GridRenderEditCellParams) {
+export function renderEditStatus(params: GridRenderEditCellParams<any>) {
   return <EditStatus {...params} />;
 }

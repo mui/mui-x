@@ -259,7 +259,7 @@ To use the v5 version of MUI X, you first need to update to the new package name
   | `filterGridColumnLookupSelector`  | `gridFilterActiveItemsLookupSelector` |
   | `densitySelector`                 | `gridDensitySelector`                 |
 
-- Some selectors have been removed / reworked
+- Some selectors have been removed/reworked
 
   1. `sortedGridRowsSelector` was removed. You can use `gridSortedRowEntriesSelector` instead.
 
@@ -368,7 +368,7 @@ To use the v5 version of MUI X, you first need to update to the new package name
   +   */
   +  value: GridCellValue;
   +  /**
-  +   * GridApi that let you manipulate the grid.
+  +   * GridApi that lets you manipulate the grid.
   +   */
   +  api: any;
   +}
@@ -436,8 +436,8 @@ To use the v5 version of MUI X, you first need to update to the new package name
 
 ### Removals from the public API
 
-We removed some API methods / selectors from what we consider public by adding the `unstable_` prefix on them.
-You can continue to use these methods if you desire, but they may be subject to breaking changes in the future without prior notice..
+We removed some API methods/selectors from what we consider public by adding the `unstable_` prefix on them.
+You can continue to use these methods if you desire, but they may be subject to breaking changes in the future without prior notice.
 
 1. `apiRef.current.applyFilters` was renamed `apiRef.current.unstable_applyFilters`
 2. `gridContainerSizesSelector` was renamed `unstable_gridContainerSizesSelector`

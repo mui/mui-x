@@ -324,12 +324,20 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const needsHorizontalScrollbar = containerWidth && columnsMeta.totalWidth > containerWidth;
 
   const contentSize = React.useMemo(() => {
+    // In cases where the columns exceed the available width,
+    // the horizontal scrollbar should be shown even when there're no rows.
+    // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
+    const height = Math.max(rowsMeta.currentPageTotalHeight, 1);
+
+    let shouldExtendContent = false;
+    if (rootRef?.current && height <= rootRef?.current.clientHeight) {
+      shouldExtendContent = true;
+    }
+
     const size = {
       width: needsHorizontalScrollbar ? columnsMeta.totalWidth : 'auto',
-      // In cases where the columns exceed the available width,
-      // the horizontal scrollbar should be shown even when there're no rows.
-      // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-      height: Math.max(rowsMeta.currentPageTotalHeight, 1),
+      height,
+      minHeight: shouldExtendContent ? '100%' : 'auto',
     };
 
     if (rootProps.autoHeight && currentPage.rows.length === 0) {
@@ -338,6 +346,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     return size;
   }, [
+    rootRef,
     columnsMeta.totalWidth,
     rowsMeta.currentPageTotalHeight,
     currentPage.rows.length,

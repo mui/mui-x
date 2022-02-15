@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ownerDocument } from '@mui/material/utils';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -19,7 +19,7 @@ import { gridFocusCellSelector } from './gridFocusStateSelector';
  * @requires useGridEditRows (event)
  */
 export const useGridFocus = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'rows'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
@@ -190,7 +190,7 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  useGridApiMethod<GridFocusApi>(
+  useGridApiMethod(
     apiRef,
     {
       setCellFocus,

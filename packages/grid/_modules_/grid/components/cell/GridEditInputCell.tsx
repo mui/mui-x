@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { unstable_useEnhancedEffect as useEnhancedEffect, debounce } from '@mui/material/utils';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
@@ -35,7 +35,13 @@ const GridEditInputCellRoot = styled(InputBase, {
   },
 }));
 
-function GridEditInputCell(props: GridRenderEditCellParams & Omit<InputBaseProps, 'id'>) {
+interface GridEditInputCellProps {
+  debounceMs?: number;
+}
+
+function GridEditInputCell(
+  props: GridEditInputCellProps & GridRenderEditCellParams & Omit<InputBaseProps, 'id'>,
+) {
   const {
     id,
     value,
@@ -51,6 +57,7 @@ function GridEditInputCell(props: GridRenderEditCellParams & Omit<InputBaseProps
     hasFocus,
     getValue,
     isValidating,
+    debounceMs = SUBMIT_FILTER_STROKE_TIME,
     ...other
   } = props;
 
@@ -60,18 +67,13 @@ function GridEditInputCell(props: GridRenderEditCellParams & Omit<InputBaseProps
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const debouncedSetEditCellValue = React.useMemo(
-    () => debounce(api.setEditCellValue, SUBMIT_FILTER_STROKE_TIME),
-    [api.setEditCellValue],
-  );
-
   const handleChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
       setValueState(newValue);
-      debouncedSetEditCellValue({ id, field, value: newValue }, event);
+      api.setEditCellValue({ id, field, value: newValue, debounceMs }, event);
     },
-    [debouncedSetEditCellValue, field, id],
+    [api, debounceMs, field, id],
   );
 
   React.useEffect(() => {
@@ -106,6 +108,7 @@ GridEditInputCell.propTypes = {
    * GridApi that let you manipulate the grid.
    */
   api: PropTypes.object.isRequired,
+  debounceMs: PropTypes.number,
   isValidating: PropTypes.bool,
 } as any;
 

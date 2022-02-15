@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiPro } from '../../../models/api/gridApiPro';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import {
@@ -20,7 +20,7 @@ import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'

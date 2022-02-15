@@ -2,7 +2,7 @@ import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -17,7 +17,8 @@ import {
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models';
+import { GridColDef } from '../../../models/colDef/gridColDef';
 import { getDataGridUtilityClass, gridClasses } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
@@ -45,7 +46,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridParamsApi (method)
  */
 export const useGridSelection = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'checkboxSelection'

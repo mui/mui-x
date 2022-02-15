@@ -1,4 +1,4 @@
-import type { GridApiRef } from '../../_modules_';
+import * as React from 'react';
 import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
@@ -33,9 +33,11 @@ import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/column
 import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 import { useGridDetailPanel } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelCache } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanelCache';
+import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
+import { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
 
 export const useDataGridProComponent = (
-  inputApiRef: GridApiRef | undefined,
+  inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization(inputApiRef, props);
@@ -44,7 +46,7 @@ export const useDataGridProComponent = (
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
-  useGridColumns(apiRef, props);
+  useGridColumns(apiRef, props as DataGridProcessedProps);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridDetailPanelCache(apiRef, props);
