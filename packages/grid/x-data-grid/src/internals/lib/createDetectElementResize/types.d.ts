@@ -5,5 +5,5 @@ interface DetectElementResize {
 
 export default function createDetectElementResize(
   nonce?: string,
-  hostWindow?: Window,
+  hostWindow?: Window
 ): DetectElementResize;
