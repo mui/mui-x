@@ -169,7 +169,7 @@ For more option to customize the print export, please visit the [`printOptions` 
 
 You can add custom export formats by creating your own export menu.
 To simplify its creation, we export `<GridToolbarExportContainer />` which contains the menu logic.
-The default GridToolbarExport is defined as follow:
+The default `<GridToolbarExport />` is defined as follow:
 
 ```jsx
 const GridToolbarExport = ({ csvOptions, printOptions, ...other }) => (
@@ -180,7 +180,7 @@ const GridToolbarExport = ({ csvOptions, printOptions, ...other }) => (
 );
 ```
 
-Each child of the `GridToolbarExportContainer` receives a prop `hideMenu` to close the export menu after the export.
+Each child of the `<GridToolbarExportContainer />` receives a prop `hideMenu` to close the export menu after the export.
 Here is an example of how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
