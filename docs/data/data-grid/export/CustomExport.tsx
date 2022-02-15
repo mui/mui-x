@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import {
-  DataGridPro,
+  DataGrid,
   GridToolbarContainer,
   GridToolbarContainerProps,
   GridToolbarExportContainer,
@@ -11,7 +11,7 @@ import {
   useGridApiContext,
   gridFilteredSortedRowIdsSelector,
   visibleGridColumnsSelector,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { CssBaseline } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
@@ -99,7 +99,7 @@ export default function CustomExport() {
   return (
     <CssBaseline>
       <div style={{ height: 300, width: '100%' }}>
-        <DataGridPro
+        <DataGrid
           {...data}
           loading={loading}
           components={{ Toolbar: CustomToolbar }}
