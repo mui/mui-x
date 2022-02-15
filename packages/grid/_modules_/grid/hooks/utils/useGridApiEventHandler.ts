@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../models/api/gridApiCommunity';
-import { GridEventListener, GridEvents, GridEventsStr } from '../../models/events';
+import { GridEventListener, GridEventsStr } from '../../models/events';
 import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/CleanupTracking';
 import { EventListenerOptions } from '../../utils/EventManager';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
+import { GridApiCommon } from '../../models';
 
 /**
  * Signal to the underlying logic what version of the public component API
@@ -23,8 +23,8 @@ class ObjectToBeRetainedByReact {}
 export function createUseGridApiEventHandler(registry: CleanupTracking) {
   let cleanupTokensCounter = 0;
 
-  return function useGridApiEventHandler<E extends GridEventsStr>(
-    apiRef: React.MutableRefObject<GridApiCommunity>,
+  return function useGridApiEventHandler<Api extends GridApiCommon, E extends GridEventsStr>(
+    apiRef: React.MutableRefObject<Api>,
     eventName: E,
     handler?: GridEventListener<E>,
     options?: EventListenerOptions,
@@ -108,8 +108,8 @@ export const useGridApiEventHandler = createUseGridApiEventHandler(registry);
 
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
-export function useGridApiOptionHandler<E extends GridEvents>(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+export function useGridApiOptionHandler<Api extends GridApiCommon, E extends GridEventsStr>(
+  apiRef: React.MutableRefObject<Api>,
   eventName: E,
   handler?: GridEventListener<E>,
 ) {

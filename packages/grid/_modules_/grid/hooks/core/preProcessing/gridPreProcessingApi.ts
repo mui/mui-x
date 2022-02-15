@@ -4,10 +4,9 @@ import { GridColDef } from '../../../models/colDef/gridColDef';
 import {
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
-} from '../../features/statePersistence';
+} from '../../features/statePersistence/gridStatePersistenceInterface';
 import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
 import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
-import { GridCanBeReorderedPreProcessingContext } from '../../features/columnReorder/columnReorderInterfaces';
 import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry } from '../../../models/gridRows';
 
@@ -15,7 +14,7 @@ export type PreProcessorCallback = (value: any, params?: any) => any;
 
 export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
-interface GridPreProcessingGroupLookup {
+export interface GridPreProcessingGroupLookup {
   hydrateColumns: {
     value: Omit<GridColumnsRawState<any>, 'columnVisibilityModel'>;
   };
@@ -23,11 +22,7 @@ interface GridPreProcessingGroupLookup {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
-  columnMenu: { value: JSX.Element[]; context: GridColDef };
-  canBeReordered: {
-    value: boolean;
-    context: GridCanBeReorderedPreProcessingContext;
-  };
+  columnMenu: { value: JSX.Element[]; context: GridColDef<any> };
   filteringMethod: { value: GridFilteringMethodCollection };
   sortingMethod: { value: GridSortingMethodCollection };
   exportState: { value: GridInitialStateCommunity };

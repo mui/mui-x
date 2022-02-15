@@ -8,14 +8,14 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-} from '../../_modules_/grid';
-import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
+  GridContextProvider,
+} from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { Watermark } from '../../_modules_/grid/components/Watermark';
-import { DataGridProProps } from '../../_modules_/grid/models/props/DataGridProProps';
+import { Watermark } from './internals/components/Watermark';
+import { DataGridProProps } from './internals';
 import { useDataGridProProps } from './useDataGridProProps';
-import { DataGridProVirtualScroller } from './DataGridProVirtualScroller';
-import { DataGridProColumnHeaders } from './DataGridProColumnHeaders';
+import { DataGridProVirtualScroller } from './internals/components/DataGridProVirtualScroller';
+import { DataGridProColumnHeaders } from './internals/components/DataGridProColumnHeaders';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.

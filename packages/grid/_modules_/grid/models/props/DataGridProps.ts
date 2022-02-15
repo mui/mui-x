@@ -2,9 +2,9 @@
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
-import { GridDensity, GridDensityTypes } from '../gridDensity';
-import { GridEditMode, GridEditModes, GridEditRowsModel } from '../gridEditRowModel';
-import { GridFeatureMode, GridFeatureModeConstant } from '../gridFeatureMode';
+import { GridDensity } from '../gridDensity';
+import { GridEditMode, GridEditRowsModel } from '../gridEditRowModel';
+import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
@@ -301,51 +301,6 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableColumnResize: boolean;
 }
-
-/**
- * The default values of `DataGridPropsWithDefaultValues` to inject in the props of DataGrid.
- */
-export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
-  autoHeight: false,
-  autoPageSize: false,
-  checkboxSelection: false,
-  checkboxSelectionVisibleOnly: false,
-  columnBuffer: 3,
-  rowBuffer: 3,
-  columnThreshold: 3,
-  rowThreshold: 3,
-  density: GridDensityTypes.Standard,
-  disableExtendRowFullWidth: false,
-  disableColumnFilter: false,
-  disableColumnMenu: false,
-  disableColumnSelector: false,
-  disableDensitySelector: false,
-  disableMultipleColumnsFiltering: false,
-  disableMultipleSelection: false,
-  disableMultipleColumnsSorting: false,
-  disableSelectionOnClick: false,
-  disableVirtualization: false,
-  editMode: GridEditModes.Cell,
-  filterMode: GridFeatureModeConstant.client,
-  headerHeight: 56,
-  hideFooter: false,
-  hideFooterPagination: false,
-  hideFooterRowCount: false,
-  hideFooterSelectedRowCount: false,
-  logger: console,
-  logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
-  pagination: false,
-  paginationMode: GridFeatureModeConstant.client,
-  rowHeight: 52,
-  rowsPerPageOptions: [25, 50, 100],
-  showCellRightBorder: false,
-  showColumnRightBorder: false,
-  sortingOrder: ['asc' as const, 'desc' as const, null],
-  sortingMode: GridFeatureModeConstant.client,
-  throttleRowsMs: 0,
-  disableColumnReorder: false,
-  disableColumnResize: false,
-};
 
 /**
  * The `DataGrid` props with no default value.

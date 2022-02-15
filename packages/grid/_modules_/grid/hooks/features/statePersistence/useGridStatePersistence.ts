@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridStatePersistenceApi } from './GridStatePersistenceApi';
+import { GridStatePersistenceApi } from './gridStatePersistenceInterface';
 import { useGridApiMethod } from '../../utils';
 
 export const useGridStatePersistence = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
