@@ -107,7 +107,6 @@ function GridCell(props: GridCellProps) {
     onKeyDown,
     onDragEnter,
     onDragOver,
-    touchRippleRef,
     ...other
   } = props;
 
