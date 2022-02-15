@@ -184,18 +184,16 @@ DataGridRaw.propTypes = {
   /**
    * Set the filter model of the grid.
    */
-  filterModel: chainPropTypes(PropTypes.any, (props: any) => {
-    if (props.filterModel != null && props.filterModel.items.length > 1) {
-      return new Error(
-        [
-          `MUI: \`<DataGrid filterModel={model} />\` is not a valid prop. \`model.items\` has more than 1 item.`,
-          'Only single filter is available in the MIT version.',
-          '',
-          'You need to upgrade to the DataGridPro component to unlock this feature.',
-        ].join('\n'),
-      );
-    }
-    return null;
+  filterModel: PropTypes.shape({
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        columnField: PropTypes.string.isRequired,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        operatorValue: PropTypes.string,
+        value: PropTypes.any,
+      }),
+    ).isRequired,
+    linkOperator: PropTypes.oneOf(['and', 'or']),
   }),
   /**
    * Function that applies CSS classes dynamically on cells.
