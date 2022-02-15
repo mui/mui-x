@@ -4,7 +4,7 @@ import mapCacheGet from './_mapCacheGet.js';
 import mapCacheHas from './_mapCacheHas.js';
 import mapCacheSet from './_mapCacheSet.js';
 
-('use strict');
+'use strict';
 
 /**
  * Creates a map cache object to store key-value pairs.
@@ -15,7 +15,7 @@ import mapCacheSet from './_mapCacheSet.js';
  */
 function MapCache(entries) {
   var index = -1,
-    length = entries == null ? 0 : entries.length;
+      length = entries == null ? 0 : entries.length;
 
   this.clear();
   while (++index < length) {

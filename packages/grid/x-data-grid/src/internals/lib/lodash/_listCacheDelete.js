@@ -1,6 +1,6 @@
 import assocIndexOf from './_assocIndexOf.js';
 
-('use strict');
+'use strict';
 
 /** Used for built-in method references. */
 var arrayProto = Array.prototype;
@@ -19,7 +19,7 @@ var splice = arrayProto.splice;
  */
 function listCacheDelete(key) {
   var data = this.__data__,
-    index = assocIndexOf(data, key);
+      index = assocIndexOf(data, key);
 
   if (index < 0) {
     return false;

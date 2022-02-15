@@ -5,29 +5,29 @@ import equalArrays from './_equalArrays.js';
 import mapToArray from './_mapToArray.js';
 import setToArray from './_setToArray.js';
 
-('use strict');
+'use strict';
 
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1,
-  COMPARE_UNORDERED_FLAG = 2;
+    COMPARE_UNORDERED_FLAG = 2;
 
 /** `Object#toString` result references. */
 var boolTag = '[object Boolean]',
-  dateTag = '[object Date]',
-  errorTag = '[object Error]',
-  mapTag = '[object Map]',
-  numberTag = '[object Number]',
-  regexpTag = '[object RegExp]',
-  setTag = '[object Set]',
-  stringTag = '[object String]',
-  symbolTag = '[object Symbol]';
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    symbolTag = '[object Symbol]';
 
 var arrayBufferTag = '[object ArrayBuffer]',
-  dataViewTag = '[object DataView]';
+    dataViewTag = '[object DataView]';
 
 /** Used to convert symbols to primitives and strings. */
 var symbolProto = Symbol ? Symbol.prototype : undefined,
-  symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
+    symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
 
 /**
  * A specialized version of `baseIsEqualDeep` for comparing objects of
@@ -49,17 +49,16 @@ var symbolProto = Symbol ? Symbol.prototype : undefined,
 function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
   switch (tag) {
     case dataViewTag:
-      if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) {
+      if ((object.byteLength != other.byteLength) ||
+          (object.byteOffset != other.byteOffset)) {
         return false;
       }
       object = object.buffer;
       other = other.buffer;
 
     case arrayBufferTag:
-      if (
-        object.byteLength != other.byteLength ||
-        !equalFunc(new Uint8Array(object), new Uint8Array(other))
-      ) {
+      if ((object.byteLength != other.byteLength) ||
+          !equalFunc(new Uint8Array(object), new Uint8Array(other))) {
         return false;
       }
       return true;
@@ -79,7 +78,7 @@ function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
       // Coerce regexes to strings and treat strings, primitives and objects,
       // as equal. See http://www.ecma-international.org/ecma-262/7.0/#sec-regexp.prototype.tostring
       // for more details.
-      return object == other + '';
+      return object == (other + '');
 
     case mapTag:
       var convert = mapToArray;
@@ -100,14 +99,7 @@ function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
 
       // Recursively compare objects (susceptible to call stack limits).
       stack.set(object, other);
-      var result = equalArrays(
-        convert(object),
-        convert(other),
-        bitmask,
-        customizer,
-        equalFunc,
-        stack,
-      );
+      var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
       stack['delete'](object);
       return result;
 

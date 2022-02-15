@@ -1,7 +1,7 @@
 import isFunction from './isFunction.js';
 import isLength from './isLength.js';
 
-('use strict');
+'use strict';
 
 /**
  * Checks if `value` is array-like. A value is considered array-like if it's

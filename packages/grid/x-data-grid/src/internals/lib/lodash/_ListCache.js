@@ -4,7 +4,7 @@ import listCacheGet from './_listCacheGet.js';
 import listCacheHas from './_listCacheHas.js';
 import listCacheSet from './_listCacheSet.js';
 
-('use strict');
+'use strict';
 
 /**
  * Creates an list cache object.
@@ -15,7 +15,7 @@ import listCacheSet from './_listCacheSet.js';
  */
 function ListCache(entries) {
   var index = -1,
-    length = entries == null ? 0 : entries.length;
+      length = entries == null ? 0 : entries.length;
 
   this.clear();
   while (++index < length) {

@@ -13,17 +13,7 @@ import isTypedArray from './isTypedArray.js';
 import toNumber from './toNumber.js';
 
 export default {
-  eq,
-  isArguments,
-  isArray,
-  isArrayLike,
-  isBuffer,
-  isDeepEqual,
-  isFunction,
-  isLength,
-  isObject,
-  isObjectLike,
-  isSymbol,
-  isTypedArray,
-  toNumber,
+  eq, isArguments, isArray, isArrayLike, isBuffer,
+  isDeepEqual, isFunction, isLength, isObject, isObjectLike,
+  isSymbol, isTypedArray, toNumber
 };

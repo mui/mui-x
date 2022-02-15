@@ -5,7 +5,7 @@ import stackGet from './_stackGet.js';
 import stackHas from './_stackHas.js';
 import stackSet from './_stackSet.js';
 
-('use strict');
+'use strict';
 
 /**
  * Creates a stack cache object to store key-value pairs.
@@ -15,7 +15,7 @@ import stackSet from './_stackSet.js';
  * @param {Array} [entries] The key-value pairs to cache.
  */
 function Stack(entries) {
-  var data = (this.__data__ = new ListCache(entries));
+  var data = this.__data__ = new ListCache(entries);
   this.size = data.size;
 }
 

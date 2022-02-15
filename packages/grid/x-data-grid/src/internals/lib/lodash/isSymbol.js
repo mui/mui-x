@@ -1,7 +1,7 @@
 import baseGetTag from './_baseGetTag.js';
 import isObjectLike from './isObjectLike.js';
 
-('use strict');
+'use strict';
 
 /** `Object#toString` result references. */
 var symbolTag = '[object Symbol]';
@@ -24,7 +24,8 @@ var symbolTag = '[object Symbol]';
  * // => false
  */
 function isSymbol(value) {
-  return typeof value == 'symbol' || (isObjectLike(value) && baseGetTag(value) == symbolTag);
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && baseGetTag(value) == symbolTag);
 }
 
 export default isSymbol;

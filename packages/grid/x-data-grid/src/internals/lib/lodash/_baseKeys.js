@@ -1,7 +1,7 @@
 import isPrototype from './_isPrototype.js';
 import nativeKeys from './_nativeKeys.js';
 
-('use strict');
+'use strict';
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;

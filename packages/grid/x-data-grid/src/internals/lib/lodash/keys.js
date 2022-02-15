@@ -2,7 +2,7 @@ import arrayLikeKeys from './_arrayLikeKeys.js';
 import baseKeys from './_baseKeys.js';
 import isArrayLike from './isArrayLike.js';
 
-('use strict');
+'use strict';
 
 /**
  * Creates an array of the own enumerable property names of `object`.

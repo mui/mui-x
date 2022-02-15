@@ -1,6 +1,6 @@
 import freeGlobal from './_freeGlobal.js';
 
-('use strict');
+'use strict';
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -15,10 +15,10 @@ var moduleExports = freeModule && freeModule.exports === freeExports;
 var freeProcess = moduleExports && freeGlobal.process;
 
 /** Used to access faster Node.js helpers. */
-var nodeUtil = (function () {
+var nodeUtil = (function() {
   try {
     return freeProcess && freeProcess.binding && freeProcess.binding('util');
   } catch (e) {}
-})();
+}());
 
 export default nodeUtil;

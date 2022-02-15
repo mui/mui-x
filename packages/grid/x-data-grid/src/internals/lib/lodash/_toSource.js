@@ -19,7 +19,7 @@ function toSource(func) {
       return funcToString.call(func);
     } catch (e) {}
     try {
-      return func + '';
+      return (func + '');
     } catch (e) {}
   }
   return '';

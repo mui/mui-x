@@ -8,7 +8,7 @@
  */
 import baseIsEqual from './_baseIsEqual.js';
 
-('use strict');
+'use strict';
 
 /**
  * Performs a deep comparison between two values to determine if they are

@@ -1,6 +1,6 @@
 import assocIndexOf from './_assocIndexOf.js';
 
-('use strict');
+'use strict';
 
 /**
  * Gets the list cache value for `key`.
@@ -13,7 +13,7 @@ import assocIndexOf from './_assocIndexOf.js';
  */
 function listCacheGet(key) {
   var data = this.__data__,
-    index = assocIndexOf(data, key);
+      index = assocIndexOf(data, key);
 
   return index < 0 ? undefined : data[index][1];
 }

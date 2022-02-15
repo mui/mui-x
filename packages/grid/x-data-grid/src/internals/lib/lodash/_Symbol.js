@@ -1,6 +1,6 @@
 import root from './_root.js';
 
-('use strict');
+'use strict';
 
 /** Built-in value references. */
 var Symbol = root.Symbol;

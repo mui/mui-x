@@ -1,6 +1,6 @@
 import getAllKeys from './_getAllKeys.js';
 
-('use strict');
+'use strict';
 
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1;
@@ -26,10 +26,10 @@ var hasOwnProperty = objectProto.hasOwnProperty;
  */
 function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
   var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
-    objProps = getAllKeys(object),
-    objLength = objProps.length,
-    othProps = getAllKeys(other),
-    othLength = othProps.length;
+      objProps = getAllKeys(object),
+      objLength = objProps.length,
+      othProps = getAllKeys(other),
+      othLength = othProps.length;
 
   if (objLength != othLength && !isPartial) {
     return false;
@@ -54,7 +54,7 @@ function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
   while (++index < objLength) {
     key = objProps[index];
     var objValue = object[key],
-      othValue = other[key];
+        othValue = other[key];
 
     if (customizer) {
       var compared = isPartial
@@ -62,11 +62,10 @@ function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
         : customizer(objValue, othValue, key, object, other, stack);
     }
     // Recursively compare objects (susceptible to call stack limits).
-    if (
-      !(compared === undefined
-        ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack)
-        : compared)
-    ) {
+    if (!(compared === undefined
+          ? (objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack))
+          : compared
+        )) {
       result = false;
       break;
     }
@@ -74,20 +73,13 @@ function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
   }
   if (result && !skipCtor) {
     var objCtor = object.constructor,
-      othCtor = other.constructor;
+        othCtor = other.constructor;
 
     // Non `Object` object instances with different constructors are not equal.
-    if (
-      objCtor != othCtor &&
-      'constructor' in object &&
-      'constructor' in other &&
-      !(
-        typeof objCtor == 'function' &&
-        objCtor instanceof objCtor &&
-        typeof othCtor == 'function' &&
-        othCtor instanceof othCtor
-      )
-    ) {
+    if (objCtor != othCtor &&
+        ('constructor' in object && 'constructor' in other) &&
+        !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
+          typeof othCtor == 'function' && othCtor instanceof othCtor)) {
       result = false;
     }
   }

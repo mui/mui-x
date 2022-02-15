@@ -1,6 +1,6 @@
 import isKeyable from './_isKeyable.js';
 
-('use strict');
+'use strict';
 
 /**
  * Gets the data for `map`.
@@ -12,7 +12,9 @@ import isKeyable from './_isKeyable.js';
  */
 function getMapData(map, key) {
   var data = map.__data__;
-  return isKeyable(key) ? data[typeof key == 'string' ? 'string' : 'hash'] : data.map;
+  return isKeyable(key)
+    ? data[typeof key == 'string' ? 'string' : 'hash']
+    : data.map;
 }
 
 export default getMapData;

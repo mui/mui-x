@@ -1,6 +1,6 @@
 import getMapData from './_getMapData.js';
 
-('use strict');
+'use strict';
 
 /**
  * Removes `key` and its value from the map.

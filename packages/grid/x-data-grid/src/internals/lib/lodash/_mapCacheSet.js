@@ -1,6 +1,6 @@
 import getMapData from './_getMapData.js';
 
-('use strict');
+'use strict';
 
 /**
  * Sets the map `key` to `value`.
@@ -14,7 +14,7 @@ import getMapData from './_getMapData.js';
  */
 function mapCacheSet(key, value) {
   var data = getMapData(this, key),
-    size = data.size;
+      size = data.size;
 
   data.set(key, value);
   this.size += data.size == size ? 0 : 1;

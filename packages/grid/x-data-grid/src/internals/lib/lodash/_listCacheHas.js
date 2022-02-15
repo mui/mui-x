@@ -1,6 +1,6 @@
 import assocIndexOf from './_assocIndexOf.js';
 
-('use strict');
+'use strict';
 
 /**
  * Checks if a list cache value for `key` exists.

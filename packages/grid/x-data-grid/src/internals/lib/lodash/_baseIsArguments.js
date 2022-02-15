@@ -1,7 +1,7 @@
 import baseGetTag from './_baseGetTag.js';
 import isObjectLike from './isObjectLike.js';
 
-('use strict');
+'use strict';
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]';

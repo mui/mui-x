@@ -2,7 +2,7 @@ import ListCache from './_ListCache.js';
 import Map from './_Map.js';
 import MapCache from './_MapCache.js';
 
-('use strict');
+'use strict';
 
 /** Used as the size to enable large array optimizations. */
 var LARGE_ARRAY_SIZE = 200;
@@ -21,7 +21,7 @@ function stackSet(key, value) {
   var data = this.__data__;
   if (data instanceof ListCache) {
     var pairs = data.__data__;
-    if (!Map || pairs.length < LARGE_ARRAY_SIZE - 1) {
+    if (!Map || (pairs.length < LARGE_ARRAY_SIZE - 1)) {
       pairs.push([key, value]);
       this.size = ++data.size;
       return this;

@@ -1,7 +1,7 @@
 import arrayPush from './_arrayPush.js';
 import isArray from './isArray.js';
 
-('use strict');
+'use strict';
 
 /**
  * The base implementation of `getAllKeys` and `getAllKeysIn` which uses

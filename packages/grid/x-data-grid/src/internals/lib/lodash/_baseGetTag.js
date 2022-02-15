@@ -2,11 +2,11 @@ import Symbol from './_Symbol.js';
 import getRawTag from './_getRawTag.js';
 import objectToString from './_objectToString.js';
 
-('use strict');
+'use strict';
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
-  undefinedTag = '[object Undefined]';
+    undefinedTag = '[object Undefined]';
 
 /** Built-in value references. */
 var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
@@ -22,7 +22,7 @@ function baseGetTag(value) {
   if (value == null) {
     return value === undefined ? undefinedTag : nullTag;
   }
-  return symToStringTag && symToStringTag in Object(value)
+  return (symToStringTag && symToStringTag in Object(value))
     ? getRawTag(value)
     : objectToString(value);
 }

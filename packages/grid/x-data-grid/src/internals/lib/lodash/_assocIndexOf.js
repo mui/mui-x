@@ -1,6 +1,6 @@
 import eq from './eq.js';
 
-('use strict');
+'use strict';
 
 /**
  * Gets the index at which the `key` is found in `array` of key-value pairs.

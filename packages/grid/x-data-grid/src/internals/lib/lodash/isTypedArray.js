@@ -2,7 +2,7 @@ import baseIsTypedArray from './_baseIsTypedArray.js';
 import baseUnary from './_baseUnary.js';
 import nodeUtil from './_nodeUtil.js';
 
-('use strict');
+'use strict';
 
 /* Node.js helper references. */
 var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;

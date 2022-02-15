@@ -1,6 +1,6 @@
 import getMapData from './_getMapData.js';
 
-('use strict');
+'use strict';
 
 /**
  * Checks if a map value for `key` exists.

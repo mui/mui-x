@@ -1,7 +1,7 @@
 import root from './_root.js';
 import stubFalse from './stubFalse.js';
 
-('use strict');
+'use strict';
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;

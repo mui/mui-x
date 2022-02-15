@@ -1,13 +1,13 @@
 import baseGetTag from './_baseGetTag.js';
 import isObject from './isObject.js';
 
-('use strict');
+'use strict';
 
 /** `Object#toString` result references. */
 var asyncTag = '[object AsyncFunction]',
-  funcTag = '[object Function]',
-  genTag = '[object GeneratorFunction]',
-  proxyTag = '[object Proxy]';
+    funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]',
+    proxyTag = '[object Proxy]';
 
 /**
  * Checks if `value` is classified as a `Function` object.

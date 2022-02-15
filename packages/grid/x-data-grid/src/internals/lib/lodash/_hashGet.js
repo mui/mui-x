@@ -1,6 +1,6 @@
 import nativeCreate from './_nativeCreate.js';
 
-('use strict');
+'use strict';
 
 /** Used to stand-in for `undefined` hash values. */
 var HASH_UNDEFINED = '__lodash_hash_undefined__';

@@ -3,7 +3,7 @@ import isMasked from './_isMasked.js';
 import isObject from './isObject.js';
 import toSource from './_toSource.js';
 
-('use strict');
+'use strict';
 
 /**
  * Used to match `RegExp`
@@ -16,7 +16,7 @@ var reIsHostCtor = /^\[object .+?Constructor\]$/;
 
 /** Used for built-in method references. */
 var funcProto = Function.prototype,
-  objectProto = Object.prototype;
+    objectProto = Object.prototype;
 
 /** Used to resolve the decompiled source of functions. */
 var funcToString = funcProto.toString;
@@ -25,13 +25,9 @@ var funcToString = funcProto.toString;
 var hasOwnProperty = objectProto.hasOwnProperty;
 
 /** Used to detect if a method is native. */
-var reIsNative = RegExp(
-  '^' +
-    funcToString
-      .call(hasOwnProperty)
-      .replace(reRegExpChar, '\\$&')
-      .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') +
-    '$',
+var reIsNative = RegExp('^' +
+  funcToString.call(hasOwnProperty).replace(reRegExpChar, '\\$&')
+  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
 );
 
 /**

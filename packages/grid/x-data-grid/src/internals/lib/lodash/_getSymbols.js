@@ -1,7 +1,7 @@
 import arrayFilter from './_arrayFilter.js';
 import stubArray from './stubArray.js';
 
-('use strict');
+'use strict';
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -19,16 +19,14 @@ var nativeGetSymbols = Object.getOwnPropertySymbols;
  * @param {Object} object The object to query.
  * @returns {Array} Returns the array of symbols.
  */
-var getSymbols = !nativeGetSymbols
-  ? stubArray
-  : function (object) {
-      if (object == null) {
-        return [];
-      }
-      object = Object(object);
-      return arrayFilter(nativeGetSymbols(object), function (symbol) {
-        return propertyIsEnumerable.call(object, symbol);
-      });
-    };
+var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
+  if (object == null) {
+    return [];
+  }
+  object = Object(object);
+  return arrayFilter(nativeGetSymbols(object), function(symbol) {
+    return propertyIsEnumerable.call(object, symbol);
+  });
+};
 
 export default getSymbols;

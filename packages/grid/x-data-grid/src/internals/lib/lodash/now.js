@@ -1,6 +1,6 @@
 import root from './_root.js';
 
-('use strict');
+'use strict';
 
 /**
  * Gets the timestamp of the number of milliseconds that have elapsed since
@@ -18,7 +18,7 @@ import root from './_root.js';
  * }, _.now());
  * // => Logs the number of milliseconds it took for the deferred invocation.
  */
-var now = function () {
+var now = function() {
   return root.Date.now();
 };
 

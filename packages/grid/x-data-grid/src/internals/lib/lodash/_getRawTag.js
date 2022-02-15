@@ -1,6 +1,6 @@
 import Symbol from './_Symbol.js';
 
-('use strict');
+'use strict';
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -27,7 +27,7 @@ var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
  */
 function getRawTag(value) {
   var isOwn = hasOwnProperty.call(value, symToStringTag),
-    tag = value[symToStringTag];
+      tag = value[symToStringTag];
 
   try {
     value[symToStringTag] = undefined;

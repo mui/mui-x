@@ -4,7 +4,7 @@ import hashGet from './_hashGet.js';
 import hashHas from './_hashHas.js';
 import hashSet from './_hashSet.js';
 
-('use strict');
+'use strict';
 
 /**
  * Creates a hash object.
@@ -15,7 +15,7 @@ import hashSet from './_hashSet.js';
  */
 function Hash(entries) {
   var index = -1,
-    length = entries == null ? 0 : entries.length;
+      length = entries == null ? 0 : entries.length;
 
   this.clear();
   while (++index < length) {

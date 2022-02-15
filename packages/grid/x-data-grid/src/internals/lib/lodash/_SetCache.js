@@ -2,7 +2,7 @@ import MapCache from './_MapCache.js';
 import setCacheAdd from './_setCacheAdd.js';
 import setCacheHas from './_setCacheHas.js';
 
-('use strict');
+'use strict';
 
 /**
  *
@@ -14,9 +14,9 @@ import setCacheHas from './_setCacheHas.js';
  */
 function SetCache(values) {
   var index = -1,
-    length = values == null ? 0 : values.length;
+      length = values == null ? 0 : values.length;
 
-  this.__data__ = new MapCache();
+  this.__data__ = new MapCache;
   while (++index < length) {
     this.add(values[index]);
   }
