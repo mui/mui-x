@@ -228,12 +228,12 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
       overflow: 'hidden',
+      whiteSpace: 'nowrap',
       borderBottom: `1px solid ${borderColor}`,
     },
     [`& .${gridClasses.cellContent}`]: {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
     },
     [`& .${gridClasses.cell}.${gridClasses['cell--editing']}`]: {
       padding: 1,
