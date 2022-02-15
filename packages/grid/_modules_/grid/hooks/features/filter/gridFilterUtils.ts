@@ -59,33 +59,40 @@ export const sanitizeFilterModel = (
   disableMultipleColumnsFiltering: boolean,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => {
-  if (model.items.length > 1) {
-    if (disableMultipleColumnsFiltering) {
-      filterModelDisableMultiColumnsFilteringWarning();
+  const hasSeveralItems = model.items.length > 1;
 
-      return {
-        ...model,
-        items: [model.items[0]],
-      };
-    }
+  let items: GridFilterItem[];
+  if (hasSeveralItems && disableMultipleColumnsFiltering) {
+    filterModelDisableMultiColumnsFilteringWarning();
 
-    const hasItemsWithoutIds = model.items.some((item) => item.id == null);
-    const hasItemWithoutOperator = model.items.some((item) => item.operatorValue == null);
+    items = [model.items[0]];
+  } else {
+    items = model.items;
+  }
 
-    if (hasItemsWithoutIds) {
-      filterModelMissingItemIdWarning();
-    }
+  const hasItemsWithoutIds = hasSeveralItems && items.some((item) => item.id == null);
+  const hasItemWithoutOperator = items.some((item) => item.operatorValue == null);
 
-    if (hasItemWithoutOperator) {
-      filterModelMissingItemOperatorWarning();
-    }
+  if (hasItemsWithoutIds) {
+    filterModelMissingItemIdWarning();
+  }
 
-    if (hasItemWithoutOperator || hasItemsWithoutIds) {
-      return {
-        ...model,
-        items: model.items.map((item) => cleanFilterItem(item, apiRef)),
-      };
-    }
+  if (hasItemWithoutOperator) {
+    filterModelMissingItemOperatorWarning();
+  }
+
+  if (hasItemWithoutOperator || hasItemsWithoutIds) {
+    return {
+      ...model,
+      items: items.map((item) => cleanFilterItem(item, apiRef)),
+    };
+  }
+
+  if (model.items !== items) {
+    return {
+      ...model,
+      items,
+    };
   }
 
   return model;
