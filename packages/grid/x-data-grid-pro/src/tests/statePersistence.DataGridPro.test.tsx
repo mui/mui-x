@@ -11,7 +11,11 @@ import {
 } from '@mui/x-data-grid-pro';
 import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getColumnHeadersTextContent, getColumnValues } from '../../../../../test/utils/helperFn';
+import {
+  getColumnHeaderCell,
+  getColumnHeadersTextContent,
+  getColumnValues,
+} from '../../../../../test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -44,7 +48,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
     columnVisibilityModel: { category1: false },
     orderedFields: ['id', '__row_group_by_columns_group__', 'idBis', 'category1'],
     dimensions: {
-      category1: {
+      idBis: {
         width: 75,
         maxWidth: Infinity,
         minWidth: 50,
@@ -141,7 +145,7 @@ describe('<DataGridPro /> - State Persistence', () => {
       });
       apiRef.current.setRowGroupingModel(['category1']);
       apiRef.current.setColumnIndex('idBis', 2);
-      apiRef.current.setColumnWidth('category1', 75);
+      apiRef.current.setColumnWidth('idBis', 75);
       apiRef.current.setColumnVisibilityModel({ category1: false });
 
       expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
@@ -164,7 +168,10 @@ describe('<DataGridPro /> - State Persistence', () => {
       expect(screen.getByRole('button', { name: /Add Filter/i })).to.not.equal(null);
 
       // Columns visibility
-      expect(getColumnHeadersTextContent()).to.not.include('category1');
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Group', 'idBis']);
+
+      // Columns dimensions
+      expect(getColumnHeaderCell(2)).toHaveInlineStyle({ width: '75px' });
     });
 
     it('should restore partial exportable state', () => {
