@@ -449,11 +449,6 @@ describe('<DataGrid /> - Filter panel', () => {
           { id: 3, val: 'VAL_3' },
         ]}
         columns={[{ field: 'id' }, { field: 'val' }]}
-        componentsProps={{
-          filterPanel: {
-            closeOnDelete: true,
-          },
-        }}
         initialState={{
           filter: {
             filterModel: {
