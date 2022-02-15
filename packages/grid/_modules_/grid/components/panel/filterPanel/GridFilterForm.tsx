@@ -80,6 +80,7 @@ const FilterFormLinkOperatorInput = styled(FormControl, {
   overridesResolver: (_, styles) => styles.filterFormLinkOperatorInput,
 })({
   minWidth: 60,
+  justifyContent: 'end',
 });
 
 const FilterFormColumnInput = styled(FormControl, {
@@ -289,7 +290,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         {...baseFormControlProps}
         {...linkOperatorInputProps}
         sx={{
-          display: hasLinkOperatorColumn ? 'block' : 'none',
+          display: hasLinkOperatorColumn ? 'flex' : 'none',
           visibility: showMultiFilterOperators ? 'visible' : 'hidden',
           ...(baseFormControlProps.sx || {}),
           ...(linkOperatorInputProps.sx || {}),
