@@ -6,7 +6,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
-} from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
+} from '../internals/hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

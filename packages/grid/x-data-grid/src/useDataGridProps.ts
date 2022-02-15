@@ -5,16 +5,16 @@ import {
   DataGridProps,
   DataGridForcedPropsKey,
   DataGridPropsWithDefaultValues,
-} from '../../_modules_/grid/models/props/DataGridProps';
+} from './internals/models/props/DataGridProps';
 
-import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../../_modules_/grid/constants/defaultGridSlotsComponents';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from './internals/constants/defaultGridSlotsComponents';
 import {
   GRID_DEFAULT_LOCALE_TEXT,
   GridDensityTypes,
   GridEditModes,
   GridFeatureModeConstant,
   GridSlotsComponent,
-} from '../../_modules_';
+} from './internals';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   apiRef: undefined,

@@ -7,13 +7,13 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-} from '../../_modules_/grid';
-import { DataGridProps } from '../../_modules_/grid/models/props/DataGridProps';
-import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
+} from './internals';
+import { DataGridProps } from './internals/models/props/DataGridProps';
+import { GridContextProvider } from './internals/context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
-import { DataGridVirtualScroller } from './DataGridVirtualScroller';
-import { DataGridColumnHeaders } from './DataGridColumnHeaders';
+import { DataGridVirtualScroller } from './internals/components/DataGridVirtualScroller';
+import { DataGridColumnHeaders } from './internals/components/DataGridColumnHeaders';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
