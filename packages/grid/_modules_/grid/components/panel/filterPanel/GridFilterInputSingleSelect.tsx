@@ -29,13 +29,22 @@ const renderSingleSelectOptions = (
   );
 };
 
+function getValueFromOption(option) {
+  if (typeof option === 'object' && option !== null) {
+    return option.value;
+  }
+  return option;
+}
+
 function getValueFromValueOptions(value, valueOptions) {
   if (valueOptions === undefined) {
     return undefined;
   }
-  return valueOptions
-    .map((option) => (typeof option === 'object' ? option.value : option))
-    .find((optionValue) => String(optionValue) === String(value));
+  const result = valueOptions.find((option) => {
+    const optionValue = getValueFromOption(option);
+    return String(optionValue) === String(value);
+  });
+  return getValueFromOption(result);
 }
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
