@@ -52,8 +52,8 @@ describe('<DataGrid /> - Filter', () => {
             columns={[]}
             filterModel={{
               items: [
-                { id: 0, columnField: 'id' },
-                { id: 1, columnField: 'id' },
+                { id: 0, columnField: 'brand', operatorValue: 'contains' },
+                { id: 1, columnField: 'brand', operatorValue: 'contains' },
               ],
             }}
           />,
