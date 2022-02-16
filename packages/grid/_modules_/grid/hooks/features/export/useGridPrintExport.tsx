@@ -215,7 +215,9 @@ export const useGridPrintExport = (
       }
 
       // Trigger print
-      printWindow.contentWindow!.print();
+      if (process.env.NODE_ENV !== 'test') {
+        printWindow.contentWindow!.print();
+      }
     },
     [apiRef, doc, rowsMeta.currentPageTotalHeight, headerHeight],
   );
@@ -273,8 +275,14 @@ export const useGridPrintExport = (
       apiRef.current.unstable_disableVirtualization();
       const printWindow = buildPrintWindow(options?.fileName);
       doc.current!.body.appendChild(printWindow);
-      printWindow.onload = () => handlePrintWindowLoad(printWindow, options);
-      printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
+      if (process.env.NODE_ENV === 'test') {
+        // In test env, run the all pipeline without waiting for loading
+        handlePrintWindowLoad(printWindow, options);
+        handlePrintWindowAfterPrint(printWindow);
+      } else {
+        printWindow.onload = () => handlePrintWindowLoad(printWindow, options);
+        printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
+      }
     },
     [
       visibleRowCount,

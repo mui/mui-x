@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { DataGrid, DataGridProps, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridToolbar,
+  GridToolbarExport,
+  GridRowsProp,
+  GridColumns,
+} from '@mui/x-data-grid';
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { useData } from 'storybook/src/hooks/useData';
 import { expect } from 'chai';
@@ -132,6 +139,51 @@ describe('<DataGridPro /> - Export', () => {
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
+    });
+
+    it('should restore columns after print', async function test() {
+      const onColumnVisibilityModelChange = spy();
+
+      const rows: GridRowsProp = [{ id: 1, value: 3, currency: 'USD' }];
+
+      const columns: GridColumns = [{ field: 'id' }, { field: 'value' }, { field: 'currency' }];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={columns}
+            rows={rows}
+            // A hack to remove the warning
+            rowsPerPageOptions={[1, 100]}
+            onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+            components={{
+              Toolbar: () => <GridToolbarExport printOptions={{ fields: ['id'] }} />,
+            }}
+          />
+        </div>,
+      );
+      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+
+      // Trigger print
+      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      fireEvent.click(screen.queryByRole('menuitem', { name: 'Print' }));
+      await clock.runToLast();
+
+      expect(onColumnVisibilityModelChange.callCount).to.equal(2);
+
+      // verify hidden columns corresponds to the printOptions
+      expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+        id: true,
+        value: false,
+        currency: false,
+      });
+
+      // verify column visibility has been restored
+      expect(onColumnVisibilityModelChange.secondCall.firstArg).to.deep.equal({
+        id: true,
+        value: true,
+        currency: true,
+      });
     });
   });
 });
