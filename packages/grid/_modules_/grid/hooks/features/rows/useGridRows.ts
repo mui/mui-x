@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
 import {
   checkGridRowIdIsValid,
@@ -75,7 +75,7 @@ const convertGridRowsPropToState = ({
 const getRowsStateFromCache = (
   rowsCache: GridRowsInternalCache,
   previousTree: GridRowTreeConfig | null,
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   rowCountProp: number | undefined,
 ): GridRowsState => {
   const { value } = rowsCache.state;
@@ -123,7 +123,7 @@ export const rowsStateInitializer: GridStateInitializer<
  * @requires useGridRowGroupsPreProcessing (method)
  */
 export const useGridRows = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'
@@ -141,7 +141,6 @@ export const useGridRows = (
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
-  // eslint-disable-next-line material-ui/no-direct-state-access
   const rowsCache = React.useRef(apiRef.current.state.rowsCache); // To avoid listing rowsCache as useEffect dep
 
   const getRow = React.useCallback<GridRowApi['getRow']>(

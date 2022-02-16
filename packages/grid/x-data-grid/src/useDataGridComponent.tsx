@@ -1,4 +1,5 @@
 import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
+import { GridApiCommunity } from '../../_modules_/grid/models/api/gridApiCommunity';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
 
@@ -42,7 +43,7 @@ import { pageStateInitializer } from '../../_modules_/grid/hooks/features/pagina
 import { useGridSelectionPreProcessors } from '../../_modules_/grid/hooks/features/selection/useGridSelectionPreProcessors';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
-  const apiRef = useGridInitialization(undefined, props);
+  const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
 
   /**
    * Register all pre-processors called during state initialization here.

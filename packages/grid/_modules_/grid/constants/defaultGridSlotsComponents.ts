@@ -67,7 +67,10 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   DetailPanelCollapseIcon: GridRemoveIcon,
 };
 
-export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
+/**
+ * TODO: Differentiate community and pro value and interface
+ */
+export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
   BaseCheckbox: MUICheckbox,
   BaseTextField: MUITextField,

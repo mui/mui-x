@@ -1,6 +1,10 @@
 import { createSelector } from './createSelector';
-import { GridState } from '../models/gridState';
-import { GridApiRef } from '../models/api/gridApiRef';
+import { GridStateCommunity } from '../models/gridStateCommunity';
+import { GridApiCommunity } from '../models/api/gridApiCommunity';
+
+interface GridCustomState extends GridStateCommunity {
+  customKey: { customKeyBis: number };
+}
 
 createSelector(
   // @ts-expect-error The state must be typed with GridState
@@ -8,24 +12,35 @@ createSelector(
   (fields: any) => fields,
 );
 
-// @ts-expect-error Missing combiner function
 createSelector(
-  (state: GridState) => state.columns.all,
-  (state: GridState) => state.columns.lookup,
+  // @ts-expect-error Missing combiner function
+  (state: GridStateCommunity) => state.columns.all,
+  (state: GridStateCommunity) => state.columns.lookup,
 );
 
 createSelector(
-  (state: GridState) => state.columns.all,
+  (state: GridStateCommunity) => state.columns.all,
   (fields) => fields,
   // @ts-expect-error Wrong state value
 )(null);
 
 createSelector(
-  (state: GridState) => state.columns.all,
+  (state: GridStateCommunity) => state.columns.all,
   (fields) => fields,
-)({} as GridApiRef);
+)({} as React.MutableRefObject<GridApiCommunity>);
 
 createSelector(
-  (state: GridState) => state.columns.all,
+  (state: GridStateCommunity) => state.columns.all,
   (fields) => fields,
-)({} as GridState);
+)({} as GridStateCommunity);
+
+createSelector(
+  // @ts-expect-error Wrong state key
+  (state: GridStateCommunity) => state.customKey,
+  (customKey) => customKey.custmKeyBis,
+);
+
+createSelector(
+  (state: GridCustomState) => state.customKey,
+  (customKey) => customKey.customKeyBis,
+);

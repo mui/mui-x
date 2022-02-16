@@ -60,12 +60,12 @@ To change the minimum width of a column, use the `minWidth` property available i
 
 ### Fluid width
 
-Column fluidity or responsiveness can be by achieved by setting the `flex` property in `GridColDef`.
+Column fluidity or responsiveness can be achieved by setting the `flex` property in `GridColDef`.
 
 The `flex` property accepts a value between 0 and ∞.
 It works by dividing the remaining space in the grid among all flex columns in proportion to their `flex` value.
 
-For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
+For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and the third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
 
 To set a minimum and maximum width for a `flex` column set the `minWidth` and the `maxWidth` property in `GridColDef`.
@@ -125,7 +125,7 @@ The value generated is used for filtering, sorting, rendering, etc. unless overr
 ### Value setter
 
 The value setter is to be used when editing rows and it is the counterpart of the value getter.
-It allows to customize how the entered value is stored in the row.
+This enables you to customize how the entered value is stored in the row.
 A common use case for it is when the data is a nested structure.
 Refer to the [cell editing](/components/data-grid/editing/#saving-nested-structures) documentation to see an example using it.
 
@@ -157,7 +157,7 @@ In the following demo, a formatter is used to display the tax rate's decimal val
 {{"demo": "ValueFormatterGrid.js", "bg": "inline"}}
 
 The value generated is only used for rendering purposes.
-Filtering and sorting will not relay on the formatted value.
+Filtering and sorting do not rely on the formatted value.
 Use the [`valueParser`](/components/data-grid/columns/#value-parser) to support filtering.
 
 ### Value parser
@@ -172,7 +172,7 @@ In the following demo, the tax rate is displayed as a percentage (e.g. 20%) but 
 
 ### Render cell
 
-By default, the grid render the value as a string in the cell.
+By default, the grid renders the value as a string in the cell.
 It resolves the rendered output in the following order:
 
 1. `renderCell() => ReactElement`
@@ -261,7 +261,7 @@ You can check the [styling cells](/components/data-grid/style/#styling-cells) se
 
 ## Column types
 
-To facilitate configuration of the columns, some column types are predefined.
+To facilitate the configuration of the columns, some column types are predefined.
 By default, columns are assumed to hold strings, so the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell.
 
 The following are the native column types:
@@ -372,7 +372,7 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 
 > ⚠️The grid does not handle switching between controlled and uncontrolled modes.
 >
-> This edge case will be supported in v6 after the removal of legacy `hide` field.
+> This edge case will be supported in v6 after the removal of the legacy `hide` field.
 
 {{"demo": "VisibleColumnsModelControlled.js", "bg": "inline"}}
 
@@ -441,7 +441,7 @@ In addition, column reordering emits the following events that can be imported:
 
 ## Column pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Pinned (or frozen, locked, or sticky) columns are columns that are visible at all of the time while the user scrolls the grid horizontally.
+Pinned (or frozen, locked, or sticky) columns are columns that are visible at all time while the user scrolls the grid horizontally.
 They can be pinned either to the left or right side and cannot be reordered.
 
 To pin a column, there are a few ways:
@@ -475,7 +475,7 @@ The following demos illustrates how this approach works:
 
 ### Controlling the pinned columns
 
-While the `initialState` prop only works for setting pinned columns during the initialization, the `pinnedColumns` prop allows to change at anytime which columns to pin.
+While the `initialState` prop only works for setting pinned columns during the initialization, the `pinnedColumns` prop allows you to modify which columns are pinned at any time.
 The value passed to it follows the same shape from the previous approach.
 Use it together with `onPinnedColumnsChange` to know when a column is pinned or unpinned.
 
@@ -524,7 +524,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 > 👍 Upvote [issue #192](https://github.com/mui/mui-x/issues/192) if you want to see it land faster.
 
 Each cell takes up the width of one column.
-Column spanning allows to change this default behavior.
+You can modify this default behavior with column spanning.
 It allows cells to span multiple columns.
 This is very close to the "column spanning" in an HTML `<table>`.
 

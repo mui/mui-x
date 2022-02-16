@@ -1,4 +1,4 @@
-import type { GridStateColDef } from '../colDef';
+import type { GridStateColDef } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] header renderer.

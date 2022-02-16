@@ -1,4 +1,4 @@
-import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
+import { GridApiCommon, GridApi, GridColDef, GridRowId } from '@mui/x-data-grid-pro';
 import { currencyPairs } from './currency-pairs';
 
 export interface DataRowModel {
@@ -7,12 +7,15 @@ export interface DataRowModel {
   [price: string]: number | string;
 }
 
-export interface GridData {
-  columns: GridColDef[];
+export interface GridData<Api extends GridApiCommon> {
+  columns: GridColDef<Api>[];
   rows: DataRowModel[];
 }
 
-export function getData(rowLength: number, colLength: number): GridData {
+export function getData<Api extends GridApiCommon = GridApi>(
+  rowLength: number,
+  colLength: number,
+): GridData<Api> {
   const data: DataRowModel[] = [];
   const pricesColLength = colLength - 2;
   for (let i = 0; i < rowLength; i += 1) {
@@ -27,7 +30,7 @@ export function getData(rowLength: number, colLength: number): GridData {
     data.push(model);
   }
 
-  const columns: GridColDef[] = [
+  const columns: GridColDef<Api>[] = [
     { field: 'id', headerName: 'id', type: 'number' },
     { field: 'currencyPair', headerName: 'Currency Pair' },
   ];

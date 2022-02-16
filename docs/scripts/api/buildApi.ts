@@ -99,7 +99,8 @@ async function run() {
       });
 
       buildEventsDocumentation({
-        project: projects.get('x-data-grid')!,
+        // TODO: Pass all the projects and add the pro icon for pro-only events
+        project: projects.get('x-data-grid-pro')!,
         documentedInterfaces,
       });
 

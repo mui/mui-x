@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef/gridCheckboxSelectionColDef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -22,7 +22,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   }, [classes]);
 };
 
-export const useGridSelectionPreProcessors = (apiRef: GridApiRef, props) => {
+export const useGridSelectionPreProcessors = (
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  props: DataGridProcessedProps,
+) => {
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
 

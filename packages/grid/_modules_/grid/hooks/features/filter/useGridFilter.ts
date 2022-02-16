@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem } from '../../../models/gridFilterItem';
@@ -16,7 +16,6 @@ import {
   GridFilteringMethod,
   GridFilteringMethodCollection,
 } from './gridFilterState';
-import { GridFilterModel } from '../../../models/gridFilterModel';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
@@ -24,34 +23,21 @@ import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/prePro
 import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
 import {
   buildAggregatedFilterApplier,
-  cleanFilterItem,
+  sanitizeFilterModel,
   mergeStateWithFilterModel,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
-const checkFilterModelValidity = (model: GridFilterModel) => {
-  if (model.items.length > 1) {
-    const hasItemsWithoutIds = model.items.find((item) => item.id == null);
-    if (hasItemsWithoutIds) {
-      throw new Error(
-        "MUI: The 'id' field is required on `filterModel.items` when you use multiple filters.",
-      );
-    }
-  }
-};
-
 export const filterStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'filterModel' | 'initialState'>
-> = (state, props) => {
-  if (props.filterModel) {
-    checkFilterModelValidity(props.filterModel);
-  }
+  Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
+> = (state, props, apiRef) => {
+  const filterModel =
+    props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
 
   return {
     ...state,
     filter: {
-      filterModel:
-        props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel(),
+      filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
       visibleRowsLookup: {},
       filteredDescendantCountLookup: {},
     },
@@ -64,7 +50,7 @@ export const filterStateInitializer: GridStateInitializer<
  * @requires useGridRows (event)
  */
 export const useGridFilter = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -125,11 +111,10 @@ export const useGridFilter = (
       const filterModel = gridFilterModelSelector(apiRef);
       const items = [...filterModel.items];
       const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
-      const newItem = cleanFilterItem(item, apiRef);
       if (itemIndex === -1) {
-        items.push(newItem);
+        items.push(item);
       } else {
-        items[itemIndex] = newItem;
+        items[itemIndex] = item;
       }
       apiRef.current.setFilterModel({ ...filterModel, items });
     },
@@ -165,12 +150,9 @@ export const useGridFilter = (
         if (filterItemOnTarget) {
           newFilterItems = filterItemsWithValue;
         } else if (props.disableMultipleColumnsFiltering) {
-          newFilterItems = [cleanFilterItem({ columnField: targetColumnField }, apiRef)];
+          newFilterItems = [{ columnField: targetColumnField }];
         } else {
-          newFilterItems = [
-            ...filterItemsWithValue,
-            cleanFilterItem({ columnField: targetColumnField }, apiRef),
-          ];
+          newFilterItems = [...filterItemsWithValue, { columnField: targetColumnField }];
         }
 
         apiRef.current.setFilterModel({
@@ -206,11 +188,9 @@ export const useGridFilter = (
     (model) => {
       const currentModel = gridFilterModelSelector(apiRef);
       if (currentModel !== model) {
-        checkFilterModelValidity(model);
-
         logger.debug('Setting filter model');
         apiRef.current.setState(
-          mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering),
+          mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering, apiRef),
         );
         apiRef.current.unstable_applyFilters();
       }
@@ -234,7 +214,7 @@ export const useGridFilter = (
     getVisibleRowModels,
   };
 
-  useGridApiMethod<GridFilterApi>(apiRef, filterApi, 'GridFilterApi');
+  useGridApiMethod(apiRef, filterApi, 'GridFilterApi');
 
   /**
    * PRE-PROCESSING
@@ -266,7 +246,7 @@ export const useGridFilter = (
         return params;
       }
       apiRef.current.setState(
-        mergeStateWithFilterModel(filterModel, props.disableMultipleColumnsFiltering),
+        mergeStateWithFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
       );
 
       return {
