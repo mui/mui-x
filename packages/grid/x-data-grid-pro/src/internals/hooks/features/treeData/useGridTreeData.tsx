@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GridColDef,
   useGridApiEventHandler,
   GridEventListener,
   GridEvents,
@@ -8,16 +7,19 @@ import {
   gridRowTreeSelector,
   gridFilteredDescendantCountLookupSelector,
   useFirstRender,
-  unstable_useGridRegisterFilteringMethod as useGridRegisterFilteringMethod,
-  unstable_useGridRegisterSortingMethod as useGridRegisterSortingMethod,
-  unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
-  Unstable_GridFilteringMethod as GridFilteringMethod,
-  Unstable_GridSortingMethod as GridSortingMethod,
-  Unstable_GridPreProcessor as GridPreProcessor,
-  Unstable_GridRowGroupingPreProcessing as GridRowGroupingPreProcessing,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid/internals';
+import {
+  useGridRegisterPreProcessor,
+  GridPreProcessor,
+} from '@mui/x-data-grid/internals/hooks/core/preProcessing';
+import { GridSortingMethod } from '@mui/x-data-grid/internals/hooks/features/sorting/gridSortingState';
+import { useGridRegisterSortingMethod } from '@mui/x-data-grid/internals/hooks/features/sorting/useGridRegisterSortingMethod';
+import { GridFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/gridFilterState';
+import { useGridRegisterFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/useGridRegisterFilteringMethod';
+import { GridRowGroupingPreProcessing } from '@mui/x-data-grid/internals/hooks/core/rowGroupsPerProcessing';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
+import { GridColDef } from '../../../models/gridColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
@@ -114,7 +116,7 @@ export const useGridTreeData = (
   /**
    * PRE-PROCESSING
    */
-  const getGroupingColDef = React.useCallback((): GridColDef<GridApiPro> => {
+  const getGroupingColDef = React.useCallback((): GridColDef => {
     const groupingColDefProp = props.groupingColDef;
 
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
@@ -131,7 +133,7 @@ export const useGridTreeData = (
 
     const { hideDescendantCount, ...colDefOverrideProperties } = colDefOverride ?? {};
 
-    const commonProperties: Omit<GridColDef<GridApiPro>, 'field' | 'editable'> = {
+    const commonProperties: Omit<GridColDef, 'field' | 'editable'> = {
       ...GRID_TREE_DATA_GROUPING_COL_DEF,
       renderCell: (params) => (
         <GridTreeDataGroupingCell {...params} hideDescendantCount={hideDescendantCount} />

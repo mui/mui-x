@@ -1,10 +1,10 @@
-import { GridColDef, GRID_STRING_COL_DEF } from '@mui/x-data-grid';
-import type { GridApiPro } from '../../../models/gridApiPro';
+import { GRID_STRING_COL_DEF } from '@mui/x-data-grid/internals';
+import { GridColDef } from '../../../models/gridColDef';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount
  */
-export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef<GridApiPro>, 'field' | 'editable'> = {
+export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editable'> = {
   ...GRID_STRING_COL_DEF,
   type: 'treeDataGroup',
   sortable: false,
@@ -19,7 +19,7 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef<GridApiPro>, 'fiel
 export const GRID_TREE_DATA_GROUPING_FIELD = '__tree_data_group__';
 
 export const GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
-  GridColDef<GridApiPro>,
+  GridColDef,
   'field' | 'editable' | 'groupable'
 > = {
   field: GRID_TREE_DATA_GROUPING_FIELD,

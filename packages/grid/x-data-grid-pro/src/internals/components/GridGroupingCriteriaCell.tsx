@@ -5,15 +5,14 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import {
   useGridSelector,
-  GridRenderCellParams,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridEvents,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridApiPro } from '../models/gridApiPro';
+import { GridRenderCellParams } from '../models/gridCellParams';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -28,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, any, GridApiPro> {
+interface GridGroupingCriteriaCellProps extends GridRenderCellParams {
   hideDescendantCount?: boolean;
 }
 

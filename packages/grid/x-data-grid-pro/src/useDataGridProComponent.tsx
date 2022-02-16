@@ -1,29 +1,27 @@
 import * as React from 'react';
-import {
-  unstable_useGridInitialization as useGridInitialization,
-  unstable_useGridClipboard as useGridClipboard,
-  unstable_useGridColumnMenu as useGridColumnMenu,
-  unstable_useGridColumns as useGridColumns,
-  unstable_useGridDensity as useGridDensity,
-  unstable_useGridCsvExport as useGridCsvExport,
-  unstable_useGridPrintExport as useGridPrintExport,
-  unstable_useGridFilter as useGridFilter,
-  unstable_useGridFocus as useGridFocus,
-  unstable_useGridKeyboard as useGridKeyboard,
-  unstable_useGridKeyboardNavigation as useGridKeyboardNavigation,
-  unstable_useGridPagination as useGridPagination,
-  unstable_useGridPreferencesPanel as useGridPreferencesPanel,
-  unstable_useGridEditing as useGridEditing,
-  unstable_useGridRows as useGridRows,
-  unstable_useGridRowsMeta as useGridRowsMeta,
-  unstable_useGridParamsApi as useGridParamsApi,
-  unstable_useGridSelection as useGridSelection,
-  unstable_useGridSorting as useGridSorting,
-  unstable_useGridScroll as useGridScroll,
-  unstable_useGridEvents as useGridEvents,
-  unstable_useGridDimensions as useGridDimensions,
-  unstable_useGridStatePersistence as useGridStatePersistence,
-} from '@mui/x-data-grid';
+import { useGridInitialization } from '@mui/x-data-grid/internals/hooks/core/useGridInitialization';
+import { useGridClipboard } from '@mui/x-data-grid/internals/hooks/features/clipboard/useGridClipboard';
+import { useGridColumnMenu } from '@mui/x-data-grid/internals/hooks/features/columnMenu/useGridColumnMenu';
+import { useGridColumns } from '@mui/x-data-grid/internals/hooks/features/columns/useGridColumns';
+import { useGridDensity } from '@mui/x-data-grid/internals/hooks/features/density/useGridDensity';
+import { useGridCsvExport } from '@mui/x-data-grid/internals/hooks/features/export/useGridCsvExport';
+import { useGridPrintExport } from '@mui/x-data-grid/internals/hooks/features/export/useGridPrintExport';
+import { useGridFilter } from '@mui/x-data-grid/internals/hooks/features/filter/useGridFilter';
+import { useGridFocus } from '@mui/x-data-grid/internals/hooks/features/focus/useGridFocus';
+import { useGridKeyboard } from '@mui/x-data-grid/internals/hooks/features/keyboard/useGridKeyboard';
+import { useGridKeyboardNavigation } from '@mui/x-data-grid/internals/hooks/features/keyboard/useGridKeyboardNavigation';
+import { useGridPagination } from '@mui/x-data-grid/internals/hooks/features/pagination/useGridPagination';
+import { useGridPreferencesPanel } from '@mui/x-data-grid/internals/hooks/features/preferencesPanel/useGridPreferencesPanel';
+import { useGridEditing } from '@mui/x-data-grid/internals/hooks/features/editRows/useGridEditing';
+import { useGridRows } from '@mui/x-data-grid/internals/hooks/features/rows/useGridRows';
+import { useGridRowsMeta } from '@mui/x-data-grid/internals/hooks/features/rows/useGridRowsMeta';
+import { useGridParamsApi } from '@mui/x-data-grid/internals/hooks/features/rows/useGridParamsApi';
+import { useGridSelection } from '@mui/x-data-grid/internals/hooks/features/selection/useGridSelection';
+import { useGridSorting } from '@mui/x-data-grid/internals/hooks/features/sorting/useGridSorting';
+import { useGridScroll } from '@mui/x-data-grid/internals/hooks/features/scroll/useGridScroll';
+import { useGridEvents } from '@mui/x-data-grid/internals/hooks/features/events/useGridEvents';
+import { useGridDimensions } from '@mui/x-data-grid/internals/hooks/features/dimensions/useGridDimensions';
+import { useGridStatePersistence } from '@mui/x-data-grid/internals/hooks/features/statePersistence/useGridStatePersistence';
 
 import { GridApiPro } from './internals/models/gridApiPro';
 import { DataGridProProcessedProps } from './internals/models/dataGridProProps';

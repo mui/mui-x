@@ -1,7 +1,5 @@
-import {
-  gridClasses,
-} from '@mui/x-data-grid/internals';
-import { findParentElementFromClassName} from "@mui/x-data-grid/internals/utils/domUtils";
+import { gridClasses } from '@mui/x-data-grid/internals';
+import { findParentElementFromClassName } from '@mui/x-data-grid/internals/utils/domUtils';
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {
   return colCellEl.getAttribute('data-field')!;

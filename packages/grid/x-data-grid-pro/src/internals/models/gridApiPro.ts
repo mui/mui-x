@@ -1,4 +1,4 @@
-import { GridApiCommon, GridStateApi, GridStatePersistenceApi } from '@mui/x-data-grid';
+import { GridApiCommon, GridStateApi, GridStatePersistenceApi } from '@mui/x-data-grid/internals';
 import { GridInitialStatePro, GridStatePro } from './gridStatePro';
 import type { GridColumnPinningApi, GridRowGroupingApi, GridDetailPanelApi } from '../hooks';
 

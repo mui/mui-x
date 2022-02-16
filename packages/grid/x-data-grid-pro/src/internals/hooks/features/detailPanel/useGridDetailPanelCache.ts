@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGridApiEventHandler, gridRowIdsSelector, GridEvents } from '@mui/x-data-grid';
+import { useGridApiEventHandler, gridRowIdsSelector, GridEvents } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 

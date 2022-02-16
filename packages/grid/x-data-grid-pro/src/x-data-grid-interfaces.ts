@@ -1,4 +1,4 @@
-import { GridKeyValue } from '@mui/x-data-grid';
+import { GridKeyValue } from '@mui/x-data-grid/internals';
 import {
   GridPinnedColumns,
   GridRowGroupingModel,
@@ -32,12 +32,14 @@ export interface GridColDefPro {
   groupingValueGetter?: (params: GridGroupingValueGetterParams) => GridKeyValue | null | undefined;
 }
 
-declare module '@mui/x-data-grid' {
+declare module '@mui/x-data-grid/internals' {
   interface GridEventLookup extends GridEventLookupPro {}
 
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
 
   interface GridPreProcessingGroupLookup extends GridPreProcessingGroupLookupPro {}
+}
 
+declare module '@mui/x-data-grid/internals/models/colDef/gridColDef' {
   export interface GridColDef extends GridColDefPro {}
 }

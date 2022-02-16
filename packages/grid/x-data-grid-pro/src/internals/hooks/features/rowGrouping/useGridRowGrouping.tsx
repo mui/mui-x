@@ -3,10 +3,8 @@ import Divider from '@mui/material/Divider';
 import {
   GridRowModel,
   GridRowId,
-  GridColDef,
   GridKeyValue,
   GridColumnLookup,
-  GridStateColDef,
   GridEvents,
   GridEventListener,
   gridRowIdsSelector,
@@ -16,20 +14,25 @@ import {
   gridColumnLookupSelector,
   gridFilteredDescendantCountLookupSelector,
   useFirstRender,
-  unstable_useGridRegisterFilteringMethod as useGridRegisterFilteringMethod,
-  unstable_useGridRegisterSortingMethod as useGridRegisterSortingMethod,
-  unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
-  unstable_useGridStateInit as useGridStateInit,
-  unstable_isDeepEqual as isDeepEqual,
-  Unstable_GridFilteringMethod as GridFilteringMethod,
-  Unstable_GridSortingMethod as GridSortingMethod,
-  Unstable_GridPreProcessor as GridPreProcessor,
-  Unstable_GridColumnRawLookup as GridColumnRawLookup,
-  Unstable_GridColumnsRawState as GridColumnsRawState,
-  Unstable_GridRestoreStatePreProcessingContext as GridRestoreStatePreProcessingContext,
-  Unstable_GridRowGroupingPreProcessing as GridRowGroupingPreProcessing,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid/internals';
+import { useGridStateInit } from '@mui/x-data-grid/internals/hooks/utils/useGridStateInit';
+import {
+  useGridRegisterPreProcessor,
+  GridPreProcessor,
+} from '@mui/x-data-grid/internals/hooks/core/preProcessing';
+import { GridRestoreStatePreProcessingContext } from '@mui/x-data-grid/internals/hooks/features/statePersistence/gridStatePersistenceInterface';
+import { GridSortingMethod } from '@mui/x-data-grid/internals/hooks/features/sorting/gridSortingState';
+import { useGridRegisterSortingMethod } from '@mui/x-data-grid/internals/hooks/features/sorting/useGridRegisterSortingMethod';
+import { GridFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/gridFilterState';
+import { useGridRegisterFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/useGridRegisterFilteringMethod';
+import { GridRowGroupingPreProcessing } from '@mui/x-data-grid/internals/hooks/core/rowGroupsPerProcessing';
+import { isDeepEqual } from '@mui/x-data-grid/build/internals/lib/lodash/lang';
+import {
+  GridColumnRawLookup,
+  GridColumnsRawState,
+} from '@mui/x-data-grid/internals/hooks/features/columns/gridColumnsInterfaces';
 import { GridGroupingValueGetterParams } from '../../../models';
+import { GridColDef, GridStateColDef } from '../../../models/gridColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {

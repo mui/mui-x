@@ -47,12 +47,12 @@ export interface GridColumnApi {
    * @param {GridColDef} col The new [[GridColDef]] object.
    * @deprecated Use `apiRef.current.updateColumns` instead.
    */
-  updateColumn: (col: GridColDef) => void;
+  updateColumn: <Api extends GridApiCommon = GridApiCommon>(col: GridColDef<Api>) => void;
   /**
    * Updates the definition of multiple columns at the same time.
    * @param {GridColDef[]} cols The new column [[GridColDef]] objects.
    */
-  updateColumns: (cols: GridColDef[]) => void;
+  updateColumns: <Api extends GridApiCommon = GridApiCommon>(cols: GridColDef<Api>[]) => void;
   /**
    * Sets the column visibility model to the one given by `model`.
    * @param {GridColumnVisibilityModel} model The new visible columns model.

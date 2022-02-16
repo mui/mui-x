@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import {
   DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
-  DATA_GRID_PROPS_DEFAULT_VALUES,
   GRID_DEFAULT_LOCALE_TEXT,
   GridSlotsComponent,
 } from '@mui/x-data-grid/internals';
+import { DATA_GRID_PROPS_DEFAULT_VALUES } from '@mui/x-data-grid/useDataGridProps';
 import {
   DataGridProProps,
   DataGridProProcessedProps,

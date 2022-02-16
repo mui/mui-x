@@ -1,4 +1,5 @@
 // ColDef
+export type { GridKeyValue, GridAlignment, GridColumnsMeta } from './gridColDef';
 export * from './gridActionsColDef';
 export * from './gridBooleanColDef';
 export * from './gridCheckboxSelectionColDef';

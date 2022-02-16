@@ -4,8 +4,8 @@ import type {
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
   GridFilterState,
-  Unstable_GridAggregatedFilterItemApplier as GridAggregatedFilterItemApplier,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid/internals';
+import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals/hooks/features/filter/gridFilterState';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridStatePro } from '../../../models/gridStatePro';

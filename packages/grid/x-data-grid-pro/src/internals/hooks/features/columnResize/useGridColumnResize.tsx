@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ownerDocument, useEventCallback } from '@mui/material/utils';
 import {
-  GridStateColDef,
   GridEvents,
   GridEventListener,
   gridClasses,
@@ -12,16 +11,17 @@ import {
   useGridApiOptionHandler,
   useGridNativeEventListener,
   useGridLogger,
-  unstable_useGridStateInit as useGridStateInit,
-  unstable_clamp as clamp,
-  unstable_findParentElementFromClassName as findParentElementFromClassName,
-  Unstable_GridColumnHeaderSeparatorProps as GridColumnHeaderSeparatorProps,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid/internals';
+import { useGridStateInit } from '@mui/x-data-grid/internals/hooks/utils/useGridStateInit';
+import { clamp } from '@mui/x-data-grid/internals/utils/utils';
+import { findParentElementFromClassName } from '@mui/x-data-grid/internals/utils/domUtils';
+import { GridColumnHeaderSeparatorProps } from '@mui/x-data-grid/build';
 import {
   findGridCellElementsFromCol,
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
+import { GridStateColDef } from '../../../models/gridColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -217,7 +217,7 @@ export const useGridColumnResize = (
       logger.debug(`Start Resize on col ${colDef.field}`);
       apiRef.current.publishEvent(GridEvents.columnResizeStart, { field: colDef.field }, event);
 
-      colDefRef.current = colDef;
+      colDefRef.current = colDef as GridStateColDef;
       colElementRef.current =
         apiRef.current.columnHeadersContainerElementRef?.current!.querySelector(
           `[data-field="${colDef.field}"]`,
@@ -324,7 +324,7 @@ export const useGridColumnResize = (
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent(GridEvents.columnResizeStart, { field }, event);
 
-    colDefRef.current = colDef;
+    colDefRef.current = colDef as GridStateColDef;
     colElementRef.current = findHeaderElementFromField(
       apiRef.current.columnHeadersElementRef?.current!,
       colDef.field,

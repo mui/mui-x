@@ -28,15 +28,29 @@ export type GridInitialState = GridInitialStateCommunity;
  */
 export type GridApiRef = React.MutableRefObject<GridApiCommunity>;
 
-export * from './internals/models/colDef/gridColDef';
+export {
+  GridStateColDef,
+  GridColDef,
+  GridColumns,
+  GridColTypeDef,
+  GridActionsColDef,
+  GridEnrichedColDef,
+} from './internals/models/colDef/gridColDef';
 export * from './internals/models/colDef/gridDateOperators';
 export * from './internals/models/colDef/gridStringOperators';
 export * from './internals/models/colDef/gridSingleSelectOperators';
 export * from './internals/models/colDef/gridBooleanOperators';
 export * from './internals/models/colDef/gridNumericOperators';
-export * from './internals/models/params/gridCellParams';
-export * from './internals/models/params/gridSortModelParams';
-export * from './internals/models/gridSortModel';
+export type {
+  GridRenderCellParams,
+  GridCellParams,
+  GridRenderEditCellParams,
+  GridValueFormatterParams,
+  GridValueGetterParams,
+  GridValueGetterFullParams,
+} from './internals/models/params/gridCellParams';
+export type { GridSortModelParams } from './internals/models/params/gridSortModelParams';
+export type { GridSortCellParams, GridComparatorFn } from './internals/models/gridSortModel';
 
 export const useGridApiContext = useUntypedGridApiContext as <
   Api extends GridApiCommon = GridApiCommunity,
