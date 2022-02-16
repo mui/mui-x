@@ -7,6 +7,7 @@ import {
   CursorCoordinates,
   GridColumnHeaderSeparatorSides,
   GridColumnResizeParams,
+  GridColumnHeaderSeparatorProps,
   useGridApiEventHandler,
   useGridApiOptionHandler,
   useGridNativeEventListener,
@@ -15,7 +16,6 @@ import {
 import { useGridStateInit } from '@mui/x-data-grid/internals/hooks/utils/useGridStateInit';
 import { clamp } from '@mui/x-data-grid/internals/utils/utils';
 import { findParentElementFromClassName } from '@mui/x-data-grid/internals/utils/domUtils';
-import { GridColumnHeaderSeparatorProps } from '@mui/x-data-grid/internals';
 import {
   findGridCellElementsFromCol,
   getFieldFromHeaderElem,
