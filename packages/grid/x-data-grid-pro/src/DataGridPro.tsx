@@ -9,7 +9,7 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   GridContextProvider,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid/internals';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from './internals/components/Watermark';
 import { DataGridProProps } from './internals';

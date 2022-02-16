@@ -6,6 +6,7 @@
     "noUnusedLocals": false,
     // TODO, turn to true
     "noImplicitAny": false,
+    "baseUrl": "./",
     "allowJs": true,
     "paths": {
       "@mui/x-data-grid": ["./packages/grid/x-data-grid/src"],
@@ -19,7 +20,11 @@
       "@mui/x-pickers": ["./packages/x-pickers/src"],
       "@mui/x-pickers/*": ["./packages/x-pickers/src/*"],
       "@mui/x-pickers-pro": ["./packages/x-pickers-pro/src"],
-      "@mui/x-pickers-pro/*": ["./packages/x-pickers-pro/src/*"]
+      "@mui/x-pickers-pro/*": ["./packages/x-pickers-pro/src/*"],
+      "test": ["./test"],
+      "test/*": ["./test/*"],
+      "packages": ["./packages"],
+      "packages/*": ["./packages/*"]
     }
-  }
+  },
 }

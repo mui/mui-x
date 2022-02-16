@@ -4,13 +4,12 @@ import {
   GridEvents,
   GridEventListener,
   GridScrollParams,
-  GridColumns,
   useGridApiEventHandler,
   useGridApiOptionHandler,
   visibleGridColumnsSelector,
   gridRowsMetaSelector,
-  unstable_useCurrentPageRows as useCurrentPageRows,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid/internals';
+import { useCurrentPageRows } from "@mui/x-data-grid/internals/hooks/utils/useCurrentPageRows";
 import { GridRowScrollEndParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
