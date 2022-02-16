@@ -10,6 +10,9 @@
     "outDir": "build",
     "rootDir": "./src"
   },
-  "include": ["src/**/*.ts*", "src/internals/lib/**/*.js"], // TODO: Remove JS files
+  "references": [
+    { "path": "../x-data-grid-pro/tsconfig.build.json" },
+  ],
+  "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }

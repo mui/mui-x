@@ -1,11 +1,13 @@
 {
-  // TODO: Replace the `tsconfig.json` with this one when migrating to the new bundling structure
+  // TODO: Replace the `tsconfig.json` with this one after migrating everything to the new bundling structure
   "extends": "@mui/monorepo/tsconfig.json",
   "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
     // Already tested with eslint
     "noUnusedLocals": false,
     // TODO, turn to true
     "noImplicitAny": false,
+    "allowJs": true,
     "paths": {
       "@mui/x-data-grid": ["./packages/grid/x-data-grid/src"],
       "@mui/x-data-grid/*": ["./packages/grid/x-data-grid/src/*"],

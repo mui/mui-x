@@ -257,7 +257,7 @@ const DataGridProVirtualScroller = React.forwardRef<
     }
 
     const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
-    const uniqueExpandedRowIds = [...new Set([...expandedRowIds]).values()];
+    const uniqueExpandedRowIds = Array.from(new Set([...expandedRowIds]).values());
 
     for (let i = 0; i < uniqueExpandedRowIds.length; i += 1) {
       const id = uniqueExpandedRowIds[i];
