@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["react", "mocha", "node"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*",  "../../../node_modules/@mui/monorepo/test/utils/initMatchers.ts"]
 }
