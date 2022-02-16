@@ -19,6 +19,17 @@ const defaultAlias = {
 
 const productionPlugins = [
   ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
+  [
+    'search-and-replace',
+    {
+      rules: [
+        {
+          search: '__RELEASE_INFO__',
+          replace: generateReleaseInfo(),
+        },
+      ],
+    },
+  ],
 ];
 
 module.exports = function getBabelConfig(api) {
@@ -67,17 +78,6 @@ module.exports = function getBabelConfig(api) {
     //     ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
     //   },
     // ],
-    [
-      'search-and-replace',
-      {
-        rules: [
-          {
-            search: '__RELEASE_INFO__',
-            replace: generateReleaseInfo(),
-          },
-        ],
-      },
-    ],
   ];
 
   if (process.env.NODE_ENV === 'production') {
