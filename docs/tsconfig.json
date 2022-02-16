@@ -6,7 +6,10 @@
     "types": ["react", "node", "requestidlecallback"],
     "jsx": "preserve",
     "skipLibCheck": true,
-    "incremental": true
+    "incremental": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
   "include": ["src/pages/**/*", "data/**/*"],
   "exclude": ["docs/.next", "docs/export"]

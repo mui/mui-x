@@ -1,5 +1,5 @@
 const path = require('path');
-const generateReleaseInfo = require('./packages/x-license-pro/generateReleaseInfo')
+const generateReleaseInfo = require('./packages/x-license-pro/generateReleaseInfo');
 
 function resolveAliasPath(relativeToBabelConf) {
   const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
