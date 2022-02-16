@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { GridApiRef, GridState } from '../../../models';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
 import { GridEvents } from '../../../models/events';
@@ -16,7 +17,7 @@ import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/prePro
 
 const mergeStateWithPageSize =
   (pageSize: number) =>
-  (state: GridState): GridState => ({
+  (state: GridStateCommunity): GridStateCommunity => ({
     ...state,
     pagination: {
       ...state.pagination,
@@ -29,7 +30,7 @@ const mergeStateWithPageSize =
  * @requires useGridFilter (state)
  */
 export const useGridPageSize = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState'

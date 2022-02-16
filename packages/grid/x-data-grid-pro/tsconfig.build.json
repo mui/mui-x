@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.build.json",
+  "compilerOptions": {
+    "composite": true
+  },
+  "references": [{ "path": "../x-data-grid/tsconfig.build.json" }]
+}

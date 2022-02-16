@@ -2,7 +2,12 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { GridApiRef, useGridApiRef, DataGridPro, GridRowsProp } from '@mui/x-data-grid-pro';
+import {
+  useGridApiRef,
+  DataGridPro,
+  GridRowsProp,
+  GridApi as GridApiPro,
+} from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
 import { action } from '@storybook/addon-actions';
@@ -72,7 +77,7 @@ export function HiddenPagination() {
 }
 
 export function PaginationApiTests() {
-  const apiRef: GridApiRef = useGridApiRef();
+  const apiRef = useGridApiRef();
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = React.useState(false);
 
@@ -172,8 +177,8 @@ export function AutoPagination() {
   );
 }
 
-function loadServerRows(params: { page: number; pageSize: number }): Promise<GridData> {
-  return new Promise<GridData>((resolve) => {
+function loadServerRows(params: { page: number; pageSize: number }): Promise<GridData<GridApiPro>> {
+  return new Promise<GridData<GridApiPro>>((resolve) => {
     const data = getData(params.pageSize * 5, 10);
 
     setTimeout(() => {

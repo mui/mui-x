@@ -325,5 +325,18 @@ describe('e2e', () => {
       );
       expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('3');
     });
+
+    // https://github.com/mui/mui-x/issues/3795#issuecomment-1025628771
+    it('should allow horizontal scroll when there are more columns and no rows', async () => {
+      await renderFixture('DataGrid/EmptyGrid');
+      await page.mouse.move(150, 150);
+      await page.mouse.wheel(50, 0);
+      await sleep(50);
+
+      const scrollLeft = await page.evaluate(() => {
+        return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollLeft;
+      });
+      expect(scrollLeft).not.to.equal(0);
+    });
   });
 });

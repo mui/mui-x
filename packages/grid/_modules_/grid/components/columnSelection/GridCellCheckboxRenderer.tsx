@@ -46,6 +46,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
+    const rippleRef = React.useRef<any>();
     const handleRef = useForkRef(checkboxElement, ref);
     const element = apiRef.current.getCellElement(id, field);
 
@@ -61,9 +62,12 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     }, [element, tabIndex]);
 
     React.useLayoutEffect(() => {
-      if (hasFocus && checkboxElement.current) {
-        const input = checkboxElement.current.querySelector('input')!;
-        input!.focus();
+      if (hasFocus) {
+        const input = checkboxElement.current?.querySelector('input');
+        input?.focus();
+      } else if (rippleRef.current) {
+        // Only available in @mui/material v5.4.1 or later
+        rippleRef.current.stop({});
       }
     }, [hasFocus]);
 
@@ -97,6 +101,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
         inputProps={{ 'aria-label': label }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
+        touchRippleRef={rippleRef}
         {...rootProps.componentsProps?.baseCheckbox}
         {...other}
       />
