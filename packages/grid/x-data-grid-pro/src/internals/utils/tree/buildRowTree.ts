@@ -7,7 +7,7 @@ import {
 import {
   GridRowGroupParams,
   GridRowGroupingResult,
-} from '@mui/x-data-grid/internals/hooks/core/rowGroupsPerProcessing';
+} from '@mui/x-data-grid/internals/hooks/core/rowGroupsPreProcessing';
 
 type GridGroupingCriteriaToIdTree = {
   [field: string]: {

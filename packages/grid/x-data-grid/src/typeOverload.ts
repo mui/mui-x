@@ -28,7 +28,7 @@ export type GridInitialState = GridInitialStateCommunity;
  */
 export type GridApiRef = React.MutableRefObject<GridApiCommunity>;
 
-export {
+export type {
   GridStateColDef,
   GridColDef,
   GridColumns,

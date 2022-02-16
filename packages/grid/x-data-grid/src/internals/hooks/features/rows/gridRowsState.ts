@@ -1,4 +1,4 @@
-import { GridRowGroupingResult } from '../../core/rowGroupsPerProcessing';
+import { GridRowGroupingResult } from '../../core/rowGroupsPreProcessing';
 
 export interface GridRowsState extends GridRowGroupingResult {
   /**

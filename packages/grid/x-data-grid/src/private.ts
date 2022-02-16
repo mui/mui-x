@@ -56,7 +56,7 @@ export type { GridSortingModelApplier as Unstable_GridSortingModelApplier } from
 export type { GridAggregatedFilterItemApplier as Unstable_GridAggregatedFilterItemApplier } from './internals/hooks/features/filter/gridFilterState';
 export type { GridColumnHeaderSeparatorProps as Unstable_GridColumnHeaderSeparatorProps } from './internals/components/columnHeaders/GridColumnHeaderSeparator';
 export type { GridPreProcessor as Unstable_GridPreProcessor } from './internals/hooks/core/preProcessing/gridPreProcessingApi';
-export type { GridRowGroupingPreProcessing as Unstable_GridRowGroupingPreProcessing } from './internals/hooks/core/rowGroupsPerProcessing';
+export type { GridRowGroupingPreProcessing as Unstable_GridRowGroupingPreProcessing } from './internals/hooks/core/rowGroupsPreProcessing';
 export type { GridRestoreStatePreProcessingContext as Unstable_GridRestoreStatePreProcessingContext } from './internals/hooks/features/statePersistence/gridStatePersistenceInterface';
 export type {
   GridColumnRawLookup as Unstable_GridColumnRawLookup,
@@ -65,7 +65,7 @@ export type {
 export type {
   GridRowGroupingResult as Unstable_GridRowGroupingResult,
   GridRowGroupParams as Unstable_GridRowGroupParams,
-} from './internals/hooks/core/rowGroupsPerProcessing';
+} from './internals/hooks/core/rowGroupsPreProcessing';
 export type {
   DataGridPropsWithoutDefaultValue as Unstable_DataGridPropsWithoutDefaultValue,
   DataGridPropsWithDefaultValues as Unstable_DataGridPropsWithDefaultValues,
