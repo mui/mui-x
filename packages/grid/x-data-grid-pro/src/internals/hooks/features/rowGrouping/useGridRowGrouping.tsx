@@ -26,7 +26,7 @@ import { useGridRegisterSortingMethod } from '@mui/x-data-grid/internals/hooks/f
 import { GridFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/gridFilterState';
 import { useGridRegisterFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/useGridRegisterFilteringMethod';
 import { GridRowGroupingPreProcessing } from '@mui/x-data-grid/internals/hooks/core/rowGroupsPerProcessing';
-import { isDeepEqual } from '@mui/x-data-grid/build/internals/lib/lodash/lang';
+import isDeepEqual from '@mui/x-data-grid/internals/lib/lodash/isDeepEqual';
 import {
   GridColumnRawLookup,
   GridColumnsRawState,
