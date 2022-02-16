@@ -1,6 +1,6 @@
 export const buildWarning = (
-    message: string | string[],
-    gravity: 'warning' | 'error' = 'warning',
+  message: string | string[],
+  gravity: 'warning' | 'error' = 'warning',
 ) => {
   let alreadyWarned = false;
 
@@ -19,8 +19,8 @@ export const buildWarning = (
 };
 
 export const wrapWithWarningOnCall = <Args extends any[], R extends any>(
-    method: (...args: Args) => R,
-    message: string | string[],
+  method: (...args: Args) => R,
+  message: string | string[],
 ) => {
   if (process.env.NODE_ENV === 'production') {
     return method;
