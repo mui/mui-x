@@ -165,6 +165,26 @@ By default, the print export display all the DataGrid. It is possible to remove 
 
 For more option to customize the print export, please visit the [`printOptions` api page](/api/data-grid/grid-print-export-options/).
 
+## Custom export format
+
+You can add custom export formats by creating your own export menu.
+To simplify its creation, we export `<GridToolbarExportContainer />` which contains the menu logic.
+The default `<GridToolbarExport />` is defined as follow:
+
+```jsx
+const GridToolbarExport = ({ csvOptions, printOptions, ...other }) => (
+  <GridToolbarExportContainer {...other}>
+    <GridCsvExportMenuItem options={csvOptions} />
+    <GridPrintExportMenuItem options={printOptions} />
+  </GridToolbarExportContainer>
+);
+```
+
+Each child of the `<GridToolbarExportContainer />` receives a prop `hideMenu` to close the export menu after the export.
+The demo below shows how to add a JSON export.
+
+{{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## 🚧 Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.

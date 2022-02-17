@@ -104,8 +104,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
-  booleanCellTrueLabel: 'true',
-  booleanCellFalseLabel: 'false',
+  booleanCellTrueLabel: 'yes',
+  booleanCellFalseLabel: 'no',
 
   // Actions cell more text
   actionsCellMore: 'more',
