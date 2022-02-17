@@ -101,8 +101,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'true',
-  // booleanCellFalseLabel: 'false',
+  // booleanCellTrueLabel: 'yes',
+  // booleanCellFalseLabel: 'no',
 
   // Actions cell more text
   actionsCellMore: 'daha fazla',
