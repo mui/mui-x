@@ -1,19 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId, useForkRef } from '@mui/material/utils';
-import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridMenu } from '../menu/GridMenu';
-import {
-  GridCsvExportOptions,
-  GridExportFormat as ExportTypes,
-  GridPrintExportOptions,
-} from '../../models/gridExport';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridClasses } from '../../gridClasses';
+import { GridCsvExportOptions, GridPrintExportOptions } from '../../models/gridExport';
+import { GridToolbarExportContainer } from './GridToolbarExportContainer';
 
 interface GridExportDisplayOptions {
   /**
@@ -23,116 +14,71 @@ interface GridExportDisplayOptions {
   disableToolbarButton?: boolean;
 }
 
-interface GridExportMenuItemsParams {
-  label: React.ReactNode;
-  format: ExportTypes;
-  formatOptions?: (GridCsvExportOptions | GridPrintExportOptions) & GridExportDisplayOptions;
+export interface GridExportMenuItemProps<Options extends {}> {
+  hideMenu?: () => void;
+  options?: Options & GridExportDisplayOptions;
 }
+
+export type GridCsvExportMenuItemProps = GridExportMenuItemProps<GridCsvExportOptions>;
+
+export type GridPrintExportMenuItemProps = GridExportMenuItemProps<GridPrintExportOptions>;
 
 export interface GridToolbarExportProps extends ButtonProps {
   csvOptions?: GridCsvExportOptions & GridExportDisplayOptions;
   printOptions?: GridPrintExportOptions & GridExportDisplayOptions;
 }
 
+export const GridCsvExportMenuItem = (props: GridCsvExportMenuItemProps) => {
+  const apiRef = useGridApiContext();
+  const { hideMenu, options } = props;
+
+  if (options?.disableToolbarButton) {
+    return null;
+  }
+  return (
+    <MenuItem
+      onClick={() => {
+        apiRef.current.exportDataAsCsv(options);
+        hideMenu?.();
+      }}
+    >
+      {apiRef.current.getLocaleText('toolbarExportCSV')}
+    </MenuItem>
+  );
+};
+
+export const GridPrintExportMenuItem = (props: GridPrintExportMenuItemProps) => {
+  const apiRef = useGridApiContext();
+  const { hideMenu, options } = props;
+
+  if (options?.disableToolbarButton) {
+    return null;
+  }
+  return (
+    <MenuItem
+      onClick={() => {
+        apiRef.current.exportDataAsPrint(options);
+        hideMenu?.();
+      }}
+    >
+      {apiRef.current.getLocaleText('toolbarExportPrint')}
+    </MenuItem>
+  );
+};
+
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
-    const { csvOptions, printOptions, onClick, ...other } = props;
-    const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const menuId = useId();
-
-    const [open, setOpen] = React.useState(false);
-    const buttonRef = React.useRef<HTMLButtonElement>(null);
-    const handleRef = useForkRef(ref, buttonRef);
-
-    const exportOptions: GridExportMenuItemsParams[] = [
-      {
-        label: apiRef.current.getLocaleText('toolbarExportCSV'),
-        format: 'csv',
-        formatOptions: csvOptions,
-      },
-      {
-        label: apiRef.current.getLocaleText('toolbarExportPrint'),
-        format: 'print',
-        formatOptions: printOptions,
-      },
-    ];
-
-    const handleMenuOpen = (event) => {
-      setOpen(true);
-      onClick?.(event);
-    };
-    const handleMenuClose = () => setOpen(false);
-    const handleExport = (option: GridExportMenuItemsParams) => () => {
-      switch (option.format) {
-        case 'csv':
-          apiRef.current.exportDataAsCsv(option.formatOptions);
-          break;
-        case 'print':
-          apiRef.current.exportDataAsPrint(option.formatOptions);
-          break;
-        default:
-          break;
-      }
-
-      setOpen(false);
-    };
-
-    const handleListKeyDown = (event: React.KeyboardEvent) => {
-      if (isTabKey(event.key)) {
-        event.preventDefault();
-      }
-      if (isHideMenuKey(event.key)) {
-        handleMenuClose();
-      }
-    };
+    const { csvOptions = {}, printOptions = {}, ...other } = props;
 
     if (csvOptions?.disableToolbarButton && printOptions?.disableToolbarButton) {
       return null;
     }
 
     return (
-      <React.Fragment>
-        <rootProps.components.BaseButton
-          ref={handleRef}
-          color="primary"
-          size="small"
-          startIcon={<rootProps.components.ExportIcon />}
-          aria-expanded={open ? 'true' : undefined}
-          aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
-          aria-haspopup="menu"
-          aria-labelledby={menuId}
-          id={buttonId}
-          {...other}
-          onClick={handleMenuOpen}
-          {...rootProps.componentsProps?.baseButton}
-        >
-          {apiRef.current.getLocaleText('toolbarExport')}
-        </rootProps.components.BaseButton>
-        <GridMenu
-          open={open}
-          target={buttonRef.current}
-          onClickAway={handleMenuClose}
-          position="bottom-start"
-        >
-          <MenuList
-            id={menuId}
-            className={gridClasses.menuList}
-            aria-labelledby={buttonId}
-            onKeyDown={handleListKeyDown}
-            autoFocusItem={open}
-          >
-            {exportOptions.map((option, index) =>
-              option.formatOptions?.disableToolbarButton ? null : (
-                <MenuItem key={index} onClick={handleExport(option)}>
-                  {option.label}
-                </MenuItem>
-              ),
-            )}
-          </MenuList>
-        </GridMenu>
-      </React.Fragment>
+      <GridToolbarExportContainer {...other} ref={ref}>
+        <GridCsvExportMenuItem options={csvOptions} />
+        <GridPrintExportMenuItem options={printOptions} />
+      </GridToolbarExportContainer>
     );
   },
 );
