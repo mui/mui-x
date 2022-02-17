@@ -367,7 +367,7 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the virtualization content"
     },
-    "virtualScrollerContent--extend": {
+    "virtualScrollerContent--overflowed": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the virtualization content",
       "conditions": "its height is bigger than the virtualization container"

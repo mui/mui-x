@@ -6,13 +6,13 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes']; extendContent: boolean };
+type OwnerState = { classes: DataGridProcessedProps['classes']; overflowedContent: boolean };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, extendContent } = ownerState;
+  const { classes, overflowedContent } = ownerState;
 
   const slots = {
-    root: ['virtualScrollerContent', extendContent && 'virtualScrollerContent--extend'],
+    root: ['virtualScrollerContent', overflowedContent && 'virtualScrollerContent--overflowed'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -32,7 +32,7 @@ const GridVirtualScrollerContent = React.forwardRef<
 >(function GridVirtualScrollerContent(props, ref) {
   const { className, style, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes, extendContent: style?.minHeight === 'auto' };
+  const ownerState = { classes: rootProps.classes, overflowedContent: style?.minHeight === 'auto' };
   const classes = useUtilityClasses(ownerState);
 
   return (

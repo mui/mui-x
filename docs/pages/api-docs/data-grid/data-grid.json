@@ -298,7 +298,7 @@
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",
-      "virtualScrollerContent--extend",
+      "virtualScrollerContent--overflowed",
       "virtualScrollerRenderZone",
       "pinnedColumns",
       "pinnedColumns--left",

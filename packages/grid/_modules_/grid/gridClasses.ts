@@ -268,7 +268,7 @@ export interface GridClasses {
   /**
    * Styles applied to the virtualization content when its height is bigger than the virtualization container.
    */
-  'virtualScrollerContent--extend': string;
+  'virtualScrollerContent--overflowed': string;
   /**
    * Styles applied to the virtualization render zone.
    */
@@ -451,7 +451,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'toolbarFilterList',
   'virtualScroller',
   'virtualScrollerContent',
-  'virtualScrollerContent--extend',
+  'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
   'pinnedColumns',
   'pinnedColumns--left',

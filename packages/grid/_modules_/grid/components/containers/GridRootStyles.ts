@@ -73,7 +73,7 @@ export const GridRootStyles = styled('div', {
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
     },
-    [`& .${gridClasses['virtualScrollerContent--extend']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
+    [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
       {
         borderColor: 'transparent',
       },
