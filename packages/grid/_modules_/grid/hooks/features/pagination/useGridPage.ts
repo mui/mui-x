@@ -37,13 +37,13 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
 
 const mergeStateWithPage =
   (page: number) =>
-    (state: GridStateCommunity): GridStateCommunity => ({
-      ...state,
-      pagination: applyValidPage({
-        ...state.pagination,
-        page,
-      }),
-    });
+  (state: GridStateCommunity): GridStateCommunity => ({
+    ...state,
+    pagination: applyValidPage({
+      ...state.pagination,
+      page,
+    }),
+  });
 
 const noRowCountInServerMode = buildWarning([
   "MUI: the 'rowCount' prop is undefined will using paginationMode='server'",
@@ -55,7 +55,10 @@ const noRowCountInServerMode = buildWarning([
  */
 export const useGridPage = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState' | 'paginationMode'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'page' | 'onPageChange' | 'rowCount' | 'initialState' | 'paginationMode'
+  >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
 
@@ -167,10 +170,12 @@ export const useGridPage = (
   React.useEffect(() => {
     apiRef.current.setState((state) => {
       let rowCount;
-      if (props.paginationMode === 'server') {
-        rowCount = props.rowCount !== undefined ? props.rowCount : state.pagination.rowCount;
+      if (props.rowCount !== undefined) {
+        rowCount = props.rowCount;
+      } else if (props.paginationMode === 'server') {
+        rowCount = state.pagination.rowCount;
       } else {
-        rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
+        rowCount = visibleTopLevelRowCount;
       }
 
       const pageCount = getPageCount(rowCount, state.pagination.pageSize);
