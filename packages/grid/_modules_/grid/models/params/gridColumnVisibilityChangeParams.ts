@@ -1,4 +1,4 @@
-import type { GridStateColDef } from '../colDef';
+import type { GridStateColDef } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter of the column visibility change event.

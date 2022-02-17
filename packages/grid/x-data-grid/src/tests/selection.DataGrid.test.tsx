@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridInputSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridApi, GridInputSelectionModel } from '@mui/x-data-grid';
 import {
   getCell,
   getRow,
@@ -32,9 +32,9 @@ function fireClickEvent(cell: HTMLElement) {
 }
 
 describe('<DataGrid /> - Selection', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer();
 
-  const defaultData = getData(4, 2);
+  const defaultData = getData<GridApi>(4, 2);
 
   const TestDataGridSelection = (
     props: Omit<DataGridProps, 'rows' | 'columns'> &
@@ -232,7 +232,7 @@ describe('<DataGrid /> - Selection', () => {
     it('should check the checkbox when there is no rows', () => {
       render(<TestDataGridSelection rows={[]} checkboxSelection />);
       const selectAll = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       expect(selectAll).to.have.property('checked', false);
     });
@@ -307,6 +307,24 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([2]);
       expect(screen.getByText('1 row selected')).not.to.equal(null);
     });
+
+    it('should set the correct aria-label on the column header checkbox', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      expect(screen.queryByRole('checkbox', { name: 'Unselect all rows' })).to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'Select all rows' })).not.to.equal(null);
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Select all rows' }));
+      expect(screen.queryByRole('checkbox', { name: 'Select all rows' })).to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'Unselect all rows' })).not.to.equal(null);
+    });
+
+    it('should set the correct aria-label on the cell checkbox', () => {
+      render(<TestDataGridSelection checkboxSelection rows={[{ id: 0, name: 'React' }]} />);
+      expect(screen.queryByRole('checkbox', { name: 'Unselect row' })).to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'Select row' })).not.to.equal(null);
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Select row' }));
+      expect(screen.queryByRole('checkbox', { name: 'Select row' })).to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'Unselect row' })).not.to.equal(null);
+    });
   });
 
   describe('prop: checkboxSelection = true (multi selection), with keyboard events', () => {
@@ -380,9 +398,9 @@ describe('<DataGrid /> - Selection', () => {
       if (isJSDOM) {
         this.skip(); // HTMLElement.focus() only scrolls to the element on a real browser
       }
-      const data = getData(20, 1);
+      const data = getData<GridApi>(20, 1);
       render(<TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />);
-      const checkboxes = screen.queryAllByRole('checkbox', { name: /select row checkbox/i });
+      const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
       checkboxes[0].focus();
       fireEvent.keyDown(checkboxes[0], { key: 'ArrowDown' });
       fireEvent.keyDown(checkboxes[1], { key: 'ArrowDown' });
@@ -395,14 +413,13 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should set tabindex=0 on the checkbox when the it receives focus', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      const checkbox = screen.getAllByRole('checkbox', { name: /select row checkbox/i })[0];
+      const checkbox = screen.getAllByRole('checkbox', { name: /select row/i })[0];
       const checkboxCell = getCell(0, 0);
       const secondCell = getCell(0, 1);
       expect(checkbox).to.have.attribute('tabindex', '-1');
       expect(checkboxCell).to.have.attribute('tabindex', '-1');
       expect(secondCell).to.have.attribute('tabindex', '-1');
 
-      secondCell.focus();
       fireEvent.mouseUp(secondCell);
       fireEvent.click(secondCell);
       expect(secondCell).to.have.attribute('tabindex', '0');
@@ -432,6 +449,26 @@ describe('<DataGrid /> - Selection', () => {
       });
 
       expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+
+    describe('ripple', () => {
+      clock.withFakeTimers();
+
+      it('should keep only one ripple visible when navigating between checkboxes', function test() {
+        if (isJSDOM || /firefox/i.test(window.navigator.userAgent)) {
+          // JSDOM doesn't fire "blur" when .focus is called in another element
+          // FIXME Firefox doesn't show any ripple
+          this.skip();
+        }
+        render(<TestDataGridSelection checkboxSelection />);
+        const cell = getCell(1, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: 'ArrowLeft' });
+        fireEvent.keyDown(getCell(1, 0).querySelector('input'), { key: 'ArrowUp' });
+        clock.runToLast(); // Wait for transition
+        expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
+      });
     });
   });
 
@@ -502,7 +539,7 @@ describe('<DataGrid /> - Selection', () => {
 
   describe('props: rows', () => {
     it('should remove the outdated selected rows when rows prop changes', () => {
-      const data = getData(4, 2);
+      const data = getData<GridApi>(4, 2);
 
       const { setProps } = render(
         <TestDataGridSelection selectionModel={[0, 1, 2]} checkboxSelection {...data} />,

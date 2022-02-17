@@ -1,1 +1,1 @@
-export * from './GridStatePersistenceApi';
+export type { GridStatePersistenceApi } from './gridStatePersistenceInterface';

@@ -4,12 +4,13 @@ import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridApi } from '../../../models/api/gridApi';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { getValueFromValueOptions } from './filterPanelUtils';
 
 const renderSingleSelectOptions = (
   { valueOptions, valueFormatter, field }: GridColDef,
-  api: GridApi,
+  api: GridApiCommunity,
 ) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
@@ -28,15 +29,6 @@ const renderSingleSelectOptions = (
     ),
   );
 };
-
-function getValueFromValueOptions(value, valueOptions) {
-  if (valueOptions === undefined) {
-    return undefined;
-  }
-  return valueOptions
-    .map((option) => (typeof option === 'object' ? option.value : option))
-    .find((optionValue) => String(optionValue) === String(value));
-}
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps & { type?: 'singleSelect' };

@@ -5,8 +5,9 @@ import { unstable_useId as useId } from '@mui/material/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridApi } from '../../../models/api/gridApi';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { getValueFromValueOptions } from './filterPanelUtils';
 
 const warnedOnce = {};
 function warnDeprecatedTypeSupport(type) {
@@ -22,7 +23,7 @@ function warnDeprecatedTypeSupport(type) {
 
 const renderSingleSelectOptions = (
   { valueOptions, valueFormatter, field }: GridColDef,
-  api: GridApi,
+  api: GridApiCommunity,
 ) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
@@ -86,9 +87,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
           typeof column.valueOptions === 'function'
             ? column.valueOptions({ field: column.field })
             : column.valueOptions;
-        value = columnValueOptions
-          .map((option) => (typeof option === 'object' ? option.value : option))
-          .find((optionValue) => String(optionValue) === value);
+        value = getValueFromValueOptions(value, columnValueOptions);
       }
 
       clearTimeout(filterTimeout.current);

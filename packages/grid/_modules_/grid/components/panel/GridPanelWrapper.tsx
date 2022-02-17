@@ -1,7 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import TrapFocus from '@mui/material/Unstable_TrapFocus';
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
+import { MUIStyledCommonProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -34,9 +35,11 @@ const GridPanelWrapperRoot = styled('div', {
 
 const isEnabled = () => true;
 
-export function GridPanelWrapper(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
-) {
+interface GridPanelWrapperProps
+  extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
+    MUIStyledCommonProps<Theme> {}
+
+function GridPanelWrapper(props: GridPanelWrapperProps) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
@@ -48,3 +51,5 @@ export function GridPanelWrapper(
     </TrapFocus>
   );
 }
+
+export { GridPanelWrapper };

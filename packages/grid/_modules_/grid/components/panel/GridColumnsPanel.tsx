@@ -10,12 +10,12 @@ import {
 } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridDragIcon } from '../icons/index';
+import { GridDragIcon } from '../icons';
 import { GridPanelContent } from './GridPanelContent';
 import { GridPanelFooter } from './GridPanelFooter';
 import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper } from './GridPanelWrapper';
-import { GRID_EXPERIMENTAL_ENABLED } from '../../constants';
+import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
@@ -93,18 +93,16 @@ export function GridColumnsPanel() {
     setSearchValue(event.target.value);
   }, []);
 
-  const currentColumns = React.useMemo(
-    () =>
-      !searchValue
-        ? columns
-        : columns.filter(
-            (column) =>
-              column.field.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ||
-              (column.headerName &&
-                column.headerName.toLowerCase().indexOf(searchValue.toLowerCase()) > -1),
-          ),
-    [columns, searchValue],
-  );
+  const currentColumns = React.useMemo(() => {
+    if (!searchValue) {
+      return columns;
+    }
+    const searchValueToCheck = searchValue.toLowerCase();
+    return columns.filter(
+      (column) =>
+        (column.headerName || column.field).toLowerCase().indexOf(searchValueToCheck) > -1,
+    );
+  }, [columns, searchValue]);
 
   React.useEffect(() => {
     searchInputRef.current!.focus();

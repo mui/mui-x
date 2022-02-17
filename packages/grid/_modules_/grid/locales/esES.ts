@@ -100,10 +100,14 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   // checkboxSelectionHeaderName: 'Checkbox selection',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'true',
-  // booleanCellFalseLabel: 'false',
+  // booleanCellTrueLabel: 'yes',
+  // booleanCellFalseLabel: 'no',
 
   // Actions cell more text
   actionsCellMore: 'más',

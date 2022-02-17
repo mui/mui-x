@@ -430,3 +430,21 @@ export function FlexLayoutGridSnap() {
     </div>
   );
 }
+
+export function PinnedColumnWithCheckboxSelectionSnap() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 15,
+    maxColumns: 6,
+  });
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPro
+        {...data}
+        initialState={{ pinnedColumns: { left: ['desk'] } }}
+        checkboxSelection
+      />
+    </div>
+  );
+}
