@@ -43,8 +43,13 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
+    if (newDeps['@mui/x-data-grid']) {
       newDeps['@mui/material'] = versions['@mui/material'];
+    }
+
+    if (newDeps['@mui/x-data-grid-pro']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
@@ -211,8 +216,9 @@ function AppWrapper(props) {
     }
   }, []);
 
+  const asPathWithoutLang = router.asPath.replace(/^\/[a-z]{2}\//, '/');
   let productPages = pages;
-  if (router.asPath.startsWith('/x')) {
+  if (asPathWithoutLang.startsWith('/x')) {
     productPages = newPages;
   }
 

@@ -7,4 +7,3 @@ export * from './HideGridColMenuItem';
 export * from './SortGridMenuItems';
 export * from './GridColumnMenuContainer';
 export * from './GridColumnMenuProps';
-export * from './GridColumnPinningMenuItems';

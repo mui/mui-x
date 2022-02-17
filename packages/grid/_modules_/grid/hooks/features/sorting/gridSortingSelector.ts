@@ -1,13 +1,13 @@
 import { createSelector } from '../../../utils/createSelector';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
-import { GridState } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 
 /**
  * @category Sorting
  * @ignore - do not document.
  */
-export const gridSortingStateSelector = (state: GridState) => state.sorting;
+export const gridSortingStateSelector = (state: GridStateCommunity) => state.sorting;
 
 /**
  * Get the id of the rows after the sorting process.

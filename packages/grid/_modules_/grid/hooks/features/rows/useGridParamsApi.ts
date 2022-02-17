@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
@@ -43,7 +43,7 @@ function warnGetValue() {
  * TODO: Impossible priority - useGridEditRows also needs to be after useGridParamsApi
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
-export function useGridParamsApi(apiRef: GridApiRef) {
+export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity>) {
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,
@@ -120,8 +120,8 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     [apiRef, getCellValueWithDeprecationWarning],
   );
 
-  const getCellParams = React.useCallback(
-    (id: GridRowId, field: string) => {
+  const getCellParams = React.useCallback<GridApiCommunity['getCellParams']>(
+    (id, field) => {
       const colDef = apiRef.current.getColumn(field);
       const value = apiRef.current.getCellValue(id, field);
       const row = apiRef.current.getRow(id);
@@ -134,7 +134,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const cellFocus = gridFocusCellSelector(apiRef);
       const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
-      const params: GridCellParams = {
+      const params: GridCellParams<any, any, any, any> = {
         id,
         field,
         row,
@@ -217,17 +217,15 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     [apiRef],
   );
 
-  useGridApiMethod<GridParamsApi>(
-    apiRef,
-    {
-      getCellValue,
-      getCellParams,
-      getCellElement,
-      getRowParams,
-      getRowElement,
-      getColumnHeaderParams,
-      getColumnHeaderElement,
-    },
-    'GridParamsApi',
-  );
+  const paramsApi: GridParamsApi = {
+    getCellValue,
+    getCellParams,
+    getCellElement,
+    getRowParams,
+    getRowElement,
+    getColumnHeaderParams,
+    getColumnHeaderElement,
+  };
+
+  useGridApiMethod(apiRef, paramsApi, 'GridParamsApi');
 }

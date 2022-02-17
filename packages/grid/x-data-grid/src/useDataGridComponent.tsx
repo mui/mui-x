@@ -1,4 +1,5 @@
 import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
+import { GridApiCommunity } from '../../_modules_/grid/models/api/gridApiCommunity';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
 
@@ -12,8 +13,7 @@ import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGri
 import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
 import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
-import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
-import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
+import { useGridPagination } from '../../_modules_/grid/hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
@@ -27,7 +27,7 @@ import { useGridRowsMeta } from '../../_modules_/grid/hooks/features/rows/useGri
 import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
-  const apiRef = useGridInitialization(undefined, props);
+  const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridDensity(apiRef, props);
@@ -38,8 +38,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
-  useGridPageSize(apiRef, props);
-  useGridPage(apiRef, props);
+  useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridColumnMenu(apiRef);

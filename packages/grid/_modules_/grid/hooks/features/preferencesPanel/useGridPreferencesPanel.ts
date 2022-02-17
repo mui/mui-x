@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
@@ -12,7 +12,7 @@ import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector'
  * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
  */
 export const useGridPreferencesPanel = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');

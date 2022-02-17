@@ -2,7 +2,7 @@ import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<DataGridPro /> - Pagination', () => {
@@ -10,7 +10,8 @@ describe('<DataGridPro /> - Pagination', () => {
 
   describe('setPage', () => {
     it('should apply valid value', () => {
-      let apiRef;
+      let apiRef: React.MutableRefObject<GridApi>;
+
       const GridTest = () => {
         const basicData = useData(20, 2);
         apiRef = useGridApiRef();
@@ -39,7 +40,7 @@ describe('<DataGridPro /> - Pagination', () => {
     });
 
     it('should apply last page if trying to go to a non-existing page', () => {
-      let apiRef;
+      let apiRef: React.MutableRefObject<GridApi>;
       const GridTest = () => {
         const basicData = useData(20, 2);
         apiRef = useGridApiRef();
