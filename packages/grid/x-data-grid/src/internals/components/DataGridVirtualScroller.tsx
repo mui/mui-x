@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { GridVirtualScroller } from '../../_modules_/grid/components/virtualization/GridVirtualScroller';
-import { GridVirtualScrollerContent } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerContent';
-import { GridVirtualScrollerRenderZone } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerRenderZone';
-import { useGridVirtualScroller } from '../../_modules_/grid/hooks/features/virtualization/useGridVirtualScroller';
+import { GridVirtualScroller } from './virtualization/GridVirtualScroller';
+import { GridVirtualScrollerContent } from './virtualization/GridVirtualScrollerContent';
+import { GridVirtualScrollerRenderZone } from './virtualization/GridVirtualScrollerRenderZone';
+import { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
 
 interface DataGridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
   disableVirtualization?: boolean;

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useGridColumnHeaders } from '../../_modules_/grid/hooks/features/columnHeaders/useGridColumnHeaders';
-import { GridScrollArea } from '../../_modules_/grid/components/GridScrollArea';
-import { GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders/GridColumnHeaders';
-import { GridColumnHeadersInner } from '../../_modules_/grid/components/columnHeaders/GridColumnHeadersInner';
+import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+import { GridScrollArea } from './GridScrollArea';
+import { GridColumnHeaders } from './columnHeaders/GridColumnHeaders';
+import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
 interface DataGridColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
   innerRef?: React.Ref<HTMLDivElement>;

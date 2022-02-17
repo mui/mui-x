@@ -9,11 +9,9 @@ describe('createSelector', () => {
     it('should warn if the instance ID is missing', () => {
       const selector = createSelector([], () => []);
       const state = {} as GridStateCommunity;
-      // @ts-expect-error Add tsconfig.json inside the utils folder
       expect(() => selector(state)).toWarnDev(
         'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
       );
-      // @ts-expect-error Add tsconfig.json inside the utils folder
       expect(() => selector(state, 0)).not.toWarnDev();
     });
 
