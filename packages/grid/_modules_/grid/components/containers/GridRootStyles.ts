@@ -73,6 +73,10 @@ export const GridRootStyles = styled('div', {
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
     },
+    [`& .${gridClasses['virtualScrollerContent--extend']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
+      {
+        borderColor: 'transparent',
+      },
     [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
       lineHeight: null,
@@ -222,10 +226,6 @@ export const GridRootStyles = styled('div', {
           },
         },
       },
-      [`&.${gridClasses['row--lastVisible']}:not(.${gridClasses['row--lastVisibleBeforeEmpty']}) .${gridClasses.cell}`]:
-        {
-          borderColor: 'transparent',
-        },
     },
     [`& .${gridClasses.cell}`]: {
       display: 'flex',

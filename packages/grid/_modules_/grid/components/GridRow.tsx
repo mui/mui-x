@@ -40,15 +40,12 @@ export interface GridRowProps {
 type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
-  hasScrollY: boolean;
   isLastVisible: boolean;
-  autoHeight: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, hasScrollY, isLastVisible, autoHeight, classes } =
-    ownerState;
+  const { editable, editing, selected, isLastVisible, classes } = ownerState;
   const slots = {
     root: [
       'row',
@@ -56,7 +53,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       editable && 'row--editable',
       editing && 'row--editing',
       isLastVisible && 'row--lastVisible',
-      isLastVisible && !hasScrollY && !autoHeight && 'row--lastVisibleBeforeEmpty',
     ],
   };
 
@@ -109,11 +105,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const ownerState = {
     selected,
     isLastVisible,
-    hasScrollY,
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
     editable: rootProps.editMode === GridEditModes.Row,
-    autoHeight: rootProps.autoHeight,
   };
 
   const classes = useUtilityClasses(ownerState);

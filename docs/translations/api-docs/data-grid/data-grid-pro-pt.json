@@ -398,6 +398,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the virtualization content"
     },
+    "virtualScrollerContent--extend": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the virtualization content",
+      "conditions": "its height is bigger than the virtualization container"
+    },
     "virtualScrollerRenderZone": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the virtualization render zone"
@@ -436,11 +441,6 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row element",
       "conditions": "the row is in edit mode"
-    },
-    "row--lastVisibleBeforeEmpty": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the last visible row element",
-      "conditions": "the content doesn't extend to the full height of the grid"
     },
     "row--lastVisible": {
       "description": "Styles applied to {{nodeName}}.",
