@@ -308,6 +308,8 @@
       "root",
       "row--editable",
       "row--editing",
+      "row--lastVisibleBeforeEmpty",
+      "row--lastVisible",
       "row",
       "rowCount",
       "scrollArea",

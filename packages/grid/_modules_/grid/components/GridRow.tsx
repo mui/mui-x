@@ -30,7 +30,7 @@ export interface GridRowProps {
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   editRowsState: GridEditRowsModel;
-  isCurrentPageLastRow?: boolean;
+  isLastVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -41,13 +41,13 @@ type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
   hasScrollY: boolean;
-  isCurrentPageLastRow: boolean;
+  isLastVisible: boolean;
   autoHeight: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, hasScrollY, isCurrentPageLastRow, autoHeight, classes } =
+  const { editable, editing, selected, hasScrollY, isLastVisible, autoHeight, classes } =
     ownerState;
   const slots = {
     root: [
@@ -55,8 +55,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       selected && 'selected',
       editable && 'row--editable',
       editing && 'row--editing',
-      isCurrentPageLastRow && 'row--last',
-      isCurrentPageLastRow && !hasScrollY && !autoHeight && 'row--lastBeforeEmpty',
+      isLastVisible && 'row--lastVisible',
+      isLastVisible && !hasScrollY && !autoHeight && 'row--lastVisibleBeforeEmpty',
     ],
   };
 
@@ -90,7 +90,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     cellFocus,
     cellTabIndex,
     editRowsState,
-    isCurrentPageLastRow = false,
+    isLastVisible = false,
     onClick,
     onDoubleClick,
     onMouseEnter,
@@ -108,7 +108,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   const ownerState = {
     selected,
-    isCurrentPageLastRow,
+    isLastVisible,
     hasScrollY,
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
@@ -276,7 +276,7 @@ GridRow.propTypes = {
   editRowsState: PropTypes.object.isRequired,
   firstColumnToRender: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
-  isCurrentPageLastRow: PropTypes.bool,
+  isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object.isRequired,

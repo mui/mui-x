@@ -285,7 +285,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
-      const currentPageLastRow = firstRowToRender + i === currentPage.rows.length - 1;
+      const lastVisibleRowIndex = firstRowToRender + i === currentPage.rows.length - 1;
       const targetRowHeight = apiRef.current.unstable_getRowHeight(id);
 
       let isSelected: boolean;
@@ -313,7 +313,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           selected={isSelected}
           index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
           containerWidth={availableSpace}
-          isCurrentPageLastRow={currentPageLastRow}
+          isLastVisible={lastVisibleRowIndex}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}
           {...rootProps.componentsProps?.row}
         />,

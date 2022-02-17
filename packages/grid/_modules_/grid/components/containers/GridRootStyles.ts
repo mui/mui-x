@@ -222,7 +222,7 @@ export const GridRootStyles = styled('div', {
           },
         },
       },
-      [`&.${gridClasses['row--last']}:not(.${gridClasses['row--lastBeforeEmpty']}) .${gridClasses.cell}`]:
+      [`&.${gridClasses['row--lastVisible']}:not(.${gridClasses['row--lastVisibleBeforeEmpty']}) .${gridClasses.cell}`]:
         {
           borderColor: 'transparent',
         },

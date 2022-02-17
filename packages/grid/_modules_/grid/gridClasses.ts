@@ -306,13 +306,13 @@ export interface GridClasses {
    */
   'row--editing': string;
   /**
-   * Styles applied to the last row element if the content doesn't extend to the full height of the grid.
+   * Styles applied to the last visible row element if the content doesn't extend to the full height of the grid.
    */
-  'row--lastBeforeEmpty': string;
+  'row--lastVisibleBeforeEmpty': string;
   /**
-   * Styles applied to the last row element on every page of the grid.
+   * Styles applied to the last visible row element on every page of the grid.
    */
-  'row--last': string;
+  'row--lastVisible': string;
   /**
    * Styles applied to the row element.
    */
@@ -440,8 +440,8 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'row--editable',
   'row--editing',
   'row',
-  'row--lastBeforeEmpty',
-  'row--last',
+  'row--lastVisibleBeforeEmpty',
+  'row--lastVisible',
   'rowCount',
   'scrollArea--left',
   'scrollArea--right',
