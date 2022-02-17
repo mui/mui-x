@@ -93,18 +93,16 @@ export function GridColumnsPanel() {
     setSearchValue(event.target.value);
   }, []);
 
-  const currentColumns = React.useMemo(
-    () =>
-      !searchValue
-        ? columns
-        : columns.filter(
-            (column) =>
-              column.field.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ||
-              (column.headerName &&
-                column.headerName.toLowerCase().indexOf(searchValue.toLowerCase()) > -1),
-          ),
-    [columns, searchValue],
-  );
+  const currentColumns = React.useMemo(() => {
+    if (!searchValue) {
+      return columns;
+    }
+    const searchValueToCheck = searchValue.toLowerCase();
+    return columns.filter(
+      (column) =>
+        (column.headerName || column.field).toLowerCase().indexOf(searchValueToCheck) > -1,
+    );
+  }, [columns, searchValue]);
 
   React.useEffect(() => {
     searchInputRef.current!.focus();
