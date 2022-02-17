@@ -21,10 +21,8 @@
       "@mui/x-pickers/*": ["./packages/x-pickers/src/*"],
       "@mui/x-pickers-pro": ["./packages/x-pickers-pro/src"],
       "@mui/x-pickers-pro/*": ["./packages/x-pickers-pro/src/*"],
-      "test": ["./test"],
       "test/*": ["./test/*"],
-      "packages": ["./packages"],
-      "packages/*": ["./packages/*"]
+      "packages/*": ["./packages/*"] // TODO: Remove, is only used for `packages/storybook/src/hooks/useData` which could be part of `@mui/x-data-generator`
     }
   }
 }
