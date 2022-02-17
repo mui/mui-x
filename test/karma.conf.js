@@ -108,7 +108,7 @@ module.exports = function setKarmaConfig(config) {
         extensions: ['.js', '.ts', '.tsx'],
         fallback: {
           fs: false, // Some tests import fs,
-          stream: false,
+          stream: require.resolve('stream-browserify'), // util > inherits breaks with `false`
           path: false,
         },
       },

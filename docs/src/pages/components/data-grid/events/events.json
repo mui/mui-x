@@ -2,13 +2,13 @@
   {
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "name": "cellDoubleClick",
     "description": "Fired when a cell is double-clicked.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
@@ -20,43 +20,43 @@
   {
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>"
   },
   {
     "name": "cellEditStop",
     "description": "Fired when the cell turns back to view mode.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any, any, any>",
     "event": "MuiEvent<MuiBaseEvent>"
   },
   {
     "name": "cellFocusIn",
     "description": "Fired when a cell gains focus.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<{}>"
   },
   {
     "name": "cellFocusOut",
     "description": "Fired when a cell loses focus.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<MuiBaseEvent>"
   },
   {
     "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
     "name": "cellMouseDown",
     "description": "Fired when a <code>mousedown</code> event happens in a cell..",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "name": "cellMouseUp",
     "description": "Fired when a <code>mouseup</code> event happens in a cell..",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
@@ -260,7 +260,7 @@
   {
     "name": "stateChange",
     "description": "Fired when the state of the grid is updated.",
-    "params": "GridState",
+    "params": "any",
     "event": "MuiEvent<{}>"
   },
   {

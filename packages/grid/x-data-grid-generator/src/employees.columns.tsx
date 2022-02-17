@@ -1,4 +1,4 @@
-import { gridStringOrNumberComparator } from '@mui/x-data-grid';
+import { gridStringOrNumberComparator } from '@mui/x-data-grid-pro';
 import {
   randomCity,
   randomCompanyName,
@@ -29,7 +29,7 @@ import {
 import { COUNTRY_ISO_OPTIONS_SORTED } from './services/static-data';
 import { GridColDefGenerator } from './services/gridColDefGenerator';
 
-export const getEmployeeColumns = (): GridColDefGenerator[] => [
+export const getEmployeeColumns = (): GridColDefGenerator<any>[] => [
   {
     field: 'id',
     generateData: randomId,

@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridApi } from '../../models/api/gridApi';
+import { GridApiCommon } from '../../models/api/gridApiCommon';
 
-export function useGridApiMethod<T extends Partial<GridApi>>(
-  apiRef: GridApiRef,
+export function useGridApiMethod<Api extends GridApiCommon, T extends Partial<Api>>(
+  apiRef: React.MutableRefObject<Api>,
   apiMethods: T,
   // TODO: Remove `apiName
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

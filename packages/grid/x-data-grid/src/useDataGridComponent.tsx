@@ -1,4 +1,5 @@
 import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
+import { GridApiCommunity } from '../../_modules_/grid/models/api/gridApiCommunity';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
 
@@ -26,7 +27,7 @@ import { useGridRowsMeta } from '../../_modules_/grid/hooks/features/rows/useGri
 import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
-  const apiRef = useGridInitialization(undefined, props);
+  const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridDensity(apiRef, props);
