@@ -1,13 +1,13 @@
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
 import { GridExportOptions } from '../../../models/gridExport';
-import { GridStateColDef } from '../../../models';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 interface GridGetColumnsToExportParams {
   /**
    * The API of the grid.
    */
-  apiRef: GridApiRef;
+  apiRef: React.MutableRefObject<GridApiCommunity>;
   options: GridExportOptions;
 }
 
