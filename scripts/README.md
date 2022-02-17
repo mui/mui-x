@@ -10,7 +10,7 @@ A typical release goes like this:
 
 The following steps must be proposed as a pull request.
 
-1. - [ ] Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
+- [ ] Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
          To do so, use `yarn release:changelog` The options are the following:
 
    ```bash
@@ -24,20 +24,19 @@ The following steps must be proposed as a pull request.
 
    In case of problem, another method to generate the changelog is available at the end of this page.
 
-2. - [ ] Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
-3. - [ ] Update the root `package.json`'s version
-4. - [ ] Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
-5. - [ ] Open PR with changes and wait for review and green CI.
-6. - [ ] Merge PR once CI is green, and it has been approved.
+- [ ] Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
+- [ ] Update the root `package.json`'s version
+- [ ] Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
+- [ ] Open PR with changes and wait for review and green CI.
+- [ ] Merge PR once CI is green, and it has been approved.
 
 ### Release the packages
 
-1. - [ ] Checkout the last version of the working branch
-2. - [ ] Make sure you have the latest dependencies installed: `yarn`.
-
-3. - [ ] Build the packages: `yarn release:build`.
-4. - [ ] Release the versions on NPM: `yarn release:publish` (you need your 2FA device).
-5. - [ ] Create a new tag named with the release you just did `git tag v4.0.0-alpha.30 && git push upstream --tag`
+- [ ] Checkout the last version of the working branch
+- [ ] Make sure you have the latest dependencies installed: `yarn`.
+- [ ] Build the packages: `yarn release:build`.
+- [ ] Release the versions on NPM: `yarn release:publish` (you need your 2FA device).
+- [ ] Create a new tag named with the release you just did `git tag v4.0.0-alpha.30 && git push upstream --tag`
 
 ### Publish the documentation
 
