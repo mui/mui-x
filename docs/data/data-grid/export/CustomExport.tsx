@@ -12,7 +12,6 @@ import {
   gridFilteredSortedRowIdsSelector,
   visibleGridColumnsSelector,
 } from '@mui/x-data-grid';
-import { CssBaseline } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
 
@@ -97,14 +96,12 @@ export default function CustomExport() {
   });
 
   return (
-    <CssBaseline>
-      <div style={{ height: 300, width: '100%' }}>
-        <DataGrid
-          {...data}
-          loading={loading}
-          components={{ Toolbar: CustomToolbar }}
-        />
-      </div>
-    </CssBaseline>
+    <div style={{ height: 300, width: '100%' }}>
+      <DataGrid
+        {...data}
+        loading={loading}
+        components={{ Toolbar: CustomToolbar }}
+      />
+    </div>
   );
 }

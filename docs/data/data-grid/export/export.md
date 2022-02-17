@@ -165,7 +165,7 @@ By default, the print export display all the DataGrid. It is possible to remove 
 
 For more option to customize the print export, please visit the [`printOptions` api page](/api/data-grid/grid-print-export-options/).
 
-## Custom export
+## Custom export format
 
 You can add custom export formats by creating your own export menu.
 To simplify its creation, we export `<GridToolbarExportContainer />` which contains the menu logic.
@@ -181,7 +181,7 @@ const GridToolbarExport = ({ csvOptions, printOptions, ...other }) => (
 ```
 
 Each child of the `<GridToolbarExportContainer />` receives a prop `hideMenu` to close the export menu after the export.
-Here is an example of how to add a JSON export.
+The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 

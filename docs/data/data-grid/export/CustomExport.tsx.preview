@@ -1,9 +1,5 @@
-<CssBaseline>
-  <div style={{ height: 300, width: '100%' }}>
-    <DataGrid
-      {...data}
-      loading={loading}
-      components={{ Toolbar: CustomToolbar }}
-    />
-  </div>
-</CssBaseline>
+<DataGrid
+  {...data}
+  loading={loading}
+  components={{ Toolbar: CustomToolbar }}
+/>
