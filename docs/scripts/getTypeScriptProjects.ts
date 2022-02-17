@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import * as ts from 'typescript';
 import { Project, ProjectNames, Projects } from './api/utils';
 
@@ -7,27 +8,23 @@ const workspaceRoot = path.resolve(__dirname, '../../');
 interface CreateProgramOptions {
   name: ProjectNames;
   rootPath: string;
-
   /**
-   * Config to us to build this package
+   * Config to use to build this package.
    * The path must be relative to the root path.
    */
   tsConfigPath: string;
-
   /**
-   * File used as root of the package
+   * File used as root of the package.
    * The path must be relative to the root path.
    */
   entryPointPath: string;
-
   /**
-   * Folder containing all the components of this package
+   * Folder containing all the components of this package.
    * The path must be relative to the root path.
    */
   componentsFolder?: string;
-
   /**
-   * Additional files containing components outside the component's folder
+   * Additional files containing components outside the component's folder.
    * The path must be relative to the root path.
    */
   otherComponentFiles?: string[];
@@ -37,17 +34,29 @@ const createProject = (options: CreateProgramOptions): Project => {
   const { name, tsConfigPath, rootPath, entryPointPath, componentsFolder, otherComponentFiles } =
     options;
 
-  const compilerOptions = ts.parseJsonConfigFileContent(
-    ts.readConfigFile(path.join(rootPath, tsConfigPath), ts.sys.readFile).config,
-    ts.sys,
-    rootPath,
+  const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
+    fs.readFileSync(filePath).toString(),
   );
+
+  if (tsConfigFile.error) {
+    throw tsConfigFile.error;
+  }
+
+  const tsConfigFileContent = ts.parseJsonConfigFileContent(
+    tsConfigFile.config,
+    ts.sys,
+    path.dirname(tsConfigPath),
+  );
+
+  if (tsConfigFileContent.errors.length > 0) {
+    throw tsConfigFileContent.errors[0];
+  }
 
   const fullEntryPointPath = path.join(rootPath, entryPointPath);
 
   const program = ts.createProgram({
     rootNames: [fullEntryPointPath],
-    options: compilerOptions.options,
+    options: tsConfigFileContent.options,
   });
 
   const checker = program.getTypeChecker();
@@ -65,12 +74,8 @@ const createProject = (options: CreateProgramOptions): Project => {
     program,
     checker,
     workspaceRoot,
-    componentsFolder:
-      componentsFolder === undefined ? undefined : path.join(rootPath, componentsFolder),
-    otherComponentFiles:
-      otherComponentFiles === undefined
-        ? undefined
-        : otherComponentFiles.map((file) => path.join(rootPath, file)),
+    componentsFolder: componentsFolder ? path.join(rootPath, componentsFolder) : undefined,
+    otherComponentFiles: otherComponentFiles?.map((file) => path.join(rootPath, file)),
     prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
   };
 };

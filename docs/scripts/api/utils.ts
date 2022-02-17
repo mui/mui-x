@@ -12,12 +12,10 @@ export interface Project {
   checker: ts.TypeChecker;
   workspaceRoot: string;
   prettierConfigPath: string;
-
   /**
    * Folder containing all the components of this package
    */
   componentsFolder?: string;
-
   /**
    * Additional files containing components outside the components folder
    */
