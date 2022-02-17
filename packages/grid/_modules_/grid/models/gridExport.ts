@@ -1,5 +1,7 @@
+import * as React from 'react';
 import { GridRowId } from './gridRows';
-import type { GridApiRef } from './api';
+import type { GridApiCommon } from './api';
+import type { GridApiCommunity } from './api/gridApiCommunity';
 
 /**
  * The options applicable to any export format.
@@ -17,11 +19,11 @@ export interface GridExportOptions {
   allColumns?: boolean;
 }
 
-export interface GridCsvGetRowsToExportParams {
+export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity> {
   /**
    * The API of the grid.
    */
-  apiRef: GridApiRef;
+  apiRef: React.MutableRefObject<Api>;
 }
 
 /**

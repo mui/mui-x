@@ -68,7 +68,7 @@ To disable sorting on a column, set the `sortable` property of `GridColDef` to `
 In the following demo, the user cannot use the _rating_ column as a sorting rule.
 
 ```tsx
-<Datagrid columns={[...columns, { field: 'rating', sortable: false }]} />
+<DataGrid columns={[...columns, { field: 'rating', sortable: false }]} />
 ```
 
 {{"demo": "DisableSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}

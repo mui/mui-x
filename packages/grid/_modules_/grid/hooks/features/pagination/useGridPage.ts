@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { GridApiRef, GridState } from '../../../models';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridLogger,
   useGridSelector,
@@ -36,13 +37,13 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
 
 const mergeStateWithPage =
   (page: number) =>
-  (state: GridState): GridState => ({
-    ...state,
-    pagination: applyValidPage({
-      ...state.pagination,
-      page,
-    }),
-  });
+    (state: GridStateCommunity): GridStateCommunity => ({
+      ...state,
+      pagination: applyValidPage({
+        ...state.pagination,
+        page,
+      }),
+    });
 
 const noRowCountInServerMode = buildWarning([
   "MUI: the 'rowCount' prop is undefined will using paginationMode='server'",
@@ -53,11 +54,8 @@ const noRowCountInServerMode = buildWarning([
  * @requires useGridFilter (state)
  */
 export const useGridPage = (
-  apiRef: GridApiRef,
-  props: Pick<
-    DataGridProcessedProps,
-    'page' | 'onPageChange' | 'rowCount' | 'initialState' | 'paginationMode'
-  >,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState' | 'paginationMode'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
 

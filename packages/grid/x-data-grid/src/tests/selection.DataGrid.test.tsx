@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridInputSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridApi, GridInputSelectionModel } from '@mui/x-data-grid';
 import {
   getCell,
   getRow,
@@ -32,9 +32,9 @@ function fireClickEvent(cell: HTMLElement) {
 }
 
 describe('<DataGrid /> - Selection', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer();
 
-  const defaultData = getData(4, 2);
+  const defaultData = getData<GridApi>(4, 2);
 
   const TestDataGridSelection = (
     props: Omit<DataGridProps, 'rows' | 'columns'> &
@@ -398,7 +398,7 @@ describe('<DataGrid /> - Selection', () => {
       if (isJSDOM) {
         this.skip(); // HTMLElement.focus() only scrolls to the element on a real browser
       }
-      const data = getData(20, 1);
+      const data = getData<GridApi>(20, 1);
       render(<TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />);
       const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
       checkboxes[0].focus();
@@ -449,6 +449,26 @@ describe('<DataGrid /> - Selection', () => {
       });
 
       expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+
+    describe('ripple', () => {
+      clock.withFakeTimers();
+
+      it('should keep only one ripple visible when navigating between checkboxes', function test() {
+        if (isJSDOM || /firefox/i.test(window.navigator.userAgent)) {
+          // JSDOM doesn't fire "blur" when .focus is called in another element
+          // FIXME Firefox doesn't show any ripple
+          this.skip();
+        }
+        render(<TestDataGridSelection checkboxSelection />);
+        const cell = getCell(1, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: 'ArrowLeft' });
+        fireEvent.keyDown(getCell(1, 0).querySelector('input'), { key: 'ArrowUp' });
+        clock.runToLast(); // Wait for transition
+        expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
+      });
     });
   });
 
@@ -520,7 +540,7 @@ describe('<DataGrid /> - Selection', () => {
 
   describe('props: rows', () => {
     it('should remove the outdated selected rows when rows prop changes', () => {
-      const data = getData(4, 2);
+      const data = getData<GridApi>(4, 2);
 
       const { setProps } = render(
         <TestDataGridSelection selectionModel={[0, 1, 2]} checkboxSelection {...data} />,

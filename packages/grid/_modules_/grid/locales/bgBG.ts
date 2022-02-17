@@ -5,7 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const bgBGGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма редове',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Няма намерени резултати.',
   errorOverlayDefaultLabel: 'Възникна грешка.',
 
   // Density selector toolbar button text
@@ -27,10 +27,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
   // Export selector toolbar button text
-  // toolbarExport: 'Export',
-  // toolbarExportLabel: 'Export',
-  // toolbarExportCSV: 'Download as CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExport: 'Изтегли',
+  toolbarExportLabel: 'Изтегли',
+  toolbarExportCSV: 'Изтегли като CSV',
+  toolbarExportPrint: 'Принтиране',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Намери колона',
@@ -60,14 +60,14 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'е на или след',
   filterOperatorBefore: 'е преди',
   filterOperatorOnOrBefore: 'е на или преди',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsEmpty: 'е празен',
+  filterOperatorIsNotEmpty: 'не е празен',
+  filterOperatorIsAnyOf: 'е някой от',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'всякакви',
+  filterValueTrue: 'вярно',
+  filterValueFalse: 'невярно',
 
   // Column menu text
   columnMenuLabel: 'Меню',
@@ -93,40 +93,41 @@ const bgBGGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Общо Rедове:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} от ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionHeaderName: 'Избор на квадратче',
+  checkboxSelectionSelectAllRows: 'Избери всички редове',
+  checkboxSelectionUnselectAllRows: 'Отмени избора на всички редове',
+  checkboxSelectionSelectRow: 'Избери ред',
+  checkboxSelectionUnselectRow: 'Отмени избора на ред',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'true',
-  // booleanCellFalseLabel: 'false',
+  booleanCellTrueLabel: 'да',
+  booleanCellFalseLabel: 'не',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'още',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Закачи в ляво',
+  pinToRight: 'Закачи в дясно',
+  unpin: 'Откачи',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Група',
+  treeDataExpand: 'виж деца',
+  treeDataCollapse: 'скрий децата',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Група',
+  groupColumn: (name) => `Групирай по ${name}`,
+  unGroupColumn: (name) => `Спри групиране по ${name}`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'Разгъване',
+  collapseDetailPanel: 'Свиване',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

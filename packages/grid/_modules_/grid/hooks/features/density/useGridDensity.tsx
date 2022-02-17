@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridDensity, GridDensityTypes } from '../../../models/gridDensity';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridDensityApi } from '../../../models/api/gridDensityApi';
 import { GridDensityState } from './densityState';
@@ -45,7 +45,7 @@ const getUpdatedDensityState = (
 };
 
 export const useGridDensity = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'headerHeight' | 'rowHeight' | 'density'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');

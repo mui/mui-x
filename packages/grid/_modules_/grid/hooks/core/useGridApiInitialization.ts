@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridEvents } from '../../models/events';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridApi, GridCoreApi, GridState } from '../../models';
+import { GridApiCommon, GridCoreApi } from '../../models';
 import { EventManager } from '../../utils/EventManager';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
@@ -13,18 +12,18 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
 
 let globalId = 0;
 
-export function useGridApiInitialization(
-  inputApiRef: GridApiRef | undefined,
+export function useGridApiInitialization<Api extends GridApiCommon>(
+  inputApiRef: React.MutableRefObject<Api> | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
-): GridApiRef {
-  const apiRef = React.useRef() as GridApiRef;
+): React.MutableRefObject<Api> {
+  const apiRef = React.useRef() as React.MutableRefObject<Api>;
 
   if (!apiRef.current) {
     apiRef.current = {
       unstable_eventManager: new EventManager(),
-      state: {} as GridState,
+      state: {} as Api['state'],
       instanceId: globalId,
-    } as GridApi;
+    } as Api;
 
     globalId += 1;
   }
@@ -63,7 +62,7 @@ export function useGridApiInitialization(
     [apiRef],
   );
 
-  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
+  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError } as any, 'GridCoreApi');
 
   React.useEffect(() => {
     const api = apiRef.current;

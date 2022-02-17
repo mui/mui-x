@@ -6,6 +6,7 @@ import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { GridFilterItem } from '../../../models/gridFilterItem';
+import { getValueFromOption } from './filterPanelUtils';
 
 export type GridFilterInputMultipleSingleSelectProps = {
   item: GridFilterItem;
@@ -24,8 +25,6 @@ const getSingleSelectOptionFormatter =
     }
     return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
   };
-
-const getValueFromOption = (option) => (typeof option === 'object' ? option.value : option);
 
 const isOptionEqualToValue = (option, value) =>
   getValueFromOption(option) === getValueFromOption(value);
