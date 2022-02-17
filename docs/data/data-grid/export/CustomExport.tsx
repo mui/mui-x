@@ -50,7 +50,7 @@ const exportBlob = (blob, filename) => {
   });
 };
 
-export const JsonExportMenuItem = (props: GridExportMenuItemProps<{}>) => {
+const JsonExportMenuItem = (props: GridExportMenuItemProps<{}>) => {
   const apiRef = useGridApiContext();
 
   const { hideMenu } = props;

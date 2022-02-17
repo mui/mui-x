@@ -75,8 +75,6 @@ JsonExportMenuItem.propTypes = {
   hideMenu: PropTypes.func,
 };
 
-export { JsonExportMenuItem };
-
 const csvOptions = { delimiter: ';' };
 
 const CustomExportButton = (props) => (
