@@ -17,15 +17,29 @@ const serialiseCellValue = (value: GridCellValue, delimiterCharacter: string) =>
   return value;
 };
 
+let warnedOnce = false;
+
 const serialiseRow = (
   id: GridRowId,
   columns: GridStateColDef[],
   getCellParams: (id: GridRowId, field: string) => GridCellParams,
   delimiterCharacter: string,
 ) =>
-  columns.map((column) =>
-    serialiseCellValue(getCellParams(id, column.field).formattedValue, delimiterCharacter),
-  );
+  columns.map((column) => {
+    const cellParams = getCellParams(id, column.field);
+    if (process.env.NODE_ENV !== 'production') {
+      if (!warnedOnce && String(cellParams.formattedValue) === '[object Object]') {
+        console.warn(
+          [
+            'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+            'You can provide a `valueFormatter` with a string representation to be used.',
+          ].join('\n'),
+        );
+        warnedOnce = true;
+      }
+    }
+    return serialiseCellValue(cellParams.formattedValue, delimiterCharacter);
+  });
 
 interface BuildCSVOptions {
   columns: GridStateColDef[];
