@@ -8,8 +8,8 @@ import {
   useGridApiOptionHandler,
   visibleGridColumnsSelector,
   gridRowsMetaSelector,
+  useCurrentPageRows,
 } from '@mui/x-data-grid/internals';
-import { useCurrentPageRows } from '@mui/x-data-grid/internals/hooks/utils/useCurrentPageRows';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridColumns } from '../../../models/gridColDef';

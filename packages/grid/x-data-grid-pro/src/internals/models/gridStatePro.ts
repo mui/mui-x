@@ -1,4 +1,4 @@
-import {
+import type {
   GridInitialStateCommunity,
   GridStateCommunity,
 } from '@mui/x-data-grid/internals/models/gridStateCommunity';

@@ -3,11 +3,9 @@ import {
   GridRowId,
   GridRowTreeConfig,
   GridKeyValue,
-} from '@mui/x-data-grid/internals';
-import {
   GridRowGroupParams,
   GridRowGroupingResult,
-} from '@mui/x-data-grid/internals/hooks/core/rowGroupsPreProcessing';
+} from '@mui/x-data-grid/internals';
 
 type GridGroupingCriteriaToIdTree = {
   [field: string]: {

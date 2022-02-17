@@ -91,7 +91,7 @@ export const getTypeScriptProjects = () => {
       tsConfigPath: 'tsconfig.json',
       entryPointPath: 'src/index.ts',
       componentsFolder: 'src/internals/components',
-      otherComponentFiles: ['src/DataGridPro.tsx'],
+      otherComponentFiles: ['src/internals/DataGridPro.tsx'],
     }),
   );
 
@@ -103,7 +103,7 @@ export const getTypeScriptProjects = () => {
       tsConfigPath: 'tsconfig.json',
       entryPointPath: 'src/index.ts',
       componentsFolder: 'src/internals/components',
-      otherComponentFiles: ['src/DataGrid.tsx'],
+      otherComponentFiles: ['src/internals/DataGrid.tsx'],
     }),
   );
 

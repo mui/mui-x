@@ -8,8 +8,8 @@ import {
   GridEvents,
   GridEventListener,
   useGridLogger,
+  useGridStateInit,
 } from '@mui/x-data-grid/internals';
-import { useGridStateInit } from '@mui/x-data-grid/internals/hooks/utils/useGridStateInit';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { GRID_STRING_COL_DEF } from '@mui/x-data-grid/internals';
-import { GridColumnRawLookup } from '@mui/x-data-grid/internals/hooks/features/columns/gridColumnsInterfaces';
+import { GRID_STRING_COL_DEF, GridColumnRawLookup } from '@mui/x-data-grid/internals';
 import { GridColDef, GridStateColDef } from '../../../models/gridColDef';
 import { GridComparatorFn } from '../../../models/gridSortModel';
 import { GridRenderCellParams } from '../../../models/gridCellParams';

@@ -12,10 +12,10 @@ import {
   useGridApiOptionHandler,
   useGridNativeEventListener,
   useGridLogger,
+  useGridStateInit,
+  clamp,
+  findParentElementFromClassName,
 } from '@mui/x-data-grid/internals';
-import { useGridStateInit } from '@mui/x-data-grid/internals/hooks/utils/useGridStateInit';
-import { clamp } from '@mui/x-data-grid/internals/utils/utils';
-import { findParentElementFromClassName } from '@mui/x-data-grid/internals/utils/domUtils';
 import {
   findGridCellElementsFromCol,
   getFieldFromHeaderElem,

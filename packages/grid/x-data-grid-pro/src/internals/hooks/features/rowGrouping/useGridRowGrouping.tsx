@@ -14,23 +14,19 @@ import {
   gridColumnLookupSelector,
   gridFilteredDescendantCountLookupSelector,
   useFirstRender,
-} from '@mui/x-data-grid/internals';
-import { useGridStateInit } from '@mui/x-data-grid/internals/hooks/utils/useGridStateInit';
-import {
+  useGridStateInit,
   useGridRegisterPreProcessor,
   GridPreProcessor,
-} from '@mui/x-data-grid/internals/hooks/core/preProcessing';
-import { GridRestoreStatePreProcessingContext } from '@mui/x-data-grid/internals/hooks/features/statePersistence/gridStatePersistenceInterface';
-import { GridSortingMethod } from '@mui/x-data-grid/internals/hooks/features/sorting/gridSortingState';
-import { useGridRegisterSortingMethod } from '@mui/x-data-grid/internals/hooks/features/sorting/useGridRegisterSortingMethod';
-import { GridFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/gridFilterState';
-import { useGridRegisterFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/useGridRegisterFilteringMethod';
-import { GridRowGroupingPreProcessing } from '@mui/x-data-grid/internals/hooks/core/rowGroupsPreProcessing';
-import isDeepEqual from '@mui/x-data-grid/internals/lib/lodash/isDeepEqual';
-import {
+  useGridRegisterSortingMethod,
+  GridSortingMethod,
+  useGridRegisterFilteringMethod,
+  GridFilteringMethod,
+  GridRestoreStatePreProcessingContext,
+  GridRowGroupingPreProcessing,
   GridColumnRawLookup,
   GridColumnsRawState,
-} from '@mui/x-data-grid/internals/hooks/features/columns/gridColumnsInterfaces';
+  isDeepEqual,
+} from '@mui/x-data-grid/internals';
 import { GridGroupingValueGetterParams } from '../../../models';
 import { GridColDef, GridStateColDef } from '../../../models/gridColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
@@ -125,7 +121,7 @@ export const useGridRowGrouping = (
       }: {
         row: GridRowModel;
         id: GridRowId;
-        colDef: GridColDef<GridApiPro>;
+        colDef: GridColDef;
       }) => {
         let key: GridKeyValue | null | undefined;
         if (colDef.groupingValueGetter) {

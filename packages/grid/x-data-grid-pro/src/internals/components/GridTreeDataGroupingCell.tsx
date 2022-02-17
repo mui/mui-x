@@ -8,8 +8,8 @@ import {
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridEvents,
+  isNavigationKey,
 } from '@mui/x-data-grid/internals';
-import { isNavigationKey } from '@mui/x-data-grid/internals/utils/keyboardUtils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';

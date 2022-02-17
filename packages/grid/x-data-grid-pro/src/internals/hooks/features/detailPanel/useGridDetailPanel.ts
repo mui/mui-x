@@ -6,12 +6,10 @@ import {
   useGridSelector,
   useGridApiEventHandler,
   useGridApiMethod,
-} from '@mui/x-data-grid/internals';
-import {
+  useGridStateInit,
   useGridRegisterPreProcessor,
   GridPreProcessor,
-} from '@mui/x-data-grid/internals/hooks/core/preProcessing';
-import { useGridStateInit } from '@mui/x-data-grid/internals/hooks/utils/useGridStateInit';
+} from '@mui/x-data-grid/internals';
 import { GridCellParams } from '../../../models/gridCellParams';
 import { GridApiPro } from '../../../models/gridApiPro';
 import {

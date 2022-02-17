@@ -11,12 +11,12 @@ import {
   useGridApiEventHandler,
   GridEvents,
   GridRowId,
+  useCurrentPageRows,
+  GridVirtualScroller,
+  GridVirtualScrollerContent,
+  GridVirtualScrollerRenderZone,
+  useGridVirtualScroller,
 } from '@mui/x-data-grid/internals';
-import { GridVirtualScroller } from '@mui/x-data-grid/internals/components/virtualization/GridVirtualScroller';
-import { GridVirtualScrollerContent } from '@mui/x-data-grid/internals/components/virtualization/GridVirtualScrollerContent';
-import { GridVirtualScrollerRenderZone } from '@mui/x-data-grid/internals/components/virtualization/GridVirtualScrollerRenderZone';
-import { useGridVirtualScroller } from '@mui/x-data-grid/internals/hooks/features/virtualization/useGridVirtualScroller';
-import { useCurrentPageRows } from '@mui/x-data-grid/internals/hooks/utils/useCurrentPageRows';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';

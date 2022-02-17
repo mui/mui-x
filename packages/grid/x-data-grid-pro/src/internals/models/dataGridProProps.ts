@@ -8,7 +8,7 @@ import {
   GridRowParams,
   GridRowId,
 } from '@mui/x-data-grid/internals';
-import {
+import type {
   GridExperimentalFeatures,
   DataGridPropsWithoutDefaultValue,
   DataGridPropsWithDefaultValues,

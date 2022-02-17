@@ -291,7 +291,7 @@
   { "name": "GridPreferencesPanel", "kind": "Variable" },
   { "name": "GridPreferencesPanelApi", "kind": "Interface" },
   { "name": "GridPreProcessEditCellProps", "kind": "ExportSpecifier" },
-  { "name": "GridPreProcessingGroupLookup", "kind": "Interface" },
+  { "name": "GridPreProcessingGroupLookup", "kind": "ExportSpecifier" },
   { "name": "GridPrintExportApi", "kind": "Interface" },
   { "name": "GridPrintExportOptions", "kind": "Interface" },
   { "name": "GridRemoveIcon", "kind": "Variable" },

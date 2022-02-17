@@ -7,16 +7,14 @@ import {
   gridRowTreeSelector,
   gridFilteredDescendantCountLookupSelector,
   useFirstRender,
-} from '@mui/x-data-grid/internals';
-import {
   useGridRegisterPreProcessor,
   GridPreProcessor,
-} from '@mui/x-data-grid/internals/hooks/core/preProcessing';
-import { GridSortingMethod } from '@mui/x-data-grid/internals/hooks/features/sorting/gridSortingState';
-import { useGridRegisterSortingMethod } from '@mui/x-data-grid/internals/hooks/features/sorting/useGridRegisterSortingMethod';
-import { GridFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/gridFilterState';
-import { useGridRegisterFilteringMethod } from '@mui/x-data-grid/internals/hooks/features/filter/useGridRegisterFilteringMethod';
-import { GridRowGroupingPreProcessing } from '@mui/x-data-grid/internals/hooks/core/rowGroupsPreProcessing';
+  GridSortingMethod,
+  useGridRegisterSortingMethod,
+  GridFilteringMethod,
+  useGridRegisterFilteringMethod,
+  GridRowGroupingPreProcessing,
+} from '@mui/x-data-grid/internals';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridColDef } from '../../../models/gridColDef';

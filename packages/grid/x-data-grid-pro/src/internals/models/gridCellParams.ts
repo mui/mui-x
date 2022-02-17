@@ -1,5 +1,5 @@
 import { GridApiCommon } from '@mui/x-data-grid/internals';
-import {
+import type {
   GridCellParams as GridCellParamsUntyped,
   GridRenderCellParams as GridRenderCellParamsUntyped,
   GridRenderEditCellParams as GridRenderEditCellParamsUntyped,

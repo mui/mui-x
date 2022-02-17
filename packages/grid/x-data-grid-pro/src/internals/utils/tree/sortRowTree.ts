@@ -1,5 +1,9 @@
-import { GridRowId, GridRowTreeConfig, GridRowTreeNodeConfig } from '@mui/x-data-grid/internals';
-import { GridSortingModelApplier } from '@mui/x-data-grid/internals/hooks/features/sorting/gridSortingState';
+import {
+  GridRowId,
+  GridRowTreeConfig,
+  GridRowTreeNodeConfig,
+  GridSortingModelApplier,
+} from '@mui/x-data-grid/internals';
 
 interface SortRowTreeParams {
   rowIds: GridRowId[];

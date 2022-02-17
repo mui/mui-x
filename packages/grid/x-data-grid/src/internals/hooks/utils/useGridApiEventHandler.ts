@@ -4,7 +4,7 @@ import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/Cl
 import { EventListenerOptions } from '../../utils/EventManager';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
-import { GridApiCommon } from '../../models';
+import type { GridApiCommon } from '../../models';
 
 /**
  * Signal to the underlying logic what version of the public component API
