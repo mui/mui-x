@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { GridEvents, GridColumnHeaderEventLookup } from '../../models/events';
-import { GridStateColDef } from '../../models/colDef/index';
+import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
@@ -106,7 +106,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const publish = React.useCallback(
     (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) => {
       // Ignore portal
-      // See https://github.com/mui-org/material-ui-x/issues/1721
+      // See https://github.com/mui/mui-x/issues/1721
       if (!event.currentTarget.contains(event.target as Element)) {
         return;
       }

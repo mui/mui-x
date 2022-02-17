@@ -142,6 +142,22 @@ export interface GridClasses {
    */
   columnsPanelRow: string;
   /**
+   * Styles applied to the detail panel element.
+   */
+  detailPanel: string;
+  /**
+   * Styles applied to the detail panels wrapper element.
+   */
+  detailPanels: string;
+  /**
+   * Styles applied to the detail panel toggle cell element.
+   */
+  detailPanelToggleCell: string;
+  /**
+   * Styles applied to the detail panel toggle cell element if expanded.
+   */
+  'detailPanelToggleCell--expanded': string;
+  /**
    * Styles applied to the panel element.
    */
   panel: string;
@@ -173,6 +189,26 @@ export interface GridClasses {
    * Styles applied to the root of the filter form component.
    */
   filterForm: string;
+  /**
+   * Styles applied to the delete icon of the filter form component.
+   */
+  filterFormDeleteIcon: string;
+  /**
+   * Styles applied to the link operator inout of the filter form component.
+   */
+  filterFormLinkOperatorInput: string;
+  /**
+   * Styles applied to the column input of the filter form component.
+   */
+  filterFormColumnInput: string;
+  /**
+   * Styles applied to the operator input of the filter form component.
+   */
+  filterFormOperatorInput: string;
+  /**
+   * Styles applied to the value input of the filter form component.
+   */
+  filterFormValueInput: string;
   /**
    * Styles applied to the root of the input component.
    */
@@ -363,6 +399,10 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'columnSeparator',
   'columnsPanel',
   'columnsPanelRow',
+  'detailPanel',
+  'detailPanels',
+  'detailPanelToggleCell',
+  'detailPanelToggleCell--expanded',
   'panel',
   'panelHeader',
   'panelWrapper',
@@ -372,6 +412,11 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'editBooleanCell',
   'editInputCell',
   'filterForm',
+  'filterFormDeleteIcon',
+  'filterFormLinkOperatorInput',
+  'filterFormColumnInput',
+  'filterFormOperatorInput',
+  'filterFormValueInput',
   'filterIcon',
   'footerContainer',
   'iconButtonContainer',

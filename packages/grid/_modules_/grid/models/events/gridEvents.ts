@@ -1,3 +1,5 @@
+import { GridEventLookup } from './gridEventLookup';
+
 export enum GridEvents {
   /**
    * Fired when the grid is resized.
@@ -262,6 +264,11 @@ export enum GridEvents {
    */
   columnsChange = 'columnsChange',
   /**
+   * Fired when the open detail panels are changed.
+   * @ignore - do not document.
+   */
+  detailPanelsExpandedRowIdsChange = 'detailPanelsExpandedRowIdsChange',
+  /**
    * Fired when the pinned columns is changed.
    * @ignore - do not document.
    */
@@ -311,4 +318,4 @@ export enum GridEvents {
   virtualScrollerContentSizeChange = 'virtualScrollerContentSizeChange',
 }
 
-export type GridEventsStr = keyof typeof GridEvents;
+export type GridEventsStr = keyof GridEventLookup;

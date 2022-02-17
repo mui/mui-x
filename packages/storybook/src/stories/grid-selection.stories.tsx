@@ -1,7 +1,7 @@
 import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { DataGridPro, GridSelectionModel, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridApi, GridSelectionModel, useGridApiRef } from '@mui/x-data-grid-pro';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
@@ -18,7 +18,7 @@ export default {
 
 export const ApiPreSelectedRows = () => {
   const apiRef = useGridApiRef();
-  const [data, setData] = React.useState<GridData>({ rows: [], columns: [] });
+  const [data, setData] = React.useState<GridData<GridApi>>({ rows: [], columns: [] });
 
   React.useEffect(() => {
     if (data.rows.length > 0) {

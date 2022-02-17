@@ -7,13 +7,12 @@ import {
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
   getGridDefaultColumnTypes,
-  GridApiRef,
-  GridColDef,
   GridColType,
   GridColumnTypesRecord,
-  GridState,
-  GridStateColDef,
 } from '../../../models';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 
@@ -90,6 +89,8 @@ export const hydrateColumnsWidth = (
   };
 };
 
+let columnTypeWarnedOnce = false;
+
 /**
  * @deprecated Should have been internal only, you can inline the logic.
  */
@@ -100,6 +101,23 @@ export const getGridColDef = (
   if (!type) {
     return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
   }
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (!columnTypeWarnedOnce && !columnTypes[type]) {
+      console.warn(
+        [
+          `MUI: The column type "${type}" you are using is not supported.`,
+          `Column type "string" is being used instead.`,
+        ].join('\n'),
+      );
+      columnTypeWarnedOnce = true;
+    }
+  }
+
+  if (!columnTypes[type]) {
+    return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
+  }
+
   return columnTypes[type];
 };
 
@@ -111,11 +129,11 @@ export const createColumnsState = ({
   shouldRegenColumnVisibilityModelFromColumns,
   reset,
 }: {
-  apiRef: GridApiRef;
   columnsToUpsert: GridColDef[];
   columnsTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
+  apiRef: React.MutableRefObject<GridApiCommunity>;
   reset: boolean;
 }) => {
   let columnsStateWithoutColumnVisibilityModel: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
@@ -212,7 +230,7 @@ export const createColumnsState = ({
 
 export const setColumnsState =
   (columnsState: GridColumnsState) =>
-  (state: GridState): GridState => ({
+  (state: GridStateCommunity): GridStateCommunity => ({
     ...state,
     columns: columnsState,
   });

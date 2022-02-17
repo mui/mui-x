@@ -98,6 +98,10 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Tích vào ô trống',
+  // checkboxSelectionSelectAllRows: 'Select all rows',
+  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
+  // checkboxSelectionSelectRow: 'Select row',
+  // checkboxSelectionUnselectRow: 'Unselect row',
 
   // Boolean cell text
   booleanCellTrueLabel: 'Có',
@@ -120,6 +124,10 @@ const viVNGrid: Partial<GridLocaleText> = {
   // groupingColumnHeaderName: 'Group',
   // groupColumn: name => `Group by ${name}`,
   // unGroupColumn: name => `Stop grouping by ${name}`,
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);

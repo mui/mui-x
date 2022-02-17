@@ -8,8 +8,8 @@ import * as babelTypes from '@babel/types';
 import * as yargs from 'yargs';
 import { Octokit } from '@octokit/rest';
 
-const GIT_ORGANIZATION = 'mui-org';
-const GIT_REPO = 'material-ui-x';
+const GIT_ORGANIZATION = 'mui';
+const GIT_REPO = 'mui-x';
 const L10N_ISSUE_ID = 3211;
 const SOURCE_CODE_REPO = `https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}`;
 
@@ -207,7 +207,7 @@ async function generateReport(
     if (info.locations.length === 0) {
       return;
     }
-    lines.push(`### ${countryToFlag(code.slice(2))} ${code}`);
+    lines.push(`### ${countryToFlag(code.slice(2))} ${code.slice(0, 2)}-${code.slice(2)}`);
     info.locations.forEach((location) => {
       const permalink = `${SOURCE_CODE_REPO}/blob/${lastCommitRef}/${info.path}#L${location}`;
       lines.push(permalink);

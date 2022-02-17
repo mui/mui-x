@@ -184,18 +184,16 @@ DataGridRaw.propTypes = {
   /**
    * Set the filter model of the grid.
    */
-  filterModel: chainPropTypes(PropTypes.any, (props: any) => {
-    if (props.filterModel != null && props.filterModel.items.length > 1) {
-      return new Error(
-        [
-          `MUI: \`<DataGrid filterModel={model} />\` is not a valid prop. \`model.items\` has more than 1 item.`,
-          'Only single filter is available in the MIT version.',
-          '',
-          'You need to upgrade to the DataGridPro component to unlock this feature.',
-        ].join('\n'),
-      );
-    }
-    return null;
+  filterModel: PropTypes.shape({
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        columnField: PropTypes.string.isRequired,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        operatorValue: PropTypes.string,
+        value: PropTypes.any,
+      }),
+    ).isRequired,
+    linkOperator: PropTypes.oneOf(['and', 'or']),
   }),
   /**
    * Function that applies CSS classes dynamically on cells.
@@ -203,6 +201,12 @@ DataGridRaw.propTypes = {
    * @returns {string} The CSS class to apply to the cell.
    */
   getCellClassName: PropTypes.func,
+  /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -263,7 +267,7 @@ DataGridRaw.propTypes = {
   loading: PropTypes.bool,
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
   /**

@@ -18,6 +18,7 @@ const pages = [
       { pathname: '/x/react-data-grid/pagination' },
       { pathname: '/x/react-data-grid/selection' },
       { pathname: '/x/react-data-grid/events' },
+      { pathname: '/x/react-data-grid/state' },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/components' },
       { pathname: '/x/react-data-grid/style' },
@@ -36,6 +37,9 @@ const pages = [
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
+          { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
+          { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
+          { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
           { pathname: '/x/api/data-grid/grid-row-params', title: 'GridRowParams' },
           { pathname: '/x/api/data-grid/grid-csv-export-options', title: 'GridCSVExportOptions' },
           {

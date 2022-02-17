@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { GridScrollFn, GridScrollParams } from '../../models/params/gridScrollParams';
 import { useGridLogger } from './useGridLogger';
-import { GridApiRef } from '../../models';
+import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 export function useGridScrollFn(
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
   renderingZoneElementRef: React.RefObject<HTMLDivElement>,
   columnHeadersElementRef: React.RefObject<HTMLDivElement>,
 ): [GridScrollFn] {

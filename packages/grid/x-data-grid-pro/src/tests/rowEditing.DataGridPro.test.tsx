@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import { GridApi, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -51,7 +51,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
@@ -275,7 +275,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     expect(cell).to.have.text('Adidas');
   });
 
-  // Confirms the bug in https://github.com/mui-org/material-ui-x/issues/3304
+  // Confirms the bug in https://github.com/mui/mui-x/issues/3304
   // TODO v6: remove
   it('should call preProcessEditCellProps twice and with the wrong value in the 2nd time if preventCommitWhileValidating=false', async () => {
     const brandPreProcessEditCellProps = spy(({ props }) => Promise.resolve(props));
@@ -402,5 +402,33 @@ describe('<DataGridPro /> - Row Editing', () => {
       value: 'ADIDAS',
       isValidating: true,
     });
+  });
+
+  it('should not crash when commiting a value with Enter without waiting for debounce', async function test() {
+    if (isJSDOM) {
+      this.skip(); // It only fails in a real browser.
+    }
+    const preProcessEditCellProps = spy(({ props }) => props);
+    render(
+      <TestCase
+        editMode="row"
+        experimentalFeatures={{ preventCommitWhileValidating: true }}
+        columns={[
+          {
+            field: 'brand',
+            editable: true,
+            preProcessEditCellProps,
+          },
+        ]}
+      />,
+    );
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    clock.runToLast();
+    expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
   });
 });

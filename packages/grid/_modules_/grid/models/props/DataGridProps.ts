@@ -2,26 +2,24 @@
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
-import { GridDensity, GridDensityTypes } from '../gridDensity';
-import { GridEditMode, GridEditModes, GridEditRowsModel } from '../gridEditRowModel';
-import { GridFeatureMode, GridFeatureModeConstant } from '../gridFeatureMode';
+import { GridDensity } from '../gridDensity';
+import { GridEditMode, GridEditRowsModel } from '../gridEditRowModel';
+import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
 import { GridRowIdGetter, GridRowsProp } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
-import { GridApiRef, GridCallbackDetails, GridLocaleText } from '../api';
-import type { GridColumns, GridColumnTypesRecord } from '../colDef';
+import { GridCallbackDetails, GridLocaleText } from '../api';
+import { GridApiCommunity } from '../api/gridApiCommunity';
+import type { GridColumnTypesRecord } from '../colDef';
+import type { GridColumns } from '../colDef/gridColDef';
 import { GridClasses } from '../../gridClasses';
-import {
-  GridCellParams,
-  GridRowHeightParams,
-  GridRowHeightReturnValue,
-  GridRowParams,
-} from '../params';
+import { GridRowHeightParams, GridRowHeightReturnValue, GridRowParams } from '../params';
+import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
-import { GridInitialState } from '../gridState';
+import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
@@ -87,7 +85,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   components?: Partial<GridSlotsComponent>;
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText?: Partial<GridLocaleText>;
 }
@@ -305,58 +303,15 @@ export interface DataGridPropsWithDefaultValues {
 }
 
 /**
- * The default values of `DataGridPropsWithDefaultValues` to inject in the props of DataGrid.
- */
-export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
-  autoHeight: false,
-  autoPageSize: false,
-  checkboxSelection: false,
-  checkboxSelectionVisibleOnly: false,
-  columnBuffer: 3,
-  rowBuffer: 3,
-  columnThreshold: 3,
-  rowThreshold: 3,
-  density: GridDensityTypes.Standard,
-  disableExtendRowFullWidth: false,
-  disableColumnFilter: false,
-  disableColumnMenu: false,
-  disableColumnSelector: false,
-  disableDensitySelector: false,
-  disableMultipleColumnsFiltering: false,
-  disableMultipleSelection: false,
-  disableMultipleColumnsSorting: false,
-  disableSelectionOnClick: false,
-  disableVirtualization: false,
-  editMode: GridEditModes.Cell,
-  filterMode: GridFeatureModeConstant.client,
-  headerHeight: 56,
-  hideFooter: false,
-  hideFooterPagination: false,
-  hideFooterRowCount: false,
-  hideFooterSelectedRowCount: false,
-  logger: console,
-  logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
-  pagination: false,
-  paginationMode: GridFeatureModeConstant.client,
-  rowHeight: 52,
-  rowsPerPageOptions: [25, 50, 100],
-  showCellRightBorder: false,
-  showColumnRightBorder: false,
-  sortingOrder: ['asc' as const, 'desc' as const, null],
-  sortingMode: GridFeatureModeConstant.client,
-  throttleRowsMs: 0,
-  disableColumnReorder: false,
-  disableColumnResize: false,
-};
-
-/**
  * The `DataGrid` props with no default value.
  */
 export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * TODO: Remove `@internal` when opening `apiRef` to Community plan
+   * @internal
    */
-  apiRef?: GridApiRef;
+  apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
@@ -370,7 +325,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Extend native column types with your new column types.
    */
-  columnTypes?: GridColumnTypesRecord;
+  columnTypes?: GridColumnTypesRecord<any>;
   /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
    * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -385,7 +340,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
    */
-  getCellClassName?: (params: GridCellParams) => string;
+  getCellClassName?: (params: GridCellParams<any, any, any, any>) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -399,11 +354,17 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    */
   getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
   /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
+  /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
-  isCellEditable?: (params: GridCellParams) => boolean;
+  isCellEditable?: (params: GridCellParams<any, any, any, any>) => boolean;
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -668,7 +629,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: GridColumns;
+  columns: GridColumns<any>;
   /**
    * An error that will turn the grid into its error state and display the error component.
    */
@@ -694,7 +655,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
-  initialState?: GridInitialState;
+  initialState?: GridInitialStateCommunity;
   /**
    * Overrideable components props dynamically passed to the component at rendering.
    */
