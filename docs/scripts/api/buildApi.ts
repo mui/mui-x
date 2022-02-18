@@ -1,5 +1,6 @@
 import * as yargs from 'yargs';
 import * as fse from 'fs-extra';
+import * as ts from 'typescript';
 import path from 'path';
 import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
@@ -17,23 +18,24 @@ async function run() {
   if (FEATURE_TOGGLE.enable_redirects) {
     outputDirectories = ['./docs/pages/x/api/data-grid'];
   }
+
+  const projects = getTypeScriptProjects();
+
   await Promise.all(
     outputDirectories.map(async (dir) => {
       const outputDirectory = path.resolve(dir);
       fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
-
-      const projects = getTypeScriptProjects();
 
       const documentedInterfaces = buildInterfacesDocumentation({
         projects,
         outputDirectory,
       });
 
-      await buildComponentsDocumentation({
-        outputDirectory,
-        documentedInterfaces,
-        projects,
-      });
+      // await buildComponentsDocumentation({
+      //   outputDirectory,
+      //   documentedInterfaces,
+      //   projects,
+      // });
 
       buildEventsDocumentation({
         // TODO: Pass all the projects and add the pro icon for pro-only events

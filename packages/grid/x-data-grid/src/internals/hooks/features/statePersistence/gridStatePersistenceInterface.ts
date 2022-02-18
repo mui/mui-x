@@ -1,17 +1,17 @@
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 
-export interface GridStatePersistenceApi<I extends GridInitialStateCommunity> {
+export interface GridStatePersistenceApi<InitialState extends GridInitialStateCommunity> {
   /**
    * Generates a serializable object containing the exportable parts of the DataGrid state.
    * These values can then be passed to the `initialState` prop or injected using the `restoreState` method.
    * @returns {GridInitialState} The exported state.
    */
-  exportState: () => I;
+  exportState: () => InitialState;
   /**
    * Inject the given values into the state of the DataGrid.
    * @param {GridInitialState} stateToRestore The exported state to restore.
    */
-  restoreState: (stateToRestore: I) => void;
+  restoreState: (stateToRestore: InitialState) => void;
 }
 
 export interface GridRestoreStatePreProcessingValue {

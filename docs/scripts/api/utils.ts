@@ -74,14 +74,18 @@ export const formatType = (rawType: string) => {
 };
 
 export const stringifySymbol = (symbol: ts.Symbol, project: Project) => {
-  const rawType =
-    symbol.valueDeclaration && ts.isPropertySignature(symbol.valueDeclaration)
-      ? symbol.valueDeclaration.type?.getText() ?? ''
-      : project.checker.typeToString(
-          project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
-          symbol.valueDeclaration,
-          ts.TypeFormatFlags.NoTruncation,
-        );
+  let rawType: string;
+
+  const declaration = symbol.declarations?.[0];
+  if (declaration && ts.isPropertySignature(declaration)) {
+    rawType = declaration.type?.getText() ?? '';
+  } else {
+    rawType = project.checker.typeToString(
+      project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
+      symbol.valueDeclaration,
+      ts.TypeFormatFlags.NoTruncation,
+    );
+  }
 
   return formatType(rawType);
 };
@@ -123,13 +127,26 @@ export function writePrettifiedFile(filename: string, data: string, project: Pro
 }
 
 /**
- * If the export is done using `export type { XXX } from './module'` or `export { XXX }
- * We must go to the root declaration
+ * Goes to the root symbol of ExportSpecifier
+ * That corresponds to one of the following patterns
+ * - `export { XXX}`
+ * - `export { XXX } from './modules'`
+ *
+ * Do not go to the root definition for TypeAlias (ie: `export type XXX = YYY`)
+ * Because we usually want to keep the description and tags of the aliased symbol.
  */
 export const resolveExportSpecifier = (symbol: ts.Symbol, project: Project) => {
-  if (ts.isExportSpecifier(symbol.declarations![0]!)) {
-    return project.checker.getAliasedSymbol(symbol);
+  let resolvedSymbol = symbol;
+
+  while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {
+    const newResolvedSymbol = project.checker.getImmediateAliasedSymbol(resolvedSymbol);
+
+    if (!newResolvedSymbol) {
+      throw new Error('Impossible to resolve export specifier');
+    }
+
+    resolvedSymbol = newResolvedSymbol;
   }
 
-  return symbol;
+  return resolvedSymbol;
 };
