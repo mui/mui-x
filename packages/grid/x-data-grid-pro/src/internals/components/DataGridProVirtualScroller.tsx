@@ -49,7 +49,7 @@ export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[
 
   const leftPinnedColumns = filter(pinnedColumns.left, columns);
   const columnsWithoutLeftPinnedColumns = columns.filter(
-    // Filter out from the remaning columns those columns already pinned to the left
+    // Filter out from the remaining columns those columns already pinned to the left
     (field) => !leftPinnedColumns.includes(field),
   );
   const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
