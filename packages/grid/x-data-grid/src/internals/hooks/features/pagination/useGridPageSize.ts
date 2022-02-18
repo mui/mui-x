@@ -96,7 +96,16 @@ export const useGridPageSize = (
   const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
       const pageSizeToExport = gridPageSizeSelector(apiRef);
-      if (pageSizeToExport === defaultPageSize) {
+
+      const shouldExportPageSize =
+        // Always export if the page size is controlled
+        props.pageSize != null ||
+        // Always export if the page size has been initialized
+        props.initialState?.pagination?.pageSize != null ||
+        // Export if the page size value is not equal to the default value
+        pageSizeToExport !== defaultPageSize;
+
+      if (!shouldExportPageSize) {
         return prevState;
       }
 
@@ -108,7 +117,7 @@ export const useGridPageSize = (
         },
       };
     },
-    [apiRef, defaultPageSize],
+    [apiRef, defaultPageSize, props.pageSize, props.initialState?.pagination?.pageSize],
   );
 
   /**
