@@ -40,11 +40,11 @@ export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[
     return [[], []];
   }
 
-  const filter = (newPinnedColumns: any[] | undefined, remaningColumns: string[]) => {
+  const filter = (newPinnedColumns: any[] | undefined, remainingColumns: string[]) => {
     if (!Array.isArray(newPinnedColumns)) {
       return [];
     }
-    return newPinnedColumns.filter((field) => remaningColumns.includes(field));
+    return newPinnedColumns.filter((field) => remainingColumns.includes(field));
   };
 
   const leftPinnedColumns = filter(pinnedColumns.left, columns);
