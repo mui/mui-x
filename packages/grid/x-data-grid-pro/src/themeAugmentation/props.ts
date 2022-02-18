@@ -1,5 +1,5 @@
 import { ComponentsOverrides, ComponentsProps } from '@mui/material/styles';
-import { DataGridProProps } from '../../../_modules_/grid/models/props/DataGridProProps';
+import { DataGridProProps } from '../internals/models/dataGridProProps';
 
 export interface DataGridProComponentsPropsList {
   MuiDataGrid: DataGridProProps;

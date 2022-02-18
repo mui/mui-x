@@ -1,12 +1,32 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DEFAULT_GRID_SLOTS_COMPONENTS } from '../../_modules_/grid/constants/defaultGridSlotsComponents';
-import { GRID_DEFAULT_LOCALE_TEXT, GridSlotsComponent } from '../../_modules_';
+import {
+  DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
+  DATA_GRID_PROPS_DEFAULT_VALUES,
+  GRID_DEFAULT_LOCALE_TEXT,
+  GridSlotsComponent,
+} from '@mui/x-data-grid';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
-  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
-} from '../../_modules_/grid/models/props/DataGridProProps';
+  DataGridProPropsWithDefaultValue,
+} from './internals/models/dataGridProProps';
+
+/**
+ * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
+ */
+export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
+  ...DATA_GRID_PROPS_DEFAULT_VALUES,
+  scrollEndThreshold: 80,
+  treeData: false,
+  defaultGroupingExpansionDepth: 0,
+  disableColumnPinning: false,
+  disableRowGrouping: false,
+  disableChildrenFiltering: false,
+  disableChildrenSorting: false,
+  rowGroupingColumnMode: 'single',
+  getDetailPanelHeight: () => 500,
+};
 
 export const useDataGridProProps = (inProps: DataGridProProps) => {
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
@@ -20,14 +40,14 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
     const overrides = themedProps.components;
 
     if (!overrides) {
-      return { ...DEFAULT_GRID_SLOTS_COMPONENTS };
+      return { ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS };
     }
 
     const mergedComponents = {} as GridSlotsComponent;
 
-    Object.keys(DEFAULT_GRID_SLOTS_COMPONENTS).forEach((key) => {
+    Object.keys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS).forEach((key) => {
       mergedComponents[key] =
-        overrides[key] === undefined ? DEFAULT_GRID_SLOTS_COMPONENTS[key] : overrides[key];
+        overrides[key] === undefined ? DATA_GRID_DEFAULT_SLOTS_COMPONENTS[key] : overrides[key];
     });
 
     return mergedComponents;
