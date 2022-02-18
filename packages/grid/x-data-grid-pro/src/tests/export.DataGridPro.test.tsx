@@ -607,5 +607,46 @@ describe('<DataGridPro /> - Export', () => {
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
     });
+
+    it('should warn when a value of a field is an object and no `valueFormatter` is provided', () => {
+      const COUNTRY_ISO_OPTIONS = [
+        { value: 'FR', label: 'France' },
+        { value: 'BR', label: 'Brazil' },
+      ];
+
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[
+                { field: 'id' },
+                {
+                  field: 'country',
+                  type: 'singleSelect',
+                  valueOptions: COUNTRY_ISO_OPTIONS,
+                },
+              ]}
+              rows={[
+                { id: 0, country: COUNTRY_ISO_OPTIONS[0] },
+                { id: 1, country: COUNTRY_ISO_OPTIONS[1] },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(() => {
+        apiRef.current.getDataAsCsv();
+      }).toWarnDev(
+        [
+          'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+          'You can provide a `valueFormatter` with a string representation to be used.',
+        ].join('\n'),
+      );
+    });
   });
 });
