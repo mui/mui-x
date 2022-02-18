@@ -1,5 +1,6 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
+import { GridApiCommon, GridColumnVisibilityModel } from '@mui/x-data-grid-pro';
 import { GridDemoData, getRealGridData } from './services/real-data-service';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
@@ -9,15 +10,14 @@ import {
   DemoTreeDataValue,
   addTreeDataOptionsToDemoData,
 } from './services/tree-data-generator';
-import { GridColumnVisibilityModel } from '../../_modules_';
 
-const dataCache = new LRUCache<string, DemoTreeDataValue>({
+const dataCache = new LRUCache<string, DemoTreeDataValue<any>>({
   max: 10,
   maxAge: 60 * 5 * 1e3, // 5 minutes
 });
 
-export type DemoDataReturnType = {
-  data: DemoTreeDataValue;
+export type DemoDataReturnType<Api extends GridApiCommon> = {
+  data: DemoTreeDataValue<Api>;
   loading: boolean;
   setRowLength: (count: number) => void;
   loadNewData: () => void;
@@ -36,7 +36,10 @@ export interface UseDemoDataOptions {
 
 // Generate fake data from a seed.
 // It's about x20 faster than getRealData.
-async function extrapolateSeed(rowLength: number, data: GridDemoData): Promise<GridDemoData> {
+async function extrapolateSeed<Api extends GridApiCommon>(
+  rowLength: number,
+  data: GridDemoData<Api>,
+): Promise<GridDemoData<Api>> {
   return new Promise<any>((resolve) => {
     const seed = data.rows;
     const rows = data.rows.slice();
@@ -87,7 +90,9 @@ const deepFreeze = <T>(object: T): T => {
   return Object.freeze(object);
 };
 
-export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => {
+export const useDemoData = <Api extends GridApiCommon = any>(
+  options: UseDemoDataOptions,
+): DemoDataReturnType<Api> => {
   const [rowLength, setRowLength] = React.useState(options.rowLength);
   const [index, setIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
@@ -110,7 +115,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     return columns;
   }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields]);
 
-  const [data, setData] = React.useState<DemoTreeDataValue>(() => {
+  const [data, setData] = React.useState<DemoTreeDataValue<Api>>(() => {
     const columns = getColumns();
 
     // TODO: Stop using `GridColDef.hide` in v6
@@ -148,7 +153,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     (async () => {
       setLoading(true);
 
-      let newData: DemoTreeDataValue;
+      let newData: DemoTreeDataValue<Api>;
       if (rowLength > 1000) {
         newData = await getRealGridData(1000, getColumns());
         newData = await extrapolateSeed(rowLength, newData);

@@ -207,7 +207,7 @@ async function generateReport(
     if (info.locations.length === 0) {
       return;
     }
-    lines.push(`### ${countryToFlag(code.slice(2))} ${code}`);
+    lines.push(`### ${countryToFlag(code.slice(2))} ${code.slice(0, 2)}-${code.slice(2)}`);
     info.locations.forEach((location) => {
       const permalink = `${SOURCE_CODE_REPO}/blob/${lastCommitRef}/${info.path}#L${location}`;
       lines.push(permalink);
@@ -247,11 +247,14 @@ async function run(argv: HandlerArgv) {
 
   const constantsPath = path.join(
     workspaceRoot,
-    'packages/grid/_modules_/grid/constants/localeTextConstants.ts',
+    'packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts',
   );
   const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
 
-  const localesDirectory = path.resolve(workspaceRoot, 'packages/grid/_modules_/grid/locales');
+  const localesDirectory = path.resolve(
+    workspaceRoot,
+    'packages/grid/x-data-grid/src/internals/locales',
+  );
   const locales = findLocales(localesDirectory);
 
   const missingTranslations: Record<string, any> = {};

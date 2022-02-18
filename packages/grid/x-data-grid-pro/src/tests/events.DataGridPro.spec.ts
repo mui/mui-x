@@ -5,6 +5,7 @@ import {
   GridEvents,
   GridRowParams,
   GridCellParams,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 
 const TestEvents = () => {
