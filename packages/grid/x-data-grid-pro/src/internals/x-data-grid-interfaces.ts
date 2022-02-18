@@ -1,11 +1,7 @@
-import { GridKeyValue } from '@mui/x-data-grid/internals';
-import {
-  GridPinnedColumns,
-  GridRowGroupingModel,
-  GridRowScrollEndParams,
-  GridGroupingValueGetterParams,
-} from './index';
-import { GridCanBeReorderedPreProcessingContext } from './hooks/features/columnReorder/columnReorderInterfaces';
+import type { GridKeyValue } from '@mui/x-data-grid/internals';
+import type { GridRowScrollEndParams, GridGroupingValueGetterParams } from './models';
+import type { GridPinnedColumns, GridRowGroupingModel } from './hooks';
+import type { GridCanBeReorderedPreProcessingContext } from './hooks/features/columnReorder/columnReorderInterfaces';
 
 export interface GridControlledStateEventLookupPro {
   rowGroupingModelChange: { params: GridRowGroupingModel };

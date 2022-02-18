@@ -6,7 +6,7 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-export enum GridColumnHeaderSeparatorSides {
+enum GridColumnHeaderSeparatorSides {
   Left = 'left',
   Right = 'right',
 }
@@ -81,4 +81,4 @@ GridColumnHeaderSeparatorRaw.propTypes = {
   side: PropTypes.oneOf(['left', 'right']),
 } as any;
 
-export { GridColumnHeaderSeparator };
+export { GridColumnHeaderSeparator, GridColumnHeaderSeparatorSides };

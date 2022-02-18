@@ -7,14 +7,13 @@ import {
   DataGridPropsWithDefaultValues,
 } from './models/props/DataGridProps';
 
-import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from './constants/defaultGridSlotsComponents';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS, GRID_DEFAULT_LOCALE_TEXT } from './constants';
 import {
-  GRID_DEFAULT_LOCALE_TEXT,
   GridDensityTypes,
   GridEditModes,
   GridFeatureModeConstant,
   GridSlotsComponent,
-} from './index';
+} from './models';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   apiRef: undefined,

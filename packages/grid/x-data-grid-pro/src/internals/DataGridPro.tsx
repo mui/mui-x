@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from './components/Watermark';
-import { DataGridProProps } from './index';
+import { DataGridProProps } from './models';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from './components/DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from './components/DataGridProColumnHeaders';

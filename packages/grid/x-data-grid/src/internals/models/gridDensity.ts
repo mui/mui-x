@@ -6,8 +6,10 @@ export type GridDensity = 'compact' | 'standard' | 'comfortable';
 /**
  * Density enum.
  */
-export enum GridDensityTypes {
+enum GridDensityTypes {
   Compact = 'compact',
   Standard = 'standard',
   Comfortable = 'comfortable',
 }
+
+export { GridDensityTypes };

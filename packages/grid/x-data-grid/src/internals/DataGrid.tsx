@@ -7,7 +7,7 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-} from './index';
+} from './components';
 import { DataGridProps } from './models/props/DataGridProps';
 import { GridContextProvider } from './context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';

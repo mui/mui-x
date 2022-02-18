@@ -10,7 +10,7 @@ import type { GridApiCommon } from '../../models';
  * Signal to the underlying logic what version of the public component API
  * of the data grid is exposed.
  */
-export enum GridSignature {
+enum GridSignature {
   DataGrid = 'DataGrid',
   DataGridPro = 'DataGridPro',
 }
@@ -116,3 +116,5 @@ export function useGridApiOptionHandler<Api extends GridApiCommon, E extends Gri
   // Validate that only one per event name?
   useGridApiEventHandler(apiRef, eventName, handler, optionsSubscriberOptions);
 }
+
+export { GridSignature };

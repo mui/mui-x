@@ -12,6 +12,7 @@ import {
   Projects,
   stringifySymbol,
   writePrettifiedFile,
+  resolveExportSpecifier,
   DocumentedInterfaces,
   ProjectNames,
 } from './utils';
@@ -77,27 +78,9 @@ const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedPrope
 });
 
 const parseInterfaceSymbol = (symbol: ts.Symbol, project: Project): ParsedObject | null => {
-  let resolvedSymbol = symbol;
-
-  // If the export is done using `export type { XXX } from './module'`
-  // We must go to the root declaration
-  while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {
-    if (ts.isExportSpecifier(symbol.declarations![0]!)) {
-      const sourceFile = project.checker.getSymbolAtLocation(
-        symbol.declarations![0].parent.parent.moduleSpecifier!,
-      );
-      const sourceFileDeclaration = sourceFile?.declarations?.find((el) =>
-        ts.isSourceFile(el),
-      ) as ts.SourceFile;
-      const exports = project.checker.getExportsOfModule(
-        project.checker.getSymbolAtLocation(sourceFileDeclaration)!,
-      );
-      resolvedSymbol = exports.find((el) => el.name === symbol.name)!;
-    }
-  }
-
+  const resolvedSymbol = resolveExportSpecifier(symbol, project);
   const declaration = resolvedSymbol.declarations![0];
-  if (!ts.isInterfaceDeclaration(declaration) && !ts.isExportSpecifier(declaration)) {
+  if (!ts.isInterfaceDeclaration(declaration)) {
     return null;
   }
 

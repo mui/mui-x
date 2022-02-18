@@ -121,3 +121,15 @@ export function writePrettifiedFile(filename: string, data: string, project: Pro
     encoding: 'utf8',
   });
 }
+
+/**
+ * If the export is done using `export type { XXX } from './module'` or `export { XXX }
+ * We must go to the root declaration
+ */
+export const resolveExportSpecifier = (symbol: ts.Symbol, project: Project) => {
+  if (ts.isExportSpecifier(symbol.declarations![0]!)) {
+    return project.checker.getAliasedSymbol(symbol);
+  }
+
+  return symbol;
+};

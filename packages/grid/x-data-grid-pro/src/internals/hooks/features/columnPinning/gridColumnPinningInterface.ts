@@ -5,7 +5,7 @@ export interface GridPinnedColumns {
 
 export type GridColumnPinningState = GridPinnedColumns;
 
-export enum GridPinnedPosition {
+enum GridPinnedPosition {
   left = 'left',
   right = 'right',
 }
@@ -42,3 +42,5 @@ export interface GridColumnPinningApi {
    */
   isColumnPinned: (field: string) => GridPinnedPosition | false;
 }
+
+export { GridPinnedPosition };
