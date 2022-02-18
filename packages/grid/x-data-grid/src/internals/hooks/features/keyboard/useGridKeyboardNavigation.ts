@@ -250,7 +250,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, colCount, currentPage, goToCell, goToHeader],
+    [apiRef, currentPage, goToCell, goToHeader],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, handleCellNavigationKeyDown);
