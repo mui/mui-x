@@ -20,7 +20,7 @@ import {
   getHeaders,
 } from '@mui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
-import createGenerateClassName from '@mui/styles/createGenerateClassName';
+import generateUtilityClass from '@mui/base/generateUtilityClass';
 import {
   DocumentedInterfaces,
   getJsdocDefaultValue,
@@ -29,8 +29,6 @@ import {
   Projects,
   writePrettifiedFile,
 } from './utils';
-
-const generateClassName = createGenerateClassName();
 
 interface ReactApi extends ReactDocgenApi {
   /**
@@ -203,22 +201,28 @@ const buildComponentDocumentation = async (options: {
   reactApi.slots = {};
 
   const demos: ReactApi['demos'] = [];
-  if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
-    demos.push(['/components/data-grid#mit-version', 'DataGrid']);
-  }
-  if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
-    demos.push(['/components/data-grid#commercial-version', 'DataGridPro']);
+  if (outputDirectory.includes('/x/')) {
+    if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/x/react-data-grid/#mit-version', 'DataGrid']);
+    }
+    if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/x/react-data-grid#commercial-version', 'DataGridPro']);
+    }
+  } else {
+    if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/components/data-grid#mit-version', 'DataGrid']);
+    }
+    if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/components/data-grid#commercial-version', 'DataGridPro']);
+    }
   }
   reactApi.demos = demos;
 
   reactApi.styles = await parseStyles(reactApi, project.program as any);
   reactApi.styles.name = 'MuiDataGrid'; // TODO it should not be hardcoded
   reactApi.styles.classes.forEach((key) => {
-    reactApi.styles.globalClasses[key] = generateClassName(
-      // @ts-expect-error
-      { key },
-      { options: { name: reactApi.styles.name, theme: {} } },
-    );
+    const globalClass = generateUtilityClass(reactApi.styles.name!, key);
+    reactApi.styles.globalClasses[key] = globalClass;
   });
 
   const componentApi: {
@@ -474,6 +478,7 @@ export default async function buildComponentsDocumentation(
   const dataGridProProject = projects.get('x-data-grid-pro')!;
   const dataGridProject = projects.get('x-data-grid')!;
 
+  // TODO: Use the project fields instead of hard-coding the paths here
   const componentsToGenerateDocs = [
     path.resolve(dataGridProject.workspaceRoot, 'packages/grid/x-data-grid/src/DataGrid.tsx'),
     path.resolve(
@@ -483,7 +488,7 @@ export default async function buildComponentsDocumentation(
   ];
 
   // Uncomment below to generate documentation for all exported components
-  // const componentsFolder = path.resolve(workspaceRoot, 'packages/grid/_modules_/grid/components');
+  // const componentsFolder = path.resolve(workspaceRoot, 'packages/grid/x-data-grid/src/internals/components');
   // const components = findComponents(componentsFolder);
   // components.forEach((component) => {
   //   const componentName = path.basename(component.filename).replace('.tsx', '');

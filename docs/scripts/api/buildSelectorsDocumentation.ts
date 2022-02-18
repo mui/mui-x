@@ -19,6 +19,7 @@ interface Selector {
   category?: string;
   deprecated?: string;
   description?: string;
+  supportsApiRef?: boolean;
 }
 
 export default function buildSelectorsDocumentation(options: BuildSelectorsDocumentationOptions) {
@@ -45,20 +46,22 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
       const parameterSymbol = signature.getParameters()[0];
 
       let isSelector = false;
+      let supportsApiRef = false;
 
-      if (
-        project.checker.getTypeOfSymbolAtLocation(
-          parameterSymbol,
-          parameterSymbol.valueDeclaration!,
-        ).symbol?.name === 'GridState'
-      ) {
+      const firstParamName = project.checker.getTypeOfSymbolAtLocation(
+        parameterSymbol,
+        parameterSymbol.valueDeclaration!,
+      ).symbol?.name;
+
+      if (['GridStatePro', 'GridStateCommunity'].includes(firstParamName)) {
         // Selector not wrapped in `createSelector`
         isSelector = true;
       } else if (
         // Selector wrapped in `createSelector`
-        type.getProperties().some((property) => property.escapedName === 'memoizedResultFunc')
+        type.symbol.name === 'OutputSelector'
       ) {
         isSelector = true;
+        supportsApiRef = true;
       }
 
       if (!isSelector) {
@@ -66,11 +69,10 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
       }
 
       const returnType = formatType(
-        project.checker.typeToString(
-          signature.getReturnType(),
-          undefined,
-          ts.TypeFormatFlags.NoTruncation,
-        ),
+        project.checker
+          .typeToString(signature.getReturnType(), undefined, ts.TypeFormatFlags.NoTruncation)
+          // For now the community selectors are not overloading when exported from the pro
+          .replace(/<GridApi(Community|Pro)>/g, ''),
       );
       const category = tags.category?.text?.[0].text;
       const deprecated = tags.deprecated?.text?.[0].text;
@@ -82,6 +84,7 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
         category,
         deprecated,
         description,
+        supportsApiRef,
       };
     })
     .filter((el): el is Selector => !!el)

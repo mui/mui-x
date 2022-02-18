@@ -3,6 +3,7 @@ import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
 import * as ts from 'typescript';
+import FEATURE_TOGGLE from '../../src/featureToggle';
 
 export interface Project {
   name: ProjectNames;
@@ -11,6 +12,14 @@ export interface Project {
   checker: ts.TypeChecker;
   workspaceRoot: string;
   prettierConfigPath: string;
+  /**
+   * Folder containing all the components of this package
+   */
+  componentsFolder?: string;
+  /**
+   * Additional files containing components outside the components folder
+   */
+  otherComponentFiles?: string[];
 }
 
 export type ProjectNames = 'x-data-grid' | 'x-data-grid-pro';
@@ -22,7 +31,8 @@ export type DocumentedInterfaces = Map<string, ProjectNames[]>;
 export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>
   symbol
     .getDocumentationComment(project.checker)
-    .map((comment) => comment.text)
+    .flatMap((comment) => comment.text.split('\n'))
+    .filter((line) => !line.startsWith('TODO'))
     .join('\n');
 
 export const getSymbolJSDocTags = (symbol: ts.Symbol) =>
@@ -45,6 +55,10 @@ export function escapeCell(value: string) {
 }
 
 export const formatType = (rawType: string) => {
+  if (!rawType) {
+    return '';
+  }
+
   const prefix = 'type FakeType = ';
   const signatureWithTypeName = `${prefix}${rawType}`;
 
@@ -86,7 +100,9 @@ export function linkify(
     if (!documentedInterfaces.get(content)) {
       return content;
     }
-    const url = `/api/data-grid/${kebabCase(content)}/`;
+    const url = `${FEATURE_TOGGLE.enable_redirects ? '/x' : ''}/api/data-grid/${kebabCase(
+      content,
+    )}/`;
     return format === 'markdown' ? `[${content}](${url})` : `<a href="${url}">${content}</a>`;
   });
 }

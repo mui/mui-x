@@ -1,0 +1,14 @@
+<DataGrid
+  sortingOrder={['desc', 'asc']}
+  initialState={{
+    sorting: {
+      sortModel: [
+        {
+          field: 'commodity',
+          sort: 'asc',
+        },
+      ],
+    },
+  }}
+  {...data}
+/>

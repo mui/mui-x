@@ -1,9 +1,10 @@
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const withTM = require('next-transpile-modules')(['@mui/monorepo']);
-const pkg = require('../node_modules/@mui/monorepo/package.json');
+const pkg = require('../package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
+const FEATURE_TOGGLE = require('./src/featureToggle');
 
 const workspaceRoot = path.join(__dirname, '../');
 
@@ -42,8 +43,8 @@ module.exports = {
     // Set by Netlify
     GRID_EXPERIMENTAL_ENABLED: process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
     // #default-branch-switch
-    SOURCE_CODE_ROOT_URL: 'https://github.com/mui-org/material-ui-x/blob/master',
-    SOURCE_CODE_REPO: 'https://github.com/mui-org/material-ui-x',
+    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
+    SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
   },
   webpack5: true,
   webpack: (config, options) => {
@@ -150,14 +151,28 @@ module.exports = {
       { source: '/api/:rest*', destination: '/api-docs/:rest*' },
     ];
   },
-  redirects:
-    process.env.NODE_ENV !== 'production'
-      ? async () => [
-          {
-            source: '/',
-            destination: '/components/data-grid/',
-            permanent: false,
-          },
-        ]
-      : undefined,
+  // redirects only take effect in the development, not production (because of `next export`).
+  redirects: async () => {
+    const redirects = [];
+    if (process.env.NODE_ENV !== 'production') {
+      redirects.push({
+        source: '/',
+        destination: '/components/data-grid/',
+        permanent: false,
+      });
+    }
+    if (FEATURE_TOGGLE.enable_redirects) {
+      redirects.push({
+        source: '/components/data-grid/:path*',
+        destination: '/x/react-data-grid/:path*',
+        permanent: false,
+      });
+      redirects.push({
+        source: '/api/data-grid/:path*',
+        destination: '/x/api/data-grid/:path*',
+        permanent: false,
+      });
+    }
+    return redirects;
+  },
 };

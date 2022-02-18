@@ -6,8 +6,8 @@ import {
   DataGridPro,
   gridClasses,
   useGridApiRef,
-  GridApiRef,
   DataGridProProps,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -15,7 +15,8 @@ import { getCell, getRow } from 'test/utils/helperFn';
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
+
   const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     const data = useData(100, 1);
@@ -33,11 +34,9 @@ describe('<DataGridPro/> - Components', () => {
     });
 
     it('should throw a console error if hideFooterRowCount is used with pagination', () => {
-      expect(() => render(<TestCase hideFooterRowCount pagination />))
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
-        );
+      expect(() => render(<TestCase hideFooterRowCount pagination />)).toErrorDev(
+        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+      );
     });
   });
 
@@ -62,7 +61,13 @@ describe('<DataGridPro/> - Components', () => {
         expect(eventHandler.callCount).to.equal(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) => match.slice(2).toLowerCase()); // e.g. onDoubleClick -> doubleClick
-        fireEvent[eventToFire](getCell(0, 0));
+        const cell = getCell(0, 0);
+
+        if (event !== 'cellMouseUp') {
+          fireEvent.mouseUp(cell);
+        }
+
+        fireEvent[eventToFire](cell);
 
         expect(propHandler.callCount).to.equal(1);
         expect(propHandler.lastCall.args[0]).not.to.equal(undefined);

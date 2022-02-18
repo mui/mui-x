@@ -11,7 +11,7 @@ import {
   DataGridProProps,
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  GridApiRef,
+  GridApi,
   GridGroupingValueGetterParams,
   GridPreferencePanelsValue,
   GridRowsProp,
@@ -20,7 +20,6 @@ import {
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { DataGridProProcessedProps } from '../../../_modules_/grid/models/props/DataGridProProps';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -65,7 +64,7 @@ const baselineProps: DataGridProProps = {
 describe('<DataGridPro /> - Group Rows By Column', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const Test = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
@@ -484,7 +483,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       const disableRowGroupingSpy = spy();
 
       const CustomToolbar = () => {
-        const rootProps = useGridRootProps<DataGridProProcessedProps>();
+        const rootProps = useGridRootProps();
         disableRowGroupingSpy(rootProps.disableRowGrouping);
         return null;
       };
@@ -740,12 +739,10 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         />,
       );
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
       apiRef.current.updateColumns([
         { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, width: 100 },
       ]);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
       apiRef.current.updateColumns([
         {
@@ -753,7 +750,6 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           headerName: 'New id',
         },
       ]);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
 
@@ -1018,16 +1014,12 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         />,
       );
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
       apiRef.current.updateColumns([
         { field: getRowGroupingFieldFromGroupingCriteria('category1'), width: 100 },
       ]);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
       apiRef.current.updateColumns([
         {
@@ -1035,9 +1027,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           headerName: 'New id',
         },
       ]);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
     });
 

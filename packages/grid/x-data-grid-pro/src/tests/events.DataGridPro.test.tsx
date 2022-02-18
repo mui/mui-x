@@ -11,8 +11,8 @@ import {
   GridRowsProp,
   GridColumns,
   GridEvents,
-  GridApiRef,
   gridClasses,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -57,7 +57,7 @@ describe('<DataGridPro /> - Events Params', () => {
     }
   });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
   const TestEvents = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     return (
@@ -225,7 +225,6 @@ describe('<DataGridPro /> - Events Params', () => {
       });
       render(<TestEvents onEditCellPropsChange={handleEditCellPropsChange} />);
       const cell = getCell(1, 1);
-      cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 'Lisa' } });

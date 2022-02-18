@@ -12,7 +12,7 @@ import {
   DataGridPro,
   DataGridProProps,
   GRID_TREE_DATA_GROUPING_FIELD,
-  GridApiRef,
+  GridApi,
   GridLinkOperator,
   GridRowsProp,
   GridRowTreeNodeConfig,
@@ -56,16 +56,16 @@ const baselineProps: DataGridProProps = {
 };
 
 describe('<DataGridPro /> - Tree Data', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const Test = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
 
     return (
       <div style={{ width: 300, height: 800 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} disableVirtualization />
       </div>
     );
   };
@@ -166,9 +166,12 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
 
     it('should keep children expansion when changing some of the rows', () => {
-      const { setProps } = render(<Test rows={[{ name: 'A' }, { name: 'A.A' }]} />);
+      const { setProps } = render(
+        <Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />,
+      );
       expect(getColumnValues(1)).to.deep.equal(['A']);
       apiRef.current.setRowChildrenExpansion('A', true);
+      clock.runToLast();
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
       setProps({
         rows: [{ name: 'A' }, { name: 'A.A' }, { name: 'B' }, { name: 'B.A' }],
@@ -376,7 +379,8 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should toggle expansion when pressing Space while focusing grouping column', () => {
       render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      getCell(0, 0).focus();
+      fireEvent.mouseUp(getCell(0, 0));
+      fireEvent.click(getCell(0, 0));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireEvent.keyDown(getCell(0, 0), { key: ' ' });
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
@@ -391,10 +395,8 @@ describe('<DataGridPro /> - Tree Data', () => {
 
     it('should keep the grouping column width between generations', () => {
       render(<Test groupingColDef={{ width: 200 }} />);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
       apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
       apiRef.current.updateColumns([
         {
@@ -402,7 +404,6 @@ describe('<DataGridPro /> - Tree Data', () => {
           headerName: 'New name',
         },
       ]);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
   });
@@ -505,11 +506,9 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should throw an error when using filterMode="server" and treeData', () => {
       expect(() => {
         render(<Test filterMode="server" />);
-      })
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
-        );
+      }).toErrorDev(
+        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
+      );
     });
 
     it('should set the filtered descendant count on matching nodes even if the children are collapsed', () => {

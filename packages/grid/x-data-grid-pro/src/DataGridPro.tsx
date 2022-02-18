@@ -8,15 +8,14 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-  useGridApiRef,
-} from '../../_modules_/grid';
-import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
+  GridContextProvider,
+} from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { Watermark } from '../../_modules_/grid/components/Watermark';
-import { DataGridProProps } from '../../_modules_/grid/models/props/DataGridProProps';
+import { Watermark } from './internals/components/Watermark';
+import { DataGridProProps } from './internals';
 import { useDataGridProProps } from './useDataGridProProps';
-import { DataGridProVirtualScroller } from './DataGridProVirtualScroller';
-import { DataGridProColumnHeaders } from './DataGridProColumnHeaders';
+import { DataGridProVirtualScroller } from './internals/components/DataGridProVirtualScroller';
+import { DataGridProColumnHeaders } from './internals/components/DataGridProColumnHeaders';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -34,9 +33,8 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   inProps,
   ref,
 ) {
-  const apiRef = useGridApiRef(inProps.apiRef);
   const props = useDataGridProProps(inProps);
-  useDataGridProComponent(apiRef, props);
+  const apiRef = useDataGridProComponent(props.apiRef, props);
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
@@ -152,6 +150,12 @@ DataGridProRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
+   * The row ids to show the detail panel.
+   */
+  detailPanelExpandedRowIds: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  ),
+  /**
    * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
    */
@@ -249,6 +253,7 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    preventCommitWhileValidating: PropTypes.bool,
     rowGrouping: PropTypes.bool,
   }),
   /**
@@ -285,11 +290,30 @@ DataGridProRaw.propTypes = {
    */
   getCellClassName: PropTypes.func,
   /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent: PropTypes.func,
+  /**
+   * Function that returns the height of the row detail panel.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {number} The height in pixels.
+   * @default "() => 500"
+   */
+  getDetailPanelHeight: PropTypes.func,
+  /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
+  /**
+   * Function that sets the row height per row.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   */
+  getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
    */
@@ -340,7 +364,7 @@ DataGridProRaw.propTypes = {
    */
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
-   * The initial state of the DataGrid.
+   * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
@@ -370,7 +394,7 @@ DataGridProRaw.propTypes = {
   loading: PropTypes.bool,
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
   /**
@@ -517,6 +541,12 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange: PropTypes.func,
+  /**
+   * Callback fired when the detail panel of a row is opened or closed.
+   * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onDetailPanelExpandedRowIdsChange: PropTypes.func,
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].

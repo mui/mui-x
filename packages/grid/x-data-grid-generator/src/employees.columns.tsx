@@ -1,3 +1,4 @@
+import { gridStringOrNumberComparator } from '@mui/x-data-grid-pro';
 import {
   randomCity,
   randomCompanyName,
@@ -25,10 +26,10 @@ import {
   renderEditRating,
   renderEditCountry,
 } from './renderer';
-import { COUNTRY_ISO_OPTIONS } from './services/static-data';
+import { COUNTRY_ISO_OPTIONS_SORTED } from './services/static-data';
 import { GridColDefGenerator } from './services/gridColDefGenerator';
 
-export const getEmployeeColumns = (): GridColDefGenerator[] => [
+export const getEmployeeColumns = (): GridColDefGenerator<any>[] => [
   {
     field: 'id',
     generateData: randomId,
@@ -41,6 +42,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     generateData: randomColor,
     renderCell: renderAvatar,
     filterable: false,
+    disableExport: true,
   },
   {
     field: 'name',
@@ -99,11 +101,19 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
   {
     field: 'country',
     headerName: 'Country',
+    type: 'singleSelect',
+    valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
+    valueFormatter: ({ value }) => (value as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
     generateData: randomCountry,
     renderCell: renderCountry,
     renderEditCell: renderEditCountry,
-    type: 'singleSelect',
-    valueOptions: COUNTRY_ISO_OPTIONS,
+    sortComparator: (v1, v2, param1, param2) =>
+      gridStringOrNumberComparator(
+        (v1 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
+        (v2 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
+        param1,
+        param2,
+      ),
     width: 150,
     editable: true,
   },

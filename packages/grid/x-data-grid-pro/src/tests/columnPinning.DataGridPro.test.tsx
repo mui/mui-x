@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridProProps,
   gridClasses,
@@ -14,7 +14,7 @@ import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/
 import { useData } from 'storybook/src/hooks/useData';
 
 // TODO Move to utils
-// Fix https://github.com/mui-org/material-ui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
+// Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
 function createDragOverEvent(target: ChildNode) {
   const dragOverEvent = createEvent.dragOver(target);
   // Safari 13 doesn't have DragEvent.
@@ -30,7 +30,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Column pinning', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
     apiRef = useGridApiRef();
@@ -109,7 +109,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     const renderZone = document.querySelector(
       `.${gridClasses.virtualScrollerRenderZone}`,
     ) as HTMLDivElement;
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
     const columnHeader = getColumnHeaderCell(0);
     const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
@@ -117,7 +116,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
     clock.runToLast();
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
   });
 
@@ -130,14 +128,12 @@ describe('<DataGridPro /> - Column pinning', () => {
     const columnHeadersInner = document.querySelector(
       `.${gridClasses.columnHeadersInner}`,
     ) as HTMLDivElement;
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
     const columnHeader = getColumnHeaderCell(0);
     const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
   });
 
@@ -148,7 +144,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
     const columnHeader = getColumnHeaderCell(2);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
     const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
@@ -156,7 +151,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     fireEvent.mouseMove(separator, { clientX: 190, buttons: 1 });
     fireEvent.mouseUp(separator);
 
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '110px' });
     expect(separator).to.have.class(gridClasses['columnSeparator--sideLeft']);
   });
@@ -168,7 +162,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
     const columnHeader = getColumnHeaderCell(2);
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
     const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
@@ -176,7 +169,6 @@ describe('<DataGridPro /> - Column pinning', () => {
     fireEvent.mouseMove(separator, { clientX: 210, buttons: 1 });
     fireEvent.mouseUp(separator);
 
-    // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '90px' });
     expect(separator).to.have.class(gridClasses['columnSeparator--sideLeft']);
   });
@@ -220,8 +212,15 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M']);
   });
 
+  it('should not override the first left pinned column when checkboxSelection=true', () => {
+    render(
+      <TestCase nbCols={2} initialState={{ pinnedColumns: { left: ['id'] } }} checkboxSelection />,
+    );
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
+  });
+
   describe('props: onPinnedColumnsChange', () => {
-    it('shoull call when a column is pinned', () => {
+    it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
       apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
@@ -236,7 +235,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       });
     });
 
-    it('shoull not change the pinned columns when it is called', () => {
+    it('should not change the pinned columns when it is called', () => {
       const handlePinnedColumnsChange = spy();
       render(
         <TestCase
@@ -259,7 +258,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('props: pinnedColumns', () => {
-    it('shoull pin the columns specified', () => {
+    it('should pin the columns specified', () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'] }} />);
       const leftColumns = document.querySelector(
         `.${gridClasses['pinnedColumns--left']}`,
@@ -282,7 +281,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('shoull filter our duplicated columns', () => {
+    it('should filter our duplicated columns', () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'], right: ['currencyPair'] }} />);
       const leftColumns = document.querySelector(
         `.${gridClasses['pinnedColumns--left']}`,

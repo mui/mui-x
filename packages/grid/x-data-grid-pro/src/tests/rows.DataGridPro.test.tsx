@@ -2,13 +2,19 @@ import * as React from 'react';
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { getCell, getRow, getColumnValues, getRows } from 'test/utils/helperFn';
 import {
-  GridApiRef,
+  getCell,
+  getRow,
+  getColumnValues,
+  getRows,
+  getColumnHeaderCell,
+} from 'test/utils/helperFn';
+import {
   GridRowModel,
   useGridApiRef,
   DataGridPro,
   DataGridProProps,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { DataGridProps } from '@mui/x-data-grid';
@@ -60,7 +66,7 @@ describe('<DataGridPro /> - Rows', () => {
     describe('updateRows', () => {
       it('should apply getRowId before updating rows', () => {
         const getRowId = (row) => `${row.clientId}`;
-        let apiRef: GridApiRef;
+        let apiRef: React.MutableRefObject<GridApi>;
         const Test = () => {
           apiRef = useGridApiRef();
           return (
@@ -80,7 +86,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should allow to switch between cell mode', () => {
-      let apiRef: GridApiRef;
+      let apiRef: React.MutableRefObject<GridApi>;
       const editableProps = { ...baselineProps };
       editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
       const getRowId = (row) => `${row.clientId}`;
@@ -109,7 +115,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should not clone the row', () => {
       const getRowId = (row) => `${row.clientId}`;
-      let apiRef: GridApiRef;
+      let apiRef: React.MutableRefObject<GridApi>;
       const Test = () => {
         apiRef = useGridApiRef();
         return (
@@ -129,7 +135,13 @@ describe('<DataGridPro /> - Rows', () => {
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro {...props} columns={columns} autoHeight={isJSDOM} throttleRowsMs={100} />
+          <DataGridPro
+            {...props}
+            columns={columns}
+            autoHeight={isJSDOM}
+            throttleRowsMs={100}
+            disableVirtualization
+          />
         </div>
       );
 
@@ -163,13 +175,13 @@ describe('<DataGridPro /> - Rows', () => {
       };
     });
 
-    let apiRef: GridApiRef;
+    let apiRef: React.MutableRefObject<GridApi>;
 
     const TestCase = (props: Partial<DataGridProProps>) => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+          <DataGridPro {...baselineProps} apiRef={apiRef} {...props} disableVirtualization />
         </div>
       );
     };
@@ -289,7 +301,7 @@ describe('<DataGridPro /> - Rows', () => {
       };
     });
 
-    let apiRef: GridApiRef;
+    let apiRef: React.MutableRefObject<GridApi>;
 
     const TestCase = (props: Partial<DataGridProProps>) => {
       apiRef = useGridApiRef();
@@ -340,7 +352,7 @@ describe('<DataGridPro /> - Rows', () => {
       }
     });
 
-    let apiRef: GridApiRef;
+    let apiRef: React.MutableRefObject<GridApi>;
     const TestCaseVirtualization = (
       props: Partial<DataGridProProps> & {
         nbRows?: number;
@@ -384,7 +396,9 @@ describe('<DataGridPro /> - Rows', () => {
 
       const lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
       expect(lastCell).to.have.text('995');
-      expect(renderingZone.children.length).to.equal(Math.floor(height / rowHeight) + rowBuffer);
+      expect(renderingZone.children.length).to.equal(
+        Math.floor((height - 1) / rowHeight) + rowBuffer,
+      ); // Subtracting 1 is needed because of the column header borders
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
       expect(renderingZone.style.transform).to.equal(
         `translate3d(0px, ${distanceToFirstRow}px, 0px)`,
@@ -608,7 +622,7 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('no virtualization', () => {
-    let apiRef: GridApiRef;
+    let apiRef: React.MutableRefObject<GridApi>;
 
     const TestCase = (props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) => {
       apiRef = useGridApiRef();
@@ -641,7 +655,7 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('Cell focus', () => {
-    let apiRef: GridApiRef;
+    let apiRef: React.MutableRefObject<GridApi>;
 
     const TestCase = ({ rows }: Pick<DataGridProProps, 'rows'>) => {
       apiRef = useGridApiRef();
@@ -714,7 +728,8 @@ describe('<DataGridPro /> - Rows', () => {
     it('should set the focus when pressing a key inside a cell', () => {
       render(<TestCase rows={baselineProps.rows} />);
       const cell = getCell(1, 0);
-      cell.focus();
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
       fireEvent.keyDown(cell, { key: 'a' });
       expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
@@ -781,6 +796,77 @@ describe('<DataGridPro /> - Rows', () => {
         apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
         fireEvent.mouseLeave(cell);
       }).not.to.throw();
+    });
+  });
+
+  describe('apiRef: setRowHeight', () => {
+    const ROW_HEIGHT = 52;
+
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    beforeEach(() => {
+      baselineProps = {
+        rows: [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Adidas',
+          },
+          {
+            id: 2,
+            brand: 'Puma',
+          },
+        ],
+        columns: [{ field: 'brand', headerName: 'Brand' }],
+      };
+    });
+
+    let apiRef: React.MutableRefObject<GridApi>;
+
+    const TestCase = (props: Partial<DataGridProProps>) => {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro {...baselineProps} apiRef={apiRef} rowHeight={ROW_HEIGHT} {...props} />
+        </div>
+      );
+    };
+
+    it('should change row height', () => {
+      const resizedRowId = 1;
+      render(<TestCase />);
+
+      expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
+
+      apiRef.current.unstable_setRowHeight(resizedRowId, 100);
+      expect(getRow(resizedRowId).clientHeight).to.equal(100);
+    });
+
+    it('should preserve changed row height after sorting', () => {
+      const resizedRowId = 0;
+      const getRowHeight = spy();
+      render(<TestCase getRowHeight={getRowHeight} />);
+
+      const row = getRow(resizedRowId);
+      expect(row.clientHeight).to.equal(ROW_HEIGHT);
+
+      getRowHeight.resetHistory();
+      apiRef.current.unstable_setRowHeight(resizedRowId, 100);
+      expect(row.clientHeight).to.equal(100);
+
+      // sort
+      fireEvent.click(getColumnHeaderCell(resizedRowId));
+
+      expect(row.clientHeight).to.equal(100);
+      expect(getRowHeight.neverCalledWithMatch({ id: resizedRowId })).to.equal(true);
     });
   });
 });

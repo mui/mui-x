@@ -9,6 +9,14 @@ parameters:
     description: The dist-tag of react to be used
     type: string
     default: stable
+  workflow:
+    description: The name of the workflow to run
+    type: string
+    default: pipeline
+  e2e-base-url:
+    description: The base url for running end-to-end test
+    type: string
+    default: ''
 
 defaults: &defaults
   parameters:
@@ -16,6 +24,10 @@ defaults: &defaults
       description: The dist-tag of react to be used
       type: string
       default: << pipeline.parameters.react-dist-tag >>
+    e2e-base-url:
+      description: The base url for running end-to-end test
+      type: string
+      default: << pipeline.parameters.e2e-base-url >>
   environment:
     # Keep in sync with "Save playwright cache"
     PLAYWRIGHT_BROWSERS_PATH: /tmp/pw-browsers
@@ -83,7 +95,7 @@ commands:
           key: v8-yarn-{{ checksum "yarn.lock" }}
           paths:
             # Keep path in sync with "Set yarn cache folder"
-            # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
+            # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
             - /tmp/yarn-cache
       - when:
           condition: << parameters.browsers >>
@@ -93,7 +105,7 @@ commands:
                 key: v5-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
                 paths:
                   # Keep path in sync with "PLAYWRIGHT_BROWSERS_PATH"
-                  # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
+                  # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
                   - /tmp/pw-browsers
 
 jobs:
@@ -123,6 +135,12 @@ jobs:
             then
               exit 1
             fi
+      - run:
+          name: Coverage
+          command: |
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_DIST_TAG-jsdom"
   test_lint:
     <<: *defaults
     steps:
@@ -131,9 +149,6 @@ jobs:
       - run:
           name: Eslint
           command: yarn eslint:ci
-      - run:
-          name: Stylelint
-          command: yarn stylelint
       - run:
           name: Lint JSON
           command: yarn jsonlint
@@ -169,7 +184,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+      - image: mcr.microsoft.com/playwright@sha256:8b1110182dc44a79dcfa9a9d7193330ef52fe407b3f689e5660009c7ddc4a5ac
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -200,7 +215,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+      - image: mcr.microsoft.com/playwright@sha256:8b1110182dc44a79dcfa9a9d7193330ef52fe407b3f689e5660009c7ddc4a5ac
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -210,10 +225,25 @@ jobs:
       - run:
           name: Run e2e tests
           command: yarn test:e2e
+  test_e2e_website:
+    <<: *defaults
+    docker:
+      - image: mcr.microsoft.com/playwright@sha256:8b1110182dc44a79dcfa9a9d7193330ef52fe407b3f689e5660009c7ddc4a5ac
+        environment:
+          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    steps:
+      - checkout
+      - install_js:
+          browsers: true
+      - run:
+          name: yarn test:e2e-website
+          command: yarn test:e2e-website
+          environment:
+            PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+      - image: mcr.microsoft.com/playwright@sha256:8b1110182dc44a79dcfa9a9d7193330ef52fe407b3f689e5660009c7ddc4a5ac
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -229,7 +259,7 @@ jobs:
   test_performance:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+      - image: mcr.microsoft.com/playwright@sha256:8b1110182dc44a79dcfa9a9d7193330ef52fe407b3f689e5660009c7ddc4a5ac
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -252,6 +282,8 @@ jobs:
 workflows:
   version: 2
   pipeline:
+    when:
+      equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
       - checkout
       - test_unit:
@@ -276,5 +308,13 @@ workflows:
           requires:
             - checkout
       - test_performance:
+          requires:
+            - checkout
+  e2e-website:
+    when:
+      equal: [e2e-website, << pipeline.parameters.workflow >>]
+    jobs:
+      - checkout
+      - test_e2e_website:
           requires:
             - checkout

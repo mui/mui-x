@@ -33,6 +33,9 @@
       },
       "default": "\"standard\""
     },
+    "detailPanelExpandedRowIds": {
+      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
+    },
     "disableChildrenFiltering": { "type": { "name": "bool" } },
     "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
@@ -56,7 +59,10 @@
     "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ rowGrouping?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ preventCommitWhileValidating?: bool, rowGrouping?: bool }"
+      }
     },
     "filterMode": {
       "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },
@@ -69,7 +75,10 @@
       }
     },
     "getCellClassName": { "type": { "name": "func" } },
+    "getDetailPanelContent": { "type": { "name": "func" } },
+    "getDetailPanelHeight": { "type": { "name": "func" }, "default": "\"() => 500\"" },
     "getRowClassName": { "type": { "name": "func" } },
+    "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "getTreeDataPath": { "type": { "name": "func" } },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
@@ -124,6 +133,7 @@
     },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
+    "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
@@ -244,6 +254,8 @@
     },
     "DensityCompactIcon": { "default": "GridViewHeadlineIcon", "type": { "name": "elementType" } },
     "DensityStandardIcon": { "default": "GridTableRowsIcon", "type": { "name": "elementType" } },
+    "DetailPanelCollapseIcon": { "default": "GridRemoveIcon", "type": { "name": "elementType" } },
+    "DetailPanelExpandIcon": { "default": "GridAddIcon", "type": { "name": "elementType" } },
     "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
@@ -265,7 +277,7 @@
     "Pagination": { "default": "Pagination", "type": { "name": "elementType | null" } },
     "Panel": { "default": "GridPanel", "type": { "name": "elementType" } },
     "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
-    "Row": { "type": { "name": "elementType" } },
+    "Row": { "default": "GridRow", "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
     "TreeDataCollapseIcon": { "default": "GridExpandMoreIcon", "type": { "name": "elementType" } },
     "TreeDataExpandIcon": { "default": "GridKeyboardArrowRight", "type": { "name": "elementType" } }
@@ -308,6 +320,10 @@
       "columnSeparator",
       "columnsPanel",
       "columnsPanelRow",
+      "detailPanel",
+      "detailPanels",
+      "detailPanelToggleCell",
+      "detailPanelToggleCell--expanded",
       "panel",
       "panelHeader",
       "panelWrapper",
@@ -316,6 +332,11 @@
       "paper",
       "editBooleanCell",
       "filterForm",
+      "filterFormDeleteIcon",
+      "filterFormLinkOperatorInput",
+      "filterFormColumnInput",
+      "filterFormOperatorInput",
+      "filterFormValueInput",
       "editInputCell",
       "filterIcon",
       "footerContainer",
@@ -334,6 +355,9 @@
       "pinnedColumns",
       "pinnedColumns--left",
       "pinnedColumns--right",
+      "pinnedColumnHeaders",
+      "pinnedColumnHeaders--left",
+      "pinnedColumnHeaders--right",
       "root",
       "row--editable",
       "row--editing",

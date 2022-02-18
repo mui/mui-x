@@ -1,118 +1,64 @@
 import * as yargs from 'yargs';
 import * as fse from 'fs-extra';
 import path from 'path';
-import * as ts from 'typescript';
 import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildSelectorsDocumentation from './buildSelectorsDocumentation';
 import buildEventsDocumentation from './buildEventsDocumentation';
-import { Project, Projects, ProjectNames } from './utils';
+import FEATURE_TOGGLE from '../../src/featureToggle';
+import { getTypeScriptProjects } from '../getTypeScriptProjects';
 
-const workspaceRoot = path.resolve(__dirname, '../../../');
+async function run() {
+  let outputDirectories = ['./docs/pages/api-docs/data-grid'];
+  if (FEATURE_TOGGLE.enable_product_scope) {
+    outputDirectories = ['./docs/pages/api-docs/data-grid', './docs/pages/x/api/data-grid'];
+  }
+  if (FEATURE_TOGGLE.enable_redirects) {
+    outputDirectories = ['./docs/pages/x/api/data-grid'];
+  }
+  await Promise.all(
+    outputDirectories.map(async (dir) => {
+      const outputDirectory = path.resolve(dir);
+      fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 
-interface CreateProgramOptions {
-  name: ProjectNames;
-  rootPath: string;
-  tsConfigPath: string;
-  entryPointPath: string;
-}
+      const projects = getTypeScriptProjects();
 
-const createProject = (options: CreateProgramOptions): Project => {
-  const { name, tsConfigPath, rootPath, entryPointPath } = options;
+      const documentedInterfaces = buildInterfacesDocumentation({
+        projects,
+        outputDirectory,
+      });
 
-  const compilerOptions = ts.parseJsonConfigFileContent(
-    ts.readConfigFile(tsConfigPath, ts.sys.readFile).config,
-    ts.sys,
-    rootPath,
-  );
+      await buildComponentsDocumentation({
+        outputDirectory,
+        documentedInterfaces,
+        projects,
+      });
 
-  const program = ts.createProgram({
-    rootNames: [entryPointPath],
-    options: compilerOptions.options,
-  });
+      buildEventsDocumentation({
+        // TODO: Pass all the projects and add the pro icon for pro-only events
+        project: projects.get('x-data-grid-pro')!,
+        documentedInterfaces,
+      });
 
-  const checker = program.getTypeChecker();
-  const sourceFile = program.getSourceFile(entryPointPath);
+      buildSelectorsDocumentation({
+        project: projects.get('x-data-grid-pro')!,
+        outputDirectory,
+      });
 
-  const exports = Object.fromEntries(
-    checker.getExportsOfModule(checker.getSymbolAtLocation(sourceFile!)!).map((symbol) => {
-      return [symbol.name, symbol];
+      buildExportsDocumentation({
+        projects,
+      });
+
+      return Promise.resolve();
     }),
   );
-
-  return {
-    name,
-    exports,
-    program,
-    checker,
-    workspaceRoot,
-    prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
-  };
-};
-
-async function run(argv: { outputDirectory?: string }) {
-  const outputDirectory = path.resolve(argv.outputDirectory!);
-  fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
-
-  const projects: Projects = new Map();
-
-  projects.set(
-    'x-data-grid-pro',
-    createProject({
-      name: 'x-data-grid-pro',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-      tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/tsconfig.json'),
-      entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
-    }),
-  );
-
-  projects.set(
-    'x-data-grid',
-    createProject({
-      name: 'x-data-grid',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
-      tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/tsconfig.json'),
-      entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/src/index.ts'),
-    }),
-  );
-
-  const documentedInterfaces = buildInterfacesDocumentation({
-    projects,
-    outputDirectory,
-  });
-
-  await buildComponentsDocumentation({
-    outputDirectory,
-    documentedInterfaces,
-    projects,
-  });
-
-  buildEventsDocumentation({
-    project: projects.get('x-data-grid')!,
-    documentedInterfaces,
-  });
-
-  buildSelectorsDocumentation({
-    project: projects.get('x-data-grid-pro')!,
-    outputDirectory,
-  });
-
-  buildExportsDocumentation({
-    projects,
-  });
 }
 
 yargs
   .command({
-    command: '$0 <outputDirectory>',
+    command: '$0',
     describe: 'generates API docs',
-    builder: (command) => {
-      return command.positional('outputDirectory', {
-        description: 'directory where the markdown is written to',
-        type: 'string',
-      });
-    },
     handler: run,
   })
   .help()
