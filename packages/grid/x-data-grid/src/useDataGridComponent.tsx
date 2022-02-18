@@ -40,6 +40,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridDensity(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
+  useGridScroll(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef, props);
