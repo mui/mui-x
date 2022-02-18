@@ -18,7 +18,7 @@
       "@mui/x-license-pro": ["./packages/x-license-pro/src"],
       "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"],
       "test/*": ["./test/*"],
-      "packages/*": ["./packages/storybook"] // TODO: Remove, is only used for `packages/storybook/src/hooks/useData` which could be part of `@mui/x-data-generator`
+      "packages/*": ["./packages/storybook/*"] // TODO: Remove, is only used for `packages/storybook/src/hooks/useData` which could be part of `@mui/x-data-generator`
     }
   }
 }
