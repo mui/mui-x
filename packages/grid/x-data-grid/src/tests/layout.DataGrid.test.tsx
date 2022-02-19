@@ -444,6 +444,53 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
+      it('should set the first column to be twice as wide as the second and third', () => {
+        const rows = [{ id: 1, username: '@MUI', age: 20 }];
+
+        const columns = [
+          { field: 'id', flex: 2 },
+          { field: 'username', flex: 1 },
+          { field: 'age', flex: 1 },
+        ];
+
+        render(
+          // width = 480px + 2px border
+          <div style={{ width: 482, height: 200 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        const firstColumn = getColumnHeaderCell(0);
+        const secondColumn = getColumnHeaderCell(1);
+        const thirdColumn = getColumnHeaderCell(2);
+        expect(secondColumn.offsetWidth).to.equal(thirdColumn.offsetWidth);
+        expect(firstColumn.offsetWidth).to.equal(2 * secondColumn.offsetWidth);
+      });
+
+      it('should use `minWidth` if calculated flex size is smaller', () => {
+        const rows = [{ id: 1, username: '@MUI', age: 20 }];
+
+        const columns = [
+          { field: 'id', flex: 2 },
+          { field: 'username', flex: 1 },
+          { field: 'age', flex: 1 },
+        ];
+
+        render(
+          // width = 100px + 2px border
+          <div style={{ width: 102, height: 200 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        const firstColumn = getColumnHeaderCell(0);
+        const secondColumn = getColumnHeaderCell(1);
+        const thirdColumn = getColumnHeaderCell(2);
+        expect(firstColumn.offsetWidth).to.equal(50);
+        expect(secondColumn.offsetWidth).to.equal(50);
+        expect(thirdColumn.offsetWidth).to.equal(50);
+      });
+
       it('should respect maxWidth when a column is fluid', () => {
         const rows = [
           {
