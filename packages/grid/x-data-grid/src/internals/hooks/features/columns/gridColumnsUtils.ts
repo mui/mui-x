@@ -57,7 +57,7 @@ export const hydrateColumnsWidth = (
       let computedWidth: number;
       if (newColumn.flex && newColumn.flex > 0) {
         totalFlexUnits += newColumn.flex;
-        computedWidth = newColumn.minWidth!;
+        computedWidth = 0;
         flexColumns.push(newColumn);
       } else {
         computedWidth = clamp(newColumn.width!, newColumn.minWidth!, newColumn.maxWidth!);
@@ -72,15 +72,73 @@ export const hydrateColumnsWidth = (
 
   // Allocate the remaining space to the flex columns
   if (totalFlexUnits > 0 && widthAllocatedBeforeFlex < viewportInnerWidth) {
-    const widthPerFlexUnit = (viewportInnerWidth - widthAllocatedBeforeFlex) / totalFlexUnits;
+    const initialFreeSpace = viewportInnerWidth - widthAllocatedBeforeFlex;
 
-    flexColumns.forEach((column) => {
-      column.computedWidth = clamp(
-        column.computedWidth + widthPerFlexUnit * column.flex!,
-        column.minWidth!,
-        column.maxWidth!,
-      );
-    });
+    let freeSpace = initialFreeSpace;
+    let flexUnits = totalFlexUnits;
+    const violationsLookup: Record<
+      GridColDef['field'],
+      { violation: 'min' | 'max'; computedWidth: number; flex: GridColDef['flex'] }
+    > = {};
+    const frozenColumnsLookup: Record<GridColDef['field'], boolean> = {};
+
+    // eslint-disable-next-line no-inner-declarations
+    function calculateFlexColumns() {
+      let totalViolation = 0;
+      Object.keys(frozenColumnsLookup).forEach((field) => {
+        freeSpace -= violationsLookup[field].computedWidth;
+        flexUnits -= violationsLookup[field].flex!;
+      });
+      for (let i = 0; i < flexColumns.length; i += 1) {
+        const column = flexColumns[i];
+
+        if (frozenColumnsLookup[column.field] === true) {
+          // eslint-disable-next-line no-continue
+          continue;
+        }
+
+        const widthPerFlexUnit = freeSpace / flexUnits;
+
+        let computedWidth = widthPerFlexUnit * column.flex!;
+
+        if (computedWidth < column.minWidth!) {
+          totalViolation += column.minWidth! - computedWidth;
+          computedWidth = column.minWidth!;
+          violationsLookup[column.field] = { violation: 'min', computedWidth, flex: column.flex! };
+        }
+        if (computedWidth > column.maxWidth!) {
+          totalViolation += column.maxWidth! - computedWidth;
+          computedWidth = column.maxWidth!;
+          violationsLookup[column.field] = { violation: 'max', computedWidth, flex: column.flex! };
+        }
+
+        column.computedWidth = computedWidth;
+      }
+      return { totalViolation };
+    }
+
+    const { totalViolation } = calculateFlexColumns();
+
+    if (totalViolation < 0) {
+      // Freeze all the items with max violations
+      Object.keys(violationsLookup).forEach((field) => {
+        if (violationsLookup[field].violation === 'max') {
+          frozenColumnsLookup[field] = true;
+        }
+      });
+      calculateFlexColumns();
+    } else if (totalViolation > 0) {
+      // Freeze all the items with min violations
+      Object.keys(violationsLookup).forEach((field) => {
+        if (violationsLookup[field].violation === 'min') {
+          frozenColumnsLookup[field] = true;
+        }
+      });
+      calculateFlexColumns();
+    } else {
+      // TODO: Freeze all items
+      calculateFlexColumns();
+    }
   }
 
   return {
