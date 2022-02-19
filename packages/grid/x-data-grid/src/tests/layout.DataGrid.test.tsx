@@ -491,6 +491,27 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(thirdColumn.offsetWidth).to.equal(50);
       });
 
+      it('should distribute remaining space between flex items', () => {
+        const rows = [{ id: 1, username: '@MUI', age: 20 }];
+
+        const columns = [
+          { field: 'id', flex: 1000 },
+          { field: 'username', flex: 1000 },
+          { field: 'age', flex: 1, minWidth: 50 },
+        ];
+
+        render(
+          // width = 200px + 2px border
+          <div style={{ width: 202, height: 200 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        expect(getColumnHeaderCell(0).offsetWidth).to.equal(75);
+        expect(getColumnHeaderCell(1).offsetWidth).to.equal(75);
+        expect(getColumnHeaderCell(2).offsetWidth).to.equal(50);
+      });
+
       it('should respect maxWidth when a column is fluid', () => {
         const rows = [
           {
