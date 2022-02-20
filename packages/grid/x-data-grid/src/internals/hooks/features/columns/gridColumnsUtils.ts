@@ -71,13 +71,13 @@ export const hydrateColumnsWidth = (
   });
 
   // Allocate the remaining space to the flex columns
-  if (totalFlexUnits > 0 && widthAllocatedBeforeFlex < viewportInnerWidth) {
+  if (totalFlexUnits > 0) {
     // eslint-disable-next-line no-inner-declarations
     function calculateFlexItems({ initialFreeSpace, totalFlexUnits }) {
       const violationsLookup: Record<
         GridColDef['field'],
         { violation: 'min' | 'max'; computedWidth: number; flex: GridColDef['flex'] }
-    > = {};
+      > = {};
       const frozenColumnsLookup: Record<GridColDef['field'], boolean> = {};
 
       // eslint-disable-next-line no-inner-declarations
@@ -87,19 +87,19 @@ export const hydrateColumnsWidth = (
         let totalViolation = 0;
         Object.keys(frozenColumnsLookup).forEach((field) => {
           freeSpace -= violationsLookup[field].computedWidth;
-        flexUnits -= violationsLookup[field].flex!;
-      });
-      for (let i = 0; i < flexColumns.length; i += 1) {
-        const column = flexColumns[i];
+          flexUnits -= violationsLookup[field].flex!;
+        });
+        for (let i = 0; i < flexColumns.length; i += 1) {
+          const column = flexColumns[i];
 
-        if (frozenColumnsLookup[column.field] === true) {
-          // eslint-disable-next-line no-continue
-          continue;
-        }
+          if (frozenColumnsLookup[column.field] === true) {
+            // eslint-disable-next-line no-continue
+            continue;
+          }
 
-        const widthPerFlexUnit = freeSpace / flexUnits;
+          const widthPerFlexUnit = freeSpace / flexUnits;
 
-        let computedWidth = widthPerFlexUnit * column.flex!;
+          let computedWidth = widthPerFlexUnit * column.flex!;
 
           if (computedWidth < column.minWidth!) {
             totalViolation += column.minWidth! - computedWidth;
@@ -121,7 +121,7 @@ export const hydrateColumnsWidth = (
           }
 
           column.computedWidth = computedWidth;
-      }
+        }
         return { totalViolation };
       }
 
@@ -129,8 +129,8 @@ export const hydrateColumnsWidth = (
 
       if (totalViolation < 0) {
         // Freeze all the items with max violations
-      Object.keys(violationsLookup).forEach((field) => {
-        if (violationsLookup[field].violation === 'max') {
+        Object.keys(violationsLookup).forEach((field) => {
+          if (violationsLookup[field].violation === 'max') {
             frozenColumnsLookup[field] = true;
           }
         });
@@ -138,7 +138,7 @@ export const hydrateColumnsWidth = (
       } else if (totalViolation > 0) {
         // Freeze all the items with min violations
         Object.keys(violationsLookup).forEach((field) => {
-        if (violationsLookup[field].violation === 'min') {
+          if (violationsLookup[field].violation === 'min') {
             frozenColumnsLookup[field] = true;
           }
         });
@@ -149,7 +149,7 @@ export const hydrateColumnsWidth = (
       }
     }
     calculateFlexItems({
-      initialFreeSpace: viewportInnerWidth - widthAllocatedBeforeFlex,
+      initialFreeSpace: Math.max(viewportInnerWidth - widthAllocatedBeforeFlex, 0),
       totalFlexUnits,
     });
   }
