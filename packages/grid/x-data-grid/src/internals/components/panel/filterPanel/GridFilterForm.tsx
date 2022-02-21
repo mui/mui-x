@@ -243,7 +243,12 @@ function GridFilterForm(props: GridFilterFormProps) {
 
   const handleDeleteFilter = () => {
     if (rootProps.disableMultipleColumnsFiltering) {
-      applyFilterChanges({ ...item, value: undefined });
+      if (item.value === undefined) {
+        deleteFilter(item);
+      } else {
+        // TODO v6: simplify the behavior by always remove the filter form
+        applyFilterChanges({ ...item, value: undefined });
+      }
     } else {
       deleteFilter(item);
     }
