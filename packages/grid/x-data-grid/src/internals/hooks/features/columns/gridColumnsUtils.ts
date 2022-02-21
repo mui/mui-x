@@ -31,6 +31,113 @@ export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}
   return mergedColumnTypes;
 };
 
+function computeFlexColumnsWidth({
+  initialFreeSpace,
+  totalFlexUnits,
+  flexColumns,
+}: {
+  initialFreeSpace: number;
+  totalFlexUnits: number;
+  flexColumns: GridStateColDef[];
+}) {
+  const flexColumnsLookup: {
+    all: Record<
+      GridColDef['field'],
+      {
+        flex: number;
+        computedWidth: number;
+        frozen: boolean;
+      }
+    >;
+    frozenFields: GridColDef['field'][];
+    freeze: (field: GridColDef['field']) => void;
+  } = {
+    all: {},
+    frozenFields: [],
+    freeze: function freeze(field: GridColDef['field']) {
+      const value = this.all[field];
+      if (value && value.frozen !== true) {
+        this.all[field].frozen = true;
+        this.frozenFields.push(field);
+      }
+    },
+  };
+
+  function loopOverFlexItems() {
+    const violationsLookup: {
+      min: Record<GridColDef['field'], boolean>;
+      max: Record<GridColDef['field'], boolean>;
+    } = { min: {}, max: {} };
+
+    let freeSpace = initialFreeSpace;
+    let flexUnits = totalFlexUnits;
+    let totalViolation = 0;
+    flexColumnsLookup.frozenFields.forEach((field) => {
+      freeSpace -= flexColumnsLookup.all[field].computedWidth;
+      flexUnits -= flexColumnsLookup.all[field].flex!;
+    });
+    if (flexColumnsLookup.frozenFields.length === flexColumns.length) {
+      // All columns are frozen - we are done here
+      return;
+    }
+    for (let i = 0; i < flexColumns.length; i += 1) {
+      const column = flexColumns[i];
+
+      if (
+        flexColumnsLookup.all[column.field] &&
+        flexColumnsLookup.all[column.field].frozen === true
+      ) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+
+      const widthPerFlexUnit = freeSpace / flexUnits;
+
+      let computedWidth = widthPerFlexUnit * column.flex!;
+
+      if (computedWidth < column.minWidth!) {
+        totalViolation += column.minWidth! - computedWidth;
+        computedWidth = column.minWidth!;
+        violationsLookup.min[column.field] = true;
+      }
+      if (computedWidth > column.maxWidth!) {
+        totalViolation += column.maxWidth! - computedWidth;
+        computedWidth = column.maxWidth!;
+        violationsLookup.max[column.field] = true;
+      }
+
+      flexColumnsLookup.all[column.field] = {
+        frozen: false,
+        computedWidth,
+        flex: column.flex!,
+      };
+    }
+
+    if (totalViolation < 0) {
+      // Freeze all the items with max violations
+      Object.keys(violationsLookup.max).forEach((field) => {
+        flexColumnsLookup.freeze(field);
+      });
+      loopOverFlexItems();
+    } else if (totalViolation > 0) {
+      // Freeze all the items with min violations
+      Object.keys(violationsLookup.min).forEach((field) => {
+        flexColumnsLookup.freeze(field);
+      });
+      loopOverFlexItems();
+    } else {
+      flexColumns.forEach(({ field }) => {
+        flexColumnsLookup.freeze(field);
+      });
+      loopOverFlexItems();
+    }
+  }
+
+  loopOverFlexItems();
+
+  return flexColumnsLookup.all;
+}
+
 /**
  * Compute the `computedWidth` (ie: the width the column should have during rendering) based on the `width` / `flex` / `minWidth` / `maxWidth` properties of `GridColDef`.
  * The columns already have been merged with there `type` default values for `minWidth`, `maxWidth` and `width`, thus the `!` for those properties below.
@@ -70,87 +177,18 @@ export const hydrateColumnsWidth = (
     columnsLookup[columnField] = newColumn;
   });
 
+  const initialFreeSpace = Math.max(viewportInnerWidth - widthAllocatedBeforeFlex, 0);
+
   // Allocate the remaining space to the flex columns
-  if (totalFlexUnits > 0) {
-    // eslint-disable-next-line no-inner-declarations
-    function calculateFlexItems({ initialFreeSpace, totalFlexUnits }) {
-      const violationsLookup: Record<
-        GridColDef['field'],
-        { violation: 'min' | 'max'; computedWidth: number; flex: GridColDef['flex'] }
-      > = {};
-      const frozenColumnsLookup: Record<GridColDef['field'], boolean> = {};
-
-      // eslint-disable-next-line no-inner-declarations
-      function loopOverFlexItems() {
-        let freeSpace = initialFreeSpace;
-        let flexUnits = totalFlexUnits;
-        let totalViolation = 0;
-        Object.keys(frozenColumnsLookup).forEach((field) => {
-          freeSpace -= violationsLookup[field].computedWidth;
-          flexUnits -= violationsLookup[field].flex!;
-        });
-        for (let i = 0; i < flexColumns.length; i += 1) {
-          const column = flexColumns[i];
-
-          if (frozenColumnsLookup[column.field] === true) {
-            // eslint-disable-next-line no-continue
-            continue;
-          }
-
-          const widthPerFlexUnit = freeSpace / flexUnits;
-
-          let computedWidth = widthPerFlexUnit * column.flex!;
-
-          if (computedWidth < column.minWidth!) {
-            totalViolation += column.minWidth! - computedWidth;
-            computedWidth = column.minWidth!;
-            violationsLookup[column.field] = {
-              violation: 'min',
-              computedWidth,
-              flex: column.flex!,
-            };
-          }
-          if (computedWidth > column.maxWidth!) {
-            totalViolation += column.maxWidth! - computedWidth;
-            computedWidth = column.maxWidth!;
-            violationsLookup[column.field] = {
-              violation: 'max',
-              computedWidth,
-              flex: column.flex!,
-            };
-          }
-
-          column.computedWidth = computedWidth;
-        }
-        return { totalViolation };
-      }
-
-      const { totalViolation } = loopOverFlexItems();
-
-      if (totalViolation < 0) {
-        // Freeze all the items with max violations
-        Object.keys(violationsLookup).forEach((field) => {
-          if (violationsLookup[field].violation === 'max') {
-            frozenColumnsLookup[field] = true;
-          }
-        });
-        loopOverFlexItems();
-      } else if (totalViolation > 0) {
-        // Freeze all the items with min violations
-        Object.keys(violationsLookup).forEach((field) => {
-          if (violationsLookup[field].violation === 'min') {
-            frozenColumnsLookup[field] = true;
-          }
-        });
-        loopOverFlexItems();
-      } else {
-        // TODO: Freeze all items
-        loopOverFlexItems();
-      }
-    }
-    calculateFlexItems({
-      initialFreeSpace: Math.max(viewportInnerWidth - widthAllocatedBeforeFlex, 0),
+  if (totalFlexUnits > 0 && viewportInnerWidth > 0) {
+    const computedColumnWidths = computeFlexColumnsWidth({
+      initialFreeSpace,
       totalFlexUnits,
+      flexColumns,
+    });
+
+    Object.keys(computedColumnWidths).forEach((field) => {
+      columnsLookup[field].computedWidth = computedColumnWidths[field].computedWidth;
     });
   }
 
