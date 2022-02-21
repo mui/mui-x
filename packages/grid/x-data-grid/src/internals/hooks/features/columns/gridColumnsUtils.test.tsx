@@ -7,6 +7,7 @@ describe('gridColumnsUtils', () => {
       return flexColumns.reduce((acc, column) => acc + column.flex, 0);
     }
 
+    // https://github.com/mui/mui-x/issues/3982
     it('should set the first column to be twice as wide as the second and third', () => {
       const flexColumns = [
         { field: 'id', minWidth: 50, flex: 2 },
@@ -63,6 +64,7 @@ describe('gridColumnsUtils', () => {
       expect(computedColumns[flexColumns[2].field].computedWidth).to.equal(50);
     });
 
+    // https://github.com/mui/mui-x/issues/3091
     it('should work with `flex` values < 0', () => {
       const flexColumns = [
         { field: 'id', minWidth: 50, flex: 1 },

@@ -465,6 +465,26 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(getColumnHeaderCell(2).offsetWidth).to.equal(50);
       });
 
+      it('should ignore `minWidth` on flex columns when computed width is greater', () => {
+        const rows = [{ id: 1, username: '@MUI', age: 20 }];
+        const columns = [
+          { field: 'id', flex: 1, minWidth: 150 },
+          { field: 'username', width: 200 },
+          { field: 'age', flex: 0.3, minWidth: 50 },
+        ];
+
+        render(
+          // width 850px + 2px border
+          <div style={{ width: 852, height: 200 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        expect(getColumnHeaderCell(0).offsetWidth).to.equal(500);
+        expect(getColumnHeaderCell(1).offsetWidth).to.equal(200);
+        expect(getColumnHeaderCell(2).offsetWidth).to.equal(150);
+      });
+
       it('should respect maxWidth when a column is fluid', () => {
         const rows = [
           {
