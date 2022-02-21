@@ -9,7 +9,6 @@ import { GridOverlays } from './GridOverlays';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { GridOverlaysRoot } from './GridOverlaysRoot';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -73,9 +72,7 @@ function GridBody(props: GridBodyProps) {
 
   return (
     <GridMainContainer>
-      <GridOverlaysRoot>
-        <GridOverlays />
-      </GridOverlaysRoot>
+      <GridOverlays />
       <ColumnHeadersComponent ref={columnsContainerRef} innerRef={columnHeadersRef} />
       <GridAutoSizer
         nonce={rootProps.nonce}
