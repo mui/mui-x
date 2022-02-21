@@ -1,6 +1,5 @@
 import * as yargs from 'yargs';
 import * as fse from 'fs-extra';
-import * as ts from 'typescript';
 import path from 'path';
 import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
@@ -31,11 +30,11 @@ async function run() {
         outputDirectory,
       });
 
-      // await buildComponentsDocumentation({
-      //   outputDirectory,
-      //   documentedInterfaces,
-      //   projects,
-      // });
+      await buildComponentsDocumentation({
+        outputDirectory,
+        documentedInterfaces,
+        projects,
+      });
 
       buildEventsDocumentation({
         // TODO: Pass all the projects and add the pro icon for pro-only events
