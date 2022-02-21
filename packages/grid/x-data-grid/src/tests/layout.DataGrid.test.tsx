@@ -380,7 +380,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
-      it('should set the first column close to its minWidth and the second one to the remaining space', () => {
+      it('should set the first column to its `minWidth` and the second one to the remaining space', () => {
         const rows = [
           {
             id: 1,
@@ -406,10 +406,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        const firstColumnWidth = Number(getColumnHeaderCell(0).style.width.split('px')[0]);
-        const secondColumnWidth = Number(getColumnHeaderCell(1).style.width.split('px')[0]);
-        expect(Math.round(firstColumnWidth)).to.equal(100);
-        expect(Math.round(secondColumnWidth)).to.equal(298);
+        expect(getColumnHeaderCell(0).offsetWidth).to.equal(100);
+        expect(getColumnHeaderCell(1).offsetWidth).to.equal(298); // 2px border
       });
 
       it('should respect minWidth when a column is fluid', () => {
