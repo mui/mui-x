@@ -114,5 +114,26 @@ describe('gridColumnsUtils', () => {
       expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(100);
       expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(900);
     });
+
+    it('should split the columns equally if they are all flex', () => {
+      const flexColumns = [
+        { field: 'id', flex: 1, minWidth: 50 },
+        { field: 'name', flex: 1 },
+        { field: 'age', flex: 1 },
+      ];
+
+      const containerWidth = 408;
+
+      const computedColumns = computeFlexColumnsWidth({
+        flexColumns,
+        initialFreeSpace: 408,
+        totalFlexUnits: getTotalFlexUnits(flexColumns),
+      });
+
+      const expectedWidth = containerWidth / 3;
+      expect(computedColumns[flexColumns[0].field].computedWidth).to.be.equal(expectedWidth);
+      expect(computedColumns[flexColumns[1].field].computedWidth).to.be.equal(expectedWidth);
+      expect(computedColumns[flexColumns[2].field].computedWidth).to.be.equal(expectedWidth);
+    });
   });
 });
