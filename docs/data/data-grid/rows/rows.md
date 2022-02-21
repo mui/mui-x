@@ -61,7 +61,7 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 
 {{"demo": "InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
-### High frequency [<span class="plan-pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### High frequency [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 Whenever the rows are updated, the grid has to apply the sorting and filters. This can be a problem if you have high frequency updates. To maintain good performances, the grid allows to batch the updates and only apply them after a period of time. The `throttleRowsMs` prop can be used to define the frequency (in milliseconds) at which rows updates are applied.
 
