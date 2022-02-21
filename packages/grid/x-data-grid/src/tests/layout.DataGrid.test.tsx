@@ -374,10 +374,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
         const firstColumn = getColumnHeaderCell(0);
         const secondColumn = getColumnHeaderCell(1);
-        const secondColumnWidthVal = secondColumn.style.width.split('px')[0];
-        expect(firstColumn).toHaveInlineStyle({
-          width: `${2 * Number(secondColumnWidthVal)}px`,
-        });
+        expect(firstColumn.offsetWidth).to.equal(2 * secondColumn.offsetWidth);
       });
 
       it('should set the first column to its `minWidth` and the second one to the remaining space', () => {
@@ -410,7 +407,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(getColumnHeaderCell(1).offsetWidth).to.equal(298); // 2px border
       });
 
-      it('should respect minWidth when a column is fluid', () => {
+      it('should respect `minWidth` when a column is fluid', () => {
         const rows = [
           {
             id: 1,
@@ -436,10 +433,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        const firstColumn = getColumnHeaderCell(0);
-        expect(firstColumn).toHaveInlineStyle({
-          width: '150px',
-        });
+        expect(getColumnHeaderCell(0).offsetWidth).to.equal(150);
+        expect(getColumnHeaderCell(1).offsetWidth).to.equal(50);
       });
 
       it('should use `minWidth` on flex columns if there is no more space to distribute', () => {
@@ -483,7 +478,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(getColumnHeaderCell(2).offsetWidth).to.equal(150);
       });
 
-      it('should respect maxWidth when a column is fluid', () => {
+      it('should respect `maxWidth` when a column is fluid', () => {
         const rows = [
           {
             id: 1,
@@ -539,21 +534,19 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           },
         ];
 
-        const containerWidth = 400;
+        const containerWidth = 408;
 
         render(
-          <div style={{ width: containerWidth, height: 300 }}>
+          // 2px border
+          <div style={{ width: containerWidth + 2, height: 300 }}>
             <DataGrid columns={columns} rows={rows} />
           </div>,
         );
 
-        const expectedWidth = (containerWidth - 2) / 3;
-        const firstColumnWidth = Number(getColumnHeaderCell(0).style.width.split('px')[0]);
-        const secondColumnWidth = Number(getColumnHeaderCell(1).style.width.split('px')[0]);
-        const thirdColumnWidth = Number(getColumnHeaderCell(2).style.width.split('px')[0]);
-        expect(Math.abs(firstColumnWidth - expectedWidth)).to.be.lessThan(0.1);
-        expect(Math.abs(secondColumnWidth - expectedWidth)).to.be.lessThan(0.1);
-        expect(Math.abs(thirdColumnWidth - expectedWidth)).to.be.lessThan(0.1);
+        const expectedWidth = containerWidth / 3;
+        expect(getColumnHeaderCell(0).offsetWidth).to.be.equal(expectedWidth);
+        expect(getColumnHeaderCell(1).offsetWidth).to.be.equal(expectedWidth);
+        expect(getColumnHeaderCell(2).offsetWidth).to.be.equal(expectedWidth);
       });
 
       it('should handle hidden columns (deprecated)', () => {
