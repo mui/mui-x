@@ -36,7 +36,7 @@ export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}
  * Based on CSS Flexbox specification:
  * https://drafts.csswg.org/css-flexbox-1/#resolve-flexible-lengths
  */
-function computeFlexColumnsWidth({
+export function computeFlexColumnsWidth({
   initialFreeSpace,
   totalFlexUnits,
   flexColumns,
