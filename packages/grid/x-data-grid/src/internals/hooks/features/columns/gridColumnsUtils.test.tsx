@@ -3,6 +3,10 @@ import { computeFlexColumnsWidth } from './gridColumnsUtils';
 
 describe('gridColumnsUtils', () => {
   describe('computeFlexColumnsWidth', () => {
+    function getTotalFlexUnits(flexColumns: { flex: number }[]) {
+      return flexColumns.reduce((acc, column) => acc + column.flex, 0);
+    }
+
     it('should set the first column to be twice as wide as the second and third', () => {
       const flexColumns = [
         { field: 'id', minWidth: 50, flex: 2 },
@@ -12,7 +16,7 @@ describe('gridColumnsUtils', () => {
       const computedColumns = computeFlexColumnsWidth({
         flexColumns,
         initialFreeSpace: 480,
-        totalFlexUnits: 4,
+        totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
       expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(
@@ -33,7 +37,7 @@ describe('gridColumnsUtils', () => {
       const computedColumns = computeFlexColumnsWidth({
         flexColumns,
         initialFreeSpace: 100,
-        totalFlexUnits: 4,
+        totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
       expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(50);
@@ -51,12 +55,62 @@ describe('gridColumnsUtils', () => {
       const computedColumns = computeFlexColumnsWidth({
         flexColumns,
         initialFreeSpace: 200,
-        totalFlexUnits: 2001,
+        totalFlexUnits: getTotalFlexUnits(flexColumns),
       });
 
       expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(75);
       expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(75);
       expect(computedColumns[flexColumns[2].field].computedWidth).to.equal(50);
+    });
+
+    it('should work with `flex` values < 0', () => {
+      const flexColumns = [
+        { field: 'id', minWidth: 50, flex: 1 },
+        { field: 'username', minWidth: 50, flex: 1 },
+        { field: 'age', minWidth: 50, flex: 0.001 },
+      ];
+
+      const computedColumns = computeFlexColumnsWidth({
+        flexColumns,
+        initialFreeSpace: 200,
+        totalFlexUnits: getTotalFlexUnits(flexColumns),
+      });
+
+      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(75);
+      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(75);
+      expect(computedColumns[flexColumns[2].field].computedWidth).to.equal(50);
+    });
+
+    it('should use `minWidth` on flex columns if there is no more space to distribute', () => {
+      const flexColumns = [
+        { field: 'id', flex: 1, minWidth: 50 },
+        { field: 'age', flex: 3, minWidth: 50 },
+      ];
+
+      const computedColumns = computeFlexColumnsWidth({
+        flexColumns,
+        initialFreeSpace: 0,
+        totalFlexUnits: getTotalFlexUnits(flexColumns),
+      });
+
+      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(50);
+      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(50);
+    });
+
+    it('should use `maxWidth` if calculated flex width exceeds it', () => {
+      const flexColumns = [
+        { field: 'id', flex: 1, minWidth: 50, maxWidth: 100 },
+        { field: 'age', flex: 3, minWidth: 50 },
+      ];
+
+      const computedColumns = computeFlexColumnsWidth({
+        flexColumns,
+        initialFreeSpace: 1000,
+        totalFlexUnits: getTotalFlexUnits(flexColumns),
+      });
+
+      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(100);
+      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(900);
     });
   });
 });
