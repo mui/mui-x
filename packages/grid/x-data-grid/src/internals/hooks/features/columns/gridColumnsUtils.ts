@@ -43,7 +43,12 @@ function computeFlexColumnsWidth({
 }: {
   initialFreeSpace: number;
   totalFlexUnits: number;
-  flexColumns: GridStateColDef[];
+  flexColumns: {
+    field: GridColDef['field'];
+    flex?: number;
+    minWidth?: number;
+    maxWidth?: number;
+  }[];
 }) {
   const flexColumnsLookup: {
     all: Record<
