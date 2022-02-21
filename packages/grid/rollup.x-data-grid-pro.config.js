@@ -35,7 +35,7 @@ export default [
         cleaner({
           targets: ['./x-data-grid-pro/build/'],
         }),
-      typescript({ tsconfig: 'tsconfig.build.json' }),
+      typescript({ tsconfig: './x-data-grid-pro/tsconfig.build.json' }),
       babel({
         babelHelpers: 'bundled',
         extensions: ['.tsx', '.ts'],

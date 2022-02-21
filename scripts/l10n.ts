@@ -247,11 +247,14 @@ async function run(argv: HandlerArgv) {
 
   const constantsPath = path.join(
     workspaceRoot,
-    'packages/grid/_modules_/grid/constants/localeTextConstants.ts',
+    'packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts',
   );
   const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
 
-  const localesDirectory = path.resolve(workspaceRoot, 'packages/grid/_modules_/grid/locales');
+  const localesDirectory = path.resolve(
+    workspaceRoot,
+    'packages/grid/x-data-grid/src/internals/locales',
+  );
   const locales = findLocales(localesDirectory);
 
   const missingTranslations: Record<string, any> = {};
