@@ -297,6 +297,40 @@ describe('<DataGridPro /> - Filter', () => {
     expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
   });
 
+  it('should not scroll the page when a filter is removed from the panel', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    render(
+      <div>
+        {/* To simulate a page that needs to be scrolled to reach the grid. */}
+        <div style={{ height: '100vh', width: '100vh' }} />
+        <TestCase
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                linkOperator: GridLinkOperator.Or,
+                items: [
+                  { id: 1, columnField: 'brand', value: 'a', operatorValue: 'contains' },
+                  { id: 2, columnField: 'brand', value: 'm', operatorValue: 'contains' },
+                ],
+              },
+            },
+          }}
+        />
+      </div>,
+    );
+    screen.getByRole('grid').scrollIntoView();
+    const initialScrollPosition = window.scrollY;
+    expect(initialScrollPosition).not.to.equal(0);
+    fireEvent.click(screen.getAllByRole('button', { name: /delete/i })[1]);
+    expect(window.scrollY).to.equal(initialScrollPosition);
+  });
+
   describe('Server', () => {
     it('should refresh the filter panel when adding filters', () => {
       function loadServerRows(commodityFilterValue) {

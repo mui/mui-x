@@ -3,7 +3,7 @@ import { gridClasses } from '../../../gridClasses';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
+import { findParentElementFromClassName } from '../../../utils/domUtils';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
@@ -51,9 +51,7 @@ export const useGridKeyboard = (apiRef: React.MutableRefObject<GridApiCommunity>
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
     (params, event) => {
       // Ignore portal
-      // Do not apply shortcuts if the focus is not on the cell root component
-      // TODO replace with !event.currentTarget.contains(event.target as Element)
-      if (!isGridCellRoot(event.target as Element)) {
+      if (!event.currentTarget.contains(event.target as Element)) {
         return;
       }
 

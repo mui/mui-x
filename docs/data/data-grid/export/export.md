@@ -189,14 +189,14 @@ The demo below shows how to add a JSON export.
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #198](https://github.com/mui-org/material-ui-x/issues/198) if you want to see it land faster.
+> 👍 Upvote [issue #198](https://github.com/mui/material-ui-x/issues/198) if you want to see it land faster.
 > You will be able to export the displayed data to Excel with an API call, or using the grid UI.
 
 ## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #199](https://github.com/mui-org/material-ui-x/issues/199) if you want to see it land faster.
+> 👍 Upvote [issue #199](https://github.com/mui/material-ui-x/issues/199) if you want to see it land faster.
 > You will be able to copy and paste items to and from the grid using the system clipboard.
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
