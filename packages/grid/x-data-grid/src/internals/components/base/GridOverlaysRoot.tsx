@@ -43,8 +43,6 @@ export function GridOverlaysRoot(props: React.PropsWithChildren<{}>) {
         position: 'absolute',
         top: headerHeight,
         left: 0,
-        right: 0,
-        bottom: 0,
       }}
       {...props}
     />
