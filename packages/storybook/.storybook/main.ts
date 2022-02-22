@@ -3,10 +3,8 @@ import webpack from 'webpack';
 import type { StorybookConfig } from '@storybook/core/types';
 
 const env = process.env.NODE_ENV || 'development';
-/* eslint-disable */
 const isDevelopment = env === 'development';
 const isProduction = env === 'production';
-/* eslint-enable */
 
 if (!(isDevelopment || isProduction)) {
   throw new Error(`Unknown env: ${env}.`);
@@ -87,32 +85,20 @@ const config: StorybookConfig = {
       maxAssetSize: maxAssetSize,
     };
 
-    const localPackageFolderName = isDevelopment ? 'src' : 'build';
-
     config.resolve = {
       ...config.resolve,
       alias: {
         ...config.resolve.alias,
-        '@mui/x-data-grid': path.resolve(
-          __dirname,
-          '../../../packages/grid/x-data-grid',
-          localPackageFolderName,
-        ),
+        '@mui/x-data-grid': path.resolve(__dirname, '../../../packages/grid/x-data-grid/src'),
         '@mui/x-data-grid-generator': path.resolve(
           __dirname,
-          '../../../packages/grid/x-data-grid-generator',
-          localPackageFolderName,
+          '../../../packages/grid/x-data-grid-generator/src',
         ),
         '@mui/x-data-grid-pro': path.resolve(
           __dirname,
-          '../../../packages/grid/x-data-grid-pro',
-          localPackageFolderName,
+          '../../../packages/grid/x-data-grid-pro/src',
         ),
-        '@mui/x-license-pro': path.resolve(
-          __dirname,
-          '../../../packages/x-license-pro',
-          localPackageFolderName,
-        ),
+        '@mui/x-license-pro': path.resolve(__dirname, '../../../packages/x-license-pro/src'),
       },
     };
     return config;
