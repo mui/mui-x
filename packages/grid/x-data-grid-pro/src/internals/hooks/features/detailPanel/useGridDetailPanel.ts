@@ -116,7 +116,7 @@ export const useGridDetailPanel = (
       if (expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
         return { ...initialValue, detail: 0 };
       }
-      const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef);
+      const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef.current.state);
       return {
         ...initialValue,
         detail: heightCache[row.id] ?? 0, // Fallback to zero because the cache might not be ready yet (e.g. page was changed)
