@@ -2520,7 +2520,7 @@
   version "5.4.0"
   resolved "https://github.com/mui/material-ui.git#88ef72fc756f74693a6590aebddd408c2b4c02e0"
 
-"@mui/private-theming@^5.4.1", "@mui/private-theming@^5.4.2":
+"@mui/private-theming@^5.4.2":
   version "5.4.2"
   resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.4.2.tgz#f0a05f908456a2f7b87ccb6fc3b6e1faae9d89e6"
   integrity sha512-mlPDYYko4wIcwXjCPEmOWbNTT4DZ6h9YHdnRtQPnWM28+TRUHEo7SbydnnmVDQLRXUfaH4Y6XtEHIfBNPE/SLg==
@@ -2538,16 +2538,16 @@
     "@emotion/cache" "^11.7.1"
     prop-types "^15.7.2"
 
-"@mui/styles@^5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.4.1.tgz#994171da902267184fffa19896ee5bbb07d4d783"
-  integrity sha512-ekw2NBC06re0H9SvCA1XgtFcghB8AQdGPXD3mjIz5ik+X+LvR+f2TeoCpJpkKp7UQdcNn6uuYi6BO6irTiQhdw==
+"@mui/styles@^5.4.2":
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.4.2.tgz#e0dadfc5de8255605f23c2f909f3669f0911bb88"
+  integrity sha512-BX75fNHmRF51yove9dBkH28gpSFjClOPDEnUwLTghPYN913OsqViS/iuCd61dxzygtEEmmeYuWfQjxu/F6vF5g==
   dependencies:
     "@babel/runtime" "^7.17.0"
     "@emotion/hash" "^0.8.0"
-    "@mui/private-theming" "^5.4.1"
-    "@mui/types" "^7.1.1"
-    "@mui/utils" "^5.4.1"
+    "@mui/private-theming" "^5.4.2"
+    "@mui/types" "^7.1.2"
+    "@mui/utils" "^5.4.2"
     clsx "^1.1.1"
     csstype "^3.0.10"
     hoist-non-react-statics "^3.3.2"
@@ -2575,12 +2575,12 @@
     csstype "^3.0.10"
     prop-types "^15.7.2"
 
-"@mui/types@^7.1.1", "@mui/types@^7.1.2":
+"@mui/types@^7.1.2":
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.1.2.tgz#4f3678ae77a7a3efab73b6e040469cc6df2144ac"
   integrity sha512-SD7O1nVzqG+ckQpFjDhXPZjRceB8HQFHEvdLLrPhlJy4lLbwEBbxK74Tj4t6Jgk0fTvLJisuwOutrtYe9P/xBQ==
 
-"@mui/utils@^5.4.1", "@mui/utils@^5.4.2":
+"@mui/utils@^5.4.2":
   version "5.4.2"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.4.2.tgz#3edda8f80de235418fff0424ee66e2a49793ec01"
   integrity sha512-646dBCC57MXTo/Gf3AnZSHRHznaTETQq5x7AWp5FRQ4jPeyT4WSs18cpJVwkV01cAHKh06pNQTIufIALIWCL5g==
