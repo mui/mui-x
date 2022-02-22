@@ -24,7 +24,6 @@ const config: StorybookConfig = {
     check: isDevelopment, // Netlify is breaking the deploy with this settings on. So deactivate on release
   },
   webpackFinal: async (config) => {
-    console.log(config.resolve);
     config.devtool = isDevelopment ? 'inline-source-map' : undefined;
     config.parallelism = 1;
     config.module.rules.push({
