@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  useGridSelector,
   GridEvents,
   GridEventListener,
   GridScrollParams,
@@ -27,7 +28,10 @@ export const useGridInfiniteLoader = (
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'
   >,
 ): void => {
+  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const currentPage = useCurrentPageRows(apiRef, props);
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
+  const contentHeight = Math.max(rowsMeta.currentPageTotalHeight, 1);
 
   const isInScrollBottomArea = React.useRef<boolean>(false);
 
@@ -40,8 +44,6 @@ export const useGridInfiniteLoader = (
 
       const scrollPositionBottom = scrollPosition.top + dimensions.viewportOuterSize.height;
       const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
-      const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
-      const contentHeight = Math.max(rowsMeta.currentPageTotalHeight, 1);
 
       if (scrollPositionBottom < contentHeight - props.scrollEndThreshold) {
         isInScrollBottomArea.current = false;
@@ -51,7 +53,6 @@ export const useGridInfiniteLoader = (
         scrollPositionBottom >= contentHeight - props.scrollEndThreshold &&
         !isInScrollBottomArea.current
       ) {
-        const visibleColumns = visibleGridColumnsSelector(apiRef);
         const rowScrollEndParam: GridRowScrollEndParams = {
           visibleColumns: visibleColumns as GridColumns<GridApiPro>,
           viewportPageSize,
@@ -61,7 +62,7 @@ export const useGridInfiniteLoader = (
         isInScrollBottomArea.current = true;
       }
     },
-    [props.scrollEndThreshold, apiRef, currentPage.rows.length],
+    [contentHeight, props.scrollEndThreshold, visibleColumns, apiRef, currentPage.rows.length],
   );
 
   const handleGridScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(

@@ -4,6 +4,7 @@ import {
   GridEventListener,
   GridCellParams,
   GridRowId,
+  useGridSelector,
   useGridApiEventHandler,
   useGridApiMethod,
   unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
@@ -46,13 +47,15 @@ export const useGridDetailPanel = (
     };
   });
 
+  const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
+  const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
+
   const handleCellClick = React.useCallback<GridEventListener<GridEvents.cellClick>>(
     (params: GridCellParams, event: React.MouseEvent) => {
       if (params.field !== GRID_DETAIL_PANEL_TOGGLE_FIELD || props.getDetailPanelContent == null) {
         return;
       }
 
-      const contentCache = gridDetailPanelExpandedRowsContentCacheSelector(apiRef);
       const content = contentCache[params.id];
       if (!React.isValidElement(content)) {
         return;
@@ -65,7 +68,7 @@ export const useGridDetailPanel = (
 
       apiRef.current.toggleDetailPanel(params.id);
     },
-    [apiRef, props.getDetailPanelContent],
+    [apiRef, contentCache, props.getDetailPanelContent],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
@@ -110,7 +113,6 @@ export const useGridDetailPanel = (
 
   const addDetailHeight = React.useCallback<GridPreProcessor<'rowHeight'>>(
     (initialValue, row) => {
-      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(apiRef);
       if (expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
         return { ...initialValue, detail: 0 };
       }
@@ -120,7 +122,7 @@ export const useGridDetailPanel = (
         detail: heightCache[row.id] ?? 0, // Fallback to zero because the cache might not be ready yet (e.g. page was changed)
       };
     },
-    [apiRef],
+    [apiRef, expandedRowIds],
   );
 
   useGridRegisterPreProcessor(apiRef, 'hydrateColumns', addToggleColumn);
@@ -140,7 +142,6 @@ export const useGridDetailPanel = (
         return;
       }
 
-      const contentCache = gridDetailPanelExpandedRowsContentCacheSelector(apiRef);
       const content = contentCache[id];
       if (!React.isValidElement(content)) {
         return;
@@ -151,7 +152,7 @@ export const useGridDetailPanel = (
         ids.includes(id) ? ids.filter((rowId) => rowId !== id) : [...ids, id],
       );
     },
-    [apiRef, props.getDetailPanelContent],
+    [apiRef, contentCache, props.getDetailPanelContent],
   );
 
   const getExpandedDetailPanels = React.useCallback<GridDetailPanelApi['getExpandedDetailPanels']>(
