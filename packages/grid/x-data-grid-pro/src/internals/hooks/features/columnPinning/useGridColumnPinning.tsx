@@ -4,7 +4,7 @@ import {
   MuiEvent,
   GridRowParams,
   useGridSelector,
-  visibleGridColumnsSelector,
+  gridVisibleColumnDefinitionsSelector,
   gridColumnsMetaSelector,
   gridVisibleColumnFieldsSelector,
   gridClasses,
@@ -135,7 +135,7 @@ export const useGridColumnPinning = (
         return initialValue;
       }
 
-      const visibleColumns = visibleGridColumnsSelector(apiRef);
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       const columnsMeta = gridColumnsMetaSelector(apiRef);
       const clientWidth = apiRef.current.windowRef!.current!.clientWidth;
       const scrollLeft = apiRef.current.windowRef!.current!.scrollLeft;
@@ -220,7 +220,7 @@ export const useGridColumnPinning = (
       }
 
       if (rightPinnedColumns.length > 0) {
-        const visibleColumns = visibleGridColumnsSelector(apiRef);
+        const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
         const firstRightPinnedColumnIndex = visibleColumns.length - rightPinnedColumns.length;
         return targetIndex >= firstRightPinnedColumnIndex ? false : initialValue;
       }

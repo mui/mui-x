@@ -4,7 +4,7 @@ import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
-  visibleGridColumnsSelector,
+  gridVisibleColumnDefinitionsSelector,
   gridColumnsMetaSelector,
 } from '../columns/gridColumnsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
@@ -53,7 +53,7 @@ interface UseGridVirtualScrollerProps {
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
 
   const {
     ref,

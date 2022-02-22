@@ -4,7 +4,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
   gridColumnsMetaSelector,
-  visibleGridColumnsSelector,
+  gridVisibleColumnDefinitionsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -48,7 +48,7 @@ export const useGridScroll = (
 
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
 

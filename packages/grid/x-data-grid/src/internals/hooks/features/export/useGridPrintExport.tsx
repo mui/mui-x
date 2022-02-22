@@ -8,7 +8,7 @@ import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import {
-  allGridColumnsSelector,
+  gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns/gridColumnsSelector';
 import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
@@ -40,7 +40,7 @@ export const useGridPrintExport = (
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
-  const columns = useGridSelector(apiRef, allGridColumnsSelector);
+  const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<any>();
   const previousHiddenColumns = React.useRef<string[]>([]);

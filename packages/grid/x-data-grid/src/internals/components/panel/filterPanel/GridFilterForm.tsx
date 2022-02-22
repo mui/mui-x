@@ -8,7 +8,7 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { gridFilterableColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
@@ -135,7 +135,7 @@ function GridFilterForm(props: GridFilterFormProps) {
     valueInputProps = {},
   } = props;
   const apiRef = useGridApiContext();
-  const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
+  const filterableColumns = useGridSelector(apiRef, gridFilterableColumnsSelector);
   const linkOperatorSelectId = useId();
   const linkOperatorSelectLabelId = useId();
   const columnSelectId = useId();

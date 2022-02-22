@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { visibleGridColumnsSelector } from '../../../hooks/features/columns';
+import { gridVisibleColumnDefinitionsSelector } from '../../../hooks/features/columns';
 
 const HideGridColMenuItem = (props: GridFilterItemProps) => {
   const { column, onClick } = props;
@@ -12,7 +12,7 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
   const rootProps = useGridRootProps();
   const timeoutRef = React.useRef<any>();
 
-  const visibleColumns = visibleGridColumnsSelector(apiRef);
+  const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
   const columnsWithMenu = visibleColumns.filter((col) => col.disableColumnMenu !== true);
   // do not allow to hide the last column with menu
   const disabled = columnsWithMenu.length === 1;

@@ -6,13 +6,13 @@ import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOr
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
-  allGridColumnsFieldsSelector,
-  allGridColumnsSelector,
+  gridColumnsFieldSelector,
+  gridColumnDefinitionsSelector,
   gridColumnLookupSelector,
   gridColumnsMetaSelector,
   gridColumnsSelector,
   gridColumnVisibilityModelSelector,
-  visibleGridColumnsSelector,
+  gridVisibleColumnDefinitionsSelector,
 } from './gridColumnsSelector';
 import {
   useGridApiEventHandler,
@@ -110,12 +110,12 @@ export function useGridColumns(
   );
 
   const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
-    () => allGridColumnsSelector(apiRef) as GridStateColDef<any>[],
+    () => gridColumnDefinitionsSelector(apiRef) as GridStateColDef<any>[],
     [apiRef],
   );
 
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
-    () => visibleGridColumnsSelector(apiRef) as GridStateColDef<any>[],
+    () => gridVisibleColumnDefinitionsSelector(apiRef) as GridStateColDef<any>[],
     [apiRef],
   );
 
@@ -127,8 +127,8 @@ export function useGridColumns(
   const getColumnIndex = React.useCallback<GridColumnApi['getColumnIndex']>(
     (field, useVisibleColumns = true) => {
       const columns = useVisibleColumns
-        ? visibleGridColumnsSelector(apiRef)
-        : allGridColumnsSelector(apiRef);
+        ? gridVisibleColumnDefinitionsSelector(apiRef)
+        : gridColumnDefinitionsSelector(apiRef);
 
       return columns.findIndex((col) => col.field === field);
     },
@@ -217,7 +217,7 @@ export function useGridColumns(
 
   const setColumnIndex = React.useCallback<GridColumnApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
-      const allColumns = allGridColumnsFieldsSelector(apiRef.current.state);
+      const allColumns = gridColumnsFieldSelector(apiRef);
       const oldIndexPosition = allColumns.findIndex((col) => col === field);
       if (oldIndexPosition === targetIndexPosition) {
         return;
