@@ -105,7 +105,7 @@ export function useGridColumns(
    * API METHODS
    */
   const getColumn = React.useCallback<GridColumnApi['getColumn']>(
-    (field) => gridColumnLookupSelector(apiRef.current.state)[field] as GridStateColDef<any>,
+    (field) => gridColumnLookupSelector(apiRef)[field] as GridStateColDef<any>,
     [apiRef],
   );
 
