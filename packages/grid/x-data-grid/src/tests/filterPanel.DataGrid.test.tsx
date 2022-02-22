@@ -8,7 +8,7 @@ import {
   GridFilterInputValueProps,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { getColumnValues } from '../../../../../test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
@@ -21,6 +21,10 @@ function setOperatorValue(operatorValue: string) {
   fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
     target: { value: operatorValue },
   });
+}
+
+function deleteFilterForm() {
+  fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
 }
 
 function CustomInputValue(props: GridFilterInputValueProps) {
@@ -432,5 +436,42 @@ describe('<DataGrid /> - Filter panel', () => {
     setOperatorValue('is');
 
     expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
+  });
+
+  it('should close filter panel when removing the last filter', async () => {
+    const onFilterModelChange = spy();
+
+    render(
+      <TestCase
+        rows={[
+          { id: 1, val: 'VAL_1' },
+          { id: 2, val: 'VAL_2' },
+          { id: 3, val: 'VAL_3' },
+        ]}
+        columns={[{ field: 'id' }, { field: 'val' }]}
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [{ columnField: 'val', operatorValue: 'contains', value: 'UK' }],
+            },
+          },
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        onFilterModelChange={onFilterModelChange}
+      />,
+    );
+    expect(screen.queryAllByRole('tooltip').length).to.deep.equal(1);
+
+    // TODO v6: remove the next two lines
+    deleteFilterForm();
+    expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
+
+    deleteFilterForm();
+    await waitFor(() => {
+      expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
+    });
   });
 });

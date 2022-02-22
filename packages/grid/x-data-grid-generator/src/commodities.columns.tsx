@@ -233,8 +233,10 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator<any>[
   {
     field: 'counterPartyCountry',
     headerName: 'Counterparty Country',
+    type: 'singleSelect',
     generateData: randomCountry,
     renderCell: renderCountry,
+    valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
     valueParser: (value) => {
       if (typeof value === 'string') {
         return COUNTRY_ISO_OPTIONS_SORTED.find((country) => country.value === value);
@@ -242,9 +244,8 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator<any>[
 
       return value;
     },
+    valueFormatter: ({ value }) => (value as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
     groupingValueGetter: (params) => params.value.code,
-    type: 'singleSelect',
-    valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
     sortComparator: (v1, v2, param1, param2) =>
       gridStringOrNumberComparator(
         (v1 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,

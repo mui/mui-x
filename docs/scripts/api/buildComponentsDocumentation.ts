@@ -478,6 +478,7 @@ export default async function buildComponentsDocumentation(
   const dataGridProProject = projects.get('x-data-grid-pro')!;
   const dataGridProject = projects.get('x-data-grid')!;
 
+  // TODO: Use the project fields instead of hard-coding the paths here
   const componentsToGenerateDocs = [
     path.resolve(dataGridProject.workspaceRoot, 'packages/grid/x-data-grid/src/DataGrid.tsx'),
     path.resolve(
@@ -487,7 +488,7 @@ export default async function buildComponentsDocumentation(
   ];
 
   // Uncomment below to generate documentation for all exported components
-  // const componentsFolder = path.resolve(workspaceRoot, 'packages/grid/_modules_/grid/components');
+  // const componentsFolder = path.resolve(workspaceRoot, 'packages/grid/x-data-grid/src/internals/components');
   // const components = findComponents(componentsFolder);
   // components.forEach((component) => {
   //   const componentName = path.basename(component.filename).replace('.tsx', '');

@@ -1,56 +1,13 @@
 import * as yargs from 'yargs';
 import * as fse from 'fs-extra';
 import path from 'path';
-import * as ts from 'typescript';
 import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildSelectorsDocumentation from './buildSelectorsDocumentation';
 import buildEventsDocumentation from './buildEventsDocumentation';
-import { Project, Projects, ProjectNames } from './utils';
 import FEATURE_TOGGLE from '../../src/featureToggle';
-
-const workspaceRoot = path.resolve(__dirname, '../../../');
-
-interface CreateProgramOptions {
-  name: ProjectNames;
-  rootPath: string;
-  tsConfigPath: string;
-  entryPointPath: string;
-}
-
-const createProject = (options: CreateProgramOptions): Project => {
-  const { name, tsConfigPath, rootPath, entryPointPath } = options;
-
-  const compilerOptions = ts.parseJsonConfigFileContent(
-    ts.readConfigFile(tsConfigPath, ts.sys.readFile).config,
-    ts.sys,
-    rootPath,
-  );
-
-  const program = ts.createProgram({
-    rootNames: [entryPointPath],
-    options: compilerOptions.options,
-  });
-
-  const checker = program.getTypeChecker();
-  const sourceFile = program.getSourceFile(entryPointPath);
-
-  const exports = Object.fromEntries(
-    checker.getExportsOfModule(checker.getSymbolAtLocation(sourceFile!)!).map((symbol) => {
-      return [symbol.name, symbol];
-    }),
-  );
-
-  return {
-    name,
-    exports,
-    program,
-    checker,
-    workspaceRoot,
-    prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
-  };
-};
+import { getTypeScriptProjects } from '../getTypeScriptProjects';
 
 async function run() {
   let outputDirectories = ['./docs/pages/api-docs/data-grid'];
@@ -65,27 +22,7 @@ async function run() {
       const outputDirectory = path.resolve(dir);
       fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 
-      const projects: Projects = new Map();
-
-      projects.set(
-        'x-data-grid-pro',
-        createProject({
-          name: 'x-data-grid-pro',
-          rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-          tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/tsconfig.json'),
-          entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
-        }),
-      );
-
-      projects.set(
-        'x-data-grid',
-        createProject({
-          name: 'x-data-grid',
-          rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
-          tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/tsconfig.json'),
-          entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/src/index.ts'),
-        }),
-      );
+      const projects = getTypeScriptProjects();
 
       const documentedInterfaces = buildInterfacesDocumentation({
         projects,
