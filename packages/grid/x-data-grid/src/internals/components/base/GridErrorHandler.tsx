@@ -6,7 +6,7 @@ import { ErrorBoundary } from '../ErrorBoundary';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridAutoSizer, AutoSizerSize } from '../GridAutoSizer';
 import { GridEvents } from '../../models/events/gridEvents';
-import { GridOverlaysRoot } from './GridOverlays';
+import { GridOverlayWrapper } from './GridOverlays';
 
 export function GridErrorHandler(props) {
   const { children } = props;
@@ -36,12 +36,12 @@ export function GridErrorHandler(props) {
             onResize={handleResize}
           >
             {() => (
-              <GridOverlaysRoot>
+              <GridOverlayWrapper>
                 <rootProps.components.ErrorOverlay
                   {...errorProps}
                   {...rootProps.componentsProps?.errorOverlay}
                 />
-              </GridOverlaysRoot>
+              </GridOverlayWrapper>
             )}
           </GridAutoSizer>
         </GridMainContainer>

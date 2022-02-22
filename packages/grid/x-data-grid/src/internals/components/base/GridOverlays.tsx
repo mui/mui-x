@@ -8,7 +8,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { GridEvents } from '../../models/events';
 
-export function GridOverlaysRoot(props: React.PropsWithChildren<{}>) {
+export function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
@@ -79,5 +79,5 @@ export function GridOverlays() {
     );
   }
 
-  return <GridOverlaysRoot>{overlay}</GridOverlaysRoot>;
+  return <GridOverlayWrapper>{overlay}</GridOverlayWrapper>;
 }
