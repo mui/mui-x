@@ -2,8 +2,8 @@ import {
   GridRowId,
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
-  Unstable_GridSortingModelApplier as GridSortingModelApplier,
-} from '@mui/x-data-grid';
+  GridSortingModelApplier,
+} from '@mui/x-data-grid/internals';
 
 interface SortRowTreeParams {
   rowIds: GridRowId[];

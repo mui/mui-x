@@ -3,8 +3,8 @@ import {
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
   GridFilterState,
-  Unstable_GridAggregatedFilterItemApplier as GridAggregatedFilterItemApplier,
-} from '@mui/x-data-grid';
+  GridAggregatedFilterItemApplier,
+} from '@mui/x-data-grid/internals';
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;

@@ -3,7 +3,7 @@ import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
-import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
+import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 
 /**
  * @category Filtering

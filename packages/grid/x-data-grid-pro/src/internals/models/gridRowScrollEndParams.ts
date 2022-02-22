@@ -1,5 +1,4 @@
-import { GridColumns } from '@mui/x-data-grid';
-import { GridApiPro } from './gridApiPro';
+import { GridColumns } from './gridColDef';
 
 /**
  * Object passed as parameter in the onRowsScrollEnd callback.
@@ -16,5 +15,5 @@ export interface GridRowScrollEndParams {
   /**
    * The grid visible columns.
    */
-  visibleColumns: GridColumns<GridApiPro>;
+  visibleColumns: GridColumns;
 }

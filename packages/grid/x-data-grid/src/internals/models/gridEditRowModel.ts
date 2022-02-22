@@ -12,17 +12,19 @@ export type GridEditRowsModel = { [rowId: string]: GridEditRowProps };
 
 export type GridEditMode = 'cell' | 'row';
 
-export enum GridEditModes {
+enum GridEditModes {
   Cell = 'cell',
   Row = 'row',
 }
 
-export enum GridCellModes {
+enum GridCellModes {
   Edit = 'edit',
   View = 'view',
 }
 
-export enum GridRowModes {
+enum GridRowModes {
   Edit = 'edit',
   View = 'view',
 }
+
+export { GridEditModes, GridCellModes, GridRowModes };

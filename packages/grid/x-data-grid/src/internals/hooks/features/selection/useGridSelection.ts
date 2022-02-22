@@ -17,7 +17,7 @@ import {
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { getDataGridUtilityClass, gridClasses } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';

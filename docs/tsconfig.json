@@ -1,11 +1,13 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "isolatedModules": true,
     /* files are emitted by babel */
     "noEmit": true,
-    "types": ["react", "node", "requestidlecallback"],
-    "jsx": "preserve",
+    "resolveJsonModule": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": ["react", "node"],
     "incremental": true
   },
   "include": ["src/pages/**/*", "data/**/*"],

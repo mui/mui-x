@@ -5,7 +5,7 @@ import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildSelectorsDocumentation from './buildSelectorsDocumentation';
-import buildEventsDocumentation from './buildEventsDocumentation';
+import buildGridEventsDocumentation from './buildEventsDocumentation';
 import FEATURE_TOGGLE from '../../src/featureToggle';
 import { getTypeScriptProjects } from '../getTypeScriptProjects';
 
@@ -17,12 +17,13 @@ async function run() {
   if (FEATURE_TOGGLE.enable_redirects) {
     outputDirectories = ['./docs/pages/x/api/data-grid'];
   }
+
+  const projects = getTypeScriptProjects();
+
   await Promise.all(
     outputDirectories.map(async (dir) => {
       const outputDirectory = path.resolve(dir);
       fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
-
-      const projects = getTypeScriptProjects();
 
       const documentedInterfaces = buildInterfacesDocumentation({
         projects,
@@ -35,7 +36,7 @@ async function run() {
         projects,
       });
 
-      buildEventsDocumentation({
+      buildGridEventsDocumentation({
         // TODO: Pass all the projects and add the pro icon for pro-only events
         project: projects.get('x-data-grid-pro')!,
         documentedInterfaces,

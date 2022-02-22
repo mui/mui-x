@@ -23,7 +23,7 @@ import {
   gridRowIdsSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridRowGroupParams } from '../../core/rowGroupsPerProcessing';
+import { GridRowGroupParams } from '../../core/rowGroupsPreProcessing';
 
 type GridRowInternalCacheValue = Omit<GridRowGroupParams, 'previousTree'>;
 

@@ -1,5 +1,3 @@
-// Used by @mui/x-pickers and @mui/x-pickers-pro
-// TODO: use on all other packages
 // TODO: Unify with core
 
 /* eslint-disable no-console */
@@ -157,9 +155,10 @@ async function run() {
 
     await Promise.all(
       [
+        // TODO: Improve if we want to use the core `copy-files.js` file
         // use enhanced readme from workspace root for `@mui/material`
-        packageData.name === '@mui/material' ? '../../README.md' : './README.md',
-        '../../CHANGELOG.md',
+        './README.md',
+        packageData.name.includes('grid') ? '../../../CHANGELOG.md' : '../../CHANGELOG.md',
         // '../../LICENSE',
       ].map((file) => includeFileInBuild(file)),
     );

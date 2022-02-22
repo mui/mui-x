@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRowId } from '@mui/x-data-grid';
+import { GridRowId } from '@mui/x-data-grid/internals';
 
 /**
  * The master/detail API interface that is available in the grid [[apiRef]].

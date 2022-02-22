@@ -3,9 +3,9 @@ import {
   GridRowId,
   GridRowTreeConfig,
   GridKeyValue,
-  Unstable_GridRowGroupingResult as GridRowGroupingResult,
-  Unstable_GridRowGroupParams as GridRowGroupParams,
-} from '@mui/x-data-grid';
+  GridRowGroupParams,
+  GridRowGroupingResult,
+} from '@mui/x-data-grid/internals';
 
 type GridGroupingCriteriaToIdTree = {
   [field: string]: {

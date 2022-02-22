@@ -1,6 +1,6 @@
 import { GridEventLookup } from './gridEventLookup';
 
-export enum GridEvents {
+enum GridEvents {
   /**
    * Fired when the grid is resized.
    */
@@ -319,3 +319,5 @@ export enum GridEvents {
 }
 
 export type GridEventsStr = keyof GridEventLookup;
+
+export { GridEvents };

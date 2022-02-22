@@ -3,10 +3,8 @@ import Divider from '@mui/material/Divider';
 import {
   GridRowModel,
   GridRowId,
-  GridColDef,
   GridKeyValue,
   GridColumnLookup,
-  GridStateColDef,
   GridEvents,
   GridEventListener,
   gridRowIdsSelector,
@@ -16,20 +14,21 @@ import {
   gridColumnLookupSelector,
   gridFilteredDescendantCountLookupSelector,
   useFirstRender,
-  unstable_useGridRegisterFilteringMethod as useGridRegisterFilteringMethod,
-  unstable_useGridRegisterSortingMethod as useGridRegisterSortingMethod,
-  unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
-  unstable_useGridStateInit as useGridStateInit,
-  unstable_isDeepEqual as isDeepEqual,
-  Unstable_GridFilteringMethod as GridFilteringMethod,
-  Unstable_GridSortingMethod as GridSortingMethod,
-  Unstable_GridPreProcessor as GridPreProcessor,
-  Unstable_GridColumnRawLookup as GridColumnRawLookup,
-  Unstable_GridColumnsRawState as GridColumnsRawState,
-  Unstable_GridRestoreStatePreProcessingContext as GridRestoreStatePreProcessingContext,
-  Unstable_GridRowGroupingPreProcessing as GridRowGroupingPreProcessing,
-} from '@mui/x-data-grid';
+  useGridStateInit,
+  useGridRegisterPreProcessor,
+  GridPreProcessor,
+  useGridRegisterSortingMethod,
+  GridSortingMethod,
+  useGridRegisterFilteringMethod,
+  GridFilteringMethod,
+  GridRestoreStatePreProcessingContext,
+  GridRowGroupingPreProcessing,
+  GridColumnRawLookup,
+  GridColumnsRawState,
+  isDeepEqual,
+} from '@mui/x-data-grid/internals';
 import { GridGroupingValueGetterParams } from '../../../models';
+import { GridColDef, GridStateColDef } from '../../../models/gridColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {
@@ -122,7 +121,7 @@ export const useGridRowGrouping = (
       }: {
         row: GridRowModel;
         id: GridRowId;
-        colDef: GridColDef<GridApiPro>;
+        colDef: GridColDef;
       }) => {
         let key: GridKeyValue | null | undefined;
         if (colDef.groupingValueGetter) {

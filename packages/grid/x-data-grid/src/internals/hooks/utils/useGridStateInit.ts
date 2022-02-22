@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommon } from '../../models';
+import type { GridApiCommon } from '../../models';
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;

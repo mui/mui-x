@@ -1,3 +1,4 @@
-export type { GridFilterState, GridFilterInitialState } from './gridFilterState';
-export { getDefaultGridFilterModel } from './gridFilterState';
+export * from './gridFilterState';
 export * from './gridFilterSelector';
+export * from './useGridFilter';
+export * from './useGridRegisterFilteringMethod';

@@ -23,7 +23,9 @@ export interface GridFilterItem {
   operatorValue?: string;
 }
 
-export enum GridLinkOperator {
+enum GridLinkOperator {
   And = 'and',
   Or = 'or',
 }
+
+export { GridLinkOperator };

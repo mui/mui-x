@@ -1,15 +1,9 @@
-import {
-  GridRowId,
-  GridRowModel,
-  GridRowTreeNodeConfig,
-  GridColDef,
-  GridStateColDef,
-} from '@mui/x-data-grid';
+import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '@mui/x-data-grid/internals';
+import { GridColDef, GridStateColDef } from './gridColDef';
 import { GridApiPro } from './gridApiPro';
 
 /**
  * Parameters passed to `colDef.groupingValueGetter`.
- * TODO: Move to `x-data-grid-pro` folder
  */
 export interface GridGroupingValueGetterParams<V = any, R = any> {
   /**

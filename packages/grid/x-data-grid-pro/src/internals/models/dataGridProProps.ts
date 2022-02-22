@@ -5,14 +5,16 @@ import {
   GridEventListener,
   GridEvents,
   GridCallbackDetails,
-  GridExperimentalFeatures,
   GridRowParams,
   GridRowId,
-  Unstable_DataGridPropsWithoutDefaultValue as DataGridPropsWithoutDefaultValue,
-  Unstable_DataGridPropsWithDefaultValues as DataGridPropsWithDefaultValues,
-  Unstable_DataGridPropsWithComplexDefaultValueAfterProcessing as DataGridPropsWithComplexDefaultValueAfterProcessing,
-  Unstable_DataGridPropsWithComplexDefaultValueBeforeProcessing as DataGridPropsWithComplexDefaultValueBeforeProcessing,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid/internals';
+import type {
+  GridExperimentalFeatures,
+  DataGridPropsWithoutDefaultValue,
+  DataGridPropsWithDefaultValues,
+  DataGridPropsWithComplexDefaultValueAfterProcessing,
+  DataGridPropsWithComplexDefaultValueBeforeProcessing,
+} from '@mui/x-data-grid/internals/models/props/DataGridProps';
 import type { GridPinnedColumns } from '../hooks/features/columnPinning';
 import { GridApiPro } from './gridApiPro';
 import {

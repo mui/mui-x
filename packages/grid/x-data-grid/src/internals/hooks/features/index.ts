@@ -1,4 +1,3 @@
-// Only export the variable and types that should be publicly exposed
 export * from './columnMenu';
 export * from './columns';
 export * from './density';
@@ -12,3 +11,10 @@ export * from './selection';
 export * from './sorting';
 export * from './dimensions';
 export * from './statePersistence';
+export * from './events';
+export * from './clipboard';
+export * from './export';
+export * from './scroll';
+export * from './keyboard';
+export * from './virtualization';
+export * from './columnHeaders';

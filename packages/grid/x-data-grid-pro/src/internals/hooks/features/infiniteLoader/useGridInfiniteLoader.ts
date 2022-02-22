@@ -4,15 +4,15 @@ import {
   GridEvents,
   GridEventListener,
   GridScrollParams,
-  GridColumns,
   useGridApiEventHandler,
   useGridApiOptionHandler,
   visibleGridColumnsSelector,
   gridRowsMetaSelector,
-  unstable_useCurrentPageRows as useCurrentPageRows,
-} from '@mui/x-data-grid';
+  useCurrentPageRows,
+} from '@mui/x-data-grid/internals';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
+import { GridColumns } from '../../../models/gridColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 /**
@@ -54,7 +54,7 @@ export const useGridInfiniteLoader = (
         !isInScrollBottomArea.current
       ) {
         const rowScrollEndParam: GridRowScrollEndParams = {
-          visibleColumns: visibleColumns as GridColumns<GridApiPro>,
+          visibleColumns: visibleColumns as GridColumns,
           viewportPageSize,
           virtualRowsCount: currentPage.rows.length,
         };

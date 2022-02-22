@@ -1,4 +1,5 @@
 const path = require('path');
+const generateReleaseInfo = require('./packages/x-license-pro/generateReleaseInfo');
 
 function resolveAliasPath(relativeToBabelConf) {
   const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
@@ -61,16 +62,31 @@ module.exports = function getBabelConfig(api) {
         version: '^7.4.4',
       },
     ],
-    [
-      'babel-plugin-transform-react-remove-prop-types',
-      {
-        mode: 'unsafe-wrap',
-      },
-    ],
+    // [
+    //   'babel-plugin-transform-react-remove-prop-types',
+    //   {
+    //     mode: 'unsafe-wrap',
+    //     ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
+    //   },
+    // ],
   ];
 
   if (process.env.NODE_ENV === 'production') {
     plugins.push(...productionPlugins);
+
+    if (process.env.BABEL_ENV) {
+      plugins.push([
+        'search-and-replace',
+        {
+          rules: [
+            {
+              search: '__RELEASE_INFO__',
+              replace: generateReleaseInfo(),
+            },
+          ],
+        },
+      ]);
+    }
   }
   if (process.env.NODE_ENV === 'test') {
     plugins.push([

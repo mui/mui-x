@@ -1,12 +1,8 @@
 import * as React from 'react';
-import {
-  GRID_STRING_COL_DEF,
-  GridColDef,
-  GridRenderCellParams,
-  GridStateColDef,
-  GridComparatorFn,
-  Unstable_GridColumnRawLookup as GridColumnRawLookup,
-} from '@mui/x-data-grid';
+import { GRID_STRING_COL_DEF, GridColumnRawLookup } from '@mui/x-data-grid/internals';
+import { GridColDef, GridStateColDef } from '../../../models/gridColDef';
+import { GridComparatorFn } from '../../../models/gridSortModel';
+import { GridRenderCellParams } from '../../../models/gridCellParams';
 import { GridGroupingColDefOverride } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';

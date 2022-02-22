@@ -11,11 +11,11 @@ import {
   GridEvents,
   useGridApiMethod,
   useGridApiEventHandler,
-  unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
-  unstable_useGridStateInit as useGridStateInit,
-  Unstable_GridPreProcessor as GridPreProcessor,
-  Unstable_GridRestoreStatePreProcessingContext as GridRestoreStatePreProcessingContext,
-} from '@mui/x-data-grid';
+  useGridStateInit,
+  useGridRegisterPreProcessor,
+  GridPreProcessor,
+  GridRestoreStatePreProcessingContext,
+} from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';

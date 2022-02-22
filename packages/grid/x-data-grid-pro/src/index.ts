@@ -1,10 +1,9 @@
 /* eslint-disable import/export */
-import type {} from './x-data-grid-interfaces';
+import type {} from './internals/x-data-grid-interfaces';
 
-export * from '@mui/x-data-grid';
 export { LicenseInfo } from '@mui/x-license-pro';
-export * from './DataGridPro';
-export { DATA_GRID_PRO_PROPS_DEFAULT_VALUES } from './useDataGridProProps';
+export * from './internals/DataGridPro';
+export { DATA_GRID_PRO_PROPS_DEFAULT_VALUES } from './internals/useDataGridProProps';
 export * from './internals';
 export {
   getGridBooleanOperators,
@@ -16,7 +15,7 @@ export {
   useGridApiContext,
   useGridApiRef,
   useGridRootProps,
-} from './typeOverload';
+} from './internals/typeOverload';
 export type {
   GridApiRef,
   GridApi,
@@ -37,4 +36,4 @@ export type {
   GridEnrichedColDef,
   GridColumns,
   GridComparatorFn,
-} from './typeOverload';
+} from './internals/typeOverload';

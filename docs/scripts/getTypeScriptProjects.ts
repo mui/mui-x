@@ -11,13 +11,15 @@ interface CreateProgramOptions {
   /**
    * Config to use to build this package.
    * The path must be relative to the root path.
+   * @default 'tsconfig.json`
    */
-  tsConfigPath: string;
+  tsConfigPath?: string;
   /**
    * File used as root of the package.
    * The path must be relative to the root path.
+   * @default 'src/index.ts'
    */
-  entryPointPath: string;
+  entryPointPath?: string;
   /**
    * Folder containing all the components of this package.
    * The path must be relative to the root path.
@@ -31,7 +33,7 @@ interface CreateProgramOptions {
 }
 
 const createProject = (options: CreateProgramOptions): Project => {
-  const { name, tsConfigPath, rootPath, entryPointPath, componentsFolder, otherComponentFiles } =
+  const { name, tsConfigPath = 'tsconfig.json', rootPath, entryPointPath = 'src/index.ts', componentsFolder, otherComponentFiles } =
     options;
 
   const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
@@ -88,10 +90,8 @@ export const getTypeScriptProjects = () => {
     createProject({
       name: 'x-data-grid-pro',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-      tsConfigPath: 'tsconfig.json',
-      entryPointPath: 'src/index.ts',
       componentsFolder: 'src/internals/components',
-      otherComponentFiles: ['src/DataGridPro.tsx'],
+      otherComponentFiles: ['src/internals/DataGridPro.tsx'],
     }),
   );
 
@@ -100,12 +100,20 @@ export const getTypeScriptProjects = () => {
     createProject({
       name: 'x-data-grid',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
-      tsConfigPath: 'tsconfig.json',
-      entryPointPath: 'src/index.ts',
       componentsFolder: 'src/internals/components',
-      otherComponentFiles: ['src/DataGrid.tsx'],
+      otherComponentFiles: ['src/internals/DataGrid.tsx'],
     }),
   );
+
+  projects.set('x-pickers', createProject({
+      name: 'x-pickers',
+      rootPath: path.join(workspaceRoot, 'packages/x-pickers'),
+  }))
+
+  projects.set('x-pickers-pro', createProject({
+      name: 'x-pickers-pro',
+      rootPath: path.join(workspaceRoot, 'packages/x-pickers-pro'),
+  }))
 
   return projects;
 };

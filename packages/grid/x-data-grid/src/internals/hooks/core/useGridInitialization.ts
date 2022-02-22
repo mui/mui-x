@@ -7,7 +7,7 @@ import { useGridApiInitialization } from './useGridApiInitialization';
 import { useGridErrorHandler } from './useGridErrorHandler';
 import { useGridLocaleText } from './useGridLocaleText';
 import { useGridPreProcessing } from './preProcessing';
-import { useGridRowGroupsPreProcessing } from './rowGroupsPerProcessing';
+import { useGridRowGroupsPreProcessing } from './rowGroupsPreProcessing';
 import { useGridStateInitialization } from './useGridStateInitialization';
 
 /**

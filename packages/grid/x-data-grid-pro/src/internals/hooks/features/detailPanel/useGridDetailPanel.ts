@@ -2,15 +2,15 @@ import * as React from 'react';
 import {
   GridEvents,
   GridEventListener,
-  GridCellParams,
   GridRowId,
   useGridSelector,
   useGridApiEventHandler,
   useGridApiMethod,
-  unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
-  unstable_useGridStateInit as useGridStateInit,
-  Unstable_GridPreProcessor as GridPreProcessor,
-} from '@mui/x-data-grid';
+  useGridStateInit,
+  useGridRegisterPreProcessor,
+  GridPreProcessor,
+} from '@mui/x-data-grid/internals';
+import { GridCellParams } from '../../../models/gridCellParams';
 import { GridApiPro } from '../../../models/gridApiPro';
 import {
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,

@@ -1,7 +1,7 @@
-import {
-  GridInitialState as GridInitialStateCommunity,
-  GridState as GridStateCommunity,
-} from '@mui/x-data-grid';
+import type {
+  GridInitialStateCommunity,
+  GridStateCommunity,
+} from '@mui/x-data-grid/internals/models/gridStateCommunity';
 import type {
   GridRowGroupingState,
   GridDetailPanelState,

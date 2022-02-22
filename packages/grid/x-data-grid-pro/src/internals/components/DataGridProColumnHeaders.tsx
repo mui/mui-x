@@ -9,10 +9,10 @@ import {
   gridVisibleColumnFieldsSelector,
   GridEvents,
   GridColumnHeaderSeparatorSides,
-  unstable_useGridColumnHeaders as useGridColumnHeaders,
-  unstable_GridColumnHeadersInner as GridColumnHeadersInner,
-  unstable_GridColumnHeaders as GridColumnHeaders,
-} from '@mui/x-data-grid';
+  GridColumnHeaders,
+  GridColumnHeadersInner,
+  useGridColumnHeaders,
+} from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';

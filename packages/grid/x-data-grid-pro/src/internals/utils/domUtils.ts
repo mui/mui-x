@@ -1,7 +1,4 @@
-import {
-  gridClasses,
-  unstable_findParentElementFromClassName as findParentElementFromClassName,
-} from '@mui/x-data-grid';
+import { gridClasses, findParentElementFromClassName } from '@mui/x-data-grid/internals';
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {
   return colCellEl.getAttribute('data-field')!;

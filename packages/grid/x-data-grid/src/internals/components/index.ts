@@ -7,6 +7,7 @@ export * from './icons';
 export * from './menu';
 export * from './panel';
 export * from './toolbar';
+export * from './virtualization';
 
 export * from './GridApiContext';
 export * from './GridAutoSizer';

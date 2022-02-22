@@ -1,7 +1,5 @@
 export * from './gridSortingSelector';
-export type { GridSortingState, GridSortingInitialState } from './gridSortingState';
-export {
-  gridDateComparator,
-  gridNumberComparator,
-  gridStringOrNumberComparator,
-} from './gridSortingUtils';
+export * from './gridSortingState';
+export * from './gridSortingUtils';
+export * from './useGridSorting';
+export * from './useGridRegisterSortingMethod';
