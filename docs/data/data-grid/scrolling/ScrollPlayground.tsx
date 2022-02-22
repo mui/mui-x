@@ -8,7 +8,7 @@ import {
   DataGridPro,
   useGridApiRef,
   gridVisibleRowCountSelector,
-  gridVisibleColumnsLengthSelector,
+  gridVisibleColumnLengthSelector,
   gridVisibleColumnDefinitionsSelector,
   gridVisibleSortedRowIdsSelector,
   GridCellParams,
@@ -38,7 +38,7 @@ export default function ScrollPlayground() {
 
   const handleClick = (position: string) => () => {
     const maxRowIndex = gridVisibleRowCountSelector(apiRef) - 1;
-    const maxColIndex = gridVisibleColumnsLengthSelector(apiRef) - 1;
+    const maxColIndex = gridVisibleColumnLengthSelector(apiRef) - 1;
 
     setCoordinates((coords) => {
       switch (position) {

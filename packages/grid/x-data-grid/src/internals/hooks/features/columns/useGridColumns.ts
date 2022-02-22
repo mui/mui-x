@@ -6,7 +6,7 @@ import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOr
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
-  gridColumnsFieldSelector,
+  gridColumnFieldsSelector,
   gridColumnDefinitionsSelector,
   gridColumnLookupSelector,
   gridColumnsMetaSelector,
@@ -217,7 +217,7 @@ export function useGridColumns(
 
   const setColumnIndex = React.useCallback<GridColumnApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
-      const allColumns = gridColumnsFieldSelector(apiRef);
+      const allColumns = gridColumnFieldsSelector(apiRef);
       const oldIndexPosition = allColumns.findIndex((col) => col === field);
       if (oldIndexPosition === targetIndexPosition) {
         return;

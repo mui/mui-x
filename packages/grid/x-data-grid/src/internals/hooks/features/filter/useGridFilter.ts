@@ -9,7 +9,7 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridFilterableColumnsLookupSelector } from '../columns/gridColumnsSelector';
+import { gridFilterableColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import {
   getDefaultGridFilterModel,
@@ -295,7 +295,7 @@ export const useGridFilter = (
   const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef);
-    const filterableColumnsLookup = gridFilterableColumnsLookupSelector(apiRef);
+    const filterableColumnsLookup = gridFilterableColumnLookupSelector(apiRef);
     const newFilterItems = filterModel.items.filter(
       (item) => item.columnField && filterableColumnsLookup[item.columnField],
     );

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { gridVisibleColumnsLengthSelector } from '../columns/gridColumnsSelector';
+import { gridVisibleColumnLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -26,7 +26,7 @@ export const useGridKeyboardNavigation = (
     props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
     const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
-    const colCount = useGridSelector(apiRef, gridVisibleColumnsLengthSelector);
+    const colCount = useGridSelector(apiRef, gridVisibleColumnLengthSelector);
     const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
     const currentPage = useCurrentPageRows(apiRef, props);
 

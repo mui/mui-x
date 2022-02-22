@@ -15,7 +15,7 @@ export const gridColumnsSelector = (state: GridStateCommunity) => state.columns;
  * This array contains the hidden columns.
  * @category Columns
  */
-export const gridColumnsFieldSelector = createSelector(
+export const gridColumnFieldsSelector = createSelector(
   gridColumnsSelector,
   (columnsState) => columnsState.all,
 );
@@ -36,7 +36,7 @@ export const gridColumnLookupSelector = createSelector(
  * @category Columns
  */
 export const gridColumnDefinitionsSelector = createSelector(
-  gridColumnsFieldSelector,
+  gridColumnFieldsSelector,
   gridColumnLookupSelector,
   (allFields, lookup) => allFields.map((field) => lookup[field]),
 );
@@ -94,7 +94,7 @@ export const gridColumnsMetaSelector = createSelector(
  * This array contains the hidden columns.
  * @category Columns
  */
-export const gridFilterableColumnsSelector = createSelector(
+export const gridFilterableColumnDefinitionsSelector = createSelector(
   gridColumnDefinitionsSelector,
   (columns) => columns.filter((col) => col.filterable),
 );
@@ -104,7 +104,7 @@ export const gridFilterableColumnsSelector = createSelector(
  * This lookup contains the hidden columns.
  * @category Columns
  */
-export const gridFilterableColumnsLookupSelector = createSelector(
+export const gridFilterableColumnLookupSelector = createSelector(
   gridColumnDefinitionsSelector,
   (columns) =>
     columns.reduce((acc, col) => {
@@ -119,7 +119,7 @@ export const gridFilterableColumnsLookupSelector = createSelector(
  * Get the amount of visible columns.
  * @category Columns
  */
-export const gridVisibleColumnsLengthSelector = createSelector(
+export const gridVisibleColumnLengthSelector = createSelector(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => visibleColumns.length,
 );
@@ -135,7 +135,7 @@ export const gridColumnsTotalWidthSelector = createSelector(
 
 /**
  * @category Columns
- * @deprecated Use `gridColumnsFieldSelector` instead.
+ * @deprecated Use `gridColumnFieldsSelector` instead.
  * @ignore - do not document.
  */
 export const allGridColumnsFieldsSelector = (state: GridStateCommunity) => state.columns.all;
@@ -156,24 +156,24 @@ export const visibleGridColumnsSelector = gridVisibleColumnDefinitionsSelector;
 
 /**
  * @category Columns
- * @deprecated Use `gridFilterableColumnsSelector` instead.
+ * @deprecated Use `gridFilterableColumnDefinitionsSelector` instead.
  * @ignore - do not document.
  */
-export const filterableGridColumnsSelector = gridFilterableColumnsSelector;
+export const filterableGridColumnsSelector = gridFilterableColumnDefinitionsSelector;
 
 /**
  * @category Columns
- * @deprecated Use `gridFilterableColumnsLookupSelector` instead (not the same return format).
+ * @deprecated Use `gridFilterableColumnLookupSelector` instead (not the same return format).
  * @ignore - do not document.
  */
 export const filterableGridColumnsIdsSelector = createSelector(
-  gridFilterableColumnsSelector,
+  gridFilterableColumnDefinitionsSelector,
   (columns) => columns.map((col) => col.field),
 );
 
 /**
  * @category Columns
- * @deprecated Use `gridVisibleColumnsLengthSelector` instead.
+ * @deprecated Use `gridVisibleColumnLengthSelector` instead.
  * @ignore - do not document.
  */
-export const visibleGridColumnsLengthSelector = gridVisibleColumnsLengthSelector;
+export const visibleGridColumnsLengthSelector = gridVisibleColumnLengthSelector;

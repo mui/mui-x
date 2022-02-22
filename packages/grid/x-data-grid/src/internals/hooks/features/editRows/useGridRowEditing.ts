@@ -13,7 +13,7 @@ import {
   GridCellModes,
 } from '../../../models/gridEditRowModel';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridColumnsFieldSelector } from '../columns/gridColumnsSelector';
+import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -36,7 +36,7 @@ export const useGridRowEditing = (
 ) => {
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
-  const columnFields = useGridSelector(apiRef, gridColumnsFieldSelector);
+  const columnFields = useGridSelector(apiRef, gridColumnFieldsSelector);
 
   const buildCallback =
     <Args extends any[]>(callback: (...args: Args) => void) =>

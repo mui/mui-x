@@ -7,7 +7,7 @@ import { Theme } from '@mui/material/styles';
 import NoSsr from '@mui/material/NoSsr';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { GridRootStyles } from './GridRootStyles';
-import { gridVisibleColumnsLengthSelector } from '../../hooks/features/columns/gridColumnsSelector';
+import { gridVisibleColumnLengthSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -25,7 +25,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const rootProps = useGridRootProps();
   const { children, className, ...other } = props;
   const apiRef = useGridApiContext();
-  const visibleColumnsLength = useGridSelector(apiRef, gridVisibleColumnsLengthSelector);
+  const visibleColumnsLength = useGridSelector(apiRef, gridVisibleColumnLengthSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
