@@ -12,14 +12,21 @@ export interface Project {
   checker: ts.TypeChecker;
   workspaceRoot: string;
   prettierConfigPath: string;
+  rootPath: string;
   /**
-   * Folder containing all the components of this package
+   * @param {string} projectRoot The path to the root of the project.
+   * @returns {string[]} Path to the component files from which we want to generate the prop-types.
    */
-  componentsFolder?: string;
+  getComponentsWithPropTypes: (project: Project) => string[]
   /**
-   * Additional files containing components outside the components folder
+   * @param {string} projectRoot The path to the root of the project.
+   * @returns {string[]} Path to the component files from which we want to generate the api doc.
    */
-  otherComponentFiles?: string[];
+  getComponentsWithApiDoc: (project: Project) => string[]
+  /**
+   * Name of the folder inside the documentation.
+   */
+  documentationFolderName: string
 }
 
 export type ProjectNames = 'x-data-grid' | 'x-data-grid-pro' | 'x-pickers' | 'x-pickers-pro';

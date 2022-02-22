@@ -88,39 +88,13 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
   await fse.writeFile(sourceFile, correctedLineEndings);
 }
 
-function findComponents(folderPath) {
-  const files = fse.readdirSync(folderPath, { withFileTypes: true });
-  return files.reduce((acc, file) => {
-    if (file.isDirectory()) {
-      const filesInFolder = findComponents(path.join(folderPath, file.name));
-      return [...acc, ...filesInFolder];
-    }
-    if (/[A-Z]+.*\.tsx/.test(file.name)) {
-      return [...acc, path.join(folderPath, file.name)];
-    }
-    return acc;
-  }, []);
-}
-
 async function run() {
   const projects = getTypeScriptProjects();
 
   const promises = Array.from(projects.values()).flatMap((project) => {
-    const componentsToAddPropTypes: string[] = [];
-    if (project.otherComponentFiles) {
-      componentsToAddPropTypes.push(...project.otherComponentFiles);
-    }
+    const componentsWithPropTypes = project.getComponentsWithPropTypes(project)
 
-    const components = findComponents(project.componentsFolder);
-    components.forEach((component) => {
-      const componentName = path.basename(component).replace('.tsx', '');
-      const isExported = !!project.exports[componentName];
-      if (isExported) {
-        componentsToAddPropTypes.push(component);
-      }
-    });
-
-    return componentsToAddPropTypes.map<Promise<void>>(async (file) => {
+    return componentsWithPropTypes.map<Promise<void>>(async (file) => {
       try {
         await generateProptypes(project.program, file);
       } catch (error: any) {

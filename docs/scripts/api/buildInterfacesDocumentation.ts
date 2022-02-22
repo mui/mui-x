@@ -20,6 +20,7 @@ import {
 interface ParsedObject {
   name: string;
   projects: ProjectNames[];
+  documentationFolderName: string,
   description?: string;
   properties: ParsedProperty[];
   tags: { [tagName: string]: ts.JSDocTagInfo };
@@ -135,6 +136,7 @@ const parseInterfaceSymbol = (
     properties: [],
     tags: getSymbolJSDocTags(defaultProjectInterface.symbol),
     projects: projectInterfaces.map((projectInterface) => projectInterface.project.name),
+    documentationFolderName: projectInterfaces[0].project.documentationFolderName,
   };
 
   const properties: Record<string, ParsedProperty> = {};
@@ -269,11 +271,11 @@ function generateMarkdown(
 
 interface BuildInterfacesDocumentationOptions {
   projects: Projects;
-  outputDirectory: string;
+  documentationRoot: string;
 }
 
 export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
-  const { projects, outputDirectory } = options;
+  const { projects, documentationRoot } = options;
 
   const allProjectsName = Array.from(projects.keys());
 
@@ -314,8 +316,9 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
           type: property.typeStr,
         })),
       };
+
       writePrettifiedFile(
-        path.resolve(outputDirectory, `${slug}.json`),
+        path.resolve(documentationRoot, parsedInterface.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
         project,
       );
@@ -323,10 +326,10 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       console.log('Built JSON file for', parsedInterface.name);
     } else {
       const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
-      writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
+      writePrettifiedFile(path.resolve(documentationRoot, parsedInterface.documentationFolderName, `${slug}.md`), markdown, project);
 
       writePrettifiedFile(
-        path.resolve(outputDirectory, `${slug}.js`),
+        path.resolve(documentationRoot, parsedInterface.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
     import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
     import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';

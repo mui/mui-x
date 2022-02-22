@@ -7,7 +7,6 @@ interface BuildExportsDocumentationOptions {
 }
 
 const buildPackageExports = (project: Project) => {
-  console.log(project.name)
   const syntaxKindToSyntaxName = {};
   Object.entries(ts.SyntaxKind).forEach(([syntaxName, syntaxKind]) => {
     syntaxKindToSyntaxName[syntaxKind] = syntaxName.replace('Declaration', '');

@@ -1,13 +1,12 @@
 import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
-import { Project, ProjectNames, Projects } from './api/utils';
+import { Project, Projects } from './api/utils';
+import { getComponentFilesInFolder } from './utils'
 
 const workspaceRoot = path.resolve(__dirname, '../../');
 
-interface CreateProgramOptions {
-  name: ProjectNames;
-  rootPath: string;
+interface CreateProgramOptions extends Pick<Project, 'name' | 'rootPath' | 'documentationFolderName' | 'getComponentsWithPropTypes' | 'getComponentsWithApiDoc'> {
   /**
    * Config to use to build this package.
    * The path must be relative to the root path.
@@ -20,20 +19,10 @@ interface CreateProgramOptions {
    * @default 'src/index.ts'
    */
   entryPointPath?: string;
-  /**
-   * Folder containing all the components of this package.
-   * The path must be relative to the root path.
-   */
-  componentsFolder?: string;
-  /**
-   * Additional files containing components outside the component's folder.
-   * The path must be relative to the root path.
-   */
-  otherComponentFiles?: string[];
 }
 
 const createProject = (options: CreateProgramOptions): Project => {
-  const { name, tsConfigPath = 'tsconfig.json', rootPath, entryPointPath = 'src/index.ts', componentsFolder, otherComponentFiles } =
+  const { rootPath, tsConfigPath = 'tsconfig.json', entryPointPath = 'src/index.ts', ...rest } =
     options;
 
   const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
@@ -71,16 +60,40 @@ const createProject = (options: CreateProgramOptions): Project => {
   );
 
   return {
-    name,
+      ...rest,
+      rootPath,
     exports,
     program,
     checker,
     workspaceRoot,
-    componentsFolder: componentsFolder ? path.join(rootPath, componentsFolder) : undefined,
-    otherComponentFiles: otherComponentFiles?.map((file) => path.join(rootPath, file)),
     prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
   };
 };
+
+const getComponentPaths = ({ folders = [], files = [] }: { folders?: string[], files?: string[] }) => (project: Project) => {
+    const paths: string[] = []
+
+    files.forEach(file => {
+        const componentName = path.basename(file).replace('.tsx', '');
+        const isExported = !!project.exports[componentName];
+        if (isExported) {
+            paths.push(path.join(project.rootPath, file))
+        }
+    })
+
+    folders.forEach(folder => {
+        const componentFiles = getComponentFilesInFolder(path.join(project.rootPath, folder))
+        componentFiles.forEach(file => {
+            const componentName = path.basename(file).replace('.tsx', '');
+            const isExported = !!project.exports[componentName];
+            if (isExported) {
+                paths.push(file);
+            }
+        })
+    })
+
+    return paths
+}
 
 export const getTypeScriptProjects = () => {
   const projects: Projects = new Map();
@@ -90,8 +103,14 @@ export const getTypeScriptProjects = () => {
     createProject({
       name: 'x-data-grid-pro',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-      componentsFolder: 'src/internals/components',
-      otherComponentFiles: ['src/internals/DataGridPro.tsx'],
+      documentationFolderName: 'data-grid',
+      getComponentsWithPropTypes: getComponentPaths({
+          folders: ['src/internals/components'],
+          files: ['src/internals/DataGridPro.tsx']
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+          files: ['src/internals/DataGridPro.tsx']
+      }),
     }),
   );
 
@@ -100,19 +119,39 @@ export const getTypeScriptProjects = () => {
     createProject({
       name: 'x-data-grid',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
-      componentsFolder: 'src/internals/components',
-      otherComponentFiles: ['src/internals/DataGrid.tsx'],
+      documentationFolderName: 'data-grid',
+        getComponentsWithPropTypes: getComponentPaths({
+            folders: ['src/internals/components'],
+            files: ['src/internals/DataGrid.tsx']
+        }),
+        getComponentsWithApiDoc: getComponentPaths({
+            files: ['src/internals/DataGrid.tsx']
+        }),
     }),
   );
+
+    projects.set('x-pickers-pro', createProject({
+        name: 'x-pickers-pro',
+        rootPath: path.join(workspaceRoot, 'packages/x-pickers-pro'),
+        documentationFolderName: 'pickers',
+        getComponentsWithPropTypes: getComponentPaths({
+            folders: ['src'],
+        }),
+        getComponentsWithApiDoc: getComponentPaths({
+            files: ['src']
+        }),
+    }))
 
   projects.set('x-pickers', createProject({
       name: 'x-pickers',
       rootPath: path.join(workspaceRoot, 'packages/x-pickers'),
-  }))
-
-  projects.set('x-pickers-pro', createProject({
-      name: 'x-pickers-pro',
-      rootPath: path.join(workspaceRoot, 'packages/x-pickers-pro'),
+    documentationFolderName: 'pickers',
+      getComponentsWithPropTypes: getComponentPaths({
+          folders: ['src'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+          files: ['src']
+      }),
   }))
 
   return projects;
