@@ -20,5 +20,11 @@
       "test/*": ["./test/*"],
       "packages/storybook/*": ["./packages/storybook/*"] // TODO: Remove, is only used for `packages/storybook/src/hooks/useData` which could be part of `@mui/x-data-generator`
     }
-  }
+  },
+  "exclude": [
+    "**/node_modules/!(@mui)/**",
+    "**/.!(storybook)/**/*",
+    "**/build/**/*",
+    "docs/export/**/*"
+  ]
 }
