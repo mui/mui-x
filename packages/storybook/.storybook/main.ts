@@ -24,6 +24,7 @@ const config: StorybookConfig = {
     check: isDevelopment, // Netlify is breaking the deploy with this settings on. So deactivate on release
   },
   webpackFinal: async (config) => {
+    console.log(config.resolve);
     config.devtool = isDevelopment ? 'inline-source-map' : undefined;
     config.parallelism = 1;
     config.module.rules.push({
@@ -82,23 +83,37 @@ const config: StorybookConfig = {
         maxSize: maxAssetSize,
       },
     };
+
     config.performance = {
       maxAssetSize: maxAssetSize,
     };
+
+    const localPackageFolderName = isDevelopment ? 'src' : 'build';
+
     config.resolve = {
       ...config.resolve,
-      extensions: ['.js', '.ts', '.tsx'],
       alias: {
-        '@mui/x-data-grid': path.resolve(__dirname, '../../../packages/grid/x-data-grid/src'),
+        ...config.resolve.alias,
+        '@mui/x-data-grid': path.resolve(
+          __dirname,
+          '../../../packages/grid/x-data-grid',
+          localPackageFolderName,
+        ),
         '@mui/x-data-grid-generator': path.resolve(
           __dirname,
-          '../../../packages/grid/x-data-grid-generator/src',
+          '../../../packages/grid/x-data-grid-generator',
+          localPackageFolderName,
         ),
         '@mui/x-data-grid-pro': path.resolve(
           __dirname,
-          '../../../packages/grid/x-data-grid-pro/src',
+          '../../../packages/grid/x-data-grid-pro',
+          localPackageFolderName,
         ),
-        '@mui/x-license-pro': path.resolve(__dirname, '../../../packages/x-license-pro/src'),
+        '@mui/x-license-pro': path.resolve(
+          __dirname,
+          '../../../packages/x-license-pro',
+          localPackageFolderName,
+        ),
       },
     };
     return config;
