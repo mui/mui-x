@@ -138,7 +138,7 @@ export const gridColumnsTotalWidthSelector = createSelector(
  * @deprecated Use `gridColumnFieldsSelector` instead.
  * @ignore - do not document.
  */
-export const allGridColumnsFieldsSelector = (state: GridStateCommunity) => state.columns.all;
+export const allGridColumnsFieldsSelector = gridColumnFieldsSelector;
 
 /**
  * @category Columns
