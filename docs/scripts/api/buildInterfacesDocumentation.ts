@@ -182,7 +182,8 @@ function generateMarkdownFromProperties(
     if (property.projects.includes('x-data-grid')) {
       planImg = '';
     } else if (property.projects.includes('x-data-grid-pro')) {
-      planImg = ' <span class="plan-pro"></span>';
+      planImg =
+        ' [<span class="plan-pro" title="Pro plan"></span>](https://mui.com/store/items/material-ui-pro/)';
     } else {
       throw new Error(`No valid plan found for ${property.name} property in ${object.name}`);
     }
