@@ -351,30 +351,30 @@ describe('<DataGridPro /> - Columns', () => {
     it('should not loose column width when re-applying pre-processing', () => {
       render(<Test checkboxSelection />);
       apiRef.current.setColumnWidth('brand', 300);
-      expect(gridColumnLookupSelector(apiRef.current.state).brand.computedWidth).to.equal(300);
+      expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
       apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
-      expect(gridColumnLookupSelector(apiRef.current.state).brand.computedWidth).to.equal(300);
+      expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
 
     it('should not loose column index when re-applying pre-processing', () => {
       render(<Test checkboxSelection columns={[{ field: 'id' }, { field: 'brand' }]} />);
-      expect(gridColumnFieldsSelector(apiRef.current.state).indexOf('brand')).to.equal(2);
+      expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       apiRef.current.setColumnIndex('brand', 1);
-      expect(gridColumnFieldsSelector(apiRef.current.state).indexOf('brand')).to.equal(1);
+      expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
       apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
-      expect(gridColumnFieldsSelector(apiRef.current.state).indexOf('brand')).to.equal(1);
+      expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
 
     it('should not loose imperatively added columns when re-applying pre-processing', () => {
       render(<Test checkboxSelection />);
       apiRef.current.updateColumn({ field: 'id' });
-      expect(gridColumnFieldsSelector(apiRef.current.state)).to.deep.equal([
+      expect(gridColumnFieldsSelector(apiRef)).to.deep.equal([
         '__check__',
         'brand',
         'id',
       ]);
       apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
-      expect(gridColumnFieldsSelector(apiRef.current.state)).to.deep.equal([
+      expect(gridColumnFieldsSelector(apiRef)).to.deep.equal([
         '__check__',
         'brand',
         'id',
