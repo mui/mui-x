@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  GridToolbarExport,
-  GridRowsProp,
-  GridColumns,
-} from '@mui/x-data-grid';
+import { DataGrid, GridToolbarExport, GridRowsProp, GridColumns } from '@mui/x-data-grid';
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -52,100 +47,102 @@ describe('<DataGridPro /> - Export - Print', () => {
 
   describe('restore visibility', () => {
     allBooleanConfigurations.forEach(({ printVisible, gridVisible }) => {
-      it(`should set and restore 'col1' from ${printVisible ? "'visible'" : "'hidden'"} to ${gridVisible ? "'visible'" : "'hidden'"
-        } (visibilityModel)`, async function test() {
-          const onColumnVisibilityModelChange = spy();
+      it(`should set and restore 'col1' from ${printVisible ? "'visible'" : "'hidden'"} to ${
+        gridVisible ? "'visible'" : "'hidden'"
+      } (visibilityModel)`, async function test() {
+        const onColumnVisibilityModelChange = spy();
 
-          render(
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid
-                {...baselineProps}
-                onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-                components={{
-                  Toolbar: () => (
-                    <GridToolbarExport
-                      printOptions={{ fields: printVisible ? ['col1', 'col2'] : ['col2'] }}
-                    />
-                  ),
-                }}
-                initialState={{
-                  columns: {
-                    columnVisibilityModel: {
-                      // Hide columns status and traderName, the other columns will remain visible
-                      col1: gridVisible,
-                      col2: false,
-                    },
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+              components={{
+                Toolbar: () => (
+                  <GridToolbarExport
+                    printOptions={{ fields: printVisible ? ['col1', 'col2'] : ['col2'] }}
+                  />
+                ),
+              }}
+              initialState={{
+                columns: {
+                  columnVisibilityModel: {
+                    // Hide columns status and traderName, the other columns will remain visible
+                    col1: gridVisible,
+                    col2: false,
                   },
-                }}
-              />
-            </div>,
-          );
-          expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+                },
+              }}
+            />
+          </div>,
+        );
+        expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-          // Trigger print
-          fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
-          fireEvent.click(screen.queryByRole('menuitem', { name: 'Print' }));
-          await clock.runToLast();
-          expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-          // verify column visibility has been set
-          expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
-            col1: printVisible,
-            col2: true,
-          });
-
-          // verify column visibility has been restored
-          expect(onColumnVisibilityModelChange.secondCall.firstArg).to.deep.equal({
-            col1: gridVisible,
-            col2: false,
-          });
+        // Trigger print
+        fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+        fireEvent.click(screen.queryByRole('menuitem', { name: 'Print' }));
+        await clock.runToLast();
+        expect(onColumnVisibilityModelChange.callCount).to.equal(2);
+        // verify column visibility has been set
+        expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+          col1: printVisible,
+          col2: true,
         });
 
-      it(`should set and restore 'col1' from ${printVisible ? "'visible'" : "'hidden'"} to ${gridVisible ? "'visible'" : "'hidden'"
-        } (hidden)`, async function test() {
-          const onColumnVisibilityModelChange = spy();
-
-          render(
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid
-                {...baselineProps}
-                onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-                components={{
-                  Toolbar: () => (
-                    <GridToolbarExport
-                      printOptions={{ fields: printVisible ? ['col1', 'col2'] : ['col2'] }}
-                    />
-                  ),
-                }}
-                columns={[
-                  { field: 'col1', hide: !gridVisible },
-                  { field: 'col2', hide: true },
-                ]}
-              />
-            </div>,
-          );
-          expect(onColumnVisibilityModelChange.callCount).to.equal(0);
-
-          // Trigger print
-          fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
-          fireEvent.click(screen.queryByRole('menuitem', { name: 'Print' }));
-          await clock.runToLast();
-
-          expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-
-          // verify column visibility has been set
-          expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
-            col1: printVisible,
-            col2: true,
-          });
-
-          // verify column visibility has been restored
-          expect(onColumnVisibilityModelChange.secondCall.firstArg).to.deep.equal({
-            col1: gridVisible,
-            col2: false,
-          });
+        // verify column visibility has been restored
+        expect(onColumnVisibilityModelChange.secondCall.firstArg).to.deep.equal({
+          col1: gridVisible,
+          col2: false,
         });
+      });
+
+      it(`should set and restore 'col1' from ${printVisible ? "'visible'" : "'hidden'"} to ${
+        gridVisible ? "'visible'" : "'hidden'"
+      } (hidden)`, async function test() {
+        const onColumnVisibilityModelChange = spy();
+
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+              components={{
+                Toolbar: () => (
+                  <GridToolbarExport
+                    printOptions={{ fields: printVisible ? ['col1', 'col2'] : ['col2'] }}
+                  />
+                ),
+              }}
+              columns={[
+                { field: 'col1', hide: !gridVisible },
+                { field: 'col2', hide: true },
+              ]}
+            />
+          </div>,
+        );
+        expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+
+        // Trigger print
+        fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+        fireEvent.click(screen.queryByRole('menuitem', { name: 'Print' }));
+        await clock.runToLast();
+
+        expect(onColumnVisibilityModelChange.callCount).to.equal(2);
+
+        // verify column visibility has been set
+        expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+          col1: printVisible,
+          col2: true,
+        });
+
+        // verify column visibility has been restored
+        expect(onColumnVisibilityModelChange.secondCall.firstArg).to.deep.equal({
+          col1: gridVisible,
+          col2: false,
+        });
+      });
     });
-  })
+  });
   describe('column selection', () => {
     it(`should ignore 'allColumns' if 'fields' is provided`, async function test() {
       const onColumnVisibilityModelChange = spy();
@@ -157,9 +154,7 @@ describe('<DataGridPro /> - Export - Print', () => {
             onColumnVisibilityModelChange={onColumnVisibilityModelChange}
             components={{
               Toolbar: () => (
-                <GridToolbarExport
-                  printOptions={{ fields: ['col2'], allColumns: true }}
-                />
+                <GridToolbarExport printOptions={{ fields: ['col2'], allColumns: true }} />
               ),
             }}
           />
@@ -188,9 +183,7 @@ describe('<DataGridPro /> - Export - Print', () => {
             onColumnVisibilityModelChange={onColumnVisibilityModelChange}
             components={{
               Toolbar: () => (
-                <GridToolbarExport
-                  printOptions={{ fields: ['col2'], allColumns: true }}
-                />
+                <GridToolbarExport printOptions={{ fields: ['col2'], allColumns: true }} />
               ),
             }}
             columns={[{ field: 'col1' }, { field: 'col2', disableExport: true }]}
@@ -219,14 +212,9 @@ describe('<DataGridPro /> - Export - Print', () => {
             {...baselineProps}
             onColumnVisibilityModelChange={onColumnVisibilityModelChange}
             components={{
-              Toolbar: () => (
-                <GridToolbarExport
-                  printOptions={{ allColumns: true }}
-                />
-              ),
+              Toolbar: () => <GridToolbarExport printOptions={{ allColumns: true }} />,
             }}
             columns={[{ field: 'col1' }, { field: 'col2', disableExport: true }]}
-
           />
         </div>,
       );
@@ -252,11 +240,7 @@ describe('<DataGridPro /> - Export - Print', () => {
             {...baselineProps}
             onColumnVisibilityModelChange={onColumnVisibilityModelChange}
             components={{
-              Toolbar: () => (
-                <GridToolbarExport
-                  printOptions={{ allColumns: true }}
-                />
-              ),
+              Toolbar: () => <GridToolbarExport printOptions={{ allColumns: true }} />,
             }}
             columns={[{ field: 'col1' }, { field: 'col2', hide: true }]}
           />
