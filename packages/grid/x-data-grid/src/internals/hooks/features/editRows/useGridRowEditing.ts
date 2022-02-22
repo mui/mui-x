@@ -56,7 +56,7 @@ export const useGridRowEditing = (
         const newEditRowsState: GridEditRowsModel = { ...state.editRows };
         if (mode === GridRowModes.Edit) {
           newEditRowsState[id] = {};
-            columnFields.forEach((field) => {
+          columnFields.forEach((field) => {
             const cellParams = apiRef.current.getCellParams(id, field);
             if (cellParams.isEditable) {
               newEditRowsState[id][field] = { value: cellParams.value };
