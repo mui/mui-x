@@ -11,7 +11,7 @@ interface GridGetColumnsToExportParams {
   options: GridExportOptions;
 }
 
-export const getColumns = ({
+export const getColumnsToExport = ({
   apiRef,
   options,
 }: GridGetColumnsToExportParams): GridStateColDef[] => {

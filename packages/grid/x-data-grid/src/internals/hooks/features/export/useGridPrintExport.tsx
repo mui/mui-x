@@ -16,7 +16,7 @@ import { gridClasses } from '../../../gridClasses';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { getColumns } from './utils';
+import { getColumnsToExport } from './utils';
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
@@ -60,7 +60,7 @@ export const useGridPrintExport = (
           return;
         }
 
-        const exportedColumnFields = getColumns({
+        const exportedColumnFields = getColumnsToExport({
           apiRef,
           options: { fields, allColumns },
         }).map((column) => column.field);
@@ -151,12 +151,11 @@ export const useGridPrintExport = (
       }
 
       // Expand container height to accommodate all rows
-      gridClone.style.height = `${
-        rowsMeta.currentPageTotalHeight +
+      gridClone.style.height = `${rowsMeta.currentPageTotalHeight +
         headerHeight +
         gridToolbarElementHeight +
         gridFooterElementHeight
-      }px`;
+        }px`;
 
       // Remove all loaded elements from the current host
       printDoc.body.innerHTML = '';

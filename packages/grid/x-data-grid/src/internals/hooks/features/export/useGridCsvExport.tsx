@@ -8,7 +8,7 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { GridRowId } from '../../../models';
-import { getColumns } from './utils';
+import { getColumnsToExport } from './utils';
 
 const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
@@ -35,7 +35,7 @@ export const useGridCsvExport = (apiRef: React.MutableRefObject<GridApiCommunity
     (options: GridCsvExportOptions = {}): string => {
       logger.debug(`Get data as CSV`);
 
-      const exportedColumns = getColumns({
+      const exportedColumns = getColumnsToExport({
         apiRef,
         options,
       });
