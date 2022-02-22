@@ -111,19 +111,19 @@
     "name": "gridDetailPanelExpandedRowIdsSelector",
     "returnType": "GridRowId[]",
     "description": "",
-    "supportsApiRef": true
+    "supportsApiRef": false
   },
   {
     "name": "gridDetailPanelExpandedRowsContentCacheSelector",
     "returnType": "Record<GridRowId, ReactNode>",
     "description": "",
-    "supportsApiRef": true
+    "supportsApiRef": false
   },
   {
     "name": "gridDetailPanelExpandedRowsHeightCacheSelector",
     "returnType": "Record<GridRowId, number>",
     "description": "",
-    "supportsApiRef": true
+    "supportsApiRef": false
   },
   {
     "name": "gridEditRowsStateSelector",
