@@ -44,7 +44,7 @@ export const useGridPrintExport = (
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<any>();
-  const previousHiddenColumns = React.useRef<string[]>([]);
+  const previousColumnVisibility = React.useRef<{ [key: string]: boolean }>({});
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
@@ -68,10 +68,12 @@ export const useGridPrintExport = (
         // Show only wanted columns.
         apiRef.current.updateColumns(
           columns.map((column) => {
-            if (columnVisibilityModel[column.field] !== false) {
-              previousHiddenColumns.current.push(column.field);
-            }
-            column.hide = !exportedColumnFields.includes(column.field);
+            const currentlyVisible = columnVisibilityModel[column.field] !== false;
+            const visibleInPrint = exportedColumnFields.includes(column.field);
+
+            previousColumnVisibility.current[column.field] = currentlyVisible;
+
+            column.hide = !visibleInPrint;
 
             return column;
           }),
@@ -151,11 +153,12 @@ export const useGridPrintExport = (
       }
 
       // Expand container height to accommodate all rows
-      gridClone.style.height = `${rowsMeta.currentPageTotalHeight +
+      gridClone.style.height = `${
+        rowsMeta.currentPageTotalHeight +
         headerHeight +
         gridToolbarElementHeight +
         gridFooterElementHeight
-        }px`;
+      }px`;
 
       // Remove all loaded elements from the current host
       printDoc.body.innerHTML = '';
@@ -232,28 +235,20 @@ export const useGridPrintExport = (
       // https://github.com/alexfauquette/material-ui-x/blob/a3fefc5b451ac269d9ee7743b7ee7ce4a78d1e24/packages/grid/_modules_/grid/hooks/core/useGridStateInitialization.ts#L64-L75
       apiRef.current.setPageSize(previousGridState.current.pagination.pageSize);
       apiRef.current.updateColumns(
-        previousGridState.current.columns.all.map(
-          (field) => previousGridState.current.columns.lookup[field],
-        ),
+        previousGridState.current.columns.all.map((field) => ({
+          ...previousGridState.current.columns.lookup[field],
+          // Restore previous visibility state
+          hide: !previousColumnVisibility.current[field],
+        })),
       );
 
       apiRef.current.unstable_enableVirtualization();
 
-      // Revert columns to their original state
-      if (previousHiddenColumns.current.length) {
-        apiRef.current.updateColumns(
-          columns.map((column) => {
-            column.hide = !previousHiddenColumns.current.includes(column.field);
-            return column;
-          }),
-        );
-      }
-
       // Clear local state
       previousGridState.current = null;
-      previousHiddenColumns.current = [];
+      previousColumnVisibility.current = {};
     },
-    [columns, apiRef],
+    [apiRef],
   );
 
   const exportDataAsPrint = React.useCallback(
