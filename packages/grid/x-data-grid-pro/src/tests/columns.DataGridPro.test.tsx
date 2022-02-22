@@ -368,17 +368,9 @@ describe('<DataGridPro /> - Columns', () => {
     it('should not loose imperatively added columns when re-applying pre-processing', () => {
       render(<Test checkboxSelection />);
       apiRef.current.updateColumn({ field: 'id' });
-      expect(gridColumnFieldsSelector(apiRef)).to.deep.equal([
-        '__check__',
-        'brand',
-        'id',
-      ]);
+      expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
       apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
-      expect(gridColumnFieldsSelector(apiRef)).to.deep.equal([
-        '__check__',
-        'brand',
-        'id',
-      ]);
+      expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
   });
 
