@@ -138,7 +138,7 @@ export const getTypeScriptProjects = () => {
             folders: ['src'],
         }),
         getComponentsWithApiDoc: getComponentPaths({
-            files: ['src']
+            folders: ['src']
         }),
     }))
 
@@ -150,7 +150,7 @@ export const getTypeScriptProjects = () => {
           folders: ['src'],
       }),
       getComponentsWithApiDoc: getComponentPaths({
-          files: ['src']
+          folders: ['src']
       }),
   }))
 

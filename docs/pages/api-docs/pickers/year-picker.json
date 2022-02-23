@@ -1,0 +1,12 @@
+{
+  "props": {
+    "onYearChange": { "type": { "name": "func" } },
+    "shouldDisableYear": { "type": { "name": "func" } }
+  },
+  "slots": {},
+  "name": "YearPicker",
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDataGrid" },
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-pickers/src/YearPicker/YearPicker.tsx",
+  "demos": "<ul></ul>"
+}

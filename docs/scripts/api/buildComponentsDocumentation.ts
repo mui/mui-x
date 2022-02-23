@@ -485,7 +485,6 @@ export default async function buildComponentsDocumentation(
     })
     .filter((markdown) => markdown.components.length > 0);
 
-  // TODO: Use the project fields instead of hard-coding the paths here
   const componentBuilds = Array.from(projects.values()).flatMap(project => {
     const componentsWithApiDoc = project.getComponentsWithApiDoc(project)
 
