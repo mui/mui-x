@@ -12,16 +12,31 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 const hasActions = (colDef: any): colDef is GridActionsColDef =>
   typeof colDef.getActions === 'function';
 
-type GridActionsCellProps = Pick<GridRenderCellParams, 'colDef' | 'id' | 'api'> &
+interface TouchRippleActions {
+  stop: (event: any, callback?: () => void) => void;
+}
+
+type GridActionsCellProps = Pick<GridRenderCellParams, 'colDef' | 'id' | 'api' | 'hasFocus'> &
   Pick<GridMenuProps, 'position'>;
 
 const GridActionsCell = (props: GridActionsCellProps) => {
   const [open, setOpen] = React.useState(false);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const touchRippleRefs = React.useRef<Record<number, TouchRippleActions | null>>({});
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
-  const { colDef, id, api, position = 'bottom-end' } = props; // TODO apply the rest to the root element
+  const { colDef, id, api, hasFocus, position = 'bottom-end' } = props; // TODO apply the rest to the root element
+
+  React.useLayoutEffect(() => {
+    if (!hasFocus) {
+      Object.entries(touchRippleRefs.current).forEach(([index, ref]) => {
+        ref?.stop({}, () => {
+          delete touchRippleRefs.current[index];
+        });
+      });
+    }
+  }, [hasFocus]);
 
   if (!hasActions(colDef)) {
     throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
@@ -35,9 +50,16 @@ const GridActionsCell = (props: GridActionsCellProps) => {
   const iconButtons = options.filter((option) => !option.props.showInMenu);
   const menuButtons = options.filter((option) => option.props.showInMenu);
 
+  const handleTouchRippleRef = (index: number) => (instance: TouchRippleActions | null) => {
+    touchRippleRefs.current[index] = instance;
+  };
+
   return (
     <div className={gridClasses.actionsCell}>
-      {iconButtons.map((button, index) => React.cloneElement(button, { key: index }))}
+      {iconButtons.map((button, index) =>
+        React.cloneElement(button, { key: index, touchRippleRef: handleTouchRippleRef(index) }),
+      )}
+
       {menuButtons.length > 0 && (
         <IconButton
           ref={buttonRef}
@@ -85,6 +107,10 @@ GridActionsCell.propTypes = {
    * The column of the row that the current cell belongs to.
    */
   colDef: PropTypes.object.isRequired,
+  /**
+   * If true, the cell is the active element.
+   */
+  hasFocus: PropTypes.bool.isRequired,
   /**
    * The grid row id.
    */
