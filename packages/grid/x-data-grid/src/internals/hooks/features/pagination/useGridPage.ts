@@ -45,9 +45,13 @@ const mergeStateWithPage =
     }),
   });
 
-const noRowCountInServerMode = buildWarning([
-  "MUI: the 'rowCount' prop is undefined will using paginationMode='server'",
-]);
+const noRowCountInServerMode = buildWarning(
+  [
+    "MUI: the 'rowCount' prop is undefined while using paginationMode='server'",
+    'For more detail, see http://mui.com/components/data-grid/pagination/#basic-implementation',
+  ],
+  'error',
+);
 
 /**
  * @requires useGridPageSize (state, event)
