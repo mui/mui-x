@@ -19,7 +19,7 @@ function useData(rowLength, columnLength) {
       rows.push(row);
     }
 
-    const columns = [{ field: 'id', hide: true }];
+    const columns = [];
 
     for (let j = 1; j <= columnLength; j += 1) {
       columns.push({ field: `price${j}M`, headerName: `${j}M` });
