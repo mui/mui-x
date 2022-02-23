@@ -29,7 +29,7 @@ function useData(rowLength: number, columnLength: number) {
       rows.push(row);
     }
 
-    const columns: GridColDef[] = [{ field: 'id', hide: true }];
+    const columns: GridColDef[] = [];
 
     for (let j = 1; j <= columnLength; j += 1) {
       columns.push({ field: `price${j}M`, headerName: `${j}M` });
