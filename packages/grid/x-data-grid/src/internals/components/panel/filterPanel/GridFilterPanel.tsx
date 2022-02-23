@@ -93,9 +93,13 @@ function GridFilterPanel(props: GridFilterPanelProps) {
 
   const deleteFilter = React.useCallback(
     (item: GridFilterItem) => {
+      const shouldCloseFilterPanel = items.length === 1;
       apiRef.current.deleteFilterItem(item);
+      if (shouldCloseFilterPanel) {
+        apiRef.current.hideFilterPanel();
+      }
     },
-    [apiRef],
+    [apiRef, items.length],
   );
 
   React.useEffect(() => {

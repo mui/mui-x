@@ -7,6 +7,9 @@ import * as babel from '@babel/core';
 import * as babelTypes from '@babel/types';
 import * as yargs from 'yargs';
 import { Octokit } from '@octokit/rest';
+import { retry } from '@octokit/plugin-retry';
+
+const MyOctokit = Octokit.plugin(retry);
 
 const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
@@ -218,22 +221,30 @@ async function generateReport(
 
 async function updateIssue(githubToken, newMessage) {
   // Initialize the API client
-  const octokit = new Octokit({
+  const octokit = new MyOctokit({
     auth: githubToken,
   });
 
-  await octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
-    owner: GIT_ORGANIZATION,
-    repo: GIT_REPO,
-    issue_number: L10N_ISSUE_ID,
-    body: `You can check below all of the localization files that contain at least one missing translation. If you are a fluent speaker of any of these languages, feel free to submit a pull request. Any help is welcome to make the X components to reach new cultures.
+  const requestBody = `You can check below all of the localization files that contain at least one missing translation. If you are a fluent speaker of any of these languages, feel free to submit a pull request. Any help is welcome to make the X components to reach new cultures.
 
 Run \`yarn l10n --report\` to update the list below ⬇️
-
+  
 ## DataGrid / DataGridPro
 ${newMessage}
-`,
-  });
+`;
+  await octokit
+    .request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+      owner: GIT_ORGANIZATION,
+      repo: GIT_REPO,
+      issue_number: L10N_ISSUE_ID,
+      body: requestBody,
+    })
+    .catch((error) => {
+      if (error.request.request.retryCount) {
+        console.error(`request failed after ${error.request.request.retryCount} retries`);
+      }
+      console.error(error);
+    });
 }
 
 interface HandlerArgv {
@@ -241,7 +252,7 @@ interface HandlerArgv {
   githubToken?: string;
 }
 
-async function run(argv: HandlerArgv) {
+async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
   const { report, githubToken } = argv;
   const workspaceRoot = path.resolve(__dirname, '../');
 
