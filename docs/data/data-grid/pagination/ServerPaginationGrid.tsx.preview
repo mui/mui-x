@@ -1,8 +1,10 @@
 <DataGrid
-  columns={data.columns}
+  columns={demoData.columns}
   pagination
-  rowCount={data.rows.length}
+  rowCount={rowCountState}
   {...rowsState}
+  rows={data}
+  loading={isLoading}
   paginationMode="server"
   onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
   onPageSizeChange={(pageSize) =>
