@@ -34,5 +34,9 @@ export function GridOverlays() {
     );
   }
 
+  if (overlay === null) {
+    return null;
+  }
+
   return <GridOverlayWrapper>{overlay}</GridOverlayWrapper>;
 }
