@@ -42,7 +42,7 @@ export function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
         width: viewportInnerSize?.width ?? 0,
         position: 'absolute',
         top: headerHeight,
-        bottom: 0,
+        bottom: height === 'auto' ? 0 : undefined,
       }}
       {...props}
     />
