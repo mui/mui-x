@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import Portal from '@mui/material/Portal';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -438,34 +439,34 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
   });
 
-  it('should ignore key shortcuts if activeElement is not a cell', () => {
-    const columns = [
-      {
-        field: 'id',
-      },
-      {
-        field: 'name',
-        renderCell: () => <input type="text" data-testid="custom-input" tabIndex={0} />,
-      },
-    ];
-
-    const rows = [
-      {
-        id: 1,
-        name: 'John',
-      },
-    ];
-
+  it('should ignore events coming from a portal inside the cell', () => {
+    const handleCellKeyDown = spy();
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid rows={rows} columns={columns} />
+        <DataGrid
+          rows={[{ id: 1, name: 'John' }]}
+          onCellKeyDown={handleCellKeyDown}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'name',
+              renderCell: () => (
+                <Portal>
+                  <input type="text" name="custom-input" />
+                </Portal>
+              ),
+            },
+          ]}
+        />
       </div>,
     );
-    const input = screen.getByTestId('custom-input');
-    fireClickEvent(input);
-    expect(getActiveCell()).to.equal('0-1');
+    fireEvent.mouseUp(getCell(0, 1));
+    fireEvent.click(getCell(0, 1));
+    expect(handleCellKeyDown.callCount).to.equal(0);
+    const input = document.querySelector('input[name="custom-input"]') as HTMLInputElement;
+    input.focus();
     fireEvent.keyDown(input, { key: 'ArrowLeft' });
-    expect(getActiveCell()).to.equal('0-1');
+    expect(handleCellKeyDown.callCount).to.equal(0);
   });
 
   it('should call preventDefault when using keyboard navigation', () => {
