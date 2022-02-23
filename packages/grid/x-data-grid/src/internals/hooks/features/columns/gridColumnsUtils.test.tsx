@@ -65,7 +65,7 @@ describe('gridColumnsUtils', () => {
     });
 
     // https://github.com/mui/mui-x/issues/3091
-    it('should work with `flex` values < 0', () => {
+    it('should work with `flex` values < 1', () => {
       const flexColumns = [
         { field: 'id', minWidth: 50, flex: 1 },
         { field: 'username', minWidth: 50, flex: 1 },
