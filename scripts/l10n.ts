@@ -258,13 +258,13 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
 
   const constantsPath = path.join(
     workspaceRoot,
-    'packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts',
+    'packages/grid/x-data-grid/src/constants/localeTextConstants.ts',
   );
   const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
 
   const localesDirectory = path.resolve(
     workspaceRoot,
-    'packages/grid/x-data-grid/src/internals/locales',
+    'packages/grid/x-data-grid/src/locales',
   );
   const locales = findLocales(localesDirectory);
 

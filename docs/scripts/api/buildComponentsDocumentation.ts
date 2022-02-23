@@ -482,11 +482,11 @@ export default async function buildComponentsDocumentation(
   const componentsToGenerateDocs = [
     path.resolve(
       dataGridProject.workspaceRoot,
-      'packages/grid/x-data-grid/src/internals/DataGrid.tsx',
+      'packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx',
     ),
     path.resolve(
       dataGridProProject.workspaceRoot,
-      'packages/grid/x-data-grid-pro/src/internals/DataGridPro.tsx',
+      'packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx',
     ),
   ];
 
