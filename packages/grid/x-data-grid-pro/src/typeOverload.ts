@@ -1,58 +1,36 @@
 import * as React from 'react';
-import type {
+import {
   GridColDef as GridColDefUntyped,
   GridActionsColDef as GridActionsColDefUntyped,
   GridEnrichedColDef as GridEnrichedColDefUntyped,
   GridColumns as GridColumnsUntyped,
   GridColTypeDef as GridColTypeDefUntyped,
   GridStateColDef as GridStateColDefUntyped,
-} from '../../_modules_/grid/models/colDef/gridColDef';
-import type {
   GridCellParams as GridCellParamsUntyped,
   GridRenderCellParams as GridRenderCellParamsUntyped,
   GridRenderEditCellParams as GridRenderEditCellParamsUntyped,
   GridValueGetterParams as GridValueGetterParamsUntyped,
   GridValueGetterFullParams as GridValueGetterFullParamsUntyped,
   GridValueFormatterParams as GridValueFormatterParamsUntyped,
-} from '../../_modules_/grid/models/params/gridCellParams';
-import type { GridSortModelParams as GridSortModelParamsUntyped } from '../../_modules_/grid/models/params/gridSortModelParams';
-import type {
+  GridSortModelParams as GridSortModelParamsUntyped,
   GridSortCellParams as GridSortCellParamsUntyped,
   GridComparatorFn as GridComparatorFnUntyped,
-} from '../../_modules_/grid/models/gridSortModel';
-import {
+  GridApiCommon,
+  GridFilterOperator,
   getGridNumericOperators as getGridNumericOperatorsUntyped,
   getGridNumericColumnOperators as getGridNumericColumnOperatorsUnTyped,
-} from '../../_modules_/grid/models/colDef/gridNumericOperators';
-import { getGridBooleanOperators as getGridBooleanOperatorsUntyped } from '../../_modules_/grid/models/colDef/gridBooleanOperators';
-import { getGridStringOperators as getGridStringOperatorsUntyped } from '../../_modules_/grid/models/colDef/gridStringOperators';
-import { getGridSingleSelectOperators as getGridSingleSelectOperatorsUntyped } from '../../_modules_/grid/models/colDef/gridSingleSelectOperators';
-import { getGridDateOperators as getGridDateOperatorsUntyped } from '../../_modules_/grid/models/colDef/gridDateOperators';
-import type { GridApiPro } from '../../_modules_/grid/models/api/gridApiPro';
-import type { GridFilterOperator, GridApiCommon } from '../../_modules_';
-import { GridInitialStatePro, GridStatePro } from '../../_modules_/grid/models/gridStatePro';
-import { useGridApiContext as useUntypedGridApiContext } from '../../_modules_/grid/hooks/utils/useGridApiContext';
-import { useGridApiRef as useUntypedGridApiRef } from '../../_modules_/grid/hooks/utils/useGridApiRef';
+  getGridBooleanOperators as getGridBooleanOperatorsUntyped,
+  getGridStringOperators as getGridStringOperatorsUntyped,
+  getGridSingleSelectOperators as getGridSingleSelectOperatorsUntyped,
+  getGridDateOperators as getGridDateOperatorsUntyped,
+} from '@mui/x-data-grid';
 
-export type {
-  GridAlignment,
-  GridKeyValue,
-  GridColumnsMeta,
-  GridGroupingColDefOverride,
-  GridGroupingColDefOverrideParams,
-} from '../../_modules_/grid/models/colDef/gridColDef';
+import type { GridApiPro } from './internals/models/gridApiPro';
+import { GridInitialStatePro, GridStatePro } from './internals/models/gridStatePro';
 
-export type {
-  GridGroupingValueGetterParams,
-  GridPreProcessEditCellProps,
-  GridValueSetterParams,
-} from '../../_modules_/grid/models/params/gridCellParams';
-
-export type {
-  GridSortDirection,
-  GridSortItem,
-  GridSortModel,
-} from '../../_modules_/grid/models/gridSortModel';
+export { useGridApiContext } from './internals/hooks/utils/useGridApiContext';
+export { useGridApiRef } from './internals/hooks/utils/useGridApiRef';
+export { useGridRootProps } from './internals/hooks/utils/useGridRootProps';
 
 /**
  * The full grid API.
@@ -167,11 +145,3 @@ export type GridSortCellParams<Api extends GridApiCommon = GridApiPro> =
   GridSortCellParamsUntyped<Api>;
 
 export type GridComparatorFn<Api extends GridApiCommon = GridApiPro> = GridComparatorFnUntyped<Api>;
-
-export const useGridApiContext = useUntypedGridApiContext as <
-  Api extends GridApiCommon = GridApiPro,
->() => React.MutableRefObject<Api>;
-
-export const useGridApiRef = useUntypedGridApiRef as <
-  Api extends GridApiCommon = GridApiPro,
->() => React.MutableRefObject<Api>;

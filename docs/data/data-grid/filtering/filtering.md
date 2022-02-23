@@ -190,6 +190,14 @@ In the demo below, you can see how to create a completely new operator for the R
 
 {{"demo": "CustomRatingOperator.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Wrap built-in operators
+
+You can create custom operators that re-use the logic of the built-in ones.
+
+In the demo below, the selected rows are always visible even when they don't match the filtering rules.
+
+{{"demo": "CustomSelectionOperator.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Multiple values operator
 
 You can create a custom operator which accepts multiple values. To do this, provide an array of values to the `value` property of the `filterItem`.
@@ -234,7 +242,7 @@ In the demo below, the `rating` column only has the `<` and `>` operators.
 
 {{"demo": "RemoveBuiltInOperators.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Edit an operator
+### Custom input component
 
 The value used by the operator to look for has to be entered by the user.
 On most column types, a text field is used.
