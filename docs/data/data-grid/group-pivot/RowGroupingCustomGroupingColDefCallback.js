@@ -99,17 +99,13 @@ export default function RowGroupingCustomGroupingColDefCallback() {
 
             override.valueFormatter = (valueFormatterParams) => {
               const rowNode = apiRef.current.getRowNode(valueFormatterParams.id);
-
               if (rowNode?.groupingField === 'year') {
                 const value = rowNode.groupingKey;
-
                 if (value && typeof value === 'number') {
                   return value.toLocaleString();
                 }
-
                 return value;
               }
-
               return undefined;
             };
 
