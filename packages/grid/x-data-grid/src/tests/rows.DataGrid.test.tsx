@@ -3,10 +3,10 @@ import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
-import { DataGrid, DataGridProps, GridActionsCellItem } from '@mui/x-data-grid';
-import { getColumnValues, getRow } from 'test/utils/helperFn';
+import { DataGrid, DataGridProps, GridActionsCellItem, GridApi } from '@mui/x-data-grid';
+import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
-import { COMPACT_DENSITY_FACTOR } from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
+import { COMPACT_DENSITY_FACTOR } from '../internals/hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -49,7 +49,7 @@ describe('<DataGrid /> - Rows', () => {
 
   describe('props: rows', () => {
     it('should support new dataset', () => {
-      const { rows, columns } = getData(5, 2);
+      const { rows, columns } = getData<GridApi>(5, 2);
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
@@ -218,6 +218,37 @@ describe('<DataGrid /> - Rows', () => {
       fireEvent.click(screen.getAllByRole('button', { name: 'more' })[1]);
       clock.runToLast();
       expect(screen.queryAllByRole('menu')).to.have.length(1);
+    });
+
+    it('should allow to move focus to another cell with the arrow keys', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={[{ id: 1, name: 'John' }]}
+            columns={[
+              { field: 'name' },
+              {
+                field: 'actions',
+                type: 'actions',
+                getActions: () => [<GridActionsCellItem icon={<span />} label="print" />],
+              },
+            ]}
+          />
+        </div>,
+      );
+      const firstCell = getCell(0, 0);
+      fireEvent.mouseUp(firstCell);
+      fireEvent.click(firstCell);
+
+      expect(getActiveCell()).to.equal('0-0');
+      fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+      expect(getActiveCell()).to.equal('0-1');
+
+      const button = screen.queryByRole('button', { name: 'print' });
+      button.focus();
+      fireEvent.keyDown(button, { key: 'ArrowLeft' });
+
+      expect(getActiveCell()).to.equal('0-0');
     });
   });
 

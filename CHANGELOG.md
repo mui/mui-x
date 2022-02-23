@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.5.1
+
+_Feb 10, 2022_
+
+A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎛 Add props to customize the behavior of the filter panel (#3497) @alexfauquette
+
+  ```tsx
+  <DataGrid
+    componentsProps={{
+      filterPanel: { columnsSort: 'asc' },
+    }}
+  />
+  ```
+
+  Check the [documentation](https://mui.com/components/data-grid/filtering/#customize-the-filter-panel-content) to see all available props.
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.5.1` / `@mui/x-data-grid-pro@v5.5.1`
+
+- [DataGrid] Add `debounceMs` option to `setEditCellValue` method (#3825) @m4theushw
+- [DataGrid] Allow to translate `checkboxSelection` labels (#3846) @m4theushw
+- [DataGrid] Customize the filter panel with props (#3497) @alexfauquette
+- [DataGrid] Fix filtering of string columns for `value = 0` (#3843) @flaviendelangle
+- [DataGrid] Fix focus when `blur` event rerenders the grid (#3718) @alexfauquette
+- [DataGridPro] Add clear error when the tree data has duplicated paths (#3840) @flaviendelangle
+- [DataGridPro] Avoid imports from `@mui/base` (#3903) @cherniavskii
+- [DataGridPro] Register column pinning after selection (#3887) @m4theushw
+- [l10n] Improve Turkish (tr-TR) locale (#3842) @atillaaliyev
+
+### Docs
+
+- [docs] Update v5 migration docs (#3847) @oliviertassinari
+- [docs] Fix sorting feature link (#3877) @alexfauquette
+- [docs] Migrate content to the new location (#3730) @siriwatknp
+- [docs] Unify multi-filtering introduction with the multi-sorting introduction (#3766) @flaviendelangle
+- [docs] Move row grouping to Premium plan (#3827) @alexfauquette
+- [docs] Reorganize export docs to prepare Excel export doc (#3822) @alexfauquette
+
+### Core
+
+- [core] Add hook `useGridPagination` to call `onGridPage` and `onGridPageSize` (#3880) @flaviendelangle
+- [core] Fix docs deploy script (#3874) @oliviertassinari
+- [core] Move the git repository to a new location (#3872) @oliviertassinari
+- [test] Add `codecov` (#3873) @oliviertassinari
+
 ## 5.5.0
 
 _Feb 3, 2022_
@@ -13,7 +62,7 @@ A big thanks to the 10 contributors who made this release possible. Here are som
 
   <img src="https://user-images.githubusercontent.com/42154031/152379354-47120aac-2b37-4a90-b311-64b4522283b9.gif" width="814">
 
-- 🌍 Add Danish (daDK) locale (#3800) @kasperfilstrup
+- 🌍 Add Danish (da-DK) locale (#3800) @kasperfilstrup
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -25,10 +74,10 @@ A big thanks to the 10 contributors who made this release possible. Here are som
 - [DataGrid] Fix <kbd>PageUp</kbd> jumping directly to the column header skipping the first row (#3761) @cherniavskii
 - [DataGrid] Throw an error if incorrect column type is used (#3757) @DanailH
 - [DataGridPro] Add support for master/detail (#3387) @m4theushw
-- [l10n] Add Danish (daDK) locale (#3800) @kasperfilstrup
-- [l10n] Improve Dutch (nlNL) locale (#3724) @MatthijsKok
-- [l10n] Improve Hebrew (heIL) locale (#3775) @ColdAtNight
-- [l10n] Improve Russian (ruRU) locale (#3818) @Leniorko
+- [l10n] Add Danish (da-DK) locale (#3800) @kasperfilstrup
+- [l10n] Improve Dutch (nl-NL) locale (#3724) @MatthijsKok
+- [l10n] Improve Hebrew (he-IL) locale (#3775) @ColdAtNight
+- [l10n] Improve Russian (ru-RU) locale (#3818) @Leniorko
 
 ### Docs
 
@@ -94,8 +143,8 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGridPro] Fix grid cell losing focus when scrolling with keyboard (#3667) @cherniavskii
 - [DataGridPro] Fix missing `styleOverrides` on pinned columns (#3733) @alexfauquette
 - [DataGridPro] Remove function overloading for `useGridApiRef` (#3666) @flaviendelangle
-- [l10n] Improve French (frFR) locale (#3739) @flaviendelangle
-- [l10n] Improve Italian (itIT) locale (#3744) @destegabry
+- [l10n] Improve French (fr-FR) locale (#3739) @flaviendelangle
+- [l10n] Improve Italian (it-IT) locale (#3744) @destegabry
 
 ### Docs
 
@@ -110,7 +159,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 ### Core
 
 - [core] Add ESLint rule to force default export equals to filename in documentation (#3674) @alexfauquette
-- [core] Fix `l10n` script not updating `csCZ` locale (#3748) @cherniavskii
+- [core] Fix `l10n` script not updating `cs-CZ` locale (#3748) @cherniavskii
 - [core] Generate CHANGELOG from GitHub API (#3313) @alexfauquette
 - [core] Isolate selectors from different grid instances (#3663) @m4theushw
 - [test] Improve test detection (#3728) @m4theushw
@@ -231,9 +280,9 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGridPro] Keep row children expansion when updating the rows (#3604) @flaviendelangle
 - [DataGridPro] Keep tree data grouping column width when regenerating the columns (#3603) @flaviendelangle
 - [DataGridPremium] Allow to group rows based on column value (#3277) @flaviendelangle
-- [l10n] Improve Finnish (fiFI) locale (#3621) @MijMa
-- [l10n] Improve Ukrainian (ukUA) locale (#3586) @Neonin
-- [l10n] Improve Czech (csCZ) and Slovak (skSK) locale (#3678) @Haaxor1689
+- [l10n] Improve Finnish (fi-FI) locale (#3621) @MijMa
+- [l10n] Improve Ukrainian (uk-UA) locale (#3586) @Neonin
+- [l10n] Improve Czech (cs-CZ) and Slovak (sk-SK) locale (#3678) @Haaxor1689
 
 ### Docs
 
@@ -273,7 +322,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - ⚡ Add support for column-based `sortingOrder` with the new `sortingOrder` option in `GridColDef` (#3449) @Quppa
 - ✨ Allow to initialize the `page` and `pageSize` without controlling them with the `initialState` prop (#3495) @flaviendelangle
 - 🙈 Allow to precisely control which children rows to expand with the new `isGroupExpandedByDefault` prop (#3444) @flaviendelangle
-- 🌍 Add Finnish (fiFI) locale (#3485) @kurkle
+- 🌍 Add Finnish (fi-FI) locale (#3485) @kurkle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -295,10 +344,10 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGridPro] Expose the field of the tree data grouping column as a constant (#3549) @flaviendelangle
 - [DataGridPro] Fix resizing of right pinned columns (#3502) @m4theushw
 - [DataGridPro] Add new prop `isGroupExpandedByDefault` (#3444) @flaviendelangle
-- [l10n] Add Finnish (fiFI) locale (#3485) @kurkle
-- [l10n] Improve French (frFR) locale (#3494) @Zenoo
-- [l10n] Improve Italian (itIT) locale (#3452) @destegabry
-- [l10n] Improve Vietnamese (viVN) locale (#3493) @hckhanh
+- [l10n] Add Finnish (fi-FI) locale (#3485) @kurkle
+- [l10n] Improve French (fr-FR) locale (#3494) @Zenoo
+- [l10n] Improve Italian (it-IT) locale (#3452) @destegabry
+- [l10n] Improve Vietnamese (vi-VN) locale (#3493) @hckhanh
 
 ### Docs
 
@@ -336,9 +385,9 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [DataGrid] Fire change event when the state changes, instead of when the prop changes (#3388) @flaviendelangle
 - [DataGrid] Unsubscribe event listeners registered in uncommitted renders (#3310) @m4theushw
 - [DataGrid] Rework state update methods and deprecate `useGridApi` and `useGridState` (#3325) @flaviendelangle
-- [l10n] Improve German (deDE) locale (#3430) @sebastianfrey
-- [l10n] Improve Hebrew (heIL) locale (#3445) @ColdAtNight
-- [l10n] Improve Dutch (nlNL) locale (#3429) @jaapjr
+- [l10n] Improve German (de-DE) locale (#3430) @sebastianfrey
+- [l10n] Improve Hebrew (he-IL) locale (#3445) @ColdAtNight
+- [l10n] Improve Dutch (nl-NL) locale (#3429) @jaapjr
 
 ### Docs
 
@@ -491,11 +540,11 @@ A big thanks to the 11 contributors who made this release possible. Here are som
 - [DataGrid] Prepare the tree structure for grouping sorting / filtering (#3301) @flaviendelangle
 - [DataGrid] Rework keyboard navigation (#3193) @flaviendelangle
 - [DataGrid] Set minimum dimensions to `GridOverlay` when no row is provided (#3261) @flaviendelangle
-- [DataGrid] Improve German (deDE) locale (#3271, #3230, #3293) @sebastianfrey
-- [DataGrid] Improve Hebrew (heIL) locale (#3294) @ColdAtNight
-- [DataGrid] Improve Russian (ruRU) locale (#3290, #3288) @Alim-El
-- [DataGrid] Improve Korean (koKR) locale (#3232, #3273) @zzossig
-- [DataGrid] Improve Greek (elGR) locale (#3169) @clytras
+- [DataGrid] Improve German (de-DE) locale (#3271, #3230, #3293) @sebastianfrey
+- [DataGrid] Improve Hebrew (he-IL) locale (#3294) @ColdAtNight
+- [DataGrid] Improve Russian (ru-RU) locale (#3290, #3288) @Alim-El
+- [DataGrid] Improve Korean (ko-KR) locale (#3232, #3273) @zzossig
+- [DataGrid] Improve Greek (el-GR) locale (#3169) @clytras
 
 ### Core
 
@@ -668,7 +717,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 _Nov 4, 2021_
 
 - 💅 Reduce styles specificity to make simpler to override (#3012) @DanailH
-- 🌍 Add Hebrew (heIL) locale (#3028) @ColdAtNight
+- 🌍 Add Hebrew (he-IL) locale (#3028) @ColdAtNight
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -705,7 +754,7 @@ _Nov 4, 2021_
 
 #### Changes
 
-- [DataGrid] Add Hebrew (heIL) locale (#3028) @ColdAtNight
+- [DataGrid] Add Hebrew (he-IL) locale (#3028) @ColdAtNight
 - [DataGrid] Move virtualization logic to hook (#3079) @m4theushw
 - [DataGrid] Revert year change in the MIT license (#3059) @oliviertassinari
 - [DataGrid] Fix filtering of nullish numeric cells (#3070) @flaviendelangle
@@ -1159,7 +1208,7 @@ _Oct 7, 2021_
 
 A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌎 Add Persian (faIR) locale (#2712) @devlifeX
+- 🌎 Add Persian (fa-IR) locale (#2712) @devlifeX
 - 🎁 Allow to select range of rows with Shift + click (#2456) @flaviendelangle
 - 🚀 Allow to throttle the row updates with the `throttleRowsMs` prop on `DataGridPro` and remove the default 100ms row update delay (#2561) @flaviendelangle
 - 💡 Enhance internal code structure
@@ -1191,7 +1240,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 #### Changes
 
-- [DataGrid] Add Persian (faIR) locale (#2712) @devlifeX
+- [DataGrid] Add Persian (fa-IR) locale (#2712) @devlifeX
 - [DataGrid] Allow to select range of rows using Shift + click (#2456) @flaviendelangle
 - [DataGrid] Fix numeric column filter to not run when value is empty (#2780) @m4theushw
 - [DataGrid] Export `singleSelect` operators (#2666) @jeremyalan
@@ -1231,8 +1280,8 @@ _Sep 24, 2021_
 
 A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-- 🇻🇳 Add Vietnamese (viVN) locale (#2668) @tuananh281098
-- 🇵🇱 Improve Polish (plPL) locale (#2632) @michallukowski
+- 🇻🇳 Add Vietnamese (vi-VN) locale (#2668) @tuananh281098
+- 🇵🇱 Improve Polish (pl-PL) locale (#2632) @michallukowski
 - ⚡️ Apply the `valueFormatter` to the `singleSelect` column type (#2581) @DanailH
 
 ### `@mui/x-data-grid@v5.0.0-beta.2` / `@mui/x-data-grid-pro@v5.0.0-beta.2`
@@ -1264,10 +1313,10 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 #### Changes
 
-- [DataGrid] Add Vietnamese (viVN) locale (#2668) @tuananh281098
+- [DataGrid] Add Vietnamese (vi-VN) locale (#2668) @tuananh281098
 - [DataGrid] Apply the `valueFormatter` to `singleSelect` select options (#2581) @DanailH
 - [DataGrid] Free up column header space when icons are not visible (#2606) @DanailH
-- [DataGrid] Improve Polish (plPL) locale (#2632) @michallukowski
+- [DataGrid] Improve Polish (pl-PL) locale (#2632) @michallukowski
 
 ### Docs
 
@@ -1380,7 +1429,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Fix TypeScript type error for toolbar components (#2393) @ZeeshanTamboli
 - [DataGrid] Fix navigation between column headers with rows filtered (#2440) @m4theushw
 - [DataGrid] Force `scrollEndThreshold` to undefined (#2574) @flaviendelangle
-- [DataGrid] Improve jaJP localization (#2502) @daikiojm
+- [DataGrid] Improve ja-JP localization (#2502) @daikiojm
 - [DataGrid] Make `hideFooterRowCount` prop available only for DataGridPro (#2564) @ZeeshanTamboli
 - [DataGrid] Fix a bug where pressing <kbd>Escape</kbd> was not closing the `GridColumnHeaderMenu` (#2463) @DanailH
 - [DataGrid] Prevent scroll when selecting rows (#2558) @m4theushw
@@ -1529,7 +1578,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - 🐞 Fix a regression to not require @material-ui/x-license when using the DataGrid (#2295) @oliviertassinari
 - 👁️ Add `onViewportRowsChange` prop for `XGrid` only (#2038) @DanailH
 - 📃 Translate booleans when exporting rows to CSV (#2296) @m4theushw
-- 🌎 Add Sudanese Arabic (arSD) locale (#2269) @YassinHussein
+- 🌎 Add Sudanese Arabic (ar-SD) locale (#2269) @YassinHussein
 
 This is the last alpha release. We are moving to beta in the next release, next week.
 
@@ -1550,7 +1599,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 #### Changes
 
 - [DataGrid] Add @material-ui/styles as peer dependency (#2288) @m4theushw
-- [DataGrid] Add Sudanese Arabic (arSD) locale (#2269) @YassinHussein
+- [DataGrid] Add Sudanese Arabic (ar-SD) locale (#2269) @YassinHussein
 - [DataGrid] Add \"is empty\" and \"is not empty\" filter operators to date and number columns (#2274) @flaviendelangle
 - [DataGrid] Avoid crash if `valueOptions` is missing in the `GridColDef` when using `singleSelect` (#2276) @DanailH
 - [DataGrid] Remove the use of the `autoFocus` attribute (#2239) @m4theushw
@@ -1645,7 +1694,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Canonical controlled state behavior (#2208) @oliviertassinari
 - [DataGrid] Fix filter with extended columns (#2246) @m4theushw
 - [DataGrid] Remove default value of columnTypes prop (#2280) @m4theushw
-- [DataGrid] Add German (deDE) translation for export and isEmpty operator (#2285) @ChristopherBussick
+- [DataGrid] Add German (de-DE) translation for export and isEmpty operator (#2285) @ChristopherBussick
 - [XGrid] Add `details` param to each callback option in `XGrid` (#2236) @DanailH
 
 ### Docs
@@ -1873,7 +1922,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [DataGrid] Add \"is empty\" and \"is not empty\" operators (#1997) @m4theushw
 - [DataGrid] Add `minWidth` to `GridColDef` (#2101) @DanailH
 - [DataGrid] Add missing localeText types (#2118) @oliviertassinari
-- [DataGrid] Add missing translations to French (frFR) locale (#2082) @flaviendelangle
+- [DataGrid] Add missing translations to French (fr-FR) locale (#2082) @flaviendelangle
 - [DataGrid] Add quick filter demo (#2149) @dtassone
 - [DataGrid] Allow passing styles and Popper props to GridPanel (#1994) @sebastianfrey
 - [DataGrid] Allow to customize the columns exported as CSV (#2008) @flaviendelangle
@@ -2108,8 +2157,8 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - [DataGrid] Allow to set the delimiter in `GridExportCsvOptions` (#1859) @michallukowski
 - [DataGrid] Escape regular expression characters in filters (#1899) @ZeeshanTamboli
 - [DataGrid] Fix support for `getRowId` on cell editing (#1917) @m4theushw
-- [DataGrid] Fix typo in French (frFR) locale (#1874) @julien-guillon
-- [DataGrid] Improve Brazilian Portuguese (ptBR) locale (#1861) @aline-matos
+- [DataGrid] Fix typo in French (fr-FR) locale (#1874) @julien-guillon
+- [DataGrid] Improve Brazilian Portuguese (pt-BR) locale (#1861) @aline-matos
 - [DataGrid] Improve type of the blur event (#1918) @oliviertassinari
 - [DataGrid] Improve updateRows performance (#1923) @N2D4
 - [DataGrid] Include Material-UI core component localizations in `localeText` (#1913) @DanailH
@@ -2193,7 +2242,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - 💅 Add `getCellClassName` prop (#1687) @m4theushw
 - 🐛 Fix a regression in the controlled pagination (#1729) @ZeeshanTamboli
 - ⚡️ Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
-- 🇨🇿 Add csCZ locale (#1765) @Haaxor1689
+- 🇨🇿 Add cs-CZ locale (#1765) @Haaxor1689
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.30 / @material-ui/data-grid@v4.0.0-alpha.30
@@ -2277,12 +2326,12 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add `getCellClassName` prop (#1687) @m4theushw
 - [DataGrid] Add customizable `aria-label`, `aria-labelledby` field (#1764) @ZeeshanTamboli
-- [DataGrid] Add Czech (csCZ) locale and fix plural rules in Slovak (skSK) locale (#1765) @Haaxor1689
+- [DataGrid] Add Czech (cs-CZ) locale and fix plural rules in Slovak (sk-SK) locale (#1765) @Haaxor1689
 - [DataGrid] Fix cell accessibility aria-colindex (#1669) @ZeeshanTamboli
 - [DataGrid] Fix changing rows per page size (#1729) @ZeeshanTamboli
 - [DataGrid] Fix date operators not working with date-time values (#1722) @m4theushw
 - [DataGrid] Fix `rowCount` prop updates (#1697) @dtassone
-- [DataGrid] Improve German (deDe) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
+- [DataGrid] Improve German (de-DE) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
 - [DataGrid] Fix accessibility of the filter panel textboxes (#1727) @m4theushw
 - [XGrid] Fix `onFilterModelChange` not firing (#1706) @dtassone
 
@@ -2379,18 +2428,18 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 #### Changes
 
-- [DataGrid] Add Slovak (skSK) locale (#1634) @martinvysnovsky
+- [DataGrid] Add Slovak (sk-SK) locale (#1634) @martinvysnovsky
 - [DataGrid] Add `columnHeader`, `row` and `cell` in addition to `root` in classes prop (#1660) @DanailH
 - [DataGrid] Add `isRowSelectable` prop (#1659) @m4theushw
 - [DataGrid] Add sort icon for when column is unsorted (#1415) @m4theushw
 - [DataGrid] Fix `id` and `aria-labelledby` attributes on the column menu (#1460) @m4theushw
 - [DataGrid] Fix broken checkbox in Material-UI v5 (#1587) @ZeeshanTamboli
 - [DataGrid] Fix CSS classes prefix (#1693) @m4theushw
-- [DataGrid] Fix German (deDe) locale (#1624) @klinge27
+- [DataGrid] Fix German (de-DE) locale (#1624) @klinge27
 - [DataGrid] Fix filter with object as value and value getter (#1665) @dtassone
 - [DataGrid] Fix incorrect date selection (#1652) @aTmb405
 - [DataGrid] Fix overflow of maximum page (#1583) @oliviertassinari
-- [DataGrid] Fix typo in Italian (itIT) locale (#1635) @profcav
+- [DataGrid] Fix typo in Italian (it-IT) locale (#1635) @profcav
 - [DataGrid] Improve performance of width resizing (#1686) @dtassone
 - [DataGrid] Make rows immutable for better developer experience (#1661) @ZeeshanTamboli
 - [DataGrid] Pass state values as props (#1628) @m4theushw
@@ -2425,7 +2474,7 @@ _May 10, 2021_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-- 🇹🇷 Add trTR locale (#1446) @simsek97
+- 🇹🇷 Add tr-TR locale (#1446) @simsek97
 - 🎁 Add support for checkbox component slot (#1528) @ZeeshanTamboli
 - ⚡️ Add `onColumnVisibilityChange` prop (#1578) @DanailH
 - 🐞 Bugfixes
@@ -2450,7 +2499,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 #### Changes
 
-- [DataGrid] Add Turkish (trTR) locale (#1526) @simsek97
+- [DataGrid] Add Turkish (tr-TR) locale (#1526) @simsek97
 - [DataGrid] Add `onColumnVisibilityChange` prop (#1578) @DanailH
 - [DataGrid] Fix date input crash (#1570) @dtassone
 - [DataGrid] Fix resulted filter data shows blank screen during pagination (#1571) @ZeeshanTamboli
@@ -2482,8 +2531,8 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 - 🎁 Add getRowClassName prop (#1448) @m4theushw
 - ⚡️ Drop support for Node v10 (#1499) @ZeeshanTamboli
 - ♿ Make checkbox focusable (#1421) @dtassone
-- 🇮🇹 Add itIT locale (#1446) @profcav
-- 🇷🇺 Add ruRU locale (#1449) @Lukin
+- 🇮🇹 Add it-IT locale (#1446) @profcav
+- 🇷🇺 Add ru-RU locale (#1449) @Lukin
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.27 / @material-ui/data-grid@v4.0.0-alpha.27
@@ -2521,12 +2570,12 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 
 #### Changes
 
-- [DataGrid] Add Italian (itIT) locale (#1446) @profcav
-- [DataGrid] Add Russian (ruRU) locale (#1449) @Lukin
+- [DataGrid] Add Italian (it-IT) locale (#1446) @profcav
+- [DataGrid] Add Russian (ru-RU) locale (#1449) @Lukin
 - [DataGrid] Add getRowClassName prop (#1448) @m4theushw
 - [DataGrid] Add support for `classes` prop (#1450) @ZeeshanTamboli
 - [DataGrid] Allow to customize the overlay when there're no filtered rows (#1445) @m4theushw
-- [DataGrid] Correct quantities plPL (#1487) @Chriserus
+- [DataGrid] Correct quantities pl-PL (#1487) @Chriserus
 - [DataGrid] Fix autoPageSize with small dataset (#1505) @dtassone
 - [DataGrid] Fix delete key for uneditable cells (#1497) @dtassone
 - [DataGrid] Fix invalid translation key (#1504) @DanailH
@@ -2569,7 +2618,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 ### @material-ui/x-grid@v4.0.0-alpha.26 / @material-ui/data-grid@v4.0.0-alpha.26
 
 - [DataGrid] Add support for Editable cells (#1287) @dtassone
-- [DataGrid] Add Ukrainian (ukUA) locale (#1418) @Neonin
+- [DataGrid] Add Ukrainian (uk-UA) locale (#1418) @Neonin
 - [DataGrid] Fix 'Hide' menu item with `disableColumnSelector` (#1429) @ZeeshanTamboli
 - [DataGrid] Fix reset of virtualPage (#1451) @dtassone
 - [DataGrid] Fix support for falsy value from valueFormatter (#1425) @zj9495
@@ -2671,10 +2720,10 @@ _Apr 2, 2021_
 
 Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 🇬🇷 Add elGR locale (#1275) @clytras
-- 🇪🇸 Add esES locale (#1286) @WiXSL
-- 🇯🇵 Add jaJP locale (#1283) @seed-of-apricot
-- 🇳🇱 Add nlNL locale (#1273) @wimdetroyer
+- 🇬🇷 Add el-GR locale (#1275) @clytras
+- 🇪🇸 Add es-ES locale (#1286) @WiXSL
+- 🇯🇵 Add ja-JP locale (#1283) @seed-of-apricot
+- 🇳🇱 Add nl-NL locale (#1273) @wimdetroyer
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.24 / @material-ui/data-grid@v4.0.0-alpha.24
@@ -2716,13 +2765,13 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
   See the documentation for [more details](https://mui.com/components/data-grid/rows/#infinite-loading).
 
 - 🕹 Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
-- 🇵🇱 Added plPL locale (#1117) @LarsKumbier
+- 🇵🇱 Added pl-PL locale (#1117) @LarsKumbier
 - ⚡️ Edit cell accessibility (#1205) @dtassone
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.23 / @material-ui/data-grid@v4.0.0-alpha.23
 
-- [DataGrid] Add plPL locale (#1274) @michallukowski
+- [DataGrid] Add pl-PL locale (#1274) @michallukowski
 - [DataGrid] Add onRowsScrollEnd to support infinite loading (#1199) @DanailH
 - [DataGrid] Edit Cell Navigation (#1205) @dtassone
 - [DataGrid] Fix Popper z-index (#1240) @m4theushw
@@ -2750,13 +2799,13 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - 🎁 Implement base foundation for editing a cell (#1025) @dtassone.
   This is the foundation on which the feature will be built. Currently, the newly added methods aren't yet ready for being used. This feature will be available in the coming weeks.
-- 🇩🇪 Added deDE locale (#1117) @LarsKumbier
+- 🇩🇪 Added de-DE locale (#1117) @LarsKumbier
 - 📜 Fix scrollbar related issue (#1146) @dtassone
 - 🐛 Handle commas in cell values when doing CSV export (#1154) @DanailH
 
 ### @material-ui/x-grid@v4.0.0-alpha.22 / @material-ui/data-grid@v4.0.0-alpha.22
 
-- [DataGrid] Add deDE locale (#1117) @LarsKumbier
+- [DataGrid] Add de-DE locale (#1117) @LarsKumbier
 - [DataGrid] Fix scrollbar on autopageSize (#1146) @dtassone
 - [DataGrid] Fix handling of special chars when doing CSV export (#1154) @DanailH
 - [DataGrid] Implement base foundation for editing a cell (#1025) @dtassone
@@ -2801,9 +2850,9 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
 #### Changes
 
-- [DataGrid] Add frFR locale (#1079) @oliviertassinari
+- [DataGrid] Add fr-FR locale (#1079) @oliviertassinari
 - [DataGrid] Add missing TablePagination localizations (#1109) @DanailH
-- [DataGrid] Add ptBR locale (#1077) @erikian
+- [DataGrid] Add pt-BR locale (#1077) @erikian
 - [DataGrid] Fix checked checkbox when empty rows (#1068) @bigandy
 - [DataGrid] Fix issue with visible rows state (#1113) @dtassone
 - [DataGrid] Fix last row (#1071) @dtassone
@@ -2891,7 +2940,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 #### Changes
 
-- [DataGrid] Add bgBG locale (#983) @DanailH
+- [DataGrid] Add bg-BG locale (#983) @DanailH
 - [DataGrid] Add last of the missing translations (#1033) @DanailH
 - [DataGrid] Add support for default props from theme (#1019) @DanailH
 - [DataGrid] Fix controllable filters and select all rows with filters (#1020) @dtassone

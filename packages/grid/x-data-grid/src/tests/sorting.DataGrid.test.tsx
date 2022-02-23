@@ -348,7 +348,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   describe('prop: initialState.sorting', () => {
-    const Test = (props: Omit<DataGridProps, 'rows' | 'columns'>) => (
+    const Test = (props: Partial<DataGridProps>) => (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} {...props} />
       </div>
@@ -449,6 +449,52 @@ describe('<DataGrid /> - Sorting', () => {
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
       fireEvent.click(screen.getAllByRole('columnheader')[0]);
       expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    });
+
+    it('should not allow to initialize the sorting with several items', () => {
+      expect(() => {
+        render(
+          <Test
+            columns={[{ field: 'id', type: 'number' }, { field: 'brand' }]}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Nike',
+              },
+              {
+                id: 2,
+                brand: 'Adidas',
+              },
+              {
+                id: 3,
+                brand: 'Puma',
+              },
+            ]}
+            initialState={{
+              sorting: {
+                sortModel: [
+                  {
+                    field: 'brand',
+                    sort: 'asc',
+                  },
+                  {
+                    field: 'id',
+                    sort: 'desc',
+                  },
+                ],
+              },
+            }}
+          />,
+        );
+
+        expect(getColumnValues(0)).to.deep.equal(['2', '0', '1', '3']);
+      }).toErrorDev(
+        'MUI: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
+      );
     });
   });
 });
