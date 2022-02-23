@@ -57,7 +57,7 @@ export default function CustomFilterPanelContent() {
               // Customize inputs by passing props
               linkOperatorInputProps: {
                 variant: 'outlined',
-                size: 'small'
+                size: 'small',
               },
               columnInputProps: {
                 variant: 'outlined',
