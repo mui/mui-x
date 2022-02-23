@@ -178,14 +178,7 @@ export const useGridPage = (
 
   React.useEffect(() => {
     apiRef.current.setState((state) => {
-      let rowCount;
-      if (props.rowCount !== undefined) {
-        rowCount = props.rowCount;
-      } else if (props.paginationMode === 'server') {
-        rowCount = state.pagination.rowCount;
-      } else {
-        rowCount = visibleTopLevelRowCount;
-      }
+      const rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
 
       const pageCount = getPageCount(rowCount, state.pagination.pageSize);
       const page = props.page == null ? state.pagination.page : props.page;
