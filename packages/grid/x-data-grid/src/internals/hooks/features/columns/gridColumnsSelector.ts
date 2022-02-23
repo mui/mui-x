@@ -12,7 +12,6 @@ export const gridColumnsSelector = (state: GridStateCommunity) => state.columns;
 
 /**
  * Get the field of each column.
- * This array contains the hidden columns.
  * @category Columns
  */
 export const gridColumnFieldsSelector = createSelector(
@@ -22,7 +21,6 @@ export const gridColumnFieldsSelector = createSelector(
 
 /**
  * Get the columns as a lookup (an object containing the field for keys and the definition for values).
- * This lookup contains the hidden columns.
  * @category Columns
  */
 export const gridColumnLookupSelector = createSelector(
@@ -32,7 +30,6 @@ export const gridColumnLookupSelector = createSelector(
 
 /**
  * Get the columns as an array.
- * This array contains the hidden columns.
  * @category Columns
  */
 export const gridColumnDefinitionsSelector = createSelector(
@@ -44,7 +41,7 @@ export const gridColumnDefinitionsSelector = createSelector(
 /**
  * Get the column visibility model, containing the visibility status of each column.
  * If a column is not registered in the model, it is visible.
- * @¢category Columns
+ * @category Visible Columns
  */
 export const gridColumnVisibilityModelSelector = createSelector(
   gridColumnsSelector,
@@ -53,7 +50,7 @@ export const gridColumnVisibilityModelSelector = createSelector(
 
 /**
  * Get the visible columns as a lookup (an object containing the field for keys and the definition for values).
- * @category Columns
+ * @category Visible Columns
  */
 export const gridVisibleColumnDefinitionsSelector = createSelector(
   gridColumnDefinitionsSelector,
@@ -64,7 +61,7 @@ export const gridVisibleColumnDefinitionsSelector = createSelector(
 
 /**
  * Get the field of each visible column.
- * @category Columns
+ * @category Visible Columns
  */
 export const gridVisibleColumnFieldsSelector = createSelector(
   gridVisibleColumnDefinitionsSelector,
@@ -72,26 +69,42 @@ export const gridVisibleColumnFieldsSelector = createSelector(
 );
 
 /**
- * Get the total width of the visible columns and the position of each visible column.
- * @category Columns
+ * Get the left position in pixel of each visible columns relative to the left of the first column.
+ * @category Visible Columns
  */
-export const gridColumnsMetaSelector = createSelector(
+export const gridColumnPositionsSelector = createSelector(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => {
     const positions: number[] = [];
+    let currentPosition = 0;
 
-    const totalWidth = visibleColumns.reduce((acc, curCol) => {
-      positions.push(acc);
-      return acc + curCol.computedWidth;
-    }, 0);
+    for (let i = 0; i < visibleColumns.length; i += 1) {
+      positions.push(currentPosition);
+      currentPosition += visibleColumns[i].computedWidth;
+    }
 
-    return { totalWidth, positions };
+    return positions;
+  },
+);
+
+/**
+ * Get the summed width of all the visible columns.
+ * @category Visible Columns
+ */
+export const gridColumnsTotalWidthSelector = createSelector(
+  gridVisibleColumnDefinitionsSelector,
+  gridColumnPositionsSelector,
+  (visibleColumns, positions) => {
+    const colCount = visibleColumns.length;
+    if (colCount === 0) {
+      return 0;
+    }
+    return positions[colCount - 1] + visibleColumns[colCount - 1].computedWidth;
   },
 );
 
 /**
  * Get the filterable columns as an array.
- * This array contains the hidden columns.
  * @category Columns
  */
 export const gridFilterableColumnDefinitionsSelector = createSelector(
@@ -101,7 +114,6 @@ export const gridFilterableColumnDefinitionsSelector = createSelector(
 
 /**
  * Get the filterable columns as a lookup (an object containing the field for keys and the definition for values).
- * This lookup contains the hidden columns.
  * @category Columns
  */
 export const gridFilterableColumnLookupSelector = createSelector(
@@ -117,20 +129,13 @@ export const gridFilterableColumnLookupSelector = createSelector(
 
 /**
  * Get the amount of visible columns.
- * @category Columns
+ * @category Visible Columns
+ * @deprecated Use the length of `gridVisibleColumnDefinitionsSelector` instead.
+ * @ignore - do not document.
  */
 export const gridVisibleColumnLengthSelector = createSelector(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => visibleColumns.length,
-);
-
-/**
- * Get the summed width of all the visible columns.
- * @category Columns
- */
-export const gridColumnsTotalWidthSelector = createSelector(
-  gridColumnsMetaSelector,
-  (meta) => meta.totalWidth,
 );
 
 /**
@@ -148,7 +153,7 @@ export const allGridColumnsFieldsSelector = gridColumnFieldsSelector;
 export const allGridColumnsSelector = gridColumnDefinitionsSelector;
 
 /**
- * @category Columns
+ * @category Visible Columns
  * @deprecated Use `gridVisibleColumnDefinitionsSelector` instead.
  * @ignore - do not document.
  */
@@ -172,8 +177,19 @@ export const filterableGridColumnsIdsSelector = createSelector(
 );
 
 /**
- * @category Columns
+ * @category Visible Columns
  * @deprecated Use `gridVisibleColumnLengthSelector` instead.
  * @ignore - do not document.
  */
 export const visibleGridColumnsLengthSelector = gridVisibleColumnLengthSelector;
+
+/**
+ * @category Visible Columns
+ * @deprecated Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
+ * @ignore - do not document.
+ */
+export const gridColumnsMetaSelector = createSelector(
+  gridColumnPositionsSelector,
+  gridColumnsTotalWidthSelector,
+  (positions, totalWidth) => ({ totalWidth, positions }),
+);

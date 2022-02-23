@@ -530,6 +530,16 @@ This is very close to the "column spanning" in an HTML `<table>`.
 
 ## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
+### Visible columns
+
+Those selectors do not take into account hidden columns
+
+{{"demo": "VisibleColumnsSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
+### Defined columns
+
+Those selectors consider all the defined columns, including hidden ones
+
 {{"demo": "ColumnsSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state)

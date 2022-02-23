@@ -113,6 +113,7 @@
   { "name": "gridColumnMenuSelector", "kind": "Variable" },
   { "name": "GridColumnMenuState", "kind": "Interface" },
   { "name": "GridColumnOrderChangeParams", "kind": "Interface" },
+  { "name": "gridColumnPositionsSelector", "kind": "Variable" },
   { "name": "GridColumnResizeParams", "kind": "Interface" },
   { "name": "GridColumns", "kind": "TypeAlias" },
   { "name": "GridColumnsInitialState", "kind": "ExportSpecifier" },

@@ -123,6 +123,7 @@
   { "name": "GridColumnOrderChangeParams", "kind": "Interface" },
   { "name": "GridColumnPinningApi", "kind": "Interface" },
   { "name": "GridColumnPinningState", "kind": "TypeAlias" },
+  { "name": "gridColumnPositionsSelector", "kind": "Variable" },
   { "name": "gridColumnReorderDragColSelector", "kind": "Variable" },
   { "name": "gridColumnReorderSelector", "kind": "Variable" },
   { "name": "GridColumnReorderState", "kind": "ExportSpecifier" },
