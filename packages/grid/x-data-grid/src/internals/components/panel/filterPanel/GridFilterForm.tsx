@@ -79,7 +79,8 @@ const FilterFormLinkOperatorInput = styled(FormControl, {
   slot: 'FilterFormLinkOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormLinkOperatorInput,
 })({
-  minWidth: 60,
+  minWidth: 55,
+  marginRight: 5,
   justifyContent: 'end',
 });
 
