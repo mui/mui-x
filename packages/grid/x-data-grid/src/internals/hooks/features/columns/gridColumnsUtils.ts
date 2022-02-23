@@ -64,11 +64,11 @@ export function computeFlexColumnsWidth({
   } = {
     all: {},
     frozenFields: [],
-    freeze: function freeze(field: GridColDef['field']) {
-      const value = this.all[field];
+    freeze: (field: GridColDef['field']) => {
+      const value = flexColumnsLookup.all[field];
       if (value && value.frozen !== true) {
-        this.all[field].frozen = true;
-        this.frozenFields.push(field);
+        flexColumnsLookup.all[field].frozen = true;
+        flexColumnsLookup.frozenFields.push(field);
       }
     },
   };
