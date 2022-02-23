@@ -5,6 +5,7 @@ import {
   GridColumns,
   gridColumnVisibilityModelSelector,
   GridEvents,
+  GridGroupingColDefOverride,
   GridRowGroupingModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -13,7 +14,7 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 
-const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
+const INITIAL_GROUPING_COLUMN_MODEL = ['director', 'year'];
 
 const useKeepGroupingColumnsHidden = (
   apiRef: GridApiRef,
@@ -98,13 +99,26 @@ export default function RowGroupingCustomGroupingColDefCallback() {
           columns={columns}
           disableSelectionOnClick
           rowGroupingModel={rowGroupingModel}
-          groupingColDef={(params) =>
-            params.fields.includes('director')
-              ? {
-                  headerName: 'Director',
+          groupingColDef={(params) => {
+            const override: GridGroupingColDefOverride = {};
+            if (params.fields.includes('director')) {
+              override.headerName = 'Director';
+            }
+
+            override.valueFormatter = (valueFormatterParams) => {
+              const rowNode = apiRef.current.getRowNode(valueFormatterParams.id!);
+              if (rowNode?.groupingField === 'year') {
+                const value = rowNode.groupingKey;
+                if (value && typeof value === 'number') {
+                  return value.toLocaleString();
                 }
-              : {}
-          }
+                return value;
+              }
+              return undefined;
+            };
+
+            return override;
+          }}
           experimentalFeatures={{
             rowGrouping: true,
           }}

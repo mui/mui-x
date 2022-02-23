@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 
-const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
+const INITIAL_GROUPING_COLUMN_MODEL = ['director', 'year'];
 
 const useKeepGroupingColumnsHidden = (apiRef, columns, initialModel, leafField) => {
   const prevModel = React.useRef(initialModel);
@@ -91,13 +91,30 @@ export default function RowGroupingCustomGroupingColDefCallback() {
           columns={columns}
           disableSelectionOnClick
           rowGroupingModel={rowGroupingModel}
-          groupingColDef={(params) =>
-            params.fields.includes('director')
-              ? {
-                  headerName: 'Director',
+          groupingColDef={(params) => {
+            const override = {};
+            if (params.fields.includes('director')) {
+              override.headerName = 'Director';
+            }
+
+            override.valueFormatter = (valueFormatterParams) => {
+              const rowNode = apiRef.current.getRowNode(valueFormatterParams.id);
+
+              if (rowNode?.groupingField === 'year') {
+                const value = rowNode.groupingKey;
+
+                if (value && typeof value === 'number') {
+                  return value.toLocaleString();
                 }
-              : {}
-          }
+
+                return value;
+              }
+
+              return undefined;
+            };
+
+            return override;
+          }}
           experimentalFeatures={{
             rowGrouping: true,
           }}
