@@ -11,6 +11,7 @@ import type {
   GridRowSelectionCheckboxParams,
   GridScrollParams,
 } from '../params';
+import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
@@ -21,6 +22,7 @@ import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridPreProcessingGroup } from '../../hooks/core/preProcessing';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
+import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -165,20 +167,26 @@ export interface GridEventLookup
   // Edit
   cellModeChange: { params: GridCellParams<any, any, any, any> };
   cellEditStart: {
-    params: GridCellParams<any, any, any, any>;
+    params: GridCellEditStartParams<any, any, any, any> | GridCellParams<any, any, any, any>; // TODO v6: keep only GridCellEditStartParams
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  cellEditStop: { params: GridCellParams<any, any, any>; any; event: MuiBaseEvent };
+  cellEditStop: {
+    params: GridCellEditStopParams<any, any, any> | GridCellParams<any, any, any, any>; // TODO v6: keep only GridCellEditStopParams
+    event: MuiBaseEvent;
+  };
   cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
   editCellPropsChange: {
     params: GridEditCellPropsParams;
     event: React.SyntheticEvent<HTMLElement> | {};
   };
   rowEditStart: {
-    params: GridRowParams;
+    params: GridRowEditStartParams | GridRowParams; // TODO v6: keep only GridRowEditStartParams
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  rowEditStop: { params: GridRowParams; event: MuiBaseEvent };
+  rowEditStop: {
+    params: GridRowEditStopParams | GridRowParams; // TODO v6: keep only GridRowEditStopParams
+    event: MuiBaseEvent;
+  };
   rowEditCommit: { params: GridRowId; event: MuiBaseEvent };
 
   // Focus

@@ -38,7 +38,10 @@
     "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ preventCommitWhileValidating?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ enableNewEditingAPI?: bool, preventCommitWhileValidating?: bool }"
+      }
     },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
@@ -124,6 +127,7 @@
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
     },
+    "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },

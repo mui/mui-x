@@ -32,7 +32,8 @@ export { useGridKeyboard as unstable_useGridKeyboard } from './internals/hooks/f
 export { useGridKeyboardNavigation as unstable_useGridKeyboardNavigation } from './internals/hooks/features/keyboard/useGridKeyboardNavigation';
 export { useGridPagination as unstable_useGridPagination } from './internals/hooks/features/pagination/useGridPagination';
 export { useGridPreferencesPanel as unstable_useGridPreferencesPanel } from './internals/hooks/features/preferencesPanel/useGridPreferencesPanel';
-export { useGridEditing as unstable_useGridEditing } from './internals/hooks/features/editRows/useGridEditing';
+export { useGridEditing as unstable_useGridEditing_old } from './internals/hooks/features/editRows/useGridEditing.old';
+export { useGridEditing as unstable_useGridEditing_new } from './internals/hooks/features/editRows/useGridEditing.new';
 export { useGridRows as unstable_useGridRows } from './internals/hooks/features/rows/useGridRows';
 export { useGridRowsMeta as unstable_useGridRowsMeta } from './internals/hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi as unstable_useGridParamsApi } from './internals/hooks/features/rows/useGridParamsApi';

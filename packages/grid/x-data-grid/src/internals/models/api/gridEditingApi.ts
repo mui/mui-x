@@ -46,7 +46,7 @@ export interface GridEditingSharedApi {
    * @param {string} field The field to update. If not passed, updates all fields in the given row id.
    * @ignore - do not document.
    */
-  unstable_runPendingEditCellValueChangeDebounce: (id: GridRowId, field?: string) => void;
+  unstable_runPendingEditCellValueMutation: (id: GridRowId, field?: string) => void;
   /**
    * @ignore - do not document.
    */
@@ -127,6 +127,127 @@ export interface GridCellEditingApi extends GridEditingSharedApi {
 }
 
 /**
+ * Params passed to `apiRef.current.startCellEditMode`.
+ */
+interface GridStartCellEditModeParams {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * The field.
+   */
+  field: string;
+}
+
+/**
+ * Params passed to `apiRef.current.stopCellEditMode`.
+ */
+interface GridStopCellEditModeParams {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * The field.
+   */
+  field: string;
+  /**
+   * Whether or not to ignore the modifications made on this cell.
+   * @default false
+   */
+  ignoreModifications?: boolean;
+  /**
+   * Whether or not to move focus to the cell below the one being edited.
+   * @default false
+   */
+  moveFocusToCellBelow?: boolean;
+}
+
+/**
+ * Params passed to `apiRef.current.startRowEditMode`.
+ */
+interface GridStartRowEditModeParams {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * The field to put focus.
+   */
+  fieldToFocus?: string;
+}
+
+/**
+ * Params passed to `apiRef.current.stopRowEditMode`.
+ */
+interface GridStopRowEditModeParams {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * Whether or not to ignore the modifications made on this cell.
+   * @default false
+   */
+  ignoreModifications?: boolean;
+  /**
+   * The field from the row below to move the focus after updating the row.
+   */
+  fieldFromRowBelowToFocus?: string;
+}
+
+export interface GridNewCellEditingApi
+  extends GridEditingSharedApi,
+    Pick<GridCellEditingApi, 'getCellMode'> {
+  /**
+   * Puts the cell at the given row id and field into edit mode.
+   * @param {GridStartCellEditModeParams} params The row id and field of the cell to edit.
+   * @ignore - do not document.
+   */
+  startCellEditMode(params: GridStartCellEditModeParams): void;
+  /**
+   * Puts the cell at the given row id and field into view mode and updates the original row with the new value stored.
+   * If `params.ignoreModifications` is `false` it will discard the modifications made.
+   * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
+   * @returns {Promise<void>} A promise which resolves once the row is updated.
+   * @ignore - do not document.
+   */
+  stopCellEditMode(params: GridStopCellEditModeParams): Promise<void>;
+  /**
+   * @ignore - do not document.
+   */
+  unstable_setCellEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
+}
+
+export interface GridNewRowEditingApi
+  extends GridEditingSharedApi,
+    Pick<GridRowEditingApi, 'getRowMode'> {
+  /**
+   * Puts the row at the given id into edit mode.
+   * @param {GridStartCellEditModeParams} params The row id edit.
+   * @ignore - do not document.
+   */
+  startRowEditMode(params: GridStartRowEditModeParams): void;
+  /**
+   * Puts the row at the given id and into view mode and updates the original row with the new values stored.
+   * If `params.ignoreModifications` is `false` it will discard the modifications made.
+   * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
+   * @returns {Promise<void>} A promise which resolves once the row is updated.
+   * @ignore - do not document.
+   */
+  stopRowEditMode(params: GridStopRowEditModeParams): Promise<void>;
+  /**
+   * @ignore - do not document.
+   */
+  unstable_setRowEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
+}
+
+/**
  * The editing API interface that is available in the grid `apiRef`.
  */
-export interface GridEditingApi extends GridCellEditingApi, GridRowEditingApi {}
+export interface GridEditingApi
+  extends GridCellEditingApi,
+    GridRowEditingApi,
+    GridNewCellEditingApi,
+    GridNewRowEditingApi {}

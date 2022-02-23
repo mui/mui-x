@@ -61,7 +61,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ preventCommitWhileValidating?: bool, rowGrouping?: bool }"
+        "description": "{ enableNewEditingAPI?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool }"
       }
     },
     "filterMode": {
@@ -169,6 +169,7 @@
         "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
       }
     },
+    "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
     "rowGroupingColumnMode": {

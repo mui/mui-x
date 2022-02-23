@@ -13,7 +13,8 @@ import {
   unstable_useGridKeyboardNavigation as useGridKeyboardNavigation,
   unstable_useGridPagination as useGridPagination,
   unstable_useGridPreferencesPanel as useGridPreferencesPanel,
-  unstable_useGridEditing as useGridEditing,
+  unstable_useGridEditing_old as useGridEditing_old,
+  unstable_useGridEditing_new as useGridEditing_new,
   unstable_useGridRows as useGridRows,
   unstable_useGridRowsMeta as useGridRowsMeta,
   unstable_useGridParamsApi as useGridParamsApi,
@@ -52,7 +53,12 @@ export const useDataGridProComponent = (
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridDetailPanelCache(apiRef, props);
+
+  const useGridEditing = props.experimentalFeatures?.enableNewEditingAPI
+    ? useGridEditing_new
+    : useGridEditing_old;
   useGridEditing(apiRef, props);
+
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);

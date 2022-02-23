@@ -1,6 +1,7 @@
 const formatUtil = require('format-util');
 const Mocha = require('mocha');
 const createDOM = require('@mui/monorepo/test/utils/createDOM');
+const sinon = require('sinon');
 
 require('@babel/register')({
   extensions: ['.js', '.ts', '.tsx'],
@@ -70,6 +71,10 @@ function throwOnUnexpectedConsoleMessages(methodName, expectedMatcher) {
     }
   });
 }
+
+mochaHooks.afterEach.push(function restoreDefaultSandbox() {
+  sinon.restore(); // https://sinonjs.org/releases/latest/general-setup/
+});
 
 throwOnUnexpectedConsoleMessages('warn', 'toWarnDev');
 throwOnUnexpectedConsoleMessages('error', 'toErrorDev');

@@ -129,6 +129,10 @@ export interface GridValueSetterParams {
    * The row that is being edited.
    */
   row: GridRowModel;
+  /**
+   * The original row with the values before entering the edit mode.
+   */
+  originalRow?: GridRowModel;
 }
 
 /**
@@ -170,4 +174,8 @@ export interface GridPreProcessEditCellProps {
    * The edit cell props.
    */
   props: GridEditCellProps;
+  /**
+   * Whether the new value is different from the stored value or not.
+   */
+  hasChanged?: boolean;
 }

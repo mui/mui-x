@@ -42,3 +42,43 @@ export interface GridRowHeightParams extends GridRowEntry {
  * The getRowHeight return value.
  */
 export type GridRowHeightReturnValue = number | null | undefined;
+
+export enum GridRowEditStartReasons {
+  enterKeyDown = 'enterKeyDown',
+  cellDoubleClick = 'cellDoubleClick',
+  printableKeyDown = 'printableKeyDown',
+  deleteKeyDown = 'deleteKeyDown',
+}
+
+/**
+ * Params passed to the `rowEditStart` event.
+ */
+export interface GridRowEditStartParams<R extends GridRowModel = GridRowModel>
+  extends GridRowParams<R> {
+  /**
+   * Which field triggered this event.
+   */
+  field: string;
+  /**
+   * The reason for this event to be triggered.
+   */
+  reason: GridRowEditStartReasons;
+}
+
+export enum GridRowEditStopReasons {
+  rowFocusOut = 'rowFocusOut',
+  escapeKeyDown = 'escapeKeyDown',
+  enterKeyDown = 'enterKeyDown',
+}
+
+export interface GridRowEditStopParams<R extends GridRowModel = GridRowModel>
+  extends GridRowParams<R> {
+  /**
+   * Which field triggered this event.
+   */
+  field: string;
+  /**
+   * The reason for this event to be triggered.
+   */
+  reason: GridRowEditStopReasons;
+}

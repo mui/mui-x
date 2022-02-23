@@ -8,7 +8,7 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { SUBMIT_FILTER_STROKE_TIME } from '../panel/filterPanel/GridFilterInputValue';
+import { GridLoadIcon } from '../icons/index';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -57,7 +57,8 @@ function GridEditInputCell(
     hasFocus,
     getValue,
     isValidating,
-    debounceMs = SUBMIT_FILTER_STROKE_TIME,
+    debounceMs = 200,
+    isProcessingProps,
     ...other
   } = props;
 
@@ -94,6 +95,7 @@ function GridEditInputCell(
       type={colDef.type === 'number' ? colDef.type : 'text'}
       value={valueState ?? ''}
       onChange={handleChange}
+      endAdornment={isProcessingProps ? <GridLoadIcon /> : undefined}
       {...other}
     />
   );
@@ -109,6 +111,7 @@ GridEditInputCell.propTypes = {
    */
   api: PropTypes.object.isRequired,
   debounceMs: PropTypes.number,
+  isProcessingProps: PropTypes.bool,
   isValidating: PropTypes.bool,
 } as any;
 

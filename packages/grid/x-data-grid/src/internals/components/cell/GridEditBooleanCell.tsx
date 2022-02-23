@@ -45,6 +45,7 @@ export function GridEditBooleanCell(
     getValue,
     hasFocus,
     isValidating,
+    isProcessingProps,
     error,
     ...other
   } = props;

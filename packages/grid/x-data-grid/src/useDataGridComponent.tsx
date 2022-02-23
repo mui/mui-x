@@ -15,7 +15,8 @@ import { useGridKeyboard } from './internals/hooks/features/keyboard/useGridKeyb
 import { useGridKeyboardNavigation } from './internals/hooks/features/keyboard/useGridKeyboardNavigation';
 import { useGridPagination } from './internals/hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from './internals/hooks/features/preferencesPanel/useGridPreferencesPanel';
-import { useGridEditing } from './internals/hooks/features/editRows/useGridEditing';
+import { useGridEditing as useGridEditing_old } from './internals/hooks/features/editRows/useGridEditing.old';
+import { useGridEditing as useGridEditing_new } from './internals/hooks/features/editRows/useGridEditing.new';
 import { useGridRows } from './internals/hooks/features/rows/useGridRows';
 import { useGridParamsApi } from './internals/hooks/features/rows/useGridParamsApi';
 import { useGridSelection } from './internals/hooks/features/selection/useGridSelection';
@@ -33,7 +34,12 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridDensity(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+
+  const useGridEditing = props.experimentalFeatures?.enableNewEditingAPI
+    ? useGridEditing_new
+    : useGridEditing_old;
   useGridEditing(apiRef, props);
+
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);

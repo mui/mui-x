@@ -40,6 +40,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
     getValue,
     hasFocus,
     isValidating,
+    isProcessingProps,
     error,
     ...other
   } = props;
@@ -73,6 +74,10 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
   const handleChange = async (event) => {
     setOpen(false);
     const isValid = await api.setEditCellValue({ id, field, value: event.target.value }, event);
+
+    if (rootProps.experimentalFeatures?.enableNewEditingAPI) {
+      return;
+    }
 
     // We use isValid === false because the default return is undefined which evaluates to true with !isValid
     if (rootProps.editMode === GridEditModes.Row || isValid === false) {
@@ -141,6 +146,7 @@ GridEditSingleSelectCell.propTypes = {
    * GridApi that let you manipulate the grid.
    */
   api: PropTypes.object.isRequired,
+  isProcessingProps: PropTypes.bool,
   isValidating: PropTypes.bool,
 } as any;
 

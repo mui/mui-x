@@ -36,6 +36,7 @@ export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBas
     getValue,
     inputProps,
     isValidating,
+    isProcessingProps,
     ...other
   } = props;
 
