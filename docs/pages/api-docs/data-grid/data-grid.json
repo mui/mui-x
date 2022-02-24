@@ -241,6 +241,7 @@
       "cell--textRight",
       "cell--withRenderer",
       "cell",
+      "cellContent",
       "cellCheckbox",
       "checkboxInput",
       "columnHeader--alignCenter",
