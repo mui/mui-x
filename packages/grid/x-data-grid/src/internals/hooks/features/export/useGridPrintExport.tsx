@@ -230,17 +230,7 @@ export const useGridPrintExport = (
       doc.current!.body.removeChild(printWindow);
 
       // Revert grid to previous state
-
-      // We can not simply use setState(...previousGridState.current) because of this verification
-      // https://github.com/alexfauquette/material-ui-x/blob/a3fefc5b451ac269d9ee7743b7ee7ce4a78d1e24/packages/grid/_modules_/grid/hooks/core/useGridStateInitialization.ts#L64-L75
-      apiRef.current.setPageSize(previousGridState.current.pagination.pageSize);
-      apiRef.current.updateColumns(
-        previousGridState.current.columns.all.map((field) => ({
-          ...previousGridState.current.columns.lookup[field],
-          // Restore previous visibility state
-          hide: !previousColumnVisibility.current[field],
-        })),
-      );
+      apiRef.current.restoreState(previousGridState.current);
 
       apiRef.current.unstable_enableVirtualization();
 
@@ -259,7 +249,7 @@ export const useGridPrintExport = (
         throw new Error('MUI: No grid root element available.');
       }
 
-      previousGridState.current = apiRef.current.state;
+      previousGridState.current = apiRef.current.exportState();
 
       if (props.pagination) {
         apiRef.current.setPageSize(visibleRowCount);
