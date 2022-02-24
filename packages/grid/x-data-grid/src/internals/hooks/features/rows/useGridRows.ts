@@ -115,7 +115,7 @@ export const rowsStateInitializer: GridStateInitializer<
   return {
     ...state,
     rows: getRowsStateFromCache(rowsCache, null, apiRef, props.rowCount),
-    rowsCache,
+    rowsCache, // TODO remove from state
   };
 };
 
