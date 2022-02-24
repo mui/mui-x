@@ -17,15 +17,12 @@ export const getColumnsToExport = ({
 }: GridGetColumnsToExportParams): GridStateColDef[] => {
   const columns = allGridColumnsSelector(apiRef);
 
-  let exportedColumns: GridStateColDef[];
   if (options.fields) {
-    exportedColumns = options.fields
+    return options.fields
       .map((field) => columns.find((column) => column.field === field))
       .filter((column): column is GridStateColDef => !!column);
-  } else {
-    const validColumns = options.allColumns ? columns : visibleGridColumnsSelector(apiRef);
-    exportedColumns = validColumns.filter((column) => !column.disableExport);
   }
 
-  return exportedColumns;
+  const validColumns = options.allColumns ? columns : visibleGridColumnsSelector(apiRef);
+  return validColumns.filter((column) => !column.disableExport);
 };
