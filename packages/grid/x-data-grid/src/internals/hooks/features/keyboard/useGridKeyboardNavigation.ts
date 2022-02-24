@@ -175,7 +175,9 @@ export const useGridKeyboardNavigation = (
     (params, event) => {
       let isFromCustomHeader = false;
       if (params.colDef.renderHeader) {
-        const headerTitleNode = event.currentTarget.querySelector(`.${gridClasses.columnHeaderTitleContainer}`);
+        const headerTitleNode = event.currentTarget.querySelector(
+          `.${gridClasses.columnHeaderTitleContainer}`,
+        );
         isFromCustomHeader =
           !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
       }

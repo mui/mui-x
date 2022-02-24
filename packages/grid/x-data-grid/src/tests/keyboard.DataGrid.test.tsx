@@ -401,7 +401,6 @@ describe('<DataGrid /> - Keyboard', () => {
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 
-
   it('should ignore events coming from a portal inside the cell', () => {
     const handleCellKeyDown = spy();
     render(
