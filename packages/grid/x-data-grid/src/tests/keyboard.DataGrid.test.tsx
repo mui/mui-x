@@ -365,8 +365,42 @@ describe('<DataGrid /> - Keyboard', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
       expect(getActiveCell()).to.equal(`5-1`);
     });
+    /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 
-    it('should be able to use keyboard in an child input', () => {
+    it('should be able to type in an child input', () => {
+      const columns = [
+        {
+          field: 'name',
+          headerName: 'Name',
+          width: 200,
+          renderCell: () => (
+            <input type="text" data-testid="custom-input" />
+          ),
+        },
+      ];
+
+      const rows = [
+        {
+          id: 1,
+          name: 'John',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={rows} columns={columns} />
+        </div>,
+      );
+      const input = screen.getByTestId('custom-input');
+      input.focus();
+
+      // This does not work with navigation keys.
+      // For now, the workaround for developers is to stop the propagation
+      // But adding input is discouraged, action column or edit mode are better options
+      expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
+    });
+
+    it('should be able to use keyboard in a columnHeader child input', () => {
       const columns = [
         {
           field: 'name',
@@ -399,7 +433,6 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
     });
   });
-  /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 
   it('should ignore events coming from a portal inside the cell', () => {
     const handleCellKeyDown = spy();
