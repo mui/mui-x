@@ -198,7 +198,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
           return <GridGroupingColumnLeafCell {...leafParams} />;
         }
 
-        return null;
+        return '';
       }
 
       // Render current grouping criteria groups
@@ -206,7 +206,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
         return <GridGroupingCriteriaCell {...params} hideDescendantCount={hideDescendantCount} />;
       }
 
-      return null;
+      return '';
     },
     valueGetter: (params) => {
       if (!params.rowNode) {
@@ -314,7 +314,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
           return <GridGroupingColumnLeafCell {...leafParams} />;
         }
 
-        return null;
+        return '';
       }
 
       // Render the groups
