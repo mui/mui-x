@@ -406,7 +406,16 @@
       "nodeName": "the row element",
       "conditions": "the row is in edit mode"
     },
+    "row--dragging": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the floating row element",
+      "conditions": "it is dragged"
+    },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
+    "rowDraggableContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the row's draggable container element"
+    },
     "rowCount": {
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
       "nodeName": "the footer row count element to show the total number of rows"

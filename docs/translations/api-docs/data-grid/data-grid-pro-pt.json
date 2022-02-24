@@ -33,6 +33,7 @@
     "disableMultipleColumnsSorting": "If <code>true</code>, sorting with multiple columns is disabled.",
     "disableMultipleSelection": "If <code>true</code>, multiple selection using the CTRL or CMD key is disabled.",
     "disableRowGrouping": "If <code>true</code>, the row grouping is disabled.",
+    "disableRowReorder": "If <code>true</code>, reordering rows is disabled.",
     "disableSelectionOnClick": "If <code>true</code>, the selection on click on a row or cell is disabled.",
     "disableVirtualization": "If <code>true</code>, the virtualization is disabled.",
     "editMode": "Controls whether to use the cell or row editing.",
@@ -437,7 +438,16 @@
       "nodeName": "the row element",
       "conditions": "the row is in edit mode"
     },
+    "row--dragging": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the floating row element",
+      "conditions": "it is dragged"
+    },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
+    "rowDraggableContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the row's draggable container element"
+    },
     "rowCount": {
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
       "nodeName": "the footer row count element to show the total number of rows"

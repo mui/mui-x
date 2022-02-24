@@ -40,7 +40,9 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.menuList}`]: styles.menuList },
     { [`& .${gridClasses['row--editable']}`]: styles['row--editable'] },
     { [`& .${gridClasses['row--editing']}`]: styles['row--editing'] },
+    { [`& .${gridClasses['row--dragging']}`]: styles['row--dragging'] },
     { [`& .${gridClasses.row}`]: styles.row },
+    { [`& .${gridClasses.rowDraggableContainer}`]: styles.rowDraggableContainer },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
     { [`& .${gridClasses.withBorder}`]: styles.withBorder },
     { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
@@ -282,11 +284,11 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses['cell--textCenter']}`]: {
       justifyContent: 'center',
     },
-    [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
+    [`& .${gridClasses.columnHeaderDraggableContainer}, & .${gridClasses.rowDraggableContainer}`]: {
       display: 'flex',
       width: '100%',
     },
-    [`& .${gridClasses['columnHeader--dragging']}`]: {
+    [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
       background: theme.palette.background.paper,
       padding: '0 12px',
       borderRadius: theme.shape.borderRadius,

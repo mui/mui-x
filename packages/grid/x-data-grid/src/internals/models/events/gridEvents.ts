@@ -119,6 +119,28 @@ export enum GridEvents {
    */
   editRowsModelChange = 'editRowsModelChange',
   /**
+   * Fired when the user starts dragging a row. It's mapped to the `dragstart` DOM event.
+   * @ignore - do not document.
+   */
+  rowDragStart = 'rowDragStart',
+  /**
+   * Fired while an element or text selection is dragged over the row.
+   * It's mapped to the `dragover` DOM event.
+   * @ignore - do not document.
+   */
+  rowDragOver = 'rowDragOver',
+  /**
+   * Fired when the dragged row enters a valid drop target.
+   * It's mapped to the `dragend` DOM event.
+   * @ignore - do not document.
+   */
+  rowDragEnter = 'rowDragEnter',
+  /**
+   * Fired when the dragging of a row ends.
+   * @ignore - do not document.
+   */
+  rowDragEnd = 'rowDragEnd',
+  /**
    * Fired when a column header loses focus.
    * @ignore - do not document.
    */

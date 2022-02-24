@@ -55,4 +55,10 @@ export interface GridSortApi {
    * @returns {number} The index of the row.
    */
   getRowIndex: (id: GridRowId) => number;
+  /**
+   * Moves a row from its original position to the position given by `targetIndexPosition`.
+   * @param {GridRowId} rowId The row id
+   * @param {number} targetIndexPosition The new position (0-based).
+   */
+  setRowIndex: (rowId: GridRowId, targetIndexPosition: number) => void;
 }

@@ -26,6 +26,7 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   pagination: true,
   checkboxSelectionVisibleOnly: false,
   disableColumnReorder: true,
+  disableRowReorder: true,
   disableColumnResize: true,
   signature: 'DataGrid',
 };
@@ -74,6 +75,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   sortingMode: GridFeatureModeConstant.client,
   throttleRowsMs: 0,
   disableColumnReorder: false,
+  disableRowReorder: false,
   disableColumnResize: false,
 };
 

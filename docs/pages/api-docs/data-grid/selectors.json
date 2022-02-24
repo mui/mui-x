@@ -274,6 +274,18 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridRowReorderDragRowSelector",
+    "returnType": "GridRowId",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowReorderSelector",
+    "returnType": "GridRowReorderState",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridRowTreeDepthSelector",
     "returnType": "number",
     "description": "",

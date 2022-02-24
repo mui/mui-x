@@ -62,6 +62,7 @@ export type DataGridForcedPropsKey =
   | 'disableMultipleSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
+  | 'disableRowReorder'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
@@ -300,6 +301,11 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
+  /**
+   * If `true`, reordering rows is disabled.
+   * @default false
+   */
+  disableRowReorder: boolean;
 }
 
 /**

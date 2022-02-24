@@ -37,6 +37,7 @@ import { useGridRowGrouping } from './internals/hooks/features/rowGrouping/useGr
 import { useGridColumnPinning } from './internals/hooks/features/columnPinning/useGridColumnPinning';
 import { useGridDetailPanel } from './internals/hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelCache } from './internals/hooks/features/detailPanel/useGridDetailPanelCache';
+import { useGridRowReorder } from './internals/hooks/features/rowReorder/useGridRowReorder';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -62,6 +63,7 @@ export const useDataGridProComponent = (
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
+  useGridRowReorder(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);

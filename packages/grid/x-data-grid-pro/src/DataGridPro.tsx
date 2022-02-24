@@ -226,6 +226,11 @@ DataGridProRaw.propTypes = {
    */
   disableRowGrouping: PropTypes.bool,
   /**
+   * If `true`, reordering rows is disabled.
+   * @default false
+   */
+  disableRowReorder: PropTypes.bool,
+  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */

@@ -10,6 +10,7 @@ import type {
   GridColumnResizeState,
   GridColumnPinningState,
   GridRowGroupingInitialState,
+  GridRowReorderState,
 } from '../hooks';
 
 /**
@@ -20,6 +21,7 @@ export interface GridStatePro extends GridStateCommunity {
   columnResize: GridColumnResizeState;
   pinnedColumns: GridColumnPinningState;
   rowGrouping: GridRowGroupingState;
+  rowReorder: GridRowReorderState;
   detailPanel: GridDetailPanelState;
 }
 

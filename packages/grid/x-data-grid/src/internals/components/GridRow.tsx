@@ -47,6 +47,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     root: ['row', selected && 'selected', editable && 'row--editable', editing && 'row--editing'],
+    draggableContainer: ['rowDraggableContainer'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -106,7 +107,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const publish = React.useCallback(
     (
         eventName: keyof GridRowEventLookup,
-        propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
+        propHandler?: React.MouseEventHandler<HTMLDivElement> | undefined,
       ): React.MouseEventHandler<HTMLDivElement> =>
       (event) => {
         // Ignore portal
@@ -132,6 +133,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       },
     [apiRef, rowId],
   );
+
+  const draggableEventHandlers = {
+    onDragStart: publish(GridEvents.rowDragStart),
+    onDragEnter: publish(GridEvents.rowDragEnter),
+    onDragOver: publish(GridEvents.rowDragOver),
+    onDragEnd: publish(GridEvents.rowDragEnd),
+  };
 
   const style = {
     maxHeight: rowHeight,
@@ -244,8 +252,14 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
       {...other}
     >
-      {cells}
-      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} height={rowHeight} />}
+      <div
+        className={classes.draggableContainer}
+        draggable={!rootProps.disableRowReorder}
+        {...draggableEventHandlers}
+      >
+        {cells}
+        {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} height={rowHeight} />}
+      </div>
     </div>
   );
 }

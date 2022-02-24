@@ -50,6 +50,7 @@
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleSelection": { "type": { "name": "bool" } },
     "disableRowGrouping": { "type": { "name": "bool" } },
+    "disableRowReorder": { "type": { "name": "bool" } },
     "disableSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
@@ -361,7 +362,9 @@
       "root",
       "row--editable",
       "row--editing",
+      "row--dragging",
       "row",
+      "rowDraggableContainer",
       "rowCount",
       "scrollArea",
       "scrollArea--left",
