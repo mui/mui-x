@@ -11,10 +11,8 @@ import {
 import {
   useGridRegisterPreProcessor,
   GridPreProcessor,
-  GridSortingMethod,
-  useGridRegisterSortingMethod,
-  GridFilteringMethod,
-  useGridRegisterFilteringMethod,
+  GridStrategyProcessor,
+  useGridRegisterStrategyProcessor,
   GridRowGroupingPreProcessing,
 } from '@mui/x-data-grid/internals';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../../../models';
@@ -180,7 +178,7 @@ export const useGridTreeData = (
     [props.treeData, getGroupingColDef],
   );
 
-  const filteringMethod = React.useCallback<GridFilteringMethod>(
+  const filtering = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
 
@@ -193,7 +191,7 @@ export const useGridTreeData = (
     [apiRef, props.disableChildrenFiltering],
   );
 
-  const sortingMethod = React.useCallback<GridSortingMethod>(
+  const sortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
       const rowIds = gridRowIdsSelector(apiRef);
@@ -209,8 +207,8 @@ export const useGridTreeData = (
   );
 
   useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
-  useGridRegisterFilteringMethod(apiRef, TREE_DATA_GROUPING_NAME, filteringMethod);
-  useGridRegisterSortingMethod(apiRef, TREE_DATA_GROUPING_NAME, sortingMethod);
+  useGridRegisterStrategyProcessor(apiRef, 'filtering', TREE_DATA_GROUPING_NAME, filtering);
+  useGridRegisterStrategyProcessor(apiRef, 'sorting', TREE_DATA_GROUPING_NAME, sortingMethod);
 
   /**
    * EVENTS

@@ -19,10 +19,8 @@ import {
   useGridStateInit,
   useGridRegisterPreProcessor,
   GridPreProcessor,
-  useGridRegisterSortingMethod,
-  GridSortingMethod,
-  useGridRegisterFilteringMethod,
-  GridFilteringMethod,
+  GridStrategyProcessor,
+  useGridRegisterStrategyProcessor,
   GridRestoreStatePreProcessingContext,
   GridRowGroupingPreProcessing,
   GridColumnRawLookup,
@@ -335,7 +333,7 @@ export const useGridRowGrouping = (
     [props.disableRowGrouping],
   );
 
-  const filteringMethod = React.useCallback<GridFilteringMethod>(
+  const filteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
 
@@ -347,7 +345,7 @@ export const useGridRowGrouping = (
     [apiRef],
   );
 
-  const sortingMethod = React.useCallback<GridSortingMethod>(
+  const sortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
       const rowIds = gridRowIdsSelector(apiRef);
@@ -364,8 +362,13 @@ export const useGridRowGrouping = (
 
   useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterPreProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
-  useGridRegisterFilteringMethod(apiRef, GROUPING_COLUMNS_FEATURE_NAME, filteringMethod);
-  useGridRegisterSortingMethod(apiRef, GROUPING_COLUMNS_FEATURE_NAME, sortingMethod);
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    'filtering',
+    GROUPING_COLUMNS_FEATURE_NAME,
+    filteringMethod,
+  );
+  useGridRegisterStrategyProcessor(apiRef, 'sorting', GROUPING_COLUMNS_FEATURE_NAME, sortingMethod);
 
   /**
    * API METHODS

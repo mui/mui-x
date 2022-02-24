@@ -5,8 +5,6 @@ import {
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
-import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
-import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
 import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry } from '../../../models/gridRows';
 
@@ -23,8 +21,6 @@ export interface GridPreProcessingGroupLookup {
     context: Partial<GridCellIndexCoordinates>;
   };
   columnMenu: { value: JSX.Element[]; context: GridColDef<any> };
-  filteringMethod: { value: GridFilteringMethodCollection };
-  sortingMethod: { value: GridSortingMethodCollection };
   exportState: { value: GridInitialStateCommunity };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;
@@ -58,10 +54,10 @@ export interface GridPreProcessingApi {
    * @returns {() => void} A function to unregister the pre-processor.
    * @ignore - do not document.
    */
-  unstable_registerPreProcessor: (
+  unstable_registerPreProcessor: <G extends GridPreProcessingGroup>(
     group: GridPreProcessingGroup,
     id: string,
-    callback: PreProcessorCallback,
+    callback: GridPreProcessor<G>,
   ) => () => void;
   /**
    * Apply on the value the pre-processors registered on the given group.

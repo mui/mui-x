@@ -6,6 +6,8 @@ export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHe
 
 export { useGridRegisterPreProcessor } from '../hooks/core/preProcessing';
 export type { GridPreProcessor } from '../hooks/core/preProcessing';
+export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
+export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
 export type {
   GridRowGroupingPreProcessing,
   GridRowGroupParams,
@@ -25,11 +27,7 @@ export { useGridDensity } from '../hooks/features/density/useGridDensity';
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter } from '../hooks/features/filter/useGridFilter';
-export { useGridRegisterFilteringMethod } from '../hooks/features/filter/useGridRegisterFilteringMethod';
-export type {
-  GridFilteringMethod,
-  GridAggregatedFilterItemApplier,
-} from '../hooks/features/filter/gridFilterState';
+export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
@@ -41,11 +39,7 @@ export { useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export { useGridSelection } from '../hooks/features/selection/useGridSelection';
 export { useGridSorting } from '../hooks/features/sorting/useGridSorting';
-export { useGridRegisterSortingMethod } from '../hooks/features/sorting/useGridRegisterSortingMethod';
-export type {
-  GridSortingMethod,
-  GridSortingModelApplier,
-} from '../hooks/features/sorting/gridSortingState';
+export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
 export { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';

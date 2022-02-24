@@ -4,6 +4,9 @@ import { GridPreProcessingApi, PreProcessorCallback } from './gridPreProcessingA
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../models/events';
 
+/**
+ * TODO: Rename `useGridPipProcessing`
+ */
 export const useGridPreProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
   const preProcessorsRef = React.useRef<
     Partial<Record<string, Record<string, PreProcessorCallback>>>
@@ -19,7 +22,7 @@ export const useGridPreProcessing = (apiRef: React.MutableRefObject<GridApiCommu
 
       const preProcessors = preProcessorsRef.current[group]!;
       const oldCallback = preProcessors[id];
-      if (!oldCallback || oldCallback !== callback) {
+      if (oldCallback !== callback) {
         preProcessorsRef.current[group] = { ...preProcessors, [id]: callback };
         apiRef.current.publishEvent(GridEvents.preProcessorRegister, group);
       }

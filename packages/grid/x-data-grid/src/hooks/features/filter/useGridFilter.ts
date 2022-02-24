@@ -11,17 +11,17 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import {
-  getDefaultGridFilterModel,
-  GridFilteringMethod,
-  GridFilteringMethodCollection,
-} from './gridFilterState';
+import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
+import {
+  GridStrategyProcessor,
+  useGridRegisterStrategyProcessor,
+  useGridApplyStrategyProcessing,
+} from '../../core/strategyProcessing';
 import {
   buildAggregatedFilterApplier,
   sanitizeFilterModel,
@@ -45,8 +45,6 @@ export const useGridFilter = (
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
-  const filteringMethodCollectionRef = React.useRef<GridFilteringMethodCollection>({});
-  const lastFilteringMethodApplied = React.useRef<GridFilteringMethod | null>(null);
 
   useGridStateInit(apiRef, (state) => {
     const filterModel =
@@ -74,14 +72,18 @@ export const useGridFilter = (
     changeEvent: GridEvents.filterModelChange,
   });
 
+  const [filteringStrategy, setFilteringStrategyName] = useGridApplyStrategyProcessing(
+    apiRef,
+    'filtering',
+    apiRef.current.unstable_applyFilters,
+  );
+
   /**
    * API METHODS
    */
   const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
     apiRef.current.setState((state) => {
-      const rowGroupingName = gridRowGroupingNameSelector(state, apiRef.current.instanceId);
-      const filteringMethod = filteringMethodCollectionRef.current[rowGroupingName];
-      if (!filteringMethod) {
+      if (!filteringStrategy.current) {
         throw new Error('MUI: Invalid filtering method.');
       }
 
@@ -91,8 +93,7 @@ export const useGridFilter = (
           ? buildAggregatedFilterApplier(filterModel, apiRef)
           : null;
 
-      lastFilteringMethodApplied.current = filteringMethod;
-      const filteringResult = filteringMethod({
+      const filteringResult = filteringStrategy.current({
         isRowMatchingFilters,
       });
 
@@ -106,7 +107,7 @@ export const useGridFilter = (
     });
     apiRef.current.publishEvent(GridEvents.visibleRowsSet);
     apiRef.current.forceUpdate();
-  }, [apiRef, props.filterMode]);
+  }, [apiRef, filteringStrategy, props.filterMode]);
 
   const upsertFilterItem = React.useCallback<GridFilterApi['upsertFilterItem']>(
     (item) => {
@@ -259,7 +260,7 @@ export const useGridFilter = (
     [apiRef, props.disableMultipleColumnsFiltering],
   );
 
-  const flatFilteringMethod = React.useCallback<GridFilteringMethod>(
+  const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       if (props.filterMode === GridFeatureModeConstant.client && params.isRowMatchingFilters) {
         const rowIds = gridRowIdsSelector(apiRef);
@@ -287,11 +288,16 @@ export const useGridFilter = (
 
   useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-  useGridRegisterFilteringMethod(apiRef, 'none', flatFilteringMethod);
+  useGridRegisterStrategyProcessor(apiRef, 'filtering', 'none', flatFilteringMethod);
 
   /**
    * EVENTS
    */
+  const handleRowsSet = React.useCallback<GridEventListener<GridEvents.rowsSet>>(() => {
+    setFilteringStrategyName(gridRowGroupingNameSelector(apiRef));
+    apiRef.current.unstable_applyFilters();
+  }, [apiRef, setFilteringStrategyName]);
+
   const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef);
@@ -304,48 +310,19 @@ export const useGridFilter = (
     }
   }, [apiRef, logger]);
 
-  const handlePreProcessorRegister = React.useCallback<
-    GridEventListener<GridEvents.preProcessorRegister>
-  >(
-    (name) => {
-      if (name !== 'filteringMethod') {
-        return;
-      }
-
-      filteringMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-        'filteringMethod',
-        {},
-      );
-
-      const rowGroupingName = gridRowGroupingNameSelector(apiRef);
-      if (
-        lastFilteringMethodApplied.current !== filteringMethodCollectionRef.current[rowGroupingName]
-      ) {
-        apiRef.current.unstable_applyFilters();
-      }
-    },
-    [apiRef],
-  );
-
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.unstable_applyFilters);
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, handleRowsSet);
   useGridApiEventHandler(
     apiRef,
     GridEvents.rowExpansionChange,
     apiRef.current.unstable_applyFilters,
   );
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
-  useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
 
   /**
    * 1ST RENDER
    */
   useFirstRender(() => {
-    // This line of pre-processor initialization should always come after the registration of `flatFilteringMethod`
-    // Otherwise on the 1st render there would be no filtering method registered
-    filteringMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-      'filteringMethod',
-      {},
-    );
+    setFilteringStrategyName(gridRowGroupingNameSelector(apiRef));
     apiRef.current.unstable_applyFilters();
   });
 
