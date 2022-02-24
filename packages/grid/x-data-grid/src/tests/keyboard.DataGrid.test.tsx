@@ -401,43 +401,6 @@ describe('<DataGrid /> - Keyboard', () => {
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 
-  it('should be able to type in an child input', () => {
-    const handleInputKeyDown = spy((event) => event.defaultPrevented);
-
-    const columns = [
-      {
-        field: 'name',
-        headerName: 'Name',
-        width: 200,
-        renderCell: () => (
-          <input type="text" data-testid="custom-input" onKeyDown={handleInputKeyDown} />
-        ),
-      },
-    ];
-
-    const rows = [
-      {
-        id: 1,
-        name: 'John',
-      },
-    ];
-
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid rows={rows} columns={columns} />
-      </div>,
-    );
-    const input = screen.getByTestId('custom-input');
-    fireClickEvent(input);
-    input.focus();
-
-    // Verify that the event is not prevented during the bubbling.
-    // fireEvent.keyDown return false if it is the case
-    // For more info, see the related discussion: https://github.com/mui-org/material-ui-x/pull/3624/files#r787767632
-    expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
-    expect(fireEvent.keyDown(input, { key: ' ' })).to.equal(true);
-    expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
-  });
 
   it('should ignore events coming from a portal inside the cell', () => {
     const handleCellKeyDown = spy();
