@@ -21,7 +21,6 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
-  useGridApplyStrategyProcessing,
   GridStrategyProcessor,
 } from '../../core/strategyProcessing';
 import {
@@ -69,12 +68,6 @@ export const useGridSorting = (
     stateSelector: gridSortModelSelector,
     changeEvent: GridEvents.sortModelChange,
   });
-
-  const [sortingStrategy, setSortingStrategyName] = useGridApplyStrategyProcessing(
-    apiRef,
-    'sorting',
-    apiRef.current.applySorting,
-  );
 
   const upsertSortModel = React.useCallback(
     (field: string, sortItem?: GridSortItem): GridSortModel => {
@@ -139,7 +132,7 @@ export const useGridSorting = (
       const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
 
-      const sortedRows = sortingStrategy({
+      const sortedRows = apiRef.current.unstable_applyStrategyProcessor('sorting', {
         sortRowList,
       });
 
@@ -149,7 +142,7 @@ export const useGridSorting = (
       };
     });
     apiRef.current.forceUpdate();
-  }, [apiRef, sortingStrategy, logger, props.sortingMode]);
+  }, [apiRef, logger, props.sortingMode]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
     (model) => {
@@ -300,9 +293,9 @@ export const useGridSorting = (
   );
 
   const handleRowsSet = React.useCallback<GridEventListener<GridEvents.rowsSet>>(() => {
-    setSortingStrategyName(gridRowGroupingNameSelector(apiRef));
+    apiRef.current.unstable_setStrategyName('sorting', gridRowGroupingNameSelector(apiRef));
     apiRef.current.applySorting();
-  }, [apiRef, setSortingStrategyName]);
+  }, [apiRef]);
 
   const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
@@ -320,16 +313,35 @@ export const useGridSorting = (
     }
   }, [apiRef]);
 
+  const handleStrategyProcessorChange = React.useCallback<
+    GridEventListener<GridEvents.strategyProcessorRegister>
+  >(
+    (params) => {
+      if (
+        params.group === 'sorting' &&
+        params.strategyName === apiRef.current.unstable_getStrategyName('sorting')
+      ) {
+        apiRef.current.applySorting();
+      }
+    },
+    [apiRef],
+  );
+
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, GridEvents.rowsSet, handleRowsSet);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.strategyProcessorRegister,
+    handleStrategyProcessorChange,
+  );
 
   /**
    * 1ST RENDER
    */
   useFirstRender(() => {
-    setSortingStrategyName(gridRowGroupingNameSelector(apiRef));
+    apiRef.current.unstable_setStrategyName('sorting', gridRowGroupingNameSelector(apiRef));
     apiRef.current.applySorting();
   });
 

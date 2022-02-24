@@ -20,7 +20,6 @@ import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/prePro
 import {
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
-  useGridApplyStrategyProcessing,
 } from '../../core/strategyProcessing';
 import {
   buildAggregatedFilterApplier,
@@ -72,12 +71,6 @@ export const useGridFilter = (
     changeEvent: GridEvents.filterModelChange,
   });
 
-  const [filteringStrategy, setFilteringStrategyName] = useGridApplyStrategyProcessing(
-    apiRef,
-    'filtering',
-    apiRef.current.unstable_applyFilters,
-  );
-
   /**
    * API METHODS
    */
@@ -89,7 +82,7 @@ export const useGridFilter = (
           ? buildAggregatedFilterApplier(filterModel, apiRef)
           : null;
 
-      const filteringResult = filteringStrategy({
+      const filteringResult = apiRef.current.unstable_applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
       });
 
@@ -103,7 +96,7 @@ export const useGridFilter = (
     });
     apiRef.current.publishEvent(GridEvents.visibleRowsSet);
     apiRef.current.forceUpdate();
-  }, [apiRef, filteringStrategy, props.filterMode]);
+  }, [apiRef, props.filterMode]);
 
   const upsertFilterItem = React.useCallback<GridFilterApi['upsertFilterItem']>(
     (item) => {
@@ -290,9 +283,9 @@ export const useGridFilter = (
    * EVENTS
    */
   const handleRowsSet = React.useCallback<GridEventListener<GridEvents.rowsSet>>(() => {
-    setFilteringStrategyName(gridRowGroupingNameSelector(apiRef));
+    apiRef.current.unstable_setStrategyName('filtering', gridRowGroupingNameSelector(apiRef));
     apiRef.current.unstable_applyFilters();
-  }, [apiRef, setFilteringStrategyName]);
+  }, [apiRef]);
 
   const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
@@ -306,6 +299,20 @@ export const useGridFilter = (
     }
   }, [apiRef, logger]);
 
+  const handleStrategyProcessorChange = React.useCallback<
+    GridEventListener<GridEvents.strategyProcessorRegister>
+  >(
+    (params) => {
+      if (
+        params.group === 'filtering' &&
+        params.strategyName === apiRef.current.unstable_getStrategyName('filtering')
+      ) {
+        apiRef.current.unstable_applyFilters();
+      }
+    },
+    [apiRef],
+  );
+
   useGridApiEventHandler(apiRef, GridEvents.rowsSet, handleRowsSet);
   useGridApiEventHandler(
     apiRef,
@@ -313,12 +320,17 @@ export const useGridFilter = (
     apiRef.current.unstable_applyFilters,
   );
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.strategyProcessorRegister,
+    handleStrategyProcessorChange,
+  );
 
   /**
    * 1ST RENDER
    */
   useFirstRender(() => {
-    setFilteringStrategyName(gridRowGroupingNameSelector(apiRef));
+    apiRef.current.unstable_setStrategyName('filtering', gridRowGroupingNameSelector(apiRef));
     apiRef.current.unstable_applyFilters();
   });
 
