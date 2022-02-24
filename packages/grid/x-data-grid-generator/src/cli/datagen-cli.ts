@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import * as fs from 'fs';
 import * as yargs from 'yargs';
-import { getCommodityColumns } from './commodities.columns';
-import { getEmployeeColumns } from './employees.columns';
-import { getRealGridData } from './services';
+import { getCommodityColumns } from '../columns/commodities.columns';
+import { getEmployeeColumns } from '../columns/employees.columns';
+import { getRealGridData } from '../services';
 
 const loadData = async (size: number, dataset: string): Promise<any> => {
   const result = await getRealGridData(

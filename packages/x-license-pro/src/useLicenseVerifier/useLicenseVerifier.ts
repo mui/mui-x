@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { verifyLicense } from './verifyLicense';
-import { LicenseInfo } from './licenseInfo';
+import { verifyLicense } from '../verifyLicense/verifyLicense';
+import { LicenseInfo } from '../utils/licenseInfo';
 import {
   showExpiredLicenseError,
   showInvalidLicenseError,
   showNotFoundLicenseError,
-} from './licenseErrorMessageUtils';
-import { LicenseStatus } from './licenseStatus';
+} from '../utils/licenseErrorMessageUtils';
+import { LicenseStatus } from '../utils/licenseStatus';
 
 export function useLicenseVerifier(): LicenseStatus {
   return React.useMemo(() => {

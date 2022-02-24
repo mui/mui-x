@@ -27,7 +27,7 @@ import {
   randomRateType,
   randomContractType,
   randomTaxCode,
-} from './services';
+} from '../services';
 import {
   renderCountry,
   renderEmail,
@@ -40,7 +40,7 @@ import {
   renderEditProgress,
   renderEditStatus,
   renderEditIncoterm,
-} from './renderer';
+} from '../renderer';
 import {
   CONTRACT_TYPE_OPTIONS,
   COUNTRY_ISO_OPTIONS_SORTED,
@@ -49,9 +49,9 @@ import {
   RATE_TYPE_OPTIONS,
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
-} from './services/static-data';
+} from '../services/static-data';
 
-import { GridColDefGenerator } from './services/gridColDefGenerator';
+import { GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getCommodityColumns = (editable = false): GridColDefGenerator<any>[] => [
   {

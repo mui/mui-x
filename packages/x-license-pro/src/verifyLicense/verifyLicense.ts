@@ -1,6 +1,6 @@
-import { base64Decode, base64Encode } from './encoding/base64';
-import { md5 } from './encoding/md5';
-import { LicenseStatus } from './licenseStatus';
+import { base64Decode, base64Encode } from '../encoding/base64';
+import { md5 } from '../encoding/md5';
+import { LicenseStatus } from '../utils/licenseStatus';
 
 export function generateReleaseInfo() {
   const today = new Date();
