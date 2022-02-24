@@ -22,6 +22,7 @@ export { useGridColumns } from '../hooks/features/columns/useGridColumns';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
+  GridHydrateColumnsValue,
 } from '../hooks/features/columns/gridColumnsInterfaces';
 export { useGridDensity } from '../hooks/features/density/useGridDensity';
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';

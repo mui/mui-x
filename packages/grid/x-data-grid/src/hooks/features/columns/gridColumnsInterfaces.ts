@@ -27,4 +27,9 @@ export type GridColumnsRawState<Api extends GridApiCommon = GridApiCommunity> = 
   lookup: GridColumnRawLookup<Api>;
 };
 
+export type GridHydrateColumnsValue<Api extends GridApiCommon = GridApiCommunity> = Omit<
+  GridColumnsRawState<Api>,
+  'columnVisibilityModel'
+>;
+
 export type GridColumnVisibilityModel = Record<GridRowId, boolean>;

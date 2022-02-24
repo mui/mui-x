@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { GridCellIndexCoordinates, GridScrollParams } from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import { GridColDef } from '../../../models/colDef/gridColDef';
@@ -5,20 +6,20 @@ import {
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
-import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
+import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry } from '../../../models/gridRows';
 
 export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
 export interface GridPreProcessingGroupLookup {
   hydrateColumns: {
-    value: Omit<GridColumnsRawState<any>, 'columnVisibilityModel'>;
+    value: GridHydrateColumnsValue<any>;
   };
   scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
-  columnMenu: { value: JSX.Element[]; context: GridColDef<any> };
+  columnMenu: { value: React.ReactNode[]; context: GridColDef<any> };
   exportState: { value: GridInitialStateCommunity };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;

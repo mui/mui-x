@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridApiCommon } from '../../../models/api';
-import { GridStrategyProcessingGroup, GridStrategyProcessor } from './gridStrategyProcessingApi';
+import {
+  GridStrategyProcessingGroup,
+  GridStrategyProcessingLookup,
+} from './gridStrategyProcessingApi';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
 export const useGridApplyStrategyProcessing = <
@@ -15,42 +18,42 @@ export const useGridApplyStrategyProcessing = <
    */
   onStrategyProcessorChange: () => void,
 ) => {
-  const strategyName = React.useRef<string | null>(null);
-  const strategy = React.useRef<GridStrategyProcessor<G> | null>();
-
-  const updateStrategy = React.useCallback(() => {
-    if (strategyName.current == null) {
-      return;
-    }
-    strategy.current = (params) =>
-      apiRef.current.unstable_applyStrategyProcessor(group, strategyName.current!, params);
-  }, [apiRef, group]);
+  const strategy = React.useCallback(
+    (params: GridStrategyProcessingLookup[G]['params']) =>
+      apiRef.current.unstable_applyStrategyProcessor(group, params),
+    [apiRef, group],
+  );
 
   const setStrategyName = React.useCallback(
     (newStrategyName: string) => {
-      if (newStrategyName !== strategyName.current) {
-        strategyName.current = newStrategyName;
-        updateStrategy();
+      if (newStrategyName !== apiRef.current.unstable_getStrategyName(group)) {
+        apiRef.current.unstable_setStrategyName(group, newStrategyName);
       }
     },
-    [updateStrategy],
+    [group, apiRef],
   );
 
-  const handleStrategyChange = React.useCallback<
+  const handleStrategyProcessorChange = React.useCallback<
     GridEventListener<GridEvents.strategyProcessorRegister>
   >(
     (params) => {
-      if (params.group !== group || params.strategyName !== strategyName.current) {
+      if (
+        params.group !== group ||
+        params.strategyName !== apiRef.current.unstable_getStrategyName(group)
+      ) {
         return;
       }
 
-      updateStrategy();
       onStrategyProcessorChange();
     },
-    [updateStrategy, group, onStrategyProcessorChange],
+    [apiRef, group, onStrategyProcessorChange],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.strategyProcessorRegister, handleStrategyChange);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.strategyProcessorRegister,
+    handleStrategyProcessorChange,
+  );
 
   return [strategy, setStrategyName] as const;
 };

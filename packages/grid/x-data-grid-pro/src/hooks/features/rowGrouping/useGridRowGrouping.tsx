@@ -23,12 +23,12 @@ import {
   useGridRegisterStrategyProcessor,
   GridRestoreStatePreProcessingContext,
   GridRowGroupingPreProcessing,
+  GridHydrateColumnsValue,
   GridColumnRawLookup,
-  GridColumnsRawState,
   isDeepEqual,
 } from '@mui/x-data-grid/internals';
 import { GridGroupingValueGetterParams } from '../../../models';
-import { GridColDef, GridStateColDef } from '../../../models/gridColDef';
+import { GridColDef } from '../../../models/gridColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {
@@ -223,7 +223,7 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const getGroupingColDefs = React.useCallback(
-    (columnsState: GridColumnsRawState<GridApiPro>) => {
+    (columnsState: GridHydrateColumnsValue<GridApiPro>) => {
       if (props.disableRowGrouping) {
         return [];
       }
@@ -270,8 +270,8 @@ export const useGridRowGrouping = (
     [apiRef, props.groupingColDef, props.rowGroupingColumnMode, props.disableRowGrouping],
   );
 
-  const updateGroupingColumn = React.useCallback(
-    (columnsState: GridColumnsRawState<GridApiPro>) => {
+  const updateGroupingColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
+    (columnsState: GridHydrateColumnsValue<GridApiPro>) => {
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
       const newColumnsLookup: GridColumnRawLookup<GridApiPro> = {};
@@ -309,8 +309,8 @@ export const useGridRowGrouping = (
     [getGroupingColDefs],
   );
 
-  const addColumnMenuButtons = React.useCallback(
-    (initialValue: JSX.Element[], columns: GridStateColDef) => {
+  const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
+    (initialValue, columns) => {
       if (props.disableRowGrouping) {
         return initialValue;
       }

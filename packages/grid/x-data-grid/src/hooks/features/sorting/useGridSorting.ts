@@ -136,14 +136,10 @@ export const useGridSorting = (
     }
 
     apiRef.current.setState((state) => {
-      if (!sortingStrategy.current) {
-        throw new Error('MUI: Invalid sorting method.');
-      }
-
       const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
 
-      const sortedRows = sortingStrategy.current({
+      const sortedRows = sortingStrategy({
         sortRowList,
       });
 

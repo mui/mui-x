@@ -83,17 +83,13 @@ export const useGridFilter = (
    */
   const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
     apiRef.current.setState((state) => {
-      if (!filteringStrategy.current) {
-        throw new Error('MUI: Invalid filtering method.');
-      }
-
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
         props.filterMode === GridFeatureModeConstant.client
           ? buildAggregatedFilterApplier(filterModel, apiRef)
           : null;
 
-      const filteringResult = filteringStrategy.current({
+      const filteringResult = filteringStrategy({
         isRowMatchingFilters,
       });
 
