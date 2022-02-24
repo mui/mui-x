@@ -90,7 +90,8 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
         }
       }
 
-      updatedControlStateIds.forEach(({ stateId, hasPropChanged }) => {
+      if (updatedControlStateIds.length === 1) {
+        const { stateId, hasPropChanged } = updatedControlStateIds[0];
         const controlState = controlStateMapRef.current[stateId];
         const model = controlState.stateSelector(newState, apiRef.current.instanceId);
 
@@ -103,7 +104,7 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
         if (!ignoreSetState) {
           apiRef.current.publishEvent(controlState.changeEvent, model);
         }
-      });
+      }
 
       return !ignoreSetState;
     },
