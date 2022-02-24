@@ -16,6 +16,7 @@ export function getRowEl(cell?: Element | null): HTMLElement | null {
   return findParentElementFromClassName(cell as HTMLDivElement, gridClasses.row)! as HTMLElement;
 }
 
+// TODO remove
 export function isGridCellRoot(elem: Element | null): boolean {
   return elem != null && elem.classList.contains(gridClasses.cell);
 }

@@ -67,6 +67,24 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     [apiRef],
   );
 
+  const modifiers = React.useMemo(
+    () => [
+      {
+        name: 'flip',
+        enabled: false,
+      },
+      {
+        name: 'isPlaced',
+        enabled: true,
+        phase: 'main' as const,
+        fn: () => {
+          setIsPlaced(true);
+        },
+      },
+    ],
+    [],
+  );
+
   const anchorEl = apiRef.current.columnHeadersContainerElementRef?.current;
 
   if (!anchorEl) {
@@ -79,20 +97,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       placement="bottom-start"
       className={clsx(className, classes.panel)}
       anchorEl={anchorEl}
-      modifiers={[
-        {
-          name: 'flip',
-          enabled: false,
-        },
-        {
-          name: 'isPlaced',
-          enabled: true,
-          phase: 'main',
-          fn: () => {
-            setIsPlaced(true);
-          },
-        },
-      ]}
+      modifiers={modifiers}
       {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>

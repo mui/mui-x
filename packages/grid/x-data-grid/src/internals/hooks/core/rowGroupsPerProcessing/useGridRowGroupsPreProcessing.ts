@@ -9,11 +9,16 @@ import {
 import { GridEvents } from '../../../models/events';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
-const getFlatRowTree: GridRowGroupingPreProcessing = ({ ids, idRowsLookup }) => {
+const getFlatRowTree: GridRowGroupingPreProcessing = ({ ids, idRowsLookup, previousTree }) => {
   const tree: GridRowTreeConfig = {};
   for (let i = 0; i < ids.length; i += 1) {
     const rowId = ids[i];
-    tree[rowId] = { id: rowId, depth: 0, parent: null, groupingKey: '', groupingField: null };
+
+    if (previousTree && previousTree[rowId]) {
+      tree[rowId] = previousTree[rowId];
+    } else {
+      tree[rowId] = { id: rowId, depth: 0, parent: null, groupingKey: '', groupingField: null };
+    }
   }
 
   return {

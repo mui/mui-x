@@ -75,14 +75,14 @@ export const useGridScroll = (
           ? params.rowIndex
           : params.rowIndex - paginationState.page * paginationState.pageSize;
 
-        const targetOffseHeight = rowsMeta.positions[elementIndex + 1]
+        const targetOffsetHeight = rowsMeta.positions[elementIndex + 1]
           ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
           : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
 
         scrollCoordinates.top = scrollIntoView({
           clientHeight: windowRef.current!.clientHeight,
           scrollTop: windowRef.current!.scrollTop,
-          offsetHeight: targetOffseHeight,
+          offsetHeight: targetOffsetHeight,
           offsetTop: rowsMeta.positions[elementIndex],
         });
       }
