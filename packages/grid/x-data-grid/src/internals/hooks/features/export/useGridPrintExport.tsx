@@ -7,6 +7,7 @@ import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
+import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
   allGridColumnsSelector,
   gridColumnVisibilityModelSelector,
@@ -43,7 +44,7 @@ export const useGridPrintExport = (
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
-  const previousGridState = React.useRef<any>();
+  const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
   const previousColumnVisibility = React.useRef<{ [key: string]: boolean }>({});
 
   React.useEffect(() => {
@@ -230,7 +231,7 @@ export const useGridPrintExport = (
       doc.current!.body.removeChild(printWindow);
 
       // Revert grid to previous state
-      apiRef.current.restoreState(previousGridState.current);
+      apiRef.current.restoreState(previousGridState.current || {});
 
       apiRef.current.unstable_enableVirtualization();
 
