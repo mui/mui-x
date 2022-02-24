@@ -4,6 +4,7 @@ import {
   GridInitialState,
   useGridApiContext,
   useGridApiRef,
+  GridToolbarContainer,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
@@ -19,7 +20,6 @@ import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
-import Divider from '@mui/material/Divider';
 import Fade from '@mui/material/Fade';
 import Popper from '@mui/material/Popper';
 
@@ -164,7 +164,7 @@ const ViewListItem = (props: {
   );
 };
 
-const NewViewListItem = (props: {
+const NewViewListButton = (props: {
   label: string;
   onLabelChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -177,22 +177,7 @@ const NewViewListItem = (props: {
 
   if (isAddingView) {
     return (
-      <ListItem
-        secondaryAction={
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            size="small"
-            onClick={() => {
-              onSubmit();
-              setIsAddingView(false);
-            }}
-            disabled={!isValid}
-          >
-            <DoneIcon />
-          </IconButton>
-        }
-      >
+      <React.Fragment>
         <TextField
           value={label}
           onChange={onLabelChange}
@@ -200,20 +185,26 @@ const NewViewListItem = (props: {
           label="Custom view label"
           variant="standard"
         />
-      </ListItem>
+        <IconButton
+          edge="end"
+          aria-label="save"
+          size="small"
+          onClick={() => {
+            onSubmit();
+            setIsAddingView(false);
+          }}
+          disabled={!isValid}
+        >
+          <DoneIcon />
+        </IconButton>
+      </React.Fragment>
     );
   }
 
   return (
-    <ListItem>
-      <Button
-        size="small"
-        startIcon={<AddIcon />}
-        onClick={() => setIsAddingView(true)}
-      >
-        Add a custom view
-      </Button>
-    </ListItem>
+    <Button endIcon={<AddIcon />} onClick={() => setIsAddingView(true)}>
+      Add a custom view
+    </Button>
   );
 };
 
@@ -266,13 +257,13 @@ const CustomToolbar = () => {
   const popperId = canBeMenuOpened ? 'transition-popper' : undefined;
 
   return (
-    <React.Fragment>
+    <GridToolbarContainer style={{ height: 48 }}>
       <Button
         aria-describedby={popperId}
         type="button"
         onClick={handlePopperAnchorClick}
       >
-        Custom views
+        Custom views ({Object.keys(state.views).length})
       </Button>
       <ClickAwayListener onClickAway={handleClosePopper}>
         <Popper
@@ -296,20 +287,19 @@ const CustomToolbar = () => {
                       onSelect={handleSetActiveView}
                     />
                   ))}
-                  <Divider />
-                  <NewViewListItem
-                    label={state.newViewLabel}
-                    onLabelChange={handleNewViewLabelChange}
-                    onSubmit={createNewView}
-                    isValid={isNewViewLabelValid}
-                  />
                 </List>
               </Paper>
             </Fade>
           )}
         </Popper>
       </ClickAwayListener>
-    </React.Fragment>
+      <NewViewListButton
+        label={state.newViewLabel}
+        onLabelChange={handleNewViewLabelChange}
+        onSubmit={createNewView}
+        isValid={isNewViewLabelValid}
+      />
+    </GridToolbarContainer>
   );
 };
 
