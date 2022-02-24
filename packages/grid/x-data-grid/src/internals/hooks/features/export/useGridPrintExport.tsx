@@ -41,7 +41,6 @@ export const useGridPrintExport = (
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
-  const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
@@ -66,22 +65,15 @@ export const useGridPrintExport = (
           options: { fields, allColumns },
         }).map((column) => column.field);
 
-        // Show only wanted columns.
-        apiRef.current.updateColumns(
-          columns.map((column) => {
-            const currentlyVisible = columnVisibilityModel[column.field] !== false;
-            const visibleInPrint = exportedColumnFields.includes(column.field);
+        const newColumnVisibilityModel = {};
+        columns.forEach((column) => {
+          newColumnVisibilityModel[column.field] = exportedColumnFields.includes(column.field);
+        });
+        apiRef.current.setColumnVisibilityModel(newColumnVisibilityModel);
 
-            previousColumnVisibility.current[column.field] = currentlyVisible;
-
-            column.hide = !visibleInPrint;
-
-            return column;
-          }),
-        );
         resolve();
       }),
-    [columns, columnVisibilityModel, apiRef],
+    [columns, apiRef],
   );
 
   const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
@@ -232,6 +224,10 @@ export const useGridPrintExport = (
 
       // Revert grid to previous state
       apiRef.current.restoreState(previousGridState.current || {});
+      if (!previousGridState.current?.columns?.columnVisibilityModel) {
+        // if the apiRef.current.exportState(); did not exported the column visibility, we update it
+        apiRef.current.setColumnVisibilityModel(previousColumnVisibility.current);
+      }
 
       apiRef.current.unstable_enableVirtualization();
 
@@ -251,6 +247,8 @@ export const useGridPrintExport = (
       }
 
       previousGridState.current = apiRef.current.exportState();
+      // It appends that the visibility model is not exported, especially if columnVisibility is not controlled
+      previousColumnVisibility.current = gridColumnVisibilityModelSelector(apiRef);
 
       if (props.pagination) {
         apiRef.current.setPageSize(visibleRowCount);
