@@ -178,7 +178,7 @@ export const useGridTreeData = (
     [props.treeData, getGroupingColDef],
   );
 
-  const filtering = React.useCallback<GridStrategyProcessor<'filtering'>>(
+  const filteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
 
@@ -207,7 +207,7 @@ export const useGridTreeData = (
   );
 
   useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
-  useGridRegisterStrategyProcessor(apiRef, 'filtering', TREE_DATA_GROUPING_NAME, filtering);
+  useGridRegisterStrategyProcessor(apiRef, 'filtering', TREE_DATA_GROUPING_NAME, filteringMethod);
   useGridRegisterStrategyProcessor(apiRef, 'sorting', TREE_DATA_GROUPING_NAME, sortingMethod);
 
   /**

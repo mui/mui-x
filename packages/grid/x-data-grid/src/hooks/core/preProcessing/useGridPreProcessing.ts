@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridPreProcessingApi, PreProcessorCallback } from './gridPreProcessingApi';
+import { GridPreProcessingApi, GridPreProcessor } from './gridPreProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../models/events';
 
@@ -9,7 +9,7 @@ import { GridEvents } from '../../../models/events';
  */
 export const useGridPreProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
   const preProcessorsRef = React.useRef<
-    Partial<Record<string, Record<string, PreProcessorCallback>>>
+    Partial<Record<string, Record<string, GridPreProcessor<any>>>>
   >({});
 
   const registerPreProcessor = React.useCallback<

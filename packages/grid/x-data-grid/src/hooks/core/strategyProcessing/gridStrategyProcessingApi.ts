@@ -29,7 +29,7 @@ export interface GridStrategyProcessingApi {
    * Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.
    * @param {GridPreProcessingGroup} group The name of the group to bind this pre-processor to.
    * @param {number} id An unique and static identifier of the pre-processor.
-   * @param {PreProcessorCallback} callback The pre-processor to register.
+   * @param {GridStrategyProcessor} callback The pre-processor to register.
    * @returns {() => void} A function to unregister the pre-processor.
    * @ignore - do not document.
    */

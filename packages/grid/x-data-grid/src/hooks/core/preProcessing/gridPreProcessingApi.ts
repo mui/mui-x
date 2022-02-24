@@ -8,8 +8,6 @@ import {
 import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry } from '../../../models/gridRows';
 
-export type PreProcessorCallback = (value: any, params?: any) => any;
-
 export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
 export interface GridPreProcessingGroupLookup {
@@ -50,7 +48,7 @@ export interface GridPreProcessingApi {
    * Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.
    * @param {GridPreProcessingGroup} group The name of the group to bind this pre-processor to.
    * @param {number} id An unique and static identifier of the pre-processor.
-   * @param {PreProcessorCallback} callback The pre-processor to register.
+   * @param {GridPreProcessor} callback The pre-processor to register.
    * @returns {() => void} A function to unregister the pre-processor.
    * @ignore - do not document.
    */
