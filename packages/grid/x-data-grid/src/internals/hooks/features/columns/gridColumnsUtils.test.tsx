@@ -99,7 +99,7 @@ describe('gridColumnsUtils', () => {
       expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(50);
     });
 
-    it('should use `maxWidth` if calculated flex width exceeds it', () => {
+    it('should use `maxWidth` if calculated width exceeds it', () => {
       const flexColumns = [
         { field: 'id', flex: 1, minWidth: 50, maxWidth: 100 },
         { field: 'age', flex: 3, minWidth: 50 },
@@ -113,6 +113,22 @@ describe('gridColumnsUtils', () => {
 
       expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(100);
       expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(900);
+    });
+
+    it('should not use `maxWidth` if calculated width is smaller', () => {
+      const flexColumns = [
+        { field: 'age', flex: 1, maxWidth: 800 },
+        { field: 'id', flex: 1, maxWidth: 400 },
+      ];
+
+      const computedColumns = computeFlexColumnsWidth({
+        flexColumns,
+        initialFreeSpace: 1000,
+        totalFlexUnits: getTotalFlexUnits(flexColumns),
+      });
+
+      expect(computedColumns[flexColumns[0].field].computedWidth).to.equal(600);
+      expect(computedColumns[flexColumns[1].field].computedWidth).to.equal(400);
     });
 
     it('should split the columns equally if they are all flex', () => {
