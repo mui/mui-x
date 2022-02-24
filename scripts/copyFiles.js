@@ -153,15 +153,20 @@ async function run() {
   try {
     const packageData = await createPackageFile();
 
-    await Promise.all(
-      [
-        // TODO: Improve if we want to use the core `copy-files.js` file
-        // use enhanced readme from workspace root for `@mui/material`
-        './README.md',
-        packageData.name.includes('grid') ? '../../../CHANGELOG.md' : '../../CHANGELOG.md',
-        // '../../LICENSE',
-      ].map((file) => includeFileInBuild(file)),
-    );
+    const filesToCopy = [
+      // TODO: Improve if we want to use the core `copy-files.js` file
+      // use enhanced readme from workspace root for `@mui/material`
+      './README.md',
+      packageData.name.includes('grid') ? '../../../CHANGELOG.md' : '../../CHANGELOG.md',
+      // '../../LICENSE',
+    ];
+
+    // Be sure to replicate this behavior if unifying with the core
+    if (packageData.name === '@mui/x-license-pro') {
+      filesToCopy.push('./bin');
+    }
+
+    await Promise.all(filesToCopy.map((file) => includeFileInBuild(file)));
 
     await addLicense(packageData);
 
