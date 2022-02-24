@@ -11,6 +11,7 @@ import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelecto
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { isGridHeaderCellRoot } from '../../../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef/gridCheckboxSelectionColDef';
+import { gridClasses } from '../../../gridClasses';
 
 /**
  * @requires useGridPage (state)
@@ -174,7 +175,7 @@ export const useGridKeyboardNavigation = (
     (params, event) => {
       let isFromCustomHeader = false;
       if (params.colDef.renderHeader) {
-        const headerTitleNode = event.currentTarget.querySelector('.MuiDataGrid-columnHeaderTitle');
+        const headerTitleNode = event.currentTarget.querySelector(`.${gridClasses.columnHeaderTitleContainer}`);
         isFromCustomHeader =
           !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
       }
