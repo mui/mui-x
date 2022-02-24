@@ -14,6 +14,7 @@ export { GridColumnHeaders as unstable_GridColumnHeaders } from './internals/com
 export { createSelector as unstable_createSelector } from './internals/utils/createSelector';
 
 export { useGridInitialization as unstable_useGridInitialization } from './internals/hooks/core';
+export { useGridInitializeState as unstable_useGridInitializeState } from './internals/hooks/utils/useGridInitializeState';
 export { useGridRegisterSortingMethod as unstable_useGridRegisterSortingMethod } from './internals/hooks/features/sorting/useGridRegisterSortingMethod';
 export { useGridRegisterFilteringMethod as unstable_useGridRegisterFilteringMethod } from './internals/hooks/features/filter/useGridRegisterFilteringMethod';
 export { useGridRegisterPreProcessor as unstable_useGridRegisterPreProcessor } from './internals/hooks/core/preProcessing/useGridRegisterPreProcessor';
@@ -22,22 +23,37 @@ export { useCurrentPageRows as unstable_useCurrentPageRows } from './internals/h
 
 export { useGridClipboard as unstable_useGridClipboard } from './internals/hooks/features/clipboard/useGridClipboard';
 export { useGridColumnMenu as unstable_useGridColumnMenu } from './internals/hooks/features/columnMenu/useGridColumnMenu';
-export { useGridColumns as unstable_useGridColumns } from './internals/hooks/features/columns/useGridColumns';
+export {
+  useGridColumns as unstable_useGridColumns,
+  columnsStateInitializer as unstable_columnsStateInitializer,
+} from './internals/hooks/features/columns/useGridColumns';
 export { useGridDensity as unstable_useGridDensity } from './internals/hooks/features/density/useGridDensity';
 export { useGridCsvExport as unstable_useGridCsvExport } from './internals/hooks/features/export/useGridCsvExport';
 export { useGridPrintExport as unstable_useGridPrintExport } from './internals/hooks/features/export/useGridPrintExport';
-export { useGridFilter as unstable_useGridFilter } from './internals/hooks/features/filter/useGridFilter';
+export {
+  useGridFilter as unstable_useGridFilter,
+  filterStateInitializer as unstable_filterStateInitializer,
+} from './internals/hooks/features/filter/useGridFilter';
 export { useGridFocus as unstable_useGridFocus } from './internals/hooks/features/focus/useGridFocus';
 export { useGridKeyboard as unstable_useGridKeyboard } from './internals/hooks/features/keyboard/useGridKeyboard';
 export { useGridKeyboardNavigation as unstable_useGridKeyboardNavigation } from './internals/hooks/features/keyboard/useGridKeyboardNavigation';
 export { useGridPagination as unstable_useGridPagination } from './internals/hooks/features/pagination/useGridPagination';
+export { pageSizeStateInitializer as unstable_pageSizeStateInitializer } from './internals/hooks/features/pagination/useGridPageSize';
+export { pageStateInitializer as unstable_pageStateInitializer } from './internals/hooks/features/pagination/useGridPage';
 export { useGridPreferencesPanel as unstable_useGridPreferencesPanel } from './internals/hooks/features/preferencesPanel/useGridPreferencesPanel';
 export { useGridEditing as unstable_useGridEditing } from './internals/hooks/features/editRows/useGridEditing';
-export { useGridRows as unstable_useGridRows } from './internals/hooks/features/rows/useGridRows';
+export {
+  useGridRows as unstable_useGridRows,
+  rowsStateInitializer as unstable_rowsStateInitializer,
+} from './internals/hooks/features/rows/useGridRows';
 export { useGridRowsMeta as unstable_useGridRowsMeta } from './internals/hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi as unstable_useGridParamsApi } from './internals/hooks/features/rows/useGridParamsApi';
 export { useGridSelection as unstable_useGridSelection } from './internals/hooks/features/selection/useGridSelection';
-export { useGridSorting as unstable_useGridSorting } from './internals/hooks/features/sorting/useGridSorting';
+export { useGridSelectionPreProcessors as unstable_useGridSelectionPreProcessors } from './internals/hooks/features/selection/useGridSelectionPreProcessors';
+export {
+  useGridSorting as unstable_useGridSorting,
+  sortingStateInitializer as unstable_sortingStateInitializer,
+} from './internals/hooks/features/sorting/useGridSorting';
 export { useGridScroll as unstable_useGridScroll } from './internals/hooks/features/scroll/useGridScroll';
 export { useGridEvents as unstable_useGridEvents } from './internals/hooks/features/events/useGridEvents';
 export { useGridDimensions as unstable_useGridDimensions } from './internals/hooks/features/dimensions/useGridDimensions';
@@ -50,6 +66,7 @@ export {
 } from './internals/utils/utils';
 export { findParentElementFromClassName as unstable_findParentElementFromClassName } from './internals/utils/domUtils';
 
+export type { GridStateInitializer as Unstable_GridStateInitializer } from './internals/hooks/utils/useGridInitializeState';
 export type { GridFilteringMethod as Unstable_GridFilteringMethod } from './internals/hooks/features/filter/gridFilterState';
 export type { GridSortingMethod as Unstable_GridSortingMethod } from './internals/hooks/features/sorting/gridSortingState';
 export type { GridSortingModelApplier as Unstable_GridSortingModelApplier } from './internals/hooks/features/sorting/gridSortingState';
