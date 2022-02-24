@@ -373,9 +373,7 @@ describe('<DataGrid /> - Keyboard', () => {
           field: 'name',
           headerName: 'Name',
           width: 200,
-          renderCell: () => (
-            <input type="text" data-testid="custom-input" />
-          ),
+          renderCell: () => <input type="text" data-testid="custom-input" />,
         },
       ];
 
