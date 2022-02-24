@@ -262,10 +262,7 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
   );
   const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
 
-  const localesDirectory = path.resolve(
-    workspaceRoot,
-    'packages/grid/x-data-grid/src/locales',
-  );
+  const localesDirectory = path.resolve(workspaceRoot, 'packages/grid/x-data-grid/src/locales');
   const locales = findLocales(localesDirectory);
 
   const missingTranslations: Record<string, any> = {};
