@@ -3,8 +3,8 @@ import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
-  gridColumnsMetaSelector,
-  visibleGridColumnsSelector,
+  gridColumnPositionsSelector,
+  gridVisibleColumnDefinitionsSelector,
 } from '../columns/gridColumnsSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPageSelector, gridPageSizeSelector } from '../pagination/gridPaginationSelector';
@@ -47,7 +47,7 @@ export const useGridScroll = (
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
       const totalRowCount = gridRowCountSelector(apiRef);
-      const visibleColumns = visibleGridColumnsSelector(apiRef);
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       if (totalRowCount === 0 || visibleColumns.length === 0) {
         return false;
       }
@@ -57,13 +57,13 @@ export const useGridScroll = (
       let scrollCoordinates: Partial<GridScrollParams> = {};
 
       if (params.colIndex != null) {
-        const columnsMeta = gridColumnsMetaSelector(apiRef);
+        const columnPositions = gridColumnPositionsSelector(apiRef);
 
         scrollCoordinates.left = scrollIntoView({
           clientHeight: windowRef.current!.clientWidth,
           scrollTop: windowRef.current!.scrollLeft,
           offsetHeight: visibleColumns[params.colIndex].computedWidth,
-          offsetTop: columnsMeta.positions[params.colIndex],
+          offsetTop: columnPositions[params.colIndex],
         });
       }
       if (params.rowIndex != null) {

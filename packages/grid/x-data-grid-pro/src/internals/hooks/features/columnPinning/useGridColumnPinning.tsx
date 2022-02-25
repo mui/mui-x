@@ -4,8 +4,9 @@ import {
   MuiEvent,
   GridRowParams,
   useGridSelector,
-  visibleGridColumnsSelector,
-  gridColumnsMetaSelector,
+  gridVisibleColumnDefinitionsSelector,
+  gridColumnsTotalWidthSelector,
+  gridColumnPositionsSelector,
   gridVisibleColumnFieldsSelector,
   gridClasses,
   GridEvents,
@@ -138,17 +139,17 @@ export const useGridColumnPinning = (
         return initialValue;
       }
 
-      const visibleColumns = visibleGridColumnsSelector(apiRef);
-      const columnsMeta = gridColumnsMetaSelector(apiRef);
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+      const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
+      const columnPositions = gridColumnPositionsSelector(apiRef);
       const clientWidth = apiRef.current.windowRef!.current!.clientWidth;
       const scrollLeft = apiRef.current.windowRef!.current!.scrollLeft;
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
-      const offsetLeft = columnsMeta.positions[params.colIndex];
+      const offsetLeft = columnPositions[params.colIndex];
 
-      const leftPinnedColumnsWidth = columnsMeta.positions[leftPinnedColumns.length];
+      const leftPinnedColumnsWidth = columnPositions[leftPinnedColumns.length];
       const rightPinnedColumnsWidth =
-        columnsMeta.totalWidth -
-        columnsMeta.positions[columnsMeta.positions.length - rightPinnedColumns.length];
+        columnsTotalWidth - columnPositions[columnPositions.length - rightPinnedColumns.length];
 
       const elementBottom = offsetLeft + offsetWidth;
       if (elementBottom - (clientWidth - rightPinnedColumnsWidth) > scrollLeft) {
@@ -196,7 +197,7 @@ export const useGridColumnPinning = (
       }
 
       if (rightPinnedColumns.length > 0) {
-        const visibleColumns = visibleGridColumnsSelector(apiRef);
+        const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
         const firstRightPinnedColumnIndex = visibleColumns.length - rightPinnedColumns.length;
         return targetIndex >= firstRightPinnedColumnIndex ? false : initialValue;
       }

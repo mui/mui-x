@@ -4,8 +4,9 @@ import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
-  visibleGridColumnsSelector,
-  gridColumnsMetaSelector,
+  gridVisibleColumnDefinitionsSelector,
+  gridColumnsTotalWidthSelector,
+  gridColumnPositionsSelector,
 } from '../columns/gridColumnsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
@@ -53,7 +54,7 @@ interface UseGridVirtualScrollerProps {
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
 
   const {
     ref,
@@ -64,7 +65,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     getRowProps,
   } = props;
 
-  const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
+  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
@@ -79,7 +81,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const scrollPosition = React.useRef({ top: 0, left: 0 });
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
-  const prevTotalWidth = React.useRef(columnsMeta.totalWidth);
+  const prevTotalWidth = React.useRef(columnsTotalWidth);
 
   const computeRenderContext = React.useCallback(() => {
     if (disableVirtualization) {
@@ -98,8 +100,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       ? firstRowIndex + currentPage.rows.length
       : getIndexFromScroll(top + rootRef.current!.clientHeight!, rowsMeta.positions);
 
-    const firstColumnIndex = getIndexFromScroll(left, columnsMeta.positions);
-    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnsMeta.positions);
+    const firstColumnIndex = getIndexFromScroll(left, columnPositions);
+    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnPositions);
 
     return {
       firstRowIndex,
@@ -112,7 +114,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     rowsMeta.positions,
     rootProps.autoHeight,
     currentPage.rows.length,
-    columnsMeta.positions,
+    columnPositions,
     containerWidth,
     visibleColumns.length,
   ]);
@@ -179,7 +181,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       });
 
       const top = gridRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
-      const left = gridColumnsMetaSelector(apiRef).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
+      const left = gridColumnPositionsSelector(apiRef)[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
       renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
 
       if (typeof onRenderZonePositioning === 'function') {
@@ -223,7 +225,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const shouldSetState =
       rowsScrolledSincePreviousRender >= rootProps.rowThreshold ||
       columnsScrolledSincePreviousRender >= rootProps.columnThreshold ||
-      prevTotalWidth.current !== columnsMeta.totalWidth;
+      prevTotalWidth.current !== columnsTotalWidth;
 
     // TODO v6: rename event to a wider name, it's not only fired for row scrolling
     apiRef.current.publishEvent(GridEvents.rowsScroll, {
@@ -235,7 +237,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     if (shouldSetState) {
       setRenderContext(nextRenderContext);
       prevRenderContext.current = nextRenderContext;
-      prevTotalWidth.current = columnsMeta.totalWidth;
+      prevTotalWidth.current = columnsTotalWidth;
       updateRenderZonePosition(nextRenderContext);
     }
   };
@@ -321,7 +323,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return rows;
   };
 
-  const needsHorizontalScrollbar = containerWidth && columnsMeta.totalWidth > containerWidth;
+  const needsHorizontalScrollbar = containerWidth && columnsTotalWidth > containerWidth;
 
   const contentSize = React.useMemo(() => {
     // In cases where the columns exceed the available width,
@@ -335,7 +337,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     const size = {
-      width: needsHorizontalScrollbar ? columnsMeta.totalWidth : 'auto',
+      width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
       height,
       minHeight: shouldExtendContent ? '100%' : 'auto',
     };
@@ -347,7 +349,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return size;
   }, [
     rootRef,
-    columnsMeta.totalWidth,
+    columnsTotalWidth,
     rowsMeta.currentPageTotalHeight,
     currentPage.rows.length,
     needsHorizontalScrollbar,

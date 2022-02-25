@@ -6,13 +6,14 @@ import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOr
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
-  allGridColumnsFieldsSelector,
-  allGridColumnsSelector,
+  gridColumnFieldsSelector,
+  gridColumnDefinitionsSelector,
   gridColumnLookupSelector,
   gridColumnsMetaSelector,
   gridColumnsSelector,
   gridColumnVisibilityModelSelector,
-  visibleGridColumnsSelector,
+  gridVisibleColumnDefinitionsSelector,
+  gridColumnPositionsSelector,
 } from './gridColumnsSelector';
 import {
   useGridApiEventHandler,
@@ -119,17 +120,17 @@ export function useGridColumns(
    * API METHODS
    */
   const getColumn = React.useCallback<GridColumnApi['getColumn']>(
-    (field) => gridColumnLookupSelector(apiRef.current.state)[field] as GridStateColDef<any>,
+    (field) => gridColumnLookupSelector(apiRef)[field] as GridStateColDef<any>,
     [apiRef],
   );
 
   const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
-    () => allGridColumnsSelector(apiRef) as GridStateColDef<any>[],
+    () => gridColumnDefinitionsSelector(apiRef) as GridStateColDef<any>[],
     [apiRef],
   );
 
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
-    () => visibleGridColumnsSelector(apiRef) as GridStateColDef<any>[],
+    () => gridVisibleColumnDefinitionsSelector(apiRef) as GridStateColDef<any>[],
     [apiRef],
   );
 
@@ -141,8 +142,8 @@ export function useGridColumns(
   const getColumnIndex = React.useCallback<GridColumnApi['getColumnIndex']>(
     (field, useVisibleColumns = true) => {
       const columns = useVisibleColumns
-        ? visibleGridColumnsSelector(apiRef)
-        : allGridColumnsSelector(apiRef);
+        ? gridVisibleColumnDefinitionsSelector(apiRef)
+        : gridColumnDefinitionsSelector(apiRef);
 
       return columns.findIndex((col) => col.field === field);
     },
@@ -152,7 +153,7 @@ export function useGridColumns(
   const getColumnPosition = React.useCallback<GridColumnApi['getColumnPosition']>(
     (field) => {
       const index = getColumnIndex(field);
-      return gridColumnsMetaSelector(apiRef).positions[index];
+      return gridColumnPositionsSelector(apiRef)[index];
     },
     [apiRef, getColumnIndex],
   );
@@ -233,7 +234,7 @@ export function useGridColumns(
 
   const setColumnIndex = React.useCallback<GridColumnApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
-      const allColumns = allGridColumnsFieldsSelector(apiRef);
+      const allColumns = gridColumnFieldsSelector(apiRef);
       const oldIndexPosition = allColumns.findIndex((col) => col === field);
       if (oldIndexPosition === targetIndexPosition) {
         return;
