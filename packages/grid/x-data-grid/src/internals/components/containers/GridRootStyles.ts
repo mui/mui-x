@@ -15,6 +15,7 @@ export const GridRootStyles = styled('div', {
     // TODO: v6 - remove
     { [`& .${gridClasses['cell--withRenderer']}`]: styles['cell--withRenderer'] },
     { [`& .${gridClasses.cell}`]: styles.cell },
+    { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${gridClasses.checkboxInput}`]: styles.checkboxInput },
     { [`& .${gridClasses['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
@@ -119,7 +120,6 @@ export const GridRootStyles = styled('div', {
       flex: 1,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-      padding: '0 6px',
     },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
@@ -138,6 +138,11 @@ export const GridRootStyles = styled('div', {
       {
         marginRight: 'auto',
         marginLeft: -6,
+      },
+    [`& .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}`]:
+      {
+        marginRight: 'auto',
+        marginLeft: -10,
       },
     [`& .${gridClasses['columnHeader--moving']}`]: {
       backgroundColor: theme.palette.action.hover,
@@ -177,7 +182,7 @@ export const GridRootStyles = styled('div', {
       width: 0,
       visibility: 'hidden',
       fontSize: 20,
-      marginRight: -6,
+      marginRight: -10,
       display: 'flex',
       alignItems: 'center',
     },
@@ -227,9 +232,12 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
       overflow: 'hidden',
-      textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       borderBottom: `1px solid ${borderColor}`,
+    },
+    [`& .${gridClasses.cellContent}`]: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     },
     [`& .${gridClasses.cell}.${gridClasses['cell--editing']}`]: {
       padding: 1,

@@ -1,11 +1,15 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridOverlay, DataGrid } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { styled } from '@mui/material/styles';
 
-const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
+const StyledGridOverlay = styled('div')(({ theme }) => ({
+  display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100%',
   '& .ant-empty-img-1': {
     fill: theme.palette.mode === 'light' ? '#aeb8c2' : '#262626',
   },

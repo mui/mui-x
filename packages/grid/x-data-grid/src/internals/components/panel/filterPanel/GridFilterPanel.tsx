@@ -11,7 +11,7 @@ import { GridFilterForm, GridFilterFormProps } from './GridFilterForm';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
-import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 
 export interface GridFilterPanelProps
   extends Pick<GridFilterFormProps, 'linkOperators' | 'columnsSort'> {
@@ -31,7 +31,7 @@ function GridFilterPanel(props: GridFilterPanelProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
+  const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
   const lastFilterRef = React.useRef<any>(null);
 
   const {
@@ -93,9 +93,13 @@ function GridFilterPanel(props: GridFilterPanelProps) {
 
   const deleteFilter = React.useCallback(
     (item: GridFilterItem) => {
+      const shouldCloseFilterPanel = items.length === 1;
       apiRef.current.deleteFilterItem(item);
+      if (shouldCloseFilterPanel) {
+        apiRef.current.hideFilterPanel();
+      }
     },
-    [apiRef],
+    [apiRef, items.length],
   );
 
   React.useEffect(() => {

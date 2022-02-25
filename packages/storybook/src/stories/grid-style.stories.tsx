@@ -177,3 +177,43 @@ export const ColumnCellRendererWithPadding = () => {
     </div>
   );
 };
+export const TruncatedCellTextSnap = () => {
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      <DataGridPro
+        columns={[{ field: 'text' }]}
+        rows={[
+          {
+            id: 1,
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a accumsan lacus. Etiam faucibus fermentum ipsum. Integer bibendum diam quis est sagittis laoreet. Pellentesque finibus lacus vitae erat aliquet dignissim.',
+          },
+        ]}
+      />
+    </div>
+  );
+};
+export const MultilineCustomCellContentSnap = () => {
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      <DataGridPro
+        columns={[
+          {
+            field: 'name',
+            renderCell: (params) => (
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>{params.value}</span>
+                <span>{params.value}</span>
+              </div>
+            ),
+          },
+        ]}
+        rows={[
+          {
+            id: 1,
+            name: 'MUI',
+          },
+        ]}
+      />
+    </div>
+  );
+};
