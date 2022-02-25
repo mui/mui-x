@@ -1,12 +1,12 @@
 import { GridApiCommon } from '@mui/x-data-grid';
-import type {
+import {
   GridCellParams as GridCellParamsUntyped,
   GridRenderCellParams as GridRenderCellParamsUntyped,
   GridRenderEditCellParams as GridRenderEditCellParamsUntyped,
   GridValueFormatterParams as GridValueFormatterParamsUntyped,
   GridValueGetterFullParams as GridValueGetterFullParamsUntyped,
   GridValueGetterParams as GridValueGetterParamsUntyped,
-} from '@mui/x-data-grid/models/params/gridCellParams';
+} from '@mui/x-data-grid';
 import { GridApiPro } from './gridApiPro';
 
 /**
