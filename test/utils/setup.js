@@ -9,11 +9,12 @@ require('@babel/register')({
 });
 
 createDOM();
-require('./init');
+
+const { mochaHooks: otherMochaHooks } = require('./init');
 
 const mochaHooks = {
-  beforeEach: [],
-  afterEach: [],
+  beforeEach: [...otherMochaHooks.beforeEach],
+  afterEach: [...otherMochaHooks.afterEach],
 };
 
 function throwOnUnexpectedConsoleMessages(methodName, expectedMatcher) {

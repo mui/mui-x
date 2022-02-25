@@ -448,6 +448,7 @@
   { "name": "unstable_GridVirtualScrollerRenderZone", "kind": "ExportSpecifier" },
   { "name": "unstable_isDeepEqual", "kind": "ExportSpecifier" },
   { "name": "unstable_isNavigationKey", "kind": "ExportSpecifier" },
+  { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
   { "name": "unstable_useCurrentPageRows", "kind": "ExportSpecifier" },
   { "name": "unstable_useGridClipboard", "kind": "ExportSpecifier" },
   { "name": "unstable_useGridColumnHeaders", "kind": "ExportSpecifier" },
