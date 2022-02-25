@@ -1,5 +1,5 @@
-import { GridApiCommon } from '@mui/x-data-grid';
 import {
+  GridApiCommon,
   GridActionsColDef as GridActionsColDefUntyped,
   GridColDef as GridColDefUntyped,
   GridColTypeDef as GridColTypeDefUntyped,
