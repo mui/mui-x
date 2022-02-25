@@ -8,8 +8,7 @@ import {
   DataGridPro,
   useGridApiRef,
   gridVisibleRowCountSelector,
-  visibleGridColumnsLengthSelector,
-  visibleGridColumnsSelector,
+  gridVisibleColumnDefinitionsSelector,
   gridVisibleSortedRowIdsSelector,
   GridCellParams,
 } from '@mui/x-data-grid-pro';
@@ -32,13 +31,13 @@ export default function ScrollPlayground() {
     const { rowIndex, colIndex } = coordinates;
     apiRef.current.scrollToIndexes(coordinates);
     const id = gridVisibleSortedRowIdsSelector(apiRef)[rowIndex];
-    const column = visibleGridColumnsSelector(apiRef)[colIndex];
+    const column = gridVisibleColumnDefinitionsSelector(apiRef)[colIndex];
     apiRef.current.setCellFocus(id, column.field);
   }, [apiRef, coordinates]);
 
   const handleClick = (position: string) => () => {
     const maxRowIndex = gridVisibleRowCountSelector(apiRef) - 1;
-    const maxColIndex = visibleGridColumnsLengthSelector(apiRef) - 1;
+    const maxColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
 
     setCoordinates((coords) => {
       switch (position) {
@@ -60,7 +59,7 @@ export default function ScrollPlayground() {
     const rowIndex = gridVisibleSortedRowIdsSelector(apiRef).findIndex(
       (id) => id === params.id,
     );
-    const colIndex = visibleGridColumnsSelector(apiRef).findIndex(
+    const colIndex = gridVisibleColumnDefinitionsSelector(apiRef).findIndex(
       (column) => column.field === params.field,
     );
     setCoordinates({ rowIndex, colIndex });

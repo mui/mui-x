@@ -26,6 +26,7 @@ export interface GridColumnApi {
   /**
    * Returns the [[GridColumnsMeta]] for each column.
    * @returns {GridColumnsMeta[]} All [[GridColumnsMeta]] objects.
+   * @deprecatedUse Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
    */
   getColumnsMeta: () => GridColumnsMeta;
   /**

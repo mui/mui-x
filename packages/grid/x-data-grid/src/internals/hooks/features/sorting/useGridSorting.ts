@@ -10,7 +10,7 @@ import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
+import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import {
   gridSortedRowEntriesSelector,
   gridSortedRowIdsSelector,
@@ -303,12 +303,10 @@ export const useGridSorting = (
   const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
     const sortModel = gridSortModelSelector(apiRef);
-    const latestColumns = allGridColumnsSelector(apiRef);
+    const latestColumns = gridColumnLookupSelector(apiRef);
 
     if (sortModel.length > 0) {
-      const newModel = sortModel.filter((sortItem) =>
-        latestColumns.find((col) => col.field === sortItem.field),
-      );
+      const newModel = sortModel.filter((sortItem) => latestColumns[sortItem.field]);
 
       if (newModel.length < sortModel.length) {
         apiRef.current.setSortModel(newModel);

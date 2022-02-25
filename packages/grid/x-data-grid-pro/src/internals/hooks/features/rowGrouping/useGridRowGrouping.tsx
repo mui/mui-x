@@ -95,9 +95,7 @@ export const useGridRowGrouping = (
   const updateRowGrouping = React.useCallback(() => {
     const groupRows: GridRowGroupingPreProcessing = (params) => {
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-      const columnsLookup = gridColumnLookupSelector(
-        apiRef.current.state,
-      ) as any as GridColumnLookup<GridApiPro>;
+      const columnsLookup = gridColumnLookupSelector(apiRef) as any as GridColumnLookup<GridApiPro>;
       sanitizedModelOnLastRowPreProcessing.current = rowGroupingModel;
 
       if (props.disableRowGrouping || rowGroupingModel.length === 0) {
