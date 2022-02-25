@@ -171,7 +171,10 @@ export const filterableGridColumnsIdsSelector = createSelector(
  * @deprecated Use the length of `gridVisibleColumnDefinitionsSelector` instead.
  * @ignore - do not document.
  */
-export const visibleGridColumnsLengthSelector = gridVisibleColumnLengthSelector;
+export const visibleGridColumnsLengthSelector = createSelector(
+  gridVisibleColumnDefinitionsSelector,
+  (visibleColumns) => visibleColumns.length,
+);
 
 /**
  * @category Visible Columns
