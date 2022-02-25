@@ -4,7 +4,7 @@ import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridVisibleColumnDefinitionsSelector,
-  gridColumnsMetaSelector,
+  gridColumnPositionsSelector,
 } from '../columns/gridColumnsSelector';
 import {
   gridTabIndexColumnHeaderSelector,
@@ -34,7 +34,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const apiRef = useGridApiContext();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
+  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
@@ -62,12 +62,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const offset =
         firstColumnToRender > 0
-          ? prevScrollLeft.current - columnsMeta.positions[firstColumnToRender]
+          ? prevScrollLeft.current - columnPositions[firstColumnToRender]
           : prevScrollLeft.current;
 
       innerRef!.current!.style.transform = `translate3d(${-offset}px, 0px, 0px)`;
     },
-    [columnsMeta.positions, minColumnIndex, rootProps.columnBuffer],
+    [columnPositions, minColumnIndex, rootProps.columnBuffer],
   );
 
   const handleScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(

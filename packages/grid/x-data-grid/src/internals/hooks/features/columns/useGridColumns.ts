@@ -13,6 +13,7 @@ import {
   gridColumnsSelector,
   gridColumnVisibilityModelSelector,
   gridVisibleColumnDefinitionsSelector,
+  gridColumnPositionsSelector,
 } from './gridColumnsSelector';
 import {
   useGridApiEventHandler,
@@ -145,7 +146,7 @@ export function useGridColumns(
   const getColumnPosition = React.useCallback<GridColumnApi['getColumnPosition']>(
     (field) => {
       const index = getColumnIndex(field);
-      return gridColumnsMetaSelector(apiRef).positions[index];
+      return gridColumnPositionsSelector(apiRef)[index];
     },
     [apiRef, getColumnIndex],
   );

@@ -3,7 +3,7 @@ import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
-  gridColumnsMetaSelector,
+  gridColumnPositionsSelector,
   gridVisibleColumnDefinitionsSelector,
 } from '../columns/gridColumnsSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -57,13 +57,13 @@ export const useGridScroll = (
       let scrollCoordinates: Partial<GridScrollParams> = {};
 
       if (params.colIndex != null) {
-        const columnsMeta = gridColumnsMetaSelector(apiRef);
+        const columnPositions = gridColumnPositionsSelector(apiRef);
 
         scrollCoordinates.left = scrollIntoView({
           clientHeight: windowRef.current!.clientWidth,
           scrollTop: windowRef.current!.scrollLeft,
           offsetHeight: visibleColumns[params.colIndex].computedWidth,
-          offsetTop: columnsMeta.positions[params.colIndex],
+          offsetTop: columnPositions[params.colIndex],
         });
       }
       if (params.rowIndex != null) {

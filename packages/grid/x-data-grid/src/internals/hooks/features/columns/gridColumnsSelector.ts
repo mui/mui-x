@@ -128,17 +128,6 @@ export const gridFilterableColumnLookupSelector = createSelector(
 );
 
 /**
- * Get the amount of visible columns.
- * @category Visible Columns
- * @deprecated Use the length of `gridVisibleColumnDefinitionsSelector` instead.
- * @ignore - do not document.
- */
-export const gridVisibleColumnLengthSelector = createSelector(
-  gridVisibleColumnDefinitionsSelector,
-  (visibleColumns) => visibleColumns.length,
-);
-
-/**
  * @category Columns
  * @deprecated Use `gridColumnFieldsSelector` instead.
  * @ignore - do not document.
@@ -177,8 +166,9 @@ export const filterableGridColumnsIdsSelector = createSelector(
 );
 
 /**
+ * Get the amount of visible columns.
  * @category Visible Columns
- * @deprecated Use `gridVisibleColumnLengthSelector` instead.
+ * @deprecated Use the length of `gridVisibleColumnDefinitionsSelector` instead.
  * @ignore - do not document.
  */
 export const visibleGridColumnsLengthSelector = gridVisibleColumnLengthSelector;

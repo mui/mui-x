@@ -425,7 +425,6 @@
   { "name": "GridVirtualScrollerApi", "kind": "Interface" },
   { "name": "gridVisibleColumnDefinitionsSelector", "kind": "Variable" },
   { "name": "gridVisibleColumnFieldsSelector", "kind": "Variable" },
-  { "name": "gridVisibleColumnLengthSelector", "kind": "Variable" },
   { "name": "gridVisibleRowCountSelector", "kind": "Variable" },
   { "name": "gridVisibleRowsLookupSelector", "kind": "Variable" },
   { "name": "gridVisibleRowsSelector", "kind": "Variable" },
