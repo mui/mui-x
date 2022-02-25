@@ -311,7 +311,7 @@ export default function FullFeaturedDemo() {
         rowThreshold={0}
         initialState={{
           ...data.initialState,
-          // pinnedColumns: { left: ['__check__', 'desk'] },
+          pinnedColumns: { left: ['__check__', 'desk'] },
         }}
         {...pagination}
       />
