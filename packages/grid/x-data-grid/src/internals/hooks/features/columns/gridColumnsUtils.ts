@@ -32,6 +32,130 @@ export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}
 };
 
 /**
+ * Computes width for flex columns.
+ * Based on CSS Flexbox specification:
+ * https://drafts.csswg.org/css-flexbox-1/#resolve-flexible-lengths
+ */
+export function computeFlexColumnsWidth({
+  initialFreeSpace,
+  totalFlexUnits,
+  flexColumns,
+}: {
+  initialFreeSpace: number;
+  totalFlexUnits: number;
+  flexColumns: {
+    field: GridColDef['field'];
+    flex?: number;
+    minWidth?: number;
+    maxWidth?: number;
+  }[];
+}) {
+  const flexColumnsLookup: {
+    all: Record<
+      GridColDef['field'],
+      {
+        flex: number;
+        computedWidth: number;
+        frozen: boolean;
+      }
+    >;
+    frozenFields: GridColDef['field'][];
+    freeze: (field: GridColDef['field']) => void;
+  } = {
+    all: {},
+    frozenFields: [],
+    freeze: (field: GridColDef['field']) => {
+      const value = flexColumnsLookup.all[field];
+      if (value && value.frozen !== true) {
+        flexColumnsLookup.all[field].frozen = true;
+        flexColumnsLookup.frozenFields.push(field);
+      }
+    },
+  };
+
+  // Step 5 of https://drafts.csswg.org/css-flexbox-1/#resolve-flexible-lengths
+  function loopOverFlexItems() {
+    // 5a: If all the flex items on the line are frozen, free space has been distributed.
+    if (flexColumnsLookup.frozenFields.length === flexColumns.length) {
+      return;
+    }
+
+    const violationsLookup: {
+      min: Record<GridColDef['field'], boolean>;
+      max: Record<GridColDef['field'], boolean>;
+    } = { min: {}, max: {} };
+
+    let remainingFreeSpace = initialFreeSpace;
+    let flexUnits = totalFlexUnits;
+    let totalViolation = 0;
+
+    // 5b: Calculate the remaining free space
+    flexColumnsLookup.frozenFields.forEach((field) => {
+      remainingFreeSpace -= flexColumnsLookup.all[field].computedWidth;
+      flexUnits -= flexColumnsLookup.all[field].flex!;
+    });
+    for (let i = 0; i < flexColumns.length; i += 1) {
+      const column = flexColumns[i];
+
+      if (
+        flexColumnsLookup.all[column.field] &&
+        flexColumnsLookup.all[column.field].frozen === true
+      ) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+
+      // 5c: Distribute remaining free space proportional to the flex factors
+      const widthPerFlexUnit = remainingFreeSpace / flexUnits;
+
+      let computedWidth = widthPerFlexUnit * column.flex!;
+
+      // 5d: Fix min/max violations
+      if (computedWidth < column.minWidth!) {
+        totalViolation += column.minWidth! - computedWidth;
+        computedWidth = column.minWidth!;
+        violationsLookup.min[column.field] = true;
+      } else if (computedWidth > column.maxWidth!) {
+        totalViolation += column.maxWidth! - computedWidth;
+        computedWidth = column.maxWidth!;
+        violationsLookup.max[column.field] = true;
+      }
+
+      flexColumnsLookup.all[column.field] = {
+        frozen: false,
+        computedWidth,
+        flex: column.flex!,
+      };
+    }
+
+    // 5e: Freeze over-flexed items
+    if (totalViolation < 0) {
+      // Freeze all the items with max violations
+      Object.keys(violationsLookup.max).forEach((field) => {
+        flexColumnsLookup.freeze(field);
+      });
+    } else if (totalViolation > 0) {
+      // Freeze all the items with min violations
+      Object.keys(violationsLookup.min).forEach((field) => {
+        flexColumnsLookup.freeze(field);
+      });
+    } else {
+      // Freeze all items
+      flexColumns.forEach(({ field }) => {
+        flexColumnsLookup.freeze(field);
+      });
+    }
+
+    // 5f: Return to the start of this loop
+    loopOverFlexItems();
+  }
+
+  loopOverFlexItems();
+
+  return flexColumnsLookup.all;
+}
+
+/**
  * Compute the `computedWidth` (ie: the width the column should have during rendering) based on the `width` / `flex` / `minWidth` / `maxWidth` properties of `GridColDef`.
  * The columns already have been merged with there `type` default values for `minWidth`, `maxWidth` and `width`, thus the `!` for those properties below.
  * TODO: Unit test this function in depth and only keep basic cases for the whole grid testing.
@@ -57,7 +181,7 @@ export const hydrateColumnsWidth = (
       let computedWidth: number;
       if (newColumn.flex && newColumn.flex > 0) {
         totalFlexUnits += newColumn.flex;
-        computedWidth = newColumn.minWidth!;
+        computedWidth = 0;
         flexColumns.push(newColumn);
       } else {
         computedWidth = clamp(newColumn.width!, newColumn.minWidth!, newColumn.maxWidth!);
@@ -70,16 +194,18 @@ export const hydrateColumnsWidth = (
     columnsLookup[columnField] = newColumn;
   });
 
-  // Allocate the remaining space to the flex columns
-  if (totalFlexUnits > 0 && widthAllocatedBeforeFlex < viewportInnerWidth) {
-    const widthPerFlexUnit = (viewportInnerWidth - widthAllocatedBeforeFlex) / totalFlexUnits;
+  const initialFreeSpace = Math.max(viewportInnerWidth - widthAllocatedBeforeFlex, 0);
 
-    flexColumns.forEach((column) => {
-      column.computedWidth = clamp(
-        column.computedWidth + widthPerFlexUnit * column.flex!,
-        column.minWidth!,
-        column.maxWidth!,
-      );
+  // Allocate the remaining space to the flex columns
+  if (totalFlexUnits > 0 && viewportInnerWidth > 0) {
+    const computedColumnWidths = computeFlexColumnsWidth({
+      initialFreeSpace,
+      totalFlexUnits,
+      flexColumns,
+    });
+
+    Object.keys(computedColumnWidths).forEach((field) => {
+      columnsLookup[field].computedWidth = computedColumnWidths[field].computedWidth;
     });
   }
 

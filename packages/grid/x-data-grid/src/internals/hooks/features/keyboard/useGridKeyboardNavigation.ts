@@ -2,8 +2,7 @@ import * as React from 'react';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../../utils/useGridSelector';
+import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -26,8 +25,6 @@ export const useGridKeyboardNavigation = (
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
-  const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
-  const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
   const currentPage = useCurrentPageRows(apiRef, props);
 
   const goToCell = React.useCallback(
@@ -35,10 +32,11 @@ export const useGridKeyboardNavigation = (
       logger.debug(`Navigating to cell row ${rowIndex}, col ${colIndex}`);
       apiRef.current.scrollToIndexes({ colIndex, rowIndex });
       const field = apiRef.current.getVisibleColumns()[colIndex].field;
+      const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
       const node = visibleSortedRows[rowIndex];
       apiRef.current.setCellFocus(node.id, field);
     },
-    [apiRef, logger, visibleSortedRows],
+    [apiRef, logger],
   );
 
   const goToHeader = React.useCallback(
@@ -61,6 +59,7 @@ export const useGridKeyboardNavigation = (
       }
 
       const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
       const colIndexBefore = (params as GridCellParams).field
         ? apiRef.current.getColumnIndex((params as GridCellParams).field)
         : 0;
@@ -68,7 +67,7 @@ export const useGridKeyboardNavigation = (
       const firstRowIndexInPage = currentPage.range.firstRowIndex;
       const lastRowIndexInPage = currentPage.range.lastRowIndex;
       const firstColIndex = 0;
-      const lastColIndex = colCount - 1;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
       let shouldPreventDefault = true;
 
       switch (event.key) {
@@ -163,7 +162,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
+    [apiRef, currentPage, goToCell, goToHeader],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<
@@ -183,7 +182,7 @@ export const useGridKeyboardNavigation = (
       const firstRowIndexInPage = currentPage.range?.firstRowIndex ?? null;
       const lastRowIndexInPage = currentPage.range?.lastRowIndex ?? null;
       const firstColIndex = 0;
-      const lastColIndex = colCount - 1;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
       let shouldPreventDefault = true;
 
       switch (event.key) {
@@ -249,7 +248,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, colCount, currentPage, goToCell, goToHeader],
+    [apiRef, currentPage, goToCell, goToHeader],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, handleCellNavigationKeyDown);
