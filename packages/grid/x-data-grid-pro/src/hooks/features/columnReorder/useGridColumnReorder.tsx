@@ -2,7 +2,6 @@ import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   CursorCoordinates,
-  useGridSelector,
   useGridApiEventHandler,
   getDataGridUtilityClass,
   GridEvents,
@@ -59,7 +58,6 @@ export const useGridColumnReorder = (
     columnReorder: { dragCol: '' },
   }));
 
-  const dragColField = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
     x: 0,
@@ -120,6 +118,7 @@ export const useGridColumnReorder = (
     GridEventListener<GridEvents.cellDragOver | GridEvents.columnHeaderDragOver>
   >(
     (params, event) => {
+      const dragColField = gridColumnReorderDragColSelector(apiRef);
       if (!dragColField) {
         return;
       }
@@ -175,11 +174,12 @@ export const useGridColumnReorder = (
         cursorPosition.current = coordinates;
       }
     },
-    [apiRef, dragColField, logger],
+    [apiRef, logger],
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<GridEvents.columnHeaderDragEnd>>(
     (params, event): void => {
+      const dragColField = gridColumnReorderDragColSelector(apiRef);
       if (props.disableColumnReorder || !dragColField) {
         return;
       }
@@ -206,7 +206,7 @@ export const useGridColumnReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [props.disableColumnReorder, logger, apiRef, dragColField],
+    [props.disableColumnReorder, logger, apiRef],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnHeaderDragStart);
