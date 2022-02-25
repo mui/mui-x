@@ -13,7 +13,7 @@ import {
   GridCellModes,
 } from '../../../models/gridEditRowModel';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
+import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -36,7 +36,7 @@ export const useGridRowEditing = (
 ) => {
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
-  const columns = useGridSelector(apiRef, allGridColumnsSelector);
+  const columnFields = useGridSelector(apiRef, gridColumnFieldsSelector);
 
   const buildCallback =
     <Args extends any[]>(callback: (...args: Args) => void) =>
@@ -56,10 +56,10 @@ export const useGridRowEditing = (
         const newEditRowsState: GridEditRowsModel = { ...state.editRows };
         if (mode === GridRowModes.Edit) {
           newEditRowsState[id] = {};
-          columns.forEach((column) => {
-            const cellParams = apiRef.current.getCellParams(id, column.field);
+          columnFields.forEach((field) => {
+            const cellParams = apiRef.current.getCellParams(id, field);
             if (cellParams.isEditable) {
-              newEditRowsState[id][column.field] = { value: cellParams.value };
+              newEditRowsState[id][field] = { value: cellParams.value };
             }
           });
         } else {
@@ -69,7 +69,7 @@ export const useGridRowEditing = (
       });
       apiRef.current.forceUpdate();
     },
-    [apiRef, columns],
+    [apiRef, columnFields],
   );
 
   const getRowMode = React.useCallback<GridEditingApi['getRowMode']>(

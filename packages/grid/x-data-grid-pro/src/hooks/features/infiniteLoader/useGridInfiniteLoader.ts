@@ -6,7 +6,7 @@ import {
   GridScrollParams,
   useGridApiEventHandler,
   useGridApiOptionHandler,
-  visibleGridColumnsSelector,
+  gridVisibleColumnDefinitionsSelector,
   gridRowsMetaSelector,
 } from '@mui/x-data-grid';
 import { useCurrentPageRows } from '@mui/x-data-grid/internals';
@@ -28,7 +28,7 @@ export const useGridInfiniteLoader = (
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'
   >,
 ): void => {
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useCurrentPageRows(apiRef, props);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const contentHeight = Math.max(rowsMeta.currentPageTotalHeight, 1);

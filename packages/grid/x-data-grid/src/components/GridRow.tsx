@@ -13,7 +13,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
-import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
+import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 
 export interface GridRowProps {
@@ -88,7 +88,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
     hasScrollY: false,
@@ -227,7 +227,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     );
   }
 
-  const emptyCellWidth = containerWidth - columnsMeta.totalWidth;
+  const emptyCellWidth = containerWidth - columnsTotalWidth;
 
   return (
     <div
