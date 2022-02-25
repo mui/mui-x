@@ -70,9 +70,12 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
   const getActiveStrategy = React.useCallback<
     GridStrategyProcessingApi['unstable_getActiveStrategy']
   >(() => {
-    const strategies = Array.from(availableStrategies.current.keys());
+    const strategyEntries = Array.from(availableStrategies.current.entries());
+    const availableStrategyEntry = strategyEntries.find(([, isStrategyAvailable]) =>
+      isStrategyAvailable(),
+    );
 
-    return strategies.find((strategyName) => availableStrategies.current[strategyName]()) ?? 'none';
+    return availableStrategyEntry?.[0] ?? 'none';
   }, []);
 
   const setStrategyAvailability = React.useCallback<
