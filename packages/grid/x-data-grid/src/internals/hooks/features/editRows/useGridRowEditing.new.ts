@@ -322,7 +322,7 @@ export const useGridRowEditing = (
         );
 
         if (isSomeFieldProcessingProps) {
-          return;
+          return false;
         }
 
         let rowUpdate = { ...row };
@@ -361,10 +361,11 @@ export const useGridRowEditing = (
       }
 
       if (!canUpdate) {
-        return;
+        return false;
       }
 
       updateOrDeleteRowState(id, null);
+      return true;
     },
     [apiRef, processRowUpdate, throwIfNotInMode, updateOrDeleteRowState],
   );

@@ -250,7 +250,7 @@ export const useGridCellEditing = (
         const { value, isProcessingProps } = editingState[id][field];
 
         if (isProcessingProps) {
-          return;
+          return false;
         }
 
         let rowUpdate = column.valueSetter
@@ -278,10 +278,11 @@ export const useGridCellEditing = (
       }
 
       if (!canUpdate) {
-        return;
+        return false;
       }
 
       updateOrDeleteFieldState(id, field, null);
+      return true;
     },
     [apiRef, processRowUpdate, throwIfNotInMode, updateOrDeleteFieldState],
   );
