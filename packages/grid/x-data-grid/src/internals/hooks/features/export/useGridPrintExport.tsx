@@ -147,11 +147,12 @@ export const useGridPrintExport = (
       }
 
       // Expand container height to accommodate all rows
-      gridClone.style.height = `${rowsMeta.currentPageTotalHeight +
+      gridClone.style.height = `${
+        rowsMeta.currentPageTotalHeight +
         headerHeight +
         gridToolbarElementHeight +
         gridFooterElementHeight
-        }px`;
+      }px`;
 
       // Remove all loaded elements from the current host
       printDoc.body.innerHTML = '';
