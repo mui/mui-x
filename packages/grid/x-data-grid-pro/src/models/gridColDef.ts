@@ -1,12 +1,12 @@
 import { GridApiCommon } from '@mui/x-data-grid';
-import type {
+import {
   GridActionsColDef as GridActionsColDefUntyped,
   GridColDef as GridColDefUntyped,
   GridColTypeDef as GridColTypeDefUntyped,
   GridColumns as GridColumnsUntyped,
   GridEnrichedColDef as GridEnrichedColDefUntyped,
   GridStateColDef as GridStateColDefUntyped,
-} from '@mui/x-data-grid/models/colDef/gridColDef';
+} from '@mui/x-data-grid';
 import { GridApiPro } from './gridApiPro';
 
 export type GridColumns<Api extends GridApiCommon = GridApiPro> = GridColumnsUntyped<Api>;

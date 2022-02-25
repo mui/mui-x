@@ -11,6 +11,9 @@ export type GridColumnRawLookup<Api extends GridApiCommon = GridApiCommunity> = 
 };
 
 export interface GridColumnsState<Api extends GridApiCommon = GridApiCommunity> {
+  /**
+   * TODO: Rename `fields`.
+   */
   all: string[];
   lookup: GridColumnLookup<Api>;
   columnVisibilityModel: GridColumnVisibilityModel;

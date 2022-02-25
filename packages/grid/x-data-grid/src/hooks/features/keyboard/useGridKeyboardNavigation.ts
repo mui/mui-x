@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
+import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -60,7 +60,6 @@ export const useGridKeyboardNavigation = (
 
       const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
       const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
-      const colCount = visibleGridColumnsLengthSelector(apiRef);
       const colIndexBefore = (params as GridCellParams).field
         ? apiRef.current.getColumnIndex((params as GridCellParams).field)
         : 0;
@@ -68,7 +67,7 @@ export const useGridKeyboardNavigation = (
       const firstRowIndexInPage = currentPage.range.firstRowIndex;
       const lastRowIndexInPage = currentPage.range.lastRowIndex;
       const firstColIndex = 0;
-      const lastColIndex = colCount - 1;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
       let shouldPreventDefault = true;
 
       switch (event.key) {
@@ -179,12 +178,11 @@ export const useGridKeyboardNavigation = (
       }
 
       const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
-      const colCount = visibleGridColumnsLengthSelector(apiRef);
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
       const firstRowIndexInPage = currentPage.range?.firstRowIndex ?? null;
       const lastRowIndexInPage = currentPage.range?.lastRowIndex ?? null;
       const firstColIndex = 0;
-      const lastColIndex = colCount - 1;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
       let shouldPreventDefault = true;
 
       switch (event.key) {

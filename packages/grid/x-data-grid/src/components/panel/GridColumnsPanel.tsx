@@ -5,7 +5,7 @@ import { switchClasses } from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import {
-  allGridColumnsSelector,
+  gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -61,7 +61,7 @@ const GridIconButtonRoot = styled(IconButton)({
 export function GridColumnsPanel() {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
-  const columns = useGridSelector(apiRef, allGridColumnsSelector);
+  const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');

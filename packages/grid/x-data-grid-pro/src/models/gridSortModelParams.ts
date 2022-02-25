@@ -1,5 +1,5 @@
 import { GridApiCommon } from '@mui/x-data-grid';
-import type { GridSortModelParams as GridSortModelParamsUntyped } from '@mui/x-data-grid/models/params/gridSortModelParams';
+import { GridSortModelParams as GridSortModelParamsUntyped } from '@mui/x-data-grid/internals';
 import { GridApiPro } from './gridApiPro';
 
 /**

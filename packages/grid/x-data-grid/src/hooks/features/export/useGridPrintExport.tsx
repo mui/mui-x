@@ -8,7 +8,7 @@ import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import {
-  allGridColumnsSelector,
+  gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns/gridColumnsSelector';
 import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
@@ -54,7 +54,7 @@ export const useGridPrintExport = (
         }
 
         const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
-        const columns = allGridColumnsSelector(apiRef);
+        const columns = gridColumnDefinitionsSelector(apiRef);
 
         // Show only wanted columns.
         apiRef.current.updateColumns(
@@ -236,7 +236,7 @@ export const useGridPrintExport = (
 
       // Revert columns to their original state
       if (previousHiddenColumns.current.length) {
-        const columns = allGridColumnsSelector(apiRef);
+        const columns = gridColumnDefinitionsSelector(apiRef);
 
         apiRef.current.updateColumns(
           columns.map((column) => {
