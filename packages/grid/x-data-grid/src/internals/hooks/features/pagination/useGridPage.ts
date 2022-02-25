@@ -11,9 +11,9 @@ import { GridEvents, GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSelector } from './gridPaginationSelector';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 const getPageCount = (rowCount: number, pageSize: number): number => {
   if (pageSize > 0 && rowCount > 0) {
@@ -44,25 +44,26 @@ const mergeStateWithPage =
     }),
   });
 
+export const pageStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'initialState' | 'rowCount' | 'page'>
+> = (state, props) => ({
+  ...state,
+  pagination: {
+    ...state.pagination!,
+    page: props.page ?? props.initialState?.pagination?.page ?? 0,
+    pageCount: getPageCount(props.rowCount ?? 0, state.pagination!.pageSize!),
+    rowCount: props.rowCount ?? 0,
+  },
+});
+
 /**
- * @requires useGridPageSize (state, event)
- * @requires useGridFilter (state)
+ * @requires useGridPageSize (event)
  */
 export const useGridPage = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
-
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    pagination: {
-      ...state.pagination!,
-      page: props.page ?? props.initialState?.pagination?.page ?? 0,
-      pageCount: getPageCount(props.rowCount ?? 0, state.pagination!.pageSize!),
-      rowCount: props.rowCount ?? 0,
-    },
-  }));
 
   const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
 

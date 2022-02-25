@@ -8,16 +8,14 @@ import {
   GridCsvExportMenuItem,
   useGridApiContext,
   gridFilteredSortedRowIdsSelector,
-  visibleGridColumnsSelector,
+  gridVisibleColumnFieldsSelector,
 } from '@mui/x-data-grid';
 import MenuItem from '@mui/material/MenuItem';
 
 const getJson = (apiRef) => {
   // Select rows and columns
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
-  const visibleColumnsField = visibleGridColumnsSelector(apiRef).map(
-    (col) => col.field,
-  );
+  const visibleColumnsField = gridVisibleColumnFieldsSelector(apiRef);
 
   // Format the data. Here we only keep the value
   const data = filteredSortedRowIds.map((id) => {

@@ -38,6 +38,10 @@ export interface GridClasses {
    */
   cell: string;
   /**
+   * Styles applied to the element that wraps the cell content.
+   */
+  cellContent: string;
+  /**
    * Styles applied to the cell checkbox element.
    */
   cellCheckbox: string;
@@ -373,6 +377,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'cell--textRight',
   'cell--withRenderer',
   'cell',
+  'cellContent',
   'cellCheckbox',
   'checkboxInput',
   'columnHeader--alignCenter',

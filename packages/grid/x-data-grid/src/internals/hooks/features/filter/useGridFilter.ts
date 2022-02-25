@@ -9,7 +9,7 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
+import { gridFilterableColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import {
   getDefaultGridFilterModel,
@@ -17,7 +17,6 @@ import {
   GridFilteringMethodCollection,
 } from './gridFilterState';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
@@ -27,9 +26,26 @@ import {
   sanitizeFilterModel,
   mergeStateWithFilterModel,
 } from './gridFilterUtils';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const filterStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
+> = (state, props, apiRef) => {
+  const filterModel =
+    props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
+
+  return {
+    ...state,
+    filter: {
+      filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
+      visibleRowsLookup: {},
+      filteredDescendantCountLookup: {},
+    },
+  };
+};
 
 /**
- * @requires useGridColumns (state, method, event)
+ * @requires useGridColumns (method, event)
  * @requires useGridParamsApi (method)
  * @requires useGridRows (event)
  */
@@ -47,24 +63,6 @@ export const useGridFilter = (
   const logger = useGridLogger(apiRef, 'useGridFilter');
   const filteringMethodCollectionRef = React.useRef<GridFilteringMethodCollection>({});
   const lastFilteringMethodApplied = React.useRef<GridFilteringMethod | null>(null);
-
-  useGridStateInit(apiRef, (state) => {
-    const filterModel =
-      props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
-
-    return {
-      ...state,
-      filter: {
-        filterModel: sanitizeFilterModel(
-          filterModel,
-          props.disableMultipleColumnsFiltering,
-          apiRef,
-        ),
-        visibleRowsLookup: {},
-        filteredDescendantCountLookup: {},
-      },
-    };
-  });
 
   apiRef.current.unstable_updateControlState({
     stateId: 'filter',
@@ -295,9 +293,9 @@ export const useGridFilter = (
   const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef);
-    const columnsIds = filterableGridColumnsIdsSelector(apiRef);
+    const filterableColumnsLookup = gridFilterableColumnLookupSelector(apiRef);
     const newFilterItems = filterModel.items.filter(
-      (item) => item.columnField && columnsIds.includes(item.columnField),
+      (item) => item.columnField && filterableColumnsLookup[item.columnField],
     );
     if (newFilterItems.length < filterModel.items.length) {
       apiRef.current.setFilterModel({ ...filterModel, items: newFilterItems });
