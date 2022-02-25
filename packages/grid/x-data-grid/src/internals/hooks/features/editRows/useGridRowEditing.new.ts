@@ -325,6 +325,14 @@ export const useGridRowEditing = (
           return false;
         }
 
+        const hasSomeFieldWithError = Object.values(editingState[id]).some(
+          (fieldProps) => fieldProps.error,
+        );
+
+        if (hasSomeFieldWithError) {
+          return false;
+        }
+
         let rowUpdate = { ...row };
 
         Object.entries(editingState[id]).forEach(([field, fieldProps]) => {

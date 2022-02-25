@@ -247,9 +247,9 @@ export const useGridCellEditing = (
         const editingState = gridEditingStateSelector(apiRef.current.state);
         const row = apiRef.current.getRow(id)!;
         const column = apiRef.current.getColumn(field);
-        const { value, isProcessingProps } = editingState[id][field];
+        const { value, error, isProcessingProps } = editingState[id][field];
 
-        if (isProcessingProps) {
+        if (error || isProcessingProps) {
           return false;
         }
 

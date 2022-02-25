@@ -319,6 +319,15 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
       });
 
+      it('should do nothing if props of any column contain error=true', async () => {
+        column1Props.preProcessEditCellProps = ({ props }) => ({ ...props, error: true });
+        render(<TestCase />);
+        apiRef.current.startRowEditMode({ id: 0 });
+        await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        await apiRef.current.stopRowEditMode({ id: 0 });
+        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+      });
+
       it('should update the CSS class of the cell', async () => {
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0 });
