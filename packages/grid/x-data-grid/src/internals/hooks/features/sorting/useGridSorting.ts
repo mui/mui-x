@@ -17,7 +17,6 @@ import {
   gridSortModelSelector,
 } from './gridSortingSelector';
 import { gridRowIdsSelector, gridRowGroupingNameSelector, gridRowTreeSelector } from '../rows';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridSortingMethod, GridSortingMethodCollection } from './gridSortingState';
 import {
@@ -28,9 +27,24 @@ import {
 } from './gridSortingUtils';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const sortingStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>
+> = (state, props) => {
+  const sortModel = props.sortModel ?? props.initialState?.sorting?.sortModel ?? [];
+
+  return {
+    ...state,
+    sorting: {
+      sortModel: sanitizeSortModel(sortModel, props.disableMultipleColumnsSorting),
+      sortedRows: [],
+    },
+  };
+};
 
 /**
- * @requires useGridRows (state, event)
+ * @requires useGridRows (event)
  * @requires useGridColumns (event)
  */
 export const useGridSorting = (
@@ -48,18 +62,6 @@ export const useGridSorting = (
   const logger = useGridLogger(apiRef, 'useGridSorting');
   const sortingMethodCollectionRef = React.useRef<GridSortingMethodCollection>({});
   const lastSortingMethodApplied = React.useRef<GridSortingMethod | null>(null);
-
-  useGridStateInit(apiRef, (state) => {
-    const sortModel = props.sortModel ?? props.initialState?.sorting?.sortModel ?? [];
-
-    return {
-      ...state,
-      sorting: {
-        sortModel: sanitizeSortModel(sortModel, props.disableMultipleColumnsSorting),
-        sortedRows: [],
-      },
-    };
-  });
 
   apiRef.current.unstable_updateControlState({
     stateId: 'sortModel',

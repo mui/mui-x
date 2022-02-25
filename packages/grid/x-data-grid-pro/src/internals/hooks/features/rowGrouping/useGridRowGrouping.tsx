@@ -19,15 +19,13 @@ import {
   unstable_useGridRegisterFilteringMethod as useGridRegisterFilteringMethod,
   unstable_useGridRegisterSortingMethod as useGridRegisterSortingMethod,
   unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
-  unstable_useGridStateInit as useGridStateInit,
   unstable_isDeepEqual as isDeepEqual,
   Unstable_GridFilteringMethod as GridFilteringMethod,
   Unstable_GridSortingMethod as GridSortingMethod,
   Unstable_GridPreProcessor as GridPreProcessor,
-  Unstable_GridColumnRawLookup as GridColumnRawLookup,
-  Unstable_GridColumnsRawState as GridColumnsRawState,
   Unstable_GridRestoreStatePreProcessingContext as GridRestoreStatePreProcessingContext,
   Unstable_GridRowGroupingPreProcessing as GridRowGroupingPreProcessing,
+  Unstable_GridStateInitializer as GridStateInitializer,
 } from '@mui/x-data-grid';
 import { GridGroupingValueGetterParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
@@ -40,20 +38,24 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   filterRowTreeFromGroupingColumns,
   getRowGroupingFieldFromGroupingCriteria,
-  getColDefOverrides,
   GROUPING_COLUMNS_FEATURE_NAME,
   isGroupingColumn,
   mergeStateWithRowGroupingModel,
 } from './gridRowGroupingUtils';
-import {
-  createGroupingColDefForOneGroupingCriteria,
-  createGroupingColDefForAllGroupingCriteria,
-} from './createGroupingColDef';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { GridRowGroupingApi, GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
 import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
 import { GridInitialStatePro } from '../../../models/gridStatePro';
+
+export const rowGroupingStateInitializer: GridStateInitializer<
+  Pick<DataGridProProcessedProps, 'rowGroupingModel' | 'initialState'>
+> = (state, props) => ({
+  ...state,
+  rowGrouping: {
+    model: props.rowGroupingModel ?? props.initialState?.rowGrouping?.model ?? [],
+  },
+});
 
 /**
  * Only available in DataGridPro
@@ -76,13 +78,6 @@ export const useGridRowGrouping = (
     | 'disableRowGrouping'
   >,
 ) => {
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    rowGrouping: {
-      model: props.rowGroupingModel ?? props.initialState?.rowGrouping?.model ?? [],
-    },
-  }));
-
   apiRef.current.unstable_updateControlState({
     stateId: 'rowGrouping',
     propModel: props.rowGroupingModel,
@@ -223,93 +218,6 @@ export const useGridRowGrouping = (
   /**
    * PRE-PROCESSING
    */
-  const getGroupingColDefs = React.useCallback(
-    (columnsState: GridColumnsRawState<GridApiPro>) => {
-      if (props.disableRowGrouping) {
-        return [];
-      }
-
-      const groupingColDefProp = props.groupingColDef;
-
-      // We can't use `gridGroupingRowsSanitizedModelSelector` here because the new columns are not in the state yet
-      const rowGroupingModel = gridRowGroupingModelSelector(apiRef).filter(
-        (field) => !!columnsState.lookup[field],
-      );
-
-      if (rowGroupingModel.length === 0) {
-        return [];
-      }
-
-      switch (props.rowGroupingColumnMode) {
-        case 'single': {
-          return [
-            createGroupingColDefForAllGroupingCriteria({
-              apiRef,
-              rowGroupingModel,
-              colDefOverride: getColDefOverrides(groupingColDefProp, rowGroupingModel),
-              columnsLookup: columnsState.lookup,
-            }),
-          ];
-        }
-
-        case 'multiple': {
-          return rowGroupingModel.map((groupingCriteria) =>
-            createGroupingColDefForOneGroupingCriteria({
-              groupingCriteria,
-              colDefOverride: getColDefOverrides(groupingColDefProp, [groupingCriteria]),
-              groupedByColDef: columnsState.lookup[groupingCriteria],
-              columnsLookup: columnsState.lookup,
-            }),
-          );
-        }
-
-        default: {
-          return [];
-        }
-      }
-    },
-    [apiRef, props.groupingColDef, props.rowGroupingColumnMode, props.disableRowGrouping],
-  );
-
-  const updateGroupingColumn = React.useCallback(
-    (columnsState: GridColumnsRawState<GridApiPro>) => {
-      const groupingColDefs = getGroupingColDefs(columnsState);
-      let newColumnFields: string[] = [];
-      const newColumnsLookup: GridColumnRawLookup<GridApiPro> = {};
-
-      // We only keep the non-grouping columns
-      columnsState.all.forEach((field) => {
-        if (!isGroupingColumn(field)) {
-          newColumnFields.push(field);
-          newColumnsLookup[field] = columnsState.lookup[field];
-        }
-      });
-
-      // We add the grouping column
-      groupingColDefs.forEach((groupingColDef) => {
-        const matchingGroupingColDef = columnsState.lookup[groupingColDef.field];
-        if (matchingGroupingColDef) {
-          groupingColDef.width = matchingGroupingColDef.width;
-          groupingColDef.flex = matchingGroupingColDef.flex;
-        }
-
-        newColumnsLookup[groupingColDef.field] = groupingColDef;
-      });
-      const startIndex = newColumnFields[0] === '__check__' ? 1 : 0;
-      newColumnFields = [
-        ...newColumnFields.slice(0, startIndex),
-        ...groupingColDefs.map((colDef) => colDef.field),
-        ...newColumnFields.slice(startIndex),
-      ];
-
-      columnsState.all = newColumnFields;
-      columnsState.lookup = newColumnsLookup;
-
-      return columnsState;
-    },
-    [getGroupingColDefs],
-  );
-
   const addColumnMenuButtons = React.useCallback(
     (initialValue: JSX.Element[], columns: GridStateColDef) => {
       if (props.disableRowGrouping) {
@@ -361,7 +269,6 @@ export const useGridRowGrouping = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterPreProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
   useGridRegisterFilteringMethod(apiRef, GROUPING_COLUMNS_FEATURE_NAME, filteringMethod);
   useGridRegisterSortingMethod(apiRef, GROUPING_COLUMNS_FEATURE_NAME, sortingMethod);

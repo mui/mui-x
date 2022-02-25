@@ -10,10 +10,32 @@ import {
   useGridApiEventHandler,
   useGridSelector,
 } from '../../utils';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
+
+export const pageSizeStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'pageSize' | 'initialState' | 'autoPageSize'>
+> = (state, props) => {
+  let pageSize: number;
+  if (props.pageSize != null) {
+    pageSize = props.pageSize;
+  } else if (props.initialState?.pagination?.pageSize != null) {
+    pageSize = props.initialState.pagination.pageSize;
+  } else {
+    pageSize = defaultPageSize(props.autoPageSize);
+  }
+
+  return {
+    ...state,
+    pagination: {
+      pageSize,
+    },
+  };
+};
 
 const mergeStateWithPageSize =
   (pageSize: number) =>
@@ -27,7 +49,6 @@ const mergeStateWithPageSize =
 
 /**
  * @requires useGridDimensions (event) - can be after
- * @requires useGridFilter (state)
  */
 export const useGridPageSize = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -38,26 +59,6 @@ export const useGridPageSize = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-
-  const defaultPageSize = props.autoPageSize ? 0 : 100;
-
-  useGridStateInit(apiRef, (state) => {
-    let pageSize: number;
-    if (props.pageSize != null) {
-      pageSize = props.pageSize;
-    } else if (props.initialState?.pagination?.pageSize != null) {
-      pageSize = props.initialState.pagination.pageSize;
-    } else {
-      pageSize = defaultPageSize;
-    }
-
-    return {
-      ...state,
-      pagination: {
-        pageSize,
-      },
-    };
-  });
 
   apiRef.current.unstable_updateControlState({
     stateId: 'pageSize',
@@ -103,7 +104,7 @@ export const useGridPageSize = (
         // Always export if the page size has been initialized
         props.initialState?.pagination?.pageSize != null ||
         // Export if the page size value is not equal to the default value
-        pageSizeToExport !== defaultPageSize;
+        pageSizeToExport !== defaultPageSize(props.autoPageSize);
 
       if (!shouldExportPageSize) {
         return prevState;
@@ -117,7 +118,7 @@ export const useGridPageSize = (
         },
       };
     },
-    [apiRef, defaultPageSize, props.pageSize, props.initialState?.pagination?.pageSize],
+    [apiRef, props.pageSize, props.initialState?.pagination?.pageSize, props.autoPageSize],
   );
 
   /**
