@@ -1,17 +1,7 @@
 import * as React from 'react';
-import { GridOverlay, DataGrid } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useDemoData } from '@mui/x-data-grid-generator';
-
-function CustomLoadingOverlay() {
-  return (
-    <GridOverlay>
-      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-        <LinearProgress />
-      </div>
-    </GridOverlay>
-  );
-}
 
 export default function CustomLoadingOverlayGrid() {
   const { data } = useDemoData({
@@ -24,7 +14,7 @@ export default function CustomLoadingOverlayGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         components={{
-          LoadingOverlay: CustomLoadingOverlay,
+          LoadingOverlay: LinearProgress,
         }}
         loading
         {...data}

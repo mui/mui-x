@@ -125,7 +125,7 @@ describe('<DataGrid /> - Components', () => {
         </ErrorBoundary>,
       );
     }).toErrorDev([
-      'MUI: Could not find the data grid context.',
+      'MUI: useGridRootProps should only be used inside the DataGrid/DataGridPro component.',
       'The above error occurred in the <ForwardRef(GridOverlay)> component',
     ]);
   });

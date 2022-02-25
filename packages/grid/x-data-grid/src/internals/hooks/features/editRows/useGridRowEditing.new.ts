@@ -19,7 +19,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditingStateSelector } from './gridEditRowsSelector';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
-import { allGridColumnsFieldsSelector } from '../columns/gridColumnsSelector';
+import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   GridRowEditStopParams,
@@ -277,9 +277,9 @@ export const useGridRowEditing = (
         throw new Error(`MUI: The cell with id=${id} is already in edit mode.`);
       }
 
-      const allColumnFields = allGridColumnsFieldsSelector(apiRef.current.state);
+      const columnFields = gridColumnFieldsSelector(apiRef);
 
-      const newProps = allColumnFields.reduce((acc, field) => {
+      const newProps = columnFields.reduce((acc, field) => {
         const cellParams = apiRef.current.getCellParams(id, field);
         if (!cellParams.isEditable) {
           return acc;

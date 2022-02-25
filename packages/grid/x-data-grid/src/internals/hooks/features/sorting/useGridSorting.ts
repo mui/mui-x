@@ -10,14 +10,13 @@ import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
+import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import {
   gridSortedRowEntriesSelector,
   gridSortedRowIdsSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
 import { gridRowIdsSelector, gridRowGroupingNameSelector, gridRowTreeSelector } from '../rows';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridSortingMethod, GridSortingMethodCollection } from './gridSortingState';
 import {
@@ -28,9 +27,24 @@ import {
 } from './gridSortingUtils';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const sortingStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>
+> = (state, props) => {
+  const sortModel = props.sortModel ?? props.initialState?.sorting?.sortModel ?? [];
+
+  return {
+    ...state,
+    sorting: {
+      sortModel: sanitizeSortModel(sortModel, props.disableMultipleColumnsSorting),
+      sortedRows: [],
+    },
+  };
+};
 
 /**
- * @requires useGridRows (state, event)
+ * @requires useGridRows (event)
  * @requires useGridColumns (event)
  */
 export const useGridSorting = (
@@ -48,18 +62,6 @@ export const useGridSorting = (
   const logger = useGridLogger(apiRef, 'useGridSorting');
   const sortingMethodCollectionRef = React.useRef<GridSortingMethodCollection>({});
   const lastSortingMethodApplied = React.useRef<GridSortingMethod | null>(null);
-
-  useGridStateInit(apiRef, (state) => {
-    const sortModel = props.sortModel ?? props.initialState?.sorting?.sortModel ?? [];
-
-    return {
-      ...state,
-      sorting: {
-        sortModel: sanitizeSortModel(sortModel, props.disableMultipleColumnsSorting),
-        sortedRows: [],
-      },
-    };
-  });
 
   apiRef.current.unstable_updateControlState({
     stateId: 'sortModel',
@@ -301,12 +303,10 @@ export const useGridSorting = (
   const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
     const sortModel = gridSortModelSelector(apiRef);
-    const latestColumns = allGridColumnsSelector(apiRef);
+    const latestColumns = gridColumnLookupSelector(apiRef);
 
     if (sortModel.length > 0) {
-      const newModel = sortModel.filter((sortItem) =>
-        latestColumns.find((col) => col.field === sortItem.field),
-      );
+      const newModel = sortModel.filter((sortItem) => latestColumns[sortItem.field]);
 
       if (newModel.length < sortModel.length) {
         apiRef.current.setSortModel(newModel);
