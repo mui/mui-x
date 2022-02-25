@@ -469,6 +469,7 @@
   { "name": "unstable_isNavigationKey", "kind": "ExportSpecifier" },
   { "name": "unstable_pageSizeStateInitializer", "kind": "ExportSpecifier" },
   { "name": "unstable_pageStateInitializer", "kind": "ExportSpecifier" },
+  { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
   { "name": "unstable_rowsStateInitializer", "kind": "ExportSpecifier" },
   { "name": "unstable_sortingStateInitializer", "kind": "ExportSpecifier" },
   { "name": "unstable_useCurrentPageRows", "kind": "ExportSpecifier" },

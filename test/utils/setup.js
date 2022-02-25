@@ -9,11 +9,12 @@ require('@babel/register')({
 });
 
 createDOM();
-require('./init');
+
+const { mochaHooks: otherMochaHooks } = require('./init');
 
 const mochaHooks = {
-  beforeEach: [],
-  afterEach: [],
+  beforeEach: [...otherMochaHooks.beforeEach],
+  afterEach: [...otherMochaHooks.afterEach],
 };
 
 function throwOnUnexpectedConsoleMessages(methodName, expectedMatcher) {
@@ -73,7 +74,9 @@ function throwOnUnexpectedConsoleMessages(methodName, expectedMatcher) {
 }
 
 mochaHooks.afterEach.push(function restoreDefaultSandbox() {
-  sinon.restore(); // https://sinonjs.org/releases/latest/general-setup/
+  // Restore Sinon default sandbox to avoid memory leak
+  // See https://github.com/sinonjs/sinon/issues/1866
+  sinon.restore();
 });
 
 throwOnUnexpectedConsoleMessages('warn', 'toWarnDev');
