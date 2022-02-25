@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import * as yargs from 'yargs';
-import { generateLicence } from './generateLicense';
+import { generateLicence } from '../generateLicense/generateLicense';
 
 const oneDayInMs = 1000 * 60 * 60 * 24;
 

@@ -1,15 +1,15 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
 import { GridApiCommon, GridColumnVisibilityModel } from '@mui/x-data-grid-pro';
-import { GridDemoData, getRealGridData } from './services/real-data-service';
-import { getCommodityColumns } from './commodities.columns';
-import { getEmployeeColumns } from './employees.columns';
-import asyncWorker from './asyncWorker';
+import { GridDemoData, getRealGridData } from '../services/real-data-service';
+import { getCommodityColumns } from '../columns/commodities.columns';
+import { getEmployeeColumns } from '../columns/employees.columns';
+import asyncWorker from '../services/asyncWorker';
 import {
   AddPathToDemoDataOptions,
   DemoTreeDataValue,
   addTreeDataOptionsToDemoData,
-} from './services/tree-data-generator';
+} from '../services/tree-data-generator';
 
 const dataCache = new LRUCache<string, DemoTreeDataValue<any>>({
   max: 10,

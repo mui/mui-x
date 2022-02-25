@@ -16,7 +16,7 @@ import {
   randomName,
   randomColor,
   randomInt,
-} from './services';
+} from '../services';
 import {
   renderAvatar,
   renderCountry,
@@ -25,9 +25,9 @@ import {
   renderRating,
   renderEditRating,
   renderEditCountry,
-} from './renderer';
-import { COUNTRY_ISO_OPTIONS_SORTED } from './services/static-data';
-import { GridColDefGenerator } from './services/gridColDefGenerator';
+} from '../renderer';
+import { COUNTRY_ISO_OPTIONS_SORTED } from '../services/static-data';
+import { GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getEmployeeColumns = (): GridColDefGenerator<any>[] => [
   {

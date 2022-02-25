@@ -1,5 +1,5 @@
-import { md5 } from './encoding/md5';
-import { base64Encode } from './encoding/base64';
+import { md5 } from '../encoding/md5';
+import { base64Encode } from '../encoding/base64';
 
 const licenseVersion = '1';
 export interface LicenseDetails {

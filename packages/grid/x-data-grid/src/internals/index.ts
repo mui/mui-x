@@ -18,7 +18,7 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export { useGridColumnMenu } from '../hooks/features/columnMenu/useGridColumnMenu';
-export { useGridColumns } from '../hooks/features/columns/useGridColumns';
+export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
@@ -27,19 +27,22 @@ export type {
 export { useGridDensity } from '../hooks/features/density/useGridDensity';
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
-export { useGridFilter } from '../hooks/features/filter/useGridFilter';
+export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
 export { useGridPagination } from '../hooks/features/pagination/useGridPagination';
+export { pageStateInitializer } from '../hooks/features/pagination/useGridPage';
+export { pageSizeStateInitializer } from '../hooks/features/pagination/useGridPageSize';
 export { useGridPreferencesPanel } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
 export { useGridEditing } from '../hooks/features/editRows/useGridEditing';
-export { useGridRows } from '../hooks/features/rows/useGridRows';
+export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
 export { useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export { useGridSelection } from '../hooks/features/selection/useGridSelection';
-export { useGridSorting } from '../hooks/features/sorting/useGridSorting';
+export { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
+export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
@@ -49,6 +52,8 @@ export type { GridRestoreStatePreProcessingContext } from '../hooks/features/sta
 export { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
 
 export { useCurrentPageRows } from '../hooks/utils/useCurrentPageRows';
+export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
+export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { useGridStateInit } from '../hooks/utils/useGridStateInit';
 
 export type {

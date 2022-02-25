@@ -2,12 +2,7 @@ import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEvents } from '../../../models/events';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import {
-  useGridSelector,
-  useGridLogger,
-  useGridApiMethod,
-  useGridApiEventHandler,
-} from '../../utils';
+import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
 import { GridColumnMenuApi } from '../../../models';
 
@@ -19,7 +14,6 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
   useGridStateInit(apiRef, (state) => ({ ...state, columnMenu: { open: false } }));
-  const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
 
   /**
    * API METHODS
@@ -67,13 +61,14 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
   const toggleColumnMenu = React.useCallback<GridColumnMenuApi['toggleColumnMenu']>(
     (field) => {
       logger.debug('Toggle Column Menu');
+      const columnMenu = gridColumnMenuSelector(apiRef.current.state);
       if (!columnMenu.open || columnMenu.field !== field) {
         showColumnMenu(field);
       } else {
         hideColumnMenu();
       }
     },
-    [logger, showColumnMenu, hideColumnMenu, columnMenu],
+    [apiRef, logger, showColumnMenu, hideColumnMenu],
   );
 
   const columnMenuApi: GridColumnMenuApi = {

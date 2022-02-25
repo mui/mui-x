@@ -13,7 +13,6 @@ import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
@@ -26,9 +25,26 @@ import {
   sanitizeFilterModel,
   mergeStateWithFilterModel,
 } from './gridFilterUtils';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const filterStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
+> = (state, props, apiRef) => {
+  const filterModel =
+    props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
+
+  return {
+    ...state,
+    filter: {
+      filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
+      visibleRowsLookup: {},
+      filteredDescendantCountLookup: {},
+    },
+  };
+};
 
 /**
- * @requires useGridColumns (state, method, event)
+ * @requires useGridColumns (method, event)
  * @requires useGridParamsApi (method)
  * @requires useGridRows (event)
  */
@@ -44,24 +60,6 @@ export const useGridFilter = (
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
-
-  useGridStateInit(apiRef, (state) => {
-    const filterModel =
-      props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
-
-    return {
-      ...state,
-      filter: {
-        filterModel: sanitizeFilterModel(
-          filterModel,
-          props.disableMultipleColumnsFiltering,
-          apiRef,
-        ),
-        visibleRowsLookup: {},
-        filteredDescendantCountLookup: {},
-      },
-    };
-  });
 
   apiRef.current.unstable_updateControlState({
     stateId: 'filter',

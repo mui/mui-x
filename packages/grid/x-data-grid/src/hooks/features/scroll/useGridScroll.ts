@@ -6,9 +6,8 @@ import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
 } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../../utils/useGridSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
+import { gridPageSelector, gridPageSizeSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
@@ -32,11 +31,10 @@ function scrollIntoView(dimensions) {
 }
 
 /**
- * @requires useGridPage (state)
- * @requires useGridPageSize (state)
- * @requires useGridColumns (state)
- * @requires useGridRows (state)
- * @requires useGridDensity (state)
+ * @requires useGridPagination (state) - can be after, async only
+ * @requires useGridColumns (state) - can be after, async only
+ * @requires useGridRows (state) - can be after, async only
+ * @requires useGridRowsMeta (state) - can be after, async only
  */
 export const useGridScroll = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -46,14 +44,10 @@ export const useGridScroll = (
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
 
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
+      const totalRowCount = gridRowCountSelector(apiRef);
+      const visibleColumns = visibleGridColumnsSelector(apiRef);
       if (totalRowCount === 0 || visibleColumns.length === 0) {
         return false;
       }
@@ -63,6 +57,8 @@ export const useGridScroll = (
       let scrollCoordinates: Partial<GridScrollParams> = {};
 
       if (params.colIndex != null) {
+        const columnsMeta = gridColumnsMetaSelector(apiRef);
+
         scrollCoordinates.left = scrollIntoView({
           clientHeight: windowRef.current!.clientWidth,
           scrollTop: windowRef.current!.scrollLeft,
@@ -71,9 +67,13 @@ export const useGridScroll = (
         });
       }
       if (params.rowIndex != null) {
+        const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+        const page = gridPageSelector(apiRef);
+        const pageSize = gridPageSizeSelector(apiRef);
+
         const elementIndex = !props.pagination
           ? params.rowIndex
-          : params.rowIndex - paginationState.page * paginationState.pageSize;
+          : params.rowIndex - page * pageSize;
 
         const targetOffsetHeight = rowsMeta.positions[elementIndex + 1]
           ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
@@ -103,19 +103,7 @@ export const useGridScroll = (
 
       return false;
     },
-    [
-      totalRowCount,
-      visibleColumns,
-      logger,
-      apiRef,
-      windowRef,
-      columnsMeta.positions,
-      props.pagination,
-      paginationState.page,
-      paginationState.pageSize,
-      rowsMeta.positions,
-      rowsMeta.currentPageTotalHeight,
-    ],
+    [logger, apiRef, windowRef, props.pagination],
   );
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(
