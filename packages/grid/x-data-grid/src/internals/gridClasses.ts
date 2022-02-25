@@ -102,6 +102,10 @@ export interface GridClasses {
    */
   columnHeaderTitleContainer: string;
   /**
+   * Styles applied to the column header's title excepted buttons.
+   */
+  columnHeaderTitleContentContainer: string;
+  /**
    * Styles applied to the column headers.
    */
   columnHeaders: string;
@@ -389,6 +393,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'columnHeaderDropZone',
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
+  'columnHeaderTitleContentContainer',
   'columnHeaders',
   'columnHeadersInner',
   'columnHeadersInner--scrollable',
