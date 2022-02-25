@@ -34,26 +34,27 @@ export type GridStrategyProcessor<G extends GridStrategyProcessingGroup> = (
 
 export interface GridStrategyProcessingApi {
   /**
-   * Register a strategy processor and emit an event to notify the agents to re-apply the pre-processors.
+   * Register a strategy processor and emit an event if the strategy is active, to notify the agents to re-apply the processor.
+   * @param {strategyName} string The name of the strategy on which this processor should be applied.
    * @param {GridStrategyProcessingGroup} group The name of the group to bind this strategy processor to.
-   * @param {strategyName} string The name of the strategy processor to register.
    * @param {GridStrategyProcessor} processor The processor to register.
    * @returns {() => void} A function to unregister the processor.
    * @ignore - do not document.
    */
   unstable_registerStrategyProcessor: <G extends GridStrategyProcessingGroup>(
-    group: G,
     strategyName: string,
+    group: G,
     callback: GridStrategyProcessor<G>,
   ) => () => void;
   /**
-   * Set the availability of a strategy.
-   * @param {string} strategyName The name of the strategy to update.
-   * @param {boolean} isAvailable The availability status of the strategy.
+   * Set a callback to know a strategy is available.
+   * @param {string} strategyName The name of the strategy.
+   * @param {boolean} callback A callback to know if this strategy is available.
    * @ignore - do not document.
    */
-  unstable_setStrategyAvailability: (strategyName: string, isAvailable: boolean) => void;
+  unstable_setStrategyAvailability: (strategyName: string, callback: () => boolean) => void;
   /**
+   * Returns the name of the active strategy.
    * @returns {string} The name of the active strategy.
    * @ignore - do not document.
    */

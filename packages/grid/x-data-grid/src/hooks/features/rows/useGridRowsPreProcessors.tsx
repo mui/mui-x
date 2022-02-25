@@ -33,5 +33,5 @@ const getFlatRowTree: GridStrategyProcessor<'rowTreeCreation'> = ({
 };
 
 export const useGridRowsPreProcessors = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
-  useGridRegisterStrategyProcessor(apiRef, 'rowTreeCreation', 'none', getFlatRowTree);
+  useGridRegisterStrategyProcessor(apiRef, 'none', 'rowTreeCreation', getFlatRowTree);
 };

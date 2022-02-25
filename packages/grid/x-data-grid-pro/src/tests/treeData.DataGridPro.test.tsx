@@ -525,7 +525,7 @@ describe('<DataGridPro /> - Tree Data', () => {
   });
 
   describe('sorting', () => {
-    it.only('should respect the prop order for a given depth when no sortModel provided', () => {
+    it('should respect the prop order for a given depth when no sortModel provided', () => {
       render(
         <Test
           rows={[{ name: 'D' }, { name: 'A.B' }, { name: 'A' }, { name: 'A.A' }]}

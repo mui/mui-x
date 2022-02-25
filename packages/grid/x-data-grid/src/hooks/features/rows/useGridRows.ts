@@ -19,6 +19,7 @@ import {
   gridRowsLookupSelector,
   gridRowTreeSelector,
   gridRowIdsSelector,
+  gridRowGroupingNameSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -372,18 +373,20 @@ export const useGridRows = (
     [apiRef, groupRows],
   );
 
-  const handleCurrentStrategyChange = React.useCallback<
-    GridEventListener<GridEvents.activeStrategyChange>
+  const handleStrategyActivityChange = React.useCallback<
+    GridEventListener<GridEvents.strategyActivityChange>
   >(() => {
-    groupRows();
-  }, [groupRows]);
+    if (apiRef.current.unstable_getActiveStrategy() !== gridRowGroupingNameSelector(apiRef)) {
+      groupRows();
+    }
+  }, [apiRef, groupRows]);
 
   useGridApiEventHandler(
     apiRef,
     GridEvents.strategyProcessorRegister,
     handleStrategyProcessorChange,
   );
-  useGridApiEventHandler(apiRef, GridEvents.activeStrategyChange, handleCurrentStrategyChange);
+  useGridApiEventHandler(apiRef, GridEvents.strategyActivityChange, handleStrategyActivityChange);
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 

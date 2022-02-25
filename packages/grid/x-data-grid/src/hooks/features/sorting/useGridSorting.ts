@@ -267,7 +267,7 @@ export const useGridSorting = (
 
   useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-  useGridRegisterStrategyProcessor(apiRef, 'sorting', 'none', flatSortingMethod);
+  useGridRegisterStrategyProcessor(apiRef, 'none', 'sorting', flatSortingMethod);
 
   /**
    * EVENTS

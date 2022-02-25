@@ -291,10 +291,10 @@ enum GridEvents {
    */
   strategyProcessorRegister = 'strategyProcessorRegister',
   /**
-   * Fired when the active strategy changes.
+   * Fired when the callback to decide if a strategy is active or not changes.
    * @ignore - do not document.
    */
-  activeStrategyChange = 'activeStrategyChange',
+  strategyActivityChange = 'strategyActivityChange',
   /**
    * Fired when the sort model changes.
    */

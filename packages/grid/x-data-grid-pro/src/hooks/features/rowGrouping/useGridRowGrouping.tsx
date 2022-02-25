@@ -22,10 +22,11 @@ import {
 } from './gridRowGroupingSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
-    getRowGroupingFieldFromGroupingCriteria,
-    GROUPING_COLUMNS_FEATURE_NAME,
-    isGroupingColumn,
-    mergeStateWithRowGroupingModel, setStrategyAvailability,
+  getRowGroupingFieldFromGroupingCriteria,
+  ROW_GROUPING_STRATEGY,
+  isGroupingColumn,
+  mergeStateWithRowGroupingModel,
+  setStrategyAvailability,
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
@@ -79,7 +80,7 @@ export const useGridRowGrouping = (
       const currentModel = gridRowGroupingModelSelector(apiRef);
       if (currentModel !== model) {
         apiRef.current.setState(mergeStateWithRowGroupingModel(model));
-          setStrategyAvailability(apiRef, props.disableRowGrouping);
+        setStrategyAvailability(apiRef, props.disableRowGrouping);
         apiRef.current.forceUpdate();
       }
     },
@@ -263,7 +264,7 @@ export const useGridRowGrouping = (
       // Refresh the row tree creation strategy processing
       apiRef.current.publishEvent(GridEvents.strategyProcessorRegister, {
         group: 'rowTreeCreation',
-        strategyName: GROUPING_COLUMNS_FEATURE_NAME,
+        strategyName: ROW_GROUPING_STRATEGY,
       });
     }
   }, [apiRef, props.disableRowGrouping]);
@@ -271,7 +272,6 @@ export const useGridRowGrouping = (
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, checkGroupingColumnsModelDiff);
   useGridApiEventHandler(apiRef, GridEvents.rowGroupingModelChange, checkGroupingColumnsModelDiff);
-
 
   /**
    * EFFECTS

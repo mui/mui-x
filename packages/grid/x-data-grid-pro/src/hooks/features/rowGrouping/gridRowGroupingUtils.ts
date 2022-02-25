@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   GridFilterItem,
   GridRowId,
@@ -10,12 +10,12 @@ import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridStatePro } from '../../../models/gridStatePro';
-import {gridRowGroupingSanitizedModelSelector} from "./gridRowGroupingSelector";
-import {GridApiPro} from "../../../models/gridApiPro";
+import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
+import { GridApiPro } from '../../../models/gridApiPro';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
-export const GROUPING_COLUMNS_FEATURE_NAME = 'grouping-columns';
+export const ROW_GROUPING_STRATEGY = 'grouping-columns';
 
 export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string | null) => {
   if (groupingCriteria === null) {
@@ -144,7 +144,7 @@ export const getColDefOverrides = (
 ) => {
   if (typeof groupingColDefProp === 'function') {
     return groupingColDefProp({
-      groupingName: GROUPING_COLUMNS_FEATURE_NAME,
+      groupingName: ROW_GROUPING_STRATEGY,
       fields,
     });
   }
@@ -159,15 +159,19 @@ export const mergeStateWithRowGroupingModel =
     rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
   });
 
-
-export const setStrategyAvailability = (apiRef: React.MutableRefObject<GridApiPro>, disableRowGrouping: boolean) => {
-  let isAvailable: boolean;
+export const setStrategyAvailability = (
+  apiRef: React.MutableRefObject<GridApiPro>,
+  disableRowGrouping: boolean,
+) => {
+  let isAvailable: () => boolean;
   if (disableRowGrouping) {
-    isAvailable = false;
+    isAvailable = () => false;
   } else {
-    const rowGroupingSanitizedModel = gridRowGroupingSanitizedModelSelector(apiRef);
-    isAvailable = rowGroupingSanitizedModel.length > 0;
+    isAvailable = () => {
+      const rowGroupingSanitizedModel = gridRowGroupingSanitizedModelSelector(apiRef);
+      return rowGroupingSanitizedModel.length > 0;
+    };
   }
 
-  apiRef.current.unstable_setStrategyAvailability(GROUPING_COLUMNS_FEATURE_NAME, isAvailable);
-}
+  apiRef.current.unstable_setStrategyAvailability(ROW_GROUPING_STRATEGY, isAvailable);
+};

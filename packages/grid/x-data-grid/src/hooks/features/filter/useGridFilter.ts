@@ -275,7 +275,7 @@ export const useGridFilter = (
 
   useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-  useGridRegisterStrategyProcessor(apiRef, 'filtering', 'none', flatFilteringMethod);
+  useGridRegisterStrategyProcessor(apiRef, 'none', 'filtering', flatFilteringMethod);
 
   /**
    * EVENTS

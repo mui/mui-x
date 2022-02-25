@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {
-    GridColumnLookup,
-    gridColumnLookupSelector,
-    GridKeyValue,
-    GridRowId,
-    gridRowIdsSelector,
-    GridRowModel,
-    gridRowTreeSelector, useFirstRender,
+  GridColumnLookup,
+  gridColumnLookupSelector,
+  GridKeyValue,
+  GridRowId,
+  gridRowIdsSelector,
+  GridRowModel,
+  gridRowTreeSelector,
+  useFirstRender,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPreProcessor,
@@ -26,10 +27,11 @@ import {
   createGroupingColDefForOneGroupingCriteria,
 } from './createGroupingColDef';
 import {
-    filterRowTreeFromGroupingColumns,
-    getColDefOverrides,
-    GROUPING_COLUMNS_FEATURE_NAME,
-    isGroupingColumn, setStrategyAvailability,
+  filterRowTreeFromGroupingColumns,
+  getColDefOverrides,
+  ROW_GROUPING_STRATEGY,
+  isGroupingColumn,
+  setStrategyAvailability,
 } from './gridRowGroupingUtils';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridColDef } from '../../../models/gridColDef';
@@ -232,7 +234,7 @@ export const useGridRowGroupingPreProcessors = (
         rows,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: GROUPING_COLUMNS_FEATURE_NAME,
+        groupingName: ROW_GROUPING_STRATEGY,
       });
     },
     [apiRef, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
@@ -266,31 +268,26 @@ export const useGridRowGroupingPreProcessors = (
   );
 
   useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
-  useGridRegisterStrategyProcessor(
-    apiRef,
-    'rowTreeCreation',
-    GROUPING_COLUMNS_FEATURE_NAME,
-    createRowTree,
-  );
-  useGridRegisterStrategyProcessor(apiRef, 'filtering', GROUPING_COLUMNS_FEATURE_NAME, filterRows);
-  useGridRegisterStrategyProcessor(apiRef, 'sorting', GROUPING_COLUMNS_FEATURE_NAME, sortRows);
+  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'rowTreeCreation', createRowTree);
+  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'filtering', filterRows);
+  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'sorting', sortRows);
 
-    /**
-     * 1ST RENDER
-     */
-    useFirstRender(() => {
-        setStrategyAvailability(apiRef, props.disableRowGrouping);
-    });
+  /**
+   * 1ST RENDER
+   */
+  useFirstRender(() => {
+    setStrategyAvailability(apiRef, props.disableRowGrouping);
+  });
 
-    /**
-     * EFFECTS
-     */
-    const isFirstRender = React.useRef(true);
-    React.useEffect(() => {
-        if (!isFirstRender.current) {
-            setStrategyAvailability(apiRef, props.disableRowGrouping);
-        } else {
-            isFirstRender.current = false;
-        }
-    }, [apiRef, props.disableRowGrouping]);
+  /**
+   * EFFECTS
+   */
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (!isFirstRender.current) {
+      setStrategyAvailability(apiRef, props.disableRowGrouping);
+    } else {
+      isFirstRender.current = false;
+    }
+  }, [apiRef, props.disableRowGrouping]);
 };

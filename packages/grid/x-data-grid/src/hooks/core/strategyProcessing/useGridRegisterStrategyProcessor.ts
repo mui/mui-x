@@ -8,12 +8,12 @@ export const useGridRegisterStrategyProcessor = <
   G extends GridStrategyProcessingGroup,
 >(
   apiRef: React.MutableRefObject<Api>,
-  group: G,
   strategyName: string,
+  group: G,
   processor: GridStrategyProcessor<G>,
 ) => {
   const registerPreProcessor = React.useCallback(() => {
-    apiRef.current.unstable_registerStrategyProcessor(group, strategyName, processor);
+    apiRef.current.unstable_registerStrategyProcessor(strategyName, group, processor);
   }, [apiRef, processor, group, strategyName]);
 
   useFirstRender(() => {
