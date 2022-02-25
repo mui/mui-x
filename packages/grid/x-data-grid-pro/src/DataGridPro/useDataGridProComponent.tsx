@@ -70,8 +70,10 @@ export const useDataGridProComponent = (
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
+  // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
+  // Because it changes the order of the columns.
+  useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
-  useGridColumnPinningPreProcessors(apiRef, props); // Must be the last because it changes the order of the columns.
 
   /**
    * Register all state initializers here.
