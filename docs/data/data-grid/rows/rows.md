@@ -102,10 +102,22 @@ If you need some rows to have different row heights this can be achieved using t
 
 ## Row spacing
 
-By using the `getRowSpacing` prop you can specify the vertical space between rows.
+You can use the `getRowSpacing` prop to specify the vertical space between rows.
 This prop is called with a [`GridRowSpacingParams`](/api/data-grid/grid-row-spacing-params/) object.
-Observe that the value specified will only be used internally to calculate which rows to render during scroll and for space allocation.
-Use it with CSS to add a margin or border between rows, as shown in the demo below:
+
+```tsx
+const getRowSpacing = React.useCallback((params: GridRowSpacingParams) => {
+  return {
+    top: params.isFirstVisible ? 0 : 5,
+    bottom: params.isLastVisible ? 0 : 5,
+  };
+}, []);
+```
+
+The value specified is only used internally to calculate which rows to render during scroll and for space allocation.
+This decision was taken to allow deep customization of the border styles.
+The same params from above are also available to the `getRowClassName` prop.
+Use it to add a custom class name to the rows and customize the border or margin with CSS, as shown in the complete demo below:
 
 {{"demo": "RowMarginGrid.js", "bg": "inline"}}
 
