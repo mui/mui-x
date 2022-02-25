@@ -286,20 +286,15 @@ enum GridEvents {
    */
   preProcessorUnregister = 'preProcessorUnregister',
   /**
-   * Fired when a pre-processor is registered.
+   * Fired when a strategy processor is registered.
    * @ignore - do not document.
    */
   strategyProcessorRegister = 'strategyProcessorRegister',
   /**
-   * Fired when a pre-processor is unregistered.
+   * Fired when the current strategy changes.
    * @ignore - do not document.
    */
-  strategyProcessorUnregister = 'strategyProcessorUnregister',
-  /**
-   * Fired when the row grouping function is changed
-   * @ignore - do not document.
-   */
-  rowGroupsPreProcessingChange = 'rowGroupsPreProcessingChange',
+  currentStrategyChange = 'currentStrategyChange',
   /**
    * Fired when the sort model changes.
    */

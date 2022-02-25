@@ -14,7 +14,7 @@ import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePan
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
+import { gridRowIdsSelector } from '../rows';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import {
   GridStrategyProcessor,
@@ -280,11 +280,6 @@ export const useGridFilter = (
   /**
    * EVENTS
    */
-  const handleRowsSet = React.useCallback<GridEventListener<GridEvents.rowsSet>>(() => {
-    apiRef.current.unstable_setStrategyName('filtering', gridRowGroupingNameSelector(apiRef));
-    apiRef.current.unstable_applyFilters();
-  }, [apiRef]);
-
   const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef);
@@ -303,7 +298,7 @@ export const useGridFilter = (
     (params) => {
       if (
         params.group === 'filtering' &&
-        params.strategyName === apiRef.current.unstable_getStrategyName('filtering')
+        params.strategyName === apiRef.current.unstable_getCurrentStrategy()
       ) {
         apiRef.current.unstable_applyFilters();
       }
@@ -311,7 +306,7 @@ export const useGridFilter = (
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, handleRowsSet);
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.unstable_applyFilters);
   useGridApiEventHandler(
     apiRef,
     GridEvents.rowExpansionChange,
@@ -328,7 +323,6 @@ export const useGridFilter = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    apiRef.current.unstable_setStrategyName('filtering', gridRowGroupingNameSelector(apiRef));
     apiRef.current.unstable_applyFilters();
   });
 

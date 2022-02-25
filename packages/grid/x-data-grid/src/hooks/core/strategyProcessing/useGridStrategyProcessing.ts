@@ -8,28 +8,23 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../models/events';
 
-interface StrategyGroupCache {
-  strategies: { [strategyName: string]: GridStrategyProcessor<any> };
-  strategyName: string | null;
-}
+type GridStrategyCache = {
+  [G in GridStrategyProcessingGroup]?: { [strategyName: string]: GridStrategyProcessor<G> };
+};
 
 export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
-  const preProcessorsRef = React.useRef<
-    Partial<Record<GridStrategyProcessingGroup, StrategyGroupCache>>
-  >({});
+  const availableStrategies = React.useRef(new Map<string, boolean>());
+  const preProcessorsRef = React.useRef<GridStrategyCache>({});
 
   const registerStrategyProcessor = React.useCallback<
     GridStrategyProcessingApi['unstable_registerStrategyProcessor']
   >(
-    (group, strategyName, processor) => {
+    (group, strategyName, processor: GridStrategyProcessor<any>) => {
       if (!preProcessorsRef.current[group]) {
-        preProcessorsRef.current[group] = {
-          strategies: {},
-          strategyName: null,
-        };
+        preProcessorsRef.current[group] = {};
       }
 
-      const groupPreProcessors = preProcessorsRef.current[group]!.strategies;
+      const groupPreProcessors = preProcessorsRef.current[group]!;
       if (groupPreProcessors[strategyName] !== processor) {
         groupPreProcessors[strategyName] = processor;
         apiRef.current.publishEvent(GridEvents.strategyProcessorRegister, { group, strategyName });
@@ -37,8 +32,10 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
 
       return () => {
         const { [strategyName]: removedPreProcessor, ...otherProcessors } =
-          preProcessorsRef.current[group]!.strategies;
-        preProcessorsRef.current[group]!.strategies = otherProcessors;
+          preProcessorsRef.current[group]!;
+        preProcessorsRef.current[group] = otherProcessors as {
+          [strategyName: string]: GridStrategyProcessor<any>;
+        };
       };
     },
     [apiRef],
@@ -46,43 +43,54 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
 
   const applyStrategyProcessor = React.useCallback<
     GridStrategyProcessingApi['unstable_applyStrategyProcessor']
-  >((group, params) => {
-    const groupCache = preProcessorsRef.current[group];
-    if (
-      !groupCache ||
-      groupCache.strategyName == null ||
-      !groupCache.strategies[groupCache.strategyName]
-    ) {
-      throw new Error(`No processor found for group ${group}`);
-    }
+  >(
+    (group, params) => {
+      const currentStrategy = apiRef.current.unstable_getCurrentStrategy();
+      if (currentStrategy == null) {
+        throw new Error("Can't apply a strategy processor before defining an active strategy");
+      }
 
-    return groupCache.strategies[groupCache.strategyName](params);
-  }, []);
+      const groupCache = preProcessorsRef.current[group];
+      if (!groupCache || !groupCache[currentStrategy]) {
+        throw new Error(`No processor found for group "${group}" on strategy "${currentStrategy}"`);
+      }
 
-  const getStrategyName = React.useCallback<GridStrategyProcessingApi['unstable_getStrategyName']>(
-    (group) => preProcessorsRef.current[group]?.strategyName ?? null,
+      const processor = groupCache[currentStrategy] as GridStrategyProcessor<any>;
+      return processor(params);
+    },
+    [apiRef],
+  );
+
+  const getCurrentStrategy = React.useCallback<
+    GridStrategyProcessingApi['unstable_getCurrentStrategy']
+  >(
+    () =>
+      Array.from(availableStrategies.current.entries()).find(
+        ([, isAvailable]) => isAvailable,
+      )?.[0] ?? 'none',
     [],
   );
 
-  const setStrategyName = React.useCallback<GridStrategyProcessingApi['unstable_setStrategyName']>(
-    (group, strategyName) => {
-      if (!preProcessorsRef.current[group]) {
-        preProcessorsRef.current[group] = {
-          strategies: {},
-          strategyName,
-        };
-      } else {
-        preProcessorsRef.current[group]!.strategyName = strategyName;
+  const setStrategyAvailability = React.useCallback<
+    GridStrategyProcessingApi['unstable_setStrategyAvailability']
+  >(
+    (strategyName, isAvailable) => {
+      const currentStrategyBefore = apiRef.current.unstable_getCurrentStrategy();
+      availableStrategies.current.set(strategyName, isAvailable);
+      const currentStrategyAfter = apiRef.current.unstable_getCurrentStrategy();
+
+      if (currentStrategyAfter !== currentStrategyBefore) {
+        apiRef.current.publishEvent(GridEvents.currentStrategyChange);
       }
     },
-    [],
+    [apiRef],
   );
 
   const strategyProcessingApi: GridStrategyProcessingApi = {
     unstable_registerStrategyProcessor: registerStrategyProcessor,
     unstable_applyStrategyProcessor: applyStrategyProcessor,
-    unstable_getStrategyName: getStrategyName,
-    unstable_setStrategyName: setStrategyName,
+    unstable_getCurrentStrategy: getCurrentStrategy,
+    unstable_setStrategyAvailability: setStrategyAvailability,
   };
 
   useGridApiMethod(apiRef, strategyProcessingApi, 'GridStrategyProcessing');

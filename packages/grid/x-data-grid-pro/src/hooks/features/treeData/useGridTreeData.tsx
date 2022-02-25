@@ -11,20 +11,15 @@ import {
 import {
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
-  GridRowGroupingPreProcessing,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
-import { filterRowTreeFromTreeData } from './gridTreeDataUtils';
-
-export const TREE_DATA_GROUPING_NAME = 'tree-data';
+import { filterRowTreeFromTreeData, TREE_DATA_FEATURE_NAME } from './gridTreeDataUtils';
 
 /**
  * Only available in DataGridPro
- * @requires useGridPreProcessing (method)
- * @requires useGridRowGroupsPreProcessing (method)
  */
 export const useGridTreeData = (
   apiRef: React.MutableRefObject<GridApiPro>,
@@ -39,15 +34,15 @@ export const useGridTreeData = (
     | 'disableChildrenSorting'
   >,
 ) => {
-  /**
-   * ROW GROUPING
-   */
-  const updateRowGrouping = React.useCallback(() => {
-    if (!props.treeData) {
-      return apiRef.current.unstable_registerRowGroupsBuilder('treeData', null);
-    }
+  const setStrategyAvailability = React.useCallback(() => {
+    apiRef.current.unstable_setStrategyAvailability(TREE_DATA_FEATURE_NAME, props.treeData);
+  }, [apiRef, props.treeData]);
 
-    const groupRows: GridRowGroupingPreProcessing = (params) => {
+  /**
+   * PRE-PROCESSING
+   */
+  const createRowTree = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
+    (params) => {
       if (!props.getTreeDataPath) {
         throw new Error('MUI: No getTreeDataPath given.');
       }
@@ -66,7 +61,7 @@ export const useGridTreeData = (
         ...params,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: TREE_DATA_GROUPING_NAME,
+        groupingName: TREE_DATA_FEATURE_NAME,
         onDuplicatePath: (firstId, secondId, path) => {
           throw new Error(
             [
@@ -77,36 +72,11 @@ export const useGridTreeData = (
           );
         },
       });
-    };
+    },
+    [props.getTreeDataPath, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
+  );
 
-    return apiRef.current.unstable_registerRowGroupsBuilder('treeData', groupRows);
-  }, [
-    apiRef,
-    props.getTreeDataPath,
-    props.treeData,
-    props.defaultGroupingExpansionDepth,
-    props.isGroupExpandedByDefault,
-  ]);
-
-  useFirstRender(() => {
-    updateRowGrouping();
-  });
-
-  const isFirstRender = React.useRef(true);
-  React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
-    updateRowGrouping();
-  }, [updateRowGrouping]);
-
-  /**
-   * PRE-PROCESSING
-   */
-
-  const filteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
+  const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
 
@@ -119,7 +89,7 @@ export const useGridTreeData = (
     [apiRef, props.disableChildrenFiltering],
   );
 
-  const sortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
+  const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
       const rowIds = gridRowIdsSelector(apiRef);
@@ -134,8 +104,14 @@ export const useGridTreeData = (
     [apiRef, props.disableChildrenSorting],
   );
 
-  useGridRegisterStrategyProcessor(apiRef, 'filtering', TREE_DATA_GROUPING_NAME, filteringMethod);
-  useGridRegisterStrategyProcessor(apiRef, 'sorting', TREE_DATA_GROUPING_NAME, sortingMethod);
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    'rowTreeCreation',
+    TREE_DATA_FEATURE_NAME,
+    createRowTree,
+  );
+  useGridRegisterStrategyProcessor(apiRef, 'filtering', TREE_DATA_FEATURE_NAME, filterRows);
+  useGridRegisterStrategyProcessor(apiRef, 'sorting', TREE_DATA_FEATURE_NAME, sortRows);
 
   /**
    * EVENTS
@@ -161,4 +137,23 @@ export const useGridTreeData = (
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+
+  /**
+   * 1ST RENDER
+   */
+  useFirstRender(() => {
+    setStrategyAvailability();
+  });
+
+  /**
+   * EFFECTS
+   */
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (!isFirstRender.current) {
+      setStrategyAvailability();
+    } else {
+      isFirstRender.current = false;
+    }
+  }, [setStrategyAvailability]);
 };

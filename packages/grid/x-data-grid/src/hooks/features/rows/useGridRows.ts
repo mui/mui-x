@@ -81,7 +81,10 @@ const getRowsStateFromCache = (
   const { value } = rowsCache.state;
   const rowCount = rowCountProp ?? 0;
 
-  const groupingResponse = apiRef.current.unstable_groupRows({ ...value, previousTree });
+  const groupingResponse = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
+    ...value,
+    previousTree,
+  });
 
   const dataTopLevelRowCount = Object.values(groupingResponse.tree).filter(
     (node) => node.parent == null,
@@ -119,9 +122,6 @@ export const rowsStateInitializer: GridStateInitializer<
   };
 };
 
-/**
- * @requires useGridRowGroupsPreProcessing (method)
- */
 export const useGridRows = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
@@ -190,6 +190,9 @@ export const useGridRows = (
     [props.throttleRowsMs, props.rowCount, apiRef],
   );
 
+  /**
+   * API METHODS
+   */
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
@@ -317,6 +320,76 @@ export const useGridRows = (
     [apiRef],
   );
 
+  const rowApi: GridRowApi = {
+    getRow,
+    getRowModels,
+    getRowsCount,
+    getAllRowIds,
+    setRows,
+    updateRows,
+    setRowChildrenExpansion,
+    getRowNode,
+  };
+
+  /**
+   * EVENTS
+   */
+  const groupRows = React.useCallback(() => {
+    logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
+
+    let rows: GridRowsProp | undefined;
+    if (rowsCache.current.state.rowsBeforePartialUpdates === props.rows) {
+      // The `props.rows` has not changed since the last row grouping
+      // We can keep the potential updates stored in `inputRowsAfterUpdates` on the new grouping
+      rows = undefined;
+    } else {
+      // The `props.rows` has changed since the last row grouping
+      // We must use the new `props.rows` on the new grouping
+      // This occurs because this event is triggered before the `useEffect` on the rows when both the grouping pre-processing and the rows changes on the same render
+      rows = props.rows;
+    }
+    throttledRowsChange(
+      convertGridRowsPropToState({
+        rows,
+        getRowId: props.getRowId,
+        prevState: rowsCache.current.state,
+      }),
+      false,
+    );
+  }, [logger, throttledRowsChange, props.getRowId, props.rows]);
+
+  const handleStrategyProcessorChange = React.useCallback<
+    GridEventListener<GridEvents.strategyProcessorRegister>
+  >(
+    (params) => {
+      if (
+        params.group === 'rowTreeCreation' &&
+        params.strategyName === apiRef.current.unstable_getCurrentStrategy()
+      ) {
+        groupRows();
+      }
+    },
+    [apiRef, groupRows],
+  );
+
+  const handleCurrentStrategyChange = React.useCallback<
+    GridEventListener<GridEvents.currentStrategyChange>
+  >(() => {
+    groupRows();
+  }, [groupRows]);
+
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.strategyProcessorRegister,
+    handleStrategyProcessorChange,
+  );
+  useGridApiEventHandler(apiRef, GridEvents.currentStrategyChange, handleCurrentStrategyChange);
+
+  useGridApiMethod(apiRef, rowApi, 'GridRowApi');
+
+  /**
+   * EFFECTS
+   */
   React.useEffect(() => {
     return () => {
       if (rowsCache.current.timeout !== null) {
@@ -350,45 +423,4 @@ export const useGridRows = (
       false,
     );
   }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange]);
-
-  const handleGroupRows = React.useCallback<
-    GridEventListener<GridEvents.rowGroupsPreProcessingChange>
-  >(() => {
-    logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
-
-    let rows: GridRowsProp | undefined;
-    if (rowsCache.current.state.rowsBeforePartialUpdates === props.rows) {
-      // The `props.rows` has not changed since the last row grouping
-      // We can keep the potential updates stored in `inputRowsAfterUpdates` on the new grouping
-      rows = undefined;
-    } else {
-      // The `props.rows` has changed since the last row grouping
-      // We must use the new `props.rows` on the new grouping
-      // This occurs because this event is triggered before the `useEffect` on the rows when both the grouping pre-processing and the rows changes on the same render
-      rows = props.rows;
-    }
-    throttledRowsChange(
-      convertGridRowsPropToState({
-        rows,
-        getRowId: props.getRowId,
-        prevState: rowsCache.current.state,
-      }),
-      false,
-    );
-  }, [logger, throttledRowsChange, props.getRowId, props.rows]);
-
-  useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
-
-  const rowApi: GridRowApi = {
-    getRow,
-    getRowModels,
-    getRowsCount,
-    getAllRowIds,
-    setRows,
-    updateRows,
-    setRowChildrenExpansion,
-    getRowNode,
-  };
-
-  useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 };

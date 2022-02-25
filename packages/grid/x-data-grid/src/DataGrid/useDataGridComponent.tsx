@@ -20,6 +20,7 @@ import { pageSizeStateInitializer } from '../hooks/features/pagination/useGridPa
 import { useGridPreferencesPanel } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridEditing } from '../hooks/features/editRows/useGridEditing';
 import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+import { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 import { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 import { useGridSelection } from '../hooks/features/selection/useGridSelection';
 import { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
@@ -37,6 +38,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
    * Register all pre-processors called during state initialization here.
    */
   useGridSelectionPreProcessors(apiRef, props);
+  useGridRowsPreProcessors(apiRef);
 
   /**
    * Register all state initializers here.

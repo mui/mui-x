@@ -142,12 +142,12 @@ export interface GridEventLookup
   resize: { params: ElementSize };
   viewportInnerSizeChange: { params: ElementSize };
   debouncedResize: { params: ElementSize };
-  rowGroupsPreProcessingChange: {};
   preProcessorRegister: { params: GridPreProcessingGroup };
   preProcessorUnregister: { params: GridPreProcessingGroup };
   strategyProcessorRegister: {
     params: { group: GridStrategyProcessingGroup; strategyName: string };
   };
+  currentStrategyChange: {};
 
   // Columns
   columnsChange: { params: string[] };

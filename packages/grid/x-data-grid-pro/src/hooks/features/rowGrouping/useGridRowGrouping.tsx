@@ -21,7 +21,6 @@ import {
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   GridRestoreStatePreProcessingContext,
-  GridRowGroupingPreProcessing,
   GridStateInitializer,
   isDeepEqual,
 } from '@mui/x-data-grid/internals';
@@ -85,21 +84,165 @@ export const useGridRowGrouping = (
     changeEvent: GridEvents.rowGroupingModelChange,
   });
 
+  const setStrategyAvailability = React.useCallback(() => {
+    let isAvailable: boolean;
+    if (props.disableRowGrouping) {
+      isAvailable = false;
+    } else {
+      const rowGroupingSanitizedModel = gridRowGroupingSanitizedModelSelector(apiRef);
+      isAvailable = rowGroupingSanitizedModel.length > 0;
+    }
+
+    apiRef.current.unstable_setStrategyAvailability(GROUPING_COLUMNS_FEATURE_NAME, isAvailable);
+  }, [apiRef, props.disableRowGrouping]);
+
   /**
-   * ROW GROUPING
+   * API METHODS
    */
+  const setRowGroupingModel = React.useCallback<GridRowGroupingApi['setRowGroupingModel']>(
+    (model) => {
+      const currentModel = gridRowGroupingModelSelector(apiRef);
+      if (currentModel !== model) {
+        apiRef.current.setState(mergeStateWithRowGroupingModel(model));
+        setStrategyAvailability();
+        apiRef.current.forceUpdate();
+      }
+    },
+    [apiRef, setStrategyAvailability],
+  );
+
+  const addRowGroupingCriteria = React.useCallback<GridRowGroupingApi['addRowGroupingCriteria']>(
+    (field, groupingIndex) => {
+      const currentModel = gridRowGroupingModelSelector(apiRef);
+      if (currentModel.includes(field)) {
+        return;
+      }
+
+      const cleanGroupingIndex = groupingIndex ?? currentModel.length;
+
+      const updatedModel = [
+        ...currentModel.slice(0, cleanGroupingIndex),
+        field,
+        ...currentModel.slice(cleanGroupingIndex),
+      ];
+
+      apiRef.current.setRowGroupingModel(updatedModel);
+    },
+    [apiRef],
+  );
+
+  const removeRowGroupingCriteria = React.useCallback<
+    GridRowGroupingApi['removeRowGroupingCriteria']
+  >(
+    (field) => {
+      const currentModel = gridRowGroupingModelSelector(apiRef);
+      if (!currentModel.includes(field)) {
+        return;
+      }
+      apiRef.current.setRowGroupingModel(currentModel.filter((el) => el !== field));
+    },
+    [apiRef],
+  );
+
+  const setRowGroupingCriteriaIndex = React.useCallback<
+    GridRowGroupingApi['setRowGroupingCriteriaIndex']
+  >(
+    (field, targetIndex) => {
+      const currentModel = gridRowGroupingModelSelector(apiRef);
+      const currentTargetIndex = currentModel.indexOf(field);
+
+      if (currentTargetIndex === -1) {
+        return;
+      }
+
+      const updatedModel = [...currentModel];
+      updatedModel.splice(targetIndex, 0, updatedModel.splice(currentTargetIndex, 1)[0]);
+
+      apiRef.current.setRowGroupingModel(updatedModel);
+    },
+    [apiRef],
+  );
+
+  const rowGroupingApi: GridRowGroupingApi = {
+    setRowGroupingModel,
+    addRowGroupingCriteria,
+    removeRowGroupingCriteria,
+    setRowGroupingCriteriaIndex,
+  };
+
+  useGridApiMethod(apiRef, rowGroupingApi, 'GridRowGroupingApi');
+
+  /**
+   * PRE-PROCESSING
+   */
+  const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
+    (initialValue, columns) => {
+      if (props.disableRowGrouping) {
+        return initialValue;
+      }
+
+      let menuItems: React.ReactNode;
+      if (isGroupingColumn(columns.field)) {
+        menuItems = <GridRowGroupingColumnMenuItems />;
+      } else if (columns.groupable) {
+        menuItems = <GridRowGroupableColumnMenuItems />;
+      } else {
+        menuItems = null;
+      }
+
+      if (menuItems == null) {
+        return initialValue;
+      }
+
+      return [...initialValue, <Divider />, menuItems];
+    },
+    [props.disableRowGrouping],
+  );
+
+  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+    (prevState) => {
+      if (props.disableRowGrouping) {
+        return prevState;
+      }
+
+      const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef);
+      if (rowGroupingModelToExport.length === 0) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        rowGrouping: {
+          model: rowGroupingModelToExport,
+        },
+      };
+    },
+    [apiRef, props.disableRowGrouping],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
+      if (props.disableRowGrouping) {
+        return params;
+      }
+
+      const rowGroupingModel = context.stateToRestore.rowGrouping?.model;
+      if (rowGroupingModel != null) {
+        apiRef.current.setState(mergeStateWithRowGroupingModel(rowGroupingModel));
+      }
+      return params;
+    },
+    [apiRef, props.disableRowGrouping],
+  );
+
   // Tracks the model on the last pre-processing to check if we need to re-build the grouping columns when the grid upserts a column.
   const sanitizedModelOnLastRowPreProcessing = React.useRef<GridRowGroupingModel>([]);
 
-  const updateRowGrouping = React.useCallback(() => {
-    const groupRows: GridRowGroupingPreProcessing = (params) => {
+  const createRowTree = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
+    (params) => {
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const columnsLookup = gridColumnLookupSelector(apiRef) as any as GridColumnLookup<GridApiPro>;
       sanitizedModelOnLastRowPreProcessing.current = rowGroupingModel;
-
-      if (props.disableRowGrouping || rowGroupingModel.length === 0) {
-        return null;
-      }
 
       const distinctValues: {
         [field: string]: { lookup: { [val: string]: boolean }; list: any[] };
@@ -188,58 +331,11 @@ export const useGridRowGrouping = (
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: GROUPING_COLUMNS_FEATURE_NAME,
       });
-    };
-
-    return apiRef.current.unstable_registerRowGroupsBuilder('rowGrouping', groupRows);
-  }, [
-    apiRef,
-    props.defaultGroupingExpansionDepth,
-    props.isGroupExpandedByDefault,
-    props.disableRowGrouping,
-  ]);
-
-  useFirstRender(() => {
-    updateRowGrouping();
-  });
-
-  const isFirstRender = React.useRef(true);
-  React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return () => {};
-    }
-
-    return updateRowGrouping();
-  }, [updateRowGrouping]);
-
-  /**
-   * PRE-PROCESSING
-   */
-  const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
-    (initialValue, columns) => {
-      if (props.disableRowGrouping) {
-        return initialValue;
-      }
-
-      let menuItems: React.ReactNode;
-      if (isGroupingColumn(columns.field)) {
-        menuItems = <GridRowGroupingColumnMenuItems />;
-      } else if (columns.groupable) {
-        menuItems = <GridRowGroupableColumnMenuItems />;
-      } else {
-        menuItems = null;
-      }
-
-      if (menuItems == null) {
-        return initialValue;
-      }
-
-      return [...initialValue, <Divider />, menuItems];
     },
-    [props.disableRowGrouping],
+    [apiRef, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
   );
 
-  const filteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
+  const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
 
@@ -251,7 +347,7 @@ export const useGridRowGrouping = (
     [apiRef],
   );
 
-  const sortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
+  const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
       const rowIds = gridRowIdsSelector(apiRef);
@@ -267,131 +363,16 @@ export const useGridRowGrouping = (
   );
 
   useGridRegisterPreProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
-  useGridRegisterStrategyProcessor(
-    apiRef,
-    'filtering',
-    GROUPING_COLUMNS_FEATURE_NAME,
-    filteringMethod,
-  );
-  useGridRegisterStrategyProcessor(apiRef, 'sorting', GROUPING_COLUMNS_FEATURE_NAME, sortingMethod);
-
-  /**
-   * API METHODS
-   */
-  const setRowGroupingModel = React.useCallback<GridRowGroupingApi['setRowGroupingModel']>(
-    (model) => {
-      const currentModel = gridRowGroupingModelSelector(apiRef);
-      if (currentModel !== model) {
-        apiRef.current.setState(mergeStateWithRowGroupingModel(model));
-        updateRowGrouping();
-        apiRef.current.forceUpdate();
-      }
-    },
-    [apiRef, updateRowGrouping],
-  );
-
-  const addRowGroupingCriteria = React.useCallback<GridRowGroupingApi['addRowGroupingCriteria']>(
-    (field, groupingIndex) => {
-      const currentModel = gridRowGroupingModelSelector(apiRef);
-      if (currentModel.includes(field)) {
-        return;
-      }
-
-      const cleanGroupingIndex = groupingIndex ?? currentModel.length;
-
-      const updatedModel = [
-        ...currentModel.slice(0, cleanGroupingIndex),
-        field,
-        ...currentModel.slice(cleanGroupingIndex),
-      ];
-
-      apiRef.current.setRowGroupingModel(updatedModel);
-    },
-    [apiRef],
-  );
-
-  const removeRowGroupingCriteria = React.useCallback<
-    GridRowGroupingApi['removeRowGroupingCriteria']
-  >(
-    (field) => {
-      const currentModel = gridRowGroupingModelSelector(apiRef);
-      if (!currentModel.includes(field)) {
-        return;
-      }
-      apiRef.current.setRowGroupingModel(currentModel.filter((el) => el !== field));
-    },
-    [apiRef],
-  );
-
-  const setRowGroupingCriteriaIndex = React.useCallback<
-    GridRowGroupingApi['setRowGroupingCriteriaIndex']
-  >(
-    (field, targetIndex) => {
-      const currentModel = gridRowGroupingModelSelector(apiRef);
-      const currentTargetIndex = currentModel.indexOf(field);
-
-      if (currentTargetIndex === -1) {
-        return;
-      }
-
-      const updatedModel = [...currentModel];
-      updatedModel.splice(targetIndex, 0, updatedModel.splice(currentTargetIndex, 1)[0]);
-
-      apiRef.current.setRowGroupingModel(updatedModel);
-    },
-    [apiRef],
-  );
-
-  const rowGroupingApi: GridRowGroupingApi = {
-    setRowGroupingModel,
-    addRowGroupingCriteria,
-    removeRowGroupingCriteria,
-    setRowGroupingCriteriaIndex,
-  };
-
-  useGridApiMethod(apiRef, rowGroupingApi, 'GridRowGroupingApi');
-
-  /**
-   * PRE-PROCESSING
-   */
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
-    (prevState) => {
-      if (props.disableRowGrouping) {
-        return prevState;
-      }
-
-      const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef);
-      if (rowGroupingModelToExport.length === 0) {
-        return prevState;
-      }
-
-      return {
-        ...prevState,
-        rowGrouping: {
-          model: rowGroupingModelToExport,
-        },
-      };
-    },
-    [apiRef, props.disableRowGrouping],
-  );
-
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
-    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
-      if (props.disableRowGrouping) {
-        return params;
-      }
-
-      const rowGroupingModel = context.stateToRestore.rowGrouping?.model;
-      if (rowGroupingModel != null) {
-        apiRef.current.setState(mergeStateWithRowGroupingModel(rowGroupingModel));
-      }
-      return params;
-    },
-    [apiRef, props.disableRowGrouping],
-  );
-
   useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    'rowTreeCreation',
+    GROUPING_COLUMNS_FEATURE_NAME,
+    createRowTree,
+  );
+  useGridRegisterStrategyProcessor(apiRef, 'filtering', GROUPING_COLUMNS_FEATURE_NAME, filterRows);
+  useGridRegisterStrategyProcessor(apiRef, 'sorting', GROUPING_COLUMNS_FEATURE_NAME, sortRows);
 
   /**
    * EVENTS
@@ -430,17 +411,38 @@ export const useGridRowGrouping = (
 
       // Refresh the column pre-processing
       apiRef.current.updateColumns([]);
-      updateRowGrouping();
+      setStrategyAvailability();
+      // Refresh the row tree creation strategy processing
+      apiRef.current.publishEvent(GridEvents.strategyProcessorRegister, {
+        group: 'rowTreeCreation',
+        strategyName: GROUPING_COLUMNS_FEATURE_NAME,
+      });
     }
-  }, [apiRef, updateRowGrouping]);
+  }, [apiRef, setStrategyAvailability]);
 
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, checkGroupingColumnsModelDiff);
   useGridApiEventHandler(apiRef, GridEvents.rowGroupingModelChange, checkGroupingColumnsModelDiff);
 
   /**
+   * 1ST RENDER
+   */
+  useFirstRender(() => {
+    setStrategyAvailability();
+  });
+
+  /**
    * EFFECTS
    */
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (!isFirstRender.current) {
+      setStrategyAvailability();
+    } else {
+      isFirstRender.current = false;
+    }
+  }, [setStrategyAvailability]);
+
   React.useEffect(() => {
     if (props.rowGroupingModel !== undefined) {
       apiRef.current.setRowGroupingModel(props.rowGroupingModel);

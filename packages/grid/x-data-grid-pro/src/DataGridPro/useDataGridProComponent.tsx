@@ -20,6 +20,7 @@ import {
   useGridPreferencesPanel,
   useGridEditing,
   useGridRows,
+  useGridRowsPreProcessors,
   rowsStateInitializer,
   useGridRowsMeta,
   useGridParamsApi,
@@ -69,6 +70,7 @@ export const useDataGridProComponent = (
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
+  useGridRowsPreProcessors(apiRef);
   useGridColumnPinningPreProcessors(apiRef, props); // Must be the last because it changes the order of the columns.
 
   /**

@@ -8,11 +8,6 @@ export { useGridRegisterPreProcessor } from '../hooks/core/preProcessing';
 export type { GridPreProcessor } from '../hooks/core/preProcessing';
 export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
 export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
-export type {
-  GridRowGroupingPreProcessing,
-  GridRowGroupParams,
-  GridRowGroupingResult,
-} from '../hooks/core/rowGroupsPreProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
@@ -38,6 +33,11 @@ export { pageSizeStateInitializer } from '../hooks/features/pagination/useGridPa
 export { useGridPreferencesPanel } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
 export { useGridEditing } from '../hooks/features/editRows/useGridEditing';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
+export type {
+  GridRowTreeCreationParams,
+  GridRowTreeCreationValue,
+} from '../hooks/features/rows/gridRowsState';
 export { useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export { useGridSelection } from '../hooks/features/selection/useGridSelection';

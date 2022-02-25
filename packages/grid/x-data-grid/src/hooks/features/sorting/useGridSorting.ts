@@ -16,7 +16,7 @@ import {
   gridSortedRowIdsSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
-import { gridRowIdsSelector, gridRowGroupingNameSelector, gridRowTreeSelector } from '../rows';
+import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
@@ -294,11 +294,6 @@ export const useGridSorting = (
     [sortColumn],
   );
 
-  const handleRowsSet = React.useCallback<GridEventListener<GridEvents.rowsSet>>(() => {
-    apiRef.current.unstable_setStrategyName('sorting', gridRowGroupingNameSelector(apiRef));
-    apiRef.current.applySorting();
-  }, [apiRef]);
-
   const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
     const sortModel = gridSortModelSelector(apiRef);
@@ -319,7 +314,7 @@ export const useGridSorting = (
     (params) => {
       if (
         params.group === 'sorting' &&
-        params.strategyName === apiRef.current.unstable_getStrategyName('sorting')
+        params.strategyName === apiRef.current.unstable_getCurrentStrategy()
       ) {
         apiRef.current.applySorting();
       }
@@ -329,7 +324,7 @@ export const useGridSorting = (
 
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, handleRowsSet);
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applySorting);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
   useGridApiEventHandler(
     apiRef,
@@ -341,7 +336,6 @@ export const useGridSorting = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    apiRef.current.unstable_setStrategyName('sorting', gridRowGroupingNameSelector(apiRef));
     apiRef.current.applySorting();
   });
 

@@ -1,4 +1,8 @@
 import {
+  GridRowTreeCreationParams,
+  GridRowTreeCreationValue,
+} from '../../features/rows/gridRowsState';
+import {
   GridFilteringMethodParams,
   GridFilteringMethodValue,
 } from '../../features/filter/gridFilterState';
@@ -10,6 +14,10 @@ import {
 export type GridStrategyProcessingGroup = keyof GridStrategyProcessingLookup;
 
 export interface GridStrategyProcessingLookup {
+  rowTreeCreation: {
+    params: GridRowTreeCreationParams;
+    value: GridRowTreeCreationValue;
+  };
   filtering: {
     params: GridFilteringMethodParams;
     value: GridFilteringMethodValue;
@@ -26,7 +34,7 @@ export type GridStrategyProcessor<G extends GridStrategyProcessingGroup> = (
 
 export interface GridStrategyProcessingApi {
   /**
-   * Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.
+   * Register a strategy processor and emit an event to notify the agents to re-apply the pre-processors.
    * @param {GridStrategyProcessingGroup} group The name of the group to bind this strategy processor to.
    * @param {strategyName} string The name of the strategy processor to register.
    * @param {GridStrategyProcessor} processor The processor to register.
@@ -38,8 +46,8 @@ export interface GridStrategyProcessingApi {
     strategyName: string,
     callback: GridStrategyProcessor<G>,
   ) => () => void;
-  unstable_setStrategyName: (group: GridStrategyProcessingGroup, strategyName: string) => void;
-  unstable_getStrategyName: (group: GridStrategyProcessingGroup) => string | null;
+  unstable_setStrategyAvailability: (strategyName: string, isAvailable: boolean) => void;
+  unstable_getCurrentStrategy: () => string;
   /**
    * Run the processor registered for the current strategy of the given group.
    * @param {GridStrategyProcessingGroup} group The name of the processing group.

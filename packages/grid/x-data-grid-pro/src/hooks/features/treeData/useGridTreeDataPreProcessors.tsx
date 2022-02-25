@@ -6,7 +6,7 @@ import {
 } from './gridTreeDataGroupColDef';
 import { GridColDef } from '../../../models/gridColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { TREE_DATA_GROUPING_NAME } from './useGridTreeData';
+import { TREE_DATA_FEATURE_NAME } from './gridTreeDataUtils';
 import { GridApiPro } from '../../../models/gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -24,7 +24,7 @@ export const useGridTreeDataPreProcessors = (
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
     if (typeof groupingColDefProp === 'function') {
       const params: GridGroupingColDefOverrideParams = {
-        groupingName: TREE_DATA_GROUPING_NAME,
+        groupingName: TREE_DATA_FEATURE_NAME,
         fields: [],
       };
 
