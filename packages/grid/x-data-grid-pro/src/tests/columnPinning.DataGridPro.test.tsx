@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridProProps,
   gridClasses,
@@ -30,7 +30,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Column pinning', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
     apiRef = useGridApiRef();
@@ -212,6 +212,13 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M']);
   });
 
+  it('should not override the first left pinned column when checkboxSelection=true', () => {
+    render(
+      <TestCase nbCols={2} initialState={{ pinnedColumns: { left: ['id'] } }} checkboxSelection />,
+    );
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
+  });
+
   describe('props: onPinnedColumnsChange', () => {
     it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
@@ -348,7 +355,6 @@ describe('<DataGridPro /> - Column pinning', () => {
         const renderZone = document.querySelector(
           `.${gridClasses.virtualScrollerRenderZone}`,
         ) as HTMLDivElement;
-        expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
         expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
         apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
         const leftColumns = document.querySelector(

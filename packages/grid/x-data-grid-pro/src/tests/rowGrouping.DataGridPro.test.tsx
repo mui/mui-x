@@ -11,7 +11,7 @@ import {
   DataGridProProps,
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  GridApiRef,
+  GridApi,
   GridGroupingValueGetterParams,
   GridPreferencePanelsValue,
   GridRowsProp,
@@ -20,7 +20,6 @@ import {
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { DataGridProProcessedProps } from '../../../_modules_/grid/models/props/DataGridProProps';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -65,7 +64,7 @@ const baselineProps: DataGridProProps = {
 describe('<DataGridPro /> - Group Rows By Column', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const Test = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
@@ -484,7 +483,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       const disableRowGroupingSpy = spy();
 
       const CustomToolbar = () => {
-        const rootProps = useGridRootProps<DataGridProProcessedProps>();
+        const rootProps = useGridRootProps();
         disableRowGroupingSpy(rootProps.disableRowGrouping);
         return null;
       };

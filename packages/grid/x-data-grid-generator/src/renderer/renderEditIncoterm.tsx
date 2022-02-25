@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderEditCellParams, GridEvents } from '@mui/x-data-grid';
+import { GridRenderEditCellParams, GridEvents } from '@mui/x-data-grid-pro';
 import Select, { SelectProps } from '@mui/material/Select';
 import { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -66,6 +66,6 @@ function EditIncoterm(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditIncoterm(params: GridRenderEditCellParams) {
+export function renderEditIncoterm(params: GridRenderEditCellParams<any>) {
   return <EditIncoterm {...params} />;
 }

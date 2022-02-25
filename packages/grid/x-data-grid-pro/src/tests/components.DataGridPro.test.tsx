@@ -6,8 +6,8 @@ import {
   DataGridPro,
   gridClasses,
   useGridApiRef,
-  GridApiRef,
   DataGridProProps,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -15,7 +15,8 @@ import { getCell, getRow } from 'test/utils/helperFn';
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
+
   const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     const data = useData(100, 1);

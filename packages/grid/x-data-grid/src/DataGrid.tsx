@@ -7,13 +7,13 @@ import {
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
-} from '../../_modules_/grid';
-import { DataGridProps } from '../../_modules_/grid/models/props/DataGridProps';
-import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
+} from './internals';
+import { DataGridProps } from './internals/models/props/DataGridProps';
+import { GridContextProvider } from './internals/context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
-import { DataGridVirtualScroller } from './DataGridVirtualScroller';
-import { DataGridColumnHeaders } from './DataGridColumnHeaders';
+import { DataGridVirtualScroller } from './internals/components/DataGridVirtualScroller';
+import { DataGridColumnHeaders } from './internals/components/DataGridColumnHeaders';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
@@ -184,18 +184,16 @@ DataGridRaw.propTypes = {
   /**
    * Set the filter model of the grid.
    */
-  filterModel: chainPropTypes(PropTypes.any, (props: any) => {
-    if (props.filterModel != null && props.filterModel.items.length > 1) {
-      return new Error(
-        [
-          `MUI: \`<DataGrid filterModel={model} />\` is not a valid prop. \`model.items\` has more than 1 item.`,
-          'Only single filter is available in the MIT version.',
-          '',
-          'You need to upgrade to the DataGridPro component to unlock this feature.',
-        ].join('\n'),
-      );
-    }
-    return null;
+  filterModel: PropTypes.shape({
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        columnField: PropTypes.string.isRequired,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        operatorValue: PropTypes.string,
+        value: PropTypes.any,
+      }),
+    ).isRequired,
+    linkOperator: PropTypes.oneOf(['and', 'or']),
   }),
   /**
    * Function that applies CSS classes dynamically on cells.
@@ -275,7 +273,7 @@ DataGridRaw.propTypes = {
   loading: PropTypes.bool,
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
   /**
