@@ -13,7 +13,6 @@ import {
 } from '../columns/gridColumnsSelector';
 import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
 import { gridClasses } from '../../../gridClasses';
-import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 
@@ -36,11 +35,6 @@ export const useGridPrintExport = (
   props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
-  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
-  const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
-  const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<any>();
   const previousHiddenColumns = React.useRef<string[]>([]);
@@ -58,6 +52,9 @@ export const useGridPrintExport = (
           resolve();
           return;
         }
+
+        const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
+        const columns = allGridColumnsSelector(apiRef);
 
         // Show only wanted columns.
         apiRef.current.updateColumns(
@@ -79,7 +76,7 @@ export const useGridPrintExport = (
         );
         resolve();
       }),
-    [columns, columnVisibilityModel, apiRef],
+    [apiRef],
   );
 
   const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
@@ -114,6 +111,9 @@ export const useGridPrintExport = (
       if (!printDoc) {
         return;
       }
+
+      const headerHeight = gridDensityHeaderHeightSelector(apiRef);
+      const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
@@ -218,7 +218,7 @@ export const useGridPrintExport = (
       // Trigger print
       printWindow.contentWindow!.print();
     },
-    [apiRef, doc, rowsMeta.currentPageTotalHeight, headerHeight],
+    [apiRef, doc],
   );
 
   const handlePrintWindowAfterPrint = React.useCallback(
@@ -236,6 +236,8 @@ export const useGridPrintExport = (
 
       // Revert columns to their original state
       if (previousHiddenColumns.current.length) {
+        const columns = allGridColumnsSelector(apiRef);
+
         apiRef.current.updateColumns(
           columns.map((column) => {
             column.hide = previousHiddenColumns.current.includes(column.field);
@@ -248,7 +250,7 @@ export const useGridPrintExport = (
       previousGridState.current = null;
       previousHiddenColumns.current = [];
     },
-    [columns, apiRef],
+    [apiRef],
   );
 
   const exportDataAsPrint = React.useCallback(
@@ -262,6 +264,7 @@ export const useGridPrintExport = (
       previousGridState.current = apiRef.current.state;
 
       if (props.pagination) {
+        const visibleRowCount = gridVisibleRowCountSelector(apiRef);
         apiRef.current.setPageSize(visibleRowCount);
       }
 
@@ -273,7 +276,6 @@ export const useGridPrintExport = (
       printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
     },
     [
-      visibleRowCount,
       props,
       logger,
       apiRef,
