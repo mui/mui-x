@@ -241,6 +241,7 @@
       "cell--textRight",
       "cell--withRenderer",
       "cell",
+      "cellContent",
       "cellCheckbox",
       "checkboxInput",
       "columnHeader--alignCenter",
@@ -325,6 +326,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-data-grid/src/internals/DataGrid.tsx",
+  "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>"
 }

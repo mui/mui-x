@@ -2,7 +2,7 @@
 /docs/.next
 /docs/export
 /lerna.json
-/packages/grid/x-data-grid/src/internals/lib
+/packages/grid/x-data-grid/src/lib
 CHANGELOG.md
 dist
 node_modules

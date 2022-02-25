@@ -105,11 +105,11 @@ export const getTypeScriptProjects = () => {
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
-          folders: ['src/internals/components'],
-          files: ['src/internals/DataGridPro.tsx']
+          folders: ['src/components'],
+          files: ['src/DataGridPro/DataGridPro.tsx']
       }),
       getComponentsWithApiDoc: getComponentPaths({
-          files: ['src/internals/DataGridPro.tsx']
+          files: ['src/DataGridProd/DataGridPro.tsx']
       }),
     }),
   );
@@ -121,11 +121,11 @@ export const getTypeScriptProjects = () => {
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
       documentationFolderName: 'data-grid',
         getComponentsWithPropTypes: getComponentPaths({
-            folders: ['src/internals/components'],
-            files: ['src/internals/DataGrid.tsx']
+            folders: ['src/components'],
+            files: ['src/DataGrid/DataGrid.tsx']
         }),
         getComponentsWithApiDoc: getComponentPaths({
-            files: ['src/internals/DataGrid.tsx']
+            files: ['src/DataGrid.tsx']
         }),
     }),
   );
