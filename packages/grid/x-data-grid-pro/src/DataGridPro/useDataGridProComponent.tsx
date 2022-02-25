@@ -83,10 +83,10 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
-  useGridRowGrouping(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
-  useGridTreeData(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
   useGridInitializeState(rowsStateInitializer, apiRef, props);
 
+  useGridRowGrouping(apiRef, props);
+  useGridTreeData(apiRef);
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);

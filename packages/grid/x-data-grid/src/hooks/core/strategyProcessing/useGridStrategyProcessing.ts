@@ -45,7 +45,7 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
     GridStrategyProcessingApi['unstable_applyStrategyProcessor']
   >(
     (group, params) => {
-      const currentStrategy = apiRef.current.unstable_getCurrentStrategy();
+      const currentStrategy = apiRef.current.unstable_getActiveStrategy();
       if (currentStrategy == null) {
         throw new Error("Can't apply a strategy processor before defining an active strategy");
       }
@@ -62,7 +62,7 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
   );
 
   const getCurrentStrategy = React.useCallback<
-    GridStrategyProcessingApi['unstable_getCurrentStrategy']
+    GridStrategyProcessingApi['unstable_getActiveStrategy']
   >(
     () =>
       Array.from(availableStrategies.current.entries()).find(
@@ -75,12 +75,12 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
     GridStrategyProcessingApi['unstable_setStrategyAvailability']
   >(
     (strategyName, isAvailable) => {
-      const currentStrategyBefore = apiRef.current.unstable_getCurrentStrategy();
+      const currentStrategyBefore = apiRef.current.unstable_getActiveStrategy();
       availableStrategies.current.set(strategyName, isAvailable);
-      const currentStrategyAfter = apiRef.current.unstable_getCurrentStrategy();
+      const currentStrategyAfter = apiRef.current.unstable_getActiveStrategy();
 
       if (currentStrategyAfter !== currentStrategyBefore) {
-        apiRef.current.publishEvent(GridEvents.currentStrategyChange);
+        apiRef.current.publishEvent(GridEvents.activeStrategyChange);
       }
     },
     [apiRef],
@@ -89,7 +89,7 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
   const strategyProcessingApi: GridStrategyProcessingApi = {
     unstable_registerStrategyProcessor: registerStrategyProcessor,
     unstable_applyStrategyProcessor: applyStrategyProcessor,
-    unstable_getCurrentStrategy: getCurrentStrategy,
+    unstable_getActiveStrategy: getCurrentStrategy,
     unstable_setStrategyAvailability: setStrategyAvailability,
   };
 

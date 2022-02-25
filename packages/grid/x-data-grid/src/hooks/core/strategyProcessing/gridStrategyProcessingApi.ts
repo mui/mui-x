@@ -46,10 +46,20 @@ export interface GridStrategyProcessingApi {
     strategyName: string,
     callback: GridStrategyProcessor<G>,
   ) => () => void;
-  unstable_setStrategyAvailability: (strategyName: string, isAvailable: boolean) => void;
-  unstable_getCurrentStrategy: () => string;
   /**
-   * Run the processor registered for the current strategy of the given group.
+   * Set the availability of a strategy.
+   * @param {string} strategyName The name of the strategy to update.
+   * @param {boolean} isAvailable The availability status of the strategy.
+   * @ignore - do not document.
+   */
+  unstable_setStrategyAvailability: (strategyName: string, isAvailable: boolean) => void;
+  /**
+   * @returns {string} The name of the active strategy.
+   * @ignore - do not document.
+   */
+  unstable_getActiveStrategy: () => string;
+  /**
+   * Run the processor registered for the active strategy of the given group.
    * @param {GridStrategyProcessingGroup} group The name of the processing group.
    * @param {any} params Additional params to pass to the processor.
    * @returns {any} The value returned by the processor of the strategy.

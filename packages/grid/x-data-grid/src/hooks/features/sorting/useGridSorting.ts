@@ -314,7 +314,7 @@ export const useGridSorting = (
     (params) => {
       if (
         params.group === 'sorting' &&
-        params.strategyName === apiRef.current.unstable_getCurrentStrategy()
+        params.strategyName === apiRef.current.unstable_getActiveStrategy()
       ) {
         apiRef.current.applySorting();
       }

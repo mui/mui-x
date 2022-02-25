@@ -364,7 +364,7 @@ export const useGridRows = (
     (params) => {
       if (
         params.group === 'rowTreeCreation' &&
-        params.strategyName === apiRef.current.unstable_getCurrentStrategy()
+        params.strategyName === apiRef.current.unstable_getActiveStrategy()
       ) {
         groupRows();
       }
@@ -373,7 +373,7 @@ export const useGridRows = (
   );
 
   const handleCurrentStrategyChange = React.useCallback<
-    GridEventListener<GridEvents.currentStrategyChange>
+    GridEventListener<GridEvents.activeStrategyChange>
   >(() => {
     groupRows();
   }, [groupRows]);
@@ -383,7 +383,7 @@ export const useGridRows = (
     GridEvents.strategyProcessorRegister,
     handleStrategyProcessorChange,
   );
-  useGridApiEventHandler(apiRef, GridEvents.currentStrategyChange, handleCurrentStrategyChange);
+  useGridApiEventHandler(apiRef, GridEvents.activeStrategyChange, handleCurrentStrategyChange);
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 

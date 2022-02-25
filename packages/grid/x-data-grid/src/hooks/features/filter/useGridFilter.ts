@@ -298,7 +298,7 @@ export const useGridFilter = (
     (params) => {
       if (
         params.group === 'filtering' &&
-        params.strategyName === apiRef.current.unstable_getCurrentStrategy()
+        params.strategyName === apiRef.current.unstable_getActiveStrategy()
       ) {
         apiRef.current.unstable_applyFilters();
       }

@@ -1,3 +1,4 @@
+import * as React from 'react'
 import {
   GridFilterItem,
   GridRowId,
@@ -9,6 +10,8 @@ import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridStatePro } from '../../../models/gridStatePro';
+import {gridRowGroupingSanitizedModelSelector} from "./gridRowGroupingSelector";
+import {GridApiPro} from "../../../models/gridApiPro";
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
@@ -155,3 +158,16 @@ export const mergeStateWithRowGroupingModel =
     ...state,
     rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
   });
+
+
+export const setStrategyAvailability = (apiRef: React.MutableRefObject<GridApiPro>, disableRowGrouping: boolean) => {
+  let isAvailable: boolean;
+  if (disableRowGrouping) {
+    isAvailable = false;
+  } else {
+    const rowGroupingSanitizedModel = gridRowGroupingSanitizedModelSelector(apiRef);
+    isAvailable = rowGroupingSanitizedModel.length > 0;
+  }
+
+  apiRef.current.unstable_setStrategyAvailability(GROUPING_COLUMNS_FEATURE_NAME, isAvailable);
+}

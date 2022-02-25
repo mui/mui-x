@@ -147,7 +147,7 @@ export interface GridEventLookup
   strategyProcessorRegister: {
     params: { group: GridStrategyProcessingGroup; strategyName: string };
   };
-  currentStrategyChange: {};
+  activeStrategyChange: {};
 
   // Columns
   columnsChange: { params: string[] };
