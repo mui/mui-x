@@ -12,7 +12,7 @@ import type { GridParamsApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
-import { GridRowApi, GridRowSpacingApi } from './gridRowApi';
+import { GridRowApi } from './gridRowApi';
 import { GridRowsMetaApi } from './gridRowsMetaApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
@@ -56,5 +56,4 @@ export interface GridApiCommon
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
-    GridStateApiUntyped,
-    GridRowSpacingApi {}
+    GridStateApiUntyped {}

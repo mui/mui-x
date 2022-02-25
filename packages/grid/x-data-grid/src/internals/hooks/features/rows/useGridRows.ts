@@ -22,6 +22,7 @@ import {
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 import {
   GridRowsInternalCacheState,
   GridRowInternalCacheValue,
@@ -142,11 +143,23 @@ export const useGridRows = (
 
   const logger = useGridLogger(apiRef, 'useGridRows');
   const rowsCache = React.useRef(apiRef.current.state.rowsCache); // To avoid listing rowsCache as useEffect dep
+  const currentPage = useCurrentPageRows(apiRef, props);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef)[id] ?? null,
     [apiRef],
   );
+
+  const lookup = React.useMemo(
+    () =>
+      currentPage.rows.reduce((acc, { id }, index) => {
+        acc[id] = index;
+        return acc;
+      }, {} as Record<GridRowId, number>),
+    [currentPage.rows],
+  );
+
+  const getRowIndexRelativeToCurrentPage = React.useCallback((id) => lookup[id], [lookup]);
 
   const throttledRowsChange = React.useCallback(
     (newState: GridRowsInternalCacheState, throttle: boolean) => {
@@ -388,6 +401,7 @@ export const useGridRows = (
     updateRows,
     setRowChildrenExpansion,
     getRowNode,
+    unstable_getRowIndexRelativeToCurrentPage: getRowIndexRelativeToCurrentPage,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');

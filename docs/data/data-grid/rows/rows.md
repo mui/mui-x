@@ -107,7 +107,7 @@ This prop is called with a [`GridRowSpacingParams`](/api/data-grid/grid-row-spac
 Observe that the value specified will only be used internally to calculate which rows to render during scroll and for space allocation.
 Use it with CSS to add a margin or border between rows, as shown in the demo below:
 
-{{"demo": "pages/components/data-grid/rows/RowMarginGrid.js", "bg": "inline"}}
+{{"demo": "RowMarginGrid.js", "bg": "inline"}}
 
 ## Styling rows
 

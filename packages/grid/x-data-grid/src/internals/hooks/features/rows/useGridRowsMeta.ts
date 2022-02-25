@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -24,9 +24,12 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
  */
 export const useGridRowsMeta = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'getRowHeight' | 'pagination' | 'paginationMode'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'getRowHeight' | 'getRowSpacing' | 'pagination' | 'paginationMode'
+  >,
 ): void => {
-  const { getRowHeight, pagination, paginationMode } = props;
+  const { getRowHeight, getRowSpacing } = props;
   const rowsHeightLookup = React.useRef<{
     [key: GridRowId]: { value: number; isResized: boolean };
   }>({});
@@ -34,6 +37,7 @@ export const useGridRowsMeta = (
   const filterState = useGridSelector(apiRef, gridFilterStateSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const sortingState = useGridSelector(apiRef, gridSortingStateSelector);
+  const currentPage = useCurrentPageRows(apiRef, props);
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
@@ -44,16 +48,11 @@ export const useGridRowsMeta = (
   }));
 
   const hydrateRowsMeta = React.useCallback(() => {
-    const { rows } = getCurrentPageRows(apiRef, {
-      pagination,
-      paginationMode,
-    });
-
     apiRef.current.setState((state) => {
       const positions: number[] = [];
       const densityFactor = gridDensityFactorSelector(state, apiRef.current.instanceId);
       const currentRowHeight = gridDensityRowHeightSelector(state, apiRef.current.instanceId);
-      const currentPageTotalHeight = rows.reduce((acc: number, row) => {
+      const currentPageTotalHeight = currentPage.rows.reduce((acc: number, row) => {
         positions.push(acc);
         let baseRowHeight: number;
 
@@ -72,9 +71,25 @@ export const useGridRowsMeta = (
           }
         }
 
+        // We use an object to make simple to check if a height is already added or not
+        const initialHeights: Record<string, number> = { base: baseRowHeight };
+
+        if (getRowSpacing) {
+          const index = apiRef.current.unstable_getRowIndexRelativeToCurrentPage(row.id);
+
+          const spacing = getRowSpacing({
+            ...row,
+            isFirstVisible: index === 0,
+            isLastVisible: index === currentPage.rows.length - 1,
+          });
+
+          initialHeights.spacingTop = spacing.top ?? 0;
+          initialHeights.spacingBottom = spacing.bottom ?? 0;
+        }
+
         const heights = apiRef.current.unstable_applyPreProcessors(
           'rowHeight',
-          { base: baseRowHeight }, // We use an object to make simple to check if a size was already added or not
+          initialHeights,
           row,
         ) as Record<string, number>;
 
@@ -94,7 +109,7 @@ export const useGridRowsMeta = (
       };
     });
     apiRef.current.forceUpdate();
-  }, [apiRef, pagination, paginationMode, getRowHeight]);
+  }, [apiRef, currentPage.rows, getRowSpacing, getRowHeight]);
 
   const getTargetRowHeight = (rowId: GridRowId): number =>
     rowsHeightLookup.current[rowId]?.value || rowHeight;

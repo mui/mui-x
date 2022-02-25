@@ -46,7 +46,6 @@ export {
   useGridRows as unstable_useGridRows,
   rowsStateInitializer as unstable_rowsStateInitializer,
 } from './internals/hooks/features/rows/useGridRows';
-export { useGridRowSpacing as unstable_useGridRowSpacing } from './internals/hooks/features/rows/useGridRowSpacing';
 export { useGridRowsMeta as unstable_useGridRowsMeta } from './internals/hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi as unstable_useGridParamsApi } from './internals/hooks/features/rows/useGridParamsApi';
 export { useGridSelection as unstable_useGridSelection } from './internals/hooks/features/selection/useGridSelection';

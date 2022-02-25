@@ -38,7 +38,6 @@ import { useGridSelectionPreProcessors } from './internals/hooks/features/select
 import { useGridInitializeState } from './internals/hooks/utils/useGridInitializeState';
 import { pageSizeStateInitializer } from './internals/hooks/features/pagination/useGridPageSize';
 import { pageStateInitializer } from './internals/hooks/features/pagination/useGridPage';
-import { useGridRowSpacing } from './internals/hooks/features/rows/useGridRowSpacing';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
@@ -69,7 +68,6 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridFilter(apiRef, props);
   useGridDensity(apiRef, props);
   useGridPagination(apiRef, props);
-  useGridRowSpacing(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridColumnMenu(apiRef);

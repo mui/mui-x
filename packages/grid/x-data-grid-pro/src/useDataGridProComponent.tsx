@@ -19,7 +19,6 @@ import {
   unstable_pageStateInitializer as pageStateInitializer,
   unstable_useGridPreferencesPanel as useGridPreferencesPanel,
   unstable_useGridEditing as useGridEditing,
-  unstable_useGridRowSpacing as useGridRowSpacing,
   unstable_useGridRows as useGridRows,
   unstable_rowsStateInitializer as rowsStateInitializer,
   unstable_useGridRowsMeta as useGridRowsMeta,
@@ -101,7 +100,6 @@ export const useDataGridProComponent = (
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
-  useGridRowSpacing(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);

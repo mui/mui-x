@@ -47,16 +47,11 @@ export interface GridRowApi {
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
    */
   setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
-}
-
-/**
- * The Row API interface that is available in the grid `apiRef`.
- */
-export interface GridRowSpacingApi {
   /**
-   * Gets the row index of a row relative to the rows that are visible in the current page.
-   * @param {GridRowId} id The `GridRowId` of the row.
+   * Gets the index of a row relative to the rows that are visible in the current page.
+   * @param {GridRowId} id The row id.
    * @returns {number} The index of the row.
+   * @ignore - do not document.
    */
   unstable_getRowIndexRelativeToCurrentPage: (id: GridRowId) => number;
 }
