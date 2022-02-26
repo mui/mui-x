@@ -12,11 +12,16 @@ import {
 } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridEventListener, GridRowId } from '../../../models';
 import { useCellEditing } from './useGridCellEditing';
 import { useGridRowEditing } from './useGridRowEditing';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const editingStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  editRows: {},
+});
 
 /**
  * @requires useGridFocus - can be after, async only
@@ -44,7 +49,6 @@ export function useGridEditing(
   const logger = useGridLogger(apiRef, 'useGridEditRows');
   useCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
-  useGridStateInit(apiRef, (state) => ({ ...state, editRows: {} }));
 
   const debounceMap = React.useRef<Record<GridRowId, Record<string, [NodeJS.Timeout, () => void]>>>(
     {},

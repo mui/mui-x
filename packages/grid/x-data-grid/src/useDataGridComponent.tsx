@@ -4,27 +4,42 @@ import { GridApiCommunity } from './internals/models/api/gridApiCommunity';
 import { useGridInitialization } from './internals/hooks/core';
 
 import { useGridClipboard } from './internals/hooks/features/clipboard/useGridClipboard';
-import { useGridColumnMenu } from './internals/hooks/features/columnMenu/useGridColumnMenu';
+import {
+  columnMenuStateInitializer,
+  useGridColumnMenu,
+} from './internals/hooks/features/columnMenu/useGridColumnMenu';
 import {
   useGridColumns,
   columnsStateInitializer,
 } from './internals/hooks/features/columns/useGridColumns';
-import { useGridDensity } from './internals/hooks/features/density/useGridDensity';
+import {
+  densityStateInitializer,
+  useGridDensity,
+} from './internals/hooks/features/density/useGridDensity';
 import { useGridCsvExport } from './internals/hooks/features/export/useGridCsvExport';
 import { useGridPrintExport } from './internals/hooks/features/export/useGridPrintExport';
 import {
   useGridFilter,
   filterStateInitializer,
 } from './internals/hooks/features/filter/useGridFilter';
-import { useGridFocus } from './internals/hooks/features/focus/useGridFocus';
+import { focusStateInitializer, useGridFocus } from './internals/hooks/features/focus/useGridFocus';
 import { useGridKeyboard } from './internals/hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from './internals/hooks/features/keyboard/useGridKeyboardNavigation';
 import { useGridPagination } from './internals/hooks/features/pagination/useGridPagination';
-import { useGridPreferencesPanel } from './internals/hooks/features/preferencesPanel/useGridPreferencesPanel';
-import { useGridEditing } from './internals/hooks/features/editRows/useGridEditing';
+import {
+  preferencePanelStateInitializer,
+  useGridPreferencesPanel,
+} from './internals/hooks/features/preferencesPanel/useGridPreferencesPanel';
+import {
+  editingStateInitializer,
+  useGridEditing,
+} from './internals/hooks/features/editRows/useGridEditing';
 import { useGridRows, rowsStateInitializer } from './internals/hooks/features/rows/useGridRows';
 import { useGridParamsApi } from './internals/hooks/features/rows/useGridParamsApi';
-import { useGridSelection } from './internals/hooks/features/selection/useGridSelection';
+import {
+  selectionStateInitializer,
+  useGridSelection,
+} from './internals/hooks/features/selection/useGridSelection';
 import {
   useGridSorting,
   sortingStateInitializer,
@@ -32,7 +47,10 @@ import {
 import { useGridScroll } from './internals/hooks/features/scroll/useGridScroll';
 import { useGridEvents } from './internals/hooks/features/events/useGridEvents';
 import { useGridDimensions } from './internals/hooks/features/dimensions/useGridDimensions';
-import { useGridRowsMeta } from './internals/hooks/features/rows/useGridRowsMeta';
+import {
+  rowsMetaStateInitializer,
+  useGridRowsMeta,
+} from './internals/hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from './internals/hooks/features/statePersistence/useGridStatePersistence';
 import { useGridSelectionPreProcessors } from './internals/hooks/features/selection/useGridSelectionPreProcessors';
 import { useGridInitializeState } from './internals/hooks/utils/useGridInitializeState';
@@ -50,6 +68,13 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(densityStateInitializer, apiRef, props);
+  useGridInitializeState(editingStateInitializer, apiRef, props);
+  useGridInitializeState(focusStateInitializer, apiRef, props);
+  useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
+  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
+  useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
   useGridInitializeState(pageSizeStateInitializer, apiRef, props);
   useGridInitializeState(pageStateInitializer, apiRef, props);
@@ -64,7 +89,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
-  useGridPreferencesPanel(apiRef, props);
+  useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
   useGridDensity(apiRef, props);
   useGridPagination(apiRef, props);

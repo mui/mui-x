@@ -8,8 +8,8 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   unstable_useGridRegisterPreProcessor as useGridRegisterPreProcessor,
-  unstable_useGridStateInit as useGridStateInit,
   Unstable_GridPreProcessor as GridPreProcessor,
+  Unstable_GridStateInitializer as GridStateInitializer,
 } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from './gridDetailPanelToggleColDef';
@@ -20,6 +20,18 @@ import {
 } from './gridDetailPanelSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridDetailPanelApi } from './gridDetailPanelInterface';
+
+export const detailPanelStateInitializer: GridStateInitializer<
+  Pick<DataGridProProcessedProps, 'initialState' | 'detailPanelExpandedRowIds'>
+> = (state, props) => {
+  return {
+    ...state,
+    detailPanel: {
+      expandedRowIds:
+        props.detailPanelExpandedRowIds ?? props.initialState?.detailPanel?.expandedRowIds ?? [],
+    },
+  };
+};
 
 export const useGridDetailPanel = (
   apiRef: React.MutableRefObject<GridApiPro>,
@@ -34,16 +46,6 @@ export const useGridDetailPanel = (
     | 'paginationMode'
   >,
 ): void => {
-  useGridStateInit(apiRef, (state) => {
-    return {
-      ...state,
-      detailPanel: {
-        expandedRowIds:
-          props.detailPanelExpandedRowIds ?? props.initialState?.detailPanel?.expandedRowIds ?? [],
-      },
-    };
-  });
-
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
 

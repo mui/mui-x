@@ -12,10 +12,10 @@ import {
   useGridApiOptionHandler,
   useGridNativeEventListener,
   useGridLogger,
-  unstable_useGridStateInit as useGridStateInit,
   unstable_clamp as clamp,
   unstable_findParentElementFromClassName as findParentElementFromClassName,
   Unstable_GridColumnHeaderSeparatorProps as GridColumnHeaderSeparatorProps,
+  Unstable_GridStateInitializer as GridStateInitializer,
 } from '@mui/x-data-grid';
 import {
   findGridCellElementsFromCol,
@@ -100,6 +100,11 @@ function getSeparatorSide(element: HTMLElement) {
     : GridColumnHeaderSeparatorSides.Left;
 }
 
+export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  columnResize: { resizingColumnField: '' },
+});
+
 /**
  * Only available in DataGridPro
  * @requires useGridColumns (method, event)
@@ -111,10 +116,6 @@ export const useGridColumnResize = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    columnResize: { resizingColumnField: '' },
-  }));
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
   const colCellElementsRef = React.useRef<NodeListOf<Element>>();

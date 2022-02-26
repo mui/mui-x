@@ -31,6 +31,13 @@ import {
   unstable_useGridEvents as useGridEvents,
   unstable_useGridDimensions as useGridDimensions,
   unstable_useGridStatePersistence as useGridStatePersistence,
+  unstable_columnMenuStateInitializer as columnMenuStateInitializer,
+  unstable_densityStateInitializer as densityStateInitializer,
+  unstable_editingStateInitializer as editingStateInitializer,
+  unstable_focusStateInitializer as focusStateInitializer,
+  unstable_preferencePanelStateInitializer as preferencePanelStateInitializer,
+  unstable_rowsMetaStateInitializer as rowsMetaStateInitializer,
+  unstable_selectionStateInitializer as selectionStateInitializer,
 } from '@mui/x-data-grid';
 
 import { GridApiPro } from './internals/models/gridApiPro';
@@ -38,8 +45,14 @@ import { DataGridProProcessedProps } from './internals/models/dataGridProProps';
 
 // Pro-only features
 import { useGridInfiniteLoader } from './internals/hooks/features/infiniteLoader/useGridInfiniteLoader';
-import { useGridColumnReorder } from './internals/hooks/features/columnReorder/useGridColumnReorder';
-import { useGridColumnResize } from './internals/hooks/features/columnResize/useGridColumnResize';
+import {
+  columnReorderStateInitializer,
+  useGridColumnReorder,
+} from './internals/hooks/features/columnReorder/useGridColumnReorder';
+import {
+  columnResizeStateInitializer,
+  useGridColumnResize,
+} from './internals/hooks/features/columnResize/useGridColumnResize';
 import { useGridTreeData } from './internals/hooks/features/treeData/useGridTreeData';
 import {
   useGridRowGrouping,
@@ -49,7 +62,10 @@ import {
   useGridColumnPinning,
   columnPinningStateInitializer,
 } from './internals/hooks/features/columnPinning/useGridColumnPinning';
-import { useGridDetailPanel } from './internals/hooks/features/detailPanel/useGridDetailPanel';
+import {
+  detailPanelStateInitializer,
+  useGridDetailPanel,
+} from './internals/hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelCache } from './internals/hooks/features/detailPanel/useGridDetailPanelCache';
 import { useGridRowGroupingPreProcessors } from './internals/hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
 import { useGridTreeDataPreProcessors } from './internals/hooks/features/treeData/useGridTreeDataPreProcessors';
@@ -74,6 +90,16 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(densityStateInitializer, apiRef, props);
+  useGridInitializeState(editingStateInitializer, apiRef, props);
+  useGridInitializeState(focusStateInitializer, apiRef, props);
+  useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
+  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
+  useGridInitializeState(selectionStateInitializer, apiRef, props);
+  useGridInitializeState(columnReorderStateInitializer, apiRef, props);
+  useGridInitializeState(columnResizeStateInitializer, apiRef, props);
+  useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
   useGridInitializeState(pageSizeStateInitializer, apiRef, props);
   useGridInitializeState(pageStateInitializer, apiRef, props);
@@ -95,7 +121,7 @@ export const useDataGridProComponent = (
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
-  useGridPreferencesPanel(apiRef, props);
+  useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
