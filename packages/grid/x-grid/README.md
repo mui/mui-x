@@ -9,10 +9,10 @@ Install the package in your project directory with:
 
 ```sh
 // with npm
-npm install @mui/x-data-grid-pro
+npm install @mui/x-data-grid-pro@^4.0.0
 
 // with yarn
-yarn add @mui/x-data-grid-pro
+yarn add @mui/x-data-grid-pro@^4.0.0
 ```
 
 This component has two peer dependencies that you will need to install as well.
