@@ -2,14 +2,14 @@ import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   GridStrategyProcessor,
-  GridStrategyProcessingGroup,
+  GridStrategyProcessorName,
   GridStrategyProcessingApi,
 } from './gridStrategyProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../models/events';
 
 type GridStrategyCache = {
-  [G in GridStrategyProcessingGroup]?: { [strategyName: string]: GridStrategyProcessor<G> };
+  [P in GridStrategyProcessorName]?: { [strategyName: string]: GridStrategyProcessor<P> };
 };
 
 /**
@@ -31,9 +31,16 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
       }
 
       const groupPreProcessors = strategiesCache.current[group]!;
-      if (groupPreProcessors[strategyName] !== processor) {
+      const previousProcessor = groupPreProcessors[strategyName];
+      if (previousProcessor !== processor) {
         groupPreProcessors[strategyName] = processor;
-        apiRef.current.publishEvent(GridEvents.strategyProcessorRegister, { group, strategyName });
+
+        if (
+          (previousProcessor as GridStrategyProcessor<any> | undefined) &&
+          strategyName === apiRef.current.unstable_getActiveStrategy()
+        ) {
+          apiRef.current.publishEvent(GridEvents.activeStrategyProcessorChange, group);
+        }
       }
 
       return () => {

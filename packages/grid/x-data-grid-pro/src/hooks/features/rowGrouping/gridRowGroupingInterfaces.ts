@@ -4,10 +4,11 @@ export interface GridRowGroupingState {
   model: GridRowGroupingModel;
 
   /**
-   * Tracks the model on the last pre-processing to check if we need to re-build the grouping columns when the grid upserts a column.
+   * Tracks the model on the last pre-processing
+   * Allows to check if we need to re-build the grouping columns when the grid upserts a column.
    * TODO: Move outside of the state
    */
-  sanitizedModelOnLastRowTreeCreation: GridRowGroupingModel;
+  unstable_sanitizedModelOnLastRowTreeCreation: GridRowGroupingModel;
 }
 
 export interface GridRowGroupingInitialState {

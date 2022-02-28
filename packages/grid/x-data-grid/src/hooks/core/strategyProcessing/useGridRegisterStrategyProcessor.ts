@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
-import { GridStrategyProcessingGroup, GridStrategyProcessor } from './gridStrategyProcessingApi';
+import { GridStrategyProcessorName, GridStrategyProcessor } from './gridStrategyProcessingApi';
 
 export const useGridRegisterStrategyProcessor = <
   Api extends GridApiCommon,
-  G extends GridStrategyProcessingGroup,
+  G extends GridStrategyProcessorName,
 >(
   apiRef: React.MutableRefObject<Api>,
   strategyName: string,

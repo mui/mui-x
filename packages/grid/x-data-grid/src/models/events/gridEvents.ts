@@ -286,10 +286,10 @@ enum GridEvents {
    */
   preProcessorUnregister = 'preProcessorUnregister',
   /**
-   * Fired when a strategy processor is registered.
+   * Fired when a processor of the active strategy changes.
    * @ignore - do not document.
    */
-  strategyProcessorRegister = 'strategyProcessorRegister',
+  activeStrategyProcessorChange = 'activeStrategyProcessorChange',
   /**
    * Fired when the callback to decide if a strategy is active or not changes.
    * @ignore - do not document.

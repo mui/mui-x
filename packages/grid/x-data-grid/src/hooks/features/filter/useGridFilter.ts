@@ -293,13 +293,10 @@ export const useGridFilter = (
   }, [apiRef, logger]);
 
   const handleStrategyProcessorChange = React.useCallback<
-    GridEventListener<GridEvents.strategyProcessorRegister>
+    GridEventListener<GridEvents.activeStrategyProcessorChange>
   >(
-    (params) => {
-      if (
-        params.group === 'filtering' &&
-        params.strategyName === apiRef.current.unstable_getActiveStrategy()
-      ) {
+    (methodName) => {
+      if (methodName === 'filtering') {
         apiRef.current.unstable_applyFilters();
       }
     },
@@ -315,7 +312,7 @@ export const useGridFilter = (
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
   useGridApiEventHandler(
     apiRef,
-    GridEvents.strategyProcessorRegister,
+    GridEvents.activeStrategyProcessorChange,
     handleStrategyProcessorChange,
   );
 

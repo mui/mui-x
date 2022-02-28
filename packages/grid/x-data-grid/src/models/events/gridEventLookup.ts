@@ -21,7 +21,7 @@ import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridPreProcessingGroup } from '../../hooks/core/preProcessing';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
-import type { GridStrategyProcessingGroup } from '../../hooks/core/strategyProcessing';
+import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -144,8 +144,8 @@ export interface GridEventLookup
   debouncedResize: { params: ElementSize };
   preProcessorRegister: { params: GridPreProcessingGroup };
   preProcessorUnregister: { params: GridPreProcessingGroup };
-  strategyProcessorRegister: {
-    params: { group: GridStrategyProcessingGroup; strategyName: string };
+  activeStrategyProcessorChange: {
+    params: GridStrategyProcessorName;
   };
   strategyActivityChange: {};
 

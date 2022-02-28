@@ -145,7 +145,7 @@ export const useGridRowGroupingPreProcessors = (
         ...state,
         rowGrouping: {
           ...state.rowGrouping,
-          sanitizedModelOnLastRowTreeCreation: rowGroupingModel,
+          unstable_sanitizedModelOnLastRowTreeCreation: rowGroupingModel,
         },
       }));
 

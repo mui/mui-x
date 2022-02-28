@@ -309,13 +309,10 @@ export const useGridSorting = (
   }, [apiRef]);
 
   const handleStrategyProcessorChange = React.useCallback<
-    GridEventListener<GridEvents.strategyProcessorRegister>
+    GridEventListener<GridEvents.activeStrategyProcessorChange>
   >(
-    (params) => {
-      if (
-        params.group === 'sorting' &&
-        params.strategyName === apiRef.current.unstable_getActiveStrategy()
-      ) {
+    (methodName) => {
+      if (methodName === 'sorting') {
         apiRef.current.applySorting();
       }
     },
@@ -328,7 +325,7 @@ export const useGridSorting = (
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
   useGridApiEventHandler(
     apiRef,
-    GridEvents.strategyProcessorRegister,
+    GridEvents.activeStrategyProcessorChange,
     handleStrategyProcessorChange,
   );
 

@@ -39,7 +39,7 @@ export const rowGroupingStateInitializer: GridStateInitializer<
   ...state,
   rowGrouping: {
     model: props.rowGroupingModel ?? props.initialState?.rowGrouping?.model ?? [],
-    sanitizedModelOnLastRowTreeCreation: [],
+    unstable_sanitizedModelOnLastRowTreeCreation: [],
   },
 });
 
@@ -247,25 +247,27 @@ export const useGridRowGrouping = (
     const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
     const lastGroupingColumnsModelApplied = gridRowGroupingStateSelector(
       apiRef.current.state,
-    ).sanitizedModelOnLastRowTreeCreation;
+    ).unstable_sanitizedModelOnLastRowTreeCreation;
 
     if (!isDeepEqual(lastGroupingColumnsModelApplied, rowGroupingModel)) {
       apiRef.current.setState((state) => ({
         ...state,
         rowGrouping: {
           ...state.rowGrouping,
-          sanitizedModelOnLastRowTreeCreation: rowGroupingModel,
+          unstable_sanitizedModelOnLastRowTreeCreation: rowGroupingModel,
         },
       }));
 
       // Refresh the column pre-processing
+      // TODO: Add a clean way to re-run a pipe processing without faking a change
       apiRef.current.updateColumns([]);
       setStrategyAvailability(apiRef, props.disableRowGrouping);
+
       // Refresh the row tree creation strategy processing
-      apiRef.current.publishEvent(GridEvents.strategyProcessorRegister, {
-        group: 'rowTreeCreation',
-        strategyName: ROW_GROUPING_STRATEGY,
-      });
+      // TODO: Add a clean way to re-run a strategy processing without publishing a private event
+      if (apiRef.current.unstable_getActiveStrategy() === ROW_GROUPING_STRATEGY) {
+        apiRef.current.publishEvent(GridEvents.activeStrategyProcessorChange, 'rowTreeCreation');
+      }
     }
   }, [apiRef, props.disableRowGrouping]);
 

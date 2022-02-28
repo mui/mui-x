@@ -11,7 +11,7 @@ import {
   GridSortingMethodValue,
 } from '../../features/sorting/gridSortingState';
 
-export type GridStrategyProcessingGroup = keyof GridStrategyProcessingLookup;
+export type GridStrategyProcessorName = keyof GridStrategyProcessingLookup;
 
 export interface GridStrategyProcessingLookup {
   rowTreeCreation: {
@@ -28,26 +28,26 @@ export interface GridStrategyProcessingLookup {
   };
 }
 
-export type GridStrategyProcessor<G extends GridStrategyProcessingGroup> = (
-  params: GridStrategyProcessingLookup[G]['params'],
-) => GridStrategyProcessingLookup[G]['value'];
+export type GridStrategyProcessor<P extends GridStrategyProcessorName> = (
+  params: GridStrategyProcessingLookup[P]['params'],
+) => GridStrategyProcessingLookup[P]['value'];
 
 export interface GridStrategyProcessingApi {
   /**
    * Register a strategy processor and emit an event if the strategy is active, to notify the agents to re-apply the processor.
-   * @param {strategyName} string The name of the strategy on which this processor should be applied.
-   * @param {GridStrategyProcessingGroup} group The name of the group to bind this strategy processor to.
+   * @param {string} strategyName The name of the strategy on which this processor should be applied.
+   * @param {GridStrategyProcessorName} processorName The name of the processor.
    * @param {GridStrategyProcessor} processor The processor to register.
    * @returns {() => void} A function to unregister the processor.
    * @ignore - do not document.
    */
-  unstable_registerStrategyProcessor: <G extends GridStrategyProcessingGroup>(
+  unstable_registerStrategyProcessor: <P extends GridStrategyProcessorName>(
     strategyName: string,
-    group: G,
-    callback: GridStrategyProcessor<G>,
+    processorName: P,
+    callback: GridStrategyProcessor<P>,
   ) => () => void;
   /**
-   * Set a callback to know a strategy is available.
+   * Set a callback to know if a strategy is available.
    * @param {string} strategyName The name of the strategy.
    * @param {boolean} callback A callback to know if this strategy is available.
    * @ignore - do not document.
@@ -60,14 +60,14 @@ export interface GridStrategyProcessingApi {
    */
   unstable_getActiveStrategy: () => string;
   /**
-   * Run the processor registered for the active strategy of the given group.
-   * @param {GridStrategyProcessingGroup} group The name of the processing group.
-   * @param {any} params Additional params to pass to the processor.
-   * @returns {any} The value returned by the processor of the strategy.
+   * Run the processor registered for the active strategy.
+   * @param {GridStrategyProcessorName} processorName The name of the processor to run.
+   * @param {GridStrategyProcessingLookup[P]['params']} params Additional params to pass to the processor.
+   * @returns {GridStrategyProcessingLookup[P]['value']} The value returned by the processor.
    * @ignore - do not document.
    */
-  unstable_applyStrategyProcessor: <G extends GridStrategyProcessingGroup>(
-    group: G,
-    params: GridStrategyProcessingLookup[G]['params'],
-  ) => GridStrategyProcessingLookup[G]['value'];
+  unstable_applyStrategyProcessor: <P extends GridStrategyProcessorName>(
+    processorName: P,
+    params: GridStrategyProcessingLookup[P]['params'],
+  ) => GridStrategyProcessingLookup[P]['value'];
 }
