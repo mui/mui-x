@@ -310,9 +310,9 @@ export function useGridColumns(
         }
       }
 
-      columnsStateToExport.orderedFields = allGridColumnsFieldsSelector(apiRef);
+      columnsStateToExport.orderedFields = gridColumnFieldsSelector(apiRef);
 
-      const columns = allGridColumnsSelector(apiRef);
+      const columns = gridColumnDefinitionsSelector(apiRef);
       const dimensions: Record<string, GridColumnDimensions> = {};
       columns.forEach((colDef) => {
         if (colDef.hasBeenResized) {
