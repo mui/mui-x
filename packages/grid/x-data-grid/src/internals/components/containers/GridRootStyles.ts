@@ -121,6 +121,11 @@ export const GridRootStyles = styled('div', {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
     },
+    [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+    },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
     },
