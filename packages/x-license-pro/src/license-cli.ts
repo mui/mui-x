@@ -18,6 +18,7 @@ export function licenseGenCli() {
         return command
           .option('order', {
             default: '',
+            alias: 'o',
             describe: 'Order number id.',
             type: 'string',
           })
@@ -29,9 +30,7 @@ export function licenseGenCli() {
       },
       handler: (argv: yargs.ArgumentsCamelCase<HandlerArgv>) => {
         if (!argv.order) {
-          throw new Error(
-            'MUI: You forgot to pass an order number. $ > licensegen --order order_123.',
-          );
+          throw new Error('MUI: You forgot to pass an order number. $ > licensegen -o order_123.');
         }
 
         const licenseDetails = {
