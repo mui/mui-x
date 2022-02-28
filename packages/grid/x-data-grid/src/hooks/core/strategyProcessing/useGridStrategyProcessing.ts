@@ -14,7 +14,11 @@ export const GRID_DEFAULT_STRATEGY = 'none';
  * Implements a variant of the Strategy Pattern (see https://en.wikipedia.org/wiki/Strategy_pattern)
  *
  * Some plugins contain custom logic that that must only be run if the right strategy is active.
- * For instance, the tree data plugin has custom filtering behavior.
+ * For instance, the tree data plugin has:
+ * - custom row tree creation algorithm.
+ * - custom sorting algorithm.
+ * - custom filtering algorithm.
+ *
  * These plugins must use:
  * - `apiRef.current.unstable_registerStrategyProcessor` to register their processors.
  * - `apiRef.current.unstable_setStrategyAvailability` to tell if their strategy can be used.
@@ -24,6 +28,7 @@ export const GRID_DEFAULT_STRATEGY = 'none';
  * - the tree data filtering if the tree data is the current way of grouping rows.
  * - the row grouping filtering if the row grouping is the current way of grouping rows.
  * - the flat filtering if there is no grouping of the rows (equivalent to the "none" strategy).
+ *
  * These hooks must use:
  * - `apiRef.current.unstable_applyStrategyProcessor` to run a processor.
  * - `GridEvents.strategyActivityChange` to update something when the active strategy changes.
@@ -31,6 +36,9 @@ export const GRID_DEFAULT_STRATEGY = 'none';
  *    For instance `GridEvents.rowsSet` is fired by `useGridRows` whenever the active strategy changes.
  *    So listening to both would most likely run your logic twice.
  * - `GridEvents.activeStrategyProcessorChange` to update something when the processor of the active strategy changes
+ *
+ * The active strategy is the first available strategy based on the registration order
+ * Which means that if two strategies are available, the active one will be the one of the hook ran 1st.
  *
  * For now, this hook is only compatible with row grouping related strategies.
  * In the future, it could support several type of strategies if we wanted to apply the same pattern to another set of processors.
