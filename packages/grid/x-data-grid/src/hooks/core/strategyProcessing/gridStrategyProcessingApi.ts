@@ -34,10 +34,11 @@ export type GridStrategyProcessor<P extends GridStrategyProcessorName> = (
 
 export interface GridStrategyProcessingApi {
   /**
-   * Register a strategy processor and emit an event if the strategy is active, to notify the agents to re-apply the processor.
+   * Register a strategy processor.
+   * If the strategy is active, emit and event to notify the agents to re-apply the processor.
    * @param {string} strategyName The name of the strategy on which this processor should be applied.
    * @param {GridStrategyProcessorName} processorName The name of the processor.
-   * @param {GridStrategyProcessor} processor The processor to register.
+   * @param {GridStrategyProcessor<P>} processor The processor to register.
    * @returns {() => void} A function to unregister the processor.
    * @ignore - do not document.
    */

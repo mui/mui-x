@@ -12,6 +12,8 @@ type GridStrategyCache = {
   [P in GridStrategyProcessorName]?: { [strategyName: string]: GridStrategyProcessor<P> };
 };
 
+export const GRID_DEFAULT_STRATEGY = 'none';
+
 /**
  * Implements the Strategy Pattern (see https://en.wikipedia.org/wiki/Strategy_pattern)
  * For now, this hook only handles one active strategy at the time,
@@ -82,7 +84,7 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
       isStrategyAvailable(),
     );
 
-    return availableStrategyEntry?.[0] ?? 'none';
+    return availableStrategyEntry?.[0] ?? GRID_DEFAULT_STRATEGY;
   }, []);
 
   const setStrategyAvailability = React.useCallback<

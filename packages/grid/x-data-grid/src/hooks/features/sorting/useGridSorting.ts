@@ -21,6 +21,7 @@ import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
   GridStrategyProcessor,
+  GRID_DEFAULT_STRATEGY,
 } from '../../core/strategyProcessing';
 import {
   buildAggregatedSortingApplier,
@@ -267,7 +268,7 @@ export const useGridSorting = (
 
   useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-  useGridRegisterStrategyProcessor(apiRef, 'none', 'sorting', flatSortingMethod);
+  useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'sorting', flatSortingMethod);
 
   /**
    * EVENTS

@@ -17,6 +17,7 @@ import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector } from '../rows';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import {
+  GRID_DEFAULT_STRATEGY,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '../../core/strategyProcessing';
@@ -275,7 +276,7 @@ export const useGridFilter = (
 
   useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-  useGridRegisterStrategyProcessor(apiRef, 'none', 'filtering', flatFilteringMethod);
+  useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'filtering', flatFilteringMethod);
 
   /**
    * EVENTS

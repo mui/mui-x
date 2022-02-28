@@ -3,11 +3,12 @@ import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowTreeConfig } from '../../../models';
 import {
+  GRID_DEFAULT_STRATEGY,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '../../core/strategyProcessing';
 
-const getFlatRowTree: GridStrategyProcessor<'rowTreeCreation'> = ({
+const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = ({
   ids,
   idRowsLookup,
   previousTree,
@@ -24,7 +25,7 @@ const getFlatRowTree: GridStrategyProcessor<'rowTreeCreation'> = ({
   }
 
   return {
-    groupingName: 'none',
+    groupingName: GRID_DEFAULT_STRATEGY,
     tree,
     treeDepth: 1,
     idRowsLookup,
@@ -33,5 +34,10 @@ const getFlatRowTree: GridStrategyProcessor<'rowTreeCreation'> = ({
 };
 
 export const useGridRowsPreProcessors = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
-  useGridRegisterStrategyProcessor(apiRef, 'none', 'rowTreeCreation', getFlatRowTree);
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    GRID_DEFAULT_STRATEGY,
+    'rowTreeCreation',
+    flatRowTreeCreationMethod,
+  );
 };
