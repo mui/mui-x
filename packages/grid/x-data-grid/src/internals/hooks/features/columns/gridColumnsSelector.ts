@@ -1,6 +1,7 @@
 import { createSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridColumnLookup } from './gridColumnsInterfaces';
+import { wrapWithWarningOnCall } from '../../../utils/warning';
 
 /**
  * @category Columns
@@ -132,48 +133,78 @@ export const gridFilterableColumnLookupSelector = createSelector(
  * @deprecated Use `gridColumnFieldsSelector` instead.
  * @ignore - do not document.
  */
-export const allGridColumnsFieldsSelector = gridColumnFieldsSelector;
+export const allGridColumnsFieldsSelector = wrapWithWarningOnCall(gridColumnFieldsSelector, [
+  'MUI: The method allGridColumnsFieldsSelector is deprecated and will be removed in the next major version.',
+  'Use gridColumnFieldsSelector instead',
+]);
 
 /**
  * @category Columns
  * @deprecated Use `gridColumnDefinitionsSelector` instead.
  * @ignore - do not document.
  */
-export const allGridColumnsSelector = gridColumnDefinitionsSelector;
+export const allGridColumnsSelector = wrapWithWarningOnCall(gridColumnDefinitionsSelector, [
+  'MUI: The method allGridColumnsSelector is deprecated and will be removed in the next major version.',
+  'Use gridColumnDefinitionsSelector instead',
+]);
 
 /**
  * @category Visible Columns
  * @deprecated Use `gridVisibleColumnDefinitionsSelector` instead.
  * @ignore - do not document.
  */
-export const visibleGridColumnsSelector = gridVisibleColumnDefinitionsSelector;
+export const visibleGridColumnsSelector = wrapWithWarningOnCall(
+  gridVisibleColumnDefinitionsSelector,
+  [
+    'MUI: The method visibleGridColumnsSelector is deprecated and will be removed in the next major version.',
+    'Use gridVisibleColumnDefinitionsSelector instead',
+  ],
+);
 
 /**
  * @category Columns
  * @deprecated Use `gridFilterableColumnDefinitionsSelector` instead.
  * @ignore - do not document.
  */
-export const filterableGridColumnsSelector = gridFilterableColumnDefinitionsSelector;
+export const filterableGridColumnsSelector = wrapWithWarningOnCall(
+  gridFilterableColumnDefinitionsSelector,
+  [
+    'MUI: The method filterableGridColumnsSelector is deprecated and will be removed in the next major version.',
+    'Use gridFilterableColumnDefinitionsSelector instead',
+  ],
+);
 
 /**
  * @category Columns
  * @deprecated Use `gridFilterableColumnLookupSelector` instead (not the same return format).
  * @ignore - do not document.
  */
-export const filterableGridColumnsIdsSelector = createSelector(
-  gridFilterableColumnDefinitionsSelector,
-  (columns) => columns.map((col) => col.field),
+export const filterableGridColumnsIdsSelector = wrapWithWarningOnCall(
+  createSelector(gridFilterableColumnDefinitionsSelector, (columns) =>
+    columns.map((col) => col.field),
+  ),
+  [
+    'MUI: The method filterableGridColumnsIdsSelector is deprecated and will be removed in the next major version.',
+    'Use gridFilterableColumnDefinitionsSelector instead.',
+    'The return format is now a lookup, if you want to get the same output as before, use the following code:',
+    '',
+    'const lookup = gridFilterableColumnLookupSelector(apiRef);',
+    'const fields = gridColumnFieldsSelector(apiRef).filter(field => lookup[field]);',
+  ],
 );
 
 /**
  * Get the amount of visible columns.
  * @category Visible Columns
- * @deprecated Use the length of `gridVisibleColumnDefinitionsSelector` instead.
+ * @deprecated Use the length of the array returned by `gridVisibleColumnDefinitionsSelector` instead.
  * @ignore - do not document.
  */
-export const visibleGridColumnsLengthSelector = createSelector(
-  gridVisibleColumnDefinitionsSelector,
-  (visibleColumns) => visibleColumns.length,
+export const visibleGridColumnsLengthSelector = wrapWithWarningOnCall(
+  createSelector(gridVisibleColumnDefinitionsSelector, (visibleColumns) => visibleColumns.length),
+  [
+    'MUI: The method visibleGridColumnsLengthSelector is deprecated and will be removed in the next major version.',
+    'Use the length of the array returned by gridVisibleColumnDefinitionsSelector instead.',
+  ],
 );
 
 /**
@@ -181,8 +212,14 @@ export const visibleGridColumnsLengthSelector = createSelector(
  * @deprecated Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
  * @ignore - do not document.
  */
-export const gridColumnsMetaSelector = createSelector(
-  gridColumnPositionsSelector,
-  gridColumnsTotalWidthSelector,
-  (positions, totalWidth) => ({ totalWidth, positions }),
+export const gridColumnsMetaSelector = wrapWithWarningOnCall(
+  createSelector(
+    gridColumnPositionsSelector,
+    gridColumnsTotalWidthSelector,
+    (positions, totalWidth) => ({ totalWidth, positions }),
+  ),
+  [
+    'MUI: The method gridColumnsMetaSelector is deprecated and will be removed in the next major version.',
+    'Use gridColumnsTotalWidthSelector or gridColumnPositionsSelector instead',
+  ],
 );

@@ -94,6 +94,7 @@ export const gridFilteredSortedRowIdsSelector = createSelector(
  * @category Filtering
  * @deprecated Use `gridVisibleSortedRowIdsSelector` instead
  * @ignore - do not document.
+ * TODO: Add deprecation warning once we have the new selectors without the "visible" keyword.
  */
 export const gridVisibleRowsSelector = gridVisibleSortedRowIdsSelector;
 
