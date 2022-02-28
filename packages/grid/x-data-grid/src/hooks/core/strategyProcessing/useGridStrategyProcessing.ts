@@ -16,18 +16,20 @@ export const GRID_DEFAULT_STRATEGY = 'none';
  * Some plugins contain custom logic that that must only be run if the right strategy is active.
  * For instance, the tree data plugin has custom filtering behavior.
  * These plugins must use:
- * - `apiRef.current.unstable_registerStrategyProcessor` to register their processors
- * - `apiRef.current.unstable_setStrategyAvailability` to tell if their strategy can be used
+ * - `apiRef.current.unstable_registerStrategyProcessor` to register their processors.
+ * - `apiRef.current.unstable_setStrategyAvailability` to tell if their strategy can be used.
  *
  * Some hooks need to run the custom logic of the active strategy.
- * For instance, the `useGridFiltering` wants to run
- * - the tree data filtering if the tree data is the current way of grouping rows
- * - the row grouping filtering if the row grouping is the current way of grouping rows
- * - the flat filtering if there is no grouping of the rows (equivalent to the "none" strategy)
+ * For instance, the `useGridFiltering` wants to run:
+ * - the tree data filtering if the tree data is the current way of grouping rows.
+ * - the row grouping filtering if the row grouping is the current way of grouping rows.
+ * - the flat filtering if there is no grouping of the rows (equivalent to the "none" strategy).
  * These hooks must use:
- * - `apiRef.current.unstable_applyStrategyProcessor` to run a processor
- * - `GridEvents.strategyActivityChange` to update something when the active strategy changes
- *    Warning: Do not listen to it if you are already indirectly, for instance via `Grid.rowsSet`
+ * - `apiRef.current.unstable_applyStrategyProcessor` to run a processor.
+ * - `GridEvents.strategyActivityChange` to update something when the active strategy changes.
+ *    Warning: Be careful not to apply the processor several times.
+ *    For instance `GridEvents.rowsSet` is fired by `useGridRows` whenever the active strategy changes.
+ *    So listening to both would most likely run your logic twice.
  * - `GridEvents.activeStrategyProcessorChange` to update something when the processor of the active strategy changes
  *
  * For now, this hook is only compatible with row grouping related strategies.
