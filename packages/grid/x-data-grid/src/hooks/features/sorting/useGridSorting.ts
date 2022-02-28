@@ -134,7 +134,6 @@ export const useGridSorting = (
     apiRef.current.setState((state) => {
       const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
-
       const sortedRows = apiRef.current.unstable_applyStrategyProcessor('sorting', {
         sortRowList,
       });
