@@ -40,7 +40,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           apiRef={apiRef}
           editMode="row"
           disableVirtualization
-          experimentalFeatures={{ enableNewEditingAPI: true }}
+          experimentalFeatures={{ newEditingApi: true }}
           {...defaultData}
           columns={defaultData.columns.map((column) => {
             if (column.field === 'currencyPair') {

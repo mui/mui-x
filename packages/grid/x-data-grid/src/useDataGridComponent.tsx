@@ -63,7 +63,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
 
-  const useGridEditing = props.experimentalFeatures?.enableNewEditingAPI
+  const useGridEditing = props.experimentalFeatures?.newEditingApi
     ? useGridEditing_new
     : useGridEditing_old;
   useGridEditing(apiRef, props);

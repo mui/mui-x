@@ -94,7 +94,7 @@ export const useDataGridProComponent = (
   useGridParamsApi(apiRef);
   useGridDetailPanelCache(apiRef, props);
 
-  const useGridEditing = props.experimentalFeatures?.enableNewEditingAPI
+  const useGridEditing = props.experimentalFeatures?.newEditingApi
     ? useGridEditing_new
     : useGridEditing_old;
   useGridEditing(apiRef, props);

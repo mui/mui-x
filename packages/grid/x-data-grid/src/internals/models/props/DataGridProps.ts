@@ -31,7 +31,7 @@ export interface GridExperimentalFeatures {
   /**
    * Enables the new API for cell editing and row editing.
    */
-  enableNewEditingAPI: boolean;
+  newEditingApi: boolean;
 }
 
 /**

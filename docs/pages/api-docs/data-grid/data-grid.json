@@ -40,7 +40,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ enableNewEditingAPI?: bool, preventCommitWhileValidating?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool }"
       }
     },
     "filterMode": {

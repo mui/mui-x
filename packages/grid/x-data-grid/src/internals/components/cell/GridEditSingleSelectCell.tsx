@@ -75,7 +75,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
     setOpen(false);
     const isValid = await api.setEditCellValue({ id, field, value: event.target.value }, event);
 
-    if (rootProps.experimentalFeatures?.enableNewEditingAPI) {
+    if (rootProps.experimentalFeatures?.newEditingApi) {
       return;
     }
 

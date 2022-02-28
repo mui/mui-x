@@ -61,7 +61,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ enableNewEditingAPI?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool }"
       }
     },
     "filterMode": {

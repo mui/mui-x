@@ -173,7 +173,7 @@ DataGridRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    enableNewEditingAPI: PropTypes.bool,
+    newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
   }),
   /**
