@@ -174,14 +174,14 @@ export const useGridKeyboardNavigation = (
       const headerTitleNode = event.currentTarget.querySelector(
         `.${gridClasses.columnHeaderTitleContainerContent}`,
       );
-      const isFromCustomHeader =
+      const isFromInsideContent =
         !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
       const isGridHeaderCellRoot =
         event.target != null &&
         (event.target as HTMLElement).classList.contains(gridClasses.columnHeader);
 
       if (!isGridHeaderCellRoot && params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field) {
-        if (!isFromCustomHeader) {
+        if (!isFromInsideContent) {
           // prevent page scroll from keyboard when focus on our buttons
           event.preventDefault();
         }
