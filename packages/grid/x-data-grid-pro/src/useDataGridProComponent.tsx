@@ -1,46 +1,90 @@
-import type { GridApiRef } from '../../_modules_';
-import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
+import * as React from 'react';
+import {
+  unstable_useGridInitialization as useGridInitialization,
+  unstable_useGridInitializeState as useGridInitializeState,
+  unstable_useGridClipboard as useGridClipboard,
+  unstable_useGridColumnMenu as useGridColumnMenu,
+  unstable_useGridColumns as useGridColumns,
+  unstable_columnsStateInitializer as columnsStateInitializer,
+  unstable_useGridDensity as useGridDensity,
+  unstable_useGridCsvExport as useGridCsvExport,
+  unstable_useGridPrintExport as useGridPrintExport,
+  unstable_useGridFilter as useGridFilter,
+  unstable_filterStateInitializer as filterStateInitializer,
+  unstable_useGridFocus as useGridFocus,
+  unstable_useGridKeyboard as useGridKeyboard,
+  unstable_useGridKeyboardNavigation as useGridKeyboardNavigation,
+  unstable_useGridPagination as useGridPagination,
+  unstable_pageSizeStateInitializer as pageSizeStateInitializer,
+  unstable_pageStateInitializer as pageStateInitializer,
+  unstable_useGridPreferencesPanel as useGridPreferencesPanel,
+  unstable_useGridEditing as useGridEditing,
+  unstable_useGridRows as useGridRows,
+  unstable_rowsStateInitializer as rowsStateInitializer,
+  unstable_useGridRowsMeta as useGridRowsMeta,
+  unstable_useGridParamsApi as useGridParamsApi,
+  unstable_useGridSelection as useGridSelection,
+  unstable_useGridSelectionPreProcessors as useGridSelectionPreProcessors,
+  unstable_useGridSorting as useGridSorting,
+  unstable_sortingStateInitializer as sortingStateInitializer,
+  unstable_useGridScroll as useGridScroll,
+  unstable_useGridEvents as useGridEvents,
+  unstable_useGridDimensions as useGridDimensions,
+  unstable_useGridStatePersistence as useGridStatePersistence,
+} from '@mui/x-data-grid';
 
-import { useGridInitialization } from '../../_modules_/grid/hooks/core';
+import { GridApiPro } from './internals/models/gridApiPro';
+import { DataGridProProcessedProps } from './internals/models/dataGridProProps';
 
-import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
-import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
-import { useGridColumnReorder } from '../../_modules_/grid/hooks/features/columnReorder/useGridColumnReorder';
-import { useGridColumnResize } from '../../_modules_/grid/hooks/features/columnResize/useGridColumnResize';
-import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useGridColumns';
-import { useGridDensity } from '../../_modules_/grid/hooks/features/density/useGridDensity';
-import { useGridCsvExport } from '../../_modules_/grid/hooks/features/export/useGridCsvExport';
-import { useGridPrintExport } from '../../_modules_/grid/hooks/features/export/useGridPrintExport';
-import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGridFilter';
-import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
-import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
-import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
-import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
-import { useGridPagination } from '../../_modules_/grid/hooks/features/pagination/useGridPagination';
-import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
-import { useGridEditing } from '../../_modules_/grid/hooks/features/editRows/useGridEditing';
-import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
-import { useGridRowsMeta } from '../../_modules_/grid/hooks/features/rows/useGridRowsMeta';
-import { useGridParamsApi } from '../../_modules_/grid/hooks/features/rows/useGridParamsApi';
-import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
-import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useGridSorting';
-import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGridScroll';
-import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
-import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
-import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/useGridTreeData';
-import { useGridRowGrouping } from '../../_modules_/grid/hooks/features/rowGrouping/useGridRowGrouping';
-import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
-import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
-import { useGridDetailPanel } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanel';
-import { useGridDetailPanelCache } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanelCache';
+// Pro-only features
+import { useGridInfiniteLoader } from './internals/hooks/features/infiniteLoader/useGridInfiniteLoader';
+import { useGridColumnReorder } from './internals/hooks/features/columnReorder/useGridColumnReorder';
+import { useGridColumnResize } from './internals/hooks/features/columnResize/useGridColumnResize';
+import { useGridTreeData } from './internals/hooks/features/treeData/useGridTreeData';
+import {
+  useGridRowGrouping,
+  rowGroupingStateInitializer,
+} from './internals/hooks/features/rowGrouping/useGridRowGrouping';
+import {
+  useGridColumnPinning,
+  columnPinningStateInitializer,
+} from './internals/hooks/features/columnPinning/useGridColumnPinning';
+import { useGridDetailPanel } from './internals/hooks/features/detailPanel/useGridDetailPanel';
+import { useGridDetailPanelCache } from './internals/hooks/features/detailPanel/useGridDetailPanelCache';
+import { useGridRowGroupingPreProcessors } from './internals/hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
+import { useGridTreeDataPreProcessors } from './internals/hooks/features/treeData/useGridTreeDataPreProcessors';
+import { useGridDetailPanelPreProcessors } from './internals/hooks/features/detailPanel/useGridDetailPanelPreProcessors';
+import { useGridColumnPinningPreProcessors } from './internals/hooks/features/columnPinning/useGridColumnPinningPreProcessors';
 
 export const useDataGridProComponent = (
-  inputApiRef: GridApiRef | undefined,
+  inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization(inputApiRef, props);
-  useGridTreeData(apiRef, props);
-  useGridRowGrouping(apiRef, props);
+
+  /**
+   * Register all pre-processors called during state initialization here.
+   */
+  useGridSelectionPreProcessors(apiRef, props);
+  useGridRowGroupingPreProcessors(apiRef, props);
+  useGridTreeDataPreProcessors(apiRef, props);
+  useGridDetailPanelPreProcessors(apiRef, props);
+  useGridColumnPinningPreProcessors(apiRef, props); // Must be the last because it changes the order of the columns.
+
+  /**
+   * Register all state initializers here.
+   */
+  useGridInitializeState(filterStateInitializer, apiRef, props);
+  useGridInitializeState(pageSizeStateInitializer, apiRef, props);
+  useGridInitializeState(pageStateInitializer, apiRef, props);
+  useGridInitializeState(sortingStateInitializer, apiRef, props);
+  useGridInitializeState(columnPinningStateInitializer, apiRef, props);
+  useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
+  useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridRowGrouping(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
+  useGridTreeData(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
+  useGridInitializeState(rowsStateInitializer, apiRef, props);
+
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);

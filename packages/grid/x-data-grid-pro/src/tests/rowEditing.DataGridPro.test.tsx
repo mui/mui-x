@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import { GridApi, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -51,7 +51,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
