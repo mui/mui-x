@@ -366,6 +366,28 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal(`5-1`);
     });
 
+    it('should move focus when the focus is on a column header button', function test() {
+      if (isJSDOM) {
+        // This test is not relevant if we can't choose the actual height
+        this.skip();
+      }
+
+      render(<NavigationTestCaseNoScrollX />);
+
+      // get the sort button in column header 1
+      const columnMenuButton = getColumnHeaderCell(1).querySelector(
+        `button[title="Sort"]`,
+      ) as HTMLElement;
+
+      // Simulate click on this button
+      fireEvent.mouseUp(columnMenuButton);
+      fireEvent.click(columnMenuButton);
+      columnMenuButton.focus();
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      expect(getActiveCell()).to.equal(`0-1`);
+    });
+
     /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
     it('should be able to type in an child input', () => {
       const columns = [
