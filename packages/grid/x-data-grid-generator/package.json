@@ -4,7 +4,7 @@
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
   "main": "src/index.ts",
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
