@@ -365,8 +365,8 @@ describe('<DataGrid /> - Keyboard', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
       expect(getActiveCell()).to.equal(`5-1`);
     });
-    /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 
+    /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
     it('should be able to type in an child input', () => {
       const columns = [
         {
