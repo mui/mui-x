@@ -171,24 +171,22 @@ export const useGridKeyboardNavigation = (
     GridEventListener<GridEvents.columnHeaderKeyDown>
   >(
     (params, event) => {
-      let isFromCustomHeader = false;
       const headerTitleNode = event.currentTarget.querySelector(
         `.${gridClasses.columnHeaderTitleContainerContent}`,
       );
-      isFromCustomHeader =
+      const isFromCustomHeader =
         !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
-
-      if (
+      const isGridHeaderCellRoot =
         event.target != null &&
-        (event.target as HTMLElement).classList.contains(gridClasses.columnHeader) &&
-        params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field
-      ) {
+        (event.target as HTMLElement).classList.contains(gridClasses.columnHeader);
+
+      if (!isGridHeaderCellRoot && params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field) {
         if (!isFromCustomHeader) {
           // prevent page scroll from keyboard when focus on our buttons
           event.preventDefault();
         }
         // When focus is on a nested input, keyboard events have no effect to avoid conflicts with native events.
-        // There is on exception for the checkBoxHeader
+        // There is one exception for the checkBoxHeader
         return;
       }
 
