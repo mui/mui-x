@@ -390,6 +390,8 @@ describe('<DataGrid /> - Keyboard', () => {
         </div>,
       );
       const input = screen.getByTestId('custom-input');
+      fireEvent.mouseUp(input);
+      fireEvent.click(input);
       input.focus();
 
       // This does not work with navigation keys.
@@ -421,6 +423,8 @@ describe('<DataGrid /> - Keyboard', () => {
         </div>,
       );
       const input = screen.getByTestId('custom-input');
+      fireEvent.mouseUp(input);
+      fireEvent.click(input);
       input.focus();
 
       // Verify that the event is not prevented during the bubbling.
