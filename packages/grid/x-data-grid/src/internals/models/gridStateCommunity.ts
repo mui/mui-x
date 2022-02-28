@@ -16,6 +16,7 @@ import type {
   GridTabIndexState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
+import type { GridRowsInternalCache } from '../hooks/features/rows/gridRowsState';
 import type { GridEditRowsModel } from './gridEditRowModel';
 import type { GridSelectionModel } from './gridSelectionModel';
 
@@ -25,6 +26,7 @@ import type { GridSelectionModel } from './gridSelectionModel';
  */
 export interface GridStateCommunity {
   rows: GridRowsState;
+  rowsCache: GridRowsInternalCache;
   rowsMeta: GridRowsMetaState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;

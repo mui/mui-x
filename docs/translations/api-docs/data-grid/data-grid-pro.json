@@ -166,6 +166,10 @@
       "conditions": "the cell has a custom renderer"
     },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
+    "cellContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element that wraps the cell content"
+    },
     "cellCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell checkbox element"

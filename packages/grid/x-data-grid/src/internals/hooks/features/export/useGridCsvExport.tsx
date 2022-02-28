@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
+import { gridColumnDefinitionsSelector, gridVisibleColumnDefinitionsSelector } from '../columns';
 import { gridFilteredSortedRowIdsSelector } from '../filter';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridCsvExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
@@ -35,7 +35,7 @@ export const useGridCsvExport = (apiRef: React.MutableRefObject<GridApiCommunity
   const getDataAsCsv = React.useCallback(
     (options: GridCsvExportOptions = {}): string => {
       logger.debug(`Get data as CSV`);
-      const columns = allGridColumnsSelector(apiRef);
+      const columns = gridColumnDefinitionsSelector(apiRef);
 
       let exportedColumns: GridStateColDef[];
       if (options.fields) {
@@ -43,7 +43,9 @@ export const useGridCsvExport = (apiRef: React.MutableRefObject<GridApiCommunity
           .map((field) => columns.find((column) => column.field === field))
           .filter((column): column is GridStateColDef => !!column);
       } else {
-        const validColumns = options.allColumns ? columns : visibleGridColumnsSelector(apiRef);
+        const validColumns = options.allColumns
+          ? columns
+          : gridVisibleColumnDefinitionsSelector(apiRef);
         exportedColumns = validColumns.filter((column) => !column.disableExport);
       }
 
