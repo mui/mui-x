@@ -64,7 +64,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
-    titleContentContainer: ['columnHeaderTitleContentContainer'],
+    titleContainerContent: ['columnHeaderTitleContainerContent'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -233,7 +233,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         {...draggableEventHandlers}
       >
         <div className={classes.titleContainer}>
-          <div className={classes.titleContentContainer}>
+          <div className={classes.titleContainerContent}>
             {headerComponent || (
               <GridColumnHeaderTitle
                 label={column.headerName ?? column.field}

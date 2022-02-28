@@ -9,7 +9,6 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { isGridHeaderCellRoot } from '../../../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../gridClasses';
 
@@ -174,16 +173,15 @@ export const useGridKeyboardNavigation = (
   >(
     (params, event) => {
       let isFromCustomHeader = false;
-      if (params.colDef.renderHeader) {
-        const headerTitleNode = event.currentTarget.querySelector(
-          `.${gridClasses.columnHeaderTitleContentContainer}`,
-        );
-        isFromCustomHeader =
-          !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
-      }
+      const headerTitleNode = event.currentTarget.querySelector(
+        `.${gridClasses.columnHeaderTitleContainerContent}`,
+      );
+      isFromCustomHeader =
+        !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
 
       if (
-        !isGridHeaderCellRoot(event.target as HTMLElement) &&
+        event.target != null &&
+        (event.target as HTMLElement).classList.contains(gridClasses.columnHeader) &&
         params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field
       ) {
         if (!isFromCustomHeader) {
