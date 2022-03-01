@@ -17,12 +17,13 @@ async function run() {
   if (FEATURE_TOGGLE.enable_redirects) {
     outputDirectories = ['./docs/pages/x/api/data-grid'];
   }
+
+  const projects = getTypeScriptProjects();
+
   await Promise.all(
     outputDirectories.map(async (dir) => {
       const outputDirectory = path.resolve(dir);
       fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
-
-      const projects = getTypeScriptProjects();
 
       const documentedInterfaces = buildInterfacesDocumentation({
         projects,
