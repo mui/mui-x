@@ -22,8 +22,6 @@ describe('<StaticDateTimePicker />', () => {
     fireEvent.click(screen.getByLabelText('Jan 1, 2018'));
     expect(onChangeMock.callCount).to.equal(1);
 
-    expect(screen.getByLabelText(/Selected time/))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByLabelText(/Selected time/)).toBeVisible();
   });
 });

@@ -62,9 +62,7 @@ describe('<YearPicker />', () => {
     fireEvent.click(targetYear);
 
     expect(onChangeMock.callCount).to.equal(1);
-    expect(onChangeMock.args[0][0])
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2025-02-02T00:00:00.000'));
+    expect(onChangeMock.args[0][0]).toEqualDateTime(adapterToUse.date('2025-02-02T00:00:00.000'));
   });
 
   it('does not allow to pick year if readOnly prop is passed', () => {

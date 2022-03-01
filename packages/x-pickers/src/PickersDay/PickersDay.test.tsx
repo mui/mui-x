@@ -50,9 +50,7 @@ describe('<PickersDay />', () => {
     fireEvent.click(targetDay);
 
     expect(handleDaySelect.callCount).to.equal(1);
-    expect(handleDaySelect.args[0][0])
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(day);
+    expect(handleDaySelect.args[0][0]).toEqualDateTime(day);
   });
 
   it('renders the day of the month by default', () => {
@@ -68,9 +66,7 @@ describe('<PickersDay />', () => {
     // TODO: This can be disorienting if the accessible name is not the same as the visible label
     // Investigate if we can drop `aria-label` and let screenreaders announce the full date in a calendar picker.
     expect(day).to.have.text('2');
-    expect(day)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveAccessibleName('Feb 2, 2020');
+    expect(day).toHaveAccessibleName('Feb 2, 2020');
   });
 
   it('should render children instead of the day of the month when children prop is present', () => {
@@ -86,8 +82,6 @@ describe('<PickersDay />', () => {
 
     const day = screen.getByRole('button');
     expect(day).to.have.text('2 (free)');
-    expect(day)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveAccessibleName('2 (free)');
+    expect(day).toHaveAccessibleName('2 (free)');
   });
 });

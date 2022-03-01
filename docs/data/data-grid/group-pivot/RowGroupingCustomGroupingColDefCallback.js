@@ -91,13 +91,24 @@ export default function RowGroupingCustomGroupingColDefCallback() {
           columns={columns}
           disableSelectionOnClick
           rowGroupingModel={rowGroupingModel}
-          groupingColDef={(params) =>
-            params.fields.includes('director')
-              ? {
-                  headerName: 'Director',
-                }
-              : {}
-          }
+          groupingColDef={(params) => {
+            const override = {};
+            if (params.fields.includes('director')) {
+              return {
+                headerName: 'Director',
+                valueFormatter: (valueFormatterParams) => {
+                  const rowNode = apiRef.current.getRowNode(valueFormatterParams.id);
+
+                  if (rowNode?.groupingField === 'director') {
+                    return `by ${rowNode.groupingKey ?? ''}`;
+                  }
+                  return undefined;
+                },
+              };
+            }
+
+            return override;
+          }}
           experimentalFeatures={{
             rowGrouping: true,
           }}

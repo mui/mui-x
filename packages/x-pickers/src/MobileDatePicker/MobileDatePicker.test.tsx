@@ -60,9 +60,7 @@ describe('<MobileDatePicker />', () => {
       // Strict Effects run mount effects twice
       React.version.startsWith('18') ? 2 : 1,
     );
-    expect(onChangeMock.args[0][0])
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2018-01-01T00:00:00.000'));
+    expect(onChangeMock.args[0][0]).toEqualDateTime(adapterToUse.date('2018-01-01T00:00:00.000'));
   });
 
   it('allows to change only year', () => {
@@ -113,9 +111,7 @@ describe('<MobileDatePicker />', () => {
     fireEvent.click(screen.getByRole('textbox'));
     fireEvent.click(screen.getByLabelText('Jan 2, 2018'));
 
-    expect(screen.queryByRole('dialog'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.queryByRole('dialog')).toBeVisible();
   });
 
   it('prop `clearable` - renders clear button in Mobile mode', () => {
@@ -209,9 +205,7 @@ describe('<MobileDatePicker />', () => {
     );
 
     expect(screen.queryAllByMuiTest('day')).to.have.length(0);
-    expect(screen.getByMuiTest('loading-progress'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByMuiTest('loading-progress')).toBeVisible();
   });
 
   it('prop `renderLoading` – displays custom loading indicator', () => {
@@ -227,9 +221,7 @@ describe('<MobileDatePicker />', () => {
     );
 
     expect(screen.queryByTestId('loading-progress')).to.equal(null);
-    expect(screen.getByTestId('custom-loading'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByTestId('custom-loading')).toBeVisible();
   });
 
   it('prop `ToolbarComponent` – render custom toolbar component', () => {
@@ -243,9 +235,7 @@ describe('<MobileDatePicker />', () => {
       />,
     );
 
-    expect(screen.getByTestId('custom-toolbar'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByTestId('custom-toolbar')).toBeVisible();
   });
 
   it('prop `renderDay` – renders custom day', () => {
@@ -275,9 +265,7 @@ describe('<MobileDatePicker />', () => {
       />,
     );
 
-    expect(screen.getByText('July'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByText('July')).toBeVisible();
   });
 
   it('prop `showTodayButton` – accept current date when "today" button is clicked', () => {

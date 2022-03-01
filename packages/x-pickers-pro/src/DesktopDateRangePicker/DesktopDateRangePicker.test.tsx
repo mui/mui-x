@@ -199,12 +199,8 @@ describe('<DesktopDateRangePicker />', () => {
 
     expect(onChangeMock.callCount).to.equal(2);
     const [changedRange] = onChangeMock.lastCall.args;
-    expect(changedRange[0])
-      .to // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2019-01-01T00:00:00.000'));
-    expect(changedRange[1])
-      .to // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2019-03-19T00:00:00.000'));
+    expect(changedRange[0]).to.toEqualDateTime(adapterToUse.date('2019-01-01T00:00:00.000'));
+    expect(changedRange[1]).to.toEqualDateTime(adapterToUse.date('2019-03-19T00:00:00.000'));
   });
 
   it('continues start selection if selected "end" date is before start', () => {
@@ -228,12 +224,8 @@ describe('<DesktopDateRangePicker />', () => {
 
     expect(onChangeMock.callCount).to.equal(3);
     const [changedRange] = onChangeMock.lastCall.args;
-    expect(changedRange[0])
-      .to // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2019-01-19T00:00:00.000'));
-    expect(changedRange[1])
-      .to // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2019-01-30T00:00:00.000'));
+    expect(changedRange[0]).to.toEqualDateTime(adapterToUse.date('2019-01-19T00:00:00.000'));
+    expect(changedRange[1]).to.toEqualDateTime(adapterToUse.date('2019-01-30T00:00:00.000'));
   });
 
   it('starts selection from end if end text field was focused', function test() {
@@ -255,12 +247,8 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(12);
     expect(onChangeMock.callCount).to.equal(2);
     const [changedRange] = onChangeMock.lastCall.args;
-    expect(changedRange[0])
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2019-01-19T00:00:00.000'));
-    expect(changedRange[1])
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2019-01-30T00:00:00.000'));
+    expect(changedRange[0]).toEqualDateTime(adapterToUse.date('2019-01-19T00:00:00.000'));
+    expect(changedRange[1]).toEqualDateTime(adapterToUse.date('2019-01-30T00:00:00.000'));
   });
 
   it('closes on focus out of fields', () => {
@@ -277,14 +265,10 @@ describe('<DesktopDateRangePicker />', () => {
     );
 
     fireEvent.focus(screen.getAllByRole('textbox')[0]);
-    expect(screen.getByRole('tooltip'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByRole('tooltip')).toBeVisible();
 
     fireEvent.focus(screen.getByText('focus me'));
-    expect(screen.getByRole('tooltip'))
-      .not // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByRole('tooltip')).not.toBeVisible();
   });
 
   // TODO
@@ -315,12 +299,8 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     expect(onChangeMock.callCount).to.equal(1);
-    expect(onChangeMock.args[0][0])
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2019-06-06T00:00:00.000'));
-    expect(onChangeMock.args[0][1])
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2019-06-06T00:00:00.000'));
+    expect(onChangeMock.args[0][0]).toEqualDateTime(adapterToUse.date('2019-06-06T00:00:00.000'));
+    expect(onChangeMock.args[0][1]).toEqualDateTime(adapterToUse.date('2019-06-06T00:00:00.000'));
   });
 
   it('scrolls current month to the active selection on focusing appropriate field', () => {
@@ -338,20 +318,14 @@ describe('<DesktopDateRangePicker />', () => {
     );
 
     fireEvent.focus(screen.getAllByRole('textbox')[0]);
-    expect(screen.getByText('May 2019'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByText('May 2019')).toBeVisible();
 
     fireEvent.focus(screen.getAllByRole('textbox')[1]);
-    expect(screen.getByText('October 2019'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByText('October 2019')).toBeVisible();
 
     // scroll back
     fireEvent.focus(screen.getAllByRole('textbox')[0]);
-    expect(screen.getByText('May 2019'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByText('May 2019')).toBeVisible();
   });
 
   it(`doesn't crash if opening picker with invalid date input`, async () => {
@@ -366,9 +340,7 @@ describe('<DesktopDateRangePicker />', () => {
     );
 
     fireEvent.focus(screen.getAllByRole('textbox')[0]);
-    expect(screen.getByRole('tooltip'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
   // TODO: remove once we use describeConformance.

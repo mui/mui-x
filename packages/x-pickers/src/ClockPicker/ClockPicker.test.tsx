@@ -43,18 +43,14 @@ describe('<ClockPicker />', () => {
     render(<ClockPicker date={null} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
-    expect(listbox)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveAccessibleName('Select hours. No time selected');
+    expect(listbox).toHaveAccessibleName('Select hours. No time selected');
   });
 
   it('has a name depending on the `date`', () => {
     render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
-    expect(listbox)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveAccessibleName('Select hours. Selected time is 4:20 AM');
+    expect(listbox).toHaveAccessibleName('Select hours. Selected time is 4:20 AM');
   });
 
   it('renders the current value as an accessible option', () => {
@@ -62,9 +58,7 @@ describe('<ClockPicker />', () => {
 
     const listbox = screen.getByRole('listbox');
     const selectedOption = within(listbox).getByRole('option', { selected: true });
-    expect(selectedOption)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveAccessibleName('4 hours');
+    expect(selectedOption).toHaveAccessibleName('4 hours');
     expect(listbox).to.have.attribute('aria-activedescendant', selectedOption.id);
   });
 
@@ -72,9 +66,7 @@ describe('<ClockPicker />', () => {
     render(<ClockPicker autoFocus date={null} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
-    expect(listbox)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveFocus();
+    expect(listbox).toHaveFocus();
   });
 
   it('stays focused when the view changes', () => {
@@ -85,18 +77,14 @@ describe('<ClockPicker />', () => {
     setProps({ view: 'minutes' });
 
     const listbox = screen.getByRole('listbox');
-    expect(listbox)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveFocus();
+    expect(listbox).toHaveFocus();
   });
 
   it('selects the current date on mount', () => {
     render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
 
     const selectedOption = screen.getByRole('option', { selected: true });
-    expect(selectedOption)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveAccessibleName('4 hours');
+    expect(selectedOption).toHaveAccessibleName('4 hours');
   });
 
   it('selects the first hour on Home press', () => {
@@ -242,9 +230,7 @@ describe('<ClockPicker />', () => {
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
-      expect(date)
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toEqualDateTime(adapterToUse.date('2018-01-01T13:00:00.000'));
+      expect(date).toEqualDateTime(adapterToUse.date('2018-01-01T13:00:00.000'));
       expect(selectionState).to.equal('shallow');
       expect(handleViewChange.callCount).to.equal(0);
     });
@@ -268,9 +254,7 @@ describe('<ClockPicker />', () => {
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
-      expect(date)
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toEqualDateTime(adapterToUse.date('2018-01-01T13:20:00.000'));
+      expect(date).toEqualDateTime(adapterToUse.date('2018-01-01T13:20:00.000'));
       expect(selectionState).to.equal('shallow');
       expect(handleViewChange.callCount).to.equal(0);
     });
@@ -330,9 +314,7 @@ describe('<ClockPicker />', () => {
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
-      expect(date)
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toEqualDateTime(adapterToUse.date('2018-01-01T13:20:10.000'));
+      expect(date).toEqualDateTime(adapterToUse.date('2018-01-01T13:20:10.000'));
       expect(selectionState).to.equal('shallow');
       expect(handleViewChange.callCount).to.equal(0);
     });

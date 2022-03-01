@@ -17,16 +17,16 @@ export interface Project {
    * @param {string} projectRoot The path to the root of the project.
    * @returns {string[]} Path to the component files from which we want to generate the prop-types.
    */
-  getComponentsWithPropTypes: (project: Project) => string[]
+  getComponentsWithPropTypes: (project: Project) => string[];
   /**
    * @param {string} projectRoot The path to the root of the project.
    * @returns {string[]} Path to the component files from which we want to generate the api doc.
    */
-  getComponentsWithApiDoc: (project: Project) => string[]
+  getComponentsWithApiDoc: (project: Project) => string[];
   /**
    * Name of the folder inside the documentation.
    */
-  documentationFolderName: string
+  documentationFolderName: string;
 }
 
 export type ProjectNames = 'x-data-grid' | 'x-data-grid-pro' | 'x-pickers' | 'x-pickers-pro';

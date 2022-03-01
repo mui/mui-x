@@ -22,9 +22,7 @@ describe('<MobileDateTimePicker />', () => {
     );
 
     fireEvent.click(screen.getByRole('textbox'));
-    expect(screen.getByRole('dialog'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByRole('dialog')).toBeVisible();
   });
 
   it('allows to select full date end-to-end', function test() {
@@ -92,9 +90,7 @@ describe('<MobileDateTimePicker />', () => {
     fireEvent.click(screen.getByText(/ok/i));
 
     expect(onChangeMock.callCount).to.equal(5);
-    expect(onChangeMock.args[4][0])
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2010-01-15T11:53:00.000'));
+    expect(onChangeMock.args[4][0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:53:00.000'));
   });
 
   it('prop: open – overrides open state', () => {
@@ -107,9 +103,7 @@ describe('<MobileDateTimePicker />', () => {
       />,
     );
 
-    expect(screen.getByRole('dialog'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByRole('dialog')).toBeVisible();
   });
 
   it('prop: onCloseMock – dispatches on close request', () => {

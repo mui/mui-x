@@ -32,7 +32,7 @@ interface GridGroupingCriteriaCellProps extends GridRenderCellParams {
 }
 
 const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) => {
-  const { id, field, rowNode, hideDescendantCount } = props;
+  const { id, field, rowNode, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -83,7 +83,7 @@ const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) => {
         )}
       </div>
       <span>
-        {rowNode.groupingKey}
+        {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
         {!hideDescendantCount && filteredDescendantCount > 0 ? ` (${filteredDescendantCount})` : ''}
       </span>
     </Box>

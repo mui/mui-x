@@ -4,49 +4,47 @@ import path from 'path';
 import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
-import buildGridSelectorsDocumentation from './buildGridSelectorsDocumentation';
-import buildGridEventsDocumentation from './buildGridEventsDocumentation';
+import buildSelectorsDocumentation from './buildSelectorsDocumentation';
+import buildEventsDocumentation from './buildEventsDocumentation';
 import FEATURE_TOGGLE from '../../src/featureToggle';
 import { getTypeScriptProjects } from '../getTypeScriptProjects';
 
 async function run() {
-  let documentationRoots = ['./docs/pages/api-docs'];
+  let outputDirectories = ['./docs/pages/api-docs/data-grid'];
   if (FEATURE_TOGGLE.enable_product_scope) {
-      documentationRoots = ['./docs/pages/api-docs', './docs/pages/x/api'];
+    outputDirectories = ['./docs/pages/api-docs/data-grid', './docs/pages/x/api/data-grid'];
   }
   if (FEATURE_TOGGLE.enable_redirects) {
-      documentationRoots = ['./docs/pages/x/api'];
+    outputDirectories = ['./docs/pages/x/api/data-grid'];
   }
 
   const projects = getTypeScriptProjects();
 
   await Promise.all(
-      documentationRoots.map(async (documentationRoot) => {
-      projects.forEach(project => {
-          fse.mkdirSync(path.resolve(path.join(documentationRoot, project.documentationFolderName)), { mode: 0o777, recursive: true });
-      })
+    outputDirectories.map(async (dir) => {
+      const outputDirectory = path.resolve(dir);
+      fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 
       const documentedInterfaces = buildInterfacesDocumentation({
         projects,
-          documentationRoot,
+        outputDirectory,
       });
 
       await buildComponentsDocumentation({
-          documentationRoot,
+        outputDirectory,
         documentedInterfaces,
         projects,
       });
 
-          // TODO: Pass all the projects and add the pro icon for pro-only events.
-          buildGridEventsDocumentation({
+      buildEventsDocumentation({
+        // TODO: Pass all the projects and add the pro icon for pro-only events
         project: projects.get('x-data-grid-pro')!,
         documentedInterfaces,
       });
 
-          // TODO: Pass all the projects and add the pro icon for pro-only selectors.
-          buildGridSelectorsDocumentation({
+      buildSelectorsDocumentation({
         project: projects.get('x-data-grid-pro')!,
-          documentationRoot,
+        outputDirectory,
       });
 
       buildExportsDocumentation({

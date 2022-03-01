@@ -20,9 +20,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         />,
       );
 
-      expect(screen.getByLabelText('Aug 13, 2020'))
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toHaveFocus();
+      expect(screen.getByLabelText('Aug 13, 2020')).toHaveFocus();
     });
 
     [
@@ -48,9 +46,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { keyCode, key });
 
-        expect(document.activeElement)
-          // @ts-expect-error need to migrate helpers to TypeScript
-          .toHaveAccessibleName(expectFocusedDay);
+        expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
       });
     });
   });
@@ -67,9 +63,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
       />,
     );
 
-    expect(document.activeElement)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveAccessibleName('Aug 13, 2020');
+    expect(document.activeElement).toHaveAccessibleName('Aug 13, 2020');
 
     for (let i = 0; i < 3; i += 1) {
       // Don't care about what's focused.
@@ -78,9 +72,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
     }
 
     // leaves focus on the same date
-    expect(document.activeElement)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toHaveAccessibleName('Aug 13, 2020');
+    expect(document.activeElement).toHaveAccessibleName('Aug 13, 2020');
   });
 
   context('YearPicker keyboard navigation', () => {

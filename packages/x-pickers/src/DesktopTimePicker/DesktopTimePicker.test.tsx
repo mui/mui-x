@@ -182,23 +182,17 @@ describe('<DesktopTimePicker />', () => {
     const prevViewButton = screen.getByLabelText('open previous view');
     const nextViewButton = screen.getByLabelText('open next view');
 
-    expect(screen.getByLabelText(/Select Hours/i))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByLabelText(/Select Hours/i)).toBeVisible();
     expect(prevViewButton).to.have.attribute('disabled');
 
     fireEvent.click(nextViewButton);
-    expect(screen.getByLabelText(/Select minutes/))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByLabelText(/Select minutes/)).toBeVisible();
 
     expect(prevViewButton).not.to.have.attribute('disabled');
     expect(nextViewButton).not.to.have.attribute('disabled');
 
     fireEvent.click(nextViewButton);
-    expect(screen.getByLabelText(/Select seconds/))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByLabelText(/Select seconds/)).toBeVisible();
     expect(nextViewButton).to.have.attribute('disabled');
   });
 
@@ -220,9 +214,9 @@ describe('<DesktopTimePicker />', () => {
     });
 
     expect(handleChange.callCount).to.equal(1);
-    expect(handleChange.firstCall.args[0])
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.date('2019-01-01T16:20:00.000'));
+    expect(handleChange.firstCall.args[0]).toEqualDateTime(
+      adapterToUse.date('2019-01-01T16:20:00.000'),
+    );
   });
 
   context('input validation', () => {

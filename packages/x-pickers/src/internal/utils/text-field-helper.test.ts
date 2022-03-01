@@ -65,11 +65,9 @@ describe('text-field-helper', () => {
       if (isValid) {
         expect(runMaskValidation()).to.be.equal(true);
       } else {
-        expect(runMaskValidation)
-          // @ts-expect-error need to migrate helpers to TypeScript
-          .toWarnDev(
-            `The mask "${mask}" you passed is not valid for the format used ${format}. Falling down to uncontrolled not-masked input.`,
-          );
+        expect(runMaskValidation).toWarnDev(
+          `The mask "${mask}" you passed is not valid for the format used ${format}. Falling down to uncontrolled not-masked input.`,
+        );
       }
     });
   });

@@ -17,12 +17,8 @@ describe('<StaticDatePicker />', () => {
       />,
     );
 
-    expect(screen.getByText('January'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
-    expect(screen.getByText('2019'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByText('January')).toBeVisible();
+    expect(screen.getByText('2019')).toBeVisible();
     expect(screen.getAllByMuiTest('day')).to.have.length(31);
   });
 

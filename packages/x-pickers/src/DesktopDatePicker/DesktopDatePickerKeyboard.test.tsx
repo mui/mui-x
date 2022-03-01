@@ -205,8 +205,6 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
 
     fireEvent.click(openButton);
 
-    expect(screen.queryByRole('dialog'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.queryByRole('dialog')).toBeVisible();
   });
 });

@@ -36,12 +36,8 @@ describe('<CalendarPicker />', () => {
       <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
     );
 
-    expect(screen.getByText('January'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
-    expect(screen.getByText('2019'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByText('January')).toBeVisible();
+    expect(screen.getByText('2019')).toBeVisible();
     expect(screen.getAllByMuiTest('day')).to.have.length(31);
     // It should follow https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
     expect(
@@ -75,9 +71,7 @@ describe('<CalendarPicker />', () => {
 
     expect(handleViewChange.callCount).to.equal(1);
     expect(screen.queryByLabelText(/switch to year view/i)).to.equal(null);
-    expect(screen.getByLabelText('year view is open, switch to calendar view'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
   it('allows month and view changing, but not selection when readOnly prop is passed', () => {
@@ -102,9 +96,7 @@ describe('<CalendarPicker />', () => {
     expect(onChangeMock.callCount).to.equal(0);
 
     fireEvent.click(screen.getByText('January'));
-    expect(screen.queryByLabelText('year view is open, switch to calendar view'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.queryByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
   it('does not allow interaction when disabled prop is passed', () => {
@@ -120,9 +112,7 @@ describe('<CalendarPicker />', () => {
     );
 
     fireEvent.click(screen.getByText('January'));
-    expect(screen.queryByText('January'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.queryByText('January')).toBeVisible();
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).to.equal(null);
 
     fireEvent.click(screen.getByTitle('Previous month'));

@@ -92,7 +92,7 @@ async function run() {
   const projects = getTypeScriptProjects();
 
   const promises = Array.from(projects.values()).flatMap((project) => {
-    const componentsWithPropTypes = project.getComponentsWithPropTypes(project)
+    const componentsWithPropTypes = project.getComponentsWithPropTypes(project);
 
     return componentsWithPropTypes.map<Promise<void>>(async (file) => {
       try {

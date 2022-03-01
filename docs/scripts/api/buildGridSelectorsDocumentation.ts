@@ -10,7 +10,7 @@ import {
 
 interface BuildSelectorsDocumentationOptions {
   project: Project;
-    documentationRoot: string;
+  documentationRoot: string;
 }
 
 interface Selector {
@@ -22,7 +22,9 @@ interface Selector {
   supportsApiRef?: boolean;
 }
 
-export default function buildGridSelectorsDocumentation(options: BuildSelectorsDocumentationOptions) {
+export default function buildGridSelectorsDocumentation(
+  options: BuildSelectorsDocumentationOptions,
+) {
   const { project, documentationRoot } = options;
 
   const selectors = Object.values(project.exports)

@@ -20,9 +20,7 @@ describe('findClosestEnabledDate', () => {
       disablePast: false,
     });
 
-    expect(result)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.startOfDay(adapterToUse.date()));
+    expect(result).toEqualDateTime(adapterToUse.startOfDay(adapterToUse.date()));
   });
 
   it('should return given date if it is enabled', () => {
@@ -194,8 +192,6 @@ describe('findClosestEnabledDate', () => {
       disablePast: false,
     })!;
 
-    expect(result)
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toEqualDateTime(adapterToUse.startOfDay(adapterToUse.date()));
+    expect(result).toEqualDateTime(adapterToUse.startOfDay(adapterToUse.date()));
   });
 });

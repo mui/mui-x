@@ -23,9 +23,7 @@ describe('<DesktopDateTimePicker />', () => {
     );
 
     userEvent.mousePress(screen.getByLabelText(/choose date/i));
-    expect(screen.getByRole('dialog'))
-      // @ts-expect-error need to migrate helpers to TypeScript
-      .toBeVisible();
+    expect(screen.getByRole('dialog')).toBeVisible();
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {

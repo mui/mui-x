@@ -1,10 +1,9 @@
 {
   "extends": "../../tsconfig",
   "compilerOptions": {
-    "noEmit": true, // TODO: Remove once the root tsconfig has `noEmit: true`
     // @date-io libraries produce duplicate type `DateType`
     "skipLibCheck": true,
     "types": ["react", "mocha", "node"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts"]
 }
