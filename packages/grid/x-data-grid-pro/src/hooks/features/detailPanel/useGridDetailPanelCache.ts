@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { useGridApiEventHandler, gridRowIdsSelector, GridEvents } from '@mui/x-data-grid';
+import {
+  useGridApiEventHandler,
+  gridRowIdsSelector,
+  GridEvents,
+  GridRowId,
+} from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -15,11 +20,11 @@ function cacheContentAndHeight(
   // TODO change to lazy approach using a Proxy
   // only call getDetailPanelContent when asked for an id
   const rowIds = gridRowIdsSelector(apiRef);
-  const contentCache = rowIds.reduce((acc, id) => {
+  const contentCache = rowIds.reduce((acc, id: GridRowId) => {
     const params = apiRef.current.getRowParams(id);
     acc[id] = getDetailPanelContent(params);
     return acc;
-  }, {});
+  }, {} as Record<GridRowId, ReturnType<typeof getDetailPanelContent>>);
 
   const heightCache = rowIds.reduce((acc, id) => {
     if (contentCache[id] == null) {
@@ -28,7 +33,7 @@ function cacheContentAndHeight(
     const params = apiRef.current.getRowParams(id);
     acc[id] = getDetailPanelHeight(params);
     return acc;
-  }, {});
+  }, {} as Record<GridRowId, ReturnType<typeof getDetailPanelHeight>>);
 
   return { contentCache, heightCache };
 }

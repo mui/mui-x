@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
+// @ts-ignore
 import { createRenderer, fireEvent, createEvent, act } from '@mui/monorepo/test/utils';
 import {
   getColumnHeadersTextContent,

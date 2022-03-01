@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';

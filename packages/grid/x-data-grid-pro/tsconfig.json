@@ -2,7 +2,8 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "types": ["react", "mocha", "node"],
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "allowJs": true
   },
   "include": ["src/**/*", "../../../node_modules/@mui/monorepo/test/utils/initMatchers.ts"]
 }

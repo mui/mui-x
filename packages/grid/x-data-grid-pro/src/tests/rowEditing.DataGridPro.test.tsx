@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { GridApi, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import {
+  GridApi,
+  DataGridProProps,
+  useGridApiRef,
+  DataGridPro,
+  GridPreProcessEditCellProps,
+} from '@mui/x-data-grid-pro';
+// @ts-ignore
 import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -200,7 +207,10 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should mark fields as invalid when an object with error is returned', async () => {
-    const preProcessEditCellProps = ({ props }) => ({ ...props, error: true });
+    const preProcessEditCellProps = (params: GridPreProcessEditCellProps) => ({
+      ...params.props,
+      error: true,
+    });
     render(
       <TestCase
         editMode="row"
@@ -224,7 +234,8 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should mark fields as invalid when a promise with error is returned', async () => {
-    const preProcessEditCellProps = ({ props }) => Promise.resolve({ ...props, error: true });
+    const preProcessEditCellProps = (params: GridPreProcessEditCellProps) =>
+      Promise.resolve({ ...params.props, error: true });
     render(
       <TestCase
         editMode="row"

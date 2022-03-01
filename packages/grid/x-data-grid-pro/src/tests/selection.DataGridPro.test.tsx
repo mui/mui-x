@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
+// @ts-ignore
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import {
   GridApi,

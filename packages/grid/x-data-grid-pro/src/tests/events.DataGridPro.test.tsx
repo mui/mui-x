@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
@@ -70,7 +71,7 @@ describe('<DataGridPro /> - Events Params', () => {
   describe('columnHeaderParams', () => {
     it('should include the correct params', () => {
       let eventArgs: { params: GridColumnHeaderParams; event: React.MouseEvent } | null = null;
-      const handleClick = (params, event) => {
+      const handleClick = (params: GridColumnHeaderParams, event: React.MouseEvent) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onColumnHeaderClick={handleClick} />);
@@ -89,7 +90,7 @@ describe('<DataGridPro /> - Events Params', () => {
     it('should include the correct params', () => {
       let eventArgs: { params: GridRowParams; event: React.MouseEvent } | null = null;
 
-      const handleClick = (params, event) => {
+      const handleClick = (params: GridRowParams, event: React.MouseEvent) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onRowClick={handleClick} />);
@@ -110,7 +111,7 @@ describe('<DataGridPro /> - Events Params', () => {
     let cell11;
 
     it('should include the correct params', () => {
-      const handleClick = (params, event) => {
+      const handleClick = (params: GridCellParams, event: React.MouseEvent) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
@@ -130,7 +131,7 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should include the correct params when grid is sorted', () => {
-      const handleClick = (params, event) => {
+      const handleClick = (params: GridCellParams, event: React.MouseEvent) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
@@ -155,7 +156,7 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should consider value getter', () => {
-      const handleClick = (params, event) => {
+      const handleClick = (params: GridCellParams, event: React.MouseEvent) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
@@ -166,7 +167,7 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should consider value formatter', () => {
-      const handleClick = (params, event) => {
+      const handleClick = (params: GridCellParams, event: React.MouseEvent) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
@@ -198,7 +199,7 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should allow to stop propagation', () => {
-      const stopClick = (params, event) => {
+      const stopClick = (params: GridCellParams, event: React.MouseEvent) => {
         event.stopPropagation();
       };
       render(<TestEvents onCellClick={stopClick} onSelectionModelChange={push('rowSelected')} />);
@@ -273,7 +274,7 @@ describe('<DataGridPro /> - Events Params', () => {
       { id: 5, brand: 'Reebok' },
     ];
     const handleRowsScrollEnd = spy();
-    const TestCase = ({ rows }) => {
+    const TestCase = ({ rows }: { rows: typeof baseRows }) => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro

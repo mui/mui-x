@@ -1,3 +1,4 @@
+// @ts-ignore
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
   getCell,
