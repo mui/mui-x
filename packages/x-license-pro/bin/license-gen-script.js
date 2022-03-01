@@ -2,4 +2,4 @@
 /* eslint-disable */
 require = require('esm')(module);
 
-require('../build/license-cli').licenseGenCli();
+require('../build/node/cli/license-cli').licenseGenCli();
