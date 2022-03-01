@@ -158,20 +158,6 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.queryByText('Detail')).to.equal(null);
   });
 
-  [...new Array(100).keys()].forEach((i) => {
-    it(`test ${i}`, () => {
-      render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
-      expect(screen.queryByText('Detail')).to.equal(null);
-      const cell = getCell(1, 1);
-      fireEvent.mouseUp(cell);
-      fireEvent.click(cell);
-      fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
-      expect(screen.queryByText('Detail')).not.to.equal(null);
-      fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
-      expect(screen.queryByText('Detail')).to.equal(null);
-    });
-  });
-
   it('should allow to pass a custom toggle by adding a column with field=GRID_DETAIL_PANEL_TOGGLE_FIELD', () => {
     render(
       <TestCase
