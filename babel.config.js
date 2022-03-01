@@ -62,13 +62,13 @@ module.exports = function getBabelConfig(api) {
         version: '^7.4.4',
       },
     ],
-    // [
-    //   'babel-plugin-transform-react-remove-prop-types',
-    //   {
-    //     mode: 'unsafe-wrap',
-    //     ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
-    //   },
-    // ],
+    [
+      'babel-plugin-transform-react-remove-prop-types',
+      {
+        mode: 'unsafe-wrap',
+        ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
+      },
+    ],
   ];
 
   if (process.env.NODE_ENV === 'production') {
