@@ -184,7 +184,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:17febf6e675b3c706cab5e53684b05eb358a06b0aaaf3b0e6ba7f3b149b41681
+      - image: mcr.microsoft.com/playwright@sha256:3d36197320f4f77b062a7973e99406d10a436e11706eddebde6be08836bfe5d1
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -215,7 +215,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:17febf6e675b3c706cab5e53684b05eb358a06b0aaaf3b0e6ba7f3b149b41681
+      - image: mcr.microsoft.com/playwright@sha256:3d36197320f4f77b062a7973e99406d10a436e11706eddebde6be08836bfe5d1
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -228,7 +228,7 @@ jobs:
   test_e2e_website:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:17febf6e675b3c706cab5e53684b05eb358a06b0aaaf3b0e6ba7f3b149b41681
+      - image: mcr.microsoft.com/playwright@sha256:3d36197320f4f77b062a7973e99406d10a436e11706eddebde6be08836bfe5d1
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -243,7 +243,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:17febf6e675b3c706cab5e53684b05eb358a06b0aaaf3b0e6ba7f3b149b41681
+      - image: mcr.microsoft.com/playwright@sha256:3d36197320f4f77b062a7973e99406d10a436e11706eddebde6be08836bfe5d1
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -259,7 +259,7 @@ jobs:
   test_performance:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:17febf6e675b3c706cab5e53684b05eb358a06b0aaaf3b0e6ba7f3b149b41681
+      - image: mcr.microsoft.com/playwright@sha256:3d36197320f4f77b062a7973e99406d10a436e11706eddebde6be08836bfe5d1
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
