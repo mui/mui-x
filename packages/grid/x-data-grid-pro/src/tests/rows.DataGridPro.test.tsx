@@ -24,7 +24,7 @@ import { getData } from 'storybook/src/data/data-service';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Rows', () => {
-  let baselineProps;
+  let baselineProps: DataGridProProps;
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
@@ -66,7 +66,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     describe('updateRows', () => {
       it('should apply getRowId before updating rows', () => {
-        const getRowId = (row) => `${row.clientId}`;
+        const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
         let apiRef: React.MutableRefObject<GridApi>;
         const Test = () => {
           apiRef = useGridApiRef();
@@ -90,7 +90,7 @@ describe('<DataGridPro /> - Rows', () => {
       let apiRef: React.MutableRefObject<GridApi>;
       const editableProps = { ...baselineProps };
       editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
-      const getRowId = (row) => `${row.clientId}`;
+      const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
 
       const Test = () => {
         apiRef = useGridApiRef();
@@ -115,7 +115,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should not clone the row', () => {
-      const getRowId = (row) => `${row.clientId}`;
+      const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
       let apiRef: React.MutableRefObject<GridApi>;
       const Test = () => {
         apiRef = useGridApiRef();

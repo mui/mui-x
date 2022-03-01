@@ -19,6 +19,7 @@ import {
   GridRowTreeNodeConfig,
   useGridApiRef,
   useGridRootProps,
+  GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 
@@ -1040,7 +1041,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       ]);
 
       setProps({
-        groupingColDef: (params) =>
+        groupingColDef: (params: GridGroupingColDefOverrideParams) =>
           params.fields.includes('category2')
             ? {
                 headerName: 'Custom group',
