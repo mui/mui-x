@@ -338,28 +338,30 @@ export function useGridColumns(
 
   const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
     (params, context) => {
-      if (!shouldUseVisibleColumnModel) {
+      const columnVisibilityModelToImport = shouldUseVisibleColumnModel
+        ? context.stateToRestore.columns?.columnVisibilityModel
+        : undefined;
+      const initialState = context.stateToRestore.columns;
+
+      if (columnVisibilityModelToImport == null && initialState == null) {
         return params;
       }
 
-      const columnVisibilityModelToImport = context.stateToRestore.columns?.columnVisibilityModel;
-      const initialState = context.stateToRestore.columns;
-      if (columnVisibilityModelToImport != null || initialState != null) {
-        const columnsState = createColumnsState({
-          apiRef,
-          columnsTypes,
-          columnsToUpsert: [],
-          initialState,
-          shouldRegenColumnVisibilityModelFromColumns: false,
-          currentColumnVisibilityModel: columnVisibilityModelToImport,
-          reset: false,
-        });
-        apiRef.current.setState(setColumnsState(columnsState));
+      const columnsState = createColumnsState({
+        apiRef,
+        columnsTypes,
+        columnsToUpsert: [],
+        initialState,
+        shouldRegenColumnVisibilityModelFromColumns: !shouldUseVisibleColumnModel,
+        currentColumnVisibilityModel: columnVisibilityModelToImport,
+        reset: false,
+      });
+      apiRef.current.setState(setColumnsState(columnsState));
 
-        if (initialState != null) {
-          apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
-        }
+      if (initialState != null) {
+        apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
       }
+
       return params;
     },
     [apiRef, shouldUseVisibleColumnModel, columnsTypes],
