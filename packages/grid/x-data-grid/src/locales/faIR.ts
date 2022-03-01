@@ -91,10 +91,10 @@ const faIRGrid: Partial<GridLocaleText> = {
       ? `${count.toLocaleString()} سطرهای انتخاب شده`
       : `${count.toLocaleString()} سطر انتخاب شده`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'مجموع سطرها:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} از ${totalCount.toLocaleString()}`,
 

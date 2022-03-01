@@ -91,10 +91,10 @@ const ptBRGrid: Partial<GridLocaleText> = {
       ? `${count.toLocaleString()} linhas selecionadas`
       : `${count.toLocaleString()} linha selecionada`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Total de linhas:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,
 
