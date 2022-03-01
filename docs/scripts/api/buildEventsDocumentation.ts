@@ -9,6 +9,7 @@ import {
   getSymbolJSDocTags,
   linkify,
   Project,
+  resolveExportSpecifier,
   stringifySymbol,
   writePrettifiedFile,
 } from './utils';
@@ -21,7 +22,7 @@ interface BuildEventsDocumentationOptions {
 export default function buildEventsDocumentation(options: BuildEventsDocumentationOptions) {
   const { project, documentedInterfaces } = options;
 
-  const gridEventsSymbol = project.exports.GridEvents;
+  const gridEventsSymbol = resolveExportSpecifier(project.exports.GridEvents, project);
   const gridEventsDeclaration = gridEventsSymbol.declarations![0] as ts.EnumDeclaration;
 
   const gridEventLookupSymbol = project.exports.GridEventLookup;

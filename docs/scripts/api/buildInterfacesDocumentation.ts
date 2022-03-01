@@ -12,13 +12,14 @@ import {
   Projects,
   stringifySymbol,
   writePrettifiedFile,
+  resolveExportSpecifier,
   DocumentedInterfaces,
   ProjectNames,
 } from './utils';
 
 interface ParsedObject {
   name: string;
-  project: ProjectNames;
+  projects: ProjectNames[];
   description?: string;
   properties: ParsedProperty[];
   tags: { [tagName: string]: ts.JSDocTagInfo };
@@ -29,8 +30,11 @@ interface ParsedProperty {
   description: string;
   tags: { [tagName: string]: ts.JSDocTagInfo };
   isOptional: boolean;
-  symbol: ts.Symbol;
   typeStr: string;
+  /**
+   * Name of the projects on which the interface has this property
+   */
+  projects: ProjectNames[];
 }
 
 const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
@@ -71,50 +75,86 @@ const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedPrope
   name: propertySymbol.name,
   description: getSymbolDescription(propertySymbol, project),
   tags: getSymbolJSDocTags(propertySymbol),
-  symbol: propertySymbol,
   isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
   typeStr: stringifySymbol(propertySymbol, project),
+  projects: [project.name],
 });
 
-const parseInterfaceSymbol = (symbol: ts.Symbol, project: Project): ParsedObject | null => {
-  let resolvedSymbol = symbol;
+interface ProjectInterface {
+  project: Project;
+  symbol: ts.Symbol;
+  type: ts.Type;
+  declaration: ts.InterfaceDeclaration;
+}
 
-  // If the export is done using `export type { XXX } from './module'`
-  // We must go to the root declaration
-  while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {
-    if (ts.isExportSpecifier(symbol.declarations![0]!)) {
-      const sourceFile = project.checker.getSymbolAtLocation(
-        symbol.declarations![0].parent.parent.moduleSpecifier!,
-      );
-      const sourceFileDeclaration = sourceFile?.declarations?.find((el) =>
-        ts.isSourceFile(el),
-      ) as ts.SourceFile;
-      const exports = project.checker.getExportsOfModule(
-        project.checker.getSymbolAtLocation(sourceFileDeclaration)!,
-      );
-      resolvedSymbol = exports.find((el) => el.name === symbol.name)!;
-    }
-  }
+const parseInterfaceSymbol = (
+  interfaceName: string,
+  documentedInterfaces: DocumentedInterfaces,
+  projects: Projects,
+): ParsedObject | null => {
+  const projectInterfaces = documentedInterfaces
+    .get(interfaceName)!
+    .map((projectName) => {
+      const project = projects.get(projectName)!;
 
-  const declaration = resolvedSymbol.declarations![0];
-  if (!ts.isInterfaceDeclaration(declaration) && !ts.isExportSpecifier(declaration)) {
+      const declaration = project.exports[interfaceName].declarations?.[0];
+      if (!declaration) {
+        return null;
+      }
+
+      const exportedSymbol = project.exports[interfaceName];
+      const type = project.checker.getDeclaredTypeOfSymbol(exportedSymbol);
+      const typeDeclaration = type.symbol.declarations?.[0];
+      const symbol = resolveExportSpecifier(exportedSymbol, project);
+
+      if (!typeDeclaration || !ts.isInterfaceDeclaration(typeDeclaration)) {
+        return null;
+      }
+
+      return {
+        symbol,
+        project,
+        type,
+        declaration,
+      };
+    })
+    .filter((projectInterface): projectInterface is ProjectInterface => !!projectInterface);
+
+  if (projectInterfaces.length === 0) {
     return null;
   }
 
-  const interfaceType = project.checker.getTypeAtLocation(declaration.name);
-  const properties = interfaceType
-    .getProperties()
-    .map((property) => parseProperty(property, project))
+  const defaultProjectInterface = projectInterfaces[0];
+
+  const parsedInterface: ParsedObject = {
+    name: defaultProjectInterface.symbol.name,
+    description: getSymbolDescription(
+      defaultProjectInterface.symbol,
+      defaultProjectInterface.project,
+    ),
+    properties: [],
+    tags: getSymbolJSDocTags(defaultProjectInterface.symbol),
+    projects: projectInterfaces.map((projectInterface) => projectInterface.project.name),
+  };
+
+  const properties: Record<string, ParsedProperty> = {};
+  projectInterfaces.forEach(({ type, project }) => {
+    const propertiesOnProject = type.getProperties();
+
+    propertiesOnProject.forEach((propertySymbol) => {
+      if (properties[propertySymbol.name]) {
+        properties[propertySymbol.name].projects.push(project.name);
+      } else {
+        properties[propertySymbol.name] = parseProperty(propertySymbol, project);
+      }
+    });
+  });
+
+  parsedInterface.properties = Object.values(properties)
     .filter((property) => !property.tags.ignore)
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  return {
-    name: symbol.name,
-    description: getSymbolDescription(resolvedSymbol, project),
-    properties,
-    tags: getSymbolJSDocTags(resolvedSymbol),
-    project: project.name,
-  };
+  return parsedInterface;
 };
 
 function generateMarkdownFromProperties(
@@ -138,9 +178,19 @@ function generateMarkdownFromProperties(
   object.properties.forEach((property) => {
     const defaultValue = property.tags.default?.text?.[0].text;
 
+    let planImg: string;
+    if (property.projects.includes('x-data-grid')) {
+      planImg = '';
+    } else if (property.projects.includes('x-data-grid-pro')) {
+      planImg =
+        ' [<span class="plan-pro" title="Pro plan"></span>](https://mui.com/store/items/material-ui-pro/)';
+    } else {
+      throw new Error(`No valid plan found for ${property.name} property in ${object.name}`);
+    }
+
     const formattedName = property.isOptional
-      ? `<span class="prop-name optional">${property.name}<sup><abbr title="optional">?</abbr></sup></span>`
-      : `<span class="prop-name">${property.name}</span>`;
+      ? `<span class="prop-name optional">${property.name}<sup><abbr title="optional">?</abbr></sup>${planImg}</span>`
+      : `<span class="prop-name">${property.name}${planImg}</span>`;
 
     const formattedType = `<span class="prop-type">${escapeCell(property.typeStr)}</span>`;
 
@@ -169,7 +219,7 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
       const objectsInProject = objects.filter((object) => {
         // TODO: Remove after opening the apiRef on the community plan
         if (
-          ['GridApiCommunity', 'GridApiPro'].includes(object.name) &&
+          ['GridApiCommunity', 'GridApiPro', 'GridApi'].includes(object.name) &&
           project.name === 'x-data-grid'
         ) {
           return false;
@@ -245,9 +295,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
 
   documentedInterfaces.forEach((packagesWithThisInterface, interfaceName) => {
     const project = projects.get(packagesWithThisInterface[0])!;
-    const symbol = project.exports[interfaceName];
-    const parsedInterface = parseInterfaceSymbol(symbol, project);
-
+    const parsedInterface = parseInterfaceSymbol(interfaceName, documentedInterfaces, projects);
     if (!parsedInterface) {
       return;
     }

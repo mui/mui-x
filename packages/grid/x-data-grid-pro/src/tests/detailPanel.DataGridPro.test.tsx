@@ -158,7 +158,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.queryByText('Detail')).to.equal(null);
   });
 
-  [...new Array(100).keys()].forEach((i) => {
+  [...Array.from(Array(100).keys())].forEach((i) => {
     it(`test ${i}`, () => {
       render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
       expect(screen.queryByText('Detail')).to.equal(null);
