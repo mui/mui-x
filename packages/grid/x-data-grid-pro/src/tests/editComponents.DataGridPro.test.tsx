@@ -5,6 +5,7 @@ import {
   useGridApiRef,
   DataGridPro,
   GridEditSingleSelectCell,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
@@ -259,10 +260,10 @@ describe('<DataGridPro /> - Edit Components', () => {
                 field: 'role',
                 type: 'singleSelect',
                 valueOptions: [0, 1],
-                valueFormatter: ({ value }) => ['User', 'Admin'][value as number],
+                valueFormatter: ({ value }) => ['User', 'Admin'][value!],
                 editable: true,
                 width: 200,
-              },
+              } as GridColDef<any, number, string>,
             ]}
             rows={[
               {

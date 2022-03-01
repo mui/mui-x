@@ -30,7 +30,7 @@ export interface GridFilterOperator<Api extends GridApiCommon = GridApiCommunity
    */
   getApplyFilterFn: (
     filterItem: GridFilterItem,
-    column: GridStateColDef<Api>,
+    column: GridStateColDef<any, any, any, Api>,
   ) => null | ((params: GridCellParams<any, any, any, Api>) => boolean);
   /**
    * The input component to render in the filter panel for this filter operator.

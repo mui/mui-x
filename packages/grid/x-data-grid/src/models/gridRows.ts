@@ -1,16 +1,18 @@
 import type { GridKeyValue } from './colDef/gridColDef';
 
-export type GridRowsProp = Readonly<GridRowModel[]>;
+export type GridDefaultRowModel = { [key: string]: any };
+
+export type GridRowsProp<R = GridDefaultRowModel> = Readonly<GridRowModel<R>[]>;
 
 /**
  * @deprecated prefer GridRowModel.
  */
-export type GridRowData<T = { [key: string]: any }> = T;
+export type GridRowData<R = GridDefaultRowModel> = R;
 
 /**
  * The key value object representing the data of a row.
  */
-export type GridRowModel<T = { [key: string]: any }> = T;
+export type GridRowModel<R = GridDefaultRowModel> = R;
 
 export type GridUpdateAction = 'delete';
 

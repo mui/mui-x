@@ -14,8 +14,8 @@ const columns: GridColumns = [
     width: 140,
     cellClassName: (params: GridCellParams<number>) =>
       clsx('super-app', {
-        negative: params.value < 0,
-        positive: params.value > 0,
+        negative: params.value! < 0,
+        positive: params.value! > 0,
       }),
   },
 ];

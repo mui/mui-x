@@ -1,14 +1,13 @@
-import { GridCellValue } from './gridCell';
 import { GridRowId, GridRowTreeNodeConfig } from './gridRows';
 import type { GridApiCommon } from './api';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
-export interface GridSortCellParams<Api extends GridApiCommon = GridApiCommunity> {
+export interface GridSortCellParams<V = any, Api extends GridApiCommon = GridApiCommunity> {
   id: GridRowId;
   field: string;
-  value: GridCellValue;
+  value: V;
   rowNode: GridRowTreeNodeConfig;
   api: Api;
 }
@@ -16,11 +15,11 @@ export interface GridSortCellParams<Api extends GridApiCommon = GridApiCommunity
 /**
  * The type of the sort comparison function.
  */
-export type GridComparatorFn<Api extends GridApiCommon = GridApiCommunity> = (
-  v1: GridCellValue,
-  v2: GridCellValue,
-  cellParams1: GridSortCellParams<Api>,
-  cellParams2: GridSortCellParams<Api>,
+export type GridComparatorFn<V = any, Api extends GridApiCommon = GridApiCommunity> = (
+  v1: V,
+  v2: V,
+  cellParams1: GridSortCellParams<V, Api>,
+  cellParams2: GridSortCellParams<V, Api>,
 ) => number;
 
 /**

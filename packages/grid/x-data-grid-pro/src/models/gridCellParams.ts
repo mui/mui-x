@@ -1,6 +1,7 @@
 import {
   GridApiCommon,
   GridCellParams as GridCellParamsUntyped,
+  GridDefaultRowModel,
   GridRenderCellParams as GridRenderCellParamsUntyped,
   GridRenderEditCellParams as GridRenderEditCellParamsUntyped,
   GridValueFormatterParams as GridValueFormatterParamsUntyped,
@@ -14,7 +15,7 @@ import { GridApiPro } from './gridApiPro';
  */
 export type GridCellParams<
   V = any,
-  R = any,
+  R extends GridDefaultRowModel = GridDefaultRowModel,
   F = V,
   Api extends GridApiCommon = GridApiPro,
 > = GridCellParamsUntyped<V, R, F, Api>;
@@ -24,7 +25,7 @@ export type GridCellParams<
  */
 export type GridRenderCellParams<
   V = any,
-  R = any,
+  R extends GridDefaultRowModel = GridDefaultRowModel,
   F = V,
   Api extends GridApiCommon = GridApiPro,
 > = GridRenderCellParamsUntyped<V, R, F, Api>;
@@ -40,7 +41,7 @@ export type GridRenderEditCellParams<Api extends GridApiCommon = GridApiPro> =
  */
 export type GridValueGetterParams<
   V = any,
-  R = any,
+  R extends GridDefaultRowModel = GridDefaultRowModel,
   Api extends GridApiCommon = GridApiPro,
 > = GridValueGetterParamsUntyped<V, R, Api>;
 
@@ -49,12 +50,14 @@ export type GridValueGetterParams<
  */
 export type GridValueGetterFullParams<
   V = any,
-  R = any,
+  R extends GridDefaultRowModel = GridDefaultRowModel,
   Api extends GridApiCommon = GridApiPro,
 > = GridValueGetterFullParamsUntyped<V, R, Api>;
 
 /**
  * Object passed as parameter in the column [[GridColDef]] value formatter callback.
  */
-export type GridValueFormatterParams<Api extends GridApiCommon = GridApiPro> =
-  GridValueFormatterParamsUntyped<Api>;
+export type GridValueFormatterParams<
+  V = any,
+  Api extends GridApiCommon = GridApiPro,
+> = GridValueFormatterParamsUntyped<V, Api>;

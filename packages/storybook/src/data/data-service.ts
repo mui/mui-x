@@ -8,7 +8,7 @@ export interface DataRowModel {
 }
 
 export interface GridData<Api extends GridApiCommon> {
-  columns: GridColDef<Api>[];
+  columns: GridColDef<any, any, any, Api>[];
   rows: DataRowModel[];
 }
 
@@ -30,7 +30,7 @@ export function getData<Api extends GridApiCommon = GridApi>(
     data.push(model);
   }
 
-  const columns: GridColDef<Api>[] = [
+  const columns: GridColDef<any, any, any, Api>[] = [
     { field: 'id', headerName: 'id', type: 'number' },
     { field: 'currencyPair', headerName: 'Currency Pair' },
   ];

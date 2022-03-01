@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
+  GridColDef,
   GridFilterItem,
   GridPreferencePanelsValue,
   GridToolbar,
@@ -550,9 +551,7 @@ describe('<DataGrid /> - Filter', () => {
               field: 'date',
               type: 'date',
               // Avoid the localization of the date to simplify the checks
-              valueFormatter: (params) => {
-                const value = params.value as Date | null | undefined | string;
-
+              valueFormatter: ({ value }) => {
                 if (value === null) {
                   return 'null';
                 }
@@ -567,7 +566,7 @@ describe('<DataGrid /> - Filter', () => {
 
                 return value.toLocaleString('en-US');
               },
-            },
+            } as GridColDef<any, Date | null | undefined | string>,
           ]}
         />,
       );
@@ -695,9 +694,7 @@ describe('<DataGrid /> - Filter', () => {
               field: 'date',
               type: 'dateTime',
               // Avoid the localization of the date to simplify the checks
-              valueFormatter: (params) => {
-                const value = params.value as Date | null | undefined | string;
-
+              valueFormatter: ({ value }) => {
                 if (value === null) {
                   return 'null';
                 }
@@ -712,7 +709,7 @@ describe('<DataGrid /> - Filter', () => {
 
                 return value.toLocaleString('en-US');
               },
-            },
+            } as GridColDef<any, Date | null | undefined | string>,
           ]}
         />,
       );

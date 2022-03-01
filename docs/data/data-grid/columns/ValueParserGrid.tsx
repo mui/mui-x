@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridValueFormatterParams, GridCellValue } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 const rows = [
   {
@@ -27,14 +27,14 @@ export default function ValueParserGrid() {
             field: 'taxRate',
             headerName: 'Tax Rate',
             width: 150,
-            valueFormatter: (params: GridValueFormatterParams) => {
+            valueFormatter: (params) => {
               const valueFormatted = Number(
-                (params.value as number) * 100,
+                (params.value ?? 0) * 100,
               ).toLocaleString();
               return `${valueFormatted} %`;
             },
-            valueParser: (value: GridCellValue) => Number(value) / 100,
-          },
+            valueParser: (value) => Number(value) / 100,
+          } as GridColDef<any, number, string, any>,
         ]}
       />
     </div>

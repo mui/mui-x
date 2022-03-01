@@ -113,17 +113,17 @@ export function useGridColumns(
    * API METHODS
    */
   const getColumn = React.useCallback<GridColumnApi['getColumn']>(
-    (field) => gridColumnLookupSelector(apiRef)[field] as GridStateColDef<any>,
+    (field) => gridColumnLookupSelector(apiRef)[field] as GridStateColDef<any, any, any, any>,
     [apiRef],
   );
 
   const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
-    () => gridColumnDefinitionsSelector(apiRef) as GridStateColDef<any>[],
+    () => gridColumnDefinitionsSelector(apiRef) as GridStateColDef<any, any, any, any>[],
     [apiRef],
   );
 
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
-    () => gridVisibleColumnDefinitionsSelector(apiRef) as GridStateColDef<any>[],
+    () => gridVisibleColumnDefinitionsSelector(apiRef) as GridStateColDef<any, any, any, any>[],
     [apiRef],
   );
 

@@ -3,11 +3,11 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export type GridColumnLookup<Api extends GridApiCommon = GridApiCommunity> = {
-  [field: string]: GridStateColDef<Api>;
+  [field: string]: GridStateColDef<any, any, any, Api>;
 };
 
 export type GridColumnRawLookup<Api extends GridApiCommon = GridApiCommunity> = {
-  [field: string]: GridColDef<Api> | GridStateColDef<Api>;
+  [field: string]: GridColDef<any, any, any, Api> | GridStateColDef<any, any, any, Api>;
 };
 
 export interface GridColumnsState<Api extends GridApiCommon = GridApiCommunity> {

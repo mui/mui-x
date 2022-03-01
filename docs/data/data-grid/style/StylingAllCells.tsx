@@ -39,7 +39,7 @@ export default function StylingAllCells() {
           if (params.field === 'city') {
             return '';
           }
-          return params.value >= 15 ? 'hot' : 'cold';
+          return params.value! >= 15 ? 'hot' : 'cold';
         }}
       />
     </Box>

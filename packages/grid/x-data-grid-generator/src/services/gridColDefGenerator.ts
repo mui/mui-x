@@ -10,7 +10,8 @@ export interface GridDataGeneratorContext {
   values?: Record<string, number>;
 }
 
-export interface GridColDefGenerator<Api extends GridApiCommon> extends GridColDef<Api> {
+export interface GridColDefGenerator<Api extends GridApiCommon>
+  extends GridColDef<any, any, any, Api> {
   generateData?: (row: any, context: GridDataGeneratorContext) => any;
 
   /**
