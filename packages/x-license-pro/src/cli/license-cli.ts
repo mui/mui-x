@@ -18,6 +18,7 @@ export function licenseGenCli() {
         return command
           .option('order', {
             default: '',
+            alias: 'o',
             describe: 'Order number id.',
             type: 'string',
           })
