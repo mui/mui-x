@@ -163,7 +163,7 @@ const useUtilityClasses = (ownerState) => {
  * But base the amount of children on a `row.descendantCount` property rather than on the internal lookups.
  */
 const GroupingCellWithLazyLoading = (props) => {
-  const { id, field, rowNode, row, hideDescendantCount } = props;
+  const { id, field, rowNode, row, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -208,7 +208,7 @@ const GroupingCellWithLazyLoading = (props) => {
         )}
       </div>
       <span>
-        {rowNode.groupingKey}
+        {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
         {!hideDescendantCount && row.descendantCount > 0
           ? ` (${row.descendantCount})`
           : ''}
@@ -222,6 +222,10 @@ GroupingCellWithLazyLoading.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
+  formattedValue: PropTypes.any.isRequired,
   hideDescendantCount: PropTypes.bool,
   /**
    * The grid row id.
