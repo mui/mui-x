@@ -14,4 +14,7 @@ export class FinalizationRegistryBasedCleanupTracking implements CleanupTracking
   unregister(unregisterToken: UnregisterToken): void {
     this.registry.unregister(unregisterToken);
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  reset() {}
 }
