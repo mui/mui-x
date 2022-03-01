@@ -9,7 +9,6 @@ import {
   GridRenderCellParams,
   useGridApiRef,
   gridColumnVisibilityModelSelector,
-  GridApi,
 } from '@mui/x-data-grid-pro';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
