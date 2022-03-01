@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
@@ -157,7 +158,7 @@ type CalendarPickerComponent = (<TDate>(
  *
  * - [CalendarPicker API](https://mui.com/api/calendar-picker/)
  */
-export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends unknown>(
+const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends unknown>(
   inProps: CalendarPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -322,3 +323,157 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate ext
     </CalendarPickerRoot>
   );
 }) as CalendarPickerComponent;
+
+CalendarPicker.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * If `true`, `onChange` is fired on click even if the same date is selected.
+   * @default false
+   */
+  allowSameDateSelection: PropTypes.bool,
+  autoFocus: PropTypes.bool,
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  /**
+   * The components used for each slot.
+   * Either a string to use a HTML element or a component.
+   * @default {}
+   */
+  components: PropTypes.object,
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  componentsProps: PropTypes.object,
+  date: PropTypes.any,
+  /**
+   * Default calendar month displayed when `value={null}`.
+   */
+  defaultCalendarMonth: PropTypes.any,
+  /**
+   * If `true`, the picker and text field are disabled.
+   * @default false
+   */
+  disabled: PropTypes.bool,
+  /**
+   * @default false
+   */
+  disableFuture: PropTypes.bool,
+  /**
+   * If `true`, todays date is rendering without highlighting with circle.
+   * @default false
+   */
+  disableHighlightToday: PropTypes.bool,
+  /**
+   * @default false
+   */
+  disablePast: PropTypes.bool,
+  /**
+   * Get aria-label text for switching between views button.
+   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
+   * @returns {string} The label of the view.
+   */
+  getViewSwitchingButtonText: PropTypes.func,
+  /**
+   * Left arrow icon aria-label text.
+   */
+  leftArrowButtonText: PropTypes.string,
+  /**
+   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * Can be used to preload information and show it in calendar.
+   * @default false
+   */
+  loading: PropTypes.bool,
+  /**
+   * Max selectable date. @DateIOType
+   */
+  maxDate: PropTypes.any,
+  /**
+   * Min selectable date. @DateIOType
+   */
+  minDate: PropTypes.any,
+  /**
+   * Callback fired on date change
+   */
+  onChange: PropTypes.func.isRequired,
+  /**
+   * Callback firing on month change. @DateIOType
+   * @param {TDate} month The new month.
+   */
+  onMonthChange: PropTypes.func,
+  /**
+   * Callback fired on view change.
+   * @param {CalendarPickerView} view The new view.
+   */
+  onViewChange: PropTypes.func,
+  /**
+   * Callback firing on year change @DateIOType.
+   * @param {TDate} year The new year.
+   */
+  onYearChange: PropTypes.func,
+  /**
+   * Initially open view.
+   * @default 'day'
+   */
+  openTo: PropTypes.oneOf(['day', 'month', 'year']),
+  /**
+   * Make picker read only.
+   * @default false
+   */
+  readOnly: PropTypes.bool,
+  /**
+   * Disable heavy animations.
+   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   */
+  reduceAnimations: PropTypes.bool,
+  /**
+   * Custom renderer for day. Check the [PickersDay](https://mui.com/api/pickers-day/) component.
+   * @param {TDate} day The day to render.
+   * @param {Array<TDate | null>} selectedDates The dates currently selected.
+   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
+   * @returns {JSX.Element} The element representing the day.
+   */
+  renderDay: PropTypes.func,
+  /**
+   * Component displaying when passed `loading` true.
+   * @returns {React.ReactNode} The node to render when loading.
+   * @default () => <span data-mui-test="loading-progress">...</span>
+   */
+  renderLoading: PropTypes.func,
+  /**
+   * Right arrow icon aria-label text.
+   */
+  rightArrowButtonText: PropTypes.string,
+  /**
+   * Disable specific date. @DateIOType
+   * @param {TDate} day The date to check.
+   * @returns {boolean} If `true` the day will be disabled.
+   */
+  shouldDisableDate: PropTypes.func,
+  /**
+   * Disable specific years dynamically.
+   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @param {TDate} year The year to test.
+   * @returns {boolean} Return `true` if the year should be disabled.
+   */
+  shouldDisableYear: PropTypes.func,
+  /**
+   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * @default false
+   */
+  showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * Controlled open view.
+   */
+  view: PropTypes.oneOf(['day', 'month', 'year']),
+  /**
+   * Views for calendar picker.
+   * @default ['year', 'day']
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+} as any;
+
+export { CalendarPicker };

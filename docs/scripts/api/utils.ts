@@ -14,12 +14,12 @@ export interface Project {
   prettierConfigPath: string;
   rootPath: string;
   /**
-   * @param {string} projectRoot The path to the root of the project.
+   * @param {Project} project The project to generate the prop-types from.
    * @returns {string[]} Path to the component files from which we want to generate the prop-types.
    */
   getComponentsWithPropTypes: (project: Project) => string[];
   /**
-   * @param {string} projectRoot The path to the root of the project.
+   * @param {Project} project The project to generate the components api from.
    * @returns {string[]} Path to the component files from which we want to generate the api doc.
    */
   getComponentsWithApiDoc: (project: Project) => string[];

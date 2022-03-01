@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
@@ -64,6 +65,16 @@ const CalendarPickerSkeletonDay = styled(Skeleton, {
   }),
 }));
 
+CalendarPickerSkeletonDay.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  ownerState: PropTypes.shape({
+    day: PropTypes.number.isRequired,
+  }).isRequired,
+} as any;
+
 const monthMap = [
   [0, 1, 1, 1, 1, 1, 1],
   [1, 1, 1, 1, 1, 1, 1],
@@ -82,7 +93,7 @@ const monthMap = [
  *
  * - [CalendarPickerSkeleton API](https://mui.com/api/calendar-picker-skeleton/)
  */
-export function CalendarPickerSkeleton(props: CalendarPickerSkeletonProps) {
+function CalendarPickerSkeleton(props: CalendarPickerSkeletonProps) {
   const { className, ...other } = useThemeProps<
     Theme,
     Omit<JSX.IntrinsicElements['div'], 'ref'> & { ref?: React.Ref<HTMLDivElement> },
@@ -113,3 +124,24 @@ export function CalendarPickerSkeleton(props: CalendarPickerSkeletonProps) {
     </CalendarPickerSkeletonRoot>
   );
 }
+
+CalendarPickerSkeleton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { CalendarPickerSkeleton };

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { parseISO } from 'date-fns';
 import { createRenderer, fireEvent, screen, RenderOptions } from '@mui/monorepo/test/utils';
-// eslint-disable-next-line no-restricted-imports
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';

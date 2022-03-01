@@ -152,10 +152,10 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
   );
 }) as MonthPickerComponent;
 
-MonthPicker.propTypes /* remove-proptypes */ = {
+MonthPicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // |     To update them edit TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.
@@ -193,9 +193,6 @@ MonthPicker.propTypes /* remove-proptypes */ = {
    * Callback fired on date change.
    */
   onChange: PropTypes.func.isRequired,
-  /**
-   * @ignore
-   */
   onMonthChange: PropTypes.func,
   /**
    * If `true` picker is readonly

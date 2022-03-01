@@ -436,10 +436,10 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
   );
 }) as ClockPickerComponent;
 
-ClockPicker.propTypes /* remove-proptypes */ = {
+ClockPicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // |     To update them edit TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
@@ -459,16 +459,12 @@ ClockPicker.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The components used for each slot.
    * Either a string to use a HTML element or a component.
    */
-  components: PropTypes.shape({
-    LeftArrowButton: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    RightArrowButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each slot inside.
    */
@@ -484,6 +480,10 @@ ClockPicker.propTypes /* remove-proptypes */ = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * Accessible text that helps user to understand which time and view is selected.
+   * @param {ClockPickerView} view The current view rendered.
+   * @param {TDate | null} time The current time.
+   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
+   * @returns {string} The clock label.
    * @default <TDate extends any>(
    *   view: ClockView,
    *   time: TDate | null,
@@ -496,16 +496,22 @@ ClockPicker.propTypes /* remove-proptypes */ = {
   getClockLabelText: PropTypes.func,
   /**
    * Get clock number aria-text for hours.
+   * @param {string} hours The hours to format.
+   * @returns {string} the formatted hours text.
    * @default (hours: string) => `${hours} hours`
    */
   getHoursClockNumberText: PropTypes.func,
   /**
    * Get clock number aria-text for minutes.
+   * @param {string} minutes The minutes to format.
+   * @returns {string} the formatted minutes text.
    * @default (minutes: string) => `${minutes} minutes`
    */
   getMinutesClockNumberText: PropTypes.func,
   /**
    * Get clock number aria-text for seconds.
+   * @param {string} seconds The seconds to format.
+   * @returns {string} the formatted seconds text.
    * @default (seconds: string) => `${seconds} seconds`
    */
   getSecondsClockNumberText: PropTypes.func,
@@ -534,6 +540,16 @@ ClockPicker.propTypes /* remove-proptypes */ = {
    */
   onChange: PropTypes.func.isRequired,
   /**
+   * Callback fired on view change.
+   * @param {ClockPickerView} view The new view.
+   */
+  onViewChange: PropTypes.func,
+  /**
+   * Initially open view.
+   * @default 'hours'
+   */
+  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  /**
    * Right arrow icon aria-label text.
    * @default 'open next view'
    */
@@ -541,14 +557,19 @@ ClockPicker.propTypes /* remove-proptypes */ = {
   /**
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
+   * @param {number} timeValue The value to check.
+   * @param {'hours' | 'minutes' | 'seconds'} clockType The clock type of the timeValue.
+   * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,
-  /**
-   * @ignore
-   */
   showViewSwitcher: PropTypes.bool,
   /**
-   * @ignore
+   * Controlled open view.
    */
   view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  /**
+   * Views for calendar picker.
+   * @default ['hours', 'minutes']
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

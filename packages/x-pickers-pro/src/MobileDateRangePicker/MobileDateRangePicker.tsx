@@ -182,10 +182,10 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
   );
 }) as MobileDateRangePickerComponent;
 
-MobileDateRangePicker.propTypes /* remove-proptypes */ = {
+MobileDateRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // |     To update them edit TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Regular expression to detect "accepted" symbols.
@@ -197,9 +197,6 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
    * @default false
    */
   allowSameDateSelection: PropTypes.bool,
-  /**
-   * @ignore
-   */
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars that render on **desktop**.
@@ -211,9 +208,6 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
    * @default 'Cancel'
    */
   cancelText: PropTypes.node,
-  /**
-   * @ignore
-   */
   children: PropTypes.node,
   /**
    * className applied to the root component.
@@ -234,15 +228,7 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
    * Either a string to use a HTML element or a component.
    * @default {}
    */
-  components: PropTypes.shape({
-    LeftArrowButton: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    OpenPickerIcon: PropTypes.elementType,
-    RightArrowButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-    SwitchViewButton: PropTypes.elementType,
-    SwitchViewIcon: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each slot inside.
    * @default {}
@@ -302,15 +288,17 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
+   * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
+   * @returns {string} The aria-text to render inside the dialog.
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
    * Get aria-label text for switching between views button.
+   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
+   * @returns {string} The label of the view.
    */
   getViewSwitchingButtonText: PropTypes.func,
-  /**
-   * @ignore
-   */
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -320,9 +308,6 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
    * Format string.
    */
   inputFormat: PropTypes.string,
-  /**
-   * @ignore
-   */
   InputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
@@ -333,13 +318,6 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
       current: PropTypes.object,
     }),
   ]),
-  /**
-   * @ignore
-   */
-  key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
-   * @ignore
-   */
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
@@ -373,10 +351,13 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
   okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
+   * @param {TDateValue} date The date that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
+   * @param {DateRange<TDate>} date The new parsed date range.
+   * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
   /**
@@ -391,10 +372,14 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
    *
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
+   *
+   * @param {TError} reason The reason why the current value is not valid.
+   * @param {TDateValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
    * Callback firing on month change. @DateIOType
+   * @param {TDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -404,6 +389,7 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
   onOpen: PropTypes.func,
   /**
    * Callback fired on view change.
+   * @param {CalendarPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -431,6 +417,9 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
   /**
    * Custom renderer for `<DateRangePicker />` days. @DateIOType
    * @example (date, dateRangePickerDayProps) => <DateRangePickerDay {...dateRangePickerDayProps} />
+   * @param {TDate} day The day to render.
+   * @param {DateRangePickerDayProps<TDate>} dateRangePickerDayProps The props of the day to render.
+   * @returns {JSX.Element} The element representing the day.
    */
   renderDay: PropTypes.func,
   /**
@@ -450,15 +439,21 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
    *  )}
    * />
    * ````
+   * @param {MuiTextFieldProps} startProps Props that you need to forward to the range start input.
+   * @param {MuiTextFieldProps} endProps Props that you need to forward to the range end input.
+   * @returns {React.ReactElement} The range input to render.
    */
   renderInput: PropTypes.func.isRequired,
   /**
    * Component displaying when passed `loading` true.
+   * @returns {React.ReactNode} The node to render when loading.
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading: PropTypes.func,
   /**
    * Custom formatter to be passed into Rifm component.
+   * @param {string} str The un-formatted string.
+   * @returns {string} The formatted string.
    */
   rifmFormatter: PropTypes.func,
   /**
@@ -467,11 +462,15 @@ MobileDateRangePicker.propTypes /* remove-proptypes */ = {
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
+   * @param {TDate} day The date to check.
+   * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @param {TDate} year The year to test.
+   * @returns {boolean} Return `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**

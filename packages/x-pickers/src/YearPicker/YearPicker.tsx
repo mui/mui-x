@@ -208,70 +208,34 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   );
 }) as YearPickerComponent;
 
-YearPicker.propTypes /* remove-proptypes */ = {
+YearPicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // |     To update them edit TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * @ignore
-   */
   autoFocus: PropTypes.bool,
-  /**
-   * @ignore
-   */
   classes: PropTypes.object,
-  /**
-   * @ignore
-   */
   className: PropTypes.string,
-  /**
-   * @ignore
-   */
   date: PropTypes.any,
-  /**
-   * @ignore
-   */
   disabled: PropTypes.bool,
-  /**
-   * @ignore
-   */
   disableFuture: PropTypes.bool,
-  /**
-   * @ignore
-   */
   disablePast: PropTypes.bool,
-  /**
-   * @ignore
-   */
   isDateDisabled: PropTypes.func.isRequired,
-  /**
-   * @ignore
-   */
   maxDate: PropTypes.any.isRequired,
-  /**
-   * @ignore
-   */
   minDate: PropTypes.any.isRequired,
-  /**
-   * @ignore
-   */
   onChange: PropTypes.func.isRequired,
-  /**
-   * @ignore
-   */
   onFocusedDayChange: PropTypes.func,
   /**
    * Callback firing on year change @DateIOType.
+   * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
-  /**
-   * @ignore
-   */
   readOnly: PropTypes.bool,
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @param {TDate} year The year to test.
+   * @returns {boolean} Return `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
 } as any;

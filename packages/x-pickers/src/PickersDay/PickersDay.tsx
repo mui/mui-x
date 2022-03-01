@@ -367,10 +367,10 @@ export const areDayPropsEqual = (
   );
 };
 
-PickersDayRaw.propTypes /* remove-proptypes */ = {
+PickersDayRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // |     To update them edit TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * If `true`, `onChange` is fired on click even if the same date is selected.
@@ -378,21 +378,9 @@ PickersDayRaw.propTypes /* remove-proptypes */ = {
    */
   allowSameDateSelection: PropTypes.bool,
   /**
-   * @ignore
-   */
-  autoFocus: PropTypes.bool,
-  /**
-   * The content of the component.
-   */
-  children: PropTypes.node,
-  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * @ignore
-   */
-  className: PropTypes.string,
   /**
    * The date to show.
    */
@@ -412,34 +400,9 @@ PickersDayRaw.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disableMargin: PropTypes.bool,
-  /**
-   * @ignore
-   */
-  hidden: PropTypes.bool,
-  /**
-   * @ignore
-   */
   isAnimating: PropTypes.bool,
-  /**
-   * @ignore
-   */
-  onClick: PropTypes.func,
-  /**
-   * @ignore
-   */
   onDayFocus: PropTypes.func,
-  /**
-   * @ignore
-   */
   onDaySelect: PropTypes.func.isRequired,
-  /**
-   * @ignore
-   */
-  onFocus: PropTypes.func,
-  /**
-   * @ignore
-   */
-  onKeyDown: PropTypes.func,
   /**
    * If `true`, day is outside of month and will be hidden.
    */

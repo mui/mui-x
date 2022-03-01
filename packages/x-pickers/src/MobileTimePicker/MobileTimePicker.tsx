@@ -73,10 +73,10 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate
   );
 }) as MobileTimePickerComponent;
 
-MobileTimePicker.propTypes /* remove-proptypes */ = {
+MobileTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // |     To update them edit TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Regular expression to detect "accepted" symbols.
@@ -98,9 +98,6 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
    * @default 'Cancel'
    */
   cancelText: PropTypes.node,
-  /**
-   * @ignore
-   */
   children: PropTypes.node,
   /**
    * className applied to the root component.
@@ -120,9 +117,7 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
    * The components used for each slot.
    * Either a string to use a HTML element or a component.
    */
-  components: PropTypes.shape({
-    OpenPickerIcon: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * Props applied to the [`Dialog`](/api/dialog/) element.
    */
@@ -153,6 +148,10 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
   disableOpenPicker: PropTypes.bool,
   /**
    * Accessible text that helps user to understand which time and view is selected.
+   * @param {ClockPickerView} view The current view rendered.
+   * @param {TDate | null} time The current time.
+   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
+   * @returns {string} The clock label.
    * @default <TDate extends any>(
    *   view: ClockView,
    *   time: TDate | null,
@@ -166,11 +165,11 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
+   * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
+   * @returns {string} The aria-text to render inside the dialog.
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * @ignore
-   */
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -180,9 +179,6 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
    * Format string.
    */
   inputFormat: PropTypes.string,
-  /**
-   * @ignore
-   */
   InputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
@@ -193,13 +189,6 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
       current: PropTypes.object,
     }),
   ]),
-  /**
-   * @ignore
-   */
-  key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
-   * @ignore
-   */
   label: PropTypes.node,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
@@ -227,10 +216,13 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
   okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
+   * @param {TDateValue} date The date that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
+   * @param {DateRange<TDate>} date The new parsed date.
+   * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
   /**
@@ -245,6 +237,9 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
    *
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
+   *
+   * @param {TError} reason The reason why the current value is not valid.
+   * @param {TDateValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -254,6 +249,7 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
   onOpen: PropTypes.func,
   /**
    * Callback fired on view change.
+   * @param {ClockPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -283,15 +279,22 @@ MobileTimePicker.propTypes /* remove-proptypes */ = {
    * @example ```jsx
    * renderInput={props => <TextField {...props} />}
    * ````
+   * @param {MuiTextFieldPropsType} props The props of the input.
+   * @returns {React.ReactNode} The node to render as the input.
    */
   renderInput: PropTypes.func.isRequired,
   /**
    * Custom formatter to be passed into Rifm component.
+   * @param {string} str The un-formatted string.
+   * @returns {string} The formatted string.
    */
   rifmFormatter: PropTypes.func,
   /**
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
+   * @param {number} timeValue The value to check.
+   * @param {'hours' | 'minutes' | 'seconds'} clockType The clock type of the timeValue.
+   * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,
   /**
