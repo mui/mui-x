@@ -96,7 +96,7 @@ If your dataset is too big, and you only want to fetch the current page, you can
 - Add an `onPageChange` callback to load the rows when the page changes
 
 Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
-To avoid this problem, we recommend to keep the previous value of `rowCount` during the loading as follow:
+To avoid this problem, we recommend to keep the previous value of `rowCount` while loading as follow:
 
 ```jsx
 const [rowCountState, setRowCountState] = React.useState(rowCount);
