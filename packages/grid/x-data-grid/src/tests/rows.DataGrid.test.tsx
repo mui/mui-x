@@ -6,7 +6,7 @@ import Portal from '@mui/material/Portal';
 import { DataGrid, DataGridProps, GridActionsCellItem, GridApi } from '@mui/x-data-grid';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
-import { COMPACT_DENSITY_FACTOR } from '../internals/hooks/features/density/useGridDensity';
+import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
