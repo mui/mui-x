@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   GridColumns,
   GridEvents,
   GridRowGroupingModel,
@@ -9,13 +9,14 @@ import {
   GridRenderCellParams,
   useGridApiRef,
   gridColumnVisibilityModelSelector,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const INITIAL_GROUPING_COLUMN_MODEL = ['composer', 'decade'];
 
 const useKeepGroupingColumnsHidden = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApi>,
   columns: GridColumns,
   initialModel: GridRowGroupingModel,
   leafField?: string,

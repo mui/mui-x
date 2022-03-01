@@ -4,7 +4,7 @@ title: Data Grid - Getting started
 
 # Data Grid - Getting started
 
-<p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows and you are set.</p>
+<p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
 
 ## Installation
 
@@ -56,7 +56,7 @@ const rows: GridRowsProp = [
 ### Define columns
 
 Comparable to rows, columns are objects defined with a set of attributes of the `GridColDef` interface.
-They are mapped to rows through their `field` property.
+They are mapped to the rows through their `field` property.
 
 ```tsx
 const columns: GridColDef[] = [
@@ -71,7 +71,7 @@ You can import `GridColDef` to see all column properties.
 
 Putting it together, this is all you need to get started, as you can see in this live and interactive demo:
 
-```jsx
+```tsx
 import React from 'react';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 

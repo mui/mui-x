@@ -80,7 +80,7 @@
     "pageSize": "Set the number of rows in one page. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.",
     "paginationMode": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
     "rowBuffer": "Number of extra rows to be rendered before/after the visible slice.",
-    "rowCount": "Set the total number of rows, if it is different than the length of the value <code>rows</code> prop. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.",
+    "rowCount": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows.",
     "rowHeight": "Set the height in pixel of a row in the grid.",
     "rows": "Set of rows of type GridRowsProp.",
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",

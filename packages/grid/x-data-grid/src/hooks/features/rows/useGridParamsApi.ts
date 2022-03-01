@@ -39,8 +39,8 @@ function warnGetValue() {
  * @requires useGridColumns (method)
  * @requires useGridRows (method)
  * @requires useGridFocus (state)
- * @requires useGridEditRows (method)
- * TODO: Impossible priority - useGridEditRows also needs to be after useGridParamsApi
+ * @requires useGridEditing (method)
+ * TODO: Impossible priority - useGridEditing also needs to be after useGridParamsApi
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
 export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity>) {

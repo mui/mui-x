@@ -22,7 +22,6 @@ import type { GridSelectionModel } from './gridSelectionModel';
 
 /**
  * The state of `DataGrid`.
- * TODO: Move to `x-data-grid` folder
  */
 export interface GridStateCommunity {
   rows: GridRowsState;
@@ -44,7 +43,6 @@ export interface GridStateCommunity {
 
 /**
  * The initial state of `DataGrid`.
- * TODO: Move to `x-data-grid` folder
  */
 export interface GridInitialStateCommunity {
   pagination?: GridPaginationInitialState;
