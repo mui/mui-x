@@ -90,8 +90,8 @@ export const getTypeScriptProjects = () => {
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
       tsConfigPath: 'tsconfig.json',
       entryPointPath: 'src/index.ts',
-      componentsFolder: 'src/internals/components',
-      otherComponentFiles: ['src/DataGridPro.tsx'],
+      componentsFolder: 'src/components',
+      otherComponentFiles: ['src/DataGridPro/DataGridPro.tsx'],
     }),
   );
 
@@ -102,8 +102,8 @@ export const getTypeScriptProjects = () => {
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
       tsConfigPath: 'tsconfig.json',
       entryPointPath: 'src/index.ts',
-      componentsFolder: 'src/internals/components',
-      otherComponentFiles: ['src/DataGrid.tsx'],
+      componentsFolder: 'src/components',
+      otherComponentFiles: ['src/DataGrid/DataGrid.tsx'],
     }),
   );
 
