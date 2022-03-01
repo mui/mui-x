@@ -17,6 +17,7 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   resizable: false,
   disableColumnMenu: true,
   disableReorder: true,
+  disableExport: true,
   align: 'left',
   width: 40,
   valueGetter: (params) => {
