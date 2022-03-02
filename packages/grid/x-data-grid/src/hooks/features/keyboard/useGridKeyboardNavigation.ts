@@ -8,6 +8,8 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
+import { gridClasses } from '../../../constants/gridClasses';
 
 /**
  * @requires useGridPage (state)
@@ -166,12 +168,21 @@ export const useGridKeyboardNavigation = (
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderNavigationKeyDown>
+    GridEventListener<GridEvents.columnHeaderKeyDown>
   >(
     (params, event) => {
-      if (!params.field) {
+      const headerTitleNode = event.currentTarget.querySelector(
+        `.${gridClasses.columnHeaderTitleContainerContent}`,
+      );
+      const isFromInsideContent =
+        !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
+
+      if (isFromInsideContent && params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        // When focus is on a nested input, keyboard events have no effect to avoid conflicts with native events.
+        // There is one exception for the checkBoxHeader
         return;
       }
+
       const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {
         return;

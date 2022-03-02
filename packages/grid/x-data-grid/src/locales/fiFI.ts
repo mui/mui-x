@@ -43,7 +43,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
   filterPanelDeleteIconLabel: 'Poista',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operaattorit',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',
   filterPanelColumns: 'Sarakkeet',
@@ -91,10 +94,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
       ? `${count.toLocaleString()} riviä valittu`
       : `${count.toLocaleString()} rivi valittu`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Rivejä yhteensä:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
 

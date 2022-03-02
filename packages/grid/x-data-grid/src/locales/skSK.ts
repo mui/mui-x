@@ -52,7 +52,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
   filterPanelDeleteIconLabel: 'Odstrániť',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operátory',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Alebo',
   filterPanelColumns: 'Stĺpce',
@@ -116,10 +119,10 @@ const skSKGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Riadkov spolu:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) => {
     const str = totalCount.toString();
     const firstDigit = str[0];

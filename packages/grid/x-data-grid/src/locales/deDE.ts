@@ -43,7 +43,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
   filterPanelDeleteIconLabel: 'Löschen',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatoren',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Und',
   filterPanelOperatorOr: 'Oder',
   filterPanelColumns: 'Spalten',
@@ -91,10 +94,10 @@ const deDEGrid: Partial<GridLocaleText> = {
       ? `${count.toLocaleString()} Einträge ausgewählt`
       : `${count.toLocaleString()} Eintrag ausgewählt`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Gesamt:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} von ${totalCount.toLocaleString()}`,
 

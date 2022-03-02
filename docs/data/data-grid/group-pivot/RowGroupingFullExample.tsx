@@ -2,7 +2,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   GridColumns,
   gridColumnVisibilityModelSelector,
   GridEvents,
@@ -13,7 +13,7 @@ import {
 const INITIAL_GROUPING_COLUMN_MODEL = ['commodity'];
 
 const useKeepGroupingColumnsHidden = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApi>,
   columns: GridColumns,
   initialModel: GridRowGroupingModel,
   leafField?: string,

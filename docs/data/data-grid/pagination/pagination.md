@@ -95,6 +95,20 @@ If your dataset is too big, and you only want to fetch the current page, you can
 - Provide a `rowCount` prop to let the grid know how many pages there are
 - Add an `onPageChange` callback to load the rows when the page changes
 
+Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
+To avoid this problem, we recommend to keep the previous value of `rowCount` while loading as follow:
+
+```jsx
+const [rowCountState, setRowCountState] = React.useState(rowCount);
+React.useEffect(() => {
+  setRowCountState((prevRowCountState) =>
+    rowCount !== undefined ? rowCount : prevRowCountState,
+  );
+}, [rowCount, setRowCountState]);
+
+<DataGrid rowCount={rowCountState} />;
+```
+
 {{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
 
 ### Cursor implementation

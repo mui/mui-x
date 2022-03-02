@@ -7,13 +7,13 @@ export interface EventListenerOptions {
 interface EventListenerCollection {
   /**
    * List of listeners to run before the others
-   * They are ran in the opposite order of the registration order
+   * They are run in the opposite order of the registration order
    */
   highPriority: Map<EventListener, true>;
 
   /**
    * List of events to run after the high priority listeners
-   * They are ran in the registration order
+   * They are run in the registration order
    */
   regular: Map<EventListener, true>;
 }

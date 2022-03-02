@@ -42,7 +42,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
   filterPanelDeleteIconLabel: '削除',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'オペレータ',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: '列',
@@ -86,10 +89,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => `${count}行を選択中`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: '総行数:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
 
