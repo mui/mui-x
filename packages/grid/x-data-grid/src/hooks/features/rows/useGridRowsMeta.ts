@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
@@ -23,7 +23,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
  * @requires useGridPage (method)
  */
 export const useGridRowsMeta = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridInternalApiCommunity>,
   props: Pick<DataGridProcessedProps, 'getRowHeight' | 'pagination' | 'paginationMode'>,
 ): void => {
   const { getRowHeight, pagination, paginationMode } = props;
@@ -72,7 +72,7 @@ export const useGridRowsMeta = (
           }
         }
 
-        const heights = apiRef.current.unstable_applyPreProcessors(
+        const heights = apiRef.current.applyPreProcessors(
           'rowHeight',
           { base: baseRowHeight }, // We use an object to make simple to check if a size was already added or not
           row,

@@ -60,59 +60,59 @@ export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
   props: DataGridProProcessedProps,
 ) => {
-  const apiRef = useGridInitialization(inputApiRef, props);
+  const { publicApiRef, internalApiRef } = useGridInitialization(inputApiRef, props);
 
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridSelectionPreProcessors(apiRef, props);
-  useGridRowGroupingPreProcessors(apiRef, props);
-  useGridTreeDataPreProcessors(apiRef, props);
-  useGridDetailPanelPreProcessors(apiRef, props);
-  useGridColumnPinningPreProcessors(apiRef, props); // Must be the last because it changes the order of the columns.
+  useGridSelectionPreProcessors(internalApiRef, props);
+  useGridRowGroupingPreProcessors(internalApiRef, props);
+  useGridTreeDataPreProcessors(internalApiRef, props);
+  useGridDetailPanelPreProcessors(internalApiRef, props);
+  useGridColumnPinningPreProcessors(internalApiRef, props); // Must be the last because it changes the order of the columns.
 
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(filterStateInitializer, apiRef, props);
-  useGridInitializeState(pageSizeStateInitializer, apiRef, props);
-  useGridInitializeState(pageStateInitializer, apiRef, props);
-  useGridInitializeState(sortingStateInitializer, apiRef, props);
-  useGridInitializeState(columnPinningStateInitializer, apiRef, props);
-  useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
-  useGridInitializeState(columnsStateInitializer, apiRef, props);
-  useGridRowGrouping(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
-  useGridTreeData(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
-  useGridInitializeState(rowsStateInitializer, apiRef, props);
+  useGridInitializeState(filterStateInitializer, internalApiRef, props);
+  useGridInitializeState(pageSizeStateInitializer, internalApiRef, props);
+  useGridInitializeState(pageStateInitializer, internalApiRef, props);
+  useGridInitializeState(sortingStateInitializer, internalApiRef, props);
+  useGridInitializeState(columnPinningStateInitializer, internalApiRef, props);
+  useGridInitializeState(rowGroupingStateInitializer, internalApiRef, props);
+  useGridInitializeState(columnsStateInitializer, internalApiRef, props);
+  useGridRowGrouping(internalApiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
+  useGridTreeData(internalApiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
+  useGridInitializeState(rowsStateInitializer, internalApiRef, props);
 
-  useGridSelection(apiRef, props);
-  useGridDetailPanel(apiRef, props);
-  useGridColumnPinning(apiRef, props);
-  useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
-  useGridParamsApi(apiRef);
-  useGridDetailPanelCache(apiRef, props);
-  useGridEditing(apiRef, props);
-  useGridFocus(apiRef, props);
-  useGridSorting(apiRef, props);
-  useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
-  useGridDensity(apiRef, props);
-  useGridColumnReorder(apiRef, props);
-  useGridColumnResize(apiRef, props);
-  useGridPagination(apiRef, props);
-  useGridRowsMeta(apiRef, props);
-  useGridScroll(apiRef, props);
-  useGridInfiniteLoader(apiRef, props);
-  useGridColumnMenu(apiRef);
-  useGridKeyboard(apiRef);
-  useGridKeyboardNavigation(apiRef, props);
-  useGridCsvExport(apiRef);
-  useGridPrintExport(apiRef, props);
-  useGridClipboard(apiRef);
-  useGridDimensions(apiRef, props);
-  useGridEvents(apiRef, props);
-  useGridStatePersistence(apiRef);
+  useGridSelection(internalApiRef, props);
+  useGridDetailPanel(internalApiRef, props);
+  useGridColumnPinning(internalApiRef, props);
+  useGridColumns(internalApiRef, props);
+  useGridRows(internalApiRef, props);
+  useGridParamsApi(internalApiRef);
+  useGridDetailPanelCache(internalApiRef, props);
+  useGridEditing(internalApiRef, props);
+  useGridFocus(internalApiRef, props);
+  useGridSorting(internalApiRef, props);
+  useGridPreferencesPanel(internalApiRef, props);
+  useGridFilter(internalApiRef, props);
+  useGridDensity(internalApiRef, props);
+  useGridColumnReorder(internalApiRef, props);
+  useGridColumnResize(internalApiRef, props);
+  useGridPagination(internalApiRef, props);
+  useGridRowsMeta(internalApiRef, props);
+  useGridScroll(internalApiRef, props);
+  useGridInfiniteLoader(internalApiRef, props);
+  useGridColumnMenu(internalApiRef);
+  useGridKeyboard(internalApiRef);
+  useGridKeyboardNavigation(internalApiRef, props);
+  useGridCsvExport(internalApiRef);
+  useGridPrintExport(internalApiRef, props);
+  useGridClipboard(internalApiRef);
+  useGridDimensions(internalApiRef, props);
+  useGridEvents(internalApiRef, props);
+  useGridStatePersistence(internalApiRef);
 
-  return apiRef;
+  return { publicApiRef, internalApiRef };
 };

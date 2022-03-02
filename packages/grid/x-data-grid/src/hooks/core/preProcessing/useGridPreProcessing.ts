@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridPreProcessingApi, PreProcessorCallback } from './gridPreProcessingApi';
-import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPreProcessingPrivateApi, PreProcessorCallback } from './gridPreProcessingApi';
+import { useGridRegisterMethods } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../models/events';
 
-export const useGridPreProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
+export const useGridPreProcessing = (apiRef: React.MutableRefObject<GridInternalApiCommunity>) => {
   const preProcessorsRef = React.useRef<
     Partial<Record<string, Record<string, PreProcessorCallback>>>
   >({});
 
   const registerPreProcessor = React.useCallback<
-    GridPreProcessingApi['unstable_registerPreProcessor']
+    GridPreProcessingPrivateApi['registerPreProcessor']
   >(
     (group, id, callback) => {
       if (!preProcessorsRef.current[group]) {
@@ -33,7 +33,7 @@ export const useGridPreProcessing = (apiRef: React.MutableRefObject<GridApiCommu
     [apiRef],
   );
 
-  const applyPreProcessors = React.useCallback<GridPreProcessingApi['unstable_applyPreProcessors']>(
+  const applyPreProcessors = React.useCallback<GridPreProcessingPrivateApi['applyPreProcessors']>(
     (...args) => {
       const [group, value, params] = args as any;
       if (!preProcessorsRef.current[group]) {
@@ -48,10 +48,10 @@ export const useGridPreProcessing = (apiRef: React.MutableRefObject<GridApiCommu
     [],
   );
 
-  const preProcessingApi: GridPreProcessingApi = {
-    unstable_registerPreProcessor: registerPreProcessor,
-    unstable_applyPreProcessors: applyPreProcessors,
+  const preProcessingPrivateApi: GridPreProcessingPrivateApi = {
+    registerPreProcessor,
+    applyPreProcessors,
   };
 
-  useGridApiMethod(apiRef, preProcessingApi, 'GridPreProcessing');
+  useGridRegisterMethods(apiRef, 'private', preProcessingPrivateApi);
 };

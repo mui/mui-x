@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridApiCommon } from '../../models/api/gridApiCommon';
-import { GridStateApi } from '../../models/api/gridStateApi';
+import { GridInternalApiCommon } from '../../models/api/gridApiCommon';
+import { GridStateApi, GridStatePrivateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { GridEvents } from '../../models/events';
-import { useGridApiMethod } from '../utils';
+import { useGridRegisterMethods } from '../utils';
 import { isFunction } from '../../utils/utils';
 
-export const useGridStateInitialization = <Api extends GridApiCommon>(
+export const useGridStateInitialization = <Api extends GridInternalApiCommon>(
   apiRef: React.MutableRefObject<Api>,
   props: Pick<DataGridProcessedProps, 'signature'>,
 ) => {
@@ -18,7 +18,7 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
   const [, rawForceUpdate] = React.useState<Api['state']>();
 
   const updateControlState = React.useCallback<
-    GridStateApi<Api['state']>['unstable_updateControlState']
+    GridStatePrivateApi<Api['state']>['updateControlState']
   >((controlStateItem) => {
     const { stateId, ...others } = controlStateItem;
 
@@ -110,13 +110,20 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
     [apiRef, props.signature],
   );
 
-  const forceUpdate = React.useCallback(() => rawForceUpdate(() => apiRef.current.state), [apiRef]);
+  const forceUpdate = React.useCallback<GridStateApi<Api['state']>['forceUpdate']>(
+    () => rawForceUpdate(() => apiRef.current.state),
+    [apiRef],
+  );
 
-  const stateApi: any = {
+  const statePublicApi = {
     setState,
     forceUpdate,
-    unstable_updateControlState: updateControlState,
   };
 
-  useGridApiMethod(apiRef, stateApi, 'GridStateApi');
+  const statePrivateApi = {
+    updateControlState,
+  };
+
+    useGridRegisterMethods(apiRef, 'public', statePublicApi);
+    useGridRegisterMethods(apiRef, 'private', statePrivateApi);
 };

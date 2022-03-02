@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GridEventPublisher, GridEventListener, GridEventsStr } from '../events';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
+import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
@@ -75,4 +76,30 @@ export interface GridCoreApi {
    * @ignore - do not document.
    */
   instanceId: number;
+}
+
+export interface GridCorePrivateApi<
+  PublicApi extends GridApiCommon,
+  PrivateApi extends GridPrivateApiCommon,
+> {
+  /**
+   * Registers a method on the public or private API.
+   * @param {'public' | 'private'} visibility The visibility of the methods.
+   * @param {Partial<PublicApi> | Partial<PrivateApi>} methods The methods to register.
+   */
+  register: <
+    V extends 'public' | 'private',
+    T extends V extends 'public' ? Partial<PublicApi> : Partial<PrivateApi>,
+  >(
+    visibility: V,
+    methods: React.RefObject<T>,
+  ) => void;
+
+  /**
+   * Returns the public API.
+   * Can be useful on a feature hook if we want to pass the `apiRef` to a callback.
+   * Do not use it to access the public method in private parts of the codebase.
+   * @returns {PublicApi} The public api.
+   */
+  getPublicApi: () => PublicApi;
 }

@@ -31,45 +31,48 @@ import { useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
-  const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
+  const { publicApiRef, internalApiRef } = useGridInitialization<GridApiCommunity>(
+    undefined,
+    props,
+  );
 
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridSelectionPreProcessors(apiRef, props);
+  useGridSelectionPreProcessors(internalApiRef, props);
 
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(filterStateInitializer, apiRef, props);
-  useGridInitializeState(pageSizeStateInitializer, apiRef, props);
-  useGridInitializeState(pageStateInitializer, apiRef, props);
-  useGridInitializeState(rowsStateInitializer, apiRef, props);
-  useGridInitializeState(sortingStateInitializer, apiRef, props);
-  useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(filterStateInitializer, internalApiRef, props);
+  useGridInitializeState(pageSizeStateInitializer, internalApiRef, props);
+  useGridInitializeState(pageStateInitializer, internalApiRef, props);
+  useGridInitializeState(rowsStateInitializer, internalApiRef, props);
+  useGridInitializeState(sortingStateInitializer, internalApiRef, props);
+  useGridInitializeState(columnsStateInitializer, internalApiRef, props);
 
-  useGridSelection(apiRef, props);
-  useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
-  useGridParamsApi(apiRef);
-  useGridEditing(apiRef, props);
-  useGridFocus(apiRef, props);
-  useGridSorting(apiRef, props);
-  useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
-  useGridDensity(apiRef, props);
-  useGridPagination(apiRef, props);
-  useGridRowsMeta(apiRef, props);
-  useGridScroll(apiRef, props);
-  useGridColumnMenu(apiRef);
-  useGridKeyboard(apiRef);
-  useGridKeyboardNavigation(apiRef, props);
-  useGridCsvExport(apiRef);
-  useGridPrintExport(apiRef, props);
-  useGridClipboard(apiRef);
-  useGridDimensions(apiRef, props);
-  useGridEvents(apiRef, props);
-  useGridStatePersistence(apiRef);
+  useGridSelection(internalApiRef, props);
+  useGridColumns(internalApiRef, props);
+  useGridRows(internalApiRef, props);
+  useGridParamsApi(internalApiRef);
+  useGridEditing(internalApiRef, props);
+  useGridFocus(internalApiRef, props);
+  useGridSorting(internalApiRef, props);
+  useGridPreferencesPanel(internalApiRef, props);
+  useGridFilter(internalApiRef, props);
+  useGridDensity(internalApiRef, props);
+  useGridPagination(internalApiRef, props);
+  useGridRowsMeta(internalApiRef, props);
+  useGridScroll(internalApiRef, props);
+  useGridColumnMenu(internalApiRef);
+  useGridKeyboard(internalApiRef);
+  useGridKeyboardNavigation(internalApiRef, props);
+  useGridCsvExport(internalApiRef);
+  useGridPrintExport(internalApiRef, props);
+  useGridClipboard(internalApiRef);
+  useGridDimensions(internalApiRef, props);
+  useGridEvents(internalApiRef, props);
+  useGridStatePersistence(internalApiRef);
 
-  return apiRef;
+  return { publicApiRef, internalApiRef };
 };

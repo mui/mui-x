@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
 import { GridEvents } from '../../../models/events';
@@ -51,7 +51,7 @@ const mergeStateWithPageSize =
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPageSize = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridInternalApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState'
@@ -60,7 +60,7 @@ export const useGridPageSize = (
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.updateControlState({
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,

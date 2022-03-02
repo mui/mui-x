@@ -7,7 +7,7 @@ import {
 import { GridColDef } from '../../../models/gridColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { TREE_DATA_GROUPING_NAME } from './useGridTreeData';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridInternalApiPro } from '../../../models/gridApiPro';
 import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
@@ -15,7 +15,7 @@ import {
 import { GridTreeDataGroupingCell } from '../../../components';
 
 export const useGridTreeDataPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridInternalApiPro>,
   props: Pick<DataGridProProcessedProps, 'treeData' | 'groupingColDef'>,
 ) => {
   const getGroupingColDef = React.useCallback((): GridColDef => {

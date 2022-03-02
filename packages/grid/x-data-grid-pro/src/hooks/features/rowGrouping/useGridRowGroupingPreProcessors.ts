@@ -11,10 +11,10 @@ import {
   createGroupingColDefForOneGroupingCriteria,
 } from './createGroupingColDef';
 import { getColDefOverrides, isGroupingColumn } from './gridRowGroupingUtils';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPro, GridInternalApiPro } from '../../../models/gridApiPro';
 
 export const useGridRowGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridInternalApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'disableRowGrouping' | 'groupingColDef' | 'rowGroupingColumnMode'

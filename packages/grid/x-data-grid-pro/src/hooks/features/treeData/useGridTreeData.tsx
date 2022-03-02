@@ -15,7 +15,7 @@ import {
   useGridRegisterFilteringMethod,
   GridRowGroupingPreProcessing,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridInternalApiPro} from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
@@ -29,7 +29,7 @@ export const TREE_DATA_GROUPING_NAME = 'tree-data';
  * @requires useGridRowGroupsPreProcessing (method)
  */
 export const useGridTreeData = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridInternalApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'

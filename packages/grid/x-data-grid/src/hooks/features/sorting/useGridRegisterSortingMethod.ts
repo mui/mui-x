@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { GridSortingMethod } from './gridSortingState';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridApiCommon } from '../../../models';
+import { GridInternalApiCommon } from '../../../models/api/gridApiCommon';
 
-export const useGridRegisterSortingMethod = <Api extends GridApiCommon>(
+export const useGridRegisterSortingMethod = <Api extends GridInternalApiCommon>(
   apiRef: React.MutableRefObject<Api>,
   groupingName: string,
   filteringMethod: GridSortingMethod,

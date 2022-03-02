@@ -3,11 +3,11 @@ import { GridPreProcessor, useGridRegisterPreProcessor } from '@mui/x-data-grid/
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { columnPinningStateInitializer } from './useGridColumnPinning';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPro, GridInternalApiPro } from '../../../models/gridApiPro';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
 
 export const useGridColumnPinningPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridInternalApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState } = props;

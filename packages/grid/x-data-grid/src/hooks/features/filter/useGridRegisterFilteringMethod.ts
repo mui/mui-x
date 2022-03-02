@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { GridFilteringMethod } from './gridFilterState';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridApiCommon } from '../../../models';
+import { GridInternalApiCommon } from '../../../models/api/gridApiCommon';
 
-export const useGridRegisterFilteringMethod = <Api extends GridApiCommon>(
+export const useGridRegisterFilteringMethod = <Api extends GridInternalApiCommon>(
   apiRef: React.MutableRefObject<Api>,
   groupingName: string,
   filteringMethod: GridFilteringMethod,

@@ -61,6 +61,14 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { useGridStateInit } from '../hooks/utils/useGridStateInit';
 
+export type {
+  GridPrivateApiCommon,
+  GridApiCommonUntyped,
+  GridPrivateApiCommonUntyped,
+} from '../models/api/gridApiCommon';
+export type { GridCorePrivateApi } from '../models/api/gridCoreApi';
+export type { GridStatePrivateApi } from '../models/api/gridStateApi';
+
 export type { GridComparatorFn, GridSortCellParams } from '../models/gridSortModel';
 
 export type { GridSortModelParams } from '../models/params/gridSortModelParams';

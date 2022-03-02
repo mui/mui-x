@@ -1,6 +1,6 @@
 import { GridColumnApi } from './gridColumnApi';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
-import { GridCoreApi } from './gridCoreApi';
+import { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
@@ -16,24 +16,27 @@ import { GridRowApi } from './gridRowApi';
 import { GridRowsMetaApi } from './gridRowsMetaApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
-import { GridStateApi } from './gridStateApi';
+import { GridStateApi, GridStatePrivateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
-import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
+import type { GridPreProcessingPrivateApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPreProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 
-type GridStateApiUntyped = {
+export type GridApiCommonUntyped = {
   [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
+};
+
+export type GridPrivateApiCommonUntyped = {
+  [key in keyof (GridStatePrivateApi<any> & GridCorePrivateApi<any, any>)]: any;
 };
 
 export interface GridApiCommon
   extends GridCoreApi,
     GridLoggerApi,
-    GridPreProcessingApi,
     GridRowGroupsPreProcessingApi,
     GridDensityApi,
     GridDimensionsApi,
@@ -56,4 +59,10 @@ export interface GridApiCommon
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
-    GridStateApiUntyped {}
+    GridApiCommonUntyped {}
+
+export interface GridPrivateApiCommon
+  extends GridPreProcessingPrivateApi,
+    GridPrivateApiCommonUntyped {}
+
+export interface GridInternalApiCommon extends GridApiCommon, GridPrivateApiCommon {}

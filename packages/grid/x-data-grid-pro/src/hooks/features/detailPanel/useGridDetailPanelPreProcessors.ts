@@ -5,10 +5,10 @@ import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
 } from './gridDetailPanelToggleColDef';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridInternalApiPro } from '../../../models/gridApiPro';
 
 export const useGridDetailPanelPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridInternalApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const addToggleColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(

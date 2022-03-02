@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridLogger,
   useGridSelector,
@@ -68,7 +68,7 @@ export const pageStateInitializer: GridStateInitializer<
  * @requires useGridPageSize (event)
  */
 export const useGridPage = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridInternalApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'page' | 'onPageChange' | 'rowCount' | 'initialState' | 'paginationMode'
@@ -78,7 +78,7 @@ export const useGridPage = (
 
   const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.updateControlState({
     stateId: 'page',
     propModel: props.page,
     propOnChange: props.onPageChange,

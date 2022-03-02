@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
@@ -48,7 +48,7 @@ export const sortingStateInitializer: GridStateInitializer<
  * @requires useGridColumns (event)
  */
 export const useGridSorting = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridInternalApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -63,7 +63,7 @@ export const useGridSorting = (
   const sortingMethodCollectionRef = React.useRef<GridSortingMethodCollection>({});
   const lastSortingMethodApplied = React.useRef<GridSortingMethod | null>(null);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.updateControlState({
     stateId: 'sortModel',
     propModel: props.sortModel,
     propOnChange: props.onSortModelChange,
@@ -322,10 +322,7 @@ export const useGridSorting = (
         return;
       }
 
-      sortingMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-        'sortingMethod',
-        {},
-      );
+      sortingMethodCollectionRef.current = apiRef.current.applyPreProcessors('sortingMethod', {});
 
       const rowGroupingName = gridRowGroupingNameSelector(apiRef);
       if (
@@ -349,10 +346,7 @@ export const useGridSorting = (
   useFirstRender(() => {
     // This line of pre-processor initialization should always come after the registration of `flatSortingMethod`
     // Otherwise on the 1st render there would be no sorting method registered
-    sortingMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-      'sortingMethod',
-      {},
-    );
+    sortingMethodCollectionRef.current = apiRef.current.applyPreProcessors('sortingMethod', {});
     apiRef.current.applySorting();
   });
 

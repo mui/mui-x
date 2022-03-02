@@ -19,7 +19,7 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridInternalApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridColumnPinningMenuItems } from '../../../components/GridColumnPinningMenuItems';
@@ -58,7 +58,7 @@ const mergeStateWithPinnedColumns =
   (state: GridStatePro): GridStatePro => ({ ...state, pinnedColumns });
 
 export const useGridColumnPinning = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridInternalApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
@@ -245,7 +245,7 @@ export const useGridColumnPinning = (
   useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.updateControlState({
     stateId: 'pinnedColumns',
     propModel: props.pinnedColumns,
     propOnChange: props.onPinnedColumnsChange,

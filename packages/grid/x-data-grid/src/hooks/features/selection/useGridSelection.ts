@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -28,7 +28,7 @@ import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
  * @requires useGridParamsApi (method)
  */
 export const useGridSelection = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridInternalApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'checkboxSelection'
@@ -61,7 +61,7 @@ export const useGridSelection = (
 
   const lastRowToggled = React.useRef<GridRowId | null>(null);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.updateControlState({
     stateId: 'selection',
     propModel: propSelectionModel,
     propOnChange: props.onSelectionModelChange,

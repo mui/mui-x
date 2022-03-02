@@ -12,7 +12,7 @@ import {
   GridColumnTypesRecord,
 } from '../../../models';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
@@ -260,7 +260,7 @@ export const createColumnsState = ({
   columnsTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.MutableRefObject<GridInternalApiCommunity>;
   reset: boolean;
 }) => {
   let columnsStateWithoutColumnVisibilityModel: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
@@ -298,10 +298,7 @@ export const createColumnsState = ({
   const columnsLookupBeforePreProcessing = { ...columnsStateWithoutColumnVisibilityModel.lookup };
 
   const columnsStateWithPreProcessing: Omit<GridColumnsRawState, 'columnVisibilityModel'> =
-    apiRef.current.unstable_applyPreProcessors(
-      'hydrateColumns',
-      columnsStateWithoutColumnVisibilityModel,
-    );
+    apiRef.current.applyPreProcessors('hydrateColumns', columnsStateWithoutColumnVisibilityModel);
 
   // TODO v6: remove the sync between the columns `hide` option and the model.
   let columnVisibilityModel: GridColumnVisibilityModel = {};

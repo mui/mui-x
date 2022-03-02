@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGridPageSize } from './useGridPageSize';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridInternalApiCommunity} from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridPage } from './useGridPage';
 
@@ -9,7 +9,7 @@ import { useGridPage } from './useGridPage';
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPagination = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridInternalApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'page'

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommon } from '../../models/api/gridApiCommon';
+import { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
 export function useGridApiMethod<Api extends GridApiCommon, T extends Partial<Api>>(
   apiRef: React.MutableRefObject<Api>,
@@ -9,12 +9,9 @@ export function useGridApiMethod<Api extends GridApiCommon, T extends Partial<Ap
   apiName: string,
 ) {
   const apiMethodsRef = React.useRef(apiMethods);
-  const [apiMethodsNames] = React.useState(Object.keys(apiMethods));
+  const [apiMethodsNames] = React.useState(() => Object.keys(apiMethods));
 
   const installMethods = React.useCallback(() => {
-    if (!apiRef.current) {
-      return;
-    }
     apiMethodsNames.forEach((methodName) => {
       if (!apiRef.current.hasOwnProperty(methodName)) {
         apiRef.current[methodName] = (...args) => apiMethodsRef.current[methodName](...args);
@@ -32,3 +29,30 @@ export function useGridApiMethod<Api extends GridApiCommon, T extends Partial<Ap
 
   installMethods();
 }
+
+export const useGridRegisterMethods = <
+  PublicApi extends GridApiCommon,
+  PrivateApi extends GridPrivateApiCommon,
+  V extends 'public' | 'private',
+  T extends V extends 'public' ? Partial<PublicApi> : Partial<PrivateApi>,
+>(
+  apiRef: React.MutableRefObject<PublicApi & PrivateApi>,
+  visibility: V,
+  apiMethods: T,
+) => {
+  const apiMethodsRef = React.useRef(apiMethods);
+
+  const installMethods = React.useCallback(() => {
+    apiRef.current.register(visibility, apiMethodsRef);
+  }, [visibility, apiRef]);
+
+  React.useEffect(() => {
+    apiMethodsRef.current = apiMethods;
+  }, [apiMethods]);
+
+  React.useEffect(() => {
+    installMethods();
+  }, [installMethods]);
+
+  installMethods();
+};

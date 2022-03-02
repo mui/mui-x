@@ -9,7 +9,7 @@ import {
   useGridLogger,
 } from '@mui/x-data-grid';
 import { useGridStateInit } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridInternalApiPro } from '../../../models/gridApiPro';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -48,7 +48,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridInternalApiPro>,
   props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
@@ -160,7 +160,7 @@ export const useGridColumnReorder = (
               !visibleColumns[targetColIndex + 1].disableReorder;
           }
 
-          const canBeReorderedProcessed = apiRef.current.unstable_applyPreProcessors(
+          const canBeReorderedProcessed = apiRef.current.applyPreProcessors(
             'canBeReordered',
             canBeReordered,
             { targetIndex: targetColVisibleIndex },

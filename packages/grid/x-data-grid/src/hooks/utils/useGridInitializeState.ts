@@ -1,18 +1,24 @@
 import * as React from 'react';
-import { GridApiCommon } from '../../models/api/gridApiCommon';
-import { GridApiCommunity } from '../../models/api/gridApiCommunity';
+import { GridInternalApiCommon } from '../../models/api/gridApiCommon';
+import { GridInternalApiCommunity } from '../../models/api/gridApiCommunity';
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
 
-export type GridStateInitializer<P, Api extends GridApiCommon = GridApiCommunity> = (
+export type GridStateInitializer<
+  P,
+  Api extends GridInternalApiCommon = GridInternalApiCommunity,
+> = (
   state: DeepPartial<Api['state']>,
   props: P,
   apiRef: React.MutableRefObject<Api>,
 ) => DeepPartial<Api['state']>;
 
-export const useGridInitializeState = <P, Api extends GridApiCommon = GridApiCommunity>(
+export const useGridInitializeState = <
+  P,
+  Api extends GridInternalApiCommon = GridInternalApiCommunity,
+>(
   initializer: GridStateInitializer<P, Api>,
   apiRef: React.MutableRefObject<Api>,
   props: P,

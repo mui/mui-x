@@ -13,7 +13,7 @@ import {
   GridPreProcessor,
 } from '@mui/x-data-grid/internals';
 import { GridCellParams } from '../../../models/gridCellParams';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridInternalApiPro } from '../../../models/gridApiPro';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from './gridDetailPanelToggleColDef';
 import {
   gridDetailPanelExpandedRowIdsSelector,
@@ -24,7 +24,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridDetailPanelApi } from './gridDetailPanelInterface';
 
 export const useGridDetailPanel = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridInternalApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'initialState'
@@ -99,7 +99,7 @@ export const useGridDetailPanel = (
 
   useGridRegisterPreProcessor(apiRef, 'rowHeight', addDetailHeight);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.updateControlState({
     stateId: 'detailPanels',
     propModel: props.detailPanelExpandedRowIds,
     propOnChange: props.onDetailPanelExpandedRowIdsChange,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem } from '../../../models/gridFilterItem';
@@ -50,7 +50,7 @@ export const filterStateInitializer: GridStateInitializer<
  * @requires useGridRows (event)
  */
 export const useGridFilter = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridInternalApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -64,7 +64,7 @@ export const useGridFilter = (
   const filteringMethodCollectionRef = React.useRef<GridFilteringMethodCollection>({});
   const lastFilteringMethodApplied = React.useRef<GridFilteringMethod | null>(null);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.updateControlState({
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
@@ -310,7 +310,7 @@ export const useGridFilter = (
         return;
       }
 
-      filteringMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
+      filteringMethodCollectionRef.current = apiRef.current.applyPreProcessors(
         'filteringMethod',
         {},
       );
@@ -340,10 +340,7 @@ export const useGridFilter = (
   useFirstRender(() => {
     // This line of pre-processor initialization should always come after the registration of `flatFilteringMethod`
     // Otherwise on the 1st render there would be no filtering method registered
-    filteringMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-      'filteringMethod',
-      {},
-    );
+    filteringMethodCollectionRef.current = apiRef.current.applyPreProcessors('filteringMethod', {});
     apiRef.current.unstable_applyFilters();
   });
 

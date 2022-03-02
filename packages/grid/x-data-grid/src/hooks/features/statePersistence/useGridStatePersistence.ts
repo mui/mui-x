@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStatePersistenceApi } from './gridStatePersistenceInterface';
 import { useGridApiMethod } from '../../utils';
 
-export const useGridStatePersistence = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
+export const useGridStatePersistence = (
+  apiRef: React.MutableRefObject<GridInternalApiCommunity>,
+) => {
   const exportState = React.useCallback<
     GridStatePersistenceApi<GridInitialStateCommunity>['exportState']
   >(() => {
-    const stateToExport = apiRef.current.unstable_applyPreProcessors('exportState', {});
+    const stateToExport = apiRef.current.applyPreProcessors('exportState', {});
 
     return stateToExport as GridInitialStateCommunity;
   }, [apiRef]);
@@ -17,7 +19,7 @@ export const useGridStatePersistence = (apiRef: React.MutableRefObject<GridApiCo
     GridStatePersistenceApi<GridInitialStateCommunity>['restoreState']
   >(
     (stateToRestore) => {
-      const response = apiRef.current.unstable_applyPreProcessors(
+      const response = apiRef.current.applyPreProcessors(
         'restoreState',
         {
           callbacks: [],

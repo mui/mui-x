@@ -17,13 +17,13 @@ export const useGridInitialization = <Api extends GridApiCommon>(
   inputApiRef: React.MutableRefObject<Api> | undefined,
   props: Pick<DataGridProcessedProps, 'signature' | 'logger' | 'logLevel' | 'error' | 'localeText'>,
 ) => {
-  const apiRef = useGridApiInitialization(inputApiRef, props);
-  useGridLoggerFactory(apiRef, props);
-  useGridErrorHandler(apiRef, props);
-  useGridStateInitialization(apiRef, props);
-  useGridPreProcessing(apiRef);
-  useGridRowGroupsPreProcessing(apiRef);
-  useGridLocaleText(apiRef, props);
+  const { publicApiRef, internalApiRef } = useGridApiInitialization(inputApiRef, props);
+  useGridLoggerFactory(internalApiRef, props);
+  useGridErrorHandler(internalApiRef, props);
+  useGridStateInitialization(internalApiRef, props);
+  useGridPreProcessing(internalApiRef);
+  useGridRowGroupsPreProcessing(internalApiRef);
+  useGridLocaleText(internalApiRef, props);
 
-  return apiRef;
+  return { publicApiRef, internalApiRef };
 };

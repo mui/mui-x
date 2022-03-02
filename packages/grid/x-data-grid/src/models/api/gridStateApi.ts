@@ -18,12 +18,14 @@ export interface GridStateApi<State extends GridStateCommunity> {
    * @ignore - do not document.
    */
   setState: <S extends State>(state: S | ((previousState: S) => S)) => boolean;
+}
+
+export interface GridStatePrivateApi<State extends GridStateCommunity> {
   /**
    * Updates a control state that binds the model, the onChange prop, and the grid state together.
    * @param {GridControlStateItem>} controlState The [[GridControlStateItem]] to be registered.
-   * @ignore - do not document.
    */
-  unstable_updateControlState: <E extends keyof GridControlledStateEventLookup>(
+  updateControlState: <E extends keyof GridControlledStateEventLookup>(
     controlState: GridControlStateItem<State, E>,
   ) => void;
 }

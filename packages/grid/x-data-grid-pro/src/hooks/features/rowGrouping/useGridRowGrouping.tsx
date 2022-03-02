@@ -29,7 +29,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import { GridGroupingValueGetterParams } from '../../../models';
 import { GridColDef, GridStateColDef } from '../../../models/gridColDef';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPro, GridInternalApiPro } from '../../../models/gridApiPro';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {
   gridRowGroupingModelSelector,
@@ -66,7 +66,7 @@ export const rowGroupingStateInitializer: GridStateInitializer<
  * TODO: Move the the Premium plan once available and remove the `experimentalFeatures.rowGrouping` flag
  */
 export const useGridRowGrouping = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridInternalApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'initialState'
@@ -79,7 +79,7 @@ export const useGridRowGrouping = (
     | 'disableRowGrouping'
   >,
 ) => {
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.updateControlState({
     stateId: 'rowGrouping',
     propModel: props.rowGroupingModel,
     propOnChange: props.onRowGroupingModelChange,
