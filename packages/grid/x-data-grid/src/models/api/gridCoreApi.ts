@@ -7,37 +7,37 @@ import { EventManager, EventListenerOptions } from '../../utils/EventManager';
  */
 export interface GridCoreApi {
   /**
-   * The react ref of the grid root container div element.
+   * The React ref of the grid root container div element.
    * @ignore - do not document.
    */
   rootElementRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The react ref of the grid column container virtualized div element.
+   * The React ref of the grid column container virtualized div element.
    * @ignore - do not document.
    */
   columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The react ref of the grid column headers container element.
+   * The React ref of the grid column headers container element.
    * @ignore - do not document.
    */
   columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The react ref of the grid window container element.
+   * The React ref of the grid window container element.
    * @ignore - do not document.
    */
   windowRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The react ref of the grid data rendering zone.
+   * The React ref of the grid data rendering zone.
    * @ignore - do not document.
    */
   renderingZoneRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The react ref of the grid header element.
+   * The React ref of the grid header element.
    * @ignore - do not document.
    */
   headerRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The react ref of the grid footer element.
+   * The React ref of the grid footer element.
    * @ignore - do not document.
    */
   footerRef?: React.RefObject<HTMLDivElement>;

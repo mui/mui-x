@@ -174,7 +174,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
       // Render leaves
       if (params.rowNode.groupingField == null) {
         if (leafColDef) {
-          const leafParams: GridRenderCellParams<any, any, any, GridApiPro> = {
+          const leafParams: GridRenderCellParams = {
             ...params.api.getCellParams(params.id, leafField!),
             api: params.api,
           };

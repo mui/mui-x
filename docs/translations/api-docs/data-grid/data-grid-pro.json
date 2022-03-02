@@ -106,7 +106,7 @@
     "paginationMode": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
     "pinnedColumns": "The column fields to display pinned to left or right.",
     "rowBuffer": "Number of extra rows to be rendered before/after the visible slice.",
-    "rowCount": "Set the total number of rows, if it is different than the length of the value <code>rows</code> prop. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.",
+    "rowCount": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows.",
     "rowGroupingColumnMode": "If <code>single</code>, all column we are grouping by will be represented in the same grouping the same column. If <code>multiple</code>, each column we are grouping by will be represented in its own column.",
     "rowGroupingModel": "Set the row grouping model of the grid.",
     "rowHeight": "Set the height in pixel of a row in the grid.",

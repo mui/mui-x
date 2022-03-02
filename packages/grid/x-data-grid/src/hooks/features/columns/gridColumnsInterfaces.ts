@@ -12,7 +12,7 @@ export type GridColumnRawLookup<Api extends GridApiCommon = GridApiCommunity> = 
 
 export interface GridColumnsState<Api extends GridApiCommon = GridApiCommunity> {
   /**
-   * TODO: Rename `fields`.
+   * TODO v6: Rename `orderedFields`.
    */
   all: string[];
   lookup: GridColumnLookup<Api>;
