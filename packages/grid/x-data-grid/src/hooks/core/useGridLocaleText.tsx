@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../models/api/gridApiCommunity';
-import { GridLocaleTextApi } from '../../models/api/gridLocaleTextApi';
+import { GridLocaleText, GridLocaleTextApi } from '../../models/api/gridLocaleTextApi';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
@@ -10,10 +10,10 @@ export const useGridLocaleText = (
 ): void => {
   const getLocaleText = React.useCallback(
     (key: any): any => {
-      if (props.localeText[key] == null) {
+      if (props.localeText[key as keyof GridLocaleText] == null) {
         throw new Error(`Missing translation for key ${key}.`);
       }
-      return props.localeText[key];
+      return props.localeText[key as keyof GridLocaleText];
     },
     [props.localeText],
   );

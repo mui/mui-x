@@ -9,6 +9,7 @@ import {
   GridRoot,
 } from '../components';
 import { DataGridProps } from '../models/props/DataGridProps';
+import { GridColDef } from '../models/colDef/gridColDef';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
@@ -80,8 +81,8 @@ DataGridRaw.propTypes = {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: chainPropTypes(PropTypes.array.isRequired, (props: any) => {
-    if (props.columns && props.columns.some((column) => column.resizable)) {
+  columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
+    if (props.columns && props.columns.some((column: GridColDef) => column.resizable)) {
       return new Error(
         [
           `MUI: \`column.resizable = true\` is not a valid prop.`,
