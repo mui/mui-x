@@ -131,6 +131,7 @@ export interface GridValueSetterParams {
   row: GridRowModel;
   /**
    * The original row with the values before entering the edit mode.
+   * Only available when using the new editing API.
    */
   originalRow?: GridRowModel;
 }
