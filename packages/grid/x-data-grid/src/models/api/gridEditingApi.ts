@@ -201,13 +201,13 @@ export interface GridNewCellEditingApi
   extends GridEditingSharedApi,
     Pick<GridCellEditingApi, 'getCellMode'> {
   /**
-   * Puts the cell correspoding the given row id and field into edit mode.
+   * Puts the cell correspoding to the given row id and field into edit mode.
    * @param {GridStartCellEditModeParams} params The row id and field of the cell to edit.
    * @ignore - do not document.
    */
   startCellEditMode(params: GridStartCellEditModeParams): void;
   /**
-   * Puts the cell correspoding the given row id and field into view mode and updates the original row with the new value stored.
+   * Puts the cell correspoding to the given row id and field into view mode and updates the original row with the new value stored.
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
@@ -228,13 +228,13 @@ export interface GridNewRowEditingApi
   extends GridEditingSharedApi,
     Pick<GridRowEditingApi, 'getRowMode'> {
   /**
-   * Puts the row correspoding the given id into edit mode.
+   * Puts the row correspoding to the given id into edit mode.
    * @param {GridStartCellEditModeParams} params The row id edit.
    * @ignore - do not document.
    */
   startRowEditMode(params: GridStartRowEditModeParams): void;
   /**
-   * Puts the row correspoding the given id and into view mode and updates the original row with the new values stored.
+   * Puts the row correspoding to the given id and into view mode and updates the original row with the new values stored.
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
