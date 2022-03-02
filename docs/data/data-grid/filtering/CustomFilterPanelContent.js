@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DataGridPro, GridLinkOperator, GridToolbar } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Icon from '@mui/material/Icon';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
