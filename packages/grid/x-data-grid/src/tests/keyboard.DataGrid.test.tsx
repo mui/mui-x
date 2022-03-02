@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore
 import { createRenderer, fireEvent, screen, createEvent } from '@mui/monorepo/test/utils';
 import Portal from '@mui/material/Portal';
 import { spy } from 'sinon';

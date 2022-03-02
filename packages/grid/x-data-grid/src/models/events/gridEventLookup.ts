@@ -168,7 +168,7 @@ export interface GridEventLookup
     params: GridCellParams<any, any, any, any>;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  cellEditStop: { params: GridCellParams<any, any, any>; any; event: MuiBaseEvent };
+  cellEditStop: { params: GridCellParams<any, any, any>; any: any; event: MuiBaseEvent };
   cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
   editCellPropsChange: {
     params: GridEditCellPropsParams;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore
 import { createRenderer, ErrorBoundary } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';

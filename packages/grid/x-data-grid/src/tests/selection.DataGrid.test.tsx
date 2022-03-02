@@ -1,7 +1,14 @@
 import * as React from 'react';
+// @ts-ignore
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridApi, GridInputSelectionModel } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridApi,
+  GridInputSelectionModel,
+  GridRowId,
+} from '@mui/x-data-grid';
 import {
   getCell,
   getRow,
@@ -285,7 +292,10 @@ describe('<DataGrid /> - Selection', () => {
       fireEvent.click(getCell(0, 0).querySelector('input'));
       fireEvent.click(getCell(1, 0).querySelector('input'));
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
-      setProps({ checkboxSelection: false, isRowSelectable: ({ id }) => id > 0 });
+      setProps({
+        checkboxSelection: false,
+        isRowSelectable: ({ id }: { id: GridRowId }) => id > 0,
+      });
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
@@ -483,7 +493,7 @@ describe('<DataGrid /> - Selection', () => {
 
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
 
-      setProps({ isRowSelectable: (params) => Number(params.id) % 2 === 0 });
+      setProps({ isRowSelectable: (params: { id: GridRowId }) => Number(params.id) % 2 === 0 });
       expect(getSelectedRowIds()).to.deep.equal([0]);
     });
 
@@ -664,7 +674,7 @@ describe('<DataGrid /> - Selection', () => {
       const ControlCase = () => {
         const [selectionModel, setSelectionModel] = React.useState<any>([]);
 
-        const handleSelectionChange = (newModel) => {
+        const handleSelectionChange: DataGridProps['onSelectionModelChange'] = (newModel) => {
           if (newModel.length) {
             setSelectionModel([...newModel, 2]);
             return;
