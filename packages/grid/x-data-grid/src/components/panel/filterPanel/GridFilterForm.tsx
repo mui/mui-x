@@ -17,6 +17,7 @@ import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
+import { GridColDef } from '../../../models/colDef/gridColDef';
 
 export interface GridFilterFormProps {
   item: GridFilterItem;
@@ -111,7 +112,7 @@ const getLinkOperatorLocaleKey = (linkOperator: GridLinkOperator) => {
   }
 };
 
-const getColumnLabel = (col) => col.headerName || col.field;
+const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
 
 const collator = new Intl.Collator();
 
