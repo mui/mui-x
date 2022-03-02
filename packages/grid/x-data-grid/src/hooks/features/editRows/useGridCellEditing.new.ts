@@ -265,7 +265,9 @@ export const useGridCellEditing = (
           }
         }
 
-        apiRef.current.updateRows([rowUpdate]);
+        if (canUpdate) {
+          apiRef.current.updateRows([rowUpdate]);
+        }
       }
 
       if (moveFocusToCellBelow) {

@@ -1,0 +1,16 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  onCellClick={handleCellClick}
+  onCellEditStart={handleCellEditStart}
+  onCellEditStop={handleCellEditStop}
+  components={{
+    Toolbar: EditToolbar,
+  }}
+  componentsProps={{
+    toolbar: {
+      selectedCellParams,
+      setSelectedCellParams,
+    },
+  }}
+/>
