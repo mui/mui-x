@@ -362,7 +362,7 @@ export function useGridColumns(
   );
 
   const prevInnerWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange = (viewportInnerSize) => {
+  const handleGridSizeChange = (viewportInnerSize: { width: number; height: number }) => {
     if (prevInnerWidth.current !== viewportInnerSize.width) {
       prevInnerWidth.current = viewportInnerSize.width;
       setGridColumnsState(

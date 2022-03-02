@@ -14,7 +14,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 
 let warnedOnceMissingColumn = false;
-function warnMissingColumn(field) {
+function warnMissingColumn(field: string) {
   console.warn(
     [
       `MUI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
