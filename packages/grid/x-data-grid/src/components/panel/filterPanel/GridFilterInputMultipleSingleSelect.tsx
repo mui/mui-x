@@ -7,7 +7,6 @@ import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { getValueFromOption } from './filterPanelUtils';
-import { GridColDef, ValueOptions } from '../../../models/colDef/gridColDef';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 
 export type GridFilterInputMultipleSingleSelectProps = {
@@ -18,21 +17,6 @@ export type GridFilterInputMultipleSingleSelectProps = {
   focusElementRef?: React.Ref<any>;
   type?: 'singleSelect';
 } & Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
-
-const getSingleSelectOptionFormatter =
-  (
-    {
-      valueFormatter,
-      field,
-    }: { valueFormatter?: GridColDef['valueFormatter']; field: GridColDef['field'] },
-    api: GridApiCommon,
-  ) =>
-  (option: ValueOptions) => {
-    if (typeof option === 'object') {
-      return option.label;
-    }
-    return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
-  };
 
 const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEqualToValue'] = (
   option,
@@ -55,10 +39,16 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     return resolvedValueOptions?.map(getValueFromOption);
   }, [resolvedValueOptions]);
 
-  const filterValueOptionFormatter = getSingleSelectOptionFormatter(
-    apiRef.current.getColumn(item.columnField),
-    apiRef.current,
-  );
+  const { valueFormatter, field } = apiRef.current.getColumn(item.columnField);
+
+  const filterValueOptionFormatter = (option: any) => {
+    if (typeof option === 'object') {
+      return option.label;
+    }
+    return valueFormatter && option !== ''
+      ? valueFormatter({ value: option, field, api: apiRef.current })
+      : option;
+  };
 
   // The value is computed from the item.value and used directly
   // If it was done by a useEffect/useState, the Autocomplete could receive incoherent value and options
