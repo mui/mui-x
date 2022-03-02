@@ -485,7 +485,6 @@
     "BooleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "ColumnMenuIcon": "Icon displayed on the side of the column header title to display the filter input component.",
     "OpenFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
-    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel",
     "ColumnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "ColumnSelectorIcon": "Icon displayed on the column menu selector tab.",
     "ColumnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
@@ -502,6 +501,7 @@
     "GroupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
-    "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded."
+    "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
+    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel."
   }
 }
