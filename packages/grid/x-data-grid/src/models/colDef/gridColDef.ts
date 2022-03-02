@@ -142,9 +142,9 @@ export interface GridColDef<
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
    * @param {GridValueSetterParams} params Object containing parameters for the setter.
-   * @returns {GridRowModel} The row with the updated field.
+   * @returns {R} The row with the updated field.
    */
-  valueSetter?: (params: GridValueSetterParams) => R;
+  valueSetter?: (params: GridValueSetterParams<R, V>) => R;
   /**
    * Function that allows to apply a formatter before rendering its value.
    * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
@@ -153,11 +153,11 @@ export interface GridColDef<
   valueFormatter?: (params: GridValueFormatterParams<V, Api>) => F;
   /**
    * Function that takes the user-entered value and converts it to a value used internally.
-   * @param {GridCellValue} value The user-entered value.
+   * @param {F | undefined} value The user-entered value.
    * @param {GridCellParams} params The params when called before saving the value.
-   * @returns {GridCellValue} The converted value to use internally.
+   * @returns {V} The converted value to use internally.
    */
-  valueParser?: (value: F, params?: GridCellParams<Api>) => V;
+  valueParser?: (value: F | undefined, params?: GridCellParams<Api>) => V;
   /**
    * Class name that will be added in cells for that column.
    */

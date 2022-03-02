@@ -251,7 +251,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator<any>[
       gridStringOrNumberComparator(v1.label, v2.label, param1, param2),
     editable,
     width: 120,
-  } as GridColDef<any, CountryIsoOption, string | undefined, any>,
+  } as GridColDef<any, CountryIsoOption, string, any>,
   {
     field: 'counterPartyCurrency',
     headerName: 'Counterparty Currency',

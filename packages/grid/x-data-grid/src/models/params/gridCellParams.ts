@@ -120,15 +120,18 @@ export type GridValueGetterFullParams<
 /**
  * Object passed as parameter in the column [[GridColDef]] value setter callback.
  */
-export interface GridValueSetterParams {
+export interface GridValueSetterParams<
+  R extends GridDefaultRowModel = GridDefaultRowModel,
+  V = any,
+> {
   /**
    * The new cell value.
    */
-  value: GridCellValue;
+  value: V;
   /**
    * The row that is being edited.
    */
-  row: GridRowModel;
+  row: R;
 }
 
 /**
