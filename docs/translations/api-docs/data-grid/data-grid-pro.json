@@ -532,6 +532,7 @@
     "GroupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
-    "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded."
+    "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
+    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel."
   }
 }

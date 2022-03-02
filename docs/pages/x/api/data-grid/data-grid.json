@@ -206,6 +206,7 @@
     "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
+    "FilterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
     "GroupingCriteriaCollapseIcon": {
       "default": "GridExpandMoreIcon",
