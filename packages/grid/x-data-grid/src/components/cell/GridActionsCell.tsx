@@ -32,7 +32,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     if (!hasFocus) {
       Object.entries(touchRippleRefs.current).forEach(([index, ref]) => {
         ref?.stop({}, () => {
-          delete touchRippleRefs.current[index];
+          delete touchRippleRefs.current[index as any];
         });
       });
     }
