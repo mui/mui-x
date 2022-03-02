@@ -43,8 +43,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
   filterPanelDeleteIconLabel: 'Excluir',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operadores',
+  filterPanelLinkOperator: 'Operator lógico',
+  filterPanelOperators: 'Operador',
   filterPanelOperatorAnd: 'E',
   filterPanelOperatorOr: 'Ou',
   filterPanelColumns: 'Colunas',
