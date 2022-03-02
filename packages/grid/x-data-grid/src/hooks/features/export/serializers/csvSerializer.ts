@@ -7,7 +7,7 @@ const serialiseCellValue = (value: GridCellValue, delimiterCharacter: string) =>
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
 
-    // Make sure value containing delimiter or line break won't be splitted into multiple rows
+    // Make sure value containing delimiter or line break won't be split into multiple rows
     if ([delimiterCharacter, '\n', '\r'].some((delimiter) => formattedValue.includes(delimiter))) {
       return `"${formattedValue}"`;
     }

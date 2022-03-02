@@ -92,17 +92,13 @@ export function createUseGridApiEventHandler(registry: CleanupTracking) {
   };
 }
 
-let registry: CleanupTracking;
+const registry =
+  typeof FinalizationRegistry !== 'undefined'
+    ? new FinalizationRegistryBasedCleanupTracking()
+    : new TimerBasedCleanupTracking();
 
-if (process.env.NODE_ENV === 'test') {
-  // Use the timer-based implementation when testing
-  registry = new TimerBasedCleanupTracking();
-} else {
-  registry =
-    typeof FinalizationRegistry !== 'undefined'
-      ? new FinalizationRegistryBasedCleanupTracking()
-      : new TimerBasedCleanupTracking();
-}
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const unstable_resetCleanupTracking = () => registry.reset();
 
 export const useGridApiEventHandler = createUseGridApiEventHandler(registry);
 

@@ -33,7 +33,7 @@ interface GridTreeDataGroupingCellProps extends GridRenderCellParams {
 }
 
 const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
-  const { id, field, rowNode, hideDescendantCount } = props;
+  const { id, field, formattedValue, rowNode, hideDescendantCount } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -85,7 +85,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
         )}
       </div>
       <span>
-        {rowNode.groupingKey}
+        {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
         {!hideDescendantCount && filteredDescendantCount > 0 ? ` (${filteredDescendantCount})` : ''}
       </span>
     </Box>

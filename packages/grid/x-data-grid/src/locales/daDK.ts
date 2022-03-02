@@ -91,10 +91,10 @@ const daDKGrid: Partial<GridLocaleText> = {
       ? `${count.toLocaleString()} rækker valgt`
       : `${count.toLocaleString()} række valgt`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Totale rækker:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
 

@@ -66,7 +66,7 @@ export const gridPaginationRowRangeSelector = createSelector(
       return null;
     }
 
-    // The tree is flat, their is no need to look for children
+    // The tree is flat, there is no need to look for children
     if (rowTreeDepth < 2) {
       return { firstRowIndex: topLevelFirstRowIndex, lastRowIndex: topLevelLastRowIndex };
     }

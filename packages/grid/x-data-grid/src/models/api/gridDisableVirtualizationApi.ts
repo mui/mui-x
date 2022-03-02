@@ -1,5 +1,5 @@
 /**
- * The disable virtualization API interface that is available in the grid [[apiRef]].
+ * The API to disable the virtualization that is available in the grid [[apiRef]].
  */
 export interface GridDisableVirtualizationApi {
   /**

@@ -86,10 +86,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => `${count}행 선택중`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: '총 행수:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
 

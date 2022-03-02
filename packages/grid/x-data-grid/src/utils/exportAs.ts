@@ -1,7 +1,7 @@
 import { GridExportFormat } from '../models/gridExport';
 
 /**
- * I have hesitate to use https://github.com/eligrey/FileSaver.js.
+ * I have hesitated to use https://github.com/eligrey/FileSaver.js.
  * If we get bug reports that this project solves, we should consider using it.
  *
  * Related resources.

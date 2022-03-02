@@ -13,6 +13,7 @@ import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { gridPageSelector } from './gridPaginationSelector';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { buildWarning } from '../../../utils/warning';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 const getPageCount = (rowCount: number, pageSize: number): number => {
@@ -44,6 +45,13 @@ const mergeStateWithPage =
     }),
   });
 
+const noRowCountInServerMode = buildWarning(
+  [
+    "MUI: the 'rowCount' prop is undefined while using paginationMode='server'",
+    'For more detail, see http://mui.com/components/data-grid/pagination/#basic-implementation',
+  ],
+  'error',
+);
 export const pageStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'initialState' | 'rowCount' | 'page'>
 > = (state, props) => ({
@@ -61,7 +69,10 @@ export const pageStateInitializer: GridStateInitializer<
  */
 export const useGridPage = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'page' | 'onPageChange' | 'rowCount' | 'initialState' | 'paginationMode'
+  >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
 
@@ -162,8 +173,17 @@ export const useGridPage = (
    * EFFECTS
    */
   React.useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (props.paginationMode === 'server' && props.rowCount == null) {
+        noRowCountInServerMode();
+      }
+    }
+  }, [props.rowCount, props.paginationMode]);
+
+  React.useEffect(() => {
     apiRef.current.setState((state) => {
       const rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
+
       const pageCount = getPageCount(rowCount, state.pagination.pageSize);
       const page = props.page == null ? state.pagination.page : props.page;
 
@@ -178,5 +198,5 @@ export const useGridPage = (
       };
     });
     apiRef.current.forceUpdate();
-  }, [visibleTopLevelRowCount, props.rowCount, props.page, apiRef]);
+  }, [visibleTopLevelRowCount, props.rowCount, props.page, props.paginationMode, apiRef]);
 };

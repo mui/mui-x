@@ -25,10 +25,6 @@ export function isGridHeaderCellRoot(elem: Element | null): boolean {
   return elem != null && elem.classList.contains(gridClasses.columnHeader);
 }
 
-export function getIdFromRowElem(rowEl: Element): string {
-  return rowEl.getAttribute('data-id')!;
-}
-
 function escapeOperandAttributeSelector(operand: string): string {
   return operand.replace(/["\\]/g, '\\$&');
 }
