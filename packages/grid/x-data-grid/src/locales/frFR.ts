@@ -43,7 +43,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
   filterPanelDeleteIconLabel: 'Supprimer',
-  filterPanelOperators: 'Opérateurs',
+  filterPanelLinkOperator: 'Opérateur logique',
+  filterPanelOperators: 'Opérateur',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',
   filterPanelColumns: 'Colonnes',

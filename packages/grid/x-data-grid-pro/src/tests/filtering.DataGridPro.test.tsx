@@ -211,7 +211,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(onFilterModelChange.callCount).to.equal(0);
     expect(getColumnValues()).to.deep.equal([]);
 
-    const select = screen.queryAllByRole('combobox', { name: /Operators/i })[1];
+    const select = screen.queryByRole('combobox', { name: 'Logic operator' });
     fireEvent.change(select, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(getColumnValues()).to.deep.equal([]);

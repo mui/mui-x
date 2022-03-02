@@ -55,6 +55,10 @@ export default function CustomFilterPanelContent() {
             columnsSort: 'asc',
             filterFormProps: {
               // Customize inputs by passing props
+              linkOperatorInputProps: {
+                variant: 'outlined',
+                size: 'small',
+              },
               columnInputProps: {
                 variant: 'outlined',
                 size: 'small',
@@ -64,9 +68,6 @@ export default function CustomFilterPanelContent() {
                 variant: 'outlined',
                 size: 'small',
                 sx: { mt: 'auto' },
-              },
-              valueInputProps: {
-                required: true,
               },
               deleteIconProps: {
                 sx: {
