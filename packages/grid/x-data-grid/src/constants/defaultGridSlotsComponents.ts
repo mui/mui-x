@@ -48,6 +48,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   BooleanCellFalseIcon: GridCloseIcon,
   ColumnMenuIcon: GridTripleDotsVerticalIcon,
   OpenFilterButtonIcon: GridFilterListIcon,
+  FilterPanelDeleteIcon: GridCloseIcon,
   ColumnFilteredIcon: GridFilterAltIcon,
   ColumnSelectorIcon: GridColumnIcon,
   ColumnUnsortedIcon: GridColumnUnsortedIcon,

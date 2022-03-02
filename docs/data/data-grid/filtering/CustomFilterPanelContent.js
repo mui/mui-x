@@ -45,6 +45,7 @@ export default function CustomFilterPanelContent() {
         {...data}
         components={{
           Toolbar: GridToolbar,
+          FilterPanelDeleteIcon: ()=>(<Icon>cancel</Icon>),
           // Use custom FilterPanel only for deep modification
           // FilterPanel: MyCustomFilterPanel,
         }}

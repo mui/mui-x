@@ -287,7 +287,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           onClick={handleDeleteFilter}
           size="small"
         >
-          <GridCloseIcon fontSize="small" />
+          <rootProps.components.FilterPanelDeleteIcon/>
         </IconButton>
       </FilterFormDeleteIcon>
       <FilterFormLinkOperatorInput
