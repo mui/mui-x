@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { DataGridPro, GridLinkOperator, GridToolbar } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import Icon from '@mui/material/Icon';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
@@ -45,7 +44,6 @@ export default function CustomFilterPanelContent() {
         {...data}
         components={{
           Toolbar: GridToolbar,
-          FilterPanelDeleteIcon: () => <Icon>cancel</Icon>,
           // Use custom FilterPanel only for deep modification
           // FilterPanel: MyCustomFilterPanel,
         }}
