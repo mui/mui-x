@@ -14,6 +14,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
 import { gridVisibleSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
+import { GridRowId } from '../../models/gridRows';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -70,7 +71,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       return rowIds.reduce((acc, id) => {
         acc[id] = true;
         return acc;
-      }, {});
+      }, {} as Record<GridRowId, true>);
     }, [
       rootProps.pagination,
       rootProps.checkboxSelectionVisibleOnly,

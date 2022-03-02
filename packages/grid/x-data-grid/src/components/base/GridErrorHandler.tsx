@@ -15,7 +15,7 @@ const ErrorOverlayWrapper = styled('div')({
   height: '100%',
 });
 
-export function GridErrorHandler(props) {
+export function GridErrorHandler(props: { children: React.ReactNode }) {
   const { children } = props;
   const apiRef = useGridApiContext();
   const logger = useGridLogger(apiRef, 'GridErrorHandler');

@@ -28,7 +28,7 @@ import type { GridApiCommunity } from '../api/gridApiCommunity';
  */
 export type GridAlignment = 'left' | 'right' | 'center';
 
-type ValueOptions = string | number | { value: any; label: string };
+export type ValueOptions = string | number | { value: any; label: string };
 
 /**
  * Value that can be used as a key for grouping rows

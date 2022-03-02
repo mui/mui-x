@@ -26,8 +26,10 @@ const getSingleSelectOptionFormatter =
     return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
   };
 
-const isOptionEqualToValue = (option, value) =>
-  getValueFromOption(option) === getValueFromOption(value);
+const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEqualToValue'] = (
+  option,
+  value,
+) => getValueFromOption(option) === getValueFromOption(value);
 
 const filter = createFilterOptions<any>();
 
