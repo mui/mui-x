@@ -240,6 +240,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's title container element"
     },
+    "columnHeaderTitleContainerContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column header's title excepted buttons"
+    },
     "columnHeaders": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column headers"
