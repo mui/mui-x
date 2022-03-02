@@ -307,6 +307,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         it(`should throw an error when calling \`apiRef.current.${methodName}\``, () => {
           render(<TestCase disableColumnPinning />);
           expect(() => {
+            // @ts-ignore
             apiRef.current[methodName]();
           }).to.throw();
         });
