@@ -44,6 +44,8 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Διαγραφή',
   // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Τελεστές',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Καί',
   filterPanelOperatorOr: 'Ή',
   filterPanelColumns: 'Στήλες',

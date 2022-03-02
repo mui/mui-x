@@ -54,6 +54,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Odstranit',
   // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operátory',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',
   filterPanelColumns: 'Sloupce',

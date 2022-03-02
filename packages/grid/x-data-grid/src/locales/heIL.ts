@@ -45,6 +45,8 @@ const heILGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'מחק',
   // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'אופרטור',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
   filterPanelColumns: 'עמודות',

@@ -45,6 +45,8 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'حذف',
   // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'العاملين',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'او',
   filterPanelColumns: 'الأعمدة',

@@ -45,6 +45,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Supprimer',
   filterPanelLinkOperator: 'Opérateur logique',
   filterPanelOperators: 'Opérateur',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',
   filterPanelColumns: 'Colonnes',

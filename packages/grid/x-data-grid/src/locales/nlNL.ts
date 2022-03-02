@@ -45,6 +45,8 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Verwijderen',
   // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatoren',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'En',
   filterPanelOperatorOr: 'Of',
   filterPanelColumns: 'Kolommen',

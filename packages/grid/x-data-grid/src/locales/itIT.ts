@@ -45,6 +45,8 @@ const itITGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Rimuovi',
   // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatori',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'E (and)',
   filterPanelOperatorOr: 'O (or)',
   filterPanelColumns: 'Colonne',

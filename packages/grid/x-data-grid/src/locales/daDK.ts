@@ -45,6 +45,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Slet',
   // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatorer',
+
+  // TODO v6: rename to filterPanelOperator
   // filterPanelOperatorAnd: 'And',
   // filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Kolonne',

@@ -45,6 +45,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Poista',
   // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operaattorit',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',
   filterPanelColumns: 'Sarakkeet',

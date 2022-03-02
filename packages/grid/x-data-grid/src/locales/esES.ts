@@ -45,6 +45,8 @@ const esESGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Borrar',
   // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operadores',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Y',
   filterPanelOperatorOr: 'O',
   filterPanelColumns: 'Columnas',

@@ -45,6 +45,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Excluir',
   filterPanelLinkOperator: 'Operador lógico',
   filterPanelOperators: 'Operador',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'E',
   filterPanelOperatorOr: 'Ou',
   filterPanelColumns: 'Colunas',
