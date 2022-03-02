@@ -451,7 +451,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
       // Verify that the event is not prevented during the bubbling.
       // fireEvent.keyDown return false if it is the case
-      // For more info, see the related discussion: https://github.com/mui-org/material-ui-x/pull/3624/files#r787767632
+      // For more info, see the related discussion: https://github.com/mui/mui-x/pull/3624#discussion_r787767632
       expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
       expect(fireEvent.keyDown(input, { key: ' ' })).to.equal(true);
       expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
