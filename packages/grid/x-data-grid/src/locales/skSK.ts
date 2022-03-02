@@ -116,10 +116,10 @@ const skSKGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Riadkov spolu:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) => {
     const str = totalCount.toString();
     const firstDigit = str[0];

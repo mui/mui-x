@@ -9,7 +9,6 @@ type GridStateApiUntyped = {
 
 /**
  * The api of `DataGrid`.
- * TODO: Move to `x-data-grid` folder
  */
 export interface GridApiCommunity
   extends Omit<GridApiCommon, keyof GridStateApiUntyped>,

@@ -37,7 +37,7 @@ function getIcon(
   className: string,
   sortingOrder: GridSortDirection[],
 ) {
-  let Icon = icons.ColumnUnsortedIcon;
+  let Icon;
   const iconProps: any = {};
   if (direction === 'asc') {
     Icon = icons.ColumnSortedAscendingIcon;

@@ -49,7 +49,7 @@ export default function CustomFilterPanelContent() {
         }}
         componentsProps={{
           filterPanel: {
-            // Force to use "And" operator
+            // Force usage of "And" operator
             linkOperators: [GridLinkOperator.And],
             // Display columns by ascending alphabetical order
             columnsSort: 'asc',

@@ -89,10 +89,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) =>
     count !== 1 ? `${count.toLocaleString()} صفوف مختارة` : `${count.toLocaleString()} صفوف مختارة`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'إجمالي الصفوف:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} من ${totalCount.toLocaleString()}`,
 

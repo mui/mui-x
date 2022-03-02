@@ -58,15 +58,15 @@ export interface GridRowTreeNodeConfig {
 }
 
 /**
- * The grid rows total height and row possitions.
+ * The grid rows total height and row positions.
  */
 export interface GridRowsMeta {
   /**
-   * The sum of of all grid rows.
+   * The sum of all grid rows.
    */
   totalHeight: number;
   /**
-   * The grid rows possitions.
+   * The grid rows positions.
    */
   positions: number[];
 }

@@ -16,7 +16,7 @@ import { gridFocusCellSelector } from './gridFocusStateSelector';
 /**
  * @requires useGridParamsApi (method)
  * @requires useGridRows (method)
- * @requires useGridEditRows (event)
+ * @requires useGridEditing (event)
  */
 export const useGridFocus = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
