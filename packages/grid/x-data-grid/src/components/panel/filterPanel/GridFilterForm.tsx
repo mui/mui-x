@@ -12,7 +12,6 @@ import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridCloseIcon } from '../../icons';
 import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -287,9 +286,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           onClick={handleDeleteFilter}
           size="small"
         >
-          {rootProps.components.FilterPanelDeleteIcon?.name ? 
-          <rootProps.components.FilterPanelDeleteIcon />
-          : <GridCloseIcon fontSize="small" />}
+          <rootProps.components.FilterPanelDeleteIcon fontSize="small" />
         </IconButton>
       </FilterFormDeleteIcon>
       <FilterFormLinkOperatorInput
