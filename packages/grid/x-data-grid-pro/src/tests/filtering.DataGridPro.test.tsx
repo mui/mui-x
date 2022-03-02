@@ -331,6 +331,41 @@ describe('<DataGridPro /> - Filter', () => {
     expect(window.scrollY).to.equal(initialScrollPosition);
   });
 
+  it('should not scroll the page when opening the filter panel and the operator=isAnyOf', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+
+    render(
+      <div>
+        {/* To simulate a page that needs to be scrolled to reach the grid. */}
+        <div style={{ height: '100vh', width: '100vh' }} />
+        <TestCase
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                linkOperator: GridLinkOperator.Or,
+                items: [{ id: 1, columnField: 'brand', operatorValue: 'isAnyOf' }],
+              },
+            },
+          }}
+        />
+      </div>,
+    );
+
+    screen.getByRole('grid').scrollIntoView();
+    const initialScrollPosition = window.scrollY;
+    expect(initialScrollPosition).not.to.equal(0);
+    apiRef.current.hidePreferences();
+    clock.tick(100);
+    apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
+    expect(window.scrollY).to.equal(initialScrollPosition);
+  });
+
   describe('Server', () => {
     it('should refresh the filter panel when adding filters', () => {
       function loadServerRows(commodityFilterValue) {
