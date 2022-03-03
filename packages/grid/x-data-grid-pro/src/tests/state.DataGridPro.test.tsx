@@ -3,8 +3,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGridPro, useGridApiRef, GridApi } from '@mui/x-data-grid-pro';
-import { DataGridProProps } from '../models';
+import { DataGridPro, useGridApiRef, GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

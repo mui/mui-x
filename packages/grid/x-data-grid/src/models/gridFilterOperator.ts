@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { GridFilterInputValueProps } from '../components/panel/filterPanel/GridFilterInputValueProps';
 import { GridFilterInputMultipleValueProps } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
+import { GridFilterInputMultipleSingleSelectProps } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 import { GridFilterItem } from './gridFilterItem';
 import { GridCellParams } from './params/gridCellParams';
 import type { GridStateColDef } from './colDef/gridColDef';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 import type { GridApiCommon } from './api/gridApiCommon';
-import type { GridFilterInputMultipleSingleSelectProps } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelectProps';
 
 /**
  * Filter operator definition interface.
