@@ -46,13 +46,13 @@ npm install @date-io/moment
 
 ```js
 // date-fns
-import { DateAdapter } from '@mui/x-pickers/AdapterDateFns';
+import { DateAdapter } from '@mui/x-date-pickers/AdapterDateFns';
 // or for Day.js
-import { DateAdapter } from '@mui/x-pickers/AdapterDayjs';
+import { DateAdapter } from '@mui/x-date-pickers/AdapterDayjs';
 // or for Luxon
-import { DateAdapter } from '@mui/x-pickers/AdapterLuxon';
+import { DateAdapter } from '@mui/x-date-pickers/AdapterLuxon';
 // or for Moment.js
-import { DateAdapter } from '@mui/x-pickers/AdapterMoment';
+import { DateAdapter } from '@mui/x-date-pickers/AdapterMoment';
 
 function App({ children }) {
   return (

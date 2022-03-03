@@ -11,7 +11,7 @@
     "rootDir": "./src"
   },
   "references": [
-    { "path": "../x-pickers/tsconfig.build.json" },
+    { "path": "../x-date-pickers/tsconfig.build.json" },
     { "path": "../x-license-pro/tsconfig.build.json" }
   ],
   "include": ["src/**/*.ts*"],
