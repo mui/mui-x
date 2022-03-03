@@ -50,6 +50,21 @@ const pages = [
       },
     ],
   },
+  {
+    pathname: '/x/react-date-pickers',
+    scopePathnames: ['/x/api/date-pickers'],
+    title: 'Date Pickers',
+    icon: 'TableViewIcon',
+    children: [
+      { pathname: '/x/react-date-pickers/getting-started' },
+      { pathname: '/x/react-date-pickers/date-picker' },
+      {
+        pathname: '/x/react-date-pickers/date-range-picker',
+      },
+      { pathname: '/x/react-date-pickers/date-time-picker' },
+      { pathname: '/x/react-date-pickers/time-picker' },
+    ],
+  },
 ];
 
 export default pages;

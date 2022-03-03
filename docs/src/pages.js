@@ -3,16 +3,6 @@ import pages from '@mui/monorepo/docs/src/pages';
 const components = pages.find((page) => page.pathname === '/components');
 const componentsAPI = pages.find((page) => page.pathname === '/api-docs');
 
-// Add the Date / Time section at the root instead of in the lab
-components.children.push({
-  title: 'Date / Time',
-  pathname: '/components',
-  subheader: '/components/pickers',
-});
-
-const lab = components.children.find((page) => page.subheader === '/components/lab');
-lab.children = lab.children.filter((child) => child.subheader !== '/components/lab-pickers');
-
 const replaceChildren = (parent, pathname, subheader, children) => {
   const node = parent.children.find(
     (page) => page.pathname === pathname && page.subheader === subheader,
@@ -76,13 +66,5 @@ replaceChildren(
     linkProps: { linkAs: `${page.pathname.replace(/^\/api-docs/, '/api')}/` },
   })),
 );
-
-replaceChildren(components, '/components', '/components/pickers', [
-  { pathname: '/components/pickers/getting-started' },
-  { pathname: '/components/pickers/date-picker' },
-  { pathname: '/components/pickers/date-range-picker', title: 'Date Range Picker ⚡️' },
-  { pathname: '/components/pickers/date-time-picker' },
-  { pathname: '/components/pickers/time-picker' },
-]);
 
 export default pages;

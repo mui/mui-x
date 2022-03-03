@@ -315,7 +315,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         })),
       };
       writePrettifiedFile(
-        path.resolve(outputDirectory, `${slug}.json`),
+        path.resolve(outputDirectory, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
         project,
       );
@@ -323,10 +323,14 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       console.log('Built JSON file for', parsedInterface.name);
     } else {
       const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
-      writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
+      writePrettifiedFile(
+        path.resolve(outputDirectory, project.documentationFolderName, `${slug}.md`),
+        markdown,
+        project,
+      );
 
       writePrettifiedFile(
-        path.resolve(outputDirectory, `${slug}.js`),
+        path.resolve(outputDirectory, project.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
     import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
     import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
