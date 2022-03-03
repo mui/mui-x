@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEvents } from '../../../models/events';
 import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';

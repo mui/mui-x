@@ -12,7 +12,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
     { [`& .${gridClasses['cell--textLeft']}`]: styles['cell--textLeft'] },
     { [`& .${gridClasses['cell--textRight']}`]: styles['cell--textRight'] },
-    // TODO: v6 - remove
+    // TODO v6: Remove
     { [`& .${gridClasses['cell--withRenderer']}`]: styles['cell--withRenderer'] },
     { [`& .${gridClasses.cell}`]: styles.cell },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
@@ -120,6 +120,11 @@ export const GridRootStyles = styled('div', {
       flex: 1,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
+    },
+    [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
     },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',

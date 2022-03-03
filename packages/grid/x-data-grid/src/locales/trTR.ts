@@ -42,7 +42,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
   filterPanelDeleteIconLabel: 'Kaldır',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatör',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Ve',
   filterPanelOperatorOr: 'Veya',
   filterPanelColumns: 'Sütunlar',
@@ -86,10 +89,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => `${count.toLocaleString()} satır seçildi`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Toplam Satır:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
 

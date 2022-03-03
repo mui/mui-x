@@ -1,6 +1,5 @@
 import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '@mui/x-data-grid';
 import { GridColDef, GridStateColDef } from './gridColDef';
-import { GridApiPro } from './gridApiPro';
 
 /**
  * Parameters passed to `colDef.groupingValueGetter`.
@@ -25,7 +24,7 @@ export interface GridGroupingValueGetterParams<V = any, R = any> {
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridColDef<GridApiPro> | GridStateColDef<GridApiPro>;
+  colDef: GridColDef | GridStateColDef;
   /**
    * The node of the row that the current cell belongs to.
    * It only contains the information available before the actual grouping.

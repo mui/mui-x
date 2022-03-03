@@ -31,7 +31,7 @@ By default, columns are ordered according to the order they are included in the 
 > ⚠️ The `columns` prop should keep the same reference between two renders.
 > The columns are designed to be definitions, to never change once the component is mounted.
 > Otherwise, you take the risk of losing the column width state (if resized).
-> You can create the array outside of the render function or memoize it.
+> You can create the array outside the render function or memoize it.
 
 ### Headers
 
@@ -389,7 +389,7 @@ You can extend the native column types with your own by simply spreading the nec
 
 The demo below defines a new column type: `usdPrice` that extends the native `number` column type.
 
-```jsx
+```ts
 const usdPrice: GridColTypeDef = {
   type: 'number',
   width: 130,
