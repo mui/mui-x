@@ -7,9 +7,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 3, 2022_
 
-A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 📦 Use the bundling scripts as the packages published by the [https://github.com/mui/material-ui](material-ui) repository (#3965) @flaviendelangle
+- 📦 Use the bundling scripts as in [material-ui](https://github.com/mui/material-ui) repository (#3965) @flaviendelangle
 
   The code structure and the bundling strategy have been modified to provide better isolation between components.
   This brings tree shaking, allowing to reduce the bundle size. 🏋
@@ -19,11 +19,11 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 
 - 🧼 Clean and document the columns selector (#4010) @flaviendelangle
 
-  To improve clarity, columns selectors have been renamed.
-  Old namings are deprecated and will be removed in v6.
-  Here is the renaming and the modification needed to get the same information with new selectors.
+  Columns selectors have been renamed to improve clarity.
+  The old names have been deprecated and will be removed in v6.
+  Here are the new names and the modifications needed to get the same information with the new selectors.
 
-  | Previews naming                 | New naming                                |
+  | Old name                        | New name                                  |
   | ------------------------------- | ----------------------------------------- |
   | `allGridColumnsFieldsSelector`  | `gridColumnFieldsSelector`                |
   | `allGridColumnsSelector`        | `gridColumnDefinitionsSelector`           |
