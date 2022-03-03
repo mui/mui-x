@@ -478,8 +478,8 @@ describe('<DataGrid /> - Selection', () => {
         <TestDataGridSelection isRowSelectable={() => true} checkboxSelection />,
       );
 
-      fireEvent.click(getRow(0));
-      fireEvent.click(getRow(1));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(1, 0).querySelector('input'));
 
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
 
