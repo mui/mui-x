@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier } from '@mui/x-license-pro';
+import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
 import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
@@ -13,7 +13,6 @@ import {
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models';
 import { useDataGridProProps } from './useDataGridProProps';
-import { Watermark } from '../components/Watermark';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
 
@@ -23,7 +22,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
 ) {
   const props = useDataGridProProps(inProps);
   const apiRef = useDataGridProComponent(props.apiRef, props);
-  const licenseStatus = useLicenseVerifier();
+  useLicenseVerifier();
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
@@ -34,7 +33,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
           >
-            <Watermark licenseStatus={licenseStatus} />
+            <Watermark />
           </GridBody>
           <GridFooterPlaceholder />
         </GridErrorHandler>

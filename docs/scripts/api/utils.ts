@@ -29,7 +29,11 @@ export interface Project {
   documentationFolderName: string;
 }
 
-export type ProjectNames = 'x-data-grid' | 'x-data-grid-pro' | 'x-pickers' | 'x-pickers-pro';
+export type ProjectNames =
+  | 'x-data-grid'
+  | 'x-data-grid-pro'
+  | 'x-date-pickers'
+  | 'x-date-pickers-pro';
 
 export type Projects = Map<ProjectNames, Project>;
 

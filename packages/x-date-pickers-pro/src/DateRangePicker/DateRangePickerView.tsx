@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { Watermark } from '@mui/x-license-pro';
 import {
   BasePickerProps,
   useUtils,
@@ -223,6 +224,7 @@ export function DateRangePickerView<TDate>(props: DateRangePickerViewProps<TDate
 
   return (
     <div className={className}>
+      <Watermark />
       {toShowToolbar && (
         <DateRangePickerToolbar
           date={date}
