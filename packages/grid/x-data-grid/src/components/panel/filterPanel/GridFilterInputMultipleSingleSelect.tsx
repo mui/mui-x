@@ -1,22 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
-
 import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridFilterItem } from '../../../models/gridFilterItem';
 import { getValueFromOption } from './filterPanelUtils';
-import { GridApiCommon } from '../../../models/api/gridApiCommon';
-
-export type GridFilterInputMultipleSingleSelectProps = {
-  item: GridFilterItem;
-  applyValue: (value: GridFilterItem) => void;
-  // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
-  apiRef: React.MutableRefObject<GridApiCommon>;
-  focusElementRef?: React.Ref<any>;
-  type?: 'singleSelect';
-} & Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
+import { GridFilterInputMultipleSingleSelectProps } from '../../../models/gridFilterOperator';
 
 const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEqualToValue'] = (
   option,
