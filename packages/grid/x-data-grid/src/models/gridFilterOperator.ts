@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { AutocompleteProps } from '@mui/material/Autocomplete';
 import { GridFilterInputValueProps } from '../components/panel/filterPanel/GridFilterInputValueProps';
 import { GridFilterInputMultipleValueProps } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterItem } from './gridFilterItem';
@@ -7,14 +6,7 @@ import { GridCellParams } from './params/gridCellParams';
 import type { GridStateColDef } from './colDef/gridColDef';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 import type { GridApiCommon } from './api/gridApiCommon';
-
-export type GridFilterInputMultipleSingleSelectProps = {
-  item: GridFilterItem;
-  applyValue: (value: GridFilterItem) => void;
-  apiRef: React.MutableRefObject<GridApiCommon>;
-  focusElementRef?: React.Ref<any>;
-  type?: 'singleSelect';
-} & Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
+import type { GridFilterInputMultipleSingleSelectProps } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelectProps';
 
 /**
  * Filter operator definition interface.

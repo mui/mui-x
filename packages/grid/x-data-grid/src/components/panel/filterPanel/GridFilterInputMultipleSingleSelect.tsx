@@ -5,7 +5,7 @@ import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { getValueFromOption } from './filterPanelUtils';
-import { GridFilterInputMultipleSingleSelectProps } from '../../../models/gridFilterOperator';
+import { GridFilterInputMultipleSingleSelectProps } from './GridFilterInputMultipleSingleSelectProps';
 
 const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEqualToValue'] = (
   option,
@@ -141,3 +141,4 @@ GridFilterInputMultipleSingleSelect.propTypes = {
 } as any;
 
 export { GridFilterInputMultipleSingleSelect };
+export type { GridFilterInputMultipleSingleSelectProps };
