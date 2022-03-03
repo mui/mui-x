@@ -3,6 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.6.0
+
+_Mar 3, 2022_
+
+A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 📦 Use the same bundling scripts as the core repository (#3965) @flaviendelangle
+
+  The code structure and the bundling strategy has been modified to have a better isolation between components.
+  This brings tree shaking, allowing us to reduce the bundle size. 🏋
+  Such modification are always a bit risky.
+  If you encounter problems with you build, please open an issue.
+  We will put high priority on investigating them.
+
+- 📚 Documentation improvements
+- 🐞 Bug and typo fixes
+
+### `@mui/x-data-grid@v5.6.0` / `@mui/x-data-grid-pro@v5.6.0`
+
+#### Changes
+
+- [DataGrid] Add slot for filter panel delete icon (#4069) @Hameezr
+- [DataGrid] Add specific label for linkOperator (#3915) @alexfauquette
+- [DataGrid] Allow for truncated and multiline content in grid cells (#3955) @DanailH
+- [DataGrid] Allow to navigate between cells with keyboard once inside an `actions` column (#3375) @m4theushw
+- [DataGrid] Fix desynchronization between rows and header when sorting (#4058) @alexfauquette
+- [DataGrid] Clean and document the columns selector (#4010) @flaviendelangle
+- [DataGrid] Differentiate the pro and community versions of `GridState`, `GridApi` and `GridApiRef` (#3648) @flaviendelangle
+- [DataGrid] Fix horizontal scroll not working on empty grid (#3821) @cherniavskii
+- [DataGrid] Fix input element in custom header (#3624) @alexfauquette
+- [DataGrid] Improve `singleSelect` filter performance (#3956) @cherniavskii
+- [DataGrid] Improve custom overlay slots positioning (#3832) @cherniavskii
+- [DataGrid] Improve flex implementation (#4006) @cherniavskii
+- [DataGrid] Improve the invalid `sortModel` and `filterModel` warnings (#3671) @flaviendelangle
+- [DataGrid] Memoize Popper modifiers passed to panel (#3975) @m4theushw
+- [DataGrid] Padding removed from header title (#3691) @valenfv
+- [DataGrid] Prevent focus while Popper is not fully positioned (#4067) @m4theushw
+- [DataGrid] Re-use previous `rowNode` when building tree and the new `rowNode` is equal to the previous one (#3961) @flaviendelangle
+- [DataGrid] Remove last filter item when no value to clean and close the filter panel (#3910) @alexfauquette
+- [DataGrid] Send warning when the `rowCount` is not provided while using server pagination (#3902) @alexfauquette
+- [DataGrid] Stop checkbox ripple on blur (#3835) @m4theushw
+- [DataGrid] Use only `headerName` when available to search column (#3959) @pkratz
+- [DataGrid] Use the same bundling scripts as the core repository (#3965) @flaviendelangle
+- [DataGridPro] Add `unstable_setRowHeight` method to `apiRef` (#3751) @cherniavskii
+- [DataGridPro] Always export the `pageSize` and `page` when it has been initialized or is being controlled (#3908) @flaviendelangle
+- [DataGridPro] Disable export for detail panel column (#4057) @gustavhagland
+- [DataGridPremium] Support `valueFormatter` on the grouping column (#4022) @flaviendelangle
+- [l10n] Improve Bulgarian (bg-BG) locale (#3949) @DanailH
+- [l10n] Improve German (de-DE) locale (#4077) @sebastianfrey
+- [l10n] Improve Hebrew (he-IL) locale (#3930) @ColdAtNight
+
+### Docs
+
+- [docs] Add example of custom operator based on built-in ones (#3911) @flaviendelangle
+- [docs] Avoid crash when grouping rows from the `Commodity` dataset (#4065) @m4theushw
+- [docs] Fix `Commodity` and `Employee` CSV export of the `country` column (#3912) @DanailH
+- [docs] Fix links to github repository (#4005) @oliviertassinari
+- [docs] Fix typo (#3923) @oliviertassinari
+- [docs] Fix typo (#4016) @MathisBurger
+- [docs] Fix typo in client-side validation example (#4066) @krallj
+- [docs] Remove useless hide id column (#4021) @alexfauquette
+
+### Core
+
+- [core] Allows to add custom export item (#3891) @alexfauquette
+- [core] Drop `_modules_` folder (#3953) @flaviendelangle
+- [core] Fix typo in `useGridScroll.ts` (#3973) @HexM7
+- [core] Fix typos, improve wordings and other various fixes (#4062) @flaviendelangle
+- [core] Initialize states before feature hooks (#3896) @m4theushw
+- [code] Make `@mui/x-data-grid-pro` import shared code from `@mui/x-data-grid` (#3688) @flaviendelangle
+- [core] Migrate `@mui/x-license-pro` to the new bundling strategy (#3738) @flaviendelangle
+- [core] Reduce usage of `useGridSelector` inside feature hooks (#3978) @flaviendelangle
+- [core] Retry l10n CI if 502 returned (#3977) @alexfauquette
+- [core] Update release instructions (#3920) @cherniavskii
+- [core] Use international locale format (#3921) @oliviertassinari
+- [core] Fix license generating script (#4055) @Janpot
+- [test] Add screenshot of the filter panel (#4072) @alexfauquette
+- [test] Reduce memory usage to run unit tests (#4031) @m4theushw
+- [test] Skip test on Firefox (#3926) @m4theushw
+
 ## 5.5.1
 
 _Feb 10, 2022_
