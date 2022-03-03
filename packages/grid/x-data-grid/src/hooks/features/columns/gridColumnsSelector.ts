@@ -7,7 +7,7 @@ import { wrapWithWarningOnCall } from '../../../utils/warning';
  * @category Columns
  * @deprecated Use the selector returning exactly the value you are looking for.
  * @ignore - do not document.
- * TODO: Rename `gridColumnsStateSelector`
+ * TODO v6: Rename `gridColumnsStateSelector`
  */
 export const gridColumnsSelector = (state: GridStateCommunity) => state.columns;
 

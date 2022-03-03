@@ -41,7 +41,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Filter panel text
   filterPanelAddFilter: 'Add filter',
   filterPanelDeleteIconLabel: 'Delete',
-  filterPanelOperators: 'Operators',
+  filterPanelLinkOperator: 'Logic operator',
+  filterPanelOperators: 'Operator', // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Columns',
@@ -89,10 +90,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
       ? `${count.toLocaleString()} rows selected`
       : `${count.toLocaleString()} row selected`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Total Rows:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 

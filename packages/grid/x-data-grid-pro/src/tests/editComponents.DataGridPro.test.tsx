@@ -294,7 +294,7 @@ describe('<DataGridPro /> - Edit Components', () => {
               valueOptions: ['Nike', 'Adidas'],
               editable: true,
               renderEditCell: (params: any) => (
-                <GridEditSingleSelectCell {...params} open={false} /> // Force to appear closed
+                <GridEditSingleSelectCell {...params} open={false} /> // Force appearing closed
               ),
             },
           ]}

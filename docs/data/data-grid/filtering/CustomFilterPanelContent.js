@@ -49,12 +49,16 @@ export default function CustomFilterPanelContent() {
         }}
         componentsProps={{
           filterPanel: {
-            // Force to use "And" operator
+            // Force usage of "And" operator
             linkOperators: [GridLinkOperator.And],
             // Display columns by ascending alphabetical order
             columnsSort: 'asc',
             filterFormProps: {
               // Customize inputs by passing props
+              linkOperatorInputProps: {
+                variant: 'outlined',
+                size: 'small',
+              },
               columnInputProps: {
                 variant: 'outlined',
                 size: 'small',
@@ -64,9 +68,6 @@ export default function CustomFilterPanelContent() {
                 variant: 'outlined',
                 size: 'small',
                 sx: { mt: 'auto' },
-              },
-              valueInputProps: {
-                required: true,
               },
               deleteIconProps: {
                 sx: {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, alpha, lighten, darken } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -24,12 +24,20 @@ const GridFooterContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FooterContainer',
   overridesResolver: (props, styles) => styles.footerContainer,
-})(() => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  minHeight: 52, // Match TablePagination min height
-}));
+})(({ theme }) => {
+  const borderColor =
+    theme.palette.mode === 'light'
+      ? lighten(alpha(theme.palette.divider, 1), 0.88)
+      : darken(alpha(theme.palette.divider, 1), 0.68);
+
+  return {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    minHeight: 52, // Match TablePagination min height
+    borderTop: `1px solid ${borderColor}`,
+  };
+});
 
 export const GridFooterContainer = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooterContainer(props: GridFooterContainerProps, ref) {

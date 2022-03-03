@@ -66,7 +66,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
   filterPanelDeleteIconLabel: 'Видалити',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Оператори',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',
   filterPanelColumns: 'Стовпці',
@@ -120,10 +123,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
       many: 'вибраних рядків',
     }),
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Усього рядків:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} з ${totalCount.toLocaleString()}`,
 

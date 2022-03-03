@@ -43,7 +43,10 @@ const heILGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
   filterPanelDeleteIconLabel: 'מחק',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'אופרטור',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
   filterPanelColumns: 'עמודות',
@@ -89,10 +92,10 @@ const heILGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) =>
     count !== 1 ? `${count.toLocaleString()} שורות נבחרו` : `שורה אחת נבחרה`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'סך הכל:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} מתוך ${totalCount.toLocaleString()}`,
 

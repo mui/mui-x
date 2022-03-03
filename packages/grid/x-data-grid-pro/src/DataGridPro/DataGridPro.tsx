@@ -417,7 +417,7 @@ DataGridProRaw.propTypes = {
    */
   nonce: PropTypes.string,
   /**
-   * Callback fired when a click event comes from a cell element.
+   * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -600,7 +600,8 @@ DataGridProRaw.propTypes = {
    */
   onResize: PropTypes.func,
   /**
-   * Callback fired when a click event comes from a row container element.
+   * Callback fired when a row is clicked.
+   * Not called if the target clicked is an interactive element added by the built-in columns.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -700,8 +701,8 @@ DataGridProRaw.propTypes = {
    */
   rowBuffer: PropTypes.number,
   /**
-   * Set the total number of rows, if it is different than the length of the value `rows` prop.
-   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.
+   * Set the total number of rows, if it is different from the length of the value `rows` prop.
+   * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
    */
   rowCount: PropTypes.number,
   /**
