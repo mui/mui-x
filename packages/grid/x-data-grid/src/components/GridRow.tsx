@@ -6,7 +6,12 @@ import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridRowEventLookup, GridEvents } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
-import { GridEditModes, GridRowModes, GridEditRowsModel } from '../models/gridEditRowModel';
+import {
+  GridEditModes,
+  GridRowModes,
+  GridEditRowsModel,
+  GridCellModes,
+} from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -15,6 +20,9 @@ import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { findParentElementFromClassName } from '../utils/domUtils';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
+import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -30,6 +38,7 @@ export interface GridRowProps {
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   editRowsState: GridEditRowsModel;
+  isLastVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -39,14 +48,20 @@ export interface GridRowProps {
 type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
+  isLastVisible: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, classes } = ownerState;
-
+  const { editable, editing, selected, isLastVisible, classes } = ownerState;
   const slots = {
-    root: ['row', selected && 'selected', editable && 'row--editable', editing && 'row--editing'],
+    root: [
+      'row',
+      selected && 'selected',
+      editable && 'row--editable',
+      editing && 'row--editing',
+      isLastVisible && 'row--lastVisible',
+    ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -79,6 +94,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     cellFocus,
     cellTabIndex,
     editRowsState,
+    isLastVisible = false,
     onClick,
     onDoubleClick,
     onMouseEnter,
@@ -96,6 +112,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   const ownerState = {
     selected,
+    isLastVisible,
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
     editable: rootProps.editMode === GridEditModes.Row,
@@ -131,6 +148,41 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         }
       },
     [apiRef, rowId],
+  );
+
+  const publishClick = React.useCallback(
+    (event) => {
+      const cell = findParentElementFromClassName(event.target, gridClasses.cell);
+      const field = cell?.getAttribute('data-field');
+
+      // Check if the field is available because the cell that fills the empty
+      // space of the row has no field.
+      if (field) {
+        // User clicked in the checkbox added by checkboxSelection
+        if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+          return;
+        }
+
+        // User opened a detail panel
+        if (field === '__detail_panel_toggle__') {
+          return;
+        }
+
+        // User is editing a cell
+        if (apiRef.current.getCellMode(rowId, field) === GridCellModes.Edit) {
+          return;
+        }
+
+        // User clicked a button from the "actions" column type
+        const column = apiRef.current.getColumn(field);
+        if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+          return;
+        }
+      }
+
+      publish(GridEvents.rowClick, onClick)(event);
+    },
+    [apiRef, onClick, publish, rowId],
   );
 
   const style = {
@@ -238,7 +290,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
-      onClick={publish(GridEvents.rowClick, onClick)}
+      onClick={publishClick}
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
       onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
       onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
@@ -261,6 +313,7 @@ GridRow.propTypes = {
   editRowsState: PropTypes.object.isRequired,
   firstColumnToRender: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
+  isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object.isRequired,

@@ -118,7 +118,7 @@ export const useDemoData = <Api extends GridApiCommon = any>(
   const [data, setData] = React.useState<DemoTreeDataValue<Api>>(() => {
     const columns = getColumns();
 
-    // TODO: Stop using `GridColDef.hide` in v6
+    // TODO v6: Stop using `GridColDef.hide`
     const columnVisibilityModel: GridColumnVisibilityModel = {};
     columns.forEach((col) => {
       if (col.hide) {

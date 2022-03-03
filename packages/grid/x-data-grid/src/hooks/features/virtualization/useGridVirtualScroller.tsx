@@ -133,20 +133,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     setContainerWidth(rootRef.current!.clientWidth);
   }, [rowsMeta.currentPageTotalHeight]);
 
-  React.useEffect(() => {
-    if (containerWidth == null) {
-      return;
-    }
-
-    const initialRenderContext = computeRenderContext();
-    prevRenderContext.current = initialRenderContext;
-    setRenderContext(initialRenderContext);
-
-    const { top, left } = scrollPosition.current!;
-    const params = { top, left, renderContext: initialRenderContext };
-    apiRef.current.publishEvent(GridEvents.rowsScroll, params);
-  }, [apiRef, computeRenderContext, containerWidth]);
-
   const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(() => {
     if (rootRef.current) {
       setContainerWidth(rootRef.current.clientWidth);
@@ -211,6 +197,29 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     ],
   );
 
+  const updateRenderContext = React.useCallback(
+    (nextRenderContext) => {
+      setRenderContext(nextRenderContext);
+      updateRenderZonePosition(nextRenderContext);
+      prevRenderContext.current = nextRenderContext;
+    },
+    [setRenderContext, prevRenderContext, updateRenderZonePosition],
+  );
+
+  React.useEffect(() => {
+    if (containerWidth == null) {
+      return;
+    }
+
+    const initialRenderContext = computeRenderContext();
+    prevRenderContext.current = initialRenderContext;
+    updateRenderContext(initialRenderContext);
+
+    const { top, left } = scrollPosition.current!;
+    const params = { top, left, renderContext: initialRenderContext };
+    apiRef.current.publishEvent(GridEvents.rowsScroll, params);
+  }, [apiRef, computeRenderContext, containerWidth, updateRenderContext]);
+
   const handleScroll = (event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
     scrollPosition.current.top = scrollTop;
@@ -247,10 +256,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     });
 
     if (shouldSetState) {
-      setRenderContext(nextRenderContext);
-      prevRenderContext.current = nextRenderContext;
+      updateRenderContext(nextRenderContext);
       prevTotalWidth.current = columnsTotalWidth;
-      updateRenderZonePosition(nextRenderContext);
     }
   };
 
@@ -299,6 +306,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
+      const lastVisibleRowIndex = firstRowToRender + i === currentPage.rows.length - 1;
       const targetRowHeight = apiRef.current.unstable_getRowHeight(id);
 
       let isSelected: boolean;
@@ -326,6 +334,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           selected={isSelected}
           index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
           containerWidth={availableSpace}
+          isLastVisible={lastVisibleRowIndex}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}
           {...rootProps.componentsProps?.row}
         />,

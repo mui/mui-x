@@ -6,8 +6,8 @@ import {
   GridRowsProp,
   useGridApiRef,
   DataGridPro,
-  GridApiRef,
   GridCellParams,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -16,7 +16,7 @@ import {
 } from '@mui/x-data-grid-generator';
 
 interface EditToolbarProps {
-  apiRef: GridApiRef;
+  apiRef: React.MutableRefObject<GridApi>;
   selectedCellParams?: any;
   setSelectedCellParams: (value: any) => void;
 }

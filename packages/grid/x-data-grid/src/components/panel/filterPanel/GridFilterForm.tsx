@@ -12,7 +12,6 @@ import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridCloseIcon } from '../../icons';
 import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -80,7 +79,9 @@ const FilterFormLinkOperatorInput = styled(FormControl, {
   slot: 'FilterFormLinkOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormLinkOperatorInput,
 })({
-  minWidth: 60,
+  minWidth: 55,
+  marginRight: 5,
+  justifyContent: 'end',
 });
 
 const FilterFormColumnInput = styled(FormControl, {
@@ -137,8 +138,6 @@ function GridFilterForm(props: GridFilterFormProps) {
   } = props;
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
-  const linkOperatorSelectId = useId();
-  const linkOperatorSelectLabelId = useId();
   const columnSelectId = useId();
   const columnSelectLabelId = useId();
   const operatorSelectId = useId();
@@ -288,7 +287,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           onClick={handleDeleteFilter}
           size="small"
         >
-          <GridCloseIcon fontSize="small" />
+          <rootProps.components.FilterPanelDeleteIcon fontSize="small" />
         </IconButton>
       </FilterFormDeleteIcon>
       <FilterFormLinkOperatorInput
@@ -297,7 +296,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         {...baseFormControlProps}
         {...linkOperatorInputProps}
         sx={{
-          display: hasLinkOperatorColumn ? 'block' : 'none',
+          display: hasLinkOperatorColumn ? 'flex' : 'none',
           visibility: showMultiFilterOperators ? 'visible' : 'hidden',
           ...(baseFormControlProps.sx || {}),
           ...(linkOperatorInputProps.sx || {}),
@@ -308,12 +307,10 @@ function GridFilterForm(props: GridFilterFormProps) {
           linkOperatorInputProps.className,
         )}
       >
-        <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
-          {apiRef.current.getLocaleText('filterPanelOperators')}
-        </InputLabel>
         <rootProps.components.BaseSelect
-          labelId={linkOperatorSelectLabelId}
-          id={linkOperatorSelectId}
+          inputProps={{
+            'aria-label': apiRef.current.getLocaleText('filterPanelLinkOperator'),
+          }}
           value={multiFilterOperator}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator || linkOperators.length === 1}

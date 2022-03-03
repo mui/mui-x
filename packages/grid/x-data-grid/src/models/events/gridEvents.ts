@@ -35,11 +35,11 @@ enum GridEvents {
    */
   cellDoubleClick = 'cellDoubleClick',
   /**
-   * Fired when a `mousedown` event happens in a cell..
+   * Fired when a `mousedown` event happens in a cell.
    */
   cellMouseDown = 'cellMouseDown',
   /**
-   * Fired when a `mouseup` event happens in a cell..
+   * Fired when a `mouseup` event happens in a cell.
    */
   cellMouseUp = 'cellMouseUp',
   /**
@@ -100,6 +100,7 @@ enum GridEvents {
   cellNavigationKeyDown = 'cellNavigationKeyDown',
   /**
    * Fired when a row is clicked.
+   * Not fired if the cell clicked is from an interactive column (actions, checkbox, etc).
    */
   rowClick = 'rowClick',
   /**

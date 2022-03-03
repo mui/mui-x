@@ -52,7 +52,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
   filterPanelDeleteIconLabel: 'Odstranit',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operátory',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',
   filterPanelColumns: 'Sloupce',
@@ -116,10 +119,10 @@ const csCZGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Celkem řádků:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) => {
     const str = totalCount.toString();
     const firstDigit = str[0];

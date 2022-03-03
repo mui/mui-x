@@ -43,7 +43,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
   filterPanelDeleteIconLabel: 'Slet',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatorer',
+
+  // TODO v6: rename to filterPanelOperator
   // filterPanelOperatorAnd: 'And',
   // filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Kolonne',
@@ -91,10 +94,10 @@ const daDKGrid: Partial<GridLocaleText> = {
       ? `${count.toLocaleString()} rækker valgt`
       : `${count.toLocaleString()} række valgt`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Totale rækker:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
 

@@ -43,7 +43,10 @@ const itITGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
   filterPanelDeleteIconLabel: 'Rimuovi',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatori',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'E (and)',
   filterPanelOperatorOr: 'O (or)',
   filterPanelColumns: 'Colonne',
@@ -91,10 +94,10 @@ const itITGrid: Partial<GridLocaleText> = {
       ? `${count.toLocaleString()} record selezionati`
       : `${count.toLocaleString()} record selezionato`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Record totali:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} di ${totalCount.toLocaleString()}`,
 

@@ -16,7 +16,7 @@ To enable the export menu, pass the `GridToolbar` component in the `Toolbar` [co
 
 ### Custom Toolbar
 
-The export menu is provided in a stand-alone component named `GridToolbarExport`. You can use it in a custom toolbar component as follow.
+The export menu is provided in a stand-alone component named `GridToolbarExport`. You can use it in a custom toolbar component as follows.
 
 ```jsx
 function CustomToolbar() {
@@ -70,24 +70,24 @@ In the following example, the print export is disabled.
 By default, the export will only contain the visible columns of the grid.
 There are a few ways to include or hide other columns.
 
-- Set the exact columns to be exported in the export option
+- Set the `disableExport` attribute to `true` in `GridColDef` for columns you don't want to be exported.
 
 ```jsx
-<DataGrid
-  componentsProps={{ toolbar: { csvOptions: { fields: ['name', 'brand'] } } }}
-/>
+<DataGrid columns={[{ field: 'name', disableExport: true }, { field: 'brand' }]} />
 ```
 
-- Set `allColumns` in export option to `true` to also include hidden columns.
+- Set `allColumns` in export option to `true` to also include hidden columns. Those with `disableExport=true` will not be exported.
 
 ```jsx
 <DataGrid componentsProps={{ toolbar: { csvOptions: { allColumns: true } } }} />
 ```
 
-- Set the `disableExport` attribute to `true` in each `GridColDef`.
+- Set the exact columns to be exported in the export option. Setting `fields` overrides the other properties. Such that the exported columns are exactly those in `fields` in the same order.
 
 ```jsx
-<DataGrid columns={[{ field: 'name', disableExport: true }, { field: 'brand' }]} />
+<DataGrid
+  componentsProps={{ toolbar: { csvOptions: { fields: ['name', 'brand'] } } }}
+/>
 ```
 
 ## Exported rows

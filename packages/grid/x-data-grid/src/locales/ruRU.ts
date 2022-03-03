@@ -53,7 +53,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
   filterPanelDeleteIconLabel: 'Удалить',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Операторы',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
   filterPanelColumns: 'Столбцы',
@@ -119,10 +122,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Всего строк:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} из ${totalCount.toLocaleString()}`,
 
