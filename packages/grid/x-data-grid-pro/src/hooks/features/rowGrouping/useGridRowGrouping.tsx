@@ -265,7 +265,7 @@ export const useGridRowGrouping = (
 
       // Refresh the row tree creation strategy processing
       // TODO: Add a clean way to re-run a strategy processing without publishing a private event
-      if (apiRef.current.unstable_getActiveStrategy() === ROW_GROUPING_STRATEGY) {
+      if (apiRef.current.unstable_getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
         apiRef.current.publishEvent(GridEvents.activeStrategyProcessorChange, 'rowTreeCreation');
       }
     }

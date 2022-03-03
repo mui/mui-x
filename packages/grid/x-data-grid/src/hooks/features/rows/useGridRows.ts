@@ -375,7 +375,9 @@ export const useGridRows = (
   >(() => {
     // `rowTreeCreation` is the only processor ran when `strategyActivityChange` is fired.
     // All the other processors listen to `rowsSet` which will be published by the `groupRows` method below.
-    if (apiRef.current.unstable_getActiveStrategy() !== gridRowGroupingNameSelector(apiRef)) {
+    if (
+      apiRef.current.unstable_getActiveStrategy('rowTree') !== gridRowGroupingNameSelector(apiRef)
+    ) {
       groupRows();
     }
   }, [apiRef, groupRows]);

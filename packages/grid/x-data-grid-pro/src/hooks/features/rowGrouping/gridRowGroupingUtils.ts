@@ -173,5 +173,5 @@ export const setStrategyAvailability = (
     };
   }
 
-  apiRef.current.unstable_setStrategyAvailability(ROW_GROUPING_STRATEGY, isAvailable);
+  apiRef.current.unstable_setStrategyAvailability('rowTree', ROW_GROUPING_STRATEGY, isAvailable);
 };

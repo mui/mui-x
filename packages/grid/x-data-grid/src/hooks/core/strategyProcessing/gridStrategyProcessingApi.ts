@@ -13,16 +13,22 @@ import {
 
 export type GridStrategyProcessorName = keyof GridStrategyProcessingLookup;
 
+export type GridStrategyGroup =
+  GridStrategyProcessingLookup[keyof GridStrategyProcessingLookup]['group'];
+
 export interface GridStrategyProcessingLookup {
   rowTreeCreation: {
+    group: 'rowTree';
     params: GridRowTreeCreationParams;
     value: GridRowTreeCreationValue;
   };
   filtering: {
+    group: 'rowTree';
     params: GridFilteringMethodParams;
     value: GridFilteringMethodValue;
   };
   sorting: {
+    group: 'rowTree';
     params: GridSortingMethodParams;
     value: GridSortingMethodValue;
   };
@@ -53,13 +59,18 @@ export interface GridStrategyProcessingApi {
    * @param {boolean} callback A callback to know if this strategy is available.
    * @ignore - do not document.
    */
-  unstable_setStrategyAvailability: (strategyName: string, callback: () => boolean) => void;
+  unstable_setStrategyAvailability: (
+    strategyGroup: GridStrategyGroup,
+    strategyName: string,
+    callback: () => boolean,
+  ) => void;
   /**
-   * Returns the name of the active strategy.
+   * Returns the name of the active strategy of a given strategy group
+   * @param {GridStrategyGroup} strategyGroup The group from which we want the active strategy.
    * @returns {string} The name of the active strategy.
    * @ignore - do not document.
    */
-  unstable_getActiveStrategy: () => string;
+  unstable_getActiveStrategy: (strategyGroup: GridStrategyGroup) => string;
   /**
    * Run the processor registered for the active strategy.
    * @param {GridStrategyProcessorName} processorName The name of the processor to run.

@@ -4,11 +4,21 @@ import {
   GridStrategyProcessor,
   GridStrategyProcessorName,
   GridStrategyProcessingApi,
+  GridStrategyProcessingLookup,
+  GridStrategyGroup,
 } from './gridStrategyProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../models/events';
 
 export const GRID_DEFAULT_STRATEGY = 'none';
+
+export const GRID_STRATEGIES_PROCESSORS: {
+  [P in GridStrategyProcessorName]: GridStrategyProcessingLookup[P]['group'];
+} = {
+  rowTreeCreation: 'rowTree',
+  filtering: 'rowTree',
+  sorting: 'rowTree',
+};
 
 /**
  * Implements a variant of the Strategy Pattern (see https://en.wikipedia.org/wiki/Strategy_pattern)
@@ -37,14 +47,12 @@ export const GRID_DEFAULT_STRATEGY = 'none';
  *    So listening to both would most likely run your logic twice.
  * - `GridEvents.activeStrategyProcessorChange` to update something when the processor of the active strategy changes
  *
- * The active strategy is the first available strategy based on the registration order
- * Which means that if two strategies are available, the active one will be the one of the hook ran 1st.
- *
- * For now, this hook is only compatible with row grouping related strategies.
- * In the future, it could support several type of strategies if we wanted to apply the same pattern to another set of processors.
+ * Each processor name is part of a strategy group which can only have one active strategy at the time.
  */
 export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
-  const availableStrategies = React.useRef(new Map<string, () => boolean>());
+  const availableStrategies = React.useRef(
+    new Map<string, { group: GridStrategyGroup; isAvailable: () => boolean }>(),
+  );
   const strategiesCache = React.useRef<{
     [P in GridStrategyProcessorName]?: { [strategyName: string]: GridStrategyProcessor<P> };
   }>({});
@@ -52,28 +60,29 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
   const registerStrategyProcessor = React.useCallback<
     GridStrategyProcessingApi['unstable_registerStrategyProcessor']
   >(
-    (strategyName, group, processor: GridStrategyProcessor<any>) => {
-      if (!strategiesCache.current[group]) {
-        strategiesCache.current[group] = {};
+    (strategyName, processorName, processor: GridStrategyProcessor<any>) => {
+      if (!strategiesCache.current[processorName]) {
+        strategiesCache.current[processorName] = {};
       }
 
-      const groupPreProcessors = strategiesCache.current[group]!;
+      const groupPreProcessors = strategiesCache.current[processorName]!;
       const previousProcessor = groupPreProcessors[strategyName];
       if (previousProcessor !== processor) {
         groupPreProcessors[strategyName] = processor;
 
         if (
           (previousProcessor as GridStrategyProcessor<any> | undefined) &&
-          strategyName === apiRef.current.unstable_getActiveStrategy()
+          strategyName ===
+            apiRef.current.unstable_getActiveStrategy(GRID_STRATEGIES_PROCESSORS[processorName])
         ) {
-          apiRef.current.publishEvent(GridEvents.activeStrategyProcessorChange, group);
+          apiRef.current.publishEvent(GridEvents.activeStrategyProcessorChange, processorName);
         }
       }
 
       return () => {
         const { [strategyName]: removedPreProcessor, ...otherProcessors } =
-          strategiesCache.current[group]!;
-        strategiesCache.current[group] = otherProcessors as {
+          strategiesCache.current[processorName]!;
+        strategiesCache.current[processorName] = otherProcessors as {
           [strategyName: string]: GridStrategyProcessor<any>;
         };
       };
@@ -84,18 +93,22 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
   const applyStrategyProcessor = React.useCallback<
     GridStrategyProcessingApi['unstable_applyStrategyProcessor']
   >(
-    (group, params) => {
-      const currentStrategy = apiRef.current.unstable_getActiveStrategy();
-      if (currentStrategy == null) {
+    (processorName, params) => {
+      const activeStrategy = apiRef.current.unstable_getActiveStrategy(
+        GRID_STRATEGIES_PROCESSORS[processorName],
+      );
+      if (activeStrategy == null) {
         throw new Error("Can't apply a strategy processor before defining an active strategy");
       }
 
-      const groupCache = strategiesCache.current[group];
-      if (!groupCache || !groupCache[currentStrategy]) {
-        throw new Error(`No processor found for group "${group}" on strategy "${currentStrategy}"`);
+      const groupCache = strategiesCache.current[processorName];
+      if (!groupCache || !groupCache[activeStrategy]) {
+        throw new Error(
+          `No processor found for processor "${processorName}" on strategy "${activeStrategy}"`,
+        );
       }
 
-      const processor = groupCache[currentStrategy] as GridStrategyProcessor<any>;
+      const processor = groupCache[activeStrategy] as GridStrategyProcessor<any>;
       return processor(params);
     },
     [apiRef],
@@ -103,11 +116,15 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
 
   const getActiveStrategy = React.useCallback<
     GridStrategyProcessingApi['unstable_getActiveStrategy']
-  >(() => {
+  >((strategyGroup) => {
     const strategyEntries = Array.from(availableStrategies.current.entries());
-    const availableStrategyEntry = strategyEntries.find(([, isStrategyAvailable]) =>
-      isStrategyAvailable(),
-    );
+    const availableStrategyEntry = strategyEntries.find(([, strategy]) => {
+      if (strategy.group !== strategyGroup) {
+        return false;
+      }
+
+      return strategy.isAvailable();
+    });
 
     return availableStrategyEntry?.[0] ?? GRID_DEFAULT_STRATEGY;
   }, []);
@@ -115,8 +132,8 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
   const setStrategyAvailability = React.useCallback<
     GridStrategyProcessingApi['unstable_setStrategyAvailability']
   >(
-    (strategyName, isAvailable) => {
-      availableStrategies.current.set(strategyName, isAvailable);
+    (strategyGroup, strategyName, isAvailable) => {
+      availableStrategies.current.set(strategyName, { group: strategyGroup, isAvailable });
       apiRef.current.publishEvent(GridEvents.strategyActivityChange);
     },
     [apiRef],
