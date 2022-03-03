@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
-import { CalendarPicker } from '@mui/x-pickers/CalendarPicker';
-import { MonthPicker } from '@mui/x-pickers/MonthPicker';
-import { YearPicker } from '@mui/x-pickers/YearPicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { CalendarPicker } from '@mui/x-date-pickers/CalendarPicker';
+import { MonthPicker } from '@mui/x-date-pickers/MonthPicker';
+import { YearPicker } from '@mui/x-date-pickers/YearPicker';
 import Grid from '@mui/material/Grid';
 
 const minDate = new Date('2020-01-01T00:00:00.000');

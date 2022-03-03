@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { act, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import 'dayjs/locale/ru';
-import { DesktopDateTimePicker } from '@mui/x-pickers/DesktopDateTimePicker';
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 describe('<DesktopDateTimePicker />', () => {

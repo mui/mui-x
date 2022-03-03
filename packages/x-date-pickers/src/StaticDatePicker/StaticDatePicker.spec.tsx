@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StaticDatePicker } from '@mui/x-pickers/StaticDatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 {
   // Allows to pass the wrapper-specific props only to the proper wrapper

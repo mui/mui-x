@@ -6,7 +6,7 @@ import {
   DateValidationError,
   validateDate,
   ExportedDateValidationProps,
-} from '@mui/x-pickers/internals';
+} from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../../utils/date-utils';
 import { RangeInput } from '../../models';
 

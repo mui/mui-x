@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { isWeekend } from 'date-fns';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
-import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-pickers/DesktopDatePicker';
+import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 import { MakeOptional } from '../internals/models/helpers';
 

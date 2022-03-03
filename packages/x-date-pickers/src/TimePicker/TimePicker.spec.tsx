@@ -1,6 +1,6 @@
 import * as React from 'react';
 import moment from 'moment';
-import { TimePicker } from '@mui/x-pickers/TimePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 <TimePicker
   value={moment()}

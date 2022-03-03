@@ -1,4 +1,4 @@
-import { MuiPickersAdapter } from '@mui/x-pickers/internals';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
 import { DateRange, NonEmptyDateRange, RangeInput } from '../models';
 
 export const parseRangeInputValue = <TDate>(

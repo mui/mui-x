@@ -3,8 +3,8 @@ import { parseISO } from 'date-fns';
 import { createRenderer, fireEvent, screen, RenderOptions } from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { TransitionProps } from '@mui/material/transitions';
-import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 // TODO make possible to pass here any utils using cli
 /**

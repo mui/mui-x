@@ -8,7 +8,7 @@ import {
   fireTouchChangedEvent,
   screen,
 } from '@mui/monorepo/test/utils';
-import { MobileTimePicker } from '@mui/x-pickers/MobileTimePicker';
+import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   wrapPickerMount,
   createPickerRenderer,

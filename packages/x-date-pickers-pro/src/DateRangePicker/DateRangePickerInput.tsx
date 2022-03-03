@@ -8,7 +8,7 @@ import {
   ExportedDateInputProps,
   MuiTextFieldProps,
   useMaskedInput,
-} from '@mui/x-pickers/internals';
+} from '@mui/x-date-pickers/internals';
 import {
   RangeInput,
   DateRange,

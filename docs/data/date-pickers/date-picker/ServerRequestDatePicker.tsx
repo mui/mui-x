@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Badge from '@mui/material/Badge';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
-import { PickersDay } from '@mui/x-pickers/PickersDay';
-import { DatePicker } from '@mui/x-pickers/DatePicker';
-import { CalendarPickerSkeleton } from '@mui/x-pickers/CalendarPickerSkeleton';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { CalendarPickerSkeleton } from '@mui/x-date-pickers/CalendarPickerSkeleton';
 import getDaysInMonth from 'date-fns/getDaysInMonth';
 
 function getRandomNumber(min: number, max: number) {

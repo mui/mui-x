@@ -8,8 +8,8 @@ import {
   ExportedArrowSwitcherProps,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
-} from '@mui/x-pickers/internals';
-import { DayPicker, PickersCalendarProps } from '@mui/x-pickers/CalendarPicker/DayPicker';
+} from '@mui/x-date-pickers/internals';
+import { DayPicker, PickersCalendarProps } from '@mui/x-date-pickers/CalendarPicker/DayPicker';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';

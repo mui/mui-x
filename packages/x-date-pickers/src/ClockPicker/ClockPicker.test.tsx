@@ -8,7 +8,7 @@ import {
   screen,
   within,
 } from '@mui/monorepo/test/utils';
-import { ClockPicker, clockPickerClasses as classes } from '@mui/x-pickers/ClockPicker';
+import { ClockPicker, clockPickerClasses as classes } from '@mui/x-date-pickers/ClockPicker';
 import {
   adapterToUse,
   wrapPickerMount,

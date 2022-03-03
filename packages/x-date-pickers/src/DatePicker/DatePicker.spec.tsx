@@ -1,6 +1,6 @@
 import * as React from 'react';
 import moment, { Moment } from 'moment';
-import { DatePicker } from '@mui/x-pickers/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { expectType } from '@mui/types';
 
 // Allows to set date type right with generic JSX syntax

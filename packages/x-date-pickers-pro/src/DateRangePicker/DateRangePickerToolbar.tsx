@@ -7,7 +7,7 @@ import {
   PickersToolbarButton,
   useUtils,
   BaseToolbarProps,
-} from '@mui/x-pickers/internals';
+} from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models';
 
 const classes = generateUtilityClasses('PrivateDateRangePickerToolbar', ['penIcon']);

@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { act, describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { DateRange } from '@mui/x-pickers-pro/DateRangePicker';
+import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DesktopDateRangePicker } from './index';
 import {
   wrapPickerMount,

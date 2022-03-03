@@ -11,7 +11,7 @@ import {
   usePickerState,
   PickerStateValueManager,
   DateInputPropsLike,
-} from '@mui/x-pickers/internals';
+} from '@mui/x-date-pickers/internals';
 import { DateRangePickerView, ExportedDateRangePickerViewProps } from './DateRangePickerView';
 import { DateRangePickerInput, ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 import { RangeInput, DateRange } from '../internal/models/dateRange';

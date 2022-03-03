@@ -90,8 +90,8 @@ module.exports = {
         'no-restricted-imports': [
           'error',
           {
-            paths: ['@mui/x-pickers'],
-            patterns: ['@mui/x-pickers/*'],
+            paths: ['@mui/x-date-pickers'],
+            patterns: ['@mui/x-date-pickers/*'],
           },
         ],
       },
@@ -103,8 +103,8 @@ module.exports = {
         'no-restricted-imports': [
           'error',
           {
-            paths: ['@mui/x-pickers-pro'],
-            patterns: ['@mui/x-pickers-pro/*'],
+            paths: ['@mui/x-date-pickers-pro'],
+            patterns: ['@mui/x-date-pickers-pro/*'],
           },
         ],
       },

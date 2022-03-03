@@ -3,7 +3,7 @@ import { createRenderer, describeConformance } from '@mui/monorepo/test/utils';
 import {
   CalendarPickerSkeleton,
   calendarPickerSkeletonClasses as classes,
-} from '@mui/x-pickers/CalendarPickerSkeleton';
+} from '@mui/x-date-pickers/CalendarPickerSkeleton';
 
 describe('<CalendarPickerSkeleton />', () => {
   const { render } = createRenderer();

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
-import { YearPicker, yearPickerClasses as classes } from '@mui/x-pickers/YearPicker';
+import { YearPicker, yearPickerClasses as classes } from '@mui/x-date-pickers/YearPicker';
 import {
   adapterToUse,
   wrapPickerMount,

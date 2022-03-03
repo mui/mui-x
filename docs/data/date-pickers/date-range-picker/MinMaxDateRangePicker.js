@@ -1,9 +1,9 @@
 import * as React from 'react';
 import addWeeks from 'date-fns/addWeeks';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
-import { DateRangePicker } from '@mui/x-pickers-pro/DateRangePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import Box from '@mui/material/Box';
 
 function getWeeksAfter(date, amount) {

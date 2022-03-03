@@ -1,4 +1,4 @@
-export * from '@mui/x-pickers';
+export * from '@mui/x-date-pickers';
 
 export * from './DateRangePicker';
 export * from './DateRangePickerDay';

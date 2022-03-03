@@ -4,8 +4,8 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { act, describeConformance, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { TransitionProps } from '@mui/material/transitions';
-import { DesktopTimePicker } from '@mui/x-pickers/DesktopTimePicker';
-import { TimePickerProps } from '@mui/x-pickers/TimePicker';
+import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { TimePickerProps } from '@mui/x-date-pickers/TimePicker';
 import {
   wrapPickerMount,
   createPickerRenderer,

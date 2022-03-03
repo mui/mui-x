@@ -2,9 +2,13 @@ import * as React from 'react';
 import {
   PickersCalendarHeader,
   ExportedCalendarHeaderProps,
-} from '@mui/x-pickers/CalendarPicker/PickersCalendarHeader';
-import { useDefaultDates, useUtils, ExportedDateValidationProps } from '@mui/x-pickers/internals';
-import { DayPicker, PickersCalendarProps } from '@mui/x-pickers/CalendarPicker/DayPicker';
+} from '@mui/x-date-pickers/CalendarPicker/PickersCalendarHeader';
+import {
+  useDefaultDates,
+  useUtils,
+  ExportedDateValidationProps,
+} from '@mui/x-date-pickers/internals';
+import { DayPicker, PickersCalendarProps } from '@mui/x-date-pickers/CalendarPicker/DayPicker';
 import { doNothing } from '../internal/utils/utils';
 import { DateRange } from '../internal/models/dateRange';
 import { DateRangePickerDay } from '../DateRangePickerDay';

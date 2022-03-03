@@ -3,10 +3,10 @@ import AlarmIcon from '@mui/icons-material/Alarm';
 import SnoozeIcon from '@mui/icons-material/Snooze';
 import TextField from '@mui/material/TextField';
 import ClockIcon from '@mui/icons-material/AccessTime';
-import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-pickers/DateTimePicker';
-import { MobileDateTimePicker } from '@mui/x-pickers/MobileDateTimePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import Stack from '@mui/material/Stack';
 
 export default function CustomDateTimePicker() {

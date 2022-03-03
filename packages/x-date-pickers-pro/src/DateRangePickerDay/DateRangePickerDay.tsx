@@ -5,12 +5,12 @@ import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import { DAY_MARGIN, useUtils } from '@mui/x-pickers/internals';
+import { DAY_MARGIN, useUtils } from '@mui/x-date-pickers/internals';
 import {
   PickersDay,
   PickersDayProps,
   areDayPropsEqual,
-} from '@mui/x-pickers/PickersDay/PickersDay';
+} from '@mui/x-date-pickers/PickersDay/PickersDay';
 import {
   DateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,

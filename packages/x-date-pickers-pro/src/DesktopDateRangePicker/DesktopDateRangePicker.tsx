@@ -11,7 +11,7 @@ import {
   PickerStateValueManager,
   DateInputPropsLike,
   DesktopWrapperProps,
-} from '@mui/x-pickers/internals';
+} from '@mui/x-date-pickers/internals';
 import {
   DateRangePickerView,
   ExportedDateRangePickerViewProps,

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
-import { ClockPicker } from '@mui/x-pickers/ClockPicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { ClockPicker } from '@mui/x-date-pickers/ClockPicker';
 
 export default function SubComponentsTimePickers() {
   const [date, setDate] = React.useState(new Date());

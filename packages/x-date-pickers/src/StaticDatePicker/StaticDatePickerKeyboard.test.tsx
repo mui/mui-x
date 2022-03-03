@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
-import { StaticDatePicker } from '@mui/x-pickers/StaticDatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 describe('<StaticDatePicker /> keyboard interactions', () => {

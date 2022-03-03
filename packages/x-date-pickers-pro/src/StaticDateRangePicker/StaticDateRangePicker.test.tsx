@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { StaticDateRangePicker } from '@mui/x-pickers-pro/StaticDateRangePicker/index';
+import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker/index';
 import { describeConformance, screen } from '@mui/monorepo/test/utils';
 import {
   wrapPickerMount,

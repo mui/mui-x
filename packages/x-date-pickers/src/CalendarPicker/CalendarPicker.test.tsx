@@ -2,7 +2,10 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
-import { CalendarPicker, calendarPickerClasses as classes } from '@mui/x-pickers/CalendarPicker';
+import {
+  CalendarPicker,
+  calendarPickerClasses as classes,
+} from '@mui/x-date-pickers/CalendarPicker';
 import {
   adapterToUse,
   wrapPickerMount,

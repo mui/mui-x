@@ -8,9 +8,9 @@ import {
   MobileKeyboardInputView,
   defaultReduceAnimations,
   PickerSelectionState,
-} from '@mui/x-pickers/internals';
-import { useCalendarState } from '@mui/x-pickers/CalendarPicker/useCalendarState';
-import { ExportedCalendarPickerProps } from '@mui/x-pickers/CalendarPicker/CalendarPicker';
+} from '@mui/x-date-pickers/internals';
+import { useCalendarState } from '@mui/x-date-pickers/CalendarPicker/useCalendarState';
+import { ExportedCalendarPickerProps } from '@mui/x-date-pickers/CalendarPicker/CalendarPicker';
 import {
   DateRange,
   CurrentlySelectingRangeEndProps,

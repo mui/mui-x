@@ -1,10 +1,10 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-pickers/DateTimePicker';
-import { MobileDateTimePicker } from '@mui/x-pickers/MobileDateTimePicker';
-import { DesktopDateTimePicker } from '@mui/x-pickers/DesktopDateTimePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import Stack from '@mui/material/Stack';
 
 export default function ResponsiveDateTimePickers() {

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import AdapterJalali from '@date-io/date-fns-jalali';
-import { DatePicker } from '@mui/x-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 export default function JalaliDatePicker() {
   const [value, setValue] = React.useState<Date | null>(new Date());
