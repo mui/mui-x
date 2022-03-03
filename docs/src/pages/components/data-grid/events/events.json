@@ -49,13 +49,13 @@
   },
   {
     "name": "cellMouseDown",
-    "description": "Fired when a <code>mousedown</code> event happens in a cell..",
+    "description": "Fired when a <code>mousedown</code> event happens in a cell.",
     "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "name": "cellMouseUp",
-    "description": "Fired when a <code>mouseup</code> event happens in a cell..",
+    "description": "Fired when a <code>mouseup</code> event happens in a cell.",
     "params": "GridCellParams<any, any, any, any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },

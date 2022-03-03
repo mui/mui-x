@@ -3,9 +3,7 @@
   "version": "5.5.1",
   "description": "MUI X License verification",
   "author": "MUI Team",
-  "main": "build/index.js",
-  "module": "build/esm/index.js",
-  "types": "build/index.d.ts",
+  "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE.txt",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"

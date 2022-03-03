@@ -17,7 +17,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
-  return [...getRows()]
+  return Array.from(getRows())
     .filter((row) => row.classList.contains('Mui-selected'))
     .map((row) =>
       Number(
@@ -528,6 +528,7 @@ describe('<DataGrid /> - Selection', () => {
         render(
           <TestDataGridSelection
             paginationMode="server"
+            rowCount={4}
             selectionModel={[1, 4]}
             isRowSelectable={(params) => params.id > 0}
             checkboxSelection

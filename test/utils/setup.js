@@ -1,6 +1,7 @@
 const formatUtil = require('format-util');
 const Mocha = require('mocha');
 const createDOM = require('@mui/monorepo/test/utils/createDOM');
+const sinon = require('sinon');
 
 require('@babel/register')({
   extensions: ['.js', '.ts', '.tsx'],
@@ -8,11 +9,12 @@ require('@babel/register')({
 });
 
 createDOM();
-require('./init');
+
+const { mochaHooks: otherMochaHooks } = require('./init');
 
 const mochaHooks = {
-  beforeEach: [],
-  afterEach: [],
+  beforeEach: [...otherMochaHooks.beforeEach],
+  afterEach: [...otherMochaHooks.afterEach],
 };
 
 function throwOnUnexpectedConsoleMessages(methodName, expectedMatcher) {
@@ -70,6 +72,12 @@ function throwOnUnexpectedConsoleMessages(methodName, expectedMatcher) {
     }
   });
 }
+
+mochaHooks.afterEach.push(function restoreDefaultSandbox() {
+  // Restore Sinon default sandbox to avoid memory leak
+  // See https://github.com/sinonjs/sinon/issues/1866
+  sinon.restore();
+});
 
 throwOnUnexpectedConsoleMessages('warn', 'toWarnDev');
 throwOnUnexpectedConsoleMessages('error', 'toErrorDev');
