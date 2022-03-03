@@ -157,7 +157,7 @@ export interface GridColDef<
    * @param {GridCellParams} params The params when called before saving the value.
    * @returns {V} The converted value to use internally.
    */
-  valueParser?: (value: F | undefined, params?: GridCellParams<Api>) => V;
+  valueParser?: (value: F | undefined, params?: GridCellParams<V, R, F, Api>) => V;
   /**
    * Class name that will be added in cells for that column.
    */
