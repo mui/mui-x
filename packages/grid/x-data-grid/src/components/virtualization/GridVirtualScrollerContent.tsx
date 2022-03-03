@@ -32,7 +32,10 @@ const GridVirtualScrollerContent = React.forwardRef<
 >(function GridVirtualScrollerContent(props, ref) {
   const { className, style, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes, overflowedContent: style?.minHeight === 'auto' };
+  const ownerState = {
+    classes: rootProps.classes,
+    overflowedContent: !rootProps.autoHeight && style?.minHeight === 'auto',
+  };
   const classes = useUtilityClasses(ownerState);
 
   return (

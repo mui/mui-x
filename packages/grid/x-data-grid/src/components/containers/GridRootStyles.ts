@@ -73,6 +73,9 @@ export const GridRootStyles = styled('div', {
     flexDirection: 'column',
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
+      [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
+        borderColor: 'transparent',
+      },
     },
     [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
       {
