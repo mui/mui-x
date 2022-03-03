@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 // @ts-ignore
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import Portal from '@mui/material/Portal';
 import { spy } from 'sinon';
 import { expect } from 'chai';

@@ -62,7 +62,7 @@ export const useGridPrintExport = (
 
         const columns = gridColumnDefinitionsSelector(apiRef);
 
-        const newColumnVisibilityModel = {};
+        const newColumnVisibilityModel: Record<string, boolean> = {};
         columns.forEach((column) => {
           newColumnVisibilityModel[column.field] = exportedColumnFields.includes(column.field);
         });
