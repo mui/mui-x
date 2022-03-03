@@ -1,7 +1,8 @@
 import { GridFilterInputSingleSelect } from '../components/panel/filterPanel/GridFilterInputSingleSelect';
-import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
+import { GridApiCommon } from '../models/api/gridApiCommon';
+import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 const parseObjectValue = (value) => {
   if (value == null || typeof value !== 'object') {
@@ -11,10 +12,12 @@ const parseObjectValue = (value) => {
   return (value as { value: any; label: string }).value;
 };
 
-export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
+export const getGridSingleSelectOperators = <
+  Api extends GridApiCommon = GridApiCommunity,
+>(): GridFilterOperator<any, any, any, Api>[] => [
   {
     value: 'is',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || filterItem.value === '') {
         return null;
       }
@@ -24,7 +27,7 @@ export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
   },
   {
     value: 'not',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || filterItem.value === '') {
         return null;
       }
@@ -34,7 +37,7 @@ export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
   },
   {
     value: 'isAnyOf',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
         return null;
       }

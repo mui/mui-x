@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   GridApiCommon,
-  GridFilterOperator,
   getGridNumericOperators as getGridNumericOperatorsUntyped,
   getGridNumericColumnOperators as getGridNumericColumnOperatorsUnTyped,
   getGridBooleanOperators as getGridBooleanOperatorsUntyped,
@@ -11,7 +10,8 @@ import {
 } from '@mui/x-data-grid';
 
 import type { GridApiPro } from '../models/gridApiPro';
-import { GridInitialStatePro, GridStatePro } from '../models/gridStatePro';
+import type { GridInitialStatePro, GridStatePro } from '../models/gridStatePro';
+import type { GridFilterOperator } from '../models/gridFilterOperator';
 
 export { useGridApiContext } from '../hooks/utils/useGridApiContext';
 export { useGridApiRef } from '../hooks/utils/useGridApiRef';
@@ -20,6 +20,7 @@ export * from '../models/gridCellParams';
 export * from '../models/gridColDef';
 export * from '../models/gridSortModel';
 export * from '../models/gridSortModelParams';
+export * from '../models/gridFilterOperator';
 
 /**
  * The full grid API.
@@ -41,18 +42,26 @@ export type GridState = GridStatePro;
  */
 export type GridInitialState = GridInitialStatePro;
 
-type FilterOperatorGetter = <Api extends GridApiCommon = GridApiPro>() => GridFilterOperator<Api>[];
+export const getGridNumericOperators = getGridNumericOperatorsUntyped as <
+  Api extends GridApiCommon = GridApiPro,
+>() => GridFilterOperator<any, number | string | null, any, Api>[];
 
-export const getGridNumericOperators = getGridNumericOperatorsUntyped as FilterOperatorGetter;
+export const getGridNumericColumnOperators = getGridNumericColumnOperatorsUnTyped as <
+  Api extends GridApiCommon = GridApiPro,
+>() => GridFilterOperator<any, number | string | null, any, Api>[];
 
-export const getGridNumericColumnOperators =
-  getGridNumericColumnOperatorsUnTyped as FilterOperatorGetter;
+export const getGridBooleanOperators = getGridBooleanOperatorsUntyped as <
+  Api extends GridApiCommon = GridApiPro,
+>() => GridFilterOperator<any, boolean | null, any, Api>[];
 
-export const getGridBooleanOperators = getGridBooleanOperatorsUntyped as FilterOperatorGetter;
+export const getGridStringOperators = getGridStringOperatorsUntyped as <
+  Api extends GridApiCommon = GridApiPro,
+>() => GridFilterOperator<any, any, any, Api>[];
 
-export const getGridStringOperators = getGridStringOperatorsUntyped as FilterOperatorGetter;
+export const getGridSingleSelectOperators = getGridSingleSelectOperatorsUntyped as <
+  Api extends GridApiCommon = GridApiPro,
+>() => GridFilterOperator<any, any, any, Api>[];
 
-export const getGridSingleSelectOperators =
-  getGridSingleSelectOperatorsUntyped as FilterOperatorGetter;
-
-export const getGridDateOperators = getGridDateOperatorsUntyped as FilterOperatorGetter;
+export const getGridDateOperators = getGridDateOperatorsUntyped as <
+  Api extends GridApiCommon = GridApiPro,
+>() => GridFilterOperator<any, string | number | Date, any, Api>[];

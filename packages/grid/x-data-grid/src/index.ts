@@ -57,3 +57,4 @@ export type {
 } from './models/params/gridCellParams';
 export type { GridSortModelParams } from './models/params/gridSortModelParams';
 export type { GridSortCellParams, GridComparatorFn } from './models/gridSortModel';
+export type { GridFilterOperator } from './models/gridFilterOperator';

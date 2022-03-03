@@ -215,7 +215,7 @@ export interface GridColDef<
   /**
    * Allows setting the filter operators for this column.
    */
-  filterOperators?: GridFilterOperator<Api>[];
+  filterOperators?: GridFilterOperator<R, V, F, Api>[];
   /**
    * If `true`, this column cannot be reordered.
    * @default false

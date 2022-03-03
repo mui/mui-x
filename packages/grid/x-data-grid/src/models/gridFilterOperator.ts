@@ -7,11 +7,17 @@ import { GridCellParams } from './params/gridCellParams';
 import type { GridStateColDef } from './colDef/gridColDef';
 import type { GridApiCommunity } from './api/gridApiCommunity';
 import type { GridApiCommon } from './api/gridApiCommon';
+import { GridDefaultRowModel } from './gridRows';
 
 /**
  * Filter operator definition interface.
  */
-export interface GridFilterOperator<Api extends GridApiCommon = GridApiCommunity> {
+export interface GridFilterOperator<
+  R extends GridDefaultRowModel = GridDefaultRowModel,
+  V = any,
+  F = V,
+  Api extends GridApiCommon = GridApiCommunity,
+> {
   /**
    * The label of the filter operator.
    */
@@ -30,8 +36,8 @@ export interface GridFilterOperator<Api extends GridApiCommon = GridApiCommunity
    */
   getApplyFilterFn: (
     filterItem: GridFilterItem,
-    column: GridStateColDef<any, any, any, Api>,
-  ) => null | ((params: GridCellParams<any, any, any, Api>) => boolean);
+    column: GridStateColDef<R, V, F, Api>,
+  ) => null | ((params: GridCellParams<V, R, F, Api>) => boolean);
   /**
    * The input component to render in the filter panel for this filter operator.
    */

@@ -3,8 +3,12 @@ import { escapeRegExp } from '../utils/utils';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
+import { GridApiCommon } from '../models/api/gridApiCommon';
+import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
-export const getGridStringOperators = (): GridFilterOperator[] => [
+export const getGridStringOperators = <
+  Api extends GridApiCommon = GridApiCommunity,
+>(): GridFilterOperator<any, any, any, Api>[] => [
   {
     value: 'contains',
     getApplyFilterFn: (filterItem: GridFilterItem) => {

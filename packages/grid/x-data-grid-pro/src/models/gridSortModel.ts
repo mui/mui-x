@@ -1,8 +1,8 @@
-import { GridApiCommon } from '@mui/x-data-grid';
 import {
+  GridApiCommon,
   GridComparatorFn as GridComparatorFnUntyped,
   GridSortCellParams as GridSortCellParamsUntyped,
-} from '@mui/x-data-grid/internals';
+} from '@mui/x-data-grid';
 import { GridApiPro } from './gridApiPro';
 
 export type GridComparatorFn<

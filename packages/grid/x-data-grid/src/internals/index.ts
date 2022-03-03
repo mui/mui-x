@@ -61,10 +61,6 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { useGridStateInit } from '../hooks/utils/useGridStateInit';
 
-export type { GridComparatorFn, GridSortCellParams } from '../models/gridSortModel';
-
-export type { GridSortModelParams } from '../models/params/gridSortModelParams';
-
 export type {
   GridExperimentalFeatures,
   DataGridPropsWithoutDefaultValue,
