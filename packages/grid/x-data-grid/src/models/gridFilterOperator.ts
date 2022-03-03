@@ -11,7 +11,6 @@ import type { GridApiCommon } from './api/gridApiCommon';
 export type GridFilterInputMultipleSingleSelectProps = {
   item: GridFilterItem;
   applyValue: (value: GridFilterItem) => void;
-  // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
   apiRef: React.MutableRefObject<GridApiCommon>;
   focusElementRef?: React.Ref<any>;
   type?: 'singleSelect';
