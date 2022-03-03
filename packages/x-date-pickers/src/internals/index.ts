@@ -43,3 +43,14 @@ export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 
 export { executeInTheNextEventLoopTick } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
+
+export { PickersCalendarHeader } from '../CalendarPicker/PickersCalendarHeader';
+export type { ExportedCalendarHeaderProps } from '../CalendarPicker/PickersCalendarHeader';
+
+export { DayPicker } from '../CalendarPicker/DayPicker';
+export type { PickersCalendarProps } from '../CalendarPicker/DayPicker';
+
+export { areDayPropsEqual } from '../PickersDay/PickersDay';
+
+export type { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+export { useCalendarState } from '../CalendarPicker/useCalendarState';
