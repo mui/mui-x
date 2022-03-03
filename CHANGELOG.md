@@ -23,29 +23,29 @@ A big thanks to the 15 contributors who made this release possible. Here are som
   Old naming are deprecated, and will be removed in v6.
   Here is the renaming and the modification needed to get same information with new selectors.
 
-  |Previews naming|New naming|  
-  |---|---|
-  |`allGridColumnsFieldsSelector` | `gridColumnFieldsSelector`|
-  |`allGridColumnsSelector` | `gridColumnDefinitionsSelector`|
-  |`visibleGridColumnsSelector` | `gridVisibleColumnDefinitionsSelector`|
-  |`filterableGridColumnsSelector` | `gridFilterableColumnDefinitionsSelector`|
+  | Previews naming                 | New naming                                |
+  | ------------------------------- | ----------------------------------------- |
+  | `allGridColumnsFieldsSelector`  | `gridColumnFieldsSelector`                |
+  | `allGridColumnsSelector`        | `gridColumnDefinitionsSelector`           |
+  | `visibleGridColumnsSelector`    | `gridVisibleColumnDefinitionsSelector`    |
+  | `filterableGridColumnsSelector` | `gridFilterableColumnDefinitionsSelector` |
 
   ```diff
-  - const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef)
-  + const all = gridColumnFieldsSelector(apiRef)
-  + const lookup = gridColumnLookupSelector(apiRef)
-  + const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef)
+  -const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef)
+  +const all = gridColumnFieldsSelector(apiRef)
+  +const lookup = gridColumnLookupSelector(apiRef)
+  +const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef)
 
-  - const filterableFields = filterableGridColumnsIdsSelector(apiRef);
-  + const lookup = gridFilterableColumnLookupSelector(apiRef);
-  + const filterableFields = gridColumnFieldsSelector(apiRef).filter(field => lookup[field]);
+  -const filterableFields = filterableGridColumnsIdsSelector(apiRef);
+  +const lookup = gridFilterableColumnLookupSelector(apiRef);
+  +const filterableFields = gridColumnFieldsSelector(apiRef).filter(field => lookup[field]);
   
-  - const visibleColumnsNumber = visibleGridColumnsLengthSelector(apiRef);
-  + const visibleColumnsNumber = gridVisibleColumnDefinitionsSelector(apiRef).length;
+  -const visibleColumnsNumber = visibleGridColumnsLengthSelector(apiRef);
+  +const visibleColumnsNumber = gridVisibleColumnDefinitionsSelector(apiRef).length;
 
-  - const { totalWidth, positions } = gridColumnsMetaSelector(apiRef);
-  + const totalWidth = gridColumnsTotalWidthSelector(apiRef);
-  + const positions = gridColumnPositionsSelector(apiRef);
+  -const { totalWidth, positions } = gridColumnsMetaSelector(apiRef);
+  +const totalWidth = gridColumnsTotalWidthSelector(apiRef);
+  +const positions = gridColumnPositionsSelector(apiRef);
   ```
 
 - 📚 Documentation improvements
@@ -56,7 +56,7 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 #### Changes
 
 - [DataGrid] Add slot for filter panel delete icon (#4069) @Hameezr
-- [DataGrid] Add specific label for linkOperator (#3915) @alexfauquette
+- [DataGrid] Add specific label for `linkOperator` (#3915) @alexfauquette
 - [DataGrid] Allow for truncated and multiline content in grid cells (#3955) @DanailH
 - [DataGrid] Allow to navigate between cells with keyboard once inside an `actions` column (#3375) @m4theushw
 - [DataGrid] Fix desynchronization between rows and header when sorting (#4058) @alexfauquette
@@ -66,12 +66,12 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 - [DataGrid] Fix input element in custom header (#3624) @alexfauquette
 - [DataGrid] Improve `singleSelect` filter performance (#3956) @cherniavskii
 - [DataGrid] Improve custom overlay slots positioning (#3832) @cherniavskii
-- [DataGrid] Improve flex implementation (#4006) @cherniavskii
+- [DataGrid] Improve `flex` implementation match the W3C standard (#4006) @cherniavskii
 - [DataGrid] Improve the invalid `sortModel` and `filterModel` warnings (#3671) @flaviendelangle
-- [DataGrid] Memoize Popper modifiers passed to panel (#3975) @m4theushw
-- [DataGrid] Prevent focus while Popper is not fully positioned (#4067) @m4theushw
+- [DataGrid] Memoize `Popper` modifiers passed to panel (#3975) @m4theushw
+- [DataGrid] Prevent focus while `Popper` is not fully positioned (#4067) @m4theushw
 - [DataGrid] Remove padding from the header title (#3691) @valenfv
-- [DataGrid] Re-use previous `rowNode` when building tree and the new `rowNode` is equal to the previous one (#3961) @flaviendelangle
+- [DataGrid] Reuse previous `rowNode` when building tree and the new `rowNode` is equal to the previous one (#3961) @flaviendelangle
 - [DataGrid] Remove last filter item when no value to clean and close the filter panel (#3910) @alexfauquette
 - [DataGrid] Send warning when the `rowCount` is not provided while using server pagination (#3902) @alexfauquette
 - [DataGrid] Stop checkbox ripple on blur (#3835) @m4theushw
@@ -99,7 +99,7 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 ### Core
 
 - [core] Allows to add custom export item (#3891) @alexfauquette
-- [core] Drop `_modules_` folder (#3953) @flaviendelangle
+- [core] Remove the `_modules_` folder (#3953) @flaviendelangle
 - [core] Fix typo in `useGridScroll.ts` (#3973) @HexM7
 - [core] Fix typos, improve wordings and other various fixes (#4062) @flaviendelangle
 - [core] Initialize states before feature hooks (#3896) @m4theushw
