@@ -12,15 +12,15 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 - 📦 Use the bundling scripts as the packages published by the [https://github.com/mui/material-ui](material-ui) repository (#3965) @flaviendelangle
 
   The code structure and the bundling strategy have been modified to provide a better isolation between components.
-  This brings tree shaking, allowing us to reduce the bundle size. 🏋
-  Such modification are always a bit risky.
-  If you encounter problems with you build, please open an issue.
-  We will put high priority on investigating them.
+  This brings tree shaking, allowing to reduce the bundle size. 🏋
+  Such modification is always a bit risky.
+  If you encounter problems with your build, please open an issue.
+  These issues will have high priority.
 
 - 🧼 Clean and document the columns selector (#4010) @flaviendelangle
 
   To improve clarity, columns selectors have been renamed.
-  Old naming are deprecated, and will be removed in v6. 
+  Old naming are deprecated, and will be removed in v6.
   Here is the renaming and the modification needed to get same information with new selectors.
 
   |Previews naming|New naming|  
@@ -61,7 +61,7 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 - [DataGrid] Allow to navigate between cells with keyboard once inside an `actions` column (#3375) @m4theushw
 - [DataGrid] Fix desynchronization between rows and header when sorting (#4058) @alexfauquette
 - [DataGrid] Clean and document the columns selector (#4010) @flaviendelangle
-- [DataGrid] Differentiate the pro and community versions of `GridState`, `GridApi` and `GridApiRef` (#3648) @flaviendelangle
+- [DataGrid] Differentiate the Pro and Community versions of `GridState`, `GridApi` and `GridApiRef` (#3648) @flaviendelangle
 - [DataGrid] Fix horizontal scroll not working on empty grid (#3821) @cherniavskii
 - [DataGrid] Fix input element in custom header (#3624) @alexfauquette
 - [DataGrid] Improve `singleSelect` filter performance (#3956) @cherniavskii
@@ -69,8 +69,8 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 - [DataGrid] Improve flex implementation (#4006) @cherniavskii
 - [DataGrid] Improve the invalid `sortModel` and `filterModel` warnings (#3671) @flaviendelangle
 - [DataGrid] Memoize Popper modifiers passed to panel (#3975) @m4theushw
-- [DataGrid] Padding removed from header title (#3691) @valenfv
 - [DataGrid] Prevent focus while Popper is not fully positioned (#4067) @m4theushw
+- [DataGrid] Remove padding from the header title (#3691) @valenfv
 - [DataGrid] Re-use previous `rowNode` when building tree and the new `rowNode` is equal to the previous one (#3961) @flaviendelangle
 - [DataGrid] Remove last filter item when no value to clean and close the filter panel (#3910) @alexfauquette
 - [DataGrid] Send warning when the `rowCount` is not provided while using server pagination (#3902) @alexfauquette
@@ -88,9 +88,9 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 ### Docs
 
 - [docs] Add example of custom operator based on built-in ones (#3911) @flaviendelangle
-- [docs] Avoid crash when grouping rows from the `Commodity` dataset (#4065) @m4theushw
+- [docs] Avoid crash in demos using row grouping and custom formatted cells (#4065) @m4theushw
 - [docs] Fix `Commodity` and `Employee` CSV export of the `country` column (#3912) @DanailH
-- [docs] Fix links to github repository (#4005) @oliviertassinari
+- [docs] Fix links to the GitHub repository (#4005) @oliviertassinari
 - [docs] Fix typo (#3923) @oliviertassinari
 - [docs] Fix typo (#4016) @MathisBurger
 - [docs] Fix typo in client-side validation example (#4066) @krallj
