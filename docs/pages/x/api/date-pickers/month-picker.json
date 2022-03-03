@@ -21,6 +21,6 @@
   "name": "MonthPicker",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-pickers/src/MonthPicker/MonthPicker.tsx",
+  "filename": "/packages/x-date-pickers/src/MonthPicker/MonthPicker.tsx",
   "demos": "<ul></ul>"
 }

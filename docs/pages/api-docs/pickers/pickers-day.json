@@ -34,6 +34,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-pickers/src/PickersDay/PickersDay.tsx",
+  "filename": "/packages/x-date-pickers/src/PickersDay/PickersDay.tsx",
   "demos": "<ul></ul>"
 }

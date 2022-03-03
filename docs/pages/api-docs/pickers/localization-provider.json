@@ -14,6 +14,6 @@
   "name": "LocalizationProvider",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/x-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
+  "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
   "demos": "<ul></ul>"
 }

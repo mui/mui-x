@@ -148,7 +148,7 @@ export const getTypeScriptProjects = () => {
     'x-pickers-pro',
     createProject({
       name: 'x-pickers-pro',
-      rootPath: path.join(workspaceRoot, 'packages/x-pickers-pro'),
+      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
@@ -163,7 +163,7 @@ export const getTypeScriptProjects = () => {
     'x-pickers',
     createProject({
       name: 'x-pickers',
-      rootPath: path.join(workspaceRoot, 'packages/x-pickers'),
+      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],

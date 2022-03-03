@@ -84,7 +84,7 @@ module.exports = {
       },
     },
     {
-      files: ['packages/x-pickers/src/**/*{.ts,.tsx,.js}'],
+      files: ['packages/x-date-pickers/src/**/*{.ts,.tsx,.js}'],
       excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
       rules: {
         'no-restricted-imports': [
@@ -97,7 +97,7 @@ module.exports = {
       },
     },
     {
-      files: ['packages/x-pickers-pro/src/**/*{.ts,.tsx,.js}'],
+      files: ['packages/x-date-pickers-pro/src/**/*{.ts,.tsx,.js}'],
       excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
       rules: {
         'no-restricted-imports': [
