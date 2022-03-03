@@ -18,6 +18,8 @@ export {
   GRID_NUMERIC_COL_DEF,
   GRID_SINGLE_SELECT_COL_DEF,
   GRID_STRING_COL_DEF,
+  gridDateFormatter,
+  gridDateTimeFormatter,
 } from '@mui/x-data-grid/colDef';
 
 export * from './DataGridPro';

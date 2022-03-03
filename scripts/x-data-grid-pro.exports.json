@@ -151,6 +151,8 @@
   { "name": "GridCsvExportOptions", "kind": "Interface" },
   { "name": "GridCsvGetRowsToExportParams", "kind": "Interface" },
   { "name": "gridDateComparator", "kind": "Variable" },
+  { "name": "gridDateFormatter", "kind": "Function" },
+  { "name": "gridDateTimeFormatter", "kind": "Function" },
   { "name": "GridDefaultRowModel", "kind": "TypeAlias" },
   { "name": "GridDensity", "kind": "TypeAlias" },
   { "name": "GridDensityApi", "kind": "Interface" },
