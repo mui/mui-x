@@ -38,6 +38,7 @@ export interface GridRowProps {
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   editRowsState: GridEditRowsModel;
+  isLastVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -47,14 +48,20 @@ export interface GridRowProps {
 type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
+  isLastVisible: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, classes } = ownerState;
-
+  const { editable, editing, selected, isLastVisible, classes } = ownerState;
   const slots = {
-    root: ['row', selected && 'selected', editable && 'row--editable', editing && 'row--editing'],
+    root: [
+      'row',
+      selected && 'selected',
+      editable && 'row--editable',
+      editing && 'row--editing',
+      isLastVisible && 'row--lastVisible',
+    ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -87,6 +94,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     cellFocus,
     cellTabIndex,
     editRowsState,
+    isLastVisible = false,
     onClick,
     onDoubleClick,
     onMouseEnter,
@@ -104,6 +112,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   const ownerState = {
     selected,
+    isLastVisible,
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
     editable: rootProps.editMode === GridEditModes.Row,
@@ -304,6 +313,7 @@ GridRow.propTypes = {
   editRowsState: PropTypes.object.isRequired,
   firstColumnToRender: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
+  isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object.isRequired,

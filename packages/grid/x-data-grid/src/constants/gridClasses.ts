@@ -274,6 +274,10 @@ export interface GridClasses {
    */
   virtualScrollerContent: string;
   /**
+   * Styles applied to the virtualization content when its height is bigger than the virtualization container.
+   */
+  'virtualScrollerContent--overflowed': string;
+  /**
    * Styles applied to the virtualization render zone.
    */
   virtualScrollerRenderZone: string;
@@ -313,6 +317,10 @@ export interface GridClasses {
    * Styles applied to the row element if the row is in edit mode.
    */
   'row--editing': string;
+  /**
+   * Styles applied to the last visible row element on every page of the grid.
+   */
+  'row--lastVisible': string;
   /**
    * Styles applied to the row element.
    */
@@ -442,6 +450,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'row--editable',
   'row--editing',
   'row',
+  'row--lastVisible',
   'rowCount',
   'scrollArea--left',
   'scrollArea--right',
@@ -452,6 +461,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'toolbarFilterList',
   'virtualScroller',
   'virtualScrollerContent',
+  'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
   'pinnedColumns',
   'pinnedColumns--left',
