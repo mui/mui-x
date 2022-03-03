@@ -11,7 +11,7 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 
 - 📦 Use the bundling scripts as the packages published by the [https://github.com/mui/material-ui](material-ui) repository (#3965) @flaviendelangle
 
-  The code structure and the bundling strategy have been modified to provide a better isolation between components.
+  The code structure and the bundling strategy have been modified to provide better isolation between components.
   This brings tree shaking, allowing to reduce the bundle size. 🏋
   Such modification is always a bit risky.
   If you encounter problems with your build, please open an issue.
@@ -20,8 +20,8 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 - 🧼 Clean and document the columns selector (#4010) @flaviendelangle
 
   To improve clarity, columns selectors have been renamed.
-  Old naming are deprecated, and will be removed in v6.
-  Here is the renaming and the modification needed to get same information with new selectors.
+  Old namings are deprecated and will be removed in v6.
+  Here is the renaming and the modification needed to get the same information with new selectors.
 
   | Previews naming                 | New naming                                |
   | ------------------------------- | ----------------------------------------- |
