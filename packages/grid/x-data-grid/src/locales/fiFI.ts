@@ -43,7 +43,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
   filterPanelDeleteIconLabel: 'Poista',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operaattorit',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',
   filterPanelColumns: 'Sarakkeet',

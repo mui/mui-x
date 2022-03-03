@@ -42,7 +42,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: '필터 추가',
   filterPanelDeleteIconLabel: '삭제',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: '연산자',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: '그리고',
   filterPanelOperatorOr: '또는',
   filterPanelColumns: '목록',

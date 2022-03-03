@@ -43,7 +43,10 @@ const itITGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
   filterPanelDeleteIconLabel: 'Rimuovi',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatori',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'E (and)',
   filterPanelOperatorOr: 'O (or)',
   filterPanelColumns: 'Colonne',

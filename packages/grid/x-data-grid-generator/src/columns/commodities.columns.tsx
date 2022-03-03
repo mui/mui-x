@@ -244,7 +244,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator<any>[
 
       return value;
     },
-    valueFormatter: ({ value }) => (value as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
+    valueFormatter: ({ value }) => (value as typeof COUNTRY_ISO_OPTIONS_SORTED[number])?.label,
     groupingValueGetter: (params) => params.value.code,
     sortComparator: (v1, v2, param1, param2) =>
       gridStringOrNumberComparator(

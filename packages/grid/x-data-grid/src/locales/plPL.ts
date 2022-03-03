@@ -42,7 +42,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
   filterPanelDeleteIconLabel: 'Usuń',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operator',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',
   filterPanelColumns: 'Kolumny',
