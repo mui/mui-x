@@ -4,24 +4,37 @@ import { CleanupTracking, UnregisterToken, UnsubscribeFn } from './CleanupTracki
 const CLEANUP_TIMER_LOOP_MILLIS = 1000;
 
 export class TimerBasedCleanupTracking implements CleanupTracking {
-  timeouts = new Map<number, NodeJS.Timeout>();
+  timeouts? = new Map<number, NodeJS.Timeout>();
 
   register(object: any, unsubscribe: UnsubscribeFn, unregisterToken: UnregisterToken): void {
+    if (!this.timeouts) {
+      this.timeouts = new Map<number, NodeJS.Timeout>();
+    }
+
     const timeout = setTimeout(() => {
       if (typeof unsubscribe === 'function') {
         unsubscribe();
       }
-      this.timeouts.delete(unregisterToken.cleanupToken);
+      this.timeouts!.delete(unregisterToken.cleanupToken);
     }, CLEANUP_TIMER_LOOP_MILLIS);
 
-    this.timeouts.set(unregisterToken!.cleanupToken, timeout);
+    this.timeouts!.set(unregisterToken!.cleanupToken, timeout);
   }
 
   unregister(unregisterToken: UnregisterToken): void {
-    const timeout = this.timeouts.get(unregisterToken.cleanupToken);
+    const timeout = this.timeouts!.get(unregisterToken.cleanupToken);
     if (timeout) {
-      this.timeouts.delete(unregisterToken.cleanupToken);
+      this.timeouts!.delete(unregisterToken.cleanupToken);
       clearTimeout(timeout);
+    }
+  }
+
+  reset() {
+    if (this.timeouts) {
+      this.timeouts.forEach((value, key) => {
+        this.unregister({ cleanupToken: key });
+      });
+      this.timeouts = undefined;
     }
   }
 }

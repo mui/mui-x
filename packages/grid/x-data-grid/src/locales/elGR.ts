@@ -42,7 +42,10 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Προσθήκη φίλτρου',
   filterPanelDeleteIconLabel: 'Διαγραφή',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Τελεστές',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Καί',
   filterPanelOperatorOr: 'Ή',
   filterPanelColumns: 'Στήλες',
@@ -90,10 +93,10 @@ const elGRGrid: Partial<GridLocaleText> = {
       ? `${count.toLocaleString()} επιλεγμένες γραμμές`
       : `${count.toLocaleString()} επιλεγμένη γραμμή`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Σύνολο Γραμμών:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} από ${totalCount.toLocaleString()}`,
 

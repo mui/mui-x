@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   GridColumns,
   gridColumnVisibilityModelSelector,
   GridEvents,
@@ -14,7 +14,7 @@ import { useMovieData } from '@mui/x-data-grid-generator';
 const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
 
 const useKeepGroupingColumnsHidden = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApi>,
   columns: GridColumns,
   initialModel: GridRowGroupingModel,
   leafField?: string,

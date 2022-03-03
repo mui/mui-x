@@ -453,7 +453,7 @@ Page.getInitialProps = () => {
 
   return {
     descriptions,
-    pageContent: jsonPageContent,
+    pageContent: jsonPageContent
   };
 };
   `.replace(/\r?\n/g, reactApi.EOL),

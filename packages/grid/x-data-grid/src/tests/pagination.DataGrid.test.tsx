@@ -121,6 +121,7 @@ describe('<DataGrid /> - Pagination', () => {
           pageSize={1}
           rowsPerPageOptions={[1]}
           paginationMode="server"
+          rowCount={4}
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));

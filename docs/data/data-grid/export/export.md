@@ -16,7 +16,7 @@ To enable the export menu, pass the `GridToolbar` component in the `Toolbar` [co
 
 ### Custom Toolbar
 
-The export menu is provided in a stand-alone component named `GridToolbarExport`. You can use it in a custom toolbar component as follow.
+The export menu is provided in a stand-alone component named `GridToolbarExport`. You can use it in a custom toolbar component as follows.
 
 ```jsx
 function CustomToolbar() {

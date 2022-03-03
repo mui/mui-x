@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { createSelector } from './createSelector';
 import { GridStateCommunity } from '../models/gridStateCommunity';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';

@@ -43,7 +43,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',
   filterPanelDeleteIconLabel: 'Verwijderen',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatoren',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'En',
   filterPanelOperatorOr: 'Of',
   filterPanelColumns: 'Kolommen',
@@ -91,10 +94,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
       ? `${count.toLocaleString()} rijen geselecteerd`
       : `${count.toLocaleString()} rij geselecteerd`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Totaal:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} van ${totalCount.toLocaleString()}`,
 

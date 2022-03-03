@@ -66,7 +66,7 @@ const TestCellParamsRow = () => {
     <DataGrid
       rows={[]}
       columns={[{ field: 'brand' }]}
-      onCellClick={(params: GridCellParams<any>) => {
+      onCellClick={(params: GridCellParams) => {
         params.row.brand!.toUpperCase();
       }}
       onCellDoubleClick={(params: GridCellParams<any, { brand: number }>) => {
