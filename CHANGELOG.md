@@ -62,6 +62,7 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 - [DataGrid] Fix desynchronization between rows and header when sorting (#4058) @alexfauquette
 - [DataGrid] Clean and document the columns selector (#4010) @flaviendelangle
 - [DataGrid] Differentiate the Pro and Community versions of `GridState`, `GridApi` and `GridApiRef` (#3648) @flaviendelangle
+- [DataGrid] Fix column selection for print export (#3917) @alexfauquette
 - [DataGrid] Fix horizontal scroll not working on empty grid (#3821) @cherniavskii
 - [DataGrid] Fix input element in custom header (#3624) @alexfauquette
 - [DataGrid] Improve `singleSelect` filter performance (#3956) @cherniavskii
@@ -70,11 +71,13 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 - [DataGrid] Improve the invalid `sortModel` and `filterModel` warnings (#3671) @flaviendelangle
 - [DataGrid] Memoize `Popper` modifiers passed to panel (#3975) @m4theushw
 - [DataGrid] Prevent focus while `Popper` is not fully positioned (#4067) @m4theushw
+- [DataGrid] Remove `GridCell`'s `borderBottom` when it is the last row (#3519) @DanailH
 - [DataGrid] Remove padding from the header title (#3691) @valenfv
 - [DataGrid] Reuse previous `rowNode` when building tree and the new `rowNode` is equal to the previous one (#3961) @flaviendelangle
 - [DataGrid] Remove last filter item when no value to clean and close the filter panel (#3910) @alexfauquette
 - [DataGrid] Send warning when the `rowCount` is not provided while using server pagination (#3902) @alexfauquette
 - [DataGrid] Stop checkbox ripple on blur (#3835) @m4theushw
+- [DataGrid] Stop calling `onRowClick` when clicking in cells with interactive elements (#3929) @m4theushw
 - [DataGrid] Use only `headerName` when available to search column (#3959) @pkratz
 - [DataGrid] Use the bundling scripts as the packages published by the [https://github.com/mui/material-ui](material-ui) repository (#3965) @flaviendelangle
 - [DataGridPro] Add `unstable_setRowHeight` method to `apiRef` (#3751) @cherniavskii
