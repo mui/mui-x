@@ -27,7 +27,7 @@ function warnMissingColumn(field) {
 
 const getCellValueWarning = buildWarning([
   `MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.`,
-  `Instead, you can access the data from \`params.row}\`.`,
+  'Instead, you can access the data from `params.row`.',
 ]);
 
 /**
