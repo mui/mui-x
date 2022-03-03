@@ -8,7 +8,7 @@ const deprecationWarning = buildWarning([
   'The two lines below are equivalent',
   '',
   'const [state, setState, forceUpdate] = useGridState(apiRef);',
-  'const { state, setState, forceUpdate } = apiRef',
+  'const { state, setState, forceUpdate } = apiRef.current',
 ]);
 
 /**
