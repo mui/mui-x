@@ -127,8 +127,8 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Gruppierung',
-  groupColumn: name => `Gruppieren nach ${name}`,
-  unGroupColumn: name => `Gruppierung nach ${name} aufheben`,
+  groupColumn: (name) => `Gruppieren nach ${name}`,
+  unGroupColumn: (name) => `Gruppierung nach ${name} aufheben`,
 
   // Master/detail
   expandDetailPanel: 'Aufklappen',
