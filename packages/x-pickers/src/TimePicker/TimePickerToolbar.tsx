@@ -2,13 +2,13 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useTheme, styled, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import { PickersToolbarText } from '../internal/components/PickersToolbarText';
-import { PickersToolbarButton } from '../internal/components/PickersToolbarButton';
-import { PickersToolbar } from '../internal/components/PickersToolbar';
-import { arrayIncludes } from '../internal/utils/utils';
-import { useUtils } from '../internal/hooks/useUtils';
-import { useMeridiemMode } from '../internal/hooks/date-helpers-hooks';
-import { BaseToolbarProps } from '../internal/models/props/baseToolbarProps';
+import { PickersToolbarText } from '../internals/components/PickersToolbarText';
+import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
+import { PickersToolbar } from '../internals/components/PickersToolbar';
+import { arrayIncludes } from '../internals/utils/utils';
+import { useUtils } from '../internals/hooks/useUtils';
+import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import {
   getTimePickerToolbarUtilityClass,
   timePickerToolbarClasses,

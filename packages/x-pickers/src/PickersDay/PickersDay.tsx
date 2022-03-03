@@ -7,10 +7,10 @@ import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { useTheme, alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
 import { useForkRef } from '@mui/material/utils';
-import { ExtendMui } from '../internal/models/helpers';
-import { useUtils } from '../internal/hooks/useUtils';
-import { DAY_SIZE, DAY_MARGIN } from '../internal/constants/dimensions';
-import { PickerSelectionState } from '../internal/hooks/usePickerState';
+import { ExtendMui } from '../internals/models/helpers';
+import { useUtils } from '../internals/hooks/useUtils';
+import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
+import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
   PickersDayClasses,
   PickersDayClassKey,

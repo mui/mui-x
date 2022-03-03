@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLicenseVerifier, LicenseStatus } from '@mui/x-license-pro';
+import { LicenseStatus } from '@mui/x-license-pro/utils';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
@@ -14,8 +14,7 @@ function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   }
 }
 
-export function Watermark() {
-  const licenseStatus = useLicenseVerifier();
+export function Watermark({ licenseStatus }: { licenseStatus: LicenseStatus }) {
   if (licenseStatus === LicenseStatus.Valid) {
     return null;
   }

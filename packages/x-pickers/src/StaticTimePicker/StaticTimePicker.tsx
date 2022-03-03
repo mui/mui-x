@@ -5,12 +5,12 @@ import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import {
   PickerStaticWrapper,
   PickerStaticWrapperProps,
-} from '../internal/components/PickerStaticWrapper/PickerStaticWrapper';
-import { CalendarOrClockPicker } from '../internal/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internal/models';
-import { useTimeValidation } from '../internal/hooks/validation/useTimeValidation';
-import { parsePickerInputValue } from '../internal/utils/date-utils';
-import { usePickerState, PickerStateValueManager } from '../internal/hooks/usePickerState';
+} from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
+import { MuiPickersAdapter } from '../internals/models';
+import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
 const valueManager: PickerStateValueManager<unknown, unknown> = {
   emptyValue: null,

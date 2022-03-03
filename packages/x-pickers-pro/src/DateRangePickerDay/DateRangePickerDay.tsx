@@ -2,10 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps } from '@mui/system';
+import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import { DAY_MARGIN } from '@mui/x-pickers/internal/constants/dimensions';
-import { useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
+import { DAY_MARGIN, useUtils } from '@mui/x-pickers/internals';
 import {
   PickersDay,
   PickersDayProps,
@@ -220,6 +220,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     selected = false,
     ...other
   } = props;
+
+  useLicenseVerifier();
   const utils = useUtils<TDate>();
 
   const isEndOfMonth = utils.isSameDay(day, utils.endOfMonth(day));

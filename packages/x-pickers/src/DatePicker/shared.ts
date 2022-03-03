@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { ParseableDate } from '../internal/models/parseableDate';
-import { OverrideParseableDateProps } from '../internal/hooks/date-helpers-hooks';
-import { useDefaultDates, useUtils } from '../internal/hooks/useUtils';
-import { CalendarPickerView, MuiPickersAdapter } from '../internal/models';
+import { ParseableDate } from '../internals/models/parseableDate';
+import { OverrideParseableDateProps } from '../internals/hooks/date-helpers-hooks';
+import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
+import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
-import { DateValidationError } from '../internal/hooks/validation/useDateValidation';
-import { ValidationProps } from '../internal/hooks/validation/useValidation';
-import { ExportedDateInputProps } from '../internal/components/PureDateInput';
-import { BasePickerProps } from '../internal/models/props/basePickerProps';
-import { BaseToolbarProps } from '../internal/models/props/baseToolbarProps';
+import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
+import { ValidationProps } from '../internals/hooks/validation/useValidation';
+import { ExportedDateInputProps } from '../internals/components/PureDateInput';
+import { BasePickerProps } from '../internals/models/props/basePickerProps';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
 export interface BaseDatePickerProps<TDate>
   extends ExportedCalendarPickerProps<TDate>,

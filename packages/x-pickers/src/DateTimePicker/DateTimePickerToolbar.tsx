@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { generateUtilityClasses } from '@mui/base';
-import { PickersToolbarText } from '../internal/components/PickersToolbarText';
-import { PickersToolbar } from '../internal/components/PickersToolbar';
-import { PickersToolbarButton } from '../internal/components/PickersToolbarButton';
+import { PickersToolbarText } from '../internals/components/PickersToolbarText';
+import { PickersToolbar } from '../internals/components/PickersToolbar';
+import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { DateTimePickerTabs } from './DateTimePickerTabs';
-import { useUtils } from '../internal/hooks/useUtils';
-import { WrapperVariantContext } from '../internal/components/wrappers/WrapperVariantContext';
-import { BaseToolbarProps } from '../internal/models/props/baseToolbarProps';
+import { useUtils } from '../internals/hooks/useUtils';
+import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
 const classes = generateUtilityClasses('PrivateDateTimePickerToolbar', ['penIcon']);
 

@@ -1,16 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { BasePickerProps } from '@mui/x-pickers/internal/models/props/basePickerProps';
-import { useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
-import { useCalendarState } from '@mui/x-pickers/CalendarPicker/useCalendarState';
 import {
+  BasePickerProps,
+  useUtils,
   WrapperVariant,
   WrapperVariantContext,
-} from '@mui/x-pickers/internal/components/wrappers/WrapperVariantContext';
-import { MobileKeyboardInputView } from '@mui/x-pickers/internal/components/CalendarOrClockPicker/CalendarOrClockPicker';
+  MobileKeyboardInputView,
+  defaultReduceAnimations,
+  PickerSelectionState,
+} from '@mui/x-pickers/internals';
+import { useCalendarState } from '@mui/x-pickers/CalendarPicker/useCalendarState';
 import { ExportedCalendarPickerProps } from '@mui/x-pickers/CalendarPicker/CalendarPicker';
-import { PickerSelectionState } from '@mui/x-pickers/internal/hooks/usePickerState';
-import { defaultReduceAnimations } from '@mui/x-pickers/internal/utils/defaultReduceAnimations';
 import {
   DateRange,
   CurrentlySelectingRangeEndProps,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { LicenseInfo } from '@mui/x-license-pro';
-import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
+import { useLicenseVerifier } from '@mui/x-license-pro';
+import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
   GridErrorHandler,
@@ -11,23 +11,11 @@ import {
   GridContextProvider,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { Watermark } from '../components/Watermark';
 import { DataGridProProps } from '../models';
 import { useDataGridProProps } from './useDataGridProProps';
+import { Watermark } from '../components/Watermark';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
-
-// This is the package release date. Each package version should update this const
-// automatically when a new version is published on npm.
-let RELEASE_INFO = '__RELEASE_INFO__';
-
-// eslint-disable-next-line no-useless-concat
-if (process.env.NODE_ENV !== 'production' && RELEASE_INFO === '__RELEASE' + '_INFO__') {
-  // eslint-disable-next-line no-underscore-dangle
-  RELEASE_INFO = ponyfillGlobal.__MUI_RELEASE_INFO__;
-}
-
-LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
 const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(function DataGridPro(
   inProps,
@@ -35,6 +23,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
 ) {
   const props = useDataGridProProps(inProps);
   const apiRef = useDataGridProComponent(props.apiRef, props);
+  const licenseStatus = useLicenseVerifier();
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
@@ -45,7 +34,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
           >
-            <Watermark />
+            <Watermark licenseStatus={licenseStatus} />
           </GridBody>
           <GridFooterPlaceholder />
         </GridErrorHandler>

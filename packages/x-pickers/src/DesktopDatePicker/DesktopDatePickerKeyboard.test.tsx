@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-pickers/DesktopDatePicker';
 import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
-import { MakeOptional } from '../internal/models/helpers';
+import { MakeOptional } from '../internals/models/helpers';
 
 function TestKeyboardDatePicker(
   PickerProps: MakeOptional<DesktopDatePickerProps, 'value' | 'onChange' | 'renderInput'>,

@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
+import { useLicenseVerifier } from '@mui/x-license-pro';
 import {
   ResponsiveTooltipWrapper,
   ResponsiveWrapperProps,
-} from '@mui/x-pickers/internal/components/wrappers/ResponsiveWrapper';
-import { useDefaultDates, useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
-import { ValidationProps } from '@mui/x-pickers/internal/hooks/validation/useValidation';
-import {
+  useDefaultDates,
+  useUtils,
+  ValidationProps,
   usePickerState,
   PickerStateValueManager,
-} from '@mui/x-pickers/internal/hooks/usePickerState';
-import { DateInputPropsLike } from '@mui/x-pickers/internal/components/wrappers/WrapperProps';
+  DateInputPropsLike,
+} from '@mui/x-pickers/internals';
 import { DateRangePickerView, ExportedDateRangePickerViewProps } from './DateRangePickerView';
 import { DateRangePickerInput, ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 import { RangeInput, DateRange } from '../internal/models/dateRange';
@@ -101,6 +101,7 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
+  useLicenseVerifier();
 
   const {
     calendars = 2,

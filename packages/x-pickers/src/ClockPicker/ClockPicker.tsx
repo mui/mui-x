@@ -5,18 +5,18 @@ import { unstable_useId as useId } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { Clock } from './Clock';
-import { pipe } from '../internal/utils/utils';
-import { useUtils, useNow } from '../internal/hooks/useUtils';
+import { pipe } from '../internals/utils/utils';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
-import { PickersArrowSwitcher } from '../internal/components/PickersArrowSwitcher';
-import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internal/utils/time-utils';
-import { PickerOnChangeFn, useViews } from '../internal/hooks/useViews';
-import { PickerSelectionState } from '../internal/hooks/usePickerState';
-import { ExportedTimeValidationProps } from '../internal/hooks/validation/useTimeValidation';
-import { useMeridiemMode } from '../internal/hooks/date-helpers-hooks';
-import { ClockPickerView, MuiPickersAdapter } from '../internal/models';
+import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
+import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
+import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
+import { PickerSelectionState } from '../internals/hooks/usePickerState';
+import { ExportedTimeValidationProps } from '../internals/hooks/validation/useTimeValidation';
+import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
+import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
-import { PickerViewRoot } from '../internal/components/PickerViewRoot';
+import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 
 export interface ClockPickerComponentsPropsOverrides {}
 

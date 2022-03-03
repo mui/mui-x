@@ -5,8 +5,8 @@ import { SxProps } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { PickersMonth } from './PickersMonth';
-import { useUtils, useNow } from '../internal/hooks/useUtils';
-import { PickerOnChangeFn } from '../internal/hooks/useViews';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { MonthPickerClasses, getMonthPickerUtilityClass } from './monthPickerClasses';
 
 export interface MonthPickerProps<TDate> {

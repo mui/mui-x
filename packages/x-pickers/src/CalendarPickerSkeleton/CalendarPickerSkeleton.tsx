@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import { DAY_SIZE, DAY_MARGIN } from '../internal/constants/dimensions';
+import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   CalendarPickerSkeletonClasses,
   getCalendarPickerSkeletonUtilityClass,

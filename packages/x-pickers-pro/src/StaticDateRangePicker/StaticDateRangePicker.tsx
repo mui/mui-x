@@ -1,16 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
+import { useLicenseVerifier } from '@mui/x-license-pro';
 import {
   PickerStaticWrapper,
   PickerStaticWrapperProps,
-} from '@mui/x-pickers/internal/components/PickerStaticWrapper/PickerStaticWrapper';
-import { useDefaultDates, useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
-import { ValidationProps } from '@mui/x-pickers/internal/hooks/validation/useValidation';
-import {
+  useDefaultDates,
+  useUtils,
+  ValidationProps,
   usePickerState,
   PickerStateValueManager,
-} from '@mui/x-pickers/internal/hooks/usePickerState';
+} from '@mui/x-pickers/internals';
 import { RangeInput, DateRange } from '../internal/models/dateRange';
 import {
   DateRangeValidationError,
@@ -103,6 +103,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiStaticDateRangePicker' });
+  useLicenseVerifier();
 
   const {
     calendars = 2,

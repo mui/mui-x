@@ -2,13 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { BaseTimePickerProps, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
-import { MobileWrapper, MobileWrapperProps } from '../internal/components/wrappers/MobileWrapper';
-import { CalendarOrClockPicker } from '../internal/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internal/models';
-import { useTimeValidation } from '../internal/hooks/validation/useTimeValidation';
-import { parsePickerInputValue } from '../internal/utils/date-utils';
-import { PureDateInput } from '../internal/components/PureDateInput';
-import { usePickerState, PickerStateValueManager } from '../internal/hooks/usePickerState';
+import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
+import { MuiPickersAdapter } from '../internals/models';
+import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { PureDateInput } from '../internals/components/PureDateInput';
+import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
 const valueManager: PickerStateValueManager<unknown, unknown> = {
   emptyValue: null,

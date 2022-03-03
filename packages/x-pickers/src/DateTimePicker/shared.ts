@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { useDefaultDates, useUtils } from '../internal/hooks/useUtils';
+import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { pick12hOr24hFormat } from '../internal/utils/text-field-helper';
+import { pick12hOr24hFormat } from '../internals/utils/text-field-helper';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
-import { DateTimeValidationError } from '../internal/hooks/validation/useDateTimeValidation';
-import { ValidationProps } from '../internal/hooks/validation/useValidation';
-import { ParseableDate } from '../internal/models/parseableDate';
-import { BasePickerProps } from '../internal/models/props/basePickerProps';
-import { BaseToolbarProps } from '../internal/models/props/baseToolbarProps';
-import { ExportedDateInputProps } from '../internal/components/PureDateInput';
-import { CalendarOrClockPickerView } from '../internal/models';
+import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
+import { ValidationProps } from '../internals/hooks/validation/useValidation';
+import { ParseableDate } from '../internals/models/parseableDate';
+import { BasePickerProps } from '../internals/models/props/basePickerProps';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { ExportedDateInputProps } from '../internals/components/PureDateInput';
+import { CalendarOrClockPickerView } from '../internals/models';
 
 export interface BaseDateTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,

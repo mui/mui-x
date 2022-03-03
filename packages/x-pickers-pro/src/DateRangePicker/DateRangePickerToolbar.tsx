@@ -2,10 +2,12 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { generateUtilityClasses } from '@mui/base';
-import { PickersToolbar } from '@mui/x-pickers/internal/components/PickersToolbar';
-import { useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
-import { PickersToolbarButton } from '@mui/x-pickers/internal/components/PickersToolbarButton';
-import { BaseToolbarProps } from '@mui/x-pickers/internal/models/props/baseToolbarProps';
+import {
+  PickersToolbar,
+  PickersToolbarButton,
+  useUtils,
+  BaseToolbarProps,
+} from '@mui/x-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models';
 
 const classes = generateUtilityClasses('PrivateDateRangePickerToolbar', ['penIcon']);

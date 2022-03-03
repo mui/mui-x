@@ -4,12 +4,12 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { ClockPointer } from './ClockPointer';
-import { useUtils } from '../internal/hooks/useUtils';
-import { WrapperVariantContext } from '../internal/components/wrappers/WrapperVariantContext';
-import { PickerSelectionState } from '../internal/hooks/usePickerState';
-import { useMeridiemMode } from '../internal/hooks/date-helpers-hooks';
+import { useUtils } from '../internals/hooks/useUtils';
+import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
+import { PickerSelectionState } from '../internals/hooks/usePickerState';
+import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { getHours, getMinutes } from './shared';
-import { ClockPickerView, MuiPickersAdapter } from '../internal/models';
+import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 
 export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   ampm: boolean;

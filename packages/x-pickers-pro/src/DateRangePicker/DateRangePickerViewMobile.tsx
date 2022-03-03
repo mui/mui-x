@@ -3,9 +3,8 @@ import {
   PickersCalendarHeader,
   ExportedCalendarHeaderProps,
 } from '@mui/x-pickers/CalendarPicker/PickersCalendarHeader';
-import { useDefaultDates, useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
+import { useDefaultDates, useUtils, ExportedDateValidationProps } from '@mui/x-pickers/internals';
 import { DayPicker, PickersCalendarProps } from '@mui/x-pickers/CalendarPicker/DayPicker';
-import { ExportedDateValidationProps } from '@mui/x-pickers/internal/hooks/validation/useDateValidation';
 import { doNothing } from '../internal/utils/utils';
 import { DateRange } from '../internal/models/dateRange';
 import { DateRangePickerDay } from '../DateRangePickerDay';

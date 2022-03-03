@@ -5,16 +5,16 @@ import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
 import { MonthPicker } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
-import { useDefaultDates, useUtils } from '../internal/hooks/useUtils';
+import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DayPicker, ExportedCalendarProps } from './DayPicker';
-import { PickerOnChangeFn, useViews } from '../internal/hooks/useViews';
+import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import { PickersCalendarHeader, ExportedCalendarHeaderProps } from './PickersCalendarHeader';
 import { YearPicker, ExportedYearPickerProps } from '../YearPicker/YearPicker';
-import { findClosestEnabledDate } from '../internal/utils/date-utils';
-import { CalendarPickerView } from '../internal/models';
-import { PickerViewRoot } from '../internal/components/PickerViewRoot';
-import { defaultReduceAnimations } from '../internal/utils/defaultReduceAnimations';
+import { findClosestEnabledDate } from '../internals/utils/date-utils';
+import { CalendarPickerView } from '../internals/models';
+import { PickerViewRoot } from '../internals/components/PickerViewRoot';
+import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { CalendarPickerClasses, getCalendarPickerUtilityClass } from './calendarPickerClasses';
 
 export interface CalendarPickerProps<TDate>

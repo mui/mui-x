@@ -1,17 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useLicenseVerifier } from '@mui/x-license-pro';
 import { useThemeProps } from '@mui/material/styles';
 import {
   MobileWrapper,
   MobileWrapperProps,
-} from '@mui/x-pickers/internal/components/wrappers/MobileWrapper';
-import { useDefaultDates, useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
-import { ValidationProps } from '@mui/x-pickers/internal/hooks/validation/useValidation';
-import {
+  ValidationProps,
+  useDefaultDates,
+  useUtils,
   usePickerState,
   PickerStateValueManager,
-} from '@mui/x-pickers/internal/hooks/usePickerState';
-import { DateInputPropsLike } from '@mui/x-pickers/internal/components/wrappers/WrapperProps';
+  DateInputPropsLike,
+} from '@mui/x-pickers/internals';
 import { RangeInput, DateRange } from '../internal/models/dateRange';
 import {
   DateRangeValidationError,
@@ -106,6 +106,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiMobileDateRangePicker' });
+  useLicenseVerifier();
 
   const {
     calendars = 2,

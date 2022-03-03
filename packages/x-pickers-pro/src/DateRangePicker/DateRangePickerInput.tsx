@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
-import { WrapperVariantContext } from '@mui/x-pickers/internal/components/wrappers/WrapperVariantContext';
-import { executeInTheNextEventLoopTick } from '@mui/x-pickers/internal/utils/utils';
 import {
+  useUtils,
+  executeInTheNextEventLoopTick,
+  WrapperVariantContext,
   DateInputProps,
   ExportedDateInputProps,
   MuiTextFieldProps,
-} from '@mui/x-pickers/internal/components/PureDateInput';
-import { useMaskedInput } from '@mui/x-pickers/internal/hooks/useMaskedInput';
+  useMaskedInput,
+} from '@mui/x-pickers/internals';
 import {
   RangeInput,
   DateRange,

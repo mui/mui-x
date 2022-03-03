@@ -2,13 +2,11 @@ import {
   useValidation,
   ValidationProps,
   Validator,
-} from '@mui/x-pickers/internal/hooks/validation/useValidation';
-import {
   DateValidationProps,
   DateValidationError,
   validateDate,
   ExportedDateValidationProps,
-} from '@mui/x-pickers/internal/hooks/validation/useDateValidation';
+} from '@mui/x-pickers/internals';
 import { isRangeValid } from '../../utils/date-utils';
 import { RangeInput } from '../../models';
 

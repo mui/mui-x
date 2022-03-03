@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
-import { ClockPickerView } from '../internal/models';
+import { ClockPickerView } from '../internals/models';
 
 export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> {
   hasSelected: boolean;

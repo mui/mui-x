@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SlideDirection } from './PickersSlideTransition';
-import { validateDate } from '../internal/hooks/validation/useDateValidation';
-import { useUtils, useNow } from '../internal/hooks/useUtils';
-import { MuiPickersAdapter } from '../internal/models';
+import { validateDate } from '../internals/hooks/validation/useDateValidation';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { MuiPickersAdapter } from '../internals/models';
 import type { CalendarPickerProps } from './CalendarPicker';
 
 interface CalendarState<TDate> {

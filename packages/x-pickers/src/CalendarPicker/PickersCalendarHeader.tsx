@@ -3,19 +3,19 @@ import Fade from '@mui/material/Fade';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { SlideDirection } from './PickersSlideTransition';
-import { useUtils } from '../internal/hooks/useUtils';
+import { useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { ExportedDateValidationProps } from '../internal/hooks/validation/useDateValidation';
-import { ArrowDropDown } from '../internal/components/icons';
+import { ExportedDateValidationProps } from '../internals/hooks/validation/useDateValidation';
+import { ArrowDropDown } from '../internals/components/icons';
 import {
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
-} from '../internal/components/PickersArrowSwitcher';
+} from '../internals/components/PickersArrowSwitcher';
 import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
-} from '../internal/hooks/date-helpers-hooks';
-import { CalendarPickerView } from '../internal/models';
+} from '../internals/hooks/date-helpers-hooks';
+import { CalendarPickerView } from '../internals/models';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,

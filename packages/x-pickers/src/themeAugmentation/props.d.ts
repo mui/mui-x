@@ -15,7 +15,7 @@ import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
 import { TimePickerProps } from '../TimePicker';
 import { YearPickerProps } from '../YearPicker';
-import { PickerStaticWrapperProps } from '../internal/components/PickerStaticWrapper';
+import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWrapper';
 
 export interface LabComponentsPropsList {
   MuiCalendarPicker: CalendarPickerProps<unknown>;

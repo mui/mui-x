@@ -4,7 +4,7 @@ import Typography, { TypographyTypeMap } from '@mui/material/Typography';
 import { styled, alpha } from '@mui/material/styles';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { generateUtilityClasses } from '@mui/base';
-import { onSpaceOrEnter } from '../internal/utils/utils';
+import { onSpaceOrEnter } from '../internals/utils/utils';
 
 const classes = generateUtilityClasses('PrivatePickersMonth', ['root', 'selected']);
 

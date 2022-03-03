@@ -2,12 +2,12 @@ import * as React from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled } from '@mui/material/styles';
-import { Time, DateRange } from '../internal/components/icons';
+import { Time, DateRange } from '../internals/components/icons';
 import {
   WrapperVariantContext,
   WrapperVariant,
-} from '../internal/components/wrappers/WrapperVariantContext';
-import { CalendarOrClockPickerView } from '../internal/models';
+} from '../internals/components/wrappers/WrapperVariantContext';
+import { CalendarOrClockPickerView } from '../internals/models';
 
 type TabValue = 'date' | 'time';
 

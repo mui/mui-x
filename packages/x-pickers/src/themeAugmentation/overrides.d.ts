@@ -4,7 +4,7 @@ import { ClockPickerClassKey } from '../ClockPicker';
 import { MonthPickerClassKey } from '../MonthPicker';
 import { PickersDayClassKey } from '../PickersDay';
 import { YearPickerClassKey } from '../YearPicker';
-import { PickerStaticWrapperClassKey } from '../internal/components/PickerStaticWrapper';
+import { PickerStaticWrapperClassKey } from '../internals/components/PickerStaticWrapper';
 
 // prettier-ignore
 export interface LabComponentNameToClassKey {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DateIOFormats } from '@date-io/core/IUtils';
-import { MuiPickersAdapter } from '../internal/models';
+import { MuiPickersAdapter } from '../internals/models';
 
 export interface MuiPickersAdapterContextValue<TDate> {
   defaultDates: {

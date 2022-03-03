@@ -10,7 +10,7 @@ import {
 import {
   WrapperVariant,
   WrapperVariantContext,
-} from '../internal/components/wrappers/WrapperVariantContext';
+} from '../internals/components/wrappers/WrapperVariantContext';
 
 export interface YearProps {
   autoFocus?: boolean;

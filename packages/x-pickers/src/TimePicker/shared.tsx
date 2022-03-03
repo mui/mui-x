@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { Clock } from '../internal/components/icons';
-import { ParseableDate } from '../internal/models/parseableDate';
+import { Clock } from '../internals/components/icons';
+import { ParseableDate } from '../internals/models/parseableDate';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { pick12hOr24hFormat } from '../internal/utils/text-field-helper';
-import { useUtils } from '../internal/hooks/useUtils';
-import { ValidationProps } from '../internal/hooks/validation/useValidation';
-import { TimeValidationError } from '../internal/hooks/validation/useTimeValidation';
-import { BasePickerProps } from '../internal/models/props/basePickerProps';
-import { BaseToolbarProps } from '../internal/models/props/baseToolbarProps';
-import { ExportedDateInputProps } from '../internal/components/PureDateInput';
-import { ClockPickerView, MuiPickersAdapter } from '../internal/models';
+import { pick12hOr24hFormat } from '../internals/utils/text-field-helper';
+import { useUtils } from '../internals/hooks/useUtils';
+import { ValidationProps } from '../internals/hooks/validation/useValidation';
+import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
+import { BasePickerProps } from '../internals/models/props/basePickerProps';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { ExportedDateInputProps } from '../internals/components/PureDateInput';
+import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 
 export interface BaseTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,

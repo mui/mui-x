@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ClockNumber } from './ClockNumber';
-import { MuiPickersAdapter } from '../internal/models';
-import { PickerSelectionState } from '../internal/hooks/usePickerState';
+import { MuiPickersAdapter } from '../internals/models';
+import { PickerSelectionState } from '../internals/hooks/usePickerState';
 
 interface GetHourNumbersOptions<TDate> {
   ampm: boolean;

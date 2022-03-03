@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { useDefaultDates, useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
-import { DayPicker, PickersCalendarProps } from '@mui/x-pickers/CalendarPicker/DayPicker';
-import { ExportedDateValidationProps } from '@mui/x-pickers/internal/hooks/validation/useDateValidation';
 import {
+  useDefaultDates,
+  useUtils,
+  ExportedDateValidationProps,
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
-} from '@mui/x-pickers/internal/components/PickersArrowSwitcher';
-import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
-} from '@mui/x-pickers/internal/hooks/date-helpers-hooks';
+} from '@mui/x-pickers/internals';
+import { DayPicker, PickersCalendarProps } from '@mui/x-pickers/CalendarPicker/DayPicker';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';

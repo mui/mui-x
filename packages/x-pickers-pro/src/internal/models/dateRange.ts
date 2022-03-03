@@ -1,4 +1,4 @@
-import { ParseableDate } from '@mui/x-pickers/internal/models/parseableDate';
+import { ParseableDate } from '@mui/x-pickers/internals';
 
 export type RangeInput<TDate> = [ParseableDate<TDate>, ParseableDate<TDate>];
 export type DateRange<TDate> = [TDate | null, TDate | null];

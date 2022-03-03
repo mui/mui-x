@@ -5,13 +5,13 @@ import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
-} from '../internal/components/wrappers/DesktopWrapper';
-import { CalendarOrClockPicker } from '../internal/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internal/models';
-import { useDateValidation } from '../internal/hooks/validation/useDateValidation';
-import { parsePickerInputValue } from '../internal/utils/date-utils';
-import { KeyboardDateInput } from '../internal/components/KeyboardDateInput';
-import { usePickerState, PickerStateValueManager } from '../internal/hooks/usePickerState';
+} from '../internals/components/wrappers/DesktopWrapper';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
+import { MuiPickersAdapter } from '../internals/models';
+import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
+import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
 const valueManager: PickerStateValueManager<unknown, unknown> = {
   emptyValue: null,

@@ -2,10 +2,10 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
-import { useUtils, useNow } from '../internal/hooks/useUtils';
-import { PickerOnChangeFn } from '../internal/hooks/useViews';
-import { DAY_SIZE, DAY_MARGIN } from '../internal/constants/dimensions';
-import { PickerSelectionState } from '../internal/hooks/usePickerState';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { PickerOnChangeFn } from '../internals/hooks/useViews';
+import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
+import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
   PickersSlideTransition,
   SlideDirection,

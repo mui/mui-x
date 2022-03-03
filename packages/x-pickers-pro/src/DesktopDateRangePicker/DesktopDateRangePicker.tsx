@@ -1,15 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useLicenseVerifier } from '@mui/x-license-pro';
 import { useThemeProps } from '@mui/material/styles';
-import { DesktopTooltipWrapper } from '@mui/x-pickers/internal/components/wrappers/DesktopTooltipWrapper';
-import { useDefaultDates, useUtils } from '@mui/x-pickers/internal/hooks/useUtils';
-import { ValidationProps } from '@mui/x-pickers/internal/hooks/validation/useValidation';
 import {
+  DesktopTooltipWrapper,
+  useDefaultDates,
+  useUtils,
+  ValidationProps,
   usePickerState,
   PickerStateValueManager,
-} from '@mui/x-pickers/internal/hooks/usePickerState';
-import { DateInputPropsLike } from '@mui/x-pickers/internal/components/wrappers/WrapperProps';
-import { DesktopWrapperProps } from '@mui/x-pickers/internal/components/wrappers/DesktopWrapper';
+  DateInputPropsLike,
+  DesktopWrapperProps,
+} from '@mui/x-pickers/internals';
 import {
   DateRangePickerView,
   ExportedDateRangePickerViewProps,
@@ -104,6 +106,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDesktopDateRangePicker' });
+  useLicenseVerifier();
 
   const {
     calendars = 2,

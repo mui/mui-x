@@ -5,13 +5,13 @@ import {
   useDateTimePickerDefaultizedProps,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
-import { MobileWrapper, MobileWrapperProps } from '../internal/components/wrappers/MobileWrapper';
-import { CalendarOrClockPicker } from '../internal/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internal/models';
-import { useDateTimeValidation } from '../internal/hooks/validation/useDateTimeValidation';
-import { parsePickerInputValue } from '../internal/utils/date-utils';
-import { PureDateInput } from '../internal/components/PureDateInput';
-import { usePickerState, PickerStateValueManager } from '../internal/hooks/usePickerState';
+import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
+import { MuiPickersAdapter } from '../internals/models';
+import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { PureDateInput } from '../internals/components/PureDateInput';
+import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
 const valueManager: PickerStateValueManager<unknown, unknown> = {
   emptyValue: null,
