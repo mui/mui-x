@@ -70,7 +70,7 @@ async function testFilter100kRows(page) {
   await page.goto(baseUrl);
 
   await page.selectOption('label=Columns', 'currencyPair');
-  await page.selectOption('label=Operators >> nth=1', 'startsWith');
+  await page.selectOption('label=Operator', 'startsWith');
   const t0 = await page.evaluate(() => performance.now());
   await page.type('label=Value', 'usd');
 

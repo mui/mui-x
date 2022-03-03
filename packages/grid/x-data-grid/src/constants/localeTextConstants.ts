@@ -41,7 +41,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Filter panel text
   filterPanelAddFilter: 'Add filter',
   filterPanelDeleteIconLabel: 'Delete',
-  filterPanelOperators: 'Operators',
+  filterPanelLinkOperator: 'Logic operator',
+  filterPanelOperators: 'Operator', // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Columns',

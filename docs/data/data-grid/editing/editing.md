@@ -87,7 +87,7 @@ If the `error` attribute is true, the value will never be committed.
 const columns: GridColDef[] = [
   {
     field: 'firstName',
-    preProcessEditCellProps: (params: GridEditCellPropsChangeParams) => {
+    preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
       const hasError = params.props.value.length < 3;
       return { ...params.props, error: hasError };
     },
