@@ -9,9 +9,9 @@ _Mar 3, 2022_
 
 A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 📦 Use the same bundling scripts as the core repository (#3965) @flaviendelangle
+- 📦 Use the bundling scripts as the packages published by the [https://github.com/mui/material-ui](material-ui) repository (#3965) @flaviendelangle
 
-  The code structure and the bundling strategy has been modified to have a better isolation between components.
+  The code structure and the bundling strategy have been modified to provide a better isolation between components.
   This brings tree shaking, allowing us to reduce the bundle size. 🏋
   Such modification are always a bit risky.
   If you encounter problems with you build, please open an issue.
@@ -45,7 +45,7 @@ A big thanks to the 15 contributors who made this release possible. Here are som
 - [DataGrid] Send warning when the `rowCount` is not provided while using server pagination (#3902) @alexfauquette
 - [DataGrid] Stop checkbox ripple on blur (#3835) @m4theushw
 - [DataGrid] Use only `headerName` when available to search column (#3959) @pkratz
-- [DataGrid] Use the same bundling scripts as the core repository (#3965) @flaviendelangle
+- [DataGrid] Use the bundling scripts as the packages published by the [https://github.com/mui/material-ui](material-ui) repository (#3965) @flaviendelangle
 - [DataGridPro] Add `unstable_setRowHeight` method to `apiRef` (#3751) @cherniavskii
 - [DataGridPro] Always export the `pageSize` and `page` when it has been initialized or is being controlled (#3908) @flaviendelangle
 - [DataGridPro] Disable export for detail panel column (#4057) @gustavhagland
