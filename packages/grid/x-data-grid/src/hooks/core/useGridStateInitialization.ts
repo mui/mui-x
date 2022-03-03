@@ -74,10 +74,10 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
         // You are trying to update several states in a no isolated way.
         throw new Error(
           `You're not allowed to update several sub-state in one transaction. You already updated ${
-            updatedControlStateIds[0]
-          }, therefore, you're not allowed to update ${updatedControlStateIds.join(
-            ', ',
-          )} in the same transaction.`,
+            updatedControlStateIds[0].stateId
+          }, therefore, you're not allowed to update ${updatedControlStateIds
+            .map((el) => el.stateId)
+            .join(', ')} in the same transaction.`,
         );
       }
 
@@ -90,7 +90,8 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
         }
       }
 
-      updatedControlStateIds.forEach(({ stateId, hasPropChanged }) => {
+      if (updatedControlStateIds.length === 1) {
+        const { stateId, hasPropChanged } = updatedControlStateIds[0];
         const controlState = controlStateMapRef.current[stateId];
         const model = controlState.stateSelector(newState, apiRef.current.instanceId);
 
@@ -103,7 +104,7 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
         if (!ignoreSetState) {
           apiRef.current.publishEvent(controlState.changeEvent, model);
         }
-      });
+      }
 
       return !ignoreSetState;
     },
