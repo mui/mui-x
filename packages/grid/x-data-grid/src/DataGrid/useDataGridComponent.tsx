@@ -18,7 +18,8 @@ import { useGridPagination } from '../hooks/features/pagination/useGridPaginatio
 import { pageStateInitializer } from '../hooks/features/pagination/useGridPage';
 import { pageSizeStateInitializer } from '../hooks/features/pagination/useGridPageSize';
 import { useGridPreferencesPanel } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
-import { useGridEditing } from '../hooks/features/editRows/useGridEditing';
+import { useGridEditing as useGridEditing_old } from '../hooks/features/editRows/useGridEditing.old';
+import { useGridEditing as useGridEditing_new } from '../hooks/features/editRows/useGridEditing.new';
 import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
 import { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 import { useGridSelection } from '../hooks/features/selection/useGridSelection';
@@ -52,7 +53,12 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+
+  const useGridEditing = props.experimentalFeatures?.newEditingApi
+    ? useGridEditing_new
+    : useGridEditing_old;
   useGridEditing(apiRef, props);
+
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
