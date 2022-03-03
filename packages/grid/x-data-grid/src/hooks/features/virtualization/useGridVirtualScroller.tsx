@@ -133,20 +133,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     setContainerWidth(rootRef.current!.clientWidth);
   }, [rowsMeta.currentPageTotalHeight]);
 
-  React.useEffect(() => {
-    if (containerWidth == null) {
-      return;
-    }
-
-    const initialRenderContext = computeRenderContext();
-    prevRenderContext.current = initialRenderContext;
-    setRenderContext(initialRenderContext);
-
-    const { top, left } = scrollPosition.current!;
-    const params = { top, left, renderContext: initialRenderContext };
-    apiRef.current.publishEvent(GridEvents.rowsScroll, params);
-  }, [apiRef, computeRenderContext, containerWidth]);
-
   const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(() => {
     if (rootRef.current) {
       setContainerWidth(rootRef.current.clientWidth);
@@ -199,6 +185,29 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     ],
   );
 
+  const updateRenderContext = React.useCallback(
+    (nextRenderContext) => {
+      setRenderContext(nextRenderContext);
+      updateRenderZonePosition(nextRenderContext);
+      prevRenderContext.current = nextRenderContext;
+    },
+    [setRenderContext, prevRenderContext, updateRenderZonePosition],
+  );
+
+  React.useEffect(() => {
+    if (containerWidth == null) {
+      return;
+    }
+
+    const initialRenderContext = computeRenderContext();
+    prevRenderContext.current = initialRenderContext;
+    updateRenderContext(initialRenderContext);
+
+    const { top, left } = scrollPosition.current!;
+    const params = { top, left, renderContext: initialRenderContext };
+    apiRef.current.publishEvent(GridEvents.rowsScroll, params);
+  }, [apiRef, computeRenderContext, containerWidth, updateRenderContext]);
+
   const handleScroll = (event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
     scrollPosition.current.top = scrollTop;
@@ -235,10 +244,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     });
 
     if (shouldSetState) {
-      setRenderContext(nextRenderContext);
-      prevRenderContext.current = nextRenderContext;
+      updateRenderContext(nextRenderContext);
       prevTotalWidth.current = columnsTotalWidth;
-      updateRenderZonePosition(nextRenderContext);
     }
   };
 
