@@ -167,11 +167,11 @@ export interface GridEventLookup
   // Edit
   cellModeChange: { params: GridCellParams<any, any, any, any> };
   cellEditStart: {
-    params: GridCellEditStartParams<any, any, any, any> | GridCellParams<any, any, any, any>; // TODO v6: keep only GridCellEditStartParams
+    params: GridCellEditStartParams<any, any, any, any>;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
   cellEditStop: {
-    params: GridCellEditStopParams<any, any, any> | GridCellParams<any, any, any, any>; // TODO v6: keep only GridCellEditStopParams
+    params: GridCellEditStopParams<any, any, any>;
     event: MuiBaseEvent;
   };
   cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
@@ -180,11 +180,11 @@ export interface GridEventLookup
     event: React.SyntheticEvent<HTMLElement> | {};
   };
   rowEditStart: {
-    params: GridRowEditStartParams | GridRowParams; // TODO v6: keep only GridRowEditStartParams
+    params: GridRowEditStartParams;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
   rowEditStop: {
-    params: GridRowEditStopParams | GridRowParams; // TODO v6: keep only GridRowEditStopParams
+    params: GridRowEditStopParams;
     event: MuiBaseEvent;
   };
   rowEditCommit: { params: GridRowId; event: MuiBaseEvent };

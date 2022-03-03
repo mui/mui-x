@@ -23,6 +23,10 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import { MuiBaseEvent } from '../../../models/muiEvent';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import {
+  GridRowEditStartParams,
+  GridRowEditStopParams,
+} from '../../../models/params/gridRowParams';
+import {
   useGridApiOptionHandler,
   useGridApiEventHandler,
 } from '../../utils/useGridApiEventHandler';
@@ -225,12 +229,24 @@ export const useGridRowEditing = (
           if (!isValid && props.experimentalFeatures?.preventCommitWhileValidating) {
             return;
           }
-          apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
+          apiRef.current.publishEvent(
+            GridEvents.rowEditStop,
+            rowParams as GridRowEditStopParams,
+            event,
+          );
         } else if (event.key === 'Escape') {
-          apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
+          apiRef.current.publishEvent(
+            GridEvents.rowEditStop,
+            rowParams as GridRowEditStopParams,
+            event,
+          );
         }
       } else if (event.key === 'Enter') {
-        apiRef.current.publishEvent(GridEvents.rowEditStart, rowParams, event);
+        apiRef.current.publishEvent(
+          GridEvents.rowEditStart,
+          rowParams as GridRowEditStartParams,
+          event,
+        );
       }
     },
     [apiRef, props.experimentalFeatures?.preventCommitWhileValidating],
@@ -241,7 +257,7 @@ export const useGridRowEditing = (
       if (!params.isEditable) {
         return;
       }
-      const rowParams = apiRef.current.getRowParams(params.id);
+      const rowParams = apiRef.current.getRowParams(params.id) as GridRowEditStartParams;
       apiRef.current.publishEvent(GridEvents.rowEditStart, rowParams, event);
     },
     [apiRef],
@@ -338,7 +354,7 @@ export const useGridRowEditing = (
     focusTimeout.current = setTimeout(async () => {
       if (nextFocusedCell.current?.id !== params.id) {
         await apiRef.current.commitRowChange(params.id, event);
-        const rowParams = apiRef.current.getRowParams(params.id);
+        const rowParams = apiRef.current.getRowParams(params.id) as GridRowEditStopParams;
         apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
       }
     });

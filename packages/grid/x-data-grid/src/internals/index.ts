@@ -37,7 +37,6 @@ export { useGridPagination } from '../hooks/features/pagination/useGridPaginatio
 export { pageStateInitializer } from '../hooks/features/pagination/useGridPage';
 export { pageSizeStateInitializer } from '../hooks/features/pagination/useGridPageSize';
 export { useGridPreferencesPanel } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
-export { useGridEditing } from '../hooks/features/editRows/useGridEditing';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
 export { useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';

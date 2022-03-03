@@ -111,7 +111,11 @@ export const useGridRowEditing = (
         focusTimeout.current = null;
         if (nextFocusedCell.current?.id !== params.id) {
           const rowParams = apiRef.current.getRowParams(params.id);
-          const newParams = { ...rowParams, reason: GridRowEditStopReasons.rowFocusOut };
+          const newParams = {
+            ...rowParams,
+            field: params.field,
+            reason: GridRowEditStopReasons.rowFocusOut,
+          };
           apiRef.current.publishEvent(GridEvents.rowEditStop, newParams, event);
         }
       });
