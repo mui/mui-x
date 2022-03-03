@@ -11,7 +11,9 @@ The default locale of MUI is English (United States). If you want to use other l
 ## Translation keys
 
 You can use the `localeText` prop to pass in your own text and translations.
-You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts) in the GitHub repository.
+You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts)
+
+in the GitHub repository.
 In the following example, the labels of the density selector are customized.
 
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
