@@ -23,7 +23,7 @@ export const GRID_STRATEGIES_PROCESSORS: {
 /**
  * Implements a variant of the Strategy Pattern (see https://en.wikipedia.org/wiki/Strategy_pattern)
  *
- * Some plugins contain custom logic that that must only be run if the right strategy is active.
+ * Some plugins contain custom logic that must only be run if the right strategy is active.
  * For instance, the tree data plugin has:
  * - custom row tree creation algorithm.
  * - custom sorting algorithm.
