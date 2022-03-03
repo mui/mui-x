@@ -5,7 +5,7 @@ import { act, describeConformance, screen, fireEvent, userEvent } from '@mui/mon
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { DesktopDateRangePicker } from './index';
+import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import {
   wrapPickerMount,
   createPickerRenderer,

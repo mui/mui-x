@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { describeConformance } from '@mui/monorepo/test/utils';
-import { DateRangePicker } from './index';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { createPickerRenderer, wrapPickerMount } from '../../../../test/utils/pickers-utils';
 
 describe('<DateRangePicker />', () => {
