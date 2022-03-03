@@ -17,6 +17,37 @@ A big thanks to the 15 contributors who made this release possible. Here are som
   If you encounter problems with you build, please open an issue.
   We will put high priority on investigating them.
 
+- 🧼 Clean and document the columns selector (#4010) @flaviendelangle
+
+  To improve clarity, columns selectors have been renamed.
+  Old naming are deprecated, and will be removed in v6. 
+  Here is the renaming and the modification needed to get same information with new selectors.
+
+  |Previews naming|New naming|  
+  |---|---|
+  |`allGridColumnsFieldsSelector` | `gridColumnFieldsSelector`|
+  |`allGridColumnsSelector` | `gridColumnDefinitionsSelector`|
+  |`visibleGridColumnsSelector` | `gridVisibleColumnDefinitionsSelector`|
+  |`filterableGridColumnsSelector` | `gridFilterableColumnDefinitionsSelector`|
+
+  ```diff
+  - const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef)
+  + const all = gridColumnFieldsSelector(apiRef)
+  + const lookup = gridColumnLookupSelector(apiRef)
+  + const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef)
+
+  - const filterableFields = filterableGridColumnsIdsSelector(apiRef);
+  + const lookup = gridFilterableColumnLookupSelector(apiRef);
+  + const filterableFields = gridColumnFieldsSelector(apiRef).filter(field => lookup[field]);
+  
+  - const visibleColumnsNumber = visibleGridColumnsLengthSelector(apiRef);
+  + const visibleColumnsNumber = gridVisibleColumnDefinitionsSelector(apiRef).length;
+
+  - const { totalWidth, positions } = gridColumnsMetaSelector(apiRef);
+  + const totalWidth = gridColumnsTotalWidthSelector(apiRef);
+  + const positions = gridColumnPositionsSelector(apiRef);
+  ```
+
 - 📚 Documentation improvements
 - 🐞 Bug and typo fixes
 
