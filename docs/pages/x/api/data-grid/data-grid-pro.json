@@ -259,6 +259,7 @@
     "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
+    "FilterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
     "GroupingCriteriaCollapseIcon": {
       "default": "GridExpandMoreIcon",
@@ -294,6 +295,7 @@
       "cell--textRight",
       "cell--withRenderer",
       "cell",
+      "cellContent",
       "cellCheckbox",
       "checkboxInput",
       "columnHeader--alignCenter",
@@ -310,6 +312,7 @@
       "columnHeaderDropZone",
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
+      "columnHeaderTitleContainerContent",
       "columnHeaders",
       "columnHeadersInner",
       "columnHeadersInner--scrollable",
@@ -380,6 +383,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro.tsx",
+  "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid#commercial-version\">DataGridPro</a></li></ul>"
 }

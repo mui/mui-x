@@ -1,39 +1,37 @@
 [
   {
-    "name": "allGridColumnsFieldsSelector",
-    "returnType": "string[]",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "allGridColumnsSelector",
+    "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef[]",
-    "description": "",
+    "category": "Columns",
+    "description": "Get the columns as an array.",
     "supportsApiRef": true
   },
   {
-    "name": "filterableGridColumnsIdsSelector",
+    "name": "gridColumnFieldsSelector",
     "returnType": "string[]",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "filterableGridColumnsSelector",
-    "returnType": "GridStateColDef[]",
-    "description": "",
+    "category": "Columns",
+    "description": "Get the field of each column.",
     "supportsApiRef": true
   },
   {
     "name": "gridColumnLookupSelector",
     "returnType": "GridColumnLookup",
-    "description": "",
-    "supportsApiRef": false
+    "category": "Columns",
+    "description": "Get the columns as a lookup (an object containing the field for keys and the definition for values).",
+    "supportsApiRef": true
   },
   {
     "name": "gridColumnMenuSelector",
     "returnType": "GridColumnMenuState",
     "description": "",
     "supportsApiRef": false
+  },
+  {
+    "name": "gridColumnPositionsSelector",
+    "returnType": "number[]",
+    "category": "Visible Columns",
+    "description": "Get the left position in pixel of each visible columns relative to the left of the first column.",
+    "supportsApiRef": true
   },
   {
     "name": "gridColumnReorderDragColSelector",
@@ -56,25 +54,15 @@
   {
     "name": "gridColumnVisibilityModelSelector",
     "returnType": "GridColumnVisibilityModel",
-    "description": "",
+    "category": "Visible Columns",
+    "description": "Get the column visibility model, containing the visibility status of each column.\nIf a column is not registered in the model, it is visible.",
     "supportsApiRef": true
-  },
-  {
-    "name": "gridColumnsMetaSelector",
-    "returnType": "{ totalWidth: number; positions: number[] }",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridColumnsSelector",
-    "returnType": "GridColumnsState",
-    "description": "",
-    "supportsApiRef": false
   },
   {
     "name": "gridColumnsTotalWidthSelector",
     "returnType": "number",
-    "description": "",
+    "category": "Visible Columns",
+    "description": "Get the summed width of all the visible columns.",
     "supportsApiRef": true
   },
   {
@@ -144,6 +132,20 @@
     "category": "Filtering",
     "description": "",
     "supportsApiRef": false
+  },
+  {
+    "name": "gridFilterableColumnDefinitionsSelector",
+    "returnType": "GridStateColDef[]",
+    "category": "Columns",
+    "description": "Get the filterable columns as an array.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFilterableColumnLookupSelector",
+    "returnType": "GridColumnLookup",
+    "category": "Columns",
+    "description": "Get the filterable columns as a lookup (an object containing the field for keys and the definition for values).",
+    "supportsApiRef": true
   },
   {
     "name": "gridFilteredSortedRowEntriesSelector",
@@ -355,9 +357,17 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridVisibleColumnDefinitionsSelector",
+    "returnType": "GridStateColDef[]",
+    "category": "Visible Columns",
+    "description": "Get the visible columns as a lookup (an object containing the field for keys and the definition for values).",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridVisibleColumnFieldsSelector",
     "returnType": "string[]",
-    "description": "",
+    "category": "Visible Columns",
+    "description": "Get the field of each visible column.",
     "supportsApiRef": true
   },
   {
@@ -410,18 +420,6 @@
   {
     "name": "selectedIdsLookupSelector",
     "returnType": "{}",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "visibleGridColumnsLengthSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "visibleGridColumnsSelector",
-    "returnType": "GridStateColDef[]",
     "description": "",
     "supportsApiRef": true
   }

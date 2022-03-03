@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridOverlay } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import {
   useDemoData,
   getRealGridData,
@@ -15,16 +15,6 @@ function sleep(duration) {
       resolve();
     }, duration);
   });
-}
-
-function CustomLoadingOverlay() {
-  return (
-    <GridOverlay>
-      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-        <LinearProgress />
-      </div>
-    </GridOverlay>
-  );
 }
 
 export default function InfiniteLoadingGrid() {
@@ -70,7 +60,7 @@ export default function InfiniteLoadingGrid() {
         hideFooterPagination
         onRowsScrollEnd={handleOnRowsScrollEnd}
         components={{
-          LoadingOverlay: CustomLoadingOverlay,
+          LoadingOverlay: LinearProgress,
         }}
       />
     </div>
