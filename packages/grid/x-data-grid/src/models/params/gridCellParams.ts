@@ -67,7 +67,7 @@ export interface GridCellParams<V = any, R = any, F = V> {
 export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef`
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
 }
@@ -78,7 +78,7 @@ export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellP
 export interface GridRenderEditCellParams extends GridEditCellProps {
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef`
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
 }
@@ -90,7 +90,7 @@ export interface GridValueGetterParams<V = any, R = any>
   extends Omit<GridCellParams<V, R, any>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef`
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
 }
@@ -133,7 +133,7 @@ export interface GridValueFormatterParams {
   value: GridCellValue;
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef`
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
 }
