@@ -16,7 +16,7 @@ describe('<DataGridPro /> - Print export', () => {
   const { render } = createRenderer();
 
   const NB_ROWS = 2;
-  const defaultData = getData<GridApi>(NB_ROWS, 2);
+  const defaultData = getData(NB_ROWS, 2);
   let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
