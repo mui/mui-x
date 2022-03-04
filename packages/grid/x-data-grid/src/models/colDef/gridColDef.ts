@@ -18,8 +18,6 @@ import { GridRowParams } from '../params/gridRowParams';
 import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApiCommon } from '../api/gridApiCommon';
-import type { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridValidRowModel } from '../gridRows';
 
 /**
