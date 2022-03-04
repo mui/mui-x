@@ -91,6 +91,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 ### Docs
 
 - [docs] Add example of custom operator based on built-in ones (#3911) @flaviendelangle
+- [docs] Add missing words in the filtering page (#4079) @flaviendelangle
 - [docs] Avoid crash in demos using row grouping and custom formatted cells (#4065) @m4theushw
 - [docs] Fix `Commodity` and `Employee` CSV export of the `country` column (#3912) @DanailH
 - [docs] Fix links to the GitHub repository (#4005) @oliviertassinari
