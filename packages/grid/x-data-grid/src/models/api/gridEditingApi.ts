@@ -198,12 +198,11 @@ interface GridStopRowEditModeParams {
 }
 
 export interface GridNewCellEditingApi
-  extends GridEditingSharedApi,
+  extends Omit<GridEditingSharedApi, 'getEditRowsModel' | 'setEditRowsModel'>,
     Pick<GridCellEditingApi, 'getCellMode'> {
   /**
    * Puts the cell correspoding to the given row id and field into edit mode.
    * @param {GridStartCellEditModeParams} params The row id and field of the cell to edit.
-   * @ignore - do not document.
    */
   startCellEditMode(params: GridStartCellEditModeParams): void;
   /**
@@ -211,7 +210,6 @@ export interface GridNewCellEditingApi
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
-   * @ignore - do not document.
    */
   stopCellEditMode(params: GridStopCellEditModeParams): Promise<boolean>;
   /**
@@ -225,12 +223,11 @@ export interface GridNewCellEditingApi
 }
 
 export interface GridNewRowEditingApi
-  extends GridEditingSharedApi,
+  extends Omit<GridEditingSharedApi, 'getEditRowsModel' | 'setEditRowsModel'>,
     Pick<GridRowEditingApi, 'getRowMode'> {
   /**
    * Puts the row correspoding to the given id into edit mode.
    * @param {GridStartCellEditModeParams} params The row id edit.
-   * @ignore - do not document.
    */
   startRowEditMode(params: GridStartRowEditModeParams): void;
   /**
@@ -238,7 +235,6 @@ export interface GridNewRowEditingApi
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
-   * @ignore - do not document.
    */
   stopRowEditMode(params: GridStopRowEditModeParams): Promise<boolean>;
   /**
@@ -259,3 +255,7 @@ export interface GridEditingApi
     GridRowEditingApi,
     GridNewCellEditingApi,
     GridNewRowEditingApi {}
+
+export interface GridOldEditingApi extends GridCellEditingApi, GridRowEditingApi {}
+
+export interface GridNewEditingApi extends GridNewCellEditingApi, GridNewRowEditingApi {}
