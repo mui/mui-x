@@ -14,7 +14,6 @@ import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { gridPageSelector } from './gridPaginationSelector';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { buildWarning } from '../../../utils/warning';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const getPageCount = (rowCount: number, pageSize: number): number => {
   if (pageSize > 0 && rowCount > 0) {
