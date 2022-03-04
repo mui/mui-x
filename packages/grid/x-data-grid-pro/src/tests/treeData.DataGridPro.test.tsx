@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
   getCell,

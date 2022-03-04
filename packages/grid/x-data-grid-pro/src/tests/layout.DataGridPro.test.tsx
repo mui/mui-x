@@ -1,5 +1,5 @@
 import * as React from 'react';
-// @ts-ignore
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';

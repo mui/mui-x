@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
-// @ts-ignore
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import Sinon, { stub } from 'sinon';

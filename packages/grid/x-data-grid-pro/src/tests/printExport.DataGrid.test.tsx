@@ -6,7 +6,7 @@ import {
   useGridApiRef,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';

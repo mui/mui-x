@@ -1,5 +1,5 @@
 import * as React from 'react';
-// @ts-ignore
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
 import { SinonStub, stub } from 'sinon';
 import { expect } from 'chai';

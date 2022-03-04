@@ -9,7 +9,7 @@ import {
   GridPreferencePanelsValue,
   GridFilterItem,
 } from '@mui/x-data-grid';
-// @ts-ignore
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { getColumnValues } from '../../../../../test/utils/helperFn';
 

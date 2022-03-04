@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, act, GridApiPro } from '@mui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
