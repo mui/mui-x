@@ -1,7 +1,7 @@
 import { GridCellValue } from './gridCell';
 
-export interface GridEditCellProps {
-  value: GridCellValue;
+export interface GridEditCellProps<V = GridCellValue> {
+  value: V;
   isValidating?: boolean;
   isProcessingProps?: boolean;
   [prop: string]: any;
