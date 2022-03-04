@@ -61,6 +61,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Allow to navigate between cells with keyboard once inside an `actions` column (#3375) @m4theushw
 - [DataGrid] Fix desynchronization between rows and header when sorting (#4058) @alexfauquette
 - [DataGrid] Clean and document the columns selector (#4010) @flaviendelangle
+- [DataGrid] Deprecate and stop typing the api params of `GridCellParams`/`GridValueGetterParams` and affiliated (#4089) @ flaviendelangle
 - [DataGrid] Differentiate the Pro and Community versions of `GridState`, `GridApi` and `GridApiRef` (#3648) @flaviendelangle
 - [DataGrid] Fix column selection for print export (#3917) @alexfauquette
 - [DataGrid] Fix horizontal scroll not working on empty grid (#3821) @cherniavskii
