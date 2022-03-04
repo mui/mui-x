@@ -18,7 +18,6 @@ import {
   GridApi,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { DataGridProps } from '@mui/x-data-grid';
 import { getData } from 'storybook/src/data/data-service';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -134,7 +133,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should not throttle even when props.throttleRowsMs is defined', () => {
       const { rows, columns } = getData(5, 2);
 
-      const Test = (props: Pick<DataGridProps, 'rows'>) => (
+      const Test = (props: Pick<DataGridProProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
             {...props}
