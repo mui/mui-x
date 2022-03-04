@@ -100,6 +100,7 @@ enum GridEvents {
   cellNavigationKeyDown = 'cellNavigationKeyDown',
   /**
    * Fired when a row is clicked.
+   * Not fired if the cell clicked is from an interactive column (actions, checkbox, etc).
    */
   rowClick = 'rowClick',
   /**

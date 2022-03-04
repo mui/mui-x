@@ -181,7 +181,7 @@
   },
   {
     "name": "rowClick",
-    "description": "Fired when a row is clicked.",
+    "description": "Fired when a row is clicked.\nNot fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },

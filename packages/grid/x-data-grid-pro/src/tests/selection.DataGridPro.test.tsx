@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import {
   GridApi,
@@ -222,7 +222,7 @@ describe('<DataGridPro /> - Selection', () => {
     it('should check if the rows selected by clicking on the rows are selected', () => {
       render(<TestDataGridSelection />);
 
-      fireEvent.click(getRow(1));
+      fireEvent.click(getCell(1, 0));
 
       expect(apiRef.current.isRowSelected(0)).to.equal(false);
       expect(apiRef.current.isRowSelected(1)).to.equal(true);

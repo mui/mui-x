@@ -12,10 +12,13 @@ import {
   GridColumns,
   GridEvents,
   gridClasses,
+  GridActionsCellItem,
   GridApi,
 } from '@mui/x-data-grid-pro';
-import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Events Params', () => {
   const { render, clock } = createRenderer();
@@ -50,19 +53,13 @@ describe('<DataGridPro /> - Events Params', () => {
     ],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let apiRef: React.MutableRefObject<GridApi>;
+
   const TestEvents = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
+        <DataGridPro apiRef={apiRef} {...baselineProps} {...props} disableVirtualization />
       </div>
     );
   };
@@ -94,7 +91,7 @@ describe('<DataGridPro /> - Events Params', () => {
       };
       render(<TestEvents onRowClick={handleClick} />);
 
-      const row1 = getRow(1);
+      const row1 = getCell(1, 0);
       fireEvent.click(row1);
 
       expect(eventArgs!.params).to.deep.include({
@@ -198,10 +195,10 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should allow to stop propagation', () => {
-      const stopClick = (params, event) => {
+      const stopClick = (params: GridCellParams, event: React.MouseEvent) => {
         event.stopPropagation();
       };
-      render(<TestEvents onCellClick={stopClick} onSelectionModelChange={push('rowSelected')} />);
+      render(<TestEvents onCellClick={stopClick} onRowClick={push('rowClick')} />);
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
@@ -255,15 +252,90 @@ describe('<DataGridPro /> - Events Params', () => {
     });
   });
 
+  describe('onRowClick', () => {
+    let eventStack: string[] = [];
+    const push = (name: string) => () => {
+      eventStack.push(name);
+    };
+
+    beforeEach(() => {
+      eventStack = [];
+    });
+
+    it('should be called when clicking a cell', () => {
+      render(<TestEvents onRowClick={push('rowClick')} />);
+      const cell11 = getCell(1, 1);
+      fireEvent.click(cell11);
+      expect(eventStack).to.deep.equal(['rowClick']);
+    });
+
+    it('should not be called when clicking the checkbox added by checkboxSelection', () => {
+      render(<TestEvents onRowClick={push('rowClick')} checkboxSelection />);
+      const cell11 = getCell(1, 0).querySelector('input');
+      fireEvent.click(cell11);
+      expect(eventStack).to.deep.equal([]);
+    });
+
+    it('should not be called when clicking in an action', () => {
+      render(
+        <TestEvents
+          onRowClick={push('rowClick')}
+          rows={[{ id: 0 }]}
+          columns={[
+            {
+              field: 'actions',
+              type: 'actions',
+              getActions: () => [<GridActionsCellItem icon={<span />} label="print" />],
+            },
+          ]}
+        />,
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'print' }));
+      expect(eventStack).to.deep.equal([]);
+    });
+
+    it('should not be called when opening the detail panel of a row', () => {
+      render(<TestEvents onRowClick={push('rowClick')} getDetailPanelContent={() => <div />} />);
+      fireEvent.click(getCell(0, 0));
+      expect(eventStack).to.deep.equal([]);
+    });
+
+    it('should not be called when expanding a group of rows', () => {
+      render(
+        <TestEvents
+          onRowClick={push('rowClick')}
+          rows={[
+            { id: 0, path: ['Group 1'] },
+            { id: 1, path: ['Group 1', 'Group 2'] },
+          ]}
+          getTreeDataPath={(row) => row.path}
+          treeData
+        />,
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'see children' }));
+      expect(eventStack).to.deep.equal([]);
+    });
+
+    it('should not be called when clicking inside a cell being edited', () => {
+      render(<TestEvents onRowClick={push('rowClick')} />);
+      const cell = getCell(0, 1);
+      fireEvent.doubleClick(cell);
+      fireEvent.click(cell.querySelector('input'));
+      expect(eventStack).to.deep.equal([]);
+    });
+  });
+
   it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {
     const handleRowsScrollEnd = spy();
-
     render(<TestEvents onRowsScrollEnd={handleRowsScrollEnd} />);
     apiRef.current.publishEvent(GridEvents.rowsScroll, { left: 0, top: 3 * 52 });
     expect(handleRowsScrollEnd.callCount).to.equal(1);
   });
 
-  it('call onRowsScrollEnd when viewport scroll reaches the bottom', () => {
+  it('call onRowsScrollEnd when viewport scroll reaches the bottom', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
     const baseRows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
