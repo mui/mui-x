@@ -3,7 +3,7 @@ import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-da
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import Sinon, { stub } from 'sinon';
+import { stub, SinonStub } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -49,7 +49,7 @@ describe('<DataGridPro /> - Clipboard', () => {
   }
 
   describe('copySelectedRowsToClipboard', () => {
-    let writeText: Sinon.SinonStub;
+    let writeText: SinonStub;
 
     beforeEach(function beforeEachHook() {
       writeText = stub().resolves();

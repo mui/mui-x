@@ -15,6 +15,7 @@ import {
   gridClasses,
   GridActionsCellItem,
   GridApi,
+  GridEventListener,
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -108,7 +109,7 @@ describe('<DataGridPro /> - Events Params', () => {
     let cell11;
 
     it('should include the correct params', () => {
-      const handleClick = (params: GridCellParams, event: React.MouseEvent) => {
+      const handleClick: GridEventListener<'cellClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
@@ -128,7 +129,7 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should include the correct params when grid is sorted', () => {
-      const handleClick = (params: GridCellParams, event: React.MouseEvent) => {
+      const handleClick: GridEventListener<'cellClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
@@ -153,7 +154,7 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should consider value getter', () => {
-      const handleClick = (params: GridCellParams, event: React.MouseEvent) => {
+      const handleClick: GridEventListener<'cellClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
@@ -164,7 +165,7 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should consider value formatter', () => {
-      const handleClick = (params: GridCellParams, event: React.MouseEvent) => {
+      const handleClick: GridEventListener<'cellClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
