@@ -1,11 +1,8 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 
 import { useTheme } from '@mui/material/styles';
-import { Palette, PaletteMode } from '@mui/material';
+import { PaletteMode } from '@mui/material';
 
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';

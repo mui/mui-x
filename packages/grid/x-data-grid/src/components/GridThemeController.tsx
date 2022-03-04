@@ -7,21 +7,18 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 const GridThemeController = ({ children }) => {
   const apiRef = useGridApiContext();
   const themePalette = gridThemePaletteSelector(apiRef);
-  const parentTheme = useTheme()
+  const parentTheme = useTheme();
 
-  const themeWithCustomPalette = React.useMemo(
-    () => {
-      if (themePalette) {
-        return deepmerge(parentTheme, createTheme({ palette: themePalette }))
-      }
-      return parentTheme
-    },
-    [parentTheme, themePalette],
-  );
+  const themeWithCustomPalette = React.useMemo(() => {
+    if (themePalette) {
+      return deepmerge(parentTheme, createTheme({ palette: themePalette }));
+    }
+    return parentTheme;
+  }, [parentTheme, themePalette]);
   return (
     <ThemeProvider
       // theme={outerTheme => ({ darkMode: true, ...outerTheme })}
-      theme={(themeWithCustomPalette)}
+      theme={themeWithCustomPalette}
     >
       {children}
     </ThemeProvider>
