@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridToolbar, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridToolbar, useGridApiRef } from '@mui/x-data-grid-pro';
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -9,7 +9,7 @@ describe('<DataGridPro /> - Print export', () => {
   const { render } = createRenderer();
 
   const NB_ROWS = 2;
-  const defaultData = getData<GridApi>(NB_ROWS, 2);
+  const defaultData = getData(NB_ROWS, 2);
   let apiRef;
 
   const baselineProps = {

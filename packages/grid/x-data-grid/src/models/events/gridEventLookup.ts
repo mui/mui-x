@@ -90,31 +90,31 @@ export interface GridColumnHeaderEventLookup {
 
 export interface GridCellEventLookup {
   cellClick: {
-    params: GridCellParams<any, any, any, any>;
+    params: GridCellParams;
     event: React.MouseEvent<HTMLElement>;
   };
   cellDoubleClick: {
-    params: GridCellParams<any, any, any, any>;
+    params: GridCellParams;
     event: React.MouseEvent<HTMLElement>;
   };
   cellMouseDown: {
-    params: GridCellParams<any, any, any, any>;
+    params: GridCellParams;
     event: React.MouseEvent<HTMLElement>;
   };
   cellMouseUp: {
-    params: GridCellParams<any, any, any, any>;
+    params: GridCellParams;
     event: React.MouseEvent<HTMLElement>;
   };
   cellKeyDown: {
-    params: GridCellParams<any, any, any, any>;
+    params: GridCellParams;
     event: React.KeyboardEvent<HTMLElement>;
   };
   cellDragEnter: {
-    params: GridCellParams<any, any, any, any>;
+    params: GridCellParams;
     event: React.DragEvent<HTMLElement>;
   };
   cellDragOver: {
-    params: GridCellParams<any, any, any, any>;
+    params: GridCellParams;
     event: React.DragEvent<HTMLElement>;
   };
 }
@@ -163,12 +163,12 @@ export interface GridEventLookup
   rowExpansionChange: { params: GridRowTreeNodeConfig };
 
   // Edit
-  cellModeChange: { params: GridCellParams<any, any, any, any> };
+  cellModeChange: { params: GridCellParams };
   cellEditStart: {
-    params: GridCellParams<any, any, any, any>;
+    params: GridCellParams;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  cellEditStop: { params: GridCellParams<any, any, any>; any; event: MuiBaseEvent };
+  cellEditStop: { params: GridCellParams; event: MuiBaseEvent };
   cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
   editCellPropsChange: {
     params: GridEditCellPropsParams;
@@ -182,12 +182,12 @@ export interface GridEventLookup
   rowEditCommit: { params: GridRowId; event: MuiBaseEvent };
 
   // Focus
-  cellFocusIn: { params: GridCellParams<any, any, any, any> };
-  cellFocusOut: { params: GridCellParams<any, any, any, any>; event: MuiBaseEvent };
+  cellFocusIn: { params: GridCellParams };
+  cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
 
   // Navigation
   cellNavigationKeyDown: {
-    params: GridCellParams<any, any, any, any> | GridRowParams;
+    params: GridCellParams | GridRowParams;
     event: React.KeyboardEvent<HTMLElement>;
   };
   columnHeaderNavigationKeyDown: {

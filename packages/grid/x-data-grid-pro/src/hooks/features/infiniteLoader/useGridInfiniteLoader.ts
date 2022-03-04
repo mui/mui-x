@@ -8,11 +8,11 @@ import {
   useGridApiOptionHandler,
   gridVisibleColumnDefinitionsSelector,
   gridRowsMetaSelector,
+  GridColumns,
 } from '@mui/x-data-grid';
 import { useCurrentPageRows } from '@mui/x-data-grid/internals';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
-import { GridColumns } from '../../../models/gridColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 /**
