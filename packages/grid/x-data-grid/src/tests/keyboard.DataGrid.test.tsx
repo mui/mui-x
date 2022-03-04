@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, createEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import Portal from '@mui/material/Portal';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -365,42 +365,97 @@ describe('<DataGrid /> - Keyboard', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
       expect(getActiveCell()).to.equal(`5-1`);
     });
-  });
-  /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 
-  it('should be able to type in an child input', () => {
-    const handleInputKeyDown = spy((event) => event.defaultPrevented);
+    it('should move focus when the focus is on a column header button', function test() {
+      if (isJSDOM) {
+        // This test is not relevant if we can't choose the actual height
+        this.skip();
+      }
 
-    const columns = [
-      {
-        field: 'name',
-        headerName: 'Name',
-        width: 200,
-        renderCell: () => (
-          <input type="text" data-testid="custom-input" onKeyDown={handleInputKeyDown} />
-        ),
-      },
-    ];
+      render(<NavigationTestCaseNoScrollX />);
 
-    const rows = [
-      {
-        id: 1,
-        name: 'John',
-      },
-    ];
+      // get the sort button in column header 1
+      const columnMenuButton = getColumnHeaderCell(1).querySelector(
+        `button[title="Sort"]`,
+      ) as HTMLElement;
 
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid rows={rows} columns={columns} />
-      </div>,
-    );
-    const input = screen.getByTestId('custom-input');
-    fireClickEvent(input);
-    const keydownEvent = createEvent.keyDown(input, {
-      key: 'a',
+      // Simulate click on this button
+      fireEvent.mouseUp(columnMenuButton);
+      fireEvent.click(columnMenuButton);
+      columnMenuButton.focus();
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      expect(getActiveCell()).to.equal(`0-1`);
     });
-    fireEvent(input, keydownEvent);
-    expect(handleInputKeyDown.returnValues).to.deep.equal([false]);
+
+    /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
+    it('should be able to type in an child input', () => {
+      const columns = [
+        {
+          field: 'name',
+          headerName: 'Name',
+          width: 200,
+          renderCell: () => <input type="text" data-testid="custom-input" />,
+        },
+      ];
+
+      const rows = [
+        {
+          id: 1,
+          name: 'John',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={rows} columns={columns} />
+        </div>,
+      );
+      const input = screen.getByTestId('custom-input');
+      fireEvent.mouseUp(input);
+      fireEvent.click(input);
+      input.focus();
+
+      // This does not work with navigation keys.
+      // For now, the workaround for developers is to stop the propagation
+      // But adding input is discouraged, action column or edit mode are better options
+      expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
+    });
+
+    it('should be able to use keyboard in a columnHeader child input', () => {
+      const columns = [
+        {
+          field: 'name',
+          headerName: 'Name',
+          width: 200,
+          renderHeader: () => <input type="text" data-testid="custom-input" />,
+        },
+      ];
+
+      const rows = [
+        {
+          id: 1,
+          name: 'John',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={rows} columns={columns} />
+        </div>,
+      );
+      const input = screen.getByTestId('custom-input');
+      fireEvent.mouseUp(input);
+      fireEvent.click(input);
+      input.focus();
+
+      // Verify that the event is not prevented during the bubbling.
+      // fireEvent.keyDown return false if it is the case
+      // For more info, see the related discussion: https://github.com/mui/mui-x/pull/3624#discussion_r787767632
+      expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
+      expect(fireEvent.keyDown(input, { key: ' ' })).to.equal(true);
+      expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
+    });
   });
 
   it('should ignore events coming from a portal inside the cell', () => {

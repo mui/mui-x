@@ -1,4 +1,4 @@
-import { GridClassKey } from '../internals/gridClasses';
+import { GridClassKey } from '../constants/gridClasses';
 
 export interface DataGridComponentNameToClassKey {
   MuiDataGrid: GridClassKey;

@@ -260,6 +260,7 @@
     "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
+    "FilterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
     "GroupingCriteriaCollapseIcon": {
       "default": "GridExpandMoreIcon",
@@ -312,6 +313,7 @@
       "columnHeaderDropZone",
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
+      "columnHeaderTitleContainerContent",
       "columnHeaders",
       "columnHeadersInner",
       "columnHeadersInner--scrollable",
@@ -353,6 +355,7 @@
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",
+      "virtualScrollerContent--overflowed",
       "virtualScrollerRenderZone",
       "pinnedColumns",
       "pinnedColumns--left",
@@ -363,6 +366,7 @@
       "root",
       "row--editable",
       "row--editing",
+      "row--lastVisible",
       "row",
       "rowCount",
       "scrollArea",
@@ -380,6 +384,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro.tsx",
+  "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "demos": "<ul><li><a href=\"/components/data-grid#commercial-version\">DataGridPro</a></li></ul>"
 }

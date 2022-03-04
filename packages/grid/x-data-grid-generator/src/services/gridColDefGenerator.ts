@@ -1,4 +1,4 @@
-import { GridApiCommon, GridColDef } from '@mui/x-data-grid-pro';
+import { GridColDef } from '@mui/x-data-grid-pro';
 
 export interface GridDataGeneratorContext {
   /**
@@ -10,7 +10,7 @@ export interface GridDataGeneratorContext {
   values?: Record<string, number>;
 }
 
-export interface GridColDefGenerator<Api extends GridApiCommon> extends GridColDef<Api> {
+export interface GridColDefGenerator extends GridColDef {
   generateData?: (row: any, context: GridDataGeneratorContext) => any;
 
   /**

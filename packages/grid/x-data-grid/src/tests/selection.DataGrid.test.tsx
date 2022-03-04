@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridApi, GridInputSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridInputSelectionModel } from '@mui/x-data-grid';
 import {
   getCell,
   getRow,
@@ -17,7 +17,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
-  return [...getRows()]
+  return Array.from(getRows())
     .filter((row) => row.classList.contains('Mui-selected'))
     .map((row) =>
       Number(
@@ -34,7 +34,7 @@ function fireClickEvent(cell: HTMLElement) {
 describe('<DataGrid /> - Selection', () => {
   const { render, clock } = createRenderer();
 
-  const defaultData = getData<GridApi>(4, 2);
+  const defaultData = getData(4, 2);
 
   const TestDataGridSelection = (
     props: Omit<DataGridProps, 'rows' | 'columns'> &
@@ -398,7 +398,7 @@ describe('<DataGrid /> - Selection', () => {
       if (isJSDOM) {
         this.skip(); // HTMLElement.focus() only scrolls to the element on a real browser
       }
-      const data = getData<GridApi>(20, 1);
+      const data = getData(20, 1);
       render(<TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />);
       const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
       checkboxes[0].focus();
@@ -478,8 +478,8 @@ describe('<DataGrid /> - Selection', () => {
         <TestDataGridSelection isRowSelectable={() => true} checkboxSelection />,
       );
 
-      fireEvent.click(getRow(0));
-      fireEvent.click(getRow(1));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(1, 0).querySelector('input'));
 
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
 
@@ -528,6 +528,7 @@ describe('<DataGrid /> - Selection', () => {
         render(
           <TestDataGridSelection
             paginationMode="server"
+            rowCount={4}
             selectionModel={[1, 4]}
             isRowSelectable={(params) => params.id > 0}
             checkboxSelection
@@ -539,7 +540,7 @@ describe('<DataGrid /> - Selection', () => {
 
   describe('props: rows', () => {
     it('should remove the outdated selected rows when rows prop changes', () => {
-      const data = getData<GridApi>(4, 2);
+      const data = getData(4, 2);
 
       const { setProps } = render(
         <TestDataGridSelection selectionModel={[0, 1, 2]} checkboxSelection {...data} />,

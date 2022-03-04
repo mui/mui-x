@@ -207,6 +207,7 @@
     "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
+    "FilterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
     "GroupingCriteriaCollapseIcon": {
       "default": "GridExpandMoreIcon",
@@ -259,6 +260,7 @@
       "columnHeaderDropZone",
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
+      "columnHeaderTitleContainerContent",
       "columnHeaders",
       "columnHeadersInner",
       "columnHeadersInner--scrollable",
@@ -300,6 +302,7 @@
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",
+      "virtualScrollerContent--overflowed",
       "virtualScrollerRenderZone",
       "pinnedColumns",
       "pinnedColumns--left",
@@ -310,6 +313,7 @@
       "root",
       "row--editable",
       "row--editing",
+      "row--lastVisible",
       "row",
       "rowCount",
       "scrollArea",
@@ -327,6 +331,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-data-grid/src/DataGrid.tsx",
+  "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>"
 }

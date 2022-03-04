@@ -8,12 +8,11 @@ import {
   DataGrid,
   DataGridProps,
   GridActionsCellItem,
-  GridApi,
   GridRowClassNameParams,
 } from '@mui/x-data-grid';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
-import { COMPACT_DENSITY_FACTOR } from '../internals/hooks/features/density/useGridDensity';
+import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -56,7 +55,7 @@ describe('<DataGrid /> - Rows', () => {
 
   describe('props: rows', () => {
     it('should support new dataset', () => {
-      const { rows, columns } = getData<GridApi>(5, 2);
+      const { rows, columns } = getData(5, 2);
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>

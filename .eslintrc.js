@@ -110,6 +110,58 @@ module.exports = {
       },
     },
     {
+      files: ['packages/x-license-pro/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: ['@mui/x-license-pro'],
+            patterns: ['@mui/x-license-pro/*'],
+          },
+        ],
+      },
+    },
+    {
+      files: ['packages/grid/x-data-grid-pro/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: ['@mui/x-data-grid-pro'],
+            patterns: ['@mui/x-data-grid-pro/*'],
+          },
+        ],
+      },
+    },
+    {
+      files: ['packages/grid/x-data-grid/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: ['@mui/x-data-grid'],
+            patterns: ['@mui/x-data-grid/*'],
+          },
+        ],
+      },
+    },
+    {
+      files: ['packages/x-data-grid-generator/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: ['@mui/x-data-grid-generator'],
+            patterns: ['@mui/x-data-grid-generator/*'],
+          },
+        ],
+      },
+    },
+    {
       files: ['packages/grid/**/*{.ts,.tsx,.js}'],
       excludedFiles: [
         'packages/grid/x-data-grid-generator/**',
