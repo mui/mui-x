@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { GRID_STRING_COL_DEF } from '@mui/x-data-grid';
+import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
 import { GridDetailPanelToggleCell } from '../../../components/GridDetailPanelToggleCell';
 import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
-import { GridColDef } from '../../../models/gridColDef';
 
 export const GRID_DETAIL_PANEL_TOGGLE_FIELD = '__detail_panel_toggle__';
 

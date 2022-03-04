@@ -4,7 +4,6 @@ import {
   GridRowModel,
   GridRowId,
   GridKeyValue,
-  GridColumnLookup,
   GridEvents,
   GridEventListener,
   gridRowIdsSelector,
@@ -14,6 +13,8 @@ import {
   gridColumnLookupSelector,
   gridFilteredDescendantCountLookupSelector,
   useFirstRender,
+  GridColDef,
+  GridStateColDef,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPreProcessor,
@@ -28,7 +29,6 @@ import {
   isDeepEqual,
 } from '@mui/x-data-grid/internals';
 import { GridGroupingValueGetterParams } from '../../../models';
-import { GridColDef, GridStateColDef } from '../../../models/gridColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {
@@ -96,7 +96,7 @@ export const useGridRowGrouping = (
   const updateRowGrouping = React.useCallback(() => {
     const groupRows: GridRowGroupingPreProcessing = (params) => {
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-      const columnsLookup = gridColumnLookupSelector(apiRef) as any as GridColumnLookup<GridApiPro>;
+      const columnsLookup = gridColumnLookupSelector(apiRef);
       sanitizedModelOnLastRowPreProcessing.current = rowGroupingModel;
 
       if (props.disableRowGrouping || rowGroupingModel.length === 0) {
