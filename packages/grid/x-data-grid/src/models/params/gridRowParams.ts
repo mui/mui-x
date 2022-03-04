@@ -28,10 +28,7 @@ export interface GridRowParams<R extends GridRowModel = GridRowModel> {
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }
 
-/**
- * Object passed as parameter in the row `getRowClassName` callback prop.
- */
-export interface GridRowClassNameParams extends GridRowParams {
+interface GridRowVisibilityParams {
   /**
    * Whether this row is the first visible or not.
    */
@@ -41,6 +38,11 @@ export interface GridRowClassNameParams extends GridRowParams {
    */
   isLastVisible: boolean;
 }
+
+/**
+ * Object passed as parameter in the row `getRowClassName` callback prop.
+ */
+export interface GridRowClassNameParams extends GridRowParams, GridRowVisibilityParams {}
 
 /**
  * Object passed as parameter in the row `getRowHeight` callback prop.
@@ -60,16 +62,7 @@ export type GridRowHeightReturnValue = number | null | undefined;
 /**
  * Object passed as parameter in the row `getRowSpacing` callback prop.
  */
-export interface GridRowSpacingParams extends GridRowEntry {
-  /**
-   * Whether this row is the first visible or not.
-   */
-  isFirstVisible: boolean;
-  /**
-   * Whether this row is the last visible or not.
-   */
-  isLastVisible: boolean;
-}
+export interface GridRowSpacingParams extends GridRowEntry, GridRowVisibilityParams {}
 
 /**
  * The getRowSpacing return value.
