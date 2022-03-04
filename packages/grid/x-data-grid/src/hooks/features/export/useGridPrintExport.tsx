@@ -239,8 +239,8 @@ export const useGridPrintExport = (
     [apiRef],
   );
 
-  const exportDataAsPrint = React.useCallback(
-    async (options?: GridPrintExportOptions) => {
+  const exportDataAsPrint = React.useCallback<GridPrintExportApi['exportDataAsPrint']>(
+    async (options) => {
       logger.debug(`Export data as Print`);
 
       if (!apiRef.current.rootElementRef!.current) {
