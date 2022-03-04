@@ -31,6 +31,7 @@ import {
   useGridDimensions,
   useGridStatePersistence,
   useGridSelectionPreProcessors,
+  useGridTheme,
 } from '@mui/x-data-grid/internals';
 
 import { GridApiPro } from '../models/gridApiPro';
@@ -112,6 +113,7 @@ export const useDataGridProComponent = (
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
+  useGridTheme(apiRef);
   useGridStatePersistence(apiRef);
 
   return apiRef;

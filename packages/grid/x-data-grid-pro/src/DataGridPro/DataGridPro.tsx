@@ -9,6 +9,7 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   GridContextProvider,
+  GridThemeController,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../components/Watermark';
@@ -38,18 +39,20 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeaderPlaceholder />
-          <GridBody
-            ColumnHeadersComponent={DataGridProColumnHeaders}
-            VirtualScrollerComponent={DataGridProVirtualScroller}
-          >
-            <Watermark />
-          </GridBody>
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
-      </GridRoot>
+      <GridThemeController>
+        <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+          <GridErrorHandler>
+            <GridHeaderPlaceholder />
+            <GridBody
+              ColumnHeadersComponent={DataGridProColumnHeaders}
+              VirtualScrollerComponent={DataGridProVirtualScroller}
+            >
+              <Watermark />
+            </GridBody>
+            <GridFooterPlaceholder />
+          </GridErrorHandler>
+        </GridRoot>
+      </GridThemeController>
     </GridContextProvider>
   );
 });

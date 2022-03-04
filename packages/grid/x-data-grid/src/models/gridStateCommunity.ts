@@ -14,6 +14,7 @@ import type {
   GridSortingInitialState,
   GridSortingState,
   GridTabIndexState,
+  GridThemeState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import type { GridRowsInternalCache } from '../hooks/features/rows/gridRowsState';
@@ -38,6 +39,7 @@ export interface GridStateCommunity {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
+  theme: GridThemeState;
   error?: any;
 }
 

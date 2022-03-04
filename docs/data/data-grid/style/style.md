@@ -117,6 +117,13 @@ Choose between one of the following values: 'left' | 'right' | 'center'.
 
 **Note**: You must use `headerAlign` to align the content of the header.
 
+## Toggle theme color mode [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+By default, the Data Grid has the same theme as your app.
+You can modify its color mode by using the method `apiRef.current.setThemeMode()`.
+
+{{"demo": "ToggleColorMode.js", "defaultCodeOpen": false}}
+
 ## Custom theme
 
 The following demo leverages the CSS customization API to match the Ant Design specification.

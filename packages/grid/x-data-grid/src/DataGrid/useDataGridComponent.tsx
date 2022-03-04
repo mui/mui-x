@@ -29,6 +29,7 @@ import { useGridEvents } from '../hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
 import { useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
+import { useGridTheme } from '../hooks/features/theme/useGridTheme';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
@@ -69,6 +70,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
+  useGridTheme(apiRef);
   useGridStatePersistence(apiRef);
 
   return apiRef;

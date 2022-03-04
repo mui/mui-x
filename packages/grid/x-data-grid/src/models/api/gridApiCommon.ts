@@ -25,6 +25,7 @@ import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPr
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
+import { GridThemeApi } from './gridThemeApi';
 
 type GridStateApiUntyped = {
   [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
@@ -56,4 +57,5 @@ export interface GridApiCommon
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
-    GridStateApiUntyped {}
+    GridStateApiUntyped,
+    GridThemeApi {}

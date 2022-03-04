@@ -12,3 +12,4 @@ export * from './selection';
 export * from './sorting';
 export * from './dimensions';
 export * from './statePersistence';
+export * from './theme';

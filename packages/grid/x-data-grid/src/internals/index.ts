@@ -55,6 +55,7 @@ export { useGridDimensions } from '../hooks/features/dimensions/useGridDimension
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
 export { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
+export { useGridTheme } from '../hooks/features/theme/useGridTheme';
 
 export { useCurrentPageRows } from '../hooks/utils/useCurrentPageRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
