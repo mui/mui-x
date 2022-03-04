@@ -189,10 +189,22 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   );
 
   const style = {
+    ...styleProp,
     maxHeight: rowHeight,
     minHeight: rowHeight,
-    ...styleProp,
   };
+
+  const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
+
+  if (sizes?.spacingTop) {
+    const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
+    style[property] = sizes.spacingTop;
+  }
+
+  if (sizes?.spacingBottom) {
+    const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
+    style[property] = sizes.spacingBottom;
+  }
 
   let rowClassName: string | null = null;
 

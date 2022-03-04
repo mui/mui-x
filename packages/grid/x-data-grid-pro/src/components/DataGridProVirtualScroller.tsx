@@ -258,7 +258,10 @@ const DataGridProVirtualScroller = React.forwardRef<
 
       if (React.isValidElement(content) && exists) {
         const height = detailPanelsHeights[id];
-        const top = rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id);
+        const sizes = apiRef.current.unstable_getRowInternalSizes(id);
+        const spacingTop = sizes?.spacingTop || 0;
+        const top =
+          rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id) + spacingTop;
 
         panels.push(
           <VirtualScrollerDetailPanel

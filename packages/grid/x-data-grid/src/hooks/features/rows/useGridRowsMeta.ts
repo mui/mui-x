@@ -31,7 +31,7 @@ export const useGridRowsMeta = (
 ): void => {
   const { getRowHeight, getRowSpacing } = props;
   const rowsHeightLookup = React.useRef<{
-    [key: GridRowId]: { value: number; isResized: boolean };
+    [key: GridRowId]: { value: number; isResized: boolean; sizes: Record<string, number> };
   }>({});
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const filterState = useGridSelector(apiRef, gridFilterStateSelector);
@@ -87,16 +87,17 @@ export const useGridRowsMeta = (
           initialHeights.spacingBottom = spacing.bottom ?? 0;
         }
 
-        const heights = apiRef.current.unstable_applyPreProcessors(
+        const sizes = apiRef.current.unstable_applyPreProcessors(
           'rowHeight',
           initialHeights,
           row,
         ) as Record<string, number>;
 
-        const finalRowHeight = Object.values(heights).reduce((acc2, value) => acc2 + value, 0);
+        const finalRowHeight = Object.values(sizes).reduce((acc2, value) => acc2 + value, 0);
 
         rowsHeightLookup.current[row.id] = {
           value: baseRowHeight,
+          sizes,
           isResized,
         };
 
@@ -114,11 +115,15 @@ export const useGridRowsMeta = (
   const getTargetRowHeight = (rowId: GridRowId): number =>
     rowsHeightLookup.current[rowId]?.value || rowHeight;
 
+  const getRowInternalSizes = (rowId: GridRowId): Record<string, number> | undefined =>
+    rowsHeightLookup.current[rowId]?.sizes;
+
   const setRowHeight = React.useCallback<GridRowsMetaApi['unstable_setRowHeight']>(
     (id: GridRowId, height: number) => {
       rowsHeightLookup.current[id] = {
         value: height,
         isResized: true,
+        sizes: { ...rowsHeightLookup.current[id].sizes, base: height },
       };
       hydrateRowsMeta();
     },
@@ -147,6 +152,7 @@ export const useGridRowsMeta = (
 
   const rowsMetaApi: GridRowsMetaApi = {
     unstable_getRowHeight: getTargetRowHeight,
+    unstable_getRowInternalSizes: getRowInternalSizes,
     unstable_setRowHeight: setRowHeight,
   };
 
