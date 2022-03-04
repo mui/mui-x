@@ -7,7 +7,7 @@ export type GridRowsProp<R = any> = Readonly<GridRowModel<R>[]>;
 /**
  * @deprecated prefer GridRowModel.
  */
-export type GridRowData<R extends GridValidRowModel = any> = R;
+export type GridRowData = GridValidRowModel;
 
 /**
  * The key value object representing the data of a row.

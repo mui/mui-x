@@ -630,7 +630,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: GridColumns<any>;
+  columns: GridColumns;
   /**
    * An error that will turn the grid into its error state and display the error component.
    */

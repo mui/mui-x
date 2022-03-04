@@ -127,27 +127,31 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   align?: GridAlignment;
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
-   * @param {GridValueGetterParams} params Object containing parameters for the getter.
-   * @returns {GridCellValue} The cell value.
+   * @template R, V
+   * @param {GridValueGetterParams<any, R>} params Object containing parameters for the getter.
+   * @returns {V} The cell value.
    */
   valueGetter?: (params: GridValueGetterParams<any, R>) => V;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
-   * @param {GridValueSetterParams} params Object containing parameters for the setter.
+   * @template R, V
+   * @param {GridValueSetterParams<R, V>} params Object containing parameters for the setter.
    * @returns {R} The row with the updated field.
    */
   valueSetter?: (params: GridValueSetterParams<R, V>) => R;
   /**
    * Function that allows to apply a formatter before rendering its value.
-   * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
+   * @template V, F
+   * @param {F<V>} params Object containing parameters for the formatter.
    * @returns {GridCellValue} The formatted value.
    */
   valueFormatter?: (params: GridValueFormatterParams<V>) => F;
   /**
    * Function that takes the user-entered value and converts it to a value used internally.
+   * @template R, V, F
    * @param {F | undefined} value The user-entered value.
-   * @param {GridCellParams} params The params when called before saving the value.
+   * @param {GridCellParams<V, R, F>} params The params when called before saving the value.
    * @returns {V} The converted value to use internally.
    */
   valueParser?: (value: F | undefined, params?: GridCellParams<V, R, F>) => V;
@@ -157,7 +161,8 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   cellClassName?: GridCellClassNamePropType;
   /**
    * Allows to override the component rendered as cell for this column.
-   * @param {GridRenderCellParams} params Object containing parameters for the renderer.
+   * @template R, V, F
+   * @param {GridRenderCellParams<V, R, F>} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
   renderCell?: (params: GridRenderCellParams<V, R, F>) => React.ReactNode;
@@ -182,7 +187,8 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   headerClassName?: GridColumnHeaderClassNamePropType;
   /**
    * Allows to render a component in the column header cell.
-   * @param {GridColumnHeaderParams} params Object containing parameters for the renderer.
+   * @template V, R, F
+   * @param {GridColumnHeaderParams<V, R, F>} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
   renderHeader?: (params: GridColumnHeaderParams<V, R, F>) => React.ReactNode;
