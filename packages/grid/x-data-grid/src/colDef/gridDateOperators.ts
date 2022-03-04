@@ -1,14 +1,12 @@
 import { GridFilterInputDate } from '../components/panel/filterPanel/GridFilterInputDate';
 import { GridFilterItem } from '../models/gridFilterItem';
-import { GridApiCommon } from '../models/api/gridApiCommon';
-import { GridApiCommunity } from '../models/api/gridApiCommunity';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridCellParams } from '../models/params/gridCellParams';
 
 const dateRegex = /(\d+)-(\d+)-(\d+)/;
 const dateTimeRegex = /(\d+)-(\d+)-(\d+)T(\d+):(\d+)/;
 
-function buildApplyFilterFn<Api extends GridApiCommon = GridApiCommunity>(
+function buildApplyFilterFn(
   filterItem: GridFilterItem,
   compareFn: (value1: number, value2: number) => boolean,
   showTime?: boolean,
@@ -25,7 +23,7 @@ function buildApplyFilterFn<Api extends GridApiCommon = GridApiCommunity>(
 
   const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
 
-  return ({ value }: GridCellParams<string | number | Date, any, any, Api>): boolean => {
+  return ({ value }: GridCellParams<string | number | Date, any, any>): boolean => {
     if (!value) {
       return false;
     }
@@ -47,9 +45,9 @@ function buildApplyFilterFn<Api extends GridApiCommon = GridApiCommunity>(
   };
 }
 
-export const getGridDateOperators = <Api extends GridApiCommon = GridApiCommunity>(
+export const getGridDateOperators = (
   showTime?: boolean,
-): GridFilterOperator<any, string | number | Date, any, Api>[] => [
+): GridFilterOperator<any, string | number | Date, any>[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {

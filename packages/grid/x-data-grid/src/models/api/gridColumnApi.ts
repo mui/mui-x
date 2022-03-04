@@ -1,6 +1,5 @@
 import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
-import type { GridApiCommon } from './gridApiCommon';
 
 /**
  * The column API interface that is available in the grid [[apiRef]].
@@ -12,29 +11,17 @@ export interface GridColumnApi {
    * @param {string} field The column field.
    * @returns {{GridStateColDef}} The [[GridStateColDef]].
    */
-  getColumn: <Api extends GridApiCommon = GridApiCommon>(
-    field: string,
-  ) => GridStateColDef<any, any, any, Api>;
+  getColumn: (field: string) => GridStateColDef;
   /**
    * Returns an array of [[GridColDef]] containing all the column definitions.
    * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
    */
-  getAllColumns: <Api extends GridApiCommon = GridApiCommon>() => GridStateColDef<
-    any,
-    any,
-    any,
-    Api
-  >[];
+  getAllColumns: () => GridStateColDef[];
   /**
    * Returns the currently visible columns.
    * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
    */
-  getVisibleColumns: <Api extends GridApiCommon = GridApiCommon>() => GridStateColDef<
-    any,
-    any,
-    any,
-    Api
-  >[];
+  getVisibleColumns: () => GridStateColDef[];
   /**
    * Returns the [[GridColumnsMeta]] for each column.
    * @returns {GridColumnsMeta[]} All [[GridColumnsMeta]] objects.
@@ -60,16 +47,12 @@ export interface GridColumnApi {
    * @param {GridColDef} col The new [[GridColDef]] object.
    * @deprecated Use `apiRef.current.updateColumns` instead.
    */
-  updateColumn: <Api extends GridApiCommon = GridApiCommon>(
-    col: GridColDef<any, any, any, Api>,
-  ) => void;
+  updateColumn: (col: GridColDef) => void;
   /**
    * Updates the definition of multiple columns at the same time.
    * @param {GridColDef[]} cols The new column [[GridColDef]] objects.
    */
-  updateColumns: <Api extends GridApiCommon = GridApiCommon>(
-    cols: GridColDef<any, any, any, Api>[],
-  ) => void;
+  updateColumns: (cols: GridColDef[]) => void;
   /**
    * Sets the column visibility model to the one given by `model`.
    * @param {GridColumnVisibilityModel} model The new visible columns model.

@@ -5,19 +5,12 @@ import { GridFilterInputMultipleSingleSelectProps } from '../components/panel/fi
 import { GridFilterItem } from './gridFilterItem';
 import { GridCellParams } from './params/gridCellParams';
 import type { GridStateColDef } from './colDef/gridColDef';
-import type { GridApiCommunity } from './api/gridApiCommunity';
-import type { GridApiCommon } from './api/gridApiCommon';
-import { GridDefaultRowModel } from './gridRows';
+import type { GridValidRowModel } from './gridRows';
 
 /**
  * Filter operator definition interface.
  */
-export interface GridFilterOperator<
-  R extends GridDefaultRowModel = GridDefaultRowModel,
-  V = any,
-  F = V,
-  Api extends GridApiCommon = GridApiCommunity,
-> {
+export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * The label of the filter operator.
    */
@@ -36,8 +29,8 @@ export interface GridFilterOperator<
    */
   getApplyFilterFn: (
     filterItem: GridFilterItem,
-    column: GridStateColDef<R, V, F, Api>,
-  ) => null | ((params: GridCellParams<V, R, F, Api>) => boolean);
+    column: GridStateColDef<R, V, F>,
+  ) => null | ((params: GridCellParams<V, R, F>) => boolean);
   /**
    * The input component to render in the filter panel for this filter operator.
    */

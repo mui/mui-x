@@ -1,18 +1,18 @@
 import type { GridKeyValue } from './colDef/gridColDef';
 
-export type GridDefaultRowModel = { [key: string]: any };
+export type GridValidRowModel = { [key: string]: any };
 
-export type GridRowsProp<R = GridDefaultRowModel> = Readonly<GridRowModel<R>[]>;
+export type GridRowsProp<R = any> = Readonly<GridRowModel<R>[]>;
 
 /**
  * @deprecated prefer GridRowModel.
  */
-export type GridRowData<R = GridDefaultRowModel> = R;
+export type GridRowData<R extends GridValidRowModel = any> = R;
 
 /**
  * The key value object representing the data of a row.
  */
-export type GridRowModel<R = GridDefaultRowModel> = R;
+export type GridRowModel<R extends GridValidRowModel = any> = R;
 
 export type GridUpdateAction = 'delete';
 
@@ -75,7 +75,7 @@ export interface GridRowsMeta {
 
 export type GridRowTreeConfig = Record<GridRowId, GridRowTreeNodeConfig>;
 
-export type GridRowsLookup = Record<GridRowId, GridRowModel>;
+export type GridRowsLookup<R extends GridValidRowModel = any> = Record<GridRowId, R>;
 
 /**
  * The type of Id supported by the grid.

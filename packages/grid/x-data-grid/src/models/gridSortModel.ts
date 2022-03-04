@@ -1,25 +1,27 @@
 import { GridRowId, GridRowTreeNodeConfig } from './gridRows';
-import type { GridApiCommon } from './api';
-import type { GridApiCommunity } from './api/gridApiCommunity';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
-export interface GridSortCellParams<V = any, Api extends GridApiCommon = GridApiCommunity> {
+export interface GridSortCellParams<V = any> {
   id: GridRowId;
   field: string;
   value: V;
   rowNode: GridRowTreeNodeConfig;
-  api: Api;
+
+  /**
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
+   */
+  api: any;
 }
 
 /**
  * The type of the sort comparison function.
  */
-export type GridComparatorFn<V = any, Api extends GridApiCommon = GridApiCommunity> = (
+export type GridComparatorFn<V = any> = (
   v1: V,
   v2: V,
-  cellParams1: GridSortCellParams<V, Api>,
-  cellParams2: GridSortCellParams<V, Api>,
+  cellParams1: GridSortCellParams<V>,
+  cellParams2: GridSortCellParams<V>,
 ) => number;
 
 /**

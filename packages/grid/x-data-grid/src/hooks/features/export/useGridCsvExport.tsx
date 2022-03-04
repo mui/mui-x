@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridColumnDefinitionsSelector, gridVisibleColumnDefinitionsSelector } from '../columns';
 import { gridFilteredSortedRowIdsSelector } from '../filter';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridCsvExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
@@ -9,7 +8,7 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { GridRowId } from '../../../models';
-import { GridStateColDef } from '../../../models/colDef/gridColDef';
+import { getColumnsToExport } from './utils';
 
 const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
@@ -35,19 +34,11 @@ export const useGridCsvExport = (apiRef: React.MutableRefObject<GridApiCommunity
   const getDataAsCsv = React.useCallback(
     (options: GridCsvExportOptions = {}): string => {
       logger.debug(`Get data as CSV`);
-      const columns = gridColumnDefinitionsSelector(apiRef);
 
-      let exportedColumns: GridStateColDef[];
-      if (options.fields) {
-        exportedColumns = options.fields
-          .map((field) => columns.find((column) => column.field === field))
-          .filter((column): column is GridStateColDef => !!column);
-      } else {
-        const validColumns = options.allColumns
-          ? columns
-          : gridVisibleColumnDefinitionsSelector(apiRef);
-        exportedColumns = validColumns.filter((column) => !column.disableExport);
-      }
+      const exportedColumns = getColumnsToExport({
+        apiRef,
+        options,
+      });
 
       const getRowsToExport = options.getRowsToExport ?? defaultGetRowsToExport;
       const exportedRowIds = getRowsToExport({ apiRef });

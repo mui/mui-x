@@ -144,7 +144,7 @@ export const useGridRows = (
   const rowsCache = React.useRef(apiRef.current.state.rowsCache); // To avoid listing rowsCache as useEffect dep
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
-    (id) => gridRowsLookupSelector(apiRef)[id] ?? null,
+    (id) => (gridRowsLookupSelector(apiRef)[id] as any) ?? null,
     [apiRef],
   );
 

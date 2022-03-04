@@ -6,13 +6,13 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes']; overflowedContent: boolean };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
+  const { classes, overflowedContent } = ownerState;
 
   const slots = {
-    root: ['virtualScrollerContent'],
+    root: ['virtualScrollerContent', overflowedContent && 'virtualScrollerContent--overflowed'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -30,13 +30,21 @@ const GridVirtualScrollerContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function GridVirtualScrollerContent(props, ref) {
-  const { className, ...other } = props;
+  const { className, style, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
+  const ownerState = {
+    classes: rootProps.classes,
+    overflowedContent: !rootProps.autoHeight && style?.minHeight === 'auto',
+  };
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <VirtualScrollerContentRoot ref={ref} className={clsx(classes.root, className)} {...other} />
+    <VirtualScrollerContentRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      style={style}
+      {...other}
+    />
   );
 });
 

@@ -1,12 +1,8 @@
 import { GridFilterInputBoolean } from '../components/panel/filterPanel/GridFilterInputBoolean';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
-import { GridApiCommon } from '../models/api/gridApiCommon';
-import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
-export const getGridBooleanOperators = <
-  Api extends GridApiCommon = GridApiCommunity,
->(): GridFilterOperator<any, boolean | null, any, Api>[] => [
+export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | null, any>[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem: GridFilterItem) => {

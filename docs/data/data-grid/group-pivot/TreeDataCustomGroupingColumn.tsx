@@ -165,7 +165,7 @@ const rows: GridRowsProp<Row> = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColumns<any> = [
   {
     field: 'name',
     headerName: 'Name',

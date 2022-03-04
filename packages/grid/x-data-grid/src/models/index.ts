@@ -22,4 +22,5 @@ export * from './gridExport';
 export * from './logger';
 export * from './muiEvent';
 export * from './events';
-export type { GridSortItem, GridSortModel, GridSortDirection } from './gridSortModel';
+export * from './gridSortModel';
+export * from './gridFilterOperator';

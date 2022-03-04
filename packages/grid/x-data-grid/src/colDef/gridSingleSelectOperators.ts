@@ -1,8 +1,6 @@
 import { GridFilterInputSingleSelect } from '../components/panel/filterPanel/GridFilterInputSingleSelect';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
-import { GridApiCommon } from '../models/api/gridApiCommon';
-import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 const parseObjectValue = (value) => {
   if (value == null || typeof value !== 'object') {
@@ -12,9 +10,7 @@ const parseObjectValue = (value) => {
   return (value as { value: any; label: string }).value;
 };
 
-export const getGridSingleSelectOperators = <
-  Api extends GridApiCommon = GridApiCommunity,
->(): GridFilterOperator<any, any, any, Api>[] => [
+export const getGridSingleSelectOperators = (): GridFilterOperator[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {

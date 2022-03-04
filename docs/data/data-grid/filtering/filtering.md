@@ -44,7 +44,7 @@ A filter item represents a filtering rule and is composed of several elements:
 
 - `filterItem.columnField`: the field on which we want to apply the rule.
 - `filterItem.value`: the value to look for.
-- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the .
+- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
 - `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)): only useful when multiple filters are used.
 
 **Note**: Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).

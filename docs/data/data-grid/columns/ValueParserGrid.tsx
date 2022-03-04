@@ -34,7 +34,7 @@ export default function ValueParserGrid() {
               return `${valueFormatted} %`;
             },
             valueParser: (value) => Number(value) / 100,
-          } as GridColDef<any, number, string, any>,
+          } as GridColDef<any, number, string>,
         ]}
       />
     </div>

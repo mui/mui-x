@@ -4,10 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "rows": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
+    "rows": { "type": { "name": "array" }, "required": true },
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -354,6 +351,7 @@
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",
+      "virtualScrollerContent--overflowed",
       "virtualScrollerRenderZone",
       "pinnedColumns",
       "pinnedColumns--left",
@@ -364,6 +362,7 @@
       "root",
       "row--editable",
       "row--editing",
+      "row--lastVisible",
       "row",
       "rowCount",
       "scrollArea",

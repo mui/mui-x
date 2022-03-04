@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
-import { GridRowId } from '../../../models/gridRows';
+import { GridValidRowModel, GridRowId } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
+import { GridStateColDef } from '../../../models/colDef';
 import {
   getGridCellElement,
   getGridColumnHeaderElement,
@@ -120,11 +121,11 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
     [apiRef, getCellValueWithDeprecationWarning],
   );
 
-  const getCellParams = React.useCallback<GridApiCommunity['getCellParams']>(
-    (id, field) => {
-      const colDef = apiRef.current.getColumn(field);
+  const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
+    <V = any, R extends GridValidRowModel = any, F = V>(id, field) => {
+      const colDef = apiRef.current.getColumn(field) as GridStateColDef<R, V, F>;
       const value = apiRef.current.getCellValue(id, field);
-      const row = apiRef.current.getRow(id);
+      const row = apiRef.current.getRow<R>(id);
       const rowNode = apiRef.current.getRowNode(id);
 
       if (!row || !rowNode) {
@@ -134,7 +135,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
       const cellFocus = gridFocusCellSelector(apiRef);
       const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
-      const params: GridCellParams<any, any, any, any> = {
+      const params: GridCellParams<V, R, F> = {
         id,
         field,
         row,

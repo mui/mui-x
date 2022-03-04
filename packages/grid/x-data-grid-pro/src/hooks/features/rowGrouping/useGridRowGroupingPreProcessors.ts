@@ -21,7 +21,7 @@ export const useGridRowGroupingPreProcessors = (
   >,
 ) => {
   const getGroupingColDefs = React.useCallback(
-    (columnsState: GridColumnsRawState<GridApiPro>) => {
+    (columnsState: GridColumnsRawState) => {
       if (props.disableRowGrouping) {
         return [];
       }
@@ -69,10 +69,10 @@ export const useGridRowGroupingPreProcessors = (
   );
 
   const updateGroupingColumn = React.useCallback(
-    (columnsState: GridColumnsRawState<GridApiPro>) => {
+    (columnsState) => {
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
-      const newColumnsLookup: GridColumnRawLookup<GridApiPro> = {};
+      const newColumnsLookup: GridColumnRawLookup = {};
 
       // We only keep the non-grouping columns
       columnsState.all.forEach((field) => {

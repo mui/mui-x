@@ -54,7 +54,7 @@ import {
 
 import { GridColDefGenerator } from '../services/gridColDefGenerator';
 
-export const getCommodityColumns = (editable = false): GridColDefGenerator<any>[] => [
+export const getCommodityColumns = (editable = false): GridColDefGenerator[] => [
   {
     field: 'id',
     generateData: randomId,
@@ -251,7 +251,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator<any>[
       gridStringOrNumberComparator(v1.label, v2.label, param1, param2),
     editable,
     width: 120,
-  } as GridColDef<any, CountryIsoOption, string, any>,
+  } as GridColDef<any, CountryIsoOption, string>,
   {
     field: 'counterPartyCurrency',
     headerName: 'Counterparty Currency',

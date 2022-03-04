@@ -1,5 +1,10 @@
-import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '@mui/x-data-grid';
-import { GridColDef, GridStateColDef } from './gridColDef';
+import {
+  GridRowId,
+  GridRowModel,
+  GridRowTreeNodeConfig,
+  GridColDef,
+  GridStateColDef,
+} from '@mui/x-data-grid';
 
 /**
  * Parameters passed to `colDef.groupingValueGetter`.

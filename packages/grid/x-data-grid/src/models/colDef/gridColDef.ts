@@ -20,7 +20,7 @@ import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellI
 import { GridEditCellProps } from '../gridEditRowModel';
 import type { GridApiCommon } from '../api/gridApiCommon';
 import type { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridDefaultRowModel } from '../gridRows';
+import type { GridValidRowModel } from '../gridRows';
 
 /**
  * Alignment used in position elements in Cells.
@@ -37,12 +37,7 @@ export type GridKeyValue = string | number | boolean;
 /**
  * Column Definition interface.
  */
-export interface GridColDef<
-  R extends GridDefaultRowModel = GridDefaultRowModel,
-  V = any,
-  F = V,
-  Api extends GridApiCommon = GridApiCommunity,
-> {
+export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * The column identifier. It's used to map with [[GridRowModel]] values.
    */
@@ -118,7 +113,7 @@ export interface GridColDef<
   /**
    * A comparator function used to sort rows.
    */
-  sortComparator?: GridComparatorFn<V, Api>;
+  sortComparator?: GridComparatorFn<V>;
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
    * @default 'string'
@@ -137,7 +132,7 @@ export interface GridColDef<
    * @param {GridValueGetterParams} params Object containing parameters for the getter.
    * @returns {GridCellValue} The cell value.
    */
-  valueGetter?: (params: GridValueGetterParams<any, R, Api>) => V;
+  valueGetter?: (params: GridValueGetterParams<any, R>) => V;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
@@ -150,14 +145,14 @@ export interface GridColDef<
    * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
    * @returns {GridCellValue} The formatted value.
    */
-  valueFormatter?: (params: GridValueFormatterParams<V, Api>) => F;
+  valueFormatter?: (params: GridValueFormatterParams<V>) => F;
   /**
    * Function that takes the user-entered value and converts it to a value used internally.
    * @param {F | undefined} value The user-entered value.
    * @param {GridCellParams} params The params when called before saving the value.
    * @returns {V} The converted value to use internally.
    */
-  valueParser?: (value: F | undefined, params?: GridCellParams<V, R, F, Api>) => V;
+  valueParser?: (value: F | undefined, params?: GridCellParams<V, R, F>) => V;
   /**
    * Class name that will be added in cells for that column.
    */
@@ -167,13 +162,13 @@ export interface GridColDef<
    * @param {GridRenderCellParams} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderCell?: (params: GridRenderCellParams<V, R, F, Api>) => React.ReactNode;
+  renderCell?: (params: GridRenderCellParams<V, R, F>) => React.ReactNode;
   /**
    * Allows to override the component rendered in edit cell mode for this column.
    * @param {GridRenderEditCellParams} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderEditCell?: (params: GridRenderEditCellParams<Api>) => React.ReactNode;
+  renderEditCell?: (params: GridRenderEditCellParams) => React.ReactNode;
   /**
    * Callback fired when the edit props of the cell changes.
    * It allows to process the props that saved into the state.
@@ -215,7 +210,7 @@ export interface GridColDef<
   /**
    * Allows setting the filter operators for this column.
    */
-  filterOperators?: GridFilterOperator<R, V, F, Api>[];
+  filterOperators?: GridFilterOperator<R, V, F>[];
   /**
    * If `true`, this column cannot be reordered.
    * @default false
@@ -228,8 +223,7 @@ export interface GridColDef<
   disableExport?: boolean;
 }
 
-export interface GridActionsColDef<Api extends GridApiCommon = GridApiCommunity>
-  extends GridColDef<any, any, any, Api> {
+export interface GridActionsColDef extends GridColDef {
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
    * @default 'actions'
@@ -243,31 +237,21 @@ export interface GridActionsColDef<Api extends GridApiCommon = GridApiCommunity>
   getActions: (params: GridRowParams) => React.ReactElement<GridActionsCellItemProps>[];
 }
 
-export type GridEnrichedColDef<
-  R extends GridDefaultRowModel = GridDefaultRowModel,
-  V = any,
-  F = V,
-  Api extends GridApiCommon = GridApiCommunity,
-> = GridColDef<R, V, F, Api> | GridActionsColDef<Api>;
+export type GridEnrichedColDef<R extends GridValidRowModel = any, V = any, F = V> =
+  | GridColDef<R, V, F>
+  | GridActionsColDef;
 
-export type GridColumns<Api extends GridApiCommon = GridApiCommunity> = GridEnrichedColDef<
-  any,
-  any,
-  any,
-  Api
->[];
+export type GridColumns<R extends GridValidRowModel = any> = GridEnrichedColDef<R>[];
 
-export type GridColTypeDef<Api extends GridApiCommon = GridApiCommunity> = Omit<
-  GridColDef<any, any, any, Api>,
-  'field'
-> & { extendType?: GridNativeColTypes };
+export type GridColTypeDef = Omit<GridColDef<any, any, any>, 'field'> & {
+  extendType?: GridNativeColTypes;
+};
 
-export type GridStateColDef<
-  R extends GridDefaultRowModel = GridDefaultRowModel,
-  V = any,
-  F = V,
-  Api extends GridApiCommon = GridApiCommunity,
-> = GridEnrichedColDef<R, V, F, Api> & {
+export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridEnrichedColDef<
+  R,
+  V,
+  F
+> & {
   computedWidth: number;
 };
 
