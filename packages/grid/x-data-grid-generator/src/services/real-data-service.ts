@@ -1,25 +1,20 @@
-import {
-  GridRowModel,
-  GridColumnVisibilityModel,
-  GridInitialState,
-  GridApiCommon,
-} from '@mui/x-data-grid-pro';
+import { GridRowModel, GridColumnVisibilityModel, GridInitialState } from '@mui/x-data-grid-pro';
 import asyncWorker from './asyncWorker';
 import { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGenerator';
 
-export interface GridDemoData<Api extends GridApiCommon> {
+export interface GridDemoData {
   rows: GridRowModel[];
-  columns: GridColDefGenerator<Api>[];
+  columns: GridColDefGenerator[];
   initialState?: GridInitialState;
 }
 
-export function getRealGridData<Api extends GridApiCommon>(
+export function getRealGridData(
   rowLength: number,
-  columns: GridColDefGenerator<Api>[],
-): Promise<GridDemoData<Api>> {
-  return new Promise<GridDemoData<Api>>((resolve) => {
+  columns: GridColDefGenerator[],
+): Promise<GridDemoData> {
+  return new Promise<GridDemoData>((resolve) => {
     const tasks = { current: rowLength };
-    const rows: GridDemoData<Api>['rows'] = [];
+    const rows: GridDemoData['rows'] = [];
     const indexedValues: { [field: string]: { [value: string]: number } } = {};
 
     function work() {

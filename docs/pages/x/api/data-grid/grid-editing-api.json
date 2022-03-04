@@ -51,6 +51,26 @@
       "name": "setRowMode",
       "description": "Sets the mode of a row.",
       "type": "(id: GridRowId, mode: GridRowMode) => void"
+    },
+    {
+      "name": "startCellEditMode",
+      "description": "Puts the cell correspoding to the given row id and field into edit mode.",
+      "type": "(params: GridStartCellEditModeParams) => void"
+    },
+    {
+      "name": "startRowEditMode",
+      "description": "Puts the row correspoding to the given id into edit mode.",
+      "type": "(params: GridStartRowEditModeParams) => void"
+    },
+    {
+      "name": "stopCellEditMode",
+      "description": "Puts the cell correspoding to the given row id and field into view mode and updates the original row with the new value stored.\nIf <code>params.ignoreModifications</code> is <code>false</code> it will discard the modifications made.",
+      "type": "(params: GridStopCellEditModeParams) => Promise<boolean>"
+    },
+    {
+      "name": "stopRowEditMode",
+      "description": "Puts the row correspoding to the given id and into view mode and updates the original row with the new values stored.\nIf <code>params.ignoreModifications</code> is <code>false</code> it will discard the modifications made.",
+      "type": "(params: GridStopRowEditModeParams) => Promise<boolean>"
     }
   ]
 }

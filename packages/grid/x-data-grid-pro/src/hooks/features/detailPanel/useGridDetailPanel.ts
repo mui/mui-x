@@ -6,13 +6,13 @@ import {
   useGridSelector,
   useGridApiEventHandler,
   useGridApiMethod,
+  GridCellParams,
 } from '@mui/x-data-grid';
 import {
   useGridStateInit,
   useGridRegisterPreProcessor,
   GridPreProcessor,
 } from '@mui/x-data-grid/internals';
-import { GridCellParams } from '../../../models/gridCellParams';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from './gridDetailPanelToggleColDef';
 import {

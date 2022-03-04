@@ -329,7 +329,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Extend native column types with your new column types.
    */
-  columnTypes?: GridColumnTypesRecord<any>;
+  columnTypes?: GridColumnTypesRecord;
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -344,7 +344,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
    */
-  getCellClassName?: (params: GridCellParams<any, any, any, any>) => string;
+  getCellClassName?: (params: GridCellParams) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -368,7 +368,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
-  isCellEditable?: (params: GridCellParams<any, any, any, any>) => boolean;
+  isCellEditable?: (params: GridCellParams) => boolean;
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -428,7 +428,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    */
   onError?: GridEventListener<GridEvents.componentError>;
   /**
-   * Callback fired when a click event comes from a cell element.
+   * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -514,7 +514,8 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    */
   onColumnVisibilityChange?: GridEventListener<GridEvents.columnVisibilityChange>;
   /**
-   * Callback fired when a click event comes from a row container element.
+   * Callback fired when a row is clicked.
+   * Not called if the target clicked is an interactive element added by the built-in columns.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -633,7 +634,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: GridColumns<any>;
+  columns: GridColumns;
   /**
    * An error that will turn the grid into its error state and display the error component.
    */

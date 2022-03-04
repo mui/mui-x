@@ -8,12 +8,12 @@ import {
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridEvents,
+  GridRenderCellParams,
 } from '@mui/x-data-grid';
 import { isNavigationKey } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridRenderCellParams } from '../models/gridCellParams';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -62,7 +62,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
   const handleClick = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
-    event.stopPropagation();
+    event.stopPropagation(); // TODO remove event.stopPropagation
   };
 
   return (

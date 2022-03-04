@@ -38,22 +38,3 @@ export type GridInitialState = GridInitialStateCommunity;
  * @deprecated Use `React.MutableRefObject<GridApi>` instead
  */
 export type GridApiRef = React.MutableRefObject<GridApiCommunity>;
-
-export type {
-  GridStateColDef,
-  GridColDef,
-  GridColumns,
-  GridColTypeDef,
-  GridActionsColDef,
-  GridEnrichedColDef,
-} from './models/colDef/gridColDef';
-export type {
-  GridRenderCellParams,
-  GridCellParams,
-  GridRenderEditCellParams,
-  GridValueFormatterParams,
-  GridValueGetterParams,
-  GridValueGetterFullParams,
-} from './models/params/gridCellParams';
-export type { GridSortModelParams } from './models/params/gridSortModelParams';
-export type { GridSortCellParams, GridComparatorFn } from './models/gridSortModel';

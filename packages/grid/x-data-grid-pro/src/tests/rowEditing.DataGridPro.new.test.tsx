@@ -19,7 +19,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const defaultData = getData<GridApi>(4, 4);
+  const defaultData = getData(4, 4);
 
   const renderEditCell1 = spy((() => <input />) as (
     props: GridRenderEditCellParams,
