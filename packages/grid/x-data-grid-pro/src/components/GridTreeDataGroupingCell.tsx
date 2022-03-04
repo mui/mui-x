@@ -8,12 +8,12 @@ import {
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridEvents,
+  GridRenderCellParams,
 } from '@mui/x-data-grid';
 import { isNavigationKey } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridRenderCellParams } from '../models/gridCellParams';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 

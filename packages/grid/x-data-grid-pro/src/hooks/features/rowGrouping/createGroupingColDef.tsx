@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { GRID_STRING_COL_DEF } from '@mui/x-data-grid';
+import {
+  GRID_STRING_COL_DEF,
+  GridColDef,
+  GridStateColDef,
+  GridComparatorFn,
+  GridRenderCellParams,
+} from '@mui/x-data-grid';
 import { GridColumnRawLookup } from '@mui/x-data-grid/internals';
-import { GridColDef, GridStateColDef } from '../../../models/gridColDef';
-import { GridComparatorFn } from '../../../models/gridSortModel';
-import { GridRenderCellParams } from '../../../models/gridCellParams';
 import { GridGroupingColDefOverride } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
@@ -135,7 +138,7 @@ const getGroupingCriteriaProperties = (
 };
 
 interface CreateGroupingColDefMonoCriteriaParams {
-  columnsLookup: GridColumnRawLookup<GridApiPro>;
+  columnsLookup: GridColumnRawLookup;
   /**
    * The field from which we are grouping the rows.
    */
@@ -250,7 +253,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 
 interface CreateGroupingColDefSeveralCriteriaParams {
   apiRef: React.MutableRefObject<GridApiPro>;
-  columnsLookup: GridColumnRawLookup<GridApiPro>;
+  columnsLookup: GridColumnRawLookup;
 
   /**
    * The fields from which we are grouping the rows.

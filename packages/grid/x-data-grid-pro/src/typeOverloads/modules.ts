@@ -29,13 +29,11 @@ export interface GridColDefPro {
 }
 
 declare module '@mui/x-data-grid' {
+  export interface GridColDef extends GridColDefPro {}
+
   interface GridEventLookup extends GridEventLookupPro {}
 
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
 
   interface GridPreProcessingGroupLookup extends GridPreProcessingGroupLookupPro {}
-}
-
-declare module '@mui/x-data-grid/models/colDef/gridColDef' {
-  export interface GridColDef extends GridColDefPro {}
 }

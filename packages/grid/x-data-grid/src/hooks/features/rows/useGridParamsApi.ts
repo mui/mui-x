@@ -134,7 +134,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
       const cellFocus = gridFocusCellSelector(apiRef);
       const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
-      const params: GridCellParams<any, any, any, any> = {
+      const params: GridCellParams = {
         id,
         field,
         row,

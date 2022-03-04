@@ -1,4 +1,4 @@
-import { GridColDef } from './gridColDef';
+import { GridColDef } from '@mui/x-data-grid';
 
 export interface GridGroupingColDefOverride
   extends Omit<
