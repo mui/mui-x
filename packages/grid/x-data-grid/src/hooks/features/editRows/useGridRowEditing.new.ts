@@ -414,8 +414,16 @@ export const useGridRowEditing = (
           newProps = { ...newProps, isProcessingProps: true };
           updateOrDeleteFieldState(id, field, newProps);
 
+          const { [field]: ignoredField, ...otherFieldsProps } = editingState[id];
+
           const promise = Promise.resolve(
-            column.preProcessEditCellProps({ id, row, props: newProps, hasChanged }),
+            column.preProcessEditCellProps({
+              id,
+              row,
+              props: newProps,
+              hasChanged,
+              otherFieldsProps,
+            }),
           ).then((processedProps) => {
             // Check again if the row is in edit mode because the user may have
             // discarded the changes while the props were being processed.
@@ -451,8 +459,17 @@ export const useGridRowEditing = (
           fieldProps = { ...fieldProps, isProcessingProps: true };
           updateOrDeleteFieldState(id, thisField, fieldProps);
 
+          editingState = gridEditingStateSelector(apiRef.current.state);
+          const { [thisField]: ignoredField, ...otherFieldsProps } = editingState[id];
+
           const promise = Promise.resolve(
-            fieldColumn.preProcessEditCellProps({ id, row, props: fieldProps, hasChanged: false }),
+            fieldColumn.preProcessEditCellProps({
+              id,
+              row,
+              props: fieldProps,
+              hasChanged: false,
+              otherFieldsProps,
+            }),
           ).then((processedProps) => {
             // Check again if the row is in edit mode because the user may have
             // discarded the changes while the props were being processed.

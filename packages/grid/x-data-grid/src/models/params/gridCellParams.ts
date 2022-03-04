@@ -179,4 +179,9 @@ export interface GridPreProcessEditCellProps {
    * Whether the new value is different from the stored value or not.
    */
   hasChanged?: boolean;
+  /**
+   * Object containing the props of the other fields.
+   * Only available for row editing and when using the new editing API.
+   */
+  otherFieldsProps?: Record<string, GridEditCellProps>;
 }
