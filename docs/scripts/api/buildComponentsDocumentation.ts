@@ -453,7 +453,7 @@ Page.getInitialProps = () => {
 
   return {
     descriptions,
-    pageContent: jsonPageContent,
+    pageContent: jsonPageContent
   };
 };
   `.replace(/\r?\n/g, reactApi.EOL),
@@ -480,10 +480,13 @@ export default async function buildComponentsDocumentation(
 
   // TODO: Use the project fields instead of hard-coding the paths here
   const componentsToGenerateDocs = [
-    path.resolve(dataGridProject.workspaceRoot, 'packages/grid/x-data-grid/src/DataGrid.tsx'),
+    path.resolve(
+      dataGridProject.workspaceRoot,
+      'packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx',
+    ),
     path.resolve(
       dataGridProProject.workspaceRoot,
-      'packages/grid/x-data-grid-pro/src/DataGridPro.tsx',
+      'packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx',
     ),
   ];
 

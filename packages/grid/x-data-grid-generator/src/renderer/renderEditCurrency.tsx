@@ -79,6 +79,6 @@ function EditCurrency(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditCurrency(params: GridRenderEditCellParams<any>) {
+export function renderEditCurrency(params: GridRenderEditCellParams) {
   return <EditCurrency {...params} />;
 }

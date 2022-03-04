@@ -10,7 +10,7 @@ import {
   GridRowsProp,
   useGridApiRef,
   DataGridPro,
-  GridApiRef,
+  GridApi,
   GridColumns,
   GridRowParams,
   MuiEvent,
@@ -65,7 +65,7 @@ const rows: GridRowsProp = [
 ];
 
 interface EditToolbarProps {
-  apiRef: GridApiRef;
+  apiRef: React.MutableRefObject<GridApi>;
 }
 
 function EditToolbar(props: EditToolbarProps) {
