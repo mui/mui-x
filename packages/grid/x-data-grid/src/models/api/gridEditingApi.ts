@@ -74,7 +74,7 @@ export interface GridRowEditingApi extends GridEditingSharedApi {
    */
   getRowMode: (id: GridRowId) => GridRowMode;
   /**
-   * Updates the row correspoding the given id with the values stored in the edit row model.
+   * Updates the row corresponding to the given id with the values stored in the edit row model.
    * @param {GridRowId} id The id to commit to.
    * @param {React.SyntheticEvent} event The event to pass forward.
    * @returns {boolean} A boolean indicating if there is an error.
@@ -94,7 +94,7 @@ export interface GridRowEditingApi extends GridEditingSharedApi {
  */
 export interface GridCellEditingApi extends GridEditingSharedApi {
   /**
-   * Updates the field correspoding the given id with the value stored in the edit row model.
+   * Updates the field corresponding to the given id with the value stored in the edit row model.
    * @param {GridCommitCellChangeParams} params The id and field to commit to.
    * @param {React.SyntheticEvent} event The event to pass forward.
    * @returns {boolean} A boolean indicating if there is an error.
@@ -201,12 +201,12 @@ export interface GridNewCellEditingApi
   extends Omit<GridEditingSharedApi, 'getEditRowsModel' | 'setEditRowsModel'>,
     Pick<GridCellEditingApi, 'getCellMode'> {
   /**
-   * Puts the cell correspoding to the given row id and field into edit mode.
+   * Puts the cell corresponding to the given row id and field into edit mode.
    * @param {GridStartCellEditModeParams} params The row id and field of the cell to edit.
    */
   startCellEditMode(params: GridStartCellEditModeParams): void;
   /**
-   * Puts the cell correspoding to the given row id and field into view mode and updates the original row with the new value stored.
+   * Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
@@ -226,12 +226,12 @@ export interface GridNewRowEditingApi
   extends Omit<GridEditingSharedApi, 'getEditRowsModel' | 'setEditRowsModel'>,
     Pick<GridRowEditingApi, 'getRowMode'> {
   /**
-   * Puts the row correspoding to the given id into edit mode.
+   * Puts the row corresponding to the given id into edit mode.
    * @param {GridStartCellEditModeParams} params The row id edit.
    */
   startRowEditMode(params: GridStartRowEditModeParams): void;
   /**
-   * Puts the row correspoding to the given id and into view mode and updates the original row with the new values stored.
+   * Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
