@@ -162,6 +162,8 @@ function App() {
             isDataGridTest = true;
           }
 
+          console.log(TestCase);
+
           return (
             <Route
               key={path}

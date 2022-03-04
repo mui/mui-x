@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import * as playwright from 'playwright';
+import { waitFor } from '@testing-library/react';
 
 function sleep(timeoutMS) {
   return new Promise((resolve) => {
