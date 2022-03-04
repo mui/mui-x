@@ -50,19 +50,19 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(columnMenuStateInitializer, apiRef, props);
-  useGridInitializeState(densityStateInitializer, apiRef, props);
+  useGridInitializeState(selectionStateInitializer, apiRef, props);
+  useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
+  useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
-  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
-  useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
+  useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(pageSizeStateInitializer, apiRef, props);
   useGridInitializeState(pageStateInitializer, apiRef, props);
-  useGridInitializeState(rowsStateInitializer, apiRef, props);
-  useGridInitializeState(sortingStateInitializer, apiRef, props);
-  useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
+  useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);

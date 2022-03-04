@@ -90,26 +90,26 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(columnMenuStateInitializer, apiRef, props);
-  useGridInitializeState(densityStateInitializer, apiRef, props);
-  useGridInitializeState(editingStateInitializer, apiRef, props);
-  useGridInitializeState(focusStateInitializer, apiRef, props);
-  useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
-  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(selectionStateInitializer, apiRef, props);
-  useGridInitializeState(columnReorderStateInitializer, apiRef, props);
-  useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
-  useGridInitializeState(filterStateInitializer, apiRef, props);
-  useGridInitializeState(pageSizeStateInitializer, apiRef, props);
-  useGridInitializeState(pageStateInitializer, apiRef, props);
-  useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
-  useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
+  useGridInitializeState(rowGroupingStateInitializer, apiRef, props); // FIXME Call in the same relative position that useGridRowGrouping is called
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridRowGrouping(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
   useGridTreeData(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
   useGridInitializeState(rowsStateInitializer, apiRef, props);
+  useGridInitializeState(editingStateInitializer, apiRef, props);
+  useGridInitializeState(focusStateInitializer, apiRef, props);
+  useGridInitializeState(sortingStateInitializer, apiRef, props);
+  useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
+  useGridInitializeState(filterStateInitializer, apiRef, props);
+  useGridInitializeState(densityStateInitializer, apiRef, props);
+  useGridInitializeState(columnReorderStateInitializer, apiRef, props);
+  useGridInitializeState(columnResizeStateInitializer, apiRef, props);
+  useGridInitializeState(pageSizeStateInitializer, apiRef, props);
+  useGridInitializeState(pageStateInitializer, apiRef, props);
+  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
+  useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
