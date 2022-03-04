@@ -22,7 +22,7 @@ function EditToolbar(props) {
       apiRef.current.stopCellEditMode({ id, field });
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
     } else {
-      apiRef.current.stopCellEditMode({ id, field });
+      apiRef.current.startCellEditMode({ id, field });
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
     }
   };
@@ -90,6 +90,7 @@ export default function StartEditButtonGrid() {
             setSelectedCellParams,
           },
         }}
+        experimentalFeatures={{ newEditingApi: true }}
       />
     </div>
   );
