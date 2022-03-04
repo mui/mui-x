@@ -1,4 +1,4 @@
-import { DataGridProProps, GridApiCommon, GridRowModel } from '@mui/x-data-grid-pro';
+import { DataGridProProps, GridRowModel } from '@mui/x-data-grid-pro';
 import { GridDemoData } from './real-data-service';
 import { randomArrayItem } from './random-generator';
 
@@ -22,19 +22,19 @@ export interface AddPathToDemoDataOptions {
   averageChildren?: number;
 }
 
-export interface DemoTreeDataValue<Api extends GridApiCommon>
+export interface DemoTreeDataValue
   extends Pick<DataGridProProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>,
-    GridDemoData<Api> {}
+    GridDemoData {}
 
 interface RowWithParentIndex {
   value: GridRowModel;
   parentIndex: number | null;
 }
 
-export const addTreeDataOptionsToDemoData = <Api extends GridApiCommon>(
-  data: GridDemoData<Api>,
+export const addTreeDataOptionsToDemoData = (
+  data: GridDemoData,
   options: AddPathToDemoDataOptions = {},
-): DemoTreeDataValue<Api> => {
+): DemoTreeDataValue => {
   const { averageChildren = 2, maxDepth = 1, groupingField } = options;
 
   const hasTreeData = maxDepth > 1 && groupingField != null;
