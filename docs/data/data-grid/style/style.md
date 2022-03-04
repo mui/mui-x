@@ -120,7 +120,7 @@ Choose between one of the following values: 'left' | 'right' | 'center'.
 ## Toggle theme color mode [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 By default, the Data Grid has the same theme as your app.
-You can modify its color mode by using the method `apiRef.current.setThemeMode()`.
+You can modify its color mode by using the method `apiRef.current.setThemePalette()`.
 
 {{"demo": "ToggleColorMode.js", "defaultCodeOpen": false}}
 

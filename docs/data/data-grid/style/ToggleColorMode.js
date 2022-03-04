@@ -27,7 +27,7 @@ export default function ToogleColorMode() {
         exclusive
         onChange={(event, newValue) => {
           setPaletteMode(newValue);
-          apiRef.current.setThemeMode(newValue);
+          apiRef.current.setThemePalette(newValue);
         }}
         aria-label="gid color mode"
       >

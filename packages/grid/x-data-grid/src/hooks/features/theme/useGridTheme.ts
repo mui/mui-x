@@ -7,10 +7,10 @@ export const useGridTheme = (apiRef: React.MutableRefObject<GridApiCommunity>): 
   /**
    * API METHODS
    */
-  const setThemeMode = React.useCallback<GridThemeApi['setThemeMode']>(
-    (newMode) => {
+  const setThemePalette = React.useCallback<GridThemeApi['setThemePalette']>(
+    (newPalette) => {
       apiRef.current.setState((state) => {
-        return { ...state, theme: { palette: { mode: newMode } } };
+        return { ...state, theme: { palette: newPalette } };
       });
       apiRef.current.forceUpdate();
     },
@@ -18,7 +18,7 @@ export const useGridTheme = (apiRef: React.MutableRefObject<GridApiCommunity>): 
   );
 
   const themeApi: GridThemeApi = {
-    setThemeMode,
+    setThemePalette,
   };
   useGridApiMethod(apiRef, themeApi, 'GridThemeApi');
 };

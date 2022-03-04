@@ -1,7 +1,5 @@
-import type { PaletteMode } from '@mui/material';
+import type { Palette } from '@mui/material';
 
 export interface GridThemeState {
-  palette?: {
-    mode?: PaletteMode;
-  };
+  palette?: Partial<Palette>;
 }

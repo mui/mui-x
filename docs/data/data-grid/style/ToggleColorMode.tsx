@@ -2,11 +2,10 @@ import * as React from 'react';
 import {
   DataGridPro,
   useGridApiRef,
-  gridThemeModeSelector,
 } from '@mui/x-data-grid-pro';
 
 import { useTheme } from '@mui/material/styles';
-import { PaletteMode } from '@mui/material';
+import { Palette, PaletteMode } from '@mui/material';
 
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
@@ -31,9 +30,9 @@ export default function ToogleColorMode() {
       <ToggleButtonGroup
         value={paletteMode}
         exclusive
-        onChange={(event, newValue) => {
+        onChange={(event, newValue: PaletteMode) => {
           setPaletteMode(newValue);
-          apiRef.current.setThemeMode(newValue);
+          apiRef.current.setThemePalette({ mode: newValue });
         }}
         aria-label="gid color mode"
       >
