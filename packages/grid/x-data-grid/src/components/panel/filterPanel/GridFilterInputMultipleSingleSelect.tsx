@@ -5,7 +5,6 @@ import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { getValueFromOption } from './filterPanelUtils';
-
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 

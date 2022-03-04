@@ -69,7 +69,7 @@ describe('<DataGridPro /> - Events Params', () => {
   describe('columnHeaderParams', () => {
     it('should include the correct params', () => {
       let eventArgs: { params: GridColumnHeaderParams; event: React.MouseEvent } | null = null;
-      const handleClick = (params: GridColumnHeaderParams, event: React.MouseEvent) => {
+      const handleClick: GridEventListener<'columnHeaderClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onColumnHeaderClick={handleClick} />);
@@ -88,7 +88,7 @@ describe('<DataGridPro /> - Events Params', () => {
     it('should include the correct params', () => {
       let eventArgs: { params: GridRowParams; event: React.MouseEvent } | null = null;
 
-      const handleClick = (params: GridRowParams, event: React.MouseEvent) => {
+      const handleClick: GridEventListener<'rowClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onRowClick={handleClick} />);
