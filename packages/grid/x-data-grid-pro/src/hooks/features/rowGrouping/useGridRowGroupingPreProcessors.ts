@@ -69,7 +69,7 @@ export const useGridRowGroupingPreProcessors = (
   );
 
   const updateGroupingColumn = React.useCallback(
-    (columnsState) => {
+    (columnsState: GridColumnsRawState) => {
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
       const newColumnsLookup: GridColumnRawLookup = {};
