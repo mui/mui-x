@@ -1,8 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-
 import Select from '@mui/material/Select';
-
 import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
 
 function SelectEditInputCell(props) {
