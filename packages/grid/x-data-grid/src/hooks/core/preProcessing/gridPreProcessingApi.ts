@@ -13,13 +13,13 @@ export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
 export interface GridPreProcessingGroupLookup {
   hydrateColumns: {
-    value: GridHydrateColumnsValue<any>;
+    value: GridHydrateColumnsValue;
   };
   scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
-  columnMenu: { value: React.ReactNode[]; context: GridColDef<any> };
+  columnMenu: { value: React.ReactNode[]; context: GridColDef };
   exportState: { value: GridInitialStateCommunity };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;

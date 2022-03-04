@@ -36,6 +36,7 @@
   { "name": "getGridSingleSelectOperators", "kind": "Variable" },
   { "name": "getGridStringOperators", "kind": "Variable" },
   { "name": "GRID_ACTIONS_COL_DEF", "kind": "Variable" },
+  { "name": "GRID_ACTIONS_COLUMN_TYPE", "kind": "Variable" },
   { "name": "GRID_BOOLEAN_COL_DEF", "kind": "Variable" },
   { "name": "GRID_CHECKBOX_SELECTION_COL_DEF", "kind": "Variable" },
   { "name": "GRID_DATE_COL_DEF", "kind": "Variable" },

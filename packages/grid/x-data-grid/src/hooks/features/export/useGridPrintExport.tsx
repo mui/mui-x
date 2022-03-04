@@ -7,6 +7,7 @@ import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
+import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
@@ -15,6 +16,7 @@ import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
+import { getColumnsToExport } from './utils';
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
@@ -36,8 +38,8 @@ export const useGridPrintExport = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const doc = React.useRef<Document | null>(null);
-  const previousGridState = React.useRef<any>();
-  const previousHiddenColumns = React.useRef<string[]>([]);
+  const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
+  const previousColumnVisibility = React.useRef<{ [key: string]: boolean }>({});
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
@@ -53,27 +55,20 @@ export const useGridPrintExport = (
           return;
         }
 
-        const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
+        const exportedColumnFields = getColumnsToExport({
+          apiRef,
+          options: { fields, allColumns },
+        }).map((column) => column.field);
+
         const columns = gridColumnDefinitionsSelector(apiRef);
 
-        // Show only wanted columns.
-        apiRef.current.updateColumns(
-          columns.map((column) => {
-            if (columnVisibilityModel[column.field] !== false) {
-              previousHiddenColumns.current.push(column.field);
-            }
+        const newColumnVisibilityModel = {};
+        columns.forEach((column) => {
+          newColumnVisibilityModel[column.field] = exportedColumnFields.includes(column.field);
+        });
 
-            // Show all columns
-            if (allColumns) {
-              column.hide = false;
-              return column;
-            }
+        apiRef.current.setColumnVisibilityModel(newColumnVisibilityModel);
 
-            column.hide = !fields?.includes(column.field) || column.disableExport;
-
-            return column;
-          }),
-        );
         resolve();
       }),
     [apiRef],
@@ -216,7 +211,9 @@ export const useGridPrintExport = (
       }
 
       // Trigger print
-      printWindow.contentWindow!.print();
+      if (process.env.NODE_ENV !== 'test') {
+        printWindow.contentWindow!.print();
+      }
     },
     [apiRef, doc],
   );
@@ -227,28 +224,17 @@ export const useGridPrintExport = (
       doc.current!.body.removeChild(printWindow);
 
       // Revert grid to previous state
-      apiRef.current.setState((state) => ({
-        ...state,
-        ...previousGridState.current,
-      }));
+      apiRef.current.restoreState(previousGridState.current || {});
+      if (!previousGridState.current?.columns?.columnVisibilityModel) {
+        // if the apiRef.current.exportState(); did not exported the column visibility, we update it
+        apiRef.current.setColumnVisibilityModel(previousColumnVisibility.current);
+      }
 
       apiRef.current.unstable_enableVirtualization();
 
-      // Revert columns to their original state
-      if (previousHiddenColumns.current.length) {
-        const columns = gridColumnDefinitionsSelector(apiRef);
-
-        apiRef.current.updateColumns(
-          columns.map((column) => {
-            column.hide = previousHiddenColumns.current.includes(column.field);
-            return column;
-          }),
-        );
-      }
-
       // Clear local state
       previousGridState.current = null;
-      previousHiddenColumns.current = [];
+      previousColumnVisibility.current = {};
     },
     [apiRef],
   );
@@ -261,7 +247,9 @@ export const useGridPrintExport = (
         throw new Error('MUI: No grid root element available.');
       }
 
-      previousGridState.current = apiRef.current.state;
+      previousGridState.current = apiRef.current.exportState();
+      // It appends that the visibility model is not exported, especially if columnVisibility is not controlled
+      previousColumnVisibility.current = gridColumnVisibilityModelSelector(apiRef);
 
       if (props.pagination) {
         const visibleRowCount = gridVisibleRowCountSelector(apiRef);
@@ -272,8 +260,14 @@ export const useGridPrintExport = (
       apiRef.current.unstable_disableVirtualization();
       const printWindow = buildPrintWindow(options?.fileName);
       doc.current!.body.appendChild(printWindow);
-      printWindow.onload = () => handlePrintWindowLoad(printWindow, options);
-      printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
+      if (process.env.NODE_ENV === 'test') {
+        // In test env, run the all pipeline without waiting for loading
+        handlePrintWindowLoad(printWindow, options);
+        handlePrintWindowAfterPrint(printWindow);
+      } else {
+        printWindow.onload = () => handlePrintWindowLoad(printWindow, options);
+        printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
+      }
     },
     [
       props,

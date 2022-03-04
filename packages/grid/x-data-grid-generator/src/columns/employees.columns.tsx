@@ -29,7 +29,7 @@ import {
 import { COUNTRY_ISO_OPTIONS_SORTED } from '../services/static-data';
 import { GridColDefGenerator } from '../services/gridColDefGenerator';
 
-export const getEmployeeColumns = (): GridColDefGenerator<any>[] => [
+export const getEmployeeColumns = (): GridColDefGenerator[] => [
   {
     field: 'id',
     generateData: randomId,

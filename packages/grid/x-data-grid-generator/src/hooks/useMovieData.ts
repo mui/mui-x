@@ -11,7 +11,7 @@ type Movie = {
   cinematicUniverse?: string;
 };
 
-const COLUMNS: GridColumns<any> = [
+const COLUMNS: GridColumns = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
     field: 'gross',
