@@ -1,6 +1,16 @@
 import * as React from 'react';
 import { GridColDef } from '../../../models/gridColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
+import { GridAggregationFunction } from './gridAggregationInterfaces';
+
+export const gridSumAggregation: GridAggregationFunction<number> = ({ values }) => {
+  let sum = 0;
+  for (let i = 0; i < values.length; i += 1) {
+    sum += values[i];
+  }
+
+  return sum;
+};
 
 export const wrapColumnWithAggregation = ({
   colDef,
