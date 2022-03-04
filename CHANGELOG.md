@@ -5,17 +5,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.6.0
 
-_Mar 3, 2022_
+_Mar 4, 2022_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 📦 Use the same bundling scripts as those in the [material-ui](https://github.com/mui/material-ui) repository (#3965) @flaviendelangle
 
   The code structure and the bundling strategy have been modified to provide better isolation between components.
-  This brings tree shaking, allowing to reduce the bundle size. 🏋
-  Such modification is always a bit risky.
+  The bundle size is slightly reduced, but with tree shaking, the doors are open for significant gains in the future. 🏋
+  We predict that such modifications could potentially impact edge cases.
   If you encounter problems with your build, please open an issue.
-  These issues will have high priority.
+  These issues will have high priority as part of our risk mitigation strategy.
 
 - 🧼 Clean and document the column selectors (#4010) @flaviendelangle
 
