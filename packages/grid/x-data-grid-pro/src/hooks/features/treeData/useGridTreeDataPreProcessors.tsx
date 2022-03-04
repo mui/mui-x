@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { gridRowIdsSelector, gridRowTreeSelector, useFirstRender } from '@mui/x-data-grid';
+import {
+  gridRowIdsSelector,
+  gridRowTreeSelector,
+  useFirstRender,
+  GridColDef,
+} from '@mui/x-data-grid';
 import {
   GridPreProcessor,
   GridStrategyProcessor,
@@ -10,7 +15,6 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
-import { GridColDef } from '../../../models/gridColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { filterRowTreeFromTreeData, TREE_DATA_STRATEGY } from './gridTreeDataUtils';
 import { GridApiPro } from '../../../models/gridApiPro';

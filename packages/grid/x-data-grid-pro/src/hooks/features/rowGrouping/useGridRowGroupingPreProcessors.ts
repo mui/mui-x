@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GridColumnLookup,
   gridColumnLookupSelector,
   GridKeyValue,
   GridRowId,
@@ -8,6 +7,7 @@ import {
   GridRowModel,
   gridRowTreeSelector,
   useFirstRender,
+  GridColDef,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPreProcessor,
@@ -34,7 +34,6 @@ import {
   setStrategyAvailability,
 } from './gridRowGroupingUtils';
 import { GridApiPro } from '../../../models/gridApiPro';
-import { GridColDef } from '../../../models/gridColDef';
 import { GridGroupingValueGetterParams } from '../../../models/gridGroupingValueGetterParams';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
@@ -51,7 +50,7 @@ export const useGridRowGroupingPreProcessors = (
   >,
 ) => {
   const getGroupingColDefs = React.useCallback(
-    (columnsState: GridHydrateColumnsValue<GridApiPro>) => {
+    (columnsState: GridHydrateColumnsValue) => {
       if (props.disableRowGrouping) {
         return [];
       }
@@ -99,10 +98,10 @@ export const useGridRowGroupingPreProcessors = (
   );
 
   const updateGroupingColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
-    (columnsState: GridHydrateColumnsValue<GridApiPro>) => {
+    (columnsState) => {
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
-      const newColumnsLookup: GridColumnRawLookup<GridApiPro> = {};
+      const newColumnsLookup: GridColumnRawLookup = {};
 
       // We only keep the non-grouping columns
       columnsState.all.forEach((field) => {
@@ -140,7 +139,7 @@ export const useGridRowGroupingPreProcessors = (
   const createRowTree = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-      const columnsLookup = gridColumnLookupSelector(apiRef) as any as GridColumnLookup<GridApiPro>;
+      const columnsLookup = gridColumnLookupSelector(apiRef);
       apiRef.current.setState((state) => ({
         ...state,
         rowGrouping: {

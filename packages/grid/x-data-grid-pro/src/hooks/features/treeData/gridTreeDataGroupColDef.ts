@@ -1,5 +1,4 @@
-import { GRID_STRING_COL_DEF } from '@mui/x-data-grid';
-import { GridColDef } from '../../../models/gridColDef';
+import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount

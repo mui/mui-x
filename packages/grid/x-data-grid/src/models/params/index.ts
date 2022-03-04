@@ -8,4 +8,5 @@ export * from './gridScrollParams';
 export * from './gridRowSelectionCheckboxParams';
 export * from './gridHeaderSelectionCheckboxParams';
 export * from './gridValueOptionsParams';
-export type { GridPreProcessEditCellProps, GridValueSetterParams } from './gridCellParams';
+export * from './gridCellParams';
+export * from './gridSortModelParams';

@@ -12,6 +12,7 @@ import {
   useGridApiOptionHandler,
   useGridNativeEventListener,
   useGridLogger,
+  GridStateColDef,
 } from '@mui/x-data-grid';
 import {
   useGridStateInit,
@@ -23,7 +24,6 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
-import { GridStateColDef } from '../../../models/gridColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
