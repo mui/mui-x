@@ -8,7 +8,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
+import { isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
@@ -16,8 +16,7 @@ import {
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef';
-import { gridClasses } from '../../../constants/gridClasses';
+import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
@@ -280,26 +279,26 @@ export const useGridSelection = (
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );
 
-  const handleRowClick = React.useCallback<GridEventListener<GridEvents.rowClick>>(
+  const handleCellClick = React.useCallback<GridEventListener<GridEvents.cellClick>>(
     (params, event) => {
       if (disableSelectionOnClick) {
         return;
       }
 
-      const cellClicked = findParentElementFromClassName(
-        event.target as HTMLElement,
-        gridClasses.cell,
-      );
-      const field = cellClicked?.getAttribute('data-field');
-
-      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+      if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
         // click on checkbox should not trigger row selection
         return;
       }
 
-      if (field) {
-        const column = apiRef.current.getColumn(field);
-        if (column.type === 'actions') {
+      if (params.field === '__detail_panel_toggle__') {
+        // click to open the detail panel should not select the row
+        return;
+      }
+
+      if (params.field) {
+        const column = apiRef.current.getColumn(params.field);
+
+        if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
           return;
         }
       }
@@ -389,7 +388,7 @@ export const useGridSelection = (
   );
 
   useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, removeOutdatedSelection);
-  useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
+  useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
   useGridApiEventHandler(
     apiRef,
     GridEvents.rowSelectionCheckboxChange,

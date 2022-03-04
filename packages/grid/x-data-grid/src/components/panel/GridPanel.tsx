@@ -80,6 +80,9 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
         fn: () => {
           setIsPlaced(true);
         },
+        effect: () => () => {
+          setIsPlaced(false);
+        },
       },
     ],
     [],

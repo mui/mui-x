@@ -701,6 +701,30 @@ export function DemoMultiFilteringGrid() {
   );
 }
 
+export function MultiFilteringPanelSnap() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPro
+        {...data}
+        initialState={{
+          filter: { filterModel: demoFilterModel },
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        checkboxSelection
+      />
+    </div>
+  );
+}
+
 export function NoResultsSnap() {
   const { data } = useDemoData({
     dataSet: 'Commodity',

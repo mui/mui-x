@@ -290,7 +290,7 @@ DataGridRaw.propTypes = {
    */
   nonce: PropTypes.string,
   /**
-   * Callback fired when a click event comes from a cell element.
+   * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -447,7 +447,8 @@ DataGridRaw.propTypes = {
    */
   onResize: PropTypes.func,
   /**
-   * Callback fired when a click event comes from a row container element.
+   * Callback fired when a row is clicked.
+   * Not called if the target clicked is an interactive element added by the built-in columns.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.

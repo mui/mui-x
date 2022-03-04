@@ -43,7 +43,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
   filterPanelDeleteIconLabel: 'Löschen',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operatoren',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Und',
   filterPanelOperatorOr: 'Oder',
   filterPanelColumns: 'Spalten',
@@ -100,10 +103,10 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Checkbox Auswahl',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Alle Zeilen auswählen',
+  checkboxSelectionUnselectAllRows: 'Alle Zeilen abwählen',
+  checkboxSelectionSelectRow: 'Zeile auswählen',
+  checkboxSelectionUnselectRow: 'Zeile abwählen',
 
   // Boolean cell text
   booleanCellTrueLabel: 'Ja',
@@ -123,13 +126,13 @@ const deDEGrid: Partial<GridLocaleText> = {
   treeDataCollapse: 'Kinder ausblenden',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Gruppierung',
+  groupColumn: (name) => `Gruppieren nach ${name}`,
+  unGroupColumn: (name) => `Gruppierung nach ${name} aufheben`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'Aufklappen',
+  collapseDetailPanel: 'Zuklappen',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

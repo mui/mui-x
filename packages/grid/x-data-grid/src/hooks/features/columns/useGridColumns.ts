@@ -30,7 +30,6 @@ import {
   createColumnsState,
   setColumnsState,
 } from './gridColumnsUtils';
-import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columnTypes' | 'columns'>
@@ -113,17 +112,17 @@ export function useGridColumns(
    * API METHODS
    */
   const getColumn = React.useCallback<GridColumnApi['getColumn']>(
-    (field) => gridColumnLookupSelector(apiRef)[field] as GridStateColDef<any>,
+    (field) => gridColumnLookupSelector(apiRef)[field],
     [apiRef],
   );
 
   const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
-    () => gridColumnDefinitionsSelector(apiRef) as GridStateColDef<any>[],
+    () => gridColumnDefinitionsSelector(apiRef),
     [apiRef],
   );
 
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
-    () => gridVisibleColumnDefinitionsSelector(apiRef) as GridStateColDef<any>[],
+    () => gridVisibleColumnDefinitionsSelector(apiRef),
     [apiRef],
   );
 

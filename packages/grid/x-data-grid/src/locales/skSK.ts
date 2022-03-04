@@ -52,7 +52,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
   filterPanelDeleteIconLabel: 'Odstrániť',
+  // filterPanelLinkOperator: 'Logic operator',
   filterPanelOperators: 'Operátory',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Alebo',
   filterPanelColumns: 'Stĺpce',
