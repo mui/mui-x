@@ -1,6 +1,6 @@
 import { GridKeyValue } from '@mui/x-data-grid';
 import type { GridRowScrollEndParams, GridGroupingValueGetterParams } from '../models';
-import type { GridPinnedColumns, GridRowGroupingModel } from '../hooks';
+import type { GridPinnedColumns, GridRowGroupingModel, GridAggregationFunction } from '../hooks';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 
 export interface GridControlledStateEventLookupPro {
@@ -22,10 +22,21 @@ export interface GridPreProcessingGroupLookupPro {
 export interface GridColDefPro {
   /**
    * Function that transforms a complex cell value into a key that be used for grouping the rows.
+   * TODO: Move to `x-data-grid-premium`
    * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
   groupingValueGetter?: (params: GridGroupingValueGetterParams) => GridKeyValue | null | undefined;
+
+  /**
+   * TODO: Move to `x-data-grid-premium
+   */
+  aggregationFunction?: GridAggregationFunction;
+
+  /**
+   * TODO: Move to `x-data-grid-premium
+   */
+  availableAggregationFunctions?: GridAggregationFunction[];
 }
 
 declare module '@mui/x-data-grid' {
