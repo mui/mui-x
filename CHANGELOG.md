@@ -9,7 +9,7 @@ _Mar 3, 2022_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 📦 Use the bundling scripts as in [material-ui](https://github.com/mui/material-ui) repository (#3965) @flaviendelangle
+- 📦 Use the same bundling scripts as those in the [material-ui](https://github.com/mui/material-ui) repository (#3965) @flaviendelangle
 
   The code structure and the bundling strategy have been modified to provide better isolation between components.
   This brings tree shaking, allowing to reduce the bundle size. 🏋
@@ -17,9 +17,9 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   If you encounter problems with your build, please open an issue.
   These issues will have high priority.
 
-- 🧼 Clean and document the columns selector (#4010) @flaviendelangle
+- 🧼 Clean and document the column selectors (#4010) @flaviendelangle
 
-  Columns selectors have been renamed to improve clarity.
+  Column selectors have been renamed to improve clarity.
   The old names have been deprecated and will be removed in v6.
   Here are the new names and the modifications needed to get the same information with the new selectors.
 
