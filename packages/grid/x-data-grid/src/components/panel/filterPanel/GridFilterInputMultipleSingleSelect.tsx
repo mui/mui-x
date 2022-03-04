@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Autocomplete, { createFilterOptions, AutocompleteProps } from '@mui/material/Autocomplete';
+import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { getValueFromOption } from './filterPanelUtils';
 import { GridFilterItem } from '../../../models/gridFilterItem';
+import { getValueFromOption } from './filterPanelUtils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 
 export type GridFilterInputMultipleSingleSelectProps = {

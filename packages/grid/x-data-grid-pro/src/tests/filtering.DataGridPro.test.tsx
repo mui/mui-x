@@ -515,7 +515,7 @@ describe('<DataGridPro /> - Filter', () => {
       const ControlCase = (props: Partial<DataGridProProps>) => {
         const { rows, columns, ...others } = props;
         const [caseFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
-        const handleFilterChange = (newModel: GridFilterModel) => {
+        const handleFilterChange: DataGridProProps['onFilterModelChange'] = (newModel) => {
           setFilterModel(newModel);
         };
 

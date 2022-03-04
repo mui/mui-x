@@ -4,7 +4,7 @@ import {
   DataGridProProps,
   useGridApiRef,
   DataGridPro,
-  GridPreProcessEditCellProps,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
@@ -207,7 +207,7 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should mark fields as invalid when an object with error is returned', async () => {
-    const preProcessEditCellProps = (params: GridPreProcessEditCellProps) => ({
+    const preProcessEditCellProps: GridColDef['preProcessEditCellProps'] = (params) => ({
       ...params.props,
       error: true,
     });
@@ -234,7 +234,7 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should mark fields as invalid when a promise with error is returned', async () => {
-    const preProcessEditCellProps = (params: GridPreProcessEditCellProps) =>
+    const preProcessEditCellProps: GridColDef['preProcessEditCellProps'] = (params) =>
       Promise.resolve({ ...params.props, error: true });
     render(
       <TestCase

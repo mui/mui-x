@@ -167,7 +167,7 @@ describe('<DataGrid /> - Pagination', () => {
       const TestCasePaginationFilteredData = (props: Partial<DataGridProps>) => {
         const [page, setPage] = React.useState(1);
 
-        const handlePageChange = (newPage: number) => {
+        const handlePageChange: DataGridProps['onPageChange'] = (newPage) => {
           onPageChange(newPage);
           setPage(newPage);
         };
@@ -527,7 +527,7 @@ describe('<DataGrid /> - Pagination', () => {
       const [rows, setRows] = React.useState<GridRowsProp>([]);
       const [page, setPage] = React.useState(0);
 
-      const handlePageChange = (newPage: number) => {
+      const handlePageChange: DataGridProps['onPageChange'] = (newPage) => {
         setPage(newPage);
       };
 
