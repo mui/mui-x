@@ -302,17 +302,30 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(screen.queryByRole('menuitem', { name: 'Pin to right' })).to.equal(null);
     });
 
-    ['pinColumn', 'unpinColumn', 'getPinnedColumns', 'setPinnedColumns', 'isColumnPinned'].forEach(
-      (methodName) => {
-        it(`should throw an error when calling \`apiRef.current.${methodName}\``, () => {
-          render(<TestCase disableColumnPinning />);
-          expect(() => {
-            // @ts-ignore
-            apiRef.current[methodName]();
-          }).to.throw();
-        });
-      },
-    );
+    it('should throw an error when calling `apiRef.current.pinColumn`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.pinColumn('id', GridPinnedPosition.left)).to.throw();
+    });
+
+    it('should throw an error when calling `apiRef.current.unpinColumn`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.unpinColumn('id')).to.throw();
+    });
+
+    it('should throw an error when calling `apiRef.current.getPinnedColumns`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.getPinnedColumns()).to.throw();
+    });
+
+    it('should throw an error when calling `apiRef.current.setPinnedColumns`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.setPinnedColumns({})).to.throw();
+    });
+
+    it('should throw an error when calling `apiRef.current.isColumnPinned`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.isColumnPinned('is')).to.throw();
+    });
   });
 
   describe('apiRef', () => {
