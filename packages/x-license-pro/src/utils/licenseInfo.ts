@@ -1,10 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 import { ponyfillGlobal } from '@mui/utils';
 
 // Store the license information in a global so it can be shared
 // when module duplication occurs. The duplication of the modules can happen
 // if using multiple version of MUI X at the same time of the bundler
 // decide to duplicate to improve the size of the chunks.
-// eslint-disable-next-line no-underscore-dangle
 ponyfillGlobal.__MUI_LICENSE_INFO__ = ponyfillGlobal.__MUI_LICENSE_INFO__ || {
   key: undefined as undefined | string,
   releaseInfo: undefined as undefined | string,
