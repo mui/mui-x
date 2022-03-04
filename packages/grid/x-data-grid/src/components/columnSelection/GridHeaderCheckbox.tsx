@@ -68,10 +68,10 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
 
       // Convert to an object to make O(1) checking if a row exists or not
       // TODO create selector that returns visibleRowIds/paginatedVisibleRowIds as an object
-      return rowIds.reduce((acc, id) => {
+      return rowIds.reduce<Record<GridRowId, true>>((acc, id) => {
         acc[id] = true;
         return acc;
-      }, {} as Record<GridRowId, true>);
+      }, {});
     }, [
       rootProps.pagination,
       rootProps.checkboxSelectionVisibleOnly,

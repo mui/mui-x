@@ -442,10 +442,13 @@ export const useGridSelection = (
         paginationMode,
       });
 
-      const currentPageRowsLookup = currentPageRows.reduce((acc, { id }) => {
-        acc[id] = true;
-        return acc;
-      }, {} as Record<GridRowId, true>);
+      const currentPageRowsLookup = currentPageRows.reduce<Record<GridRowId, true>>(
+        (acc, { id }) => {
+          acc[id] = true;
+          return acc;
+        },
+        {},
+      );
 
       const firstSelectableRow = currentSelection.find((id) => {
         let isSelectable = true;

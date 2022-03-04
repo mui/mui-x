@@ -20,20 +20,26 @@ function cacheContentAndHeight(
   // TODO change to lazy approach using a Proxy
   // only call getDetailPanelContent when asked for an id
   const rowIds = gridRowIdsSelector(apiRef);
-  const contentCache = rowIds.reduce((acc, id: GridRowId) => {
-    const params = apiRef.current.getRowParams(id);
-    acc[id] = getDetailPanelContent(params);
-    return acc;
-  }, {} as Record<GridRowId, ReturnType<typeof getDetailPanelContent>>);
-
-  const heightCache = rowIds.reduce((acc, id) => {
-    if (contentCache[id] == null) {
+  const contentCache = rowIds.reduce<Record<GridRowId, ReturnType<typeof getDetailPanelContent>>>(
+    (acc, id) => {
+      const params = apiRef.current.getRowParams(id);
+      acc[id] = getDetailPanelContent(params);
       return acc;
-    }
-    const params = apiRef.current.getRowParams(id);
-    acc[id] = getDetailPanelHeight(params);
-    return acc;
-  }, {} as Record<GridRowId, ReturnType<typeof getDetailPanelHeight>>);
+    },
+    {},
+  );
+
+  const heightCache = rowIds.reduce<Record<GridRowId, ReturnType<typeof getDetailPanelHeight>>>(
+    (acc, id) => {
+      if (contentCache[id] == null) {
+        return acc;
+      }
+      const params = apiRef.current.getRowParams(id);
+      acc[id] = getDetailPanelHeight(params);
+      return acc;
+    },
+    {},
+  );
 
   return { contentCache, heightCache };
 }

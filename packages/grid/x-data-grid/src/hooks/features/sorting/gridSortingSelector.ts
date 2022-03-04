@@ -49,13 +49,13 @@ export type GridSortColumnLookup = Record<
 export const gridSortColumnLookupSelector = createSelector(
   gridSortModelSelector,
   (sortModel: GridSortModel) => {
-    const result = sortModel.reduce((res, sortItem, index) => {
+    const result = sortModel.reduce<GridSortColumnLookup>((res, sortItem, index) => {
       res[sortItem.field] = {
         sortDirection: sortItem.sort,
         sortIndex: sortModel.length > 1 ? index + 1 : undefined,
       };
       return res;
-    }, {} as GridSortColumnLookup);
+    }, {});
     return result;
   },
 );

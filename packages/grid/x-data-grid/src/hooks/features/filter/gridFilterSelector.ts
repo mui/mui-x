@@ -169,14 +169,17 @@ export type GridFilterActiveItemsLookup = { [columnField: string]: GridFilterIte
 export const gridFilterActiveItemsLookupSelector = createSelector(
   gridFilterActiveItemsSelector,
   (activeFilters) => {
-    const result: GridFilterActiveItemsLookup = activeFilters.reduce((res, filterItem) => {
-      if (!res[filterItem.columnField!]) {
-        res[filterItem.columnField!] = [filterItem];
-      } else {
-        res[filterItem.columnField!].push(filterItem);
-      }
-      return res;
-    }, {} as GridFilterActiveItemsLookup);
+    const result: GridFilterActiveItemsLookup = activeFilters.reduce<GridFilterActiveItemsLookup>(
+      (res, filterItem) => {
+        if (!res[filterItem.columnField!]) {
+          res[filterItem.columnField!] = [filterItem];
+        } else {
+          res[filterItem.columnField!].push(filterItem);
+        }
+        return res;
+      },
+      {},
+    );
 
     return result;
   },
