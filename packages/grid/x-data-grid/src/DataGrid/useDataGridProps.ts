@@ -67,6 +67,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
+  rowSpacingType: 'margin',
   showCellRightBorder: false,
   showColumnRightBorder: false,
   sortingOrder: ['asc' as const, 'desc' as const, null],

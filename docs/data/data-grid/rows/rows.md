@@ -102,7 +102,7 @@ If you need some rows to have different row heights this can be achieved using t
 
 ## Row spacing
 
-You can use the `getRowSpacing` prop to specify the vertical space between rows.
+You can use the `getRowSpacing` prop to increase the spacing between rows.
 This prop is called with a [`GridRowSpacingParams`](/api/data-grid/grid-row-spacing-params/) object.
 
 ```tsx
@@ -114,12 +114,21 @@ const getRowSpacing = React.useCallback((params: GridRowSpacingParams) => {
 }, []);
 ```
 
-The value specified is only used internally to calculate which rows to render during scroll and for space allocation.
-This decision was taken to allow deep customization of the border styles.
-The same params from above are also available to the `getRowClassName` prop.
-Use it to add a custom class name to the rows and customize the border or margin with CSS, as shown in the complete demo below:
+{{"demo": "RowMarginGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-{{"demo": "RowMarginGrid.js", "bg": "inline"}}
+By default, setting `getRowSpacing` will change the `marginXXX` CSS properties of each row.
+To add a border instead, set `rowSpacingType` to `"border"` and customize the color and style.
+
+```tsx
+<DataGrid
+  getRowSpacing={...}
+  rowSpacingType="border"
+  sx={{ '& .MuiDataGrid-row': { borderTopColor: 'yellow', borderTopStyle: 'solid' } }}
+/>
+```
+
+> ⚠ Adding a bottom margin or border to rows that also have a [detail panel](/components/data-grid/group-pivot/#master-detail) is not recommended.
+> As alternative, increase the top spacing of the next row to compensate.
 
 ## Styling rows
 

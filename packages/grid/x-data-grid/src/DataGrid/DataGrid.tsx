@@ -568,6 +568,11 @@ DataGridRaw.propTypes = {
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * Sets the type of space between rows added by `getRowSpacing`.
+   * @default "margin"
+   */
+  rowSpacingType: PropTypes.oneOf(['border', 'margin']),
+  /**
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */

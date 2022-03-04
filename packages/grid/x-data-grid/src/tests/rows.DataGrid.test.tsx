@@ -369,7 +369,7 @@ describe('<DataGrid /> - Rows', () => {
       );
     };
 
-    it('should call with the correct params', () => {
+    it('should be called with the correct params', () => {
       const getRowSpacing = stub().returns({});
       render(<TestCase getRowSpacing={getRowSpacing} pageSize={2} rowsPerPageOptions={[2]} />);
 
@@ -403,11 +403,7 @@ describe('<DataGrid /> - Rows', () => {
       });
     });
 
-    it('should consider the spacing when computing the content size', function test() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
+    it('should consider the spacing when computing the content size', () => {
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
@@ -415,6 +411,7 @@ describe('<DataGrid /> - Rows', () => {
         <TestCase
           rowHeight={rowHeight}
           getRowSpacing={() => ({ top: spacingTop, bottom: spacingBottom })}
+          disableVirtualization
         />,
       );
       const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent');
@@ -425,11 +422,7 @@ describe('<DataGrid /> - Rows', () => {
       });
     });
 
-    it('should update the content size when getRowSpacing is removed', function test() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
+    it('should update the content size when getRowSpacing is removed', () => {
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
@@ -437,6 +430,7 @@ describe('<DataGrid /> - Rows', () => {
         <TestCase
           rowHeight={rowHeight}
           getRowSpacing={() => ({ top: spacingTop, bottom: spacingBottom })}
+          disableVirtualization
         />,
       );
       const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent');
@@ -449,6 +443,37 @@ describe('<DataGrid /> - Rows', () => {
       expect(virtualScrollerContent).toHaveInlineStyle({
         width: 'auto',
         height: `${rows.length * rowHeight}px`,
+      });
+    });
+
+    it('should set the row margin to the value returned by getRowSpacing if rowSpacingType is not defined', () => {
+      const spacingTop = 5;
+      const spacingBottom = 10;
+      render(
+        <TestCase
+          getRowSpacing={() => ({ top: spacingTop, bottom: spacingBottom })}
+          disableVirtualization
+        />,
+      );
+      expect(getRow(0)).toHaveInlineStyle({
+        marginTop: `${spacingTop}px`,
+        marginBottom: `${spacingBottom}px`,
+      });
+    });
+
+    it('should set the row border to the value returned by getRowSpacing if rowSpacingType=border', () => {
+      const borderTop = 5;
+      const borderBottom = 10;
+      render(
+        <TestCase
+          rowSpacingType="border"
+          getRowSpacing={() => ({ top: borderTop, bottom: borderBottom })}
+          disableVirtualization
+        />,
+      );
+      expect(getRow(0)).toHaveInlineStyle({
+        borderTopWidth: `${borderTop}px`,
+        borderBottomWidth: `${borderBottom}px`,
       });
     });
   });

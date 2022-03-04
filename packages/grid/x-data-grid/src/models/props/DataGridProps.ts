@@ -270,6 +270,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowsPerPageOptions: number[];
   /**
+   * Sets the type of space between rows added by `getRowSpacing`.
+   * @default "margin"
+   */
+  rowSpacingType: 'margin' | 'border';
+  /**
    * If `true`, the right border of the cells are displayed.
    * @default false
    */
