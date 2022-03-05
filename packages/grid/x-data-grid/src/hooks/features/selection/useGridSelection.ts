@@ -21,9 +21,11 @@ import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { GridSelectionModel } from '../../../models';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['selectionModel'],
+  prevSelectionModel?: GridSelectionModel,
 ) => {
   if (selectionModelProp == null) {
     return selectionModelProp;
@@ -31,6 +33,10 @@ const getSelectionModelPropValue = (
 
   if (Array.isArray(selectionModelProp)) {
     return selectionModelProp;
+  }
+
+  if (prevSelectionModel && prevSelectionModel[0] === selectionModelProp) {
+    return prevSelectionModel;
   }
 
   return [selectionModelProp];
@@ -65,10 +71,12 @@ export const useGridSelection = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
 
-  const propSelectionModel = React.useMemo(
-    () => getSelectionModelPropValue(props.selectionModel),
-    [props.selectionModel],
-  );
+  const propSelectionModel = React.useMemo(() => {
+    return getSelectionModelPropValue(
+      props.selectionModel,
+      gridSelectionStateSelector(apiRef.current.state),
+    );
+  }, [apiRef, props.selectionModel]);
 
   const lastRowToggled = React.useRef<GridRowId | null>(null);
 
