@@ -45,13 +45,13 @@ These are the ways to start editing a cell (or row if `editMode="row"`):
 - Pressing <kbd class="key">Enter</kbd>, <kbd class="key">Backspace</kbd> or <kbd class="key">Delete</kbd>.
   Note that the existing content in the cell is first cleared if <kbd class="key">Backspace</kbd> or <kbd class="key">Delete</kbd> is pressed.
 - Pressing any printable key, for instance `a`, `E`, `0`, or `$`.
-- Calling to `apiRef.current.startCellEditMode` passing the ID and field of the cell.
+- Calling `apiRef.current.startCellEditMode` passing the ID and field of the cell.
 
   ```tsx
   apiRef.current.startCellEditMode({ id: 1, field: 'name' });
   ```
 
-- Calling to `apiRef.current.startRowEditMode` passing the ID of the row (only available if `editMode="row"`).
+- Calling `apiRef.current.startRowEditMode` passing the ID of the row (only available if `editMode="row"`).
 
   ```tsx
   apiRef.current.startRowEditMode({ id: 1 });
@@ -135,7 +135,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-In the following demo, both value parser and value setter were defined for the _Full name_ column.
+In the following demo, both value parser and value setter were defined for the "Full name" column.
 The value parser converts the value entered to uppercase while the value setter splits the value and saves it correctly into the row object:
 
 {{"demo": "ValueParserSetterGrid.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -249,7 +249,7 @@ The demo also employs validation to prevent entering an empty name.
 
 Each of the built-in column types provide a equivalent component to edit the value of the cells.
 For custom defined columns or to override the existing components, you can provide a new edit component through the `renderEditCell` property in the column definition.
-This property works in a similar way to `renderCell`, rendered while cells are in view mode.
+This property works in a similar fashion to `renderCell`, rendered while cells are in view mode.
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
