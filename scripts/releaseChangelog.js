@@ -190,7 +190,7 @@ async function main(argv) {
 <!-- generated comparing ${lastRelease}..${release} -->
 _${nowFormatted}_
 
-A big thanks to the ${
+We'd like to offer a big thanks to the ${
     authors.length
   } contributors who made this release possible. Here are some highlights ✨:
 
