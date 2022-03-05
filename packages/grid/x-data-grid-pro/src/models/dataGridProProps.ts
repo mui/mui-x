@@ -23,6 +23,7 @@ import {
 } from './gridGroupingColDefOverride';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridInitialStatePro } from './gridStatePro';
+import { GridAggregationFunction } from '@mui/x-data-grid-pro/hooks';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -120,6 +121,11 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default "() => 500"
    */
   getDetailPanelHeight: (params: GridRowParams) => number;
+  /**
+   * TODO: Move to `x-data-grid-premium
+   * @default GRID_AGGREGATION_FUNCTIONS
+   */
+  aggregationFunctions: Record<string, GridAggregationFunction>;
 }
 
 export interface DataGridProPropsWithoutDefaultValue

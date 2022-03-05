@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Divider from '@mui/material/Divider';
+import MuiDivider from '@mui/material/Divider';
 import {
   GridEvents,
   GridEventListener,
@@ -32,6 +32,8 @@ import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
 import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
 import { GridInitialStatePro } from '../../../models/gridStatePro';
+
+const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'rowGroupingModel' | 'initialState'>
@@ -152,15 +154,15 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
-    (initialValue, columns) => {
+    (initialValue, column) => {
       if (props.disableRowGrouping) {
         return initialValue;
       }
 
       let menuItems: React.ReactNode;
-      if (isGroupingColumn(columns.field)) {
+      if (isGroupingColumn(column.field)) {
         menuItems = <GridRowGroupingColumnMenuItems />;
-      } else if (columns.groupable) {
+      } else if (column.groupable) {
         menuItems = <GridRowGroupableColumnMenuItems />;
       } else {
         menuItems = null;

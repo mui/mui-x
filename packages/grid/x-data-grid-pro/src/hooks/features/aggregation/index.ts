@@ -1,2 +1,2 @@
 export type { GridAggregationFunction } from './gridAggregationInterfaces';
-export { gridSumAggregation } from './gridAggregationUtils';
+export { GRID_AGGREGATION_FUNCTIONS } from './gridAggregationUtils';

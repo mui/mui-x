@@ -11,6 +11,7 @@ import {
   DataGridProProcessedProps,
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
+import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 
 /**
  * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
@@ -26,6 +27,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   disableChildrenSorting: false,
   rowGroupingColumnMode: 'single',
   getDetailPanelHeight: () => 500,
+  aggregationFunctions: GRID_AGGREGATION_FUNCTIONS,
 };
 
 export const useDataGridProProps = (inProps: DataGridProProps) => {

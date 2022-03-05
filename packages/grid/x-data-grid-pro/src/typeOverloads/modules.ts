@@ -31,7 +31,18 @@ export interface GridColDefPro {
   /**
    * TODO: Move to `x-data-grid-premium
    */
-  aggregationFunction?: GridAggregationFunction;
+  currentAggregation?: string;
+
+  /**
+   * TODO: Move to `x-data-grid-premium
+   */
+  aggregable?: boolean
+
+  /**
+   * TODO: Move to `x-data-grid-premium
+   * @default A
+   */
+  availableAggregationFunctions?: string[];
 }
 
 declare module '@mui/x-data-grid' {

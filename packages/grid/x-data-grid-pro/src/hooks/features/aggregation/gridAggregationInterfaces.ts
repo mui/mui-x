@@ -5,4 +5,7 @@ interface GridAggregationParams<V = any> {
   values: V[];
 }
 
-export type GridAggregationFunction<V = any> = (params: GridAggregationParams<V>) => number;
+export type GridAggregationFunction<V = any> = {
+  apply: (params: GridAggregationParams<V>) => number;
+  types: string[];
+};
