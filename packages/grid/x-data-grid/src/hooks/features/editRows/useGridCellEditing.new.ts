@@ -98,6 +98,11 @@ export const useGridCellEditing = (
           reason = GridCellEditStopReasons.escapeKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStopReasons.enterKeyDown;
+        } else if (event.key === 'Tab') {
+          reason = event.shiftKey
+            ? GridCellEditStopReasons.shiftTabKeyDown
+            : GridCellEditStopReasons.tabKeyDown;
+          event.preventDefault(); // Prevent going to the next element in the tab sequence
         }
 
         if (reason) {
@@ -129,7 +134,7 @@ export const useGridCellEditing = (
 
   const handleCellEditStart = React.useCallback<GridEventListener<GridEvents.cellEditStart>>(
     (params, event) => {
-      const { id, field, reason } = params as GridCellEditStartParams; // TODO v6: remove cast
+      const { id, field, reason } = params;
 
       apiRef.current.startCellEditMode(params);
 
@@ -145,11 +150,15 @@ export const useGridCellEditing = (
 
   const handleCellEditStop = React.useCallback<GridEventListener<GridEvents.cellEditStop>>(
     (params) => {
-      const { id, field, reason } = params as GridCellEditStopParams; // TODO v6: remove cast
+      const { id, field, reason } = params;
 
-      let moveFocusToCellBelow = false;
+      let cellToMoveFocus: 'none' | 'below' | 'right' | 'left' = 'none';
       if (reason === GridCellEditStopReasons.enterKeyDown) {
-        moveFocusToCellBelow = true;
+        cellToMoveFocus = 'below';
+      } else if (reason === GridCellEditStopReasons.tabKeyDown) {
+        cellToMoveFocus = 'right';
+      } else if (reason === GridCellEditStopReasons.shiftTabKeyDown) {
+        cellToMoveFocus = 'left';
       }
 
       let ignoreModifications = reason === 'escapeKeyDown';
@@ -160,7 +169,12 @@ export const useGridCellEditing = (
         ignoreModifications = true;
       }
 
-      apiRef.current.stopCellEditMode({ id, field, ignoreModifications, moveFocusToCellBelow });
+      apiRef.current.stopCellEditMode({
+        id,
+        field,
+        ignoreModifications,
+        cellToMoveFocus,
+      });
     },
     [apiRef],
   );
@@ -235,7 +249,7 @@ export const useGridCellEditing = (
 
   const stopCellEditMode = React.useCallback<GridNewCellEditingApi['stopCellEditMode']>(
     async (params) => {
-      const { id, field, ignoreModifications, moveFocusToCellBelow } = params;
+      const { id, field, ignoreModifications, cellToMoveFocus = 'none' } = params;
 
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
@@ -268,12 +282,16 @@ export const useGridCellEditing = (
         apiRef.current.updateRows([rowUpdate]);
       }
 
-      if (moveFocusToCellBelow) {
+      if (cellToMoveFocus !== 'none') {
         // TODO Don't fire event and set focus manually here
         apiRef.current.publishEvent(
           GridEvents.cellNavigationKeyDown,
           apiRef.current.getCellParams(id, field),
-          { key: 'Enter', preventDefault: () => {} } as any,
+          {
+            key: cellToMoveFocus === 'below' ? 'Enter' : 'Tab',
+            shiftKey: cellToMoveFocus === 'left',
+            preventDefault: () => {},
+          } as any,
         );
       }
 
