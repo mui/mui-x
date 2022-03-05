@@ -10,6 +10,7 @@ import {
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -368,7 +369,7 @@ describe('<DataGridPro /> - Filter', () => {
 
   describe('Server', () => {
     it('should refresh the filter panel when adding filters', () => {
-      function loadServerRows(commodityFilterValue) {
+      function loadServerRows(commodityFilterValue: string | undefined) {
         const serverRows = [
           { id: '1', commodity: 'rice' },
           { id: '2', commodity: 'soybeans' },
@@ -394,7 +395,7 @@ describe('<DataGridPro /> - Filter', () => {
 
       function AddServerFilterGrid() {
         const [rows, setRows] = React.useState<GridRowModel[]>([]);
-        const [filterValue, setFilterValue] = React.useState();
+        const [filterValue, setFilterValue] = React.useState<string>();
 
         const handleFilterChange = React.useCallback((newFilterModel: GridFilterModel) => {
           setFilterValue(newFilterModel.items[0].value);
@@ -514,7 +515,7 @@ describe('<DataGridPro /> - Filter', () => {
       const ControlCase = (props: Partial<DataGridProProps>) => {
         const { rows, columns, ...others } = props;
         const [caseFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
-        const handleFilterChange = (newModel) => {
+        const handleFilterChange: DataGridProProps['onFilterModelChange'] = (newModel) => {
           setFilterModel(newModel);
         };
 

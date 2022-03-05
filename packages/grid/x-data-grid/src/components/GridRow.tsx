@@ -67,7 +67,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const EmptyCell = ({ width, height }) => {
+const EmptyCell = ({ width, height }: { width: number; height: number }) => {
   if (!width || !height) {
     return null;
   }

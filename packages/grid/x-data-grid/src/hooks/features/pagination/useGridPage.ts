@@ -77,7 +77,7 @@ export const useGridPage = (
   /**
    * API METHODS
    */
-  const setPage = React.useCallback(
+  const setPage = React.useCallback<GridPageApi['setPage']>(
     (page) => {
       logger.debug(`Setting page to ${page}`);
       apiRef.current.setState(mergeStateWithPage(page));

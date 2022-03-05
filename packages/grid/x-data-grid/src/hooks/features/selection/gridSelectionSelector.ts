@@ -18,7 +18,7 @@ export const selectedGridRowsSelector = createSelector(
 );
 
 export const selectedIdsLookupSelector = createSelector(gridSelectionStateSelector, (selection) =>
-  selection.reduce((lookup, rowId) => {
+  selection.reduce<Record<GridRowId, GridRowId>>((lookup, rowId) => {
     lookup[rowId] = rowId;
     return lookup;
   }, {}),
