@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GridHydrateColumnsValue,
   GridPreProcessor,
   useGridRegisterPreProcessor,
 } from '@mui/x-data-grid/internals';
@@ -9,7 +8,7 @@ import { wrapColumnWithAggregation } from './gridAggregationUtils';
 
 export const useGridAggregationPreProcessors = (apiRef: React.MutableRefObject<GridApiPro>) => {
   const updateGroupingColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
-    (columnsState: GridHydrateColumnsValue<GridApiPro>) => {
+    (columnsState) => {
       columnsState.all.forEach((field) => {
         const colDef = columnsState.lookup[field];
 
