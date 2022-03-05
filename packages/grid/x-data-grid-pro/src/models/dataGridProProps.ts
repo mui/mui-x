@@ -126,6 +126,12 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: Record<string, GridAggregationFunction>;
+
+  /**
+   * TODO: Move to `x-data-grid-premium
+   * @default "inline"
+   */
+  aggregationPosition: 'footer' | 'inline';
 }
 
 export interface DataGridProPropsWithoutDefaultValue

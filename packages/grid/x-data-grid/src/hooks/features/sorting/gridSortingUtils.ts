@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { GridSortingModelApplier } from './gridSortingState';
 import type { GridCellValue, GridRowId, GridRowTreeNodeConfig } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -80,27 +81,51 @@ const parseSortItem = (
   return { getSortCellParams, comparator };
 };
 
+interface GridRowAggregatedSortingParams {
+  params: GridSortCellParams[];
+  node: GridRowTreeNodeConfig;
+}
+
 /**
  * Compare two rows according to a list of valid sort items.
  * The `row1Params` and `row2Params` must have the same length as `parsedSortItems`,
  * and each of their index must contain the `GridSortCellParams` of the sort item with the same index.
  * @param {GridParsedSortItem[]} parsedSortItems All the sort items with which we want to compare the rows.
- * @param {GridSortCellParams} row1Params The params of the 1st row for each sort item.
- * @param {GridSortCellParams} row2Params The params of the 2nd row for each sort item.
+ * @param {GridRowAggregatedSortingParams} row1 The node and params of the 1st row for each sort item.
+ * @param {GridRowAggregatedSortingParams} row2 The node and params of the 2nd row for each sort item.
  */
 const compareRows = (
   parsedSortItems: GridParsedSortItem[],
-  row1Params: GridSortCellParams[],
-  row2Params: GridSortCellParams[],
+  row1: GridRowAggregatedSortingParams,
+  row2: GridRowAggregatedSortingParams,
 ) => {
+  const getForcedPositionIndex = (node: GridRowTreeNodeConfig) => {
+    if (node.groupForcedPosition === 'bottom') {
+      return -1;
+    }
+
+    if (node.groupForcedPosition === 'top') {
+      return 1;
+    }
+
+    return 0;
+  };
+
+  const row1ForcedPositionIndex = getForcedPositionIndex(row1.node);
+  const row2ForcedPositionIndex = getForcedPositionIndex(row2.node);
+
+  if (row1ForcedPositionIndex !== row2ForcedPositionIndex) {
+    return row1ForcedPositionIndex > row2ForcedPositionIndex ? -1 : 1;
+  }
+
   return parsedSortItems.reduce((res, item, index) => {
     if (res !== 0) {
       // return the results of the first comparator which distinguish the two rows
       return res;
     }
 
-    const sortCellParams1 = row1Params[index];
-    const sortCellParams2 = row2Params[index];
+    const sortCellParams1 = row1.params[index];
+    const sortCellParams2 = row2.params[index];
     res = item.comparator(
       sortCellParams1.value,
       sortCellParams2.value,
@@ -131,12 +156,12 @@ export const buildAggregatedSortingApplier = (
 
   return (rowList: GridRowTreeNodeConfig[]) =>
     rowList
-      .map((value) => ({
-        value,
-        params: comparatorList.map((el) => el.getSortCellParams(value.id)),
+      .map((node) => ({
+        node,
+        params: comparatorList.map((el) => el.getSortCellParams(node.id)),
       }))
-      .sort((a, b) => compareRows(comparatorList, a.params, b.params))
-      .map((row) => row.value.id);
+      .sort((a, b) => compareRows(comparatorList, a, b))
+      .map((row) => row.node.id);
 };
 
 export const getNextGridSortDirection = (

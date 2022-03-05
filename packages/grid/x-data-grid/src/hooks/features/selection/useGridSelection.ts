@@ -387,7 +387,7 @@ export const useGridSelection = (
     [apiRef, handleSingleRowSelection, selectRows],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, removeOutdatedSelection);
+  useGridApiEventHandler(apiRef, GridEvents.filteredRowsSet, removeOutdatedSelection);
   useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
   useGridApiEventHandler(
     apiRef,

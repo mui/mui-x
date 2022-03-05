@@ -29,6 +29,7 @@ import {
   GridRowsInternalCache,
   GridRowsState,
 } from './gridRowsState';
+import { GridPreProcessor } from '@mui/x-data-grid/hooks/core/preProcessing';
 
 interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
@@ -87,14 +88,27 @@ const getRowsStateFromCache = (
     previousTree,
   });
 
-  const dataTopLevelRowCount = Object.values(groupingResponse.tree).filter(
+  const processedGroupingResponse = apiRef.current.unstable_applyPreProcessors(
+    'hydrateRows',
+    groupingResponse,
+  );
+
+  const dataTopLevelRowCount = Object.values(processedGroupingResponse.tree).filter(
     (node) => node.parent == null,
   ).length;
+
   const totalRowCount =
-    rowCount > groupingResponse.ids.length ? rowCount : groupingResponse.ids.length;
+    rowCount > processedGroupingResponse.ids.length
+      ? rowCount
+      : processedGroupingResponse.ids.length;
   const totalTopLevelRowCount = rowCount > dataTopLevelRowCount ? rowCount : dataTopLevelRowCount;
 
-  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
+  return {
+    ...processedGroupingResponse,
+    groupingResponseBeforeRowHydration: groupingResponse,
+    totalRowCount,
+    totalTopLevelRowCount,
+  };
 };
 
 export const rowsStateInitializer: GridStateInitializer<
@@ -382,12 +396,37 @@ export const useGridRows = (
     }
   }, [apiRef, groupRows]);
 
+  const handlePreProcessorRegister = React.useCallback<
+    GridEventListener<GridEvents.preProcessorRegister>
+  >(
+    (name) => {
+      if (name !== 'hydrateRows') {
+        return;
+      }
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          ...apiRef.current.unstable_applyPreProcessors(
+            'hydrateRows',
+            state.rows.groupingResponseBeforeRowHydration,
+          ),
+        },
+      }));
+      apiRef.current.publishEvent(GridEvents.rowsSet);
+      apiRef.current.forceUpdate();
+    },
+    [apiRef],
+  );
+
   useGridApiEventHandler(
     apiRef,
     GridEvents.activeStrategyProcessorChange,
     handleStrategyProcessorChange,
   );
   useGridApiEventHandler(apiRef, GridEvents.strategyActivityChange, handleStrategyActivityChange);
+  useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 

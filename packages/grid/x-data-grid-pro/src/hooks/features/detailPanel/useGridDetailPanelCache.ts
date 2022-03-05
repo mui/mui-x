@@ -50,7 +50,7 @@ export const useGridDetailPanelCache = (
     apiRef.current.forceUpdate();
   }, [apiRef, props.getDetailPanelContent, props.getDetailPanelHeight]);
 
-  useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, updateCaches);
+  useGridApiEventHandler(apiRef, GridEvents.filteredRowsSet, updateCaches);
 
   const isFirstRender = React.useRef(true);
   if (isFirstRender.current) {

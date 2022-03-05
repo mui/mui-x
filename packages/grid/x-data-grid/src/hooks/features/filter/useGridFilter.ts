@@ -12,7 +12,12 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { gridFilterableColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { getDefaultGridFilterModel } from './gridFilterState';
-import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
+import {
+  gridFilteredRowsLookupSelector,
+  gridFilteredSortedRowIdsSelector,
+  gridFilterModelSelector,
+  gridVisibleSortedRowEntriesSelector,
+} from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector } from '../rows';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
@@ -93,7 +98,7 @@ export const useGridFilter = (
         },
       };
     });
-    apiRef.current.publishEvent(GridEvents.visibleRowsSet);
+    apiRef.current.publishEvent(GridEvents.filteredRowsSet);
     apiRef.current.forceUpdate();
   }, [apiRef, props.filterMode]);
 

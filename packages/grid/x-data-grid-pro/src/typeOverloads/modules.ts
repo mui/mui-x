@@ -36,7 +36,7 @@ export interface GridColDefPro {
   /**
    * TODO: Move to `x-data-grid-premium
    */
-  aggregable?: boolean
+  aggregable?: boolean;
 
   /**
    * TODO: Move to `x-data-grid-premium
