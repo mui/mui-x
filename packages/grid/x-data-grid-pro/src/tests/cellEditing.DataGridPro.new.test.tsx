@@ -352,7 +352,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         });
       });
 
-      it('should move focus to the cell below when moveFocusToCellBelow=true', async () => {
+      it('should move focus to the cell below when cellToMoveFocus=below', async () => {
         const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
           const ref = React.useRef<HTMLInputElement>(null);
           React.useLayoutEffect(() => {
@@ -370,9 +370,73 @@ describe('<DataGridPro /> - Cell Editing', () => {
         await apiRef.current.stopCellEditMode({
           id: 0,
           field: 'currencyPair',
-          moveFocusToCellBelow: true,
+          cellToMoveFocus: 'below',
         });
         expect(getCell(1, 1)).toHaveFocus();
+      });
+
+      it('should move focus to the cell on the right when cellToMoveFocus=right', async () => {
+        const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
+          const ref = React.useRef<HTMLInputElement>(null);
+          React.useLayoutEffect(() => {
+            if (hasFocus) {
+              ref.current!.focus();
+            }
+          }, [hasFocus]);
+          return <input ref={ref} />;
+        };
+        columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        render(
+          <TestCase
+            {...getData(1, 3)}
+            columns={[
+              { field: 'id' },
+              { field: 'currencyPair', editable: true },
+              { field: 'price1M', editable: true },
+            ]}
+          />,
+        );
+
+        apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
+        expect(getCell(0, 1).querySelector('input')).toHaveFocus();
+        await apiRef.current.stopCellEditMode({
+          id: 0,
+          field: 'currencyPair',
+          cellToMoveFocus: 'right',
+        });
+        expect(getCell(0, 2)).toHaveFocus();
+      });
+
+      it('should move focus to the cell on the left when cellToMoveFocus=left', async () => {
+        const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
+          const ref = React.useRef<HTMLInputElement>(null);
+          React.useLayoutEffect(() => {
+            if (hasFocus) {
+              ref.current!.focus();
+            }
+          }, [hasFocus]);
+          return <input ref={ref} />;
+        };
+        columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        render(
+          <TestCase
+            {...getData(1, 3)}
+            columns={[
+              { field: 'id' },
+              { field: 'currencyPair', editable: true },
+              { field: 'price1M', editable: true },
+            ]}
+          />,
+        );
+
+        apiRef.current.startCellEditMode({ id: 0, field: 'price1M' });
+        expect(getCell(0, 2).querySelector('input')).toHaveFocus();
+        await apiRef.current.stopCellEditMode({
+          id: 0,
+          field: 'price1M',
+          cellToMoveFocus: 'left',
+        });
+        expect(getCell(0, 1)).toHaveFocus();
       });
 
       it('should run all pending value mutations before calling processRowUpdate', async () => {
@@ -577,7 +641,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('cellFocusOut');
       });
 
-      it('should call stopCellEditMode with ignoreModifications=false and moveFocusToCellBelow=false', () => {
+      it('should call stopCellEditMode with ignoreModifications=false and cellToMoveFocus=none', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         fireEvent.doubleClick(getCell(0, 1));
@@ -586,7 +650,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          moveFocusToCellBelow: false,
+          cellToMoveFocus: 'none',
           ignoreModifications: false,
         });
       });
@@ -618,7 +682,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('escapeKeyDown');
       });
 
-      it('should call stopCellEditMode with ignoreModifications=true and moveFocusToCellBelow=false', () => {
+      it('should call stopCellEditMode with ignoreModifications=true and cellToMoveFocus=none', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
@@ -630,7 +694,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          moveFocusToCellBelow: false,
+          cellToMoveFocus: 'none',
           ignoreModifications: true,
         });
       });
@@ -650,7 +714,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
       });
 
-      it('should call stopCellEditMode with ignoreModifications=false and moveFocusToCellBelow=true', () => {
+      it('should call stopCellEditMode with ignoreModifications=false and cellToMoveFocus=below', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
@@ -662,7 +726,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          moveFocusToCellBelow: true,
+          cellToMoveFocus: 'below',
           ignoreModifications: false,
         });
       });
@@ -678,6 +742,53 @@ describe('<DataGridPro /> - Cell Editing', () => {
         fireEvent.doubleClick(cell);
         apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
         fireEvent.keyDown(cell, { key: 'Enter' });
+        expect(spiedStopCellEditMode.callCount).to.equal(1);
+        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
+      });
+    });
+
+    describe('by pressing Tab', () => {
+      it(`should publish 'cellEditStop' with reason=tabKeyDown`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent(GridEvents.cellEditStop, listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.doubleClick(cell);
+        expect(listener.callCount).to.equal(0);
+        fireEvent.keyDown(cell, { key: 'Tab' });
+        expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
+      });
+
+      it('should call stopCellEditMode with ignoreModifications=false and cellToMoveFocus=right', () => {
+        render(<TestCase />);
+        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.doubleClick(cell);
+        fireEvent.keyDown(cell, { key: 'Tab' });
+        expect(spiedStopCellEditMode.callCount).to.equal(1);
+        expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
+          id: 0,
+          field: 'currencyPair',
+          cellToMoveFocus: 'right',
+          ignoreModifications: false,
+        });
+      });
+
+      it('should call stopCellEditMode with ignoreModifications=true if the props are being processed', () => {
+        columnProps.preProcessEditCellProps = ({ props }) =>
+          new Promise((resolve) => resolve(props));
+        render(<TestCase />);
+        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.doubleClick(cell);
+        apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        fireEvent.keyDown(cell, { key: 'Tab' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
         expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
       });

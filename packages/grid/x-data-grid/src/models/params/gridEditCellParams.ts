@@ -66,6 +66,8 @@ export enum GridCellEditStopReasons {
   cellFocusOut = 'cellFocusOut',
   escapeKeyDown = 'escapeKeyDown',
   enterKeyDown = 'enterKeyDown',
+  tabKeyDown = 'tabKeyDown',
+  shiftTabKeyDown = 'shiftTabKeyDown',
 }
 
 /**

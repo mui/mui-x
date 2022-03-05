@@ -158,10 +158,10 @@ interface GridStopCellEditModeParams {
    */
   ignoreModifications?: boolean;
   /**
-   * Whether or not to move focus to the cell below the one being edited.
-   * @default false
+   * To which cell to move focus after finishing editing.
+   * @default "none"
    */
-  moveFocusToCellBelow?: boolean;
+  cellToMoveFocus?: 'none' | 'below' | 'right' | 'left';
 }
 
 /**
