@@ -14,9 +14,8 @@ import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { gridPageSelector } from './gridPaginationSelector';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { buildWarning } from '../../../utils/warning';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
-const getPageCount = (rowCount: number, pageSize: number): number => {
+export const getPageCount = (rowCount: number, pageSize: number): number => {
   if (pageSize > 0 && rowCount > 0) {
     return Math.ceil(rowCount / pageSize);
   }
@@ -52,17 +51,6 @@ const noRowCountInServerMode = buildWarning(
   ],
   'error',
 );
-export const pageStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'initialState' | 'rowCount' | 'page'>
-> = (state, props) => ({
-  ...state,
-  pagination: {
-    ...state.pagination!,
-    page: props.page ?? props.initialState?.pagination?.page ?? 0,
-    pageCount: getPageCount(props.rowCount ?? 0, state.pagination!.pageSize!),
-    rowCount: props.rowCount ?? 0,
-  },
-});
 
 /**
  * @requires useGridPageSize (event)
