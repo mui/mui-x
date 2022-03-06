@@ -813,6 +813,28 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           rowHeight * 2,
         );
       });
+
+      it('should expand content height to one row height when there is an error', () => {
+        const error = { message: 'ERROR' };
+        const rowHeight = 50;
+
+        render(
+          <div style={{ width: 150 }}>
+            <DataGrid
+              columns={[{ field: 'brand' }]}
+              rows={[]}
+              autoHeight
+              error={error}
+              rowHeight={rowHeight}
+            />
+          </div>,
+        );
+        const errorOverlayElement = document.querySelectorAll(
+          '.MuiDataGrid-overlay',
+        )[0] as HTMLElement;
+        expect(errorOverlayElement.textContent).to.equal(error.message);
+        expect(errorOverlayElement.offsetHeight).to.equal(rowHeight);
+      });
     });
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
