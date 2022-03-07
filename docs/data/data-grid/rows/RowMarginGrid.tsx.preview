@@ -2,7 +2,7 @@
   {...data}
   getRowSpacing={getRowSpacing}
   sx={{
-    '& .MuiDataGrid-row': {
+    [`& .${gridClasses.row}`]: {
       bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#000' : '#efefef'),
     },
   }}
