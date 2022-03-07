@@ -9,8 +9,8 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getValueFromValueOptions } from './filterPanelUtils';
 
-const warnedOnce = {};
-function warnDeprecatedTypeSupport(type) {
+const warnedOnce: Record<string, boolean> = {};
+function warnDeprecatedTypeSupport(type: string) {
   console.warn(
     [
       `MUI: Using GridFilterInputValue with a "${type}" column is deprecated.`,
@@ -56,7 +56,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
     ['date', 'datetime-local', 'singleSelect'].includes(type as string) &&
     !warnedOnce[type as string]
   ) {
-    warnDeprecatedTypeSupport(type);
+    warnDeprecatedTypeSupport(type as string);
   }
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');

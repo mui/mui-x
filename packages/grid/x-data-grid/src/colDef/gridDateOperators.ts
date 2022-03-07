@@ -22,7 +22,7 @@ function buildApplyFilterFn(
 
   const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
 
-  return ({ value }): boolean => {
+  return ({ value }: { value: any }): boolean => {
     if (!value) {
       return false;
     }

@@ -54,8 +54,8 @@ export const useGridCsvExport = (apiRef: React.MutableRefObject<GridApiCommunity
     [logger, apiRef],
   );
 
-  const exportDataAsCsv = React.useCallback(
-    (options?: GridCsvExportOptions): void => {
+  const exportDataAsCsv = React.useCallback<GridCsvExportApi['exportDataAsCsv']>(
+    (options): void => {
       logger.debug(`Export data as CSV`);
       const csv = getDataAsCsv(options);
 
