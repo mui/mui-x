@@ -12,7 +12,6 @@ import {
 import { useCurrentPageRows } from '@mui/x-data-grid/internals';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
-import { GridColumns } from '../../../models/gridColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 /**
@@ -54,7 +53,7 @@ export const useGridInfiniteLoader = (
         !isInScrollBottomArea.current
       ) {
         const rowScrollEndParam: GridRowScrollEndParams = {
-          visibleColumns: visibleColumns as GridColumns,
+          visibleColumns,
           viewportPageSize,
           virtualRowsCount: currentPage.rows.length,
         };

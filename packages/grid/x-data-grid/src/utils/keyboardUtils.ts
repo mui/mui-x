@@ -38,4 +38,4 @@ export const isNavigationKey = (key: string) =>
 export const isKeyboardEvent = (event: any): event is React.KeyboardEvent<HTMLElement> =>
   !!event.key;
 
-export const isHideMenuKey = (key) => isTabKey(key) || isEscapeKey(key);
+export const isHideMenuKey = (key: React.KeyboardEvent['key']) => isTabKey(key) || isEscapeKey(key);

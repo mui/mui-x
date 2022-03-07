@@ -9,6 +9,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
@@ -264,6 +265,22 @@ describe('<DataGridPro /> - Detail panel', () => {
     // + 1x when the effect runs for the first time = 5x
     expect(getDetailPanelHeight.callCount).to.equal(5);
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
+  });
+
+  it('should not select the row when opening the detail panel', () => {
+    const handleSelectionModelChange = spy();
+    render(
+      <TestCase
+        getDetailPanelContent={() => <div>Detail</div>}
+        onSelectionModelChange={handleSelectionModelChange}
+        checkboxSelection
+      />,
+    );
+    expect(screen.queryByText('Detail')).to.equal(null);
+    const cell = getCell(1, 0);
+    fireEvent.mouseUp(cell);
+    fireEvent.click(cell);
+    expect(handleSelectionModelChange.callCount).to.equal(0);
   });
 
   describe('props: onDetailPanelsExpandedRowIds', () => {

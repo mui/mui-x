@@ -1,4 +1,5 @@
-import { createRenderer, act } from '@mui/monorepo/test/utils';
+// @ts-ignore Remove once the test utils are typed
+import { createRenderer, act, GridApiPro } from '@mui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
@@ -71,7 +72,7 @@ describe('<DataGridPro /> - Pagination', () => {
 
   describe('setPageSize', () => {
     it('should apply value', () => {
-      let apiRef;
+      let apiRef: React.MutableRefObject<GridApiPro>;
       const GridTest = () => {
         const [pageSize, setPageSize] = React.useState(5);
         const basicData = useData(20, 2);

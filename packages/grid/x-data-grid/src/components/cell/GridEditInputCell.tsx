@@ -9,6 +9,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { SUBMIT_FILTER_STROKE_TIME } from '../panel/filterPanel/GridFilterInputValue';
+import { GridColDef } from '../../models/colDef/gridColDef';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -106,11 +107,14 @@ GridEditInputCell.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.object.isRequired,
+  api: PropTypes.any.isRequired,
   debounceMs: PropTypes.number,
   isValidating: PropTypes.bool,
 } as any;
 
 export { GridEditInputCell };
-export const renderEditInputCell = (params) => <GridEditInputCell {...params} />;
+export const renderEditInputCell: GridColDef['renderEditCell'] = (params) => (
+  <GridEditInputCell {...params} />
+);

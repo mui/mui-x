@@ -1,5 +1,5 @@
 // ColDef
-export type { GridKeyValue, GridAlignment, GridColumnsMeta } from './gridColDef';
+export * from './gridColDef';
 
 // Other types
 export * from './gridColType';

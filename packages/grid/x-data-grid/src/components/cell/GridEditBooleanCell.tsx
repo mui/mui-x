@@ -9,6 +9,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridColDef } from '../../models/colDef/gridColDef';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -88,4 +89,6 @@ export function GridEditBooleanCell(
     </label>
   );
 }
-export const renderEditBooleanCell = (params) => <GridEditBooleanCell {...params} />;
+export const renderEditBooleanCell: GridColDef['renderEditCell'] = (params) => (
+  <GridEditBooleanCell {...params} />
+);

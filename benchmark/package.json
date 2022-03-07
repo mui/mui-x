@@ -1,6 +1,6 @@
 {
   "name": "benchmark",
-  "version": "5.5.1",
+  "version": "5.6.0",
   "private": true,
   "scripts": {
     "browser": "webpack --config browser/webpack.config.js && node browser/scripts/benchmark.js"

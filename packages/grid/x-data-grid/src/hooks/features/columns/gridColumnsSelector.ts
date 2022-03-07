@@ -119,12 +119,12 @@ export const gridFilterableColumnDefinitionsSelector = createSelector(
 export const gridFilterableColumnLookupSelector = createSelector(
   gridColumnDefinitionsSelector,
   (columns) =>
-    columns.reduce((acc, col) => {
+    columns.reduce<GridColumnLookup>((acc, col) => {
       if (col.filterable) {
         acc[col.field] = col;
       }
       return acc;
-    }, {} as GridColumnLookup),
+    }, {}),
 );
 
 /**

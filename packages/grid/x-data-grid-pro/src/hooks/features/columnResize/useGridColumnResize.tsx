@@ -12,6 +12,7 @@ import {
   useGridApiOptionHandler,
   useGridNativeEventListener,
   useGridLogger,
+  GridStateColDef,
 } from '@mui/x-data-grid';
 import {
   useGridStateInit,
@@ -23,7 +24,6 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
-import { GridStateColDef } from '../../../models/gridColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -49,7 +49,7 @@ function doesSupportTouchActionNone(): boolean {
   return cachedSupportsTouchActionNone;
 }
 
-function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
+function trackFinger(event: any, currentTouchId: number | undefined): CursorCoordinates | boolean {
   if (currentTouchId !== undefined && event.changedTouches) {
     for (let i = 0; i < event.changedTouches.length; i += 1) {
       const touch = event.changedTouches[i];
