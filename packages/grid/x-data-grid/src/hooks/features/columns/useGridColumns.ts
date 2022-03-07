@@ -315,7 +315,7 @@ export function useGridColumns(
       const dimensions: Record<string, GridColumnDimensions> = {};
       columns.forEach((colDef) => {
         if (colDef.hasBeenResized) {
-          const colDefDimensions = {};
+          const colDefDimensions: GridColumnDimensions = {};
           COLUMNS_DIMENSION_PROPERTIES.forEach((propertyName) => {
             colDefDimensions[propertyName] = colDef[propertyName];
           });
