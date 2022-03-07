@@ -48,7 +48,7 @@ const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) => {
     ? rootProps.components.GroupingCriteriaCollapseIcon
     : rootProps.components.GroupingCriteriaExpandIcon;
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === ' ') {
       event.stopPropagation();
     }

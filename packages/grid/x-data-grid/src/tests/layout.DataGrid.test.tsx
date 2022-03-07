@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
 import { SinonStub, stub } from 'sinon';
 import { expect } from 'chai';
@@ -151,7 +152,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'lastName' },
           {
             field: 'fullName',
-            valueGetter: (params) =>
+            valueGetter: (params: GridValueGetterParams) =>
               `${params.getValue(params.id, 'firstName') || ''} ${
                 params.getValue(params.id, 'lastName') || ''
               }`,
@@ -302,7 +303,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        getAllByRole('columnheader').forEach((col) => {
+        getAllByRole('columnheader').forEach((col: HTMLElement) => {
           expect(col).toHaveInlineStyle({ width: '100px' });
         });
       });
@@ -338,7 +339,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        getAllByRole('columnheader').forEach((col, index) => {
+        getAllByRole('columnheader').forEach((col: HTMLElement, index: number) => {
           expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
         });
       });

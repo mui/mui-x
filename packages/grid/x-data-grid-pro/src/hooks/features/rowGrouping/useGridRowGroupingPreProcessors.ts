@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
   useGridRegisterPreProcessor,
-  GridColumnsRawState,
   GridColumnRawLookup,
+  GridPreProcessor,
 } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridRowGroupingModelSelector } from './gridRowGroupingSelector';
@@ -21,7 +21,7 @@ export const useGridRowGroupingPreProcessors = (
   >,
 ) => {
   const getGroupingColDefs = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
+    (columnsState) => {
       if (props.disableRowGrouping) {
         return [];
       }
@@ -68,7 +68,7 @@ export const useGridRowGroupingPreProcessors = (
     [apiRef, props.groupingColDef, props.rowGroupingColumnMode, props.disableRowGrouping],
   );
 
-  const updateGroupingColumn = React.useCallback(
+  const updateGroupingColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
     (columnsState) => {
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];

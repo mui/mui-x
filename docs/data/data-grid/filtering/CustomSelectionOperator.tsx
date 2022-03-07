@@ -42,10 +42,10 @@ export default function CustomSelectionOperator() {
 
   const selectionModelLookup = React.useMemo(
     () =>
-      models.selectionModel.reduce((lookup, rowId) => {
+      models.selectionModel.reduce<Record<GridRowId, GridRowId>>((lookup, rowId) => {
         lookup[rowId] = rowId;
         return lookup;
-      }, {} as Record<GridRowId, GridRowId>),
+      }, {}),
     [models.selectionModel],
   );
 

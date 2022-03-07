@@ -1,13 +1,14 @@
 import { GridFilterInputSingleSelect } from '../components/panel/filterPanel/GridFilterInputSingleSelect';
 import { GridFilterOperator } from '../models/gridFilterOperator';
+import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 
-const parseObjectValue = (value) => {
+const parseObjectValue = (value: GridFilterItem) => {
   if (value == null || typeof value !== 'object') {
     return value;
   }
 
-  return (value as { value: any; label: string }).value;
+  return value.value;
 };
 
 export const getGridSingleSelectOperators = (): GridFilterOperator[] => [
