@@ -21,14 +21,8 @@ import {
 } from '@mui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
 import generateUtilityClass from '@mui/base/generateUtilityClass';
-import {
-  DocumentedInterfaces,
-  getJsdocDefaultValue,
-  linkify,
-  Project,
-  Projects,
-  writePrettifiedFile,
-} from './utils';
+import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
+import { Project, Projects } from '../getTypeScriptProjects';
 
 interface ReactApi extends ReactDocgenApi {
   /**
@@ -183,7 +177,7 @@ function parseComponentSource(src: string, componentObject: { filename: string }
 const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
-  outputDirectory: string;
+  documentationRoot: string;
   documentedInterfaces: DocumentedInterfaces;
   pagesMarkdown: ReadonlyArray<{
     components: readonly string[];
@@ -191,7 +185,7 @@ const buildComponentDocumentation = async (options: {
     pathname: string;
   }>;
 }) => {
-  const { filename, project, outputDirectory, documentedInterfaces } = options;
+  const { filename, project, documentationRoot, documentedInterfaces } = options;
 
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
@@ -201,7 +195,7 @@ const buildComponentDocumentation = async (options: {
   reactApi.slots = {};
 
   const demos: ReactApi['demos'] = [];
-  if (outputDirectory.includes('/x/')) {
+  if (documentationRoot.includes('/x/')) {
     if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
       demos.push(['/x/react-data-grid/#mit-version', 'DataGrid']);
     }
@@ -426,7 +420,7 @@ const buildComponentDocumentation = async (options: {
   // docs/pages/component-name.json
   writePrettifiedFile(
     path.resolve(
-      outputDirectory,
+      documentationRoot,
       project.documentationFolderName,
       `${kebabCase(reactApi.name)}.json`,
     ),
@@ -437,7 +431,7 @@ const buildComponentDocumentation = async (options: {
   // docs/pages/component-name.js
   writePrettifiedFile(
     path.resolve(
-      outputDirectory,
+      documentationRoot,
       project.documentationFolderName,
       `${kebabCase(reactApi.name)}.js`,
     ),
@@ -474,14 +468,14 @@ Page.getInitialProps = () => {
 
 interface BuildComponentsDocumentationOptions {
   projects: Projects;
-  outputDirectory: string;
+  documentationRoot: string;
   documentedInterfaces: DocumentedInterfaces;
 }
 
 export default async function buildComponentsDocumentation(
   options: BuildComponentsDocumentationOptions,
 ) {
-  const { outputDirectory, documentedInterfaces, projects } = options;
+  const { documentationRoot, documentedInterfaces, projects } = options;
 
   const pagesMarkdown = findPagesMarkdown()
     .map((markdown) => {
@@ -504,7 +498,7 @@ export default async function buildComponentsDocumentation(
         return await buildComponentDocumentation({
           filename,
           project,
-          outputDirectory,
+          documentationRoot,
           pagesMarkdown,
           documentedInterfaces,
         });

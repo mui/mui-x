@@ -4,39 +4,7 @@ import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
 import * as ts from 'typescript';
 import FEATURE_TOGGLE from '../../src/featureToggle';
-
-export interface Project {
-  name: ProjectNames;
-  exports: Record<string, ts.Symbol>;
-  program: ts.Program;
-  checker: ts.TypeChecker;
-  workspaceRoot: string;
-  prettierConfigPath: string;
-  rootPath: string;
-  /**
-   * @param {Project} project The project to generate the prop-types from.
-   * @returns {string[]} Path to the component files from which we want to generate the prop-types.
-   */
-  getComponentsWithPropTypes?: (project: Project) => string[];
-  /**
-   * @param {Project} project The project to generate the components api from.
-   * @returns {string[]} Path to the component files from which we want to generate the api doc.
-   */
-  getComponentsWithApiDoc?: (project: Project) => string[];
-  /**
-   * Name of the folder inside the documentation.
-   */
-  documentationFolderName: string;
-}
-
-export type ProjectNames =
-  | 'x-license-pro'
-  | 'x-data-grid'
-  | 'x-data-grid-pro'
-  | 'x-date-pickers'
-  | 'x-date-pickers-pro';
-
-export type Projects = Map<ProjectNames, Project>;
+import { Project, ProjectNames } from '../getTypeScriptProjects';
 
 export type DocumentedInterfaces = Map<string, ProjectNames[]>;
 

@@ -1,10 +1,42 @@
 import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
-import { Project, Projects } from './api/utils';
 import { getComponentFilesInFolder } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../');
+
+export interface Project {
+  name: ProjectNames;
+  exports: Record<string, ts.Symbol>;
+  program: ts.Program;
+  checker: ts.TypeChecker;
+  workspaceRoot: string;
+  rootPath: string;
+  prettierConfigPath: string;
+  /**
+   * @param {Project} project The project to generate the prop-types from.
+   * @returns {string[]} Path to the component files from which we want to generate the prop-types.
+   */
+  getComponentsWithPropTypes?: (project: Project) => string[];
+  /**
+   * @param {Project} project The project to generate the components api from.
+   * @returns {string[]} Path to the component files from which we want to generate the api doc.
+   */
+  getComponentsWithApiDoc?: (project: Project) => string[];
+  /**
+   * Name of the folder inside the documentation.
+   */
+  documentationFolderName: string;
+}
+
+export type ProjectNames =
+  | 'x-license-pro'
+  | 'x-data-grid'
+  | 'x-data-grid-pro'
+  | 'x-date-pickers'
+  | 'x-date-pickers-pro';
+
+export type Projects = Map<ProjectNames, Project>;
 
 interface CreateProgramOptions
   extends Pick<
@@ -120,11 +152,11 @@ export const getTypeScriptProjects = () => {
   const projects: Projects = new Map();
 
   projects.set(
-    'x-data-grid-pro',
+    'x-license-pro',
     createProject({
-      name: 'x-data-grid-pro',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-      documentationFolderName: 'data-grid',
+      name: 'x-license-pro',
+      rootPath: path.join(workspaceRoot, 'packages/x-license-pro'),
+      documentationFolderName: 'license',
     }),
   );
 
