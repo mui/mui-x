@@ -591,7 +591,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
   });
 
-  it('should be able to type in a custom input', () => {
+  it('should not call .preventDefault on key events inside a cell in edit mode', () => {
     render(
       <TestCase
         columns={[
