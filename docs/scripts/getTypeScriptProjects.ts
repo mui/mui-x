@@ -1,10 +1,43 @@
 import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
-import { Project, Projects } from './api/utils';
 import { getComponentFilesInFolder } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../');
+
+export interface Project {
+  name: ProjectNames;
+  exports: Record<string, ts.Symbol>;
+  program: ts.Program;
+  checker: ts.TypeChecker;
+  workspaceRoot: string;
+  rootPath: string;
+  prettierConfigPath: string;
+  /**
+   * @param {Project} project The project to generate the prop-types from.
+   * @returns {string[]} Path to the component files from which we want to generate the prop-types.
+   */
+  getComponentsWithPropTypes?: (project: Project) => string[];
+  /**
+   * @param {Project} project The project to generate the components api from.
+   * @returns {string[]} Path to the component files from which we want to generate the api doc.
+   */
+  getComponentsWithApiDoc?: (project: Project) => string[];
+  /**
+   * Name of the folder inside the documentation.
+   */
+  documentationFolderName: string;
+}
+
+export type ProjectNames =
+  | 'x-license-pro'
+  | 'x-data-grid'
+  | 'x-data-grid-pro'
+  | 'x-data-grid-generator'
+  | 'x-date-pickers'
+  | 'x-date-pickers-pro';
+
+export type Projects = Map<ProjectNames, Project>;
 
 interface CreateProgramOptions
   extends Pick<
@@ -18,7 +51,7 @@ interface CreateProgramOptions
   /**
    * Config to use to build this package.
    * The path must be relative to the root path.
-   * @default 'tsconfig.json`
+   * @default 'tsconfig.build.json`
    */
   tsConfigPath?: string;
   /**
@@ -32,10 +65,13 @@ interface CreateProgramOptions
 const createProject = (options: CreateProgramOptions): Project => {
   const {
     rootPath,
-    tsConfigPath = 'tsconfig.json',
-    entryPointPath = 'src/index.ts',
+    tsConfigPath: inputTsConfigPath = 'tsconfig.build.json',
+    entryPointPath: inputEntryPointPath = 'src/index.ts',
     ...rest
   } = options;
+
+  const tsConfigPath = path.join(rootPath, inputTsConfigPath);
+  const entryPointPath = path.join(rootPath, inputEntryPointPath);
 
   const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
     fs.readFileSync(filePath).toString(),
@@ -55,15 +91,13 @@ const createProject = (options: CreateProgramOptions): Project => {
     throw tsConfigFileContent.errors[0];
   }
 
-  const fullEntryPointPath = path.join(rootPath, entryPointPath);
-
   const program = ts.createProgram({
-    rootNames: [fullEntryPointPath],
+    rootNames: [entryPointPath],
     options: tsConfigFileContent.options,
   });
 
   const checker = program.getTypeChecker();
-  const sourceFile = program.getSourceFile(fullEntryPointPath);
+  const sourceFile = program.getSourceFile(entryPointPath);
 
   const exports = Object.fromEntries(
     checker.getExportsOfModule(checker.getSymbolAtLocation(sourceFile!)!).map((symbol) => {
@@ -82,6 +116,12 @@ const createProject = (options: CreateProgramOptions): Project => {
   };
 };
 
+/**
+ * Transforms a list of folders and files into a list of file paths containing components.
+ * The file must have the name of the component.
+ * @param {string} folders The folders from which we want to extract components
+ * @param {string} files The files from which we want to extract components
+ */
 const getComponentPaths =
   ({ folders = [], files = [] }: { folders?: string[]; files?: string[] }) =>
   (project: Project) => {
@@ -113,18 +153,11 @@ export const getTypeScriptProjects = () => {
   const projects: Projects = new Map();
 
   projects.set(
-    'x-data-grid-pro',
+    'x-license-pro',
     createProject({
-      name: 'x-data-grid-pro',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-      documentationFolderName: 'data-grid',
-      getComponentsWithPropTypes: getComponentPaths({
-        folders: ['src/components'],
-        files: ['src/DataGridPro/DataGridPro.tsx'],
-      }),
-      getComponentsWithApiDoc: getComponentPaths({
-        files: ['src/DataGridPro/DataGridPro.tsx'],
-      }),
+      name: 'x-license-pro',
+      rootPath: path.join(workspaceRoot, 'packages/x-license-pro'),
+      documentationFolderName: 'license',
     }),
   );
 
@@ -145,34 +178,59 @@ export const getTypeScriptProjects = () => {
   );
 
   projects.set(
-    'x-date-pickers-pro',
+    'x-data-grid-pro',
     createProject({
-      name: 'x-date-pickers-pro',
-      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
-      documentationFolderName: 'date-pickers',
+      name: 'x-data-grid-pro',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
+      documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
-        folders: ['src'],
+        folders: ['src/components'],
+        files: ['src/DataGridPro/DataGridPro.tsx'],
       }),
       getComponentsWithApiDoc: getComponentPaths({
-        folders: ['src'],
+        files: ['src/DataGridPro/DataGridPro.tsx'],
       }),
     }),
   );
 
   projects.set(
-    'x-date-pickers',
+    'x-data-grid-generator',
     createProject({
-      name: 'x-date-pickers',
-      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
-      documentationFolderName: 'date-pickers',
-      getComponentsWithPropTypes: getComponentPaths({
-        folders: ['src'],
-      }),
-      getComponentsWithApiDoc: getComponentPaths({
-        folders: ['src'],
-      }),
+      name: 'x-data-grid-generator',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-generator'),
+      documentationFolderName: 'data-grid',
     }),
   );
+
+  // projects.set(
+  //   'x-date-pickers-pro',
+  //   createProject({
+  //     name: 'x-date-pickers-pro',
+  //     rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
+  //     documentationFolderName: 'date-pickers',
+  //     getComponentsWithPropTypes: getComponentPaths({
+  //       folders: ['src'],
+  //     }),
+  //     getComponentsWithApiDoc: getComponentPaths({
+  //       folders: ['src'],
+  //     }),
+  //   }),
+  // );
+  //
+  // projects.set(
+  //   'x-date-pickers',
+  //   createProject({
+  //     name: 'x-date-pickers',
+  //     rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
+  //     documentationFolderName: 'date-pickers',
+  //     getComponentsWithPropTypes: getComponentPaths({
+  //       folders: ['src'],
+  //     }),
+  //     getComponentsWithApiDoc: getComponentPaths({
+  //       folders: ['src'],
+  //     }),
+  //   }),
+  // );
 
   return projects;
 };

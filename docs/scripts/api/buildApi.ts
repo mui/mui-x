@@ -10,28 +10,28 @@ import FEATURE_TOGGLE from '../../src/featureToggle';
 import { getTypeScriptProjects } from '../getTypeScriptProjects';
 
 async function run() {
-  let outputDirectories = ['./docs/pages/api-docs'];
+  let documentationRoots = ['./docs/pages/api-docs'];
   if (FEATURE_TOGGLE.enable_product_scope) {
-    outputDirectories = ['./docs/pages/api-docs', './docs/pages/x/api'];
+    documentationRoots = ['./docs/pages/api-docs', './docs/pages/x/api'];
   }
   if (FEATURE_TOGGLE.enable_redirects) {
-    outputDirectories = ['./docs/pages/x/api'];
+    documentationRoots = ['./docs/pages/x/api'];
   }
 
   const projects = getTypeScriptProjects();
 
   await Promise.all(
-    outputDirectories.map(async (dir) => {
-      const outputDirectory = path.resolve(dir);
-      fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
+    documentationRoots.map(async (relativeDocumentationRoot) => {
+      const documentationRoot = path.resolve(relativeDocumentationRoot);
+      fse.mkdirSync(documentationRoot, { mode: 0o777, recursive: true });
 
       const documentedInterfaces = buildInterfacesDocumentation({
         projects,
-        outputDirectory,
+        documentationRoot,
       });
 
       await buildComponentsDocumentation({
-        outputDirectory,
+        documentationRoot,
         documentedInterfaces,
         projects,
       });
@@ -44,7 +44,7 @@ async function run() {
 
       buildGridSelectorsDocumentation({
         project: projects.get('x-data-grid-pro')!,
-        documentationRoot: outputDirectory,
+        documentationRoot,
       });
 
       buildExportsDocumentation({

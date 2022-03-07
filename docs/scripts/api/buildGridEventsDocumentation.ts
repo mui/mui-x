@@ -8,11 +8,11 @@ import {
   getSymbolDescription,
   getSymbolJSDocTags,
   linkify,
-  Project,
   resolveExportSpecifier,
   stringifySymbol,
   writePrettifiedFile,
 } from './utils';
+import { Project } from '../getTypeScriptProjects';
 
 interface BuildEventsDocumentationOptions {
   project: Project;

@@ -1,12 +1,7 @@
 import * as path from 'path';
 import * as ts from 'typescript';
-import {
-  formatType,
-  getSymbolDescription,
-  getSymbolJSDocTags,
-  Project,
-  writePrettifiedFile,
-} from './utils';
+import { formatType, getSymbolDescription, getSymbolJSDocTags, writePrettifiedFile } from './utils';
+import { Project } from '../getTypeScriptProjects';
 
 interface BuildSelectorsDocumentationOptions {
   project: Project;

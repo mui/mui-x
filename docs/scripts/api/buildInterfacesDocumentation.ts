@@ -8,14 +8,12 @@ import {
   getSymbolDescription,
   getSymbolJSDocTags,
   linkify,
-  Project,
-  Projects,
   stringifySymbol,
   writePrettifiedFile,
   resolveExportSpecifier,
   DocumentedInterfaces,
-  ProjectNames,
 } from './utils';
+import { Projects, Project, ProjectNames } from '../getTypeScriptProjects';
 
 interface ParsedObject {
   name: string;
@@ -236,7 +234,8 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
         project.name
       }'`;
     })
-    .filter((el): el is string => !!el);
+    .filter((el): el is string => !!el)
+    .sort((a, b) => b.length - a.length);
 
   imports += prettier.format(projectImports.join('\n// or\n'), {
     singleQuote: true,
@@ -269,11 +268,11 @@ function generateMarkdown(
 
 interface BuildInterfacesDocumentationOptions {
   projects: Projects;
-  outputDirectory: string;
+  documentationRoot: string;
 }
 
 export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
-  const { projects, outputDirectory } = options;
+  const { projects, documentationRoot } = options;
 
   const allProjectsName = Array.from(projects.keys());
 
@@ -315,7 +314,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         })),
       };
       writePrettifiedFile(
-        path.resolve(outputDirectory, project.documentationFolderName, `${slug}.json`),
+        path.resolve(documentationRoot, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
         project,
       );
@@ -324,13 +323,13 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     } else {
       const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
       writePrettifiedFile(
-        path.resolve(outputDirectory, project.documentationFolderName, `${slug}.md`),
+        path.resolve(documentationRoot, project.documentationFolderName, `${slug}.md`),
         markdown,
         project,
       );
 
       writePrettifiedFile(
-        path.resolve(outputDirectory, project.documentationFolderName, `${slug}.js`),
+        path.resolve(documentationRoot, project.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
     import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
     import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
