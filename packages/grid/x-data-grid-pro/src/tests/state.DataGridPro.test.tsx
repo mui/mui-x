@@ -1,8 +1,9 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef, GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -30,11 +31,11 @@ describe('<DataGridPro /> - State', () => {
 
   it('should trigger on state change and pass the correct params', () => {
     let onStateParams;
-    let apiRef;
+    let apiRef: React.MutableRefObject<GridApi>;
 
     function Test() {
       apiRef = useGridApiRef();
-      const onStateChange = (params) => {
+      const onStateChange: DataGridProProps['onStateChange'] = (params) => {
         onStateParams = params;
       };
 
@@ -48,7 +49,7 @@ describe('<DataGridPro /> - State', () => {
     render(<Test />);
     const header = screen.getByRole('columnheader', { name: 'brand' });
     fireEvent.click(header);
-    expect(onStateParams).to.equal(apiRef.current.state);
+    expect(onStateParams).to.equal(apiRef!.current.state);
     expect(onStateParams).not.to.equal(undefined);
   });
 

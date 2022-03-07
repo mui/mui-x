@@ -9,6 +9,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';

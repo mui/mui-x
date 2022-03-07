@@ -9,6 +9,8 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridLoadIcon } from '../icons/index';
+import { SUBMIT_FILTER_STROKE_TIME } from '../panel/filterPanel/GridFilterInputValue';
+import { GridColDef } from '../../models/colDef/gridColDef';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -42,6 +44,8 @@ interface GridEditInputCellProps {
 function GridEditInputCell(
   props: GridEditInputCellProps & GridRenderEditCellParams & Omit<InputBaseProps, 'id'>,
 ) {
+  const rootProps = useGridRootProps();
+
   const {
     id,
     value,
@@ -57,14 +61,13 @@ function GridEditInputCell(
     hasFocus,
     getValue,
     isValidating,
-    debounceMs = 200,
+    debounceMs = rootProps.experimentalFeatures?.newEditingApi ? 200 : SUBMIT_FILTER_STROKE_TIME,
     isProcessingProps,
     ...other
   } = props;
 
   const inputRef = React.useRef<HTMLInputElement>();
   const [valueState, setValueState] = React.useState(value);
-  const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
@@ -161,4 +164,6 @@ GridEditInputCell.propTypes = {
 } as any;
 
 export { GridEditInputCell };
-export const renderEditInputCell = (params) => <GridEditInputCell {...params} />;
+export const renderEditInputCell: GridColDef['renderEditCell'] = (params) => (
+  <GridEditInputCell {...params} />
+);

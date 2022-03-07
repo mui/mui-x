@@ -50,7 +50,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === ' ') {
       event.stopPropagation();
     }
@@ -59,7 +59,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
     }
   };
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation(); // TODO remove event.stopPropagation

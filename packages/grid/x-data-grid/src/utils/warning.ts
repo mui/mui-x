@@ -18,8 +18,8 @@ export const buildWarning = (
   };
 };
 
-export const wrapWithWarningOnCall = <Args extends any[], R extends any>(
-  method: (...args: Args) => R,
+export const wrapWithWarningOnCall = <F extends Function>(
+  method: F,
   message: string | string[],
 ) => {
   if (process.env.NODE_ENV === 'production') {
@@ -28,7 +28,7 @@ export const wrapWithWarningOnCall = <Args extends any[], R extends any>(
 
   const warning = buildWarning(message);
 
-  return (...args: Args) => {
+  return (...args: any[]) => {
     warning();
     return method(...args);
   };

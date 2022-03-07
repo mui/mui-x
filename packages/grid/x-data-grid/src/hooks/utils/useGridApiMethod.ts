@@ -17,7 +17,8 @@ export function useGridApiMethod<Api extends GridApiCommon, T extends Partial<Ap
     }
     apiMethodsNames.forEach((methodName) => {
       if (!apiRef.current.hasOwnProperty(methodName)) {
-        apiRef.current[methodName] = (...args) => apiMethodsRef.current[methodName](...args);
+        apiRef.current[methodName as keyof GridApiCommon] = (...args: any[]) =>
+          apiMethodsRef.current[methodName as keyof GridApiCommon](...args);
       }
     });
   }, [apiMethodsNames, apiRef]);

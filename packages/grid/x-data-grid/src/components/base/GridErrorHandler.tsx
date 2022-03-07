@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridLogger } from '../../hooks/utils/useGridLogger';
@@ -15,7 +16,7 @@ const ErrorOverlayWrapper = styled('div')({
   height: '100%',
 });
 
-export function GridErrorHandler(props) {
+function GridErrorHandler(props: { children: React.ReactNode }) {
   const { children } = props;
   const apiRef = useGridApiContext();
   const logger = useGridLogger(apiRef, 'GridErrorHandler');
@@ -58,3 +59,13 @@ export function GridErrorHandler(props) {
     </ErrorBoundary>
   );
 }
+
+GridErrorHandler.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+} as any;
+
+export { GridErrorHandler };
