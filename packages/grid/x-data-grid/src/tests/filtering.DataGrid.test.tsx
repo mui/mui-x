@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {

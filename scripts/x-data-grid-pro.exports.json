@@ -469,6 +469,7 @@
   { "name": "useGridScrollFn", "kind": "Function" },
   { "name": "useGridSelector", "kind": "Variable" },
   { "name": "useGridState", "kind": "Variable" },
+  { "name": "ValueOptions", "kind": "TypeAlias" },
   { "name": "visibleGridColumnsLengthSelector", "kind": "Variable" },
   { "name": "visibleGridColumnsSelector", "kind": "Variable" },
   { "name": "viVN", "kind": "Variable" },

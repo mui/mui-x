@@ -30,7 +30,9 @@ function writeToClipboardPolyfill(data: string) {
  * @requires useGridSelection (method)
  */
 export const useGridClipboard = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
-  const copySelectedRowsToClipboard = React.useCallback(
+  const copySelectedRowsToClipboard = React.useCallback<
+    GridClipboardApi['unstable_copySelectedRowsToClipboard']
+  >(
     (includeHeaders = false) => {
       if (apiRef.current.getSelectedRows().size === 0) {
         return;

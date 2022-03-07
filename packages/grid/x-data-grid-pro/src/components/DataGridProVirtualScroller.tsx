@@ -245,10 +245,10 @@ const DataGridProVirtualScroller = React.forwardRef<
       return null;
     }
 
-    return currentPage.rows.reduce((acc, { id }, index) => {
+    return currentPage.rows.reduce<Record<GridRowId, number>>((acc, { id }, index) => {
       acc[id] = index;
       return acc;
-    }, {} as Record<GridRowId, number>);
+    }, {});
   }, [currentPage.rows, rootProps.getDetailPanelContent]);
 
   const getDetailPanels = () => {

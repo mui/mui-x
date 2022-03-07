@@ -1,8 +1,6 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
 import {
-  MuiEvent,
-  GridRowParams,
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
@@ -12,6 +10,7 @@ import {
   GridEvents,
   useGridApiMethod,
   useGridApiEventHandler,
+  GridEventListener,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPreProcessor,
@@ -105,15 +104,15 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns.left, pinnedColumns.right, props.disableColumnPinning],
   );
 
-  const handleMouseEnter = React.useCallback(
-    (params: GridRowParams, event: MuiEvent<React.MouseEvent<HTMLElement>>) => {
+  const handleMouseEnter = React.useCallback<GridEventListener<GridEvents.rowMouseEnter>>(
+    (params, event) => {
       updateHoveredClassOnSiblingRows(event);
     },
     [updateHoveredClassOnSiblingRows],
   );
 
-  const handleMouseLeave = React.useCallback(
-    (params: GridRowParams, event: MuiEvent<React.MouseEvent<HTMLElement>>) => {
+  const handleMouseLeave = React.useCallback<GridEventListener<GridEvents.rowMouseLeave>>(
+    (params, event) => {
       updateHoveredClassOnSiblingRows(event);
     },
     [updateHoveredClassOnSiblingRows],
