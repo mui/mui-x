@@ -152,10 +152,10 @@ export const useGridRows = (
 
   const lookup = React.useMemo(
     () =>
-      currentPage.rows.reduce((acc, { id }, index) => {
+      currentPage.rows.reduce<Record<GridRowId, number>>((acc, { id }, index) => {
         acc[id] = index;
         return acc;
-      }, {} as Record<GridRowId, number>),
+      }, {}),
     [currentPage.rows],
   );
 
