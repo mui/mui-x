@@ -2,10 +2,10 @@ import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
+import { GridPreferencesPanelApi } from '../../../models/api/gridPreferencesPanelApi';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const preferencePanelStateInitializer: GridStateInitializer<
@@ -41,12 +41,14 @@ export const useGridPreferencesPanel = (apiRef: React.MutableRefObject<GridApiCo
 
   // This is a hack for the issue with Core V4, by delaying hiding the panel on the clickAwayListener,
   // we can cancel the action if the trigger element still need the panel...
-  const hidePreferencesDelayed = React.useCallback(() => {
+  const hidePreferencesDelayed = React.useCallback<
+    GridPreferencesPanelApi['hidePreferences']
+  >(() => {
     hideTimeout.current = setTimeout(hidePreferences, 100);
   }, [hidePreferences]);
 
-  const showPreferences = React.useCallback(
-    (newValue: GridPreferencePanelsValue) => {
+  const showPreferences = React.useCallback<GridPreferencesPanelApi['showPreferences']>(
+    (newValue) => {
       logger.debug('Opening Preferences Panel');
       doNotHidePanel();
       apiRef.current.setState((state) => ({

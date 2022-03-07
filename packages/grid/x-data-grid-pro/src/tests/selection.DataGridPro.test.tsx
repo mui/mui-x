@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import {
   GridApi,
@@ -9,6 +10,7 @@ import {
   DataGridPro,
   GridEvents,
   DataGridProProps,
+  GridSelectionModel,
 } from '@mui/x-data-grid-pro';
 import { getData } from 'storybook/src/data/data-service';
 
@@ -400,7 +402,7 @@ describe('<DataGridPro /> - Selection', () => {
   describe('controlled selection', () => {
     it('should not publish GRID_SELECTION_CHANGE if the selection state did not change ', () => {
       const handleSelectionChange = spy();
-      const selectionModel = [];
+      const selectionModel: GridSelectionModel = [];
       render(<TestDataGridSelection selectionModel={selectionModel} />);
       apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
       apiRef.current.setSelectionModel(selectionModel);

@@ -11,8 +11,9 @@ import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
 import { GridEvents } from '../../models/events/gridEvents';
+import { GridColDef, ValueOptions } from '../../models/colDef/gridColDef';
 
-const renderSingleSelectOptions = (option) =>
+const renderSingleSelectOptions = (option: ValueOptions) =>
   typeof option === 'object' ? (
     <MenuItem key={option.value} value={option.value}>
       {option.label}
@@ -49,7 +50,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(rootProps.editMode === 'cell');
 
-  let valueOptionsFormatted;
+  let valueOptionsFormatted: Array<ValueOptions>;
   if (typeof colDef.valueOptions === 'function') {
     valueOptionsFormatted = colDef.valueOptions({ id, row, field });
   } else {
@@ -70,9 +71,10 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
     });
   }
 
-  const handleChange = async (event) => {
+  const handleChange = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     setOpen(false);
-    const isValid = await api.setEditCellValue({ id, field, value: event.target.value }, event);
+    const target = event.target as HTMLInputElement;
+    const isValid = await api.setEditCellValue({ id, field, value: target.value }, event);
 
     // We use isValid === false because the default return is undefined which evaluates to true with !isValid
     if (rootProps.editMode === GridEditModes.Row || isValid === false) {
@@ -91,7 +93,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
     }
   };
 
-  const handleClose = (event, reason) => {
+  const handleClose = (event: React.KeyboardEvent, reason: string) => {
     if (rootProps.editMode === GridEditModes.Row) {
       setOpen(false);
       return;
@@ -146,4 +148,6 @@ GridEditSingleSelectCell.propTypes = {
 } as any;
 
 export { GridEditSingleSelectCell };
-export const renderEditSingleSelectCell = (params) => <GridEditSingleSelectCell {...params} />;
+export const renderEditSingleSelectCell: GridColDef['renderEditCell'] = (params) => (
+  <GridEditSingleSelectCell {...params} />
+);

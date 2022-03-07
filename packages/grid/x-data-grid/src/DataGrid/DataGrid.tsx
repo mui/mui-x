@@ -80,7 +80,8 @@ DataGridRaw.propTypes = {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: chainPropTypes(PropTypes.array.isRequired, (props: any) => {
+  columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
+    // @ts-ignore because otherwise `build:api` doesn't work
     if (props.columns && props.columns.some((column) => column.resizable)) {
       return new Error(
         [
@@ -267,7 +268,7 @@ DataGridRaw.propTypes = {
   loading: PropTypes.bool,
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
   /**

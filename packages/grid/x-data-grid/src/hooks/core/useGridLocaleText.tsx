@@ -8,8 +8,8 @@ export const useGridLocaleText = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'localeText'>,
 ): void => {
-  const getLocaleText = React.useCallback(
-    (key: any): any => {
+  const getLocaleText = React.useCallback<GridLocaleTextApi['getLocaleText']>(
+    (key) => {
       if (props.localeText[key] == null) {
         throw new Error(`Missing translation for key ${key}.`);
       }

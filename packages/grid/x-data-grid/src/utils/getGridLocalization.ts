@@ -1,3 +1,4 @@
+import { Localization as CoreLocalization } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 
 export interface Localization {
@@ -12,14 +13,14 @@ export interface Localization {
 
 export const getGridLocalization = (
   gridTranslations: Partial<GridLocaleText>,
-  coreTranslations?,
+  coreTranslations?: CoreLocalization,
 ): Localization => ({
   components: {
     MuiDataGrid: {
       defaultProps: {
         localeText: {
           ...gridTranslations,
-          MuiTablePagination: coreTranslations?.components?.MuiTablePagination.defaultProps || {},
+          MuiTablePagination: coreTranslations?.components?.MuiTablePagination?.defaultProps || {},
         },
       },
     },

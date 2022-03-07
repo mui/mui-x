@@ -45,9 +45,10 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
 
     const mergedComponents = {} as GridSlotsComponent;
 
-    Object.keys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS).forEach((key) => {
-      mergedComponents[key] =
-        overrides[key] === undefined ? DATA_GRID_DEFAULT_SLOTS_COMPONENTS[key] : overrides[key];
+    type GridSlots = keyof GridSlotsComponent;
+    Object.entries(DATA_GRID_DEFAULT_SLOTS_COMPONENTS).forEach(([key, defaultComponent]) => {
+      mergedComponents[key as GridSlots] =
+        overrides[key as GridSlots] === undefined ? defaultComponent : overrides[key as GridSlots];
     });
 
     return mergedComponents;
