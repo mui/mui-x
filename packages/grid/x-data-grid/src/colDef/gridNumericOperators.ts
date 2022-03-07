@@ -154,7 +154,7 @@ export const getGridNumericOperators = (): GridFilterOperator[] => [
 /**
  * @deprecated Use `getGridNumericOperators` instead.
  */
-export const getGridNumericColumnOperators = wrapWithWarningOnCall(
-  getGridNumericOperators,
-  'MUI: Using getGridNumericColumnOperators is deprecated, use getGridNumericOperators instead.',
-);
+export const getGridNumericColumnOperators = wrapWithWarningOnCall(getGridNumericOperators, [
+  'MUI: The method getGridNumericColumnOperators is deprecated and will be removed in the next major version.',
+  'Use getGridNumericOperators instead.',
+]);
