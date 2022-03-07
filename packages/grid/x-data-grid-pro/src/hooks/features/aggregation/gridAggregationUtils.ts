@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { GridColDef } from '@mui/x-data-grid';
+import { GridColumnRawLookup } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
-import { GridAggregationFunction } from './gridAggregationInterfaces';
+import {
+  GridAggregationFunction,
+  GridAggregationItem,
+  GridAggregationModel,
+} from './gridAggregationInterfaces';
+import { GridStatePro } from '../../../models/gridStatePro';
 
 const sumAgg: GridAggregationFunction<number> = {
   apply: ({ values }) => {
@@ -83,21 +89,17 @@ export const GRID_AGGREGATION_FUNCTIONS = {
 export const wrapColumnWithAggregation = ({
   colDef,
   apiRef,
+  currentAggregation,
   aggregationFunctions,
   aggregationPositionRef,
 }: {
   colDef: GridColDef;
   apiRef: React.MutableRefObject<GridApiPro>;
+  currentAggregation: GridAggregationItem;
   aggregationFunctions: Record<string, GridAggregationFunction>;
   aggregationPositionRef: React.RefObject<'inline' | 'footer'>;
 }) => {
-  const { valueGetter, currentAggregation } = colDef;
-
-  if (currentAggregation == null) {
-    return colDef;
-  }
-
-  const aggregationFunction = aggregationFunctions?.[currentAggregation];
+  const aggregationFunction = aggregationFunctions?.[currentAggregation.method];
 
   if (!aggregationFunction) {
     throw new Error(`MUI: No aggregation registered with the name ${currentAggregation}`);
@@ -131,8 +133,8 @@ export const wrapColumnWithAggregation = ({
       }
     }
 
-    if (valueGetter) {
-      return valueGetter(params);
+    if (colDef.valueGetter) {
+      return colDef.valueGetter(params);
     }
 
     return params.row[params.field];
@@ -141,6 +143,19 @@ export const wrapColumnWithAggregation = ({
   return {
     ...colDef,
     valueGetter: wrappedValueGetter,
+  };
+};
+
+export const unwrapColumnFromAggregation = ({
+  colDef,
+  colDefBeforePreProcessing,
+}: {
+  colDef: GridColDef;
+  colDefBeforePreProcessing: GridColDef;
+}) => {
+  return {
+    ...colDef,
+    valueGetter: colDefBeforePreProcessing.valueGetter,
   };
 };
 
@@ -162,4 +177,26 @@ export const getAvailableAggregationFunctions = ({
       aggregationFunctions[name].types.includes(column.type!),
     );
   }
+};
+
+export const mergeStateWithAggregationModel =
+  (aggregationModel: GridAggregationModel) =>
+  (state: GridStatePro): GridStatePro => ({
+    ...state,
+    aggregation: { ...state.aggregation, model: aggregationModel },
+  });
+
+export const sanitizeAggregationModel = (
+  model: GridAggregationModel,
+  columnsLookup: GridColumnRawLookup,
+) => {
+  const sanitizedModel: GridAggregationModel = {};
+
+  Object.keys(model).forEach((field) => {
+    if (columnsLookup[field].aggregable !== false) {
+      sanitizedModel[field] = model[field];
+    }
+  });
+
+  return model;
 };

@@ -23,6 +23,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   defaultGroupingExpansionDepth: 0,
   disableColumnPinning: false,
   disableRowGrouping: false,
+  disableAggregation: false,
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
   rowGroupingColumnMode: 'single',

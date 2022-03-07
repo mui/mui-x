@@ -23,13 +23,17 @@ import {
 } from './gridGroupingColDefOverride';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridInitialStatePro } from './gridStatePro';
-import { GridAggregationFunction } from '@mui/x-data-grid-pro/hooks';
+import type { GridAggregationModel, GridAggregationFunction } from '../hooks/features/aggregation';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
    * Will be part of the premium-plan when fully ready.
    */
   rowGrouping: boolean;
+  /**
+   * Will be part of the premium-plan when fully ready.
+   */
+  aggregation: boolean;
 }
 
 /**
@@ -108,6 +112,11 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   disableRowGrouping: boolean;
+  /**
+   * If `true`, the aggregation is disabled.
+   * @default false
+   */
+  disableAggregation: boolean;
   /**
    * If `single`, all column we are grouping by will be represented in the same grouping the same column.
    * If `multiple`, each column we are grouping by will be represented in its own column.
@@ -191,10 +200,22 @@ export interface DataGridProPropsWithoutDefaultValue
   rowGroupingModel?: GridRowGroupingModel;
   /**
    * Callback fired when the row grouping model changes.
+   * TODO: Move to `x-data-grid-premium
    * @param {GridRowGroupingModel} model Columns used as grouping criteria.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
+  /**
+   * TODO: Move to `x-data-grid-premium
+   */
+  aggregationModel?: GridAggregationModel;
+  /**
+   * Callback fired when the row grouping model changes.
+   * TODO: Move to `x-data-grid-premium
+   * @param {GridAggregationModel} model The aggregated columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
   /**
    * The grouping column used by the tree data.
    */

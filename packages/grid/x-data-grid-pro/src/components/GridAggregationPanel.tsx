@@ -5,12 +5,14 @@ import {
   gridColumnDefinitionsSelector,
   GridPanelContent,
   GridPanelWrapper,
-  useGridApiContext,
   useGridSelector,
   GridColDef,
 } from '@mui/x-data-grid';
 import { getAvailableAggregationFunctions } from '../hooks/features/aggregation/gridAggregationUtils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 
 const GridAggregationPanelRoot = styled('div')({
   padding: '8px 0px 8px 8px',
@@ -27,6 +29,7 @@ export const GridAggregationPanel = () => {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
+  const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
 
   const aggregableColumns = React.useMemo(
     () =>
@@ -43,9 +46,17 @@ export const GridAggregationPanel = () => {
   );
 
   const handleChange = (colDef: GridColDef) => (event: React.ChangeEvent<HTMLSelectElement>) => {
-    apiRef.current.updateColumns([
-      { field: colDef.field, currentAggregation: event.target.value || undefined },
-    ]);
+    const method = event.target.value || undefined;
+    const currentModel = gridAggregationModelSelector(apiRef);
+    let newModel: GridAggregationModel;
+    if (method === undefined) {
+      const { [colDef.field]: itemToRemove, ...rest } = currentModel;
+      newModel = rest;
+    } else {
+      newModel = { ...currentModel, [colDef.field]: { ...currentModel[colDef.field], method } };
+    }
+
+    apiRef.current.setAggregationModel(newModel);
   };
 
   return (
@@ -57,9 +68,9 @@ export const GridAggregationPanel = () => {
               <Typography>{column.definition.headerName ?? column.definition.field}</Typography>
               <rootProps.components.BaseSelect
                 inputProps={{
-                  'aria-label': apiRef.current.getLocaleText('filterPanelLinkOperator'),
+                  'aria-label': 'TODO',
                 }}
-                value={column.definition.currentAggregation ?? ''}
+                value={aggregationModel[column.definition.field]?.method ?? ''}
                 onChange={handleChange(column.definition)}
                 native
                 size="small"

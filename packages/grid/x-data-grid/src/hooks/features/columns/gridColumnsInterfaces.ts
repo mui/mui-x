@@ -15,6 +15,7 @@ export interface GridColumnsState {
    */
   all: string[];
   lookup: GridColumnLookup;
+  lookupBeforePreProcessing: GridColumnRawLookup;
   columnVisibilityModel: GridColumnVisibilityModel;
 }
 

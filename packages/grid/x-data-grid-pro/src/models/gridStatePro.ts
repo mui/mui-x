@@ -10,6 +10,8 @@ import type {
   GridColumnResizeState,
   GridColumnPinningState,
   GridRowGroupingInitialState,
+  GridAggregationState,
+  GridAggregationInitialState,
 } from '../hooks';
 
 /**
@@ -21,6 +23,7 @@ export interface GridStatePro extends GridStateCommunity {
   pinnedColumns: GridColumnPinningState;
   rowGrouping: GridRowGroupingState;
   detailPanel: GridDetailPanelState;
+  aggregation: GridAggregationState;
 }
 
 /**
@@ -30,4 +33,5 @@ export interface GridInitialStatePro extends GridInitialStateCommunity {
   rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
   detailPanel?: GridDetailPanelInitialState;
+  aggregation?: GridAggregationInitialState;
 }

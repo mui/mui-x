@@ -47,6 +47,10 @@ import {
   rowGroupingStateInitializer,
 } from '../hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
+import {
+  useGridAggregation,
+  aggregationStateInitializer,
+} from '../hooks/features/aggregation/useGridAggregation';
 import { useGridAggregationPreProcessors } from '../hooks/features/aggregation/useGridAggregationPreProcessors';
 import {
   useGridColumnPinning,
@@ -84,11 +88,13 @@ export const useDataGridProComponent = (
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
+  useGridInitializeState(aggregationStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
 
   useGridRowGrouping(apiRef, props);
   useGridTreeData(apiRef);
+  useGridAggregation(apiRef, props);
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);

@@ -268,34 +268,43 @@ export const createColumnsState = ({
     columnsStateWithoutColumnVisibilityModel = {
       all: [],
       lookup: {},
+      lookupBeforePreProcessing: {},
     };
   } else {
     const currentState = gridColumnsSelector(apiRef.current.state);
     columnsStateWithoutColumnVisibilityModel = {
       all: [...currentState.all],
       lookup: { ...currentState.lookup },
+      lookupBeforePreProcessing: { ...currentState.lookupBeforePreProcessing },
     };
   }
 
   const columnsToUpsertLookup: Record<string, true> = {};
-  columnsToUpsert.forEach((newColumn) => {
-    columnsToUpsertLookup[newColumn.field] = true;
-    if (columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] == null) {
+  columnsToUpsert.forEach((partialColumn) => {
+    columnsToUpsertLookup[partialColumn.field] = true;
+
+    let newColumn: GridColDef;
+    if (columnsStateWithoutColumnVisibilityModel.lookup[partialColumn.field] == null) {
       // New Column
-      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = {
-        ...getGridColDef(columnsTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
-        ...newColumn,
+      newColumn = {
+        ...getGridColDef(columnsTypes, partialColumn.type), // TODO v6: Inline `getGridColDef`
+        ...partialColumn,
       };
       columnsStateWithoutColumnVisibilityModel.all.push(newColumn.field);
     } else {
-      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = {
-        ...columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field],
-        ...newColumn,
+      newColumn = {
+        ...columnsStateWithoutColumnVisibilityModel.lookup[partialColumn.field],
+        ...partialColumn,
       };
     }
+
+    columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = newColumn;
+    columnsStateWithoutColumnVisibilityModel.lookupBeforePreProcessing[newColumn.field] = newColumn;
   });
 
-  const columnsLookupBeforePreProcessing = { ...columnsStateWithoutColumnVisibilityModel.lookup };
+  const columnsLookupBeforeCurrentPreProcessing = {
+    ...columnsStateWithoutColumnVisibilityModel.lookup,
+  };
 
   const columnsStateWithPreProcessing: Omit<GridColumnsRawState, 'columnVisibilityModel'> =
     apiRef.current.unstable_applyPreProcessors(
@@ -319,7 +328,8 @@ export const createColumnsState = ({
         // Then we don't want to update the visibility status of the column in the model.
         if (
           !columnsToUpsertLookup[field] &&
-          columnsLookupBeforePreProcessing[field] === columnsStateWithPreProcessing.lookup[field]
+          columnsLookupBeforeCurrentPreProcessing[field] ===
+            columnsStateWithPreProcessing.lookup[field]
         ) {
           return;
         }

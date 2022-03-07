@@ -213,6 +213,10 @@ enum GridEvents {
    */
   rowGroupingModelChange = 'rowGroupingModelChange',
   /**
+   * Fired when the aggregation model changes.
+   */
+  aggregationModelChange = 'aggregationModelChange',
+  /**
    * Fired during the scroll of the grid viewport.
    */
   rowsScroll = 'rowsScroll',

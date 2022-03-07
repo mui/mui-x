@@ -6,40 +6,80 @@ import { GridApiPro } from '../../../models/gridApiPro';
 import {
   getAvailableAggregationFunctions,
   wrapColumnWithAggregation,
+  unwrapColumnFromAggregation,
+  sanitizeAggregationModel,
 } from './gridAggregationUtils';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridAggregationColumnMenuItems } from '../../../components/GridAggregationColumnMenuItems';
 import { GridAggregationPanel } from '../../../components/GridAggregationPanel';
+import {
+  gridAggregationModelSelector,
+  gridAggregationStateSelector,
+} from './gridAggregationSelectors';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
 export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'aggregationFunctions' | 'aggregationPosition'>,
+  props: Pick<
+    DataGridProProcessedProps,
+    'aggregationFunctions' | 'aggregationPosition' | 'disableAggregation'
+  >,
 ) => {
   const aggregationPositionRef = React.useRef(props.aggregationPosition);
   aggregationPositionRef.current = props.aggregationPosition;
 
   // TODO: Add ability to clear current aggregation
-  const updateGroupingColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
+  const updateAggregatedColumns = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      console.log('HEY');
+      // We can't use `gridAggregationSanitizedModelSelector` here because the new columns are not in the state yet
+      const aggregationModel = sanitizeAggregationModel(
+        gridAggregationModelSelector(apiRef),
+        columnsState.lookup,
+      );
+
+      const lastAggregationModelApplied = gridAggregationStateSelector(
+        apiRef.current.state,
+      ).unstable_sanitizedModelOnLastHydration;
+
       columnsState.all.forEach((field) => {
-        const colDef = columnsState.lookup[field];
+        const shouldHaveAggregation = !props.disableAggregation && !!aggregationModel[field];
+        const haveAggregationColumn = !!lastAggregationModelApplied[field];
 
-        const wrappedColDef = wrapColumnWithAggregation({
-          colDef,
-          apiRef,
-          aggregationFunctions: props.aggregationFunctions,
-          aggregationPositionRef,
-        });
+        if (!shouldHaveAggregation && haveAggregationColumn) {
+          columnsState.lookup[field] = unwrapColumnFromAggregation({
+            colDef: columnsState.lookup[field],
+            colDefBeforePreProcessing: columnsState.lookupBeforePreProcessing[field],
+          });
+        } else if (shouldHaveAggregation) {
+          const colDef = haveAggregationColumn
+            ? unwrapColumnFromAggregation({
+                colDef: columnsState.lookup[field],
+                colDefBeforePreProcessing: columnsState.lookupBeforePreProcessing[field],
+              })
+            : columnsState.lookup[field];
 
-        columnsState.lookup[field] = wrappedColDef;
+          columnsState.lookup[field] = wrapColumnWithAggregation({
+            colDef,
+            currentAggregation: aggregationModel[field],
+            apiRef,
+            aggregationFunctions: props.aggregationFunctions,
+            aggregationPositionRef,
+          });
+        }
       });
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        aggregation: {
+          ...state.aggregation,
+          unstable_sanitizedModelOnLastHydration: aggregationModel,
+        },
+      }));
 
       return columnsState;
     },
-    [apiRef, props.aggregationFunctions, aggregationPositionRef],
+    [apiRef, props.aggregationFunctions, props.disableAggregation, aggregationPositionRef],
   );
 
   const addGroupFooterRows = React.useCallback<GridPreProcessor<'hydrateRows'>>(
@@ -90,6 +130,10 @@ export const useGridAggregationPreProcessors = (
 
   const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
     (initialValue, column) => {
+      if (props.disableAggregation) {
+        return initialValue;
+      }
+
       const availableAggregationFunction = getAvailableAggregationFunctions({
         aggregationFunctions: props.aggregationFunctions,
         column,
@@ -114,7 +158,7 @@ export const useGridAggregationPreProcessors = (
     [],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
+  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateAggregatedColumns);
   useGridRegisterPreProcessor(apiRef, 'hydrateRows', addGroupFooterRows);
   useGridRegisterPreProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
   useGridRegisterPreProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);

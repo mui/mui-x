@@ -1,10 +1,11 @@
 import { GridKeyValue } from '@mui/x-data-grid';
 import type { GridRowScrollEndParams, GridGroupingValueGetterParams } from '../models';
-import type { GridPinnedColumns, GridRowGroupingModel, GridAggregationFunction } from '../hooks';
+import type { GridPinnedColumns, GridRowGroupingModel, GridAggregationModel } from '../hooks';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 
 export interface GridControlledStateEventLookupPro {
   rowGroupingModelChange: { params: GridRowGroupingModel };
+  aggregationModelChange: { params: GridAggregationModel };
   pinnedColumnsChange: { params: GridPinnedColumns };
 }
 
@@ -27,11 +28,6 @@ export interface GridColDefPro {
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
   groupingValueGetter?: (params: GridGroupingValueGetterParams) => GridKeyValue | null | undefined;
-
-  /**
-   * TODO: Move to `x-data-grid-premium
-   */
-  currentAggregation?: string;
 
   /**
    * TODO: Move to `x-data-grid-premium

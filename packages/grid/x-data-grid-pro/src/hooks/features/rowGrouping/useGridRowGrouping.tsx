@@ -36,7 +36,8 @@ import { GridInitialStatePro } from '../../../models/gridStatePro';
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
 export const rowGroupingStateInitializer: GridStateInitializer<
-  Pick<DataGridProProcessedProps, 'rowGroupingModel' | 'initialState'>
+  Pick<DataGridProProcessedProps, 'rowGroupingModel' | 'initialState'>,
+  GridApiPro
 > = (state, props) => ({
   ...state,
   rowGrouping: {
