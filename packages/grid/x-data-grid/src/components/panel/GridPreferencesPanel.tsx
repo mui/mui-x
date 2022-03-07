@@ -15,10 +15,6 @@ export const GridPreferencesPanel = React.forwardRef<
   const rootProps = useGridRootProps();
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
-  const isColumnsTabOpen =
-    preferencePanelState.openedPanelValue === GridPreferencePanelsValue.columns;
-  const isFiltersTabOpen = !preferencePanelState.openedPanelValue || !isColumnsTabOpen;
-
   return (
     <rootProps.components.Panel
       ref={ref}
@@ -28,12 +24,10 @@ export const GridPreferencesPanel = React.forwardRef<
       {...props}
       {...rootProps.componentsProps?.basePopper}
     >
-      {!rootProps.disableColumnSelector && isColumnsTabOpen && (
-        <rootProps.components.ColumnsPanel {...rootProps.componentsProps?.columnsPanel} />
-      )}
-
-      {!rootProps.disableColumnFilter && isFiltersTabOpen && (
-        <rootProps.components.FilterPanel {...rootProps.componentsProps?.filterPanel} />
+      {apiRef.current.unstable_applyPreProcessors(
+        'preferencePanel',
+        null,
+        preferencePanelState.openedPanelValue ?? GridPreferencePanelsValue.filters,
       )}
     </rootProps.components.Panel>
   );

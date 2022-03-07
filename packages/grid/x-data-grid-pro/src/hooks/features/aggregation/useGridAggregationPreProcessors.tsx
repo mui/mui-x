@@ -1,10 +1,15 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
+import { GridPreferencePanelsValue } from '@mui/x-data-grid';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
-import { wrapColumnWithAggregation } from './gridAggregationUtils';
+import {
+  getAvailableAggregationFunctions,
+  wrapColumnWithAggregation,
+} from './gridAggregationUtils';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridAggregationColumnMenuItems } from '../../../components/GridAggregationColumnMenuItems';
+import { GridAggregationPanel } from '../../../components/GridAggregationPanel';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -15,17 +20,21 @@ export const useGridAggregationPreProcessors = (
   const aggregationPositionRef = React.useRef(props.aggregationPosition);
   aggregationPositionRef.current = props.aggregationPosition;
 
+  // TODO: Add ability to clear current aggregation
   const updateGroupingColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
     (columnsState) => {
+      console.log('HEY');
       columnsState.all.forEach((field) => {
         const colDef = columnsState.lookup[field];
 
-        wrapColumnWithAggregation({
+        const wrappedColDef = wrapColumnWithAggregation({
           colDef,
           apiRef,
           aggregationFunctions: props.aggregationFunctions,
           aggregationPositionRef,
         });
+
+        columnsState.lookup[field] = wrappedColDef;
       });
 
       return columnsState;
@@ -81,11 +90,26 @@ export const useGridAggregationPreProcessors = (
 
   const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
     (initialValue, column) => {
-      if (column.aggregable === false) {
+      const availableAggregationFunction = getAvailableAggregationFunctions({
+        aggregationFunctions: props.aggregationFunctions,
+        column,
+      });
+      if (availableAggregationFunction.length === 0) {
         return initialValue;
       }
 
       return [...initialValue, <Divider />, <GridAggregationColumnMenuItems />];
+    },
+    [props.aggregationFunctions],
+  );
+
+  const preferencePanelPreProcessing = React.useCallback<GridPreProcessor<'preferencePanel'>>(
+    (initialValue, value) => {
+      if (value === GridPreferencePanelsValue.aggregation) {
+        return <GridAggregationPanel />;
+      }
+
+      return initialValue;
     },
     [],
   );
@@ -93,4 +117,5 @@ export const useGridAggregationPreProcessors = (
   useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterPreProcessor(apiRef, 'hydrateRows', addGroupFooterRows);
   useGridRegisterPreProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPreProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
 };

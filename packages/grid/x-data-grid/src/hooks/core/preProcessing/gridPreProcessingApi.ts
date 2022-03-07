@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { GridCellIndexCoordinates, GridScrollParams } from '../../../models';
+import { GridCellIndexCoordinates, GridScrollParams, GridColDef } from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
-import { GridColDef } from '../../../models/colDef/gridColDef';
 import {
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
@@ -9,6 +8,7 @@ import {
 import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry } from '../../../models/gridRows';
 import { GridHydrateRowsValue } from '../../features/rows/gridRowsState';
+import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 
 export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
@@ -30,6 +30,7 @@ export interface GridPreProcessingGroupLookup {
     context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
   };
   rowHeight: { value: Record<string, number>; context: GridRowEntry };
+  preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
 }
 
 export type GridPreProcessor<P extends GridPreProcessingGroup> = (

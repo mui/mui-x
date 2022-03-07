@@ -39,6 +39,7 @@ const COLUMNS: GridColumns = [
   {
     field: 'year',
     headerName: 'Year',
+    type: 'number',
   },
   {
     field: 'cinematicUniverse',
