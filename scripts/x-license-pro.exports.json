@@ -8,5 +8,6 @@
   { "name": "showInvalidLicenseError", "kind": "Function" },
   { "name": "showNotFoundLicenseError", "kind": "Function" },
   { "name": "useLicenseVerifier", "kind": "Function" },
-  { "name": "verifyLicense", "kind": "Function" }
+  { "name": "verifyLicense", "kind": "Function" },
+  { "name": "Watermark", "kind": "Function" }
 ]
