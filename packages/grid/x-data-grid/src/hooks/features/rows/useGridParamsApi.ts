@@ -11,6 +11,7 @@ import {
 } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
+import { buildWarning } from '../../../utils/warning';
 
 let warnedOnceMissingColumn = false;
 function warnMissingColumn(field: string) {
@@ -23,16 +24,10 @@ function warnMissingColumn(field: string) {
   warnedOnceMissingColumn = true;
 }
 
-let warnedOnceGetValue = false;
-function warnGetValue() {
-  console.warn(
-    [
-      `MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.`,
-      `Instead, you can access the data from \`params.row}\`.`,
-    ].join('\n'),
-  );
-  warnedOnceGetValue = true;
-}
+const getCellValueWarning = buildWarning([
+  `MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.`,
+  'Instead, you can access the data from `params.row`.',
+]);
 
 /**
  * @requires useGridColumns (method)
@@ -57,9 +52,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
   const getCellValueWithDeprecationWarning = React.useCallback<GridParamsApi['getCellValue']>(
     (...args) => {
       if (process.env.NODE_ENV !== 'production') {
-        if (!warnedOnceGetValue) {
-          warnGetValue();
-        }
+        getCellValueWarning();
       }
 
       return apiRef.current.getCellValue(...args);
