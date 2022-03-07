@@ -419,7 +419,7 @@
   },
   {
     "name": "selectedIdsLookupSelector",
-    "returnType": "{}",
+    "returnType": "Record<GridRowId, GridRowId>",
     "description": "",
     "supportsApiRef": true
   }

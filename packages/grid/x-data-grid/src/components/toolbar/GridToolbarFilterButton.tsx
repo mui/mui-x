@@ -94,7 +94,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       );
     }, [apiRef, preferencePanel.open, activeFilters, lookup, classes]);
 
-    const toggleFilter = (event) => {
+    const toggleFilter = (event: React.MouseEvent<HTMLButtonElement>) => {
       const { open, openedPanelValue } = preferencePanel;
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef.current.hideFilterPanel();

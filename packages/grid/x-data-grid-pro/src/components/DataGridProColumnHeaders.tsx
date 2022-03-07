@@ -53,7 +53,7 @@ interface GridColumnHeadersPinnedColumnHeadersProps {
 }
 
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
-const getOverlayAlpha = (elevation) => {
+const getOverlayAlpha = (elevation: number) => {
   let alphaValue;
   if (elevation < 1) {
     alphaValue = 5.11916 * elevation ** 2;

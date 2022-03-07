@@ -13,7 +13,7 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
     const rootProps = useGridRootProps();
     const { open, openedPanelValue } = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
-    const showColumns = (event) => {
+    const showColumns = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open && openedPanelValue === GridPreferencePanelsValue.columns) {
         apiRef.current.hidePreferences();
       } else {

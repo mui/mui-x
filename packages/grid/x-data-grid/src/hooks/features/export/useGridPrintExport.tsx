@@ -62,7 +62,7 @@ export const useGridPrintExport = (
 
         const columns = gridColumnDefinitionsSelector(apiRef);
 
-        const newColumnVisibilityModel = {};
+        const newColumnVisibilityModel: Record<string, boolean> = {};
         columns.forEach((column) => {
           newColumnVisibilityModel[column.field] = exportedColumnFields.includes(column.field);
         });
@@ -239,8 +239,8 @@ export const useGridPrintExport = (
     [apiRef],
   );
 
-  const exportDataAsPrint = React.useCallback(
-    async (options?: GridPrintExportOptions) => {
+  const exportDataAsPrint = React.useCallback<GridPrintExportApi['exportDataAsPrint']>(
+    async (options) => {
       logger.debug(`Export data as Print`);
 
       if (!apiRef.current.rootElementRef!.current) {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGrid, DataGridProps, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { useData } from 'storybook/src/hooks/useData';
 import { expect } from 'chai';

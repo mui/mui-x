@@ -1,6 +1,7 @@
 import * as React from 'react';
-import clsx from 'clsx';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
@@ -8,6 +9,7 @@ import {
   DataGrid,
   DataGridProps,
   GridActionsCellItem,
+  GridRowIdGetter,
   GridRowClassNameParams,
 } from '@mui/x-data-grid';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
@@ -43,7 +45,7 @@ describe('<DataGrid /> - Rows', () => {
 
   describe('props: getRowId', () => {
     it('should allow to select a field as id', () => {
-      const getRowId = (row) => `${row.clientId}`;
+      const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} getRowId={getRowId} />
@@ -105,8 +107,8 @@ describe('<DataGrid /> - Rows', () => {
 
   describe('prop: getRowClassName', () => {
     it('should apply the CSS class returned by getRowClassName', () => {
-      const getRowId = (row: any) => `${row.clientId}`;
-      const handleRowClassName = (params: GridRowClassNameParams) =>
+      const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
+      const handleRowClassName: DataGridProps['getRowClassName'] = (params) =>
         params.row.age < 20 ? 'under-age' : '';
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -294,8 +296,8 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     const ROW_HEIGHT = 52;
-    const TestCase = (props) => {
-      const getRowId = (row) => `${row.clientId}`;
+    const TestCase = (props: Partial<DataGridProps>) => {
+      const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} {...props} getRowId={getRowId} />

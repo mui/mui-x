@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { GridEvents } from '../models/events';
+import { GridEvents, GridEventListener } from '../models/events';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { GridScrollParams } from '../models/params/gridScrollParams';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -72,9 +72,12 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const handleScrolling = React.useCallback((newScrollPosition) => {
-    scrollPosition.current = newScrollPosition;
-  }, []);
+  const handleScrolling = React.useCallback<GridEventListener<'rowsScroll'>>(
+    (newScrollPosition) => {
+      scrollPosition.current = newScrollPosition;
+    },
+    [],
+  );
 
   const handleDragOver = React.useCallback(
     (event) => {
