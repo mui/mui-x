@@ -234,7 +234,8 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
         project.name
       }'`;
     })
-    .filter((el): el is string => !!el);
+    .filter((el): el is string => !!el)
+    .sort((a, b) => b.length - a.length);
 
   imports += prettier.format(projectImports.join('\n// or\n'), {
     singleQuote: true,

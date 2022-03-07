@@ -33,6 +33,7 @@ export type ProjectNames =
   | 'x-license-pro'
   | 'x-data-grid'
   | 'x-data-grid-pro'
+  | 'x-data-grid-generator'
   | 'x-date-pickers'
   | 'x-date-pickers-pro';
 
@@ -161,6 +162,22 @@ export const getTypeScriptProjects = () => {
   );
 
   projects.set(
+    'x-data-grid',
+    createProject({
+      name: 'x-data-grid',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
+      documentationFolderName: 'data-grid',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src/components'],
+        files: ['src/DataGrid/DataGrid.tsx'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        files: ['src/DataGrid/DataGrid.tsx'],
+      }),
+    }),
+  );
+
+  projects.set(
     'x-data-grid-pro',
     createProject({
       name: 'x-data-grid-pro',
@@ -177,18 +194,11 @@ export const getTypeScriptProjects = () => {
   );
 
   projects.set(
-    'x-data-grid',
+    'x-data-grid-generator',
     createProject({
-      name: 'x-data-grid',
-      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
+      name: 'x-data-grid-pro',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-generator'),
       documentationFolderName: 'data-grid',
-      getComponentsWithPropTypes: getComponentPaths({
-        folders: ['src/components'],
-        files: ['src/DataGrid/DataGrid.tsx'],
-      }),
-      getComponentsWithApiDoc: getComponentPaths({
-        files: ['src/DataGrid/DataGrid.tsx'],
-      }),
     }),
   );
 
