@@ -859,6 +859,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(virtualScrollerContent.clientHeight).to.equal(virtualScroller.clientHeight);
     });
 
+    // See https://github.com/mui/mui-x/issues/4113
     it('should preserve default width constraints when extending default column type', () => {
       const rows = [{ id: 1, value: 1 }];
       const columns = [{ field: 'id', type: 'number' }];
