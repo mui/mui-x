@@ -286,7 +286,7 @@ export const useGridRowEditing = (
 
       const columnFields = gridColumnFieldsSelector(apiRef);
 
-      const newProps = columnFields.reduce((acc, field) => {
+      const newProps = columnFields.reduce<Record<string, GridEditCellProps>>((acc, field) => {
         const cellParams = apiRef.current.getCellParams(id, field);
         if (!cellParams.isEditable) {
           return acc;

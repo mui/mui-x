@@ -1,9 +1,10 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
-import { DataGrid, DataGridProps, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridActionsCellItem, GridRowIdGetter } from '@mui/x-data-grid';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
@@ -37,7 +38,7 @@ describe('<DataGrid /> - Rows', () => {
 
   describe('props: getRowId', () => {
     it('should allow to select a field as id', () => {
-      const getRowId = (row) => `${row.clientId}`;
+      const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} getRowId={getRowId} />
@@ -98,8 +99,9 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   it('should apply the CSS class returned by getRowClassName', () => {
-    const getRowId = (row) => `${row.clientId}`;
-    const handleRowClassName = (params) => (params.row.age < 20 ? 'under-age' : '');
+    const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
+    const handleRowClassName: DataGridProps['getRowClassName'] = (params) =>
+      params.row.age < 20 ? 'under-age' : '';
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid getRowClassName={handleRowClassName} getRowId={getRowId} {...baselineProps} />
@@ -261,8 +263,8 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     const ROW_HEIGHT = 52;
-    const TestCase = (props) => {
-      const getRowId = (row) => `${row.clientId}`;
+    const TestCase = (props: Partial<DataGridProps>) => {
+      const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} {...props} getRowId={getRowId} />

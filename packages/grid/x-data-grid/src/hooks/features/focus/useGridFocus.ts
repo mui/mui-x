@@ -3,7 +3,6 @@ import { ownerDocument } from '@mui/material/utils';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
-import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -31,8 +30,8 @@ export const useGridFocus = (
   }));
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
 
-  const setCellFocus = React.useCallback(
-    (id: GridRowId, field: string) => {
+  const setCellFocus = React.useCallback<GridFocusApi['setCellFocus']>(
+    (id, field) => {
       // The row might have been deleted
       if (!apiRef.current.getRow(id)) {
         return;

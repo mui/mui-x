@@ -18,7 +18,7 @@ export const useGridTreeDataPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<DataGridProProcessedProps, 'treeData' | 'groupingColDef'>,
 ) => {
-  const getGroupingColDef = React.useCallback((): GridColDef => {
+  const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
 
     let colDefOverride: GridGroupingColDefOverride | null | undefined;

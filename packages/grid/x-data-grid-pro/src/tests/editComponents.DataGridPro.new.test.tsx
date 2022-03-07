@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { GridApi, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { act, createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';

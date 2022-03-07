@@ -55,12 +55,8 @@ export const useGridDensity = (
     density: getUpdatedDensityState(props.density, props.headerHeight, props.rowHeight),
   }));
 
-  const setDensity = React.useCallback(
-    (
-      newDensity: GridDensity,
-      newHeaderHeight = props.headerHeight,
-      newRowHeight = props.rowHeight,
-    ): void => {
+  const setDensity = React.useCallback<GridDensityApi['setDensity']>(
+    (newDensity, newHeaderHeight = props.headerHeight, newRowHeight = props.rowHeight): void => {
       logger.debug(`Set grid density to ${newDensity}`);
       apiRef.current.setState((state) => {
         const currentDensityState = gridDensitySelector(state);

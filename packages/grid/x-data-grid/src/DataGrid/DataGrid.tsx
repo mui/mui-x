@@ -80,7 +80,8 @@ DataGridRaw.propTypes = {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: chainPropTypes(PropTypes.array.isRequired, (props: any) => {
+  columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
+    // @ts-ignore because otherwise `build:api` doesn't work
     if (props.columns && props.columns.some((column) => column.resizable)) {
       return new Error(
         [

@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -84,7 +85,7 @@ describe('<DataGridPro /> - Layout', () => {
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call with GridColDef.hide: deprecated)', () => {
       let apiRef: React.MutableRefObject<GridApi>;
 
-      const TestCase = (props) => {
+      const TestCase = (props: DataGridProProps) => {
         apiRef = useGridApiRef();
 
         return (

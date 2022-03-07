@@ -1,3 +1,4 @@
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
   getColumnHeaderCell,
@@ -18,6 +19,7 @@ import {
   GridRowTreeNodeConfig,
   useGridApiRef,
   useGridRootProps,
+  GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 
@@ -1039,7 +1041,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       ]);
 
       setProps({
-        groupingColDef: (params) =>
+        groupingColDef: (params: GridGroupingColDefOverrideParams) =>
           params.fields.includes('category2')
             ? {
                 headerName: 'Custom group',
