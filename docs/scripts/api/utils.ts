@@ -17,12 +17,12 @@ export interface Project {
    * @param {Project} project The project to generate the prop-types from.
    * @returns {string[]} Path to the component files from which we want to generate the prop-types.
    */
-  getComponentsWithPropTypes: (project: Project) => string[];
+  getComponentsWithPropTypes?: (project: Project) => string[];
   /**
    * @param {Project} project The project to generate the components api from.
    * @returns {string[]} Path to the component files from which we want to generate the api doc.
    */
-  getComponentsWithApiDoc: (project: Project) => string[];
+  getComponentsWithApiDoc?: (project: Project) => string[];
   /**
    * Name of the folder inside the documentation.
    */
@@ -30,6 +30,7 @@ export interface Project {
 }
 
 export type ProjectNames =
+  | 'x-license-pro'
   | 'x-data-grid'
   | 'x-data-grid-pro'
   | 'x-date-pickers'

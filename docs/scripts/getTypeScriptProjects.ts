@@ -125,6 +125,15 @@ export const getTypeScriptProjects = () => {
       name: 'x-data-grid-pro',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
       documentationFolderName: 'data-grid',
+    }),
+  );
+
+  projects.set(
+    'x-data-grid-pro',
+    createProject({
+      name: 'x-data-grid-pro',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
+      documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src/components'],
         files: ['src/DataGridPro/DataGridPro.tsx'],

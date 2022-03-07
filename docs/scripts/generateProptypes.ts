@@ -92,13 +92,16 @@ async function run() {
   const projects = getTypeScriptProjects();
 
   const promises = Array.from(projects.values()).flatMap((project) => {
-    const componentsWithPropTypes = project.getComponentsWithPropTypes(project);
+    if (!project.getComponentsWithPropTypes) {
+      return [];
+    }
 
-    return componentsWithPropTypes.map<Promise<void>>(async (file) => {
+    const componentsWithPropTypes = project.getComponentsWithPropTypes(project);
+    return componentsWithPropTypes.map<Promise<void>>(async (filename) => {
       try {
-        await generateProptypes(project.program, file);
+        await generateProptypes(project.program, filename);
       } catch (error: any) {
-        error.message = `${file}: ${error.message}`;
+        error.message = `${filename}: ${error.message}`;
         throw error;
       }
     });
