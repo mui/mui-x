@@ -171,7 +171,9 @@ export const useGridSelection = (
         newSelection = isSelected ? selectableIds : [];
       } else {
         // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-        const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
+        const selectionLookup = {
+          ...selectedIdsLookupSelector(apiRef),
+        };
 
         selectableIds.forEach((id) => {
           if (isSelected) {
@@ -440,10 +442,13 @@ export const useGridSelection = (
         paginationMode,
       });
 
-      const currentPageRowsLookup = currentPageRows.reduce((acc, { id }) => {
-        acc[id] = true;
-        return acc;
-      }, {});
+      const currentPageRowsLookup = currentPageRows.reduce<Record<GridRowId, true>>(
+        (acc, { id }) => {
+          acc[id] = true;
+          return acc;
+        },
+        {},
+      );
 
       const firstSelectableRow = currentSelection.find((id) => {
         let isSelectable = true;

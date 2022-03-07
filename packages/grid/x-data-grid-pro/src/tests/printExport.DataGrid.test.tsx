@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { DataGridPro, GridToolbar, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridToolbar,
+  GridApi,
+  useGridApiRef,
+  DataGridProProps,
+} from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -10,7 +17,7 @@ describe('<DataGridPro /> - Print export', () => {
 
   const NB_ROWS = 2;
   const defaultData = getData(NB_ROWS, 2);
-  let apiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
     ...defaultData,
@@ -18,7 +25,7 @@ describe('<DataGridPro /> - Print export', () => {
     rowsPerPageOptions: [NB_ROWS, 100],
   };
 
-  const Test = (props) => {
+  const Test = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
 
     return (

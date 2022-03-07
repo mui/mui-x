@@ -80,7 +80,7 @@ const GridMenu = (props: GridMenuProps) => {
     prevTarget.current = target;
   }, [open, target]);
 
-  const handleExited = (popperOnExited) => (node: HTMLElement) => {
+  const handleExited = (popperOnExited: (() => {}) | undefined) => (node: HTMLElement) => {
     if (popperOnExited) {
       popperOnExited();
     }
@@ -105,7 +105,7 @@ const GridMenu = (props: GridMenuProps) => {
         <ClickAwayListener onClickAway={onClickAway}>
           <Grow
             {...TransitionProps}
-            style={{ transformOrigin: transformOrigin[placement] }}
+            style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
             onExited={handleExited(TransitionProps?.onExited)}
           >
             <Paper>{children}</Paper>

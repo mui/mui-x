@@ -5,7 +5,9 @@ import {
   GridApi,
   GridSortModel,
   useGridApiRef,
+  GridColumns,
 } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -173,28 +175,27 @@ describe('<DataGridPro /> - Sorting', () => {
     // The number of renders depends on the user-agent
     if (!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM) {
       this.skip();
-      return;
     }
 
-    let renderCellCount = 0;
+    let renderCellCount: number = 0;
 
-    function CounterRender(props) {
+    function CounterRender(props: { value: string }) {
       React.useEffect(() => {
         if (props.value === 'Nike') {
           renderCellCount += 1;
         }
       });
-      return props.value;
+      return <React.Fragment>{props.value}</React.Fragment>;
     }
 
-    const columns = [
+    const columns: GridColumns = [
       {
         field: 'brand',
         renderCell: (params) => <CounterRender value={params.value} />,
       },
     ];
 
-    function Test(props) {
+    function Test(props: Omit<DataGridProProps, 'columns' | 'rows'>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro {...baselineProps} columns={columns} checkboxSelection {...props} />
@@ -242,7 +243,7 @@ describe('<DataGridPro /> - Sorting', () => {
       const ControlCase = (props: Partial<DataGridProProps>) => {
         const { rows, columns, ...others } = props;
         const [caseSortModel, setSortModel] = React.useState<GridSortModel>([]);
-        const handleSortChange = (newModel) => {
+        const handleSortChange: DataGridProProps['onSortModelChange'] = (newModel) => {
           setSortModel(newModel);
           expectedModel = newModel;
         };

@@ -7,6 +7,7 @@ import {
   DataGridPro,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';

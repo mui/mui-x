@@ -7,7 +7,9 @@ import {
   GridFilterInputValue,
   GridFilterInputValueProps,
   GridPreferencePanelsValue,
+  GridFilterItem,
 } from '@mui/x-data-grid';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { getColumnValues } from '../../../../../test/utils/helperFn';
 
@@ -30,7 +32,7 @@ function deleteFilterForm() {
 function CustomInputValue(props: GridFilterInputValueProps) {
   const { item, applyValue } = props;
 
-  const handleFilterChange = (event) => {
+  const handleFilterChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     applyValue({ ...item, value: event.target.value });
   };
 
@@ -94,7 +96,7 @@ describe('<DataGrid /> - Filter panel', () => {
           },
           {
             value: 'equals',
-            getApplyFilterFn: (filterItem) => {
+            getApplyFilterFn: (filterItem: GridFilterItem) => {
               if (!filterItem.value) {
                 return null;
               }
@@ -102,7 +104,7 @@ describe('<DataGrid /> - Filter panel', () => {
                 sensitivity: 'base',
                 usage: 'search',
               });
-              return ({ value }): boolean => {
+              return ({ value }: { value: any }): boolean => {
                 return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
               };
             },

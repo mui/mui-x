@@ -47,7 +47,7 @@ export const useGridTreeDataPreProcessors = (
     );
   }, [apiRef, props.treeData]);
 
-  const getGroupingColDef = React.useCallback((): GridColDef => {
+  const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
 
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
