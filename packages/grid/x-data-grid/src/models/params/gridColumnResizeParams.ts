@@ -12,7 +12,7 @@ export interface GridColumnResizeParams {
   /**
    * The column of the current header component.
    */
-  colDef: GridStateColDef<any>;
+  colDef: GridStateColDef;
   /**
    * The width of the column.
    */

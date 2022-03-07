@@ -1,11 +1,11 @@
-export function getValueFromOption(option) {
+export function getValueFromOption(option: any | undefined) {
   if (typeof option === 'object' && option !== null) {
     return option.value;
   }
   return option;
 }
 
-export function getValueFromValueOptions(value, valueOptions) {
+export function getValueFromValueOptions(value: string, valueOptions: any[]) {
   if (valueOptions === undefined) {
     return undefined;
   }

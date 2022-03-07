@@ -6,6 +6,7 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridColDef } from '../../models/colDef/gridColDef';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -131,4 +132,6 @@ export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBas
     />
   );
 }
-export const renderEditDateCell = (params) => <GridEditDateCell {...params} />;
+export const renderEditDateCell: GridColDef['renderEditCell'] = (params) => (
+  <GridEditDateCell {...params} />
+);

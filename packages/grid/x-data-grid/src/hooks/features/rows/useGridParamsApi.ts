@@ -3,7 +3,6 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
-import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import {
   getGridCellElement,
@@ -15,7 +14,7 @@ import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFo
 import { buildWarning } from '../../../utils/warning';
 
 let warnedOnceMissingColumn = false;
-function warnMissingColumn(field) {
+function warnMissingColumn(field: string) {
   console.warn(
     [
       `MUI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
@@ -39,8 +38,8 @@ const getCellValueWarning = buildWarning([
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
 export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity>) {
-  const getColumnHeaderParams = React.useCallback(
-    (field: string): GridColumnHeaderParams => ({
+  const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
+    (field) => ({
       field,
       colDef: apiRef.current.getColumn(field),
     }),
@@ -61,8 +60,8 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
     [apiRef],
   );
 
-  const getRowParams = React.useCallback(
-    (id: GridRowId) => {
+  const getRowParams = React.useCallback<GridParamsApi['getRowParams']>(
+    (id) => {
       const row = apiRef.current.getRow(id);
 
       if (!row) {
@@ -127,7 +126,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
       const cellFocus = gridFocusCellSelector(apiRef);
       const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
-      const params: GridCellParams<any, any, any, any> = {
+      const params: GridCellParams = {
         id,
         field,
         row,
@@ -156,8 +155,8 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
     [apiRef, getCellValueWithDeprecationWarning],
   );
 
-  const getCellValue = React.useCallback(
-    (id: GridRowId, field: string) => {
+  const getCellValue = React.useCallback<GridParamsApi['getCellValue']>(
+    (id, field) => {
       const colDef = apiRef.current.getColumn(field);
 
       if (process.env.NODE_ENV !== 'production') {
@@ -181,8 +180,8 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
     [apiRef, getBaseCellParams],
   );
 
-  const getColumnHeaderElement = React.useCallback(
-    (field: string): HTMLDivElement | null => {
+  const getColumnHeaderElement = React.useCallback<GridParamsApi['getColumnHeaderElement']>(
+    (field) => {
       if (!apiRef.current.rootElementRef!.current) {
         return null;
       }
@@ -190,8 +189,8 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
     },
     [apiRef],
   );
-  const getRowElement = React.useCallback(
-    (id: GridRowId): HTMLDivElement | null => {
+  const getRowElement = React.useCallback<GridParamsApi['getRowElement']>(
+    (id) => {
       if (!apiRef.current.rootElementRef!.current) {
         return null;
       }
@@ -200,8 +199,8 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
     [apiRef],
   );
 
-  const getCellElement = React.useCallback(
-    (id: GridRowId, field: string): HTMLDivElement | null => {
+  const getCellElement = React.useCallback<GridParamsApi['getCellElement']>(
+    (id, field) => {
       if (!apiRef.current.rootElementRef!.current) {
         return null;
       }

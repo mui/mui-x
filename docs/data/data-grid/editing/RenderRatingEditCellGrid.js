@@ -53,8 +53,9 @@ function RatingEditInputCell(props) {
 RatingEditInputCell.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.object.isRequired,
+  api: PropTypes.any.isRequired,
   /**
    * The column field of the cell that triggered the event.
    */
