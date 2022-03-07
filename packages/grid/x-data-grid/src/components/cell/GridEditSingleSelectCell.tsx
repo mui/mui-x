@@ -53,9 +53,9 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
 
   let valueOptionsFormatted: Array<ValueOptions>;
   if (typeof colDef.valueOptions === 'function') {
-    valueOptionsFormatted = colDef.valueOptions({ id, row, field });
+    valueOptionsFormatted = colDef.valueOptions!({ id, row, field });
   } else {
-    valueOptionsFormatted = colDef.valueOptions;
+    valueOptionsFormatted = colDef.valueOptions!;
   }
 
   if (colDef.valueFormatter) {

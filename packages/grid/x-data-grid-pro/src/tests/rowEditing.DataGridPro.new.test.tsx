@@ -6,8 +6,10 @@ import {
   GridEvents,
   DataGridPro,
   GridRenderEditCellParams,
+  GridPreProcessEditCellProps,
   GridCellProps,
 } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -149,7 +151,9 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should set isProcessingProps to true before calling preProcessEditCellProps', async () => {
-        column1Props.preProcessEditCellProps = spy(({ props }) => props);
+        column1Props.preProcessEditCellProps = spy(
+          ({ props }: GridPreProcessEditCellProps) => props,
+        );
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0 });
         apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
@@ -157,8 +161,12 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should call all preProcessEditCellProps with the correct params', async () => {
-        column1Props.preProcessEditCellProps = spy(({ props }) => props);
-        column2Props.preProcessEditCellProps = spy(({ props }) => props);
+        column1Props.preProcessEditCellProps = spy(
+          ({ props }: GridPreProcessEditCellProps) => props,
+        );
+        column2Props.preProcessEditCellProps = spy(
+          ({ props }: GridPreProcessEditCellProps) => props,
+        );
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0 });
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
@@ -185,7 +193,10 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should pass to renderEditCell the props returned by preProcessEditCellProps', async () => {
-        column1Props.preProcessEditCellProps = ({ props }) => ({ ...props, foo: 'bar' });
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          foo: 'bar',
+        });
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0 });
         expect(renderEditCell1.lastCall.args[0].foo).to.equal(undefined);
@@ -194,7 +205,10 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should not pass to renderEditCell the value returned by preProcessEditCellProps', async () => {
-        column1Props.preProcessEditCellProps = ({ props }) => ({ ...props, value: 'foobar' });
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          value: 'foobar',
+        });
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0 });
         expect(renderEditCell1.lastCall.args[0].value).to.equal('USDGBP');
@@ -203,8 +217,8 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should set isProcessingProps to false after calling preProcessEditCellProps', async () => {
-        column1Props.preProcessEditCellProps = ({ props }) => props;
-        column2Props.preProcessEditCellProps = ({ props }) => props;
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
+        column2Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0 });
         const promise = apiRef.current.setEditCellValue({
@@ -221,7 +235,10 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should return false if preProcessEditCellProps sets an error', async () => {
-        column1Props.preProcessEditCellProps = ({ props }) => ({ ...props, error: true });
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        });
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0 });
         expect(
@@ -234,7 +251,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should return false if the cell left the edit mode while calling preProcessEditCellProps', async () => {
-        column1Props.preProcessEditCellProps = ({ props }) =>
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
           new Promise((resolve) => {
             // Simulates the user cancelling the editing while processing the props
             apiRef.current.stopRowEditMode({
@@ -308,7 +325,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should do nothing if props are still being processed and ignoreModifications=false', async () => {
-        column1Props.preProcessEditCellProps = ({ props }) =>
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
           new Promise((resolve) => {
             // Simulates the user stopping the editing while processing the props
             apiRef.current.stopRowEditMode({ id: 0 }).then(() => resolve(props));
@@ -320,7 +337,10 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should do nothing if props of any column contain error=true', async () => {
-        column1Props.preProcessEditCellProps = ({ props }) => ({ ...props, error: true });
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        });
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0 });
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
@@ -652,7 +672,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should call stopRowEditMode with ignoreModifications=true if the props are being processed', () => {
-        column1Props.preProcessEditCellProps = ({ props }) =>
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
           new Promise((resolve) => resolve(props));
         render(<TestCase />);
         const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
@@ -727,7 +747,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should call stopRowEditMode with ignoreModifications=true if the props are being processed', () => {
-        column1Props.preProcessEditCellProps = ({ props }) =>
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
           new Promise((resolve) => resolve(props));
         render(<TestCase />);
         const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
