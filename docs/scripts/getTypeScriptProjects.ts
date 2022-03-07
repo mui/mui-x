@@ -196,7 +196,7 @@ export const getTypeScriptProjects = () => {
   projects.set(
     'x-data-grid-generator',
     createProject({
-      name: 'x-data-grid-pro',
+      name: 'x-data-grid-generator',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-generator'),
       documentationFolderName: 'data-grid',
     }),
