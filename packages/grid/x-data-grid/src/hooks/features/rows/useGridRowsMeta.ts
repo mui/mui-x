@@ -75,7 +75,7 @@ export const useGridRowsMeta = (
         const initialHeights: Record<string, number> = { base: baseRowHeight };
 
         if (getRowSpacing) {
-          const index = apiRef.current.unstable_getRowIndexRelativeToCurrentPage(row.id);
+          const index = apiRef.current.getRowIndexRelativeToCurrentPage(row.id);
 
           const spacing = getRowSpacing({
             ...row,

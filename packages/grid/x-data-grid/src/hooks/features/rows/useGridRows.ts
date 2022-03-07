@@ -401,7 +401,7 @@ export const useGridRows = (
     updateRows,
     setRowChildrenExpansion,
     getRowNode,
-    unstable_getRowIndexRelativeToCurrentPage: getRowIndexRelativeToCurrentPage,
+    getRowIndexRelativeToCurrentPage,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
