@@ -2,6 +2,7 @@ import { GridRowId, GridCellValue } from '../../../../models';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../../colDef';
 import { GridCellParams } from '../../../../models/params/gridCellParams';
 import { GridStateColDef } from '../../../../models/colDef/gridColDef';
+import { buildWarning } from '../../../../utils/warning';
 
 const serialiseCellValue = (value: GridCellValue, delimiterCharacter: string) => {
   if (typeof value === 'string') {
@@ -18,7 +19,10 @@ const serialiseCellValue = (value: GridCellValue, delimiterCharacter: string) =>
   return value;
 };
 
-let warnedOnce = false;
+const objectFormattedValueWarning = buildWarning([
+  'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+  'You can provide a `valueFormatter` with a string representation to be used.',
+]);
 
 const serialiseRow = (
   id: GridRowId,
@@ -29,14 +33,8 @@ const serialiseRow = (
   columns.map((column) => {
     const cellParams = getCellParams(id, column.field);
     if (process.env.NODE_ENV !== 'production') {
-      if (!warnedOnce && String(cellParams.formattedValue) === '[object Object]') {
-        console.warn(
-          [
-            'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
-            'You can provide a `valueFormatter` with a string representation to be used.',
-          ].join('\n'),
-        );
-        warnedOnce = true;
+      if (String(cellParams.formattedValue) === '[object Object]') {
+        objectFormattedValueWarning();
       }
     }
     return serialiseCellValue(cellParams.formattedValue, delimiterCharacter);
