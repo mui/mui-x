@@ -13,38 +13,43 @@ export const sortRowTree = (params: SortRowTreeParams) => {
   let sortedRows: GridRowId[] = [];
 
   // Group the rows by parent
-  const groupedByParentRows = new Map<GridRowId | null, GridRowTreeNodeConfig[]>([[null, []]]);
+  const groupedByParentRows = new Map<
+    GridRowId | null,
+    { body: GridRowTreeNodeConfig[]; footer: GridRowTreeNodeConfig[] }
+  >([[null, { body: [], footer: [] }]]);
   for (let i = 0; i < rowIds.length; i += 1) {
     const rowId = rowIds[i];
     const node = rowTree[rowId];
     let group = groupedByParentRows.get(node.parent);
     if (!group) {
-      group = [];
+      group = { body: [], footer: [] };
       groupedByParentRows.set(node.parent, group);
     }
-    group.push(node);
+
+    if (node.position === 'footer') {
+      group.footer.push(node);
+    } else {
+      group.body.push(node);
+    }
   }
 
   // Apply the sorting to each list of children
   const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>();
-  groupedByParentRows.forEach((rowList, parent) => {
-    if (rowList.length === 0) {
+  groupedByParentRows.forEach((group, parent) => {
+    if (group.body.length === 0) {
       sortedGroupedByParentRows.set(parent, []);
     } else {
-      const depth = rowList[0].depth;
-      if (depth > 0 && disableChildrenSorting) {
-        sortedGroupedByParentRows.set(
-          parent,
-          rowList.map((row) => row.id),
-        );
-      } else if (!sortRowList) {
-        sortedGroupedByParentRows.set(
-          parent,
-          rowList.map((row) => row.id),
-        );
+      let sortedBodyRows: GridRowId[];
+      const depth = group.body[0].depth;
+      if ((depth > 0 && disableChildrenSorting) || !sortRowList) {
+        sortedBodyRows = group.body.map((row) => row.id);
       } else {
-        sortedGroupedByParentRows.set(parent, sortRowList(rowList));
+        sortedBodyRows = sortRowList(group.body);
       }
+
+      const footerRows = group.footer.map((row) => row.id);
+
+      sortedGroupedByParentRows.set(parent, [...sortedBodyRows, ...footerRows]);
     }
   });
 

@@ -99,25 +99,6 @@ const compareRows = (
   row1: GridRowAggregatedSortingParams,
   row2: GridRowAggregatedSortingParams,
 ) => {
-  const getForcedPositionIndex = (node: GridRowTreeNodeConfig) => {
-    if (node.groupForcedPosition === 'bottom') {
-      return -1;
-    }
-
-    if (node.groupForcedPosition === 'top') {
-      return 1;
-    }
-
-    return 0;
-  };
-
-  const row1ForcedPositionIndex = getForcedPositionIndex(row1.node);
-  const row2ForcedPositionIndex = getForcedPositionIndex(row2.node);
-
-  if (row1ForcedPositionIndex !== row2ForcedPositionIndex) {
-    return row1ForcedPositionIndex > row2ForcedPositionIndex ? -1 : 1;
-  }
-
   return parsedSortItems.reduce((res, item, index) => {
     if (res !== 0) {
       // return the results of the first comparator which distinguish the two rows

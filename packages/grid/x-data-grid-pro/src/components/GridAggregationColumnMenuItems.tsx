@@ -37,7 +37,9 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
   return (
     <React.Fragment>
       {availableAggregationFunctions.map((aggFunc) => (
-        <MenuItem onClick={(event) => setAggregation(event, aggFunc)}>Set agg {aggFunc}</MenuItem>
+        <MenuItem key={aggFunc} onClick={(event) => setAggregation(event, aggFunc)}>
+          Set agg {aggFunc}
+        </MenuItem>
       ))}
     </React.Fragment>
   );

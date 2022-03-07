@@ -61,7 +61,6 @@ export const useGridAggregationPreProcessors = (
           depth: node.depth + 1,
           groupingKey: null,
           groupingField: null,
-          groupForcedPosition: 'bottom',
         };
 
         tree[parentId] = {
