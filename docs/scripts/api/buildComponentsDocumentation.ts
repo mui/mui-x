@@ -425,24 +425,30 @@ const buildComponentDocumentation = async (options: {
 
   // docs/pages/component-name.json
   writePrettifiedFile(
-    path.resolve(outputDirectory, `${kebabCase(reactApi.name)}.json`),
+    path.resolve(
+      outputDirectory,
+      project.documentationFolderName,
+      `${kebabCase(reactApi.name)}.json`,
+    ),
     JSON.stringify(pageContent),
     project,
   );
 
   // docs/pages/component-name.js
   writePrettifiedFile(
-    path.resolve(outputDirectory, `${kebabCase(reactApi.name)}.js`),
+    path.resolve(
+      outputDirectory,
+      project.documentationFolderName,
+      `${kebabCase(reactApi.name)}.js`,
+    ),
     `import * as React from 'react';
 import ApiPage from 'docsx/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import jsonPageContent from './${kebabCase(reactApi.name)}.json';
-
 export default function Page(props) {
   const { descriptions, pageContent } = props;
   return <ApiPage descriptions={descriptions} pageContent={pageContent} />;
 }
-
 Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/data-grid', 
@@ -450,7 +456,6 @@ Page.getInitialProps = () => {
     /${kebabCase(reactApi.name)}.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
-
   return {
     descriptions,
     pageContent: jsonPageContent

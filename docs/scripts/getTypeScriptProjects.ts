@@ -1,38 +1,44 @@
 import path from 'path';
 import fs from 'fs';
 import * as ts from 'typescript';
-import { Project, ProjectNames, Projects } from './api/utils';
+import { Project, Projects } from './api/utils';
+import { getComponentFilesInFolder } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../');
 
-interface CreateProgramOptions {
-  name: ProjectNames;
-  rootPath: string;
+interface CreateProgramOptions
+  extends Pick<
+    Project,
+    | 'name'
+    | 'rootPath'
+    | 'documentationFolderName'
+    | 'getComponentsWithPropTypes'
+    | 'getComponentsWithApiDoc'
+  > {
   /**
    * Config to use to build this package.
    * The path must be relative to the root path.
+   * @default 'tsconfig.build.json`
    */
-  tsConfigPath: string;
+  tsConfigPath?: string;
   /**
    * File used as root of the package.
    * The path must be relative to the root path.
+   * @default 'src/index.ts'
    */
-  entryPointPath: string;
-  /**
-   * Folder containing all the components of this package.
-   * The path must be relative to the root path.
-   */
-  componentsFolder?: string;
-  /**
-   * Additional files containing components outside the component's folder.
-   * The path must be relative to the root path.
-   */
-  otherComponentFiles?: string[];
+  entryPointPath?: string;
 }
 
 const createProject = (options: CreateProgramOptions): Project => {
-  const { name, tsConfigPath, rootPath, entryPointPath, componentsFolder, otherComponentFiles } =
-    options;
+  const {
+    rootPath,
+    tsConfigPath: inputTsConfigPath = 'tsconfig.build.json',
+    entryPointPath: inputEntryPointPath = 'src/index.ts',
+    ...rest
+  } = options;
+
+  const tsConfigPath = path.join(rootPath, inputTsConfigPath);
+  const entryPointPath = path.join(rootPath, inputEntryPointPath);
 
   const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
     fs.readFileSync(filePath).toString(),
@@ -52,15 +58,13 @@ const createProject = (options: CreateProgramOptions): Project => {
     throw tsConfigFileContent.errors[0];
   }
 
-  const fullEntryPointPath = path.join(rootPath, entryPointPath);
-
   const program = ts.createProgram({
-    rootNames: [fullEntryPointPath],
+    rootNames: [entryPointPath],
     options: tsConfigFileContent.options,
   });
 
   const checker = program.getTypeChecker();
-  const sourceFile = program.getSourceFile(fullEntryPointPath);
+  const sourceFile = program.getSourceFile(entryPointPath);
 
   const exports = Object.fromEntries(
     checker.getExportsOfModule(checker.getSymbolAtLocation(sourceFile!)!).map((symbol) => {
@@ -69,16 +73,48 @@ const createProject = (options: CreateProgramOptions): Project => {
   );
 
   return {
-    name,
+    ...rest,
+    rootPath,
     exports,
     program,
     checker,
     workspaceRoot,
-    componentsFolder: componentsFolder ? path.join(rootPath, componentsFolder) : undefined,
-    otherComponentFiles: otherComponentFiles?.map((file) => path.join(rootPath, file)),
     prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
   };
 };
+
+/**
+ * Transforms a list of folders and files into a list of file paths containing components.
+ * The file must have the name of the component.
+ * @param {string} folders The folders from which we want to extract components
+ * @param {string} files The files from which we want to extract components
+ */
+const getComponentPaths =
+  ({ folders = [], files = [] }: { folders?: string[]; files?: string[] }) =>
+  (project: Project) => {
+    const paths: string[] = [];
+
+    files.forEach((file) => {
+      const componentName = path.basename(file).replace('.tsx', '');
+      const isExported = !!project.exports[componentName];
+      if (isExported) {
+        paths.push(path.join(project.rootPath, file));
+      }
+    });
+
+    folders.forEach((folder) => {
+      const componentFiles = getComponentFilesInFolder(path.join(project.rootPath, folder));
+      componentFiles.forEach((file) => {
+        const componentName = path.basename(file).replace('.tsx', '');
+        const isExported = !!project.exports[componentName];
+        if (isExported) {
+          paths.push(file);
+        }
+      });
+    });
+
+    return paths;
+  };
 
 export const getTypeScriptProjects = () => {
   const projects: Projects = new Map();
@@ -88,10 +124,14 @@ export const getTypeScriptProjects = () => {
     createProject({
       name: 'x-data-grid-pro',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-      tsConfigPath: 'tsconfig.json',
-      entryPointPath: 'src/index.ts',
-      componentsFolder: 'src/components',
-      otherComponentFiles: ['src/DataGridPro/DataGridPro.tsx'],
+      documentationFolderName: 'data-grid',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src/components'],
+        files: ['src/DataGridPro/DataGridPro.tsx'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        files: ['src/DataGridPro/DataGridPro.tsx'],
+      }),
     }),
   );
 
@@ -100,12 +140,46 @@ export const getTypeScriptProjects = () => {
     createProject({
       name: 'x-data-grid',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
-      tsConfigPath: 'tsconfig.json',
-      entryPointPath: 'src/index.ts',
-      componentsFolder: 'src/components',
-      otherComponentFiles: ['src/DataGrid/DataGrid.tsx'],
+      documentationFolderName: 'data-grid',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src/components'],
+        files: ['src/DataGrid/DataGrid.tsx'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        files: ['src/DataGrid/DataGrid.tsx'],
+      }),
     }),
   );
+
+  // projects.set(
+  //   'x-date-pickers-pro',
+  //   createProject({
+  //     name: 'x-date-pickers-pro',
+  //     rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
+  //     documentationFolderName: 'date-pickers',
+  //     getComponentsWithPropTypes: getComponentPaths({
+  //       folders: ['src'],
+  //     }),
+  //     getComponentsWithApiDoc: getComponentPaths({
+  //       folders: ['src'],
+  //     }),
+  //   }),
+  // );
+  //
+  // projects.set(
+  //   'x-date-pickers',
+  //   createProject({
+  //     name: 'x-date-pickers',
+  //     rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
+  //     documentationFolderName: 'date-pickers',
+  //     getComponentsWithPropTypes: getComponentPaths({
+  //       folders: ['src'],
+  //     }),
+  //     getComponentsWithApiDoc: getComponentPaths({
+  //       folders: ['src'],
+  //     }),
+  //   }),
+  // );
 
   return projects;
 };

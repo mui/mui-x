@@ -19,7 +19,7 @@ interface BuildEventsDocumentationOptions {
   documentedInterfaces: DocumentedInterfaces;
 }
 
-export default function buildEventsDocumentation(options: BuildEventsDocumentationOptions) {
+export default function buildGridEventsDocumentation(options: BuildEventsDocumentationOptions) {
   const { project, documentedInterfaces } = options;
 
   const gridEventsSymbol = resolveExportSpecifier(project.exports.GridEvents, project);

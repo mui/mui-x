@@ -10,7 +10,7 @@ import {
 
 interface BuildSelectorsDocumentationOptions {
   project: Project;
-  outputDirectory: string;
+  documentationRoot: string;
 }
 
 interface Selector {
@@ -22,8 +22,10 @@ interface Selector {
   supportsApiRef?: boolean;
 }
 
-export default function buildSelectorsDocumentation(options: BuildSelectorsDocumentationOptions) {
-  const { project, outputDirectory } = options;
+export default function buildGridSelectorsDocumentation(
+  options: BuildSelectorsDocumentationOptions,
+) {
+  const { project, documentationRoot } = options;
 
   const selectors = Object.values(project.exports)
     .map((symbol): Selector | null => {
@@ -91,7 +93,7 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
     .sort((a, b) => (a.name > b.name ? 1 : -1));
 
   writePrettifiedFile(
-    path.resolve(outputDirectory, `selectors.json`),
+    path.resolve(documentationRoot, project.documentationFolderName, `selectors.json`),
     JSON.stringify(selectors),
     project,
   );
