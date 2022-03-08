@@ -1,6 +1,6 @@
 import { createIsAfterIgnoreDatePart } from '../../utils/time-utils';
 import { useValidation, ValidationProps, Validator } from './useValidation';
-import {ClockPickerView} from "../../models";
+import { ClockPickerView } from '../../models';
 
 export interface ExportedTimeValidationProps<TDate> {
   /**

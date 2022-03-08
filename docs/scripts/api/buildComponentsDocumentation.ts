@@ -85,7 +85,7 @@ function extractSlots(options: {
   const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
   if (!['x-data-grid', 'x-data-grid-pro'].includes(project.name)) {
-    return slots
+    return slots;
   }
 
   const proptypes = ttp.parseFromProgram(filename, project.program, {
