@@ -2582,9 +2582,9 @@
     react-is "^17.0.2"
     react-transition-group "^4.4.2"
 
-"@mui/monorepo@https://github.com/flaviendelangle/material-ui.git#doc-gen":
+"@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.5.0"
-  resolved "https://github.com/flaviendelangle/material-ui.git#c9ec9779e1523f2c03af07097637e715fb19d993"
+  resolved "https://github.com/mui/material-ui.git#1dce3aadadfe4956bd0f265f816740d0a5d2b4b0"
 
 "@mui/private-theming@^5.4.2", "@mui/private-theming@^5.4.4":
   version "5.4.4"
