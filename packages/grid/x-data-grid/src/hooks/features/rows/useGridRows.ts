@@ -83,14 +83,16 @@ const getRowsStateFromCache = (
 
   const groupingResponse = apiRef.current.unstable_groupRows({ ...value, previousTree });
 
-  const dataTopLevelRowCount = Object.values(groupingResponse.tree).filter(
-    (node) => node.parent == null,
-  ).length;
-  const totalRowCount =
-    rowCount > groupingResponse.ids.length ? rowCount : groupingResponse.ids.length;
-  const totalTopLevelRowCount = rowCount > dataTopLevelRowCount ? rowCount : dataTopLevelRowCount;
+  const dataTopLevelRowCount =
+    groupingResponse.treeDepth === 1
+      ? groupingResponse.ids.length
+      : Object.values(groupingResponse.tree).filter((node) => node.parent == null).length;
 
-  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
+  return {
+    ...groupingResponse,
+    totalRowCount: Math.max(rowCount, groupingResponse.ids.length),
+    totalTopLevelRowCount: Math.max(rowCount, dataTopLevelRowCount),
+  };
 };
 
 export const rowsStateInitializer: GridStateInitializer<
