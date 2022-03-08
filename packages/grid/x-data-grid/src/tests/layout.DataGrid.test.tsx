@@ -810,7 +810,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
         expect(
-          (document.querySelector('.MuiDataGrid-noRowsOverlay') as HTMLElement).clientHeight,
+          (document.querySelector('.MuiDataGrid-overlay') as HTMLElement).clientHeight,
         ).to.equal(rowHeight * 2);
       });
 
