@@ -1,16 +1,16 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  DataGridProProps,
   GridApi,
+  useGridApiRef,
+  DataGridProProps,
   gridClasses,
   GridPinnedPosition,
-  useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 // @ts-ignore Remove once the test utils are typed
-import { createEvent, createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, createEvent } from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
 
