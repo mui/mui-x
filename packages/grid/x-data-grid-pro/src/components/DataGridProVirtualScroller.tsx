@@ -13,7 +13,6 @@ import {
   GridRowId,
 } from '@mui/x-data-grid';
 import {
-  useCurrentPageRows,
   GridVirtualScroller,
   GridVirtualScrollerContent,
   GridVirtualScrollerRenderZone,
@@ -150,7 +149,6 @@ const DataGridProVirtualScroller = React.forwardRef<
   const { className, disableVirtualization, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const currentPage = useCurrentPageRows(apiRef, rootProps);
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const detailPanelsContent = useGridSelector(
@@ -240,17 +238,6 @@ const DataGridProVirtualScroller = React.forwardRef<
     minHeight: contentProps.style.minHeight,
   };
 
-  const rowsLookup = React.useMemo(() => {
-    if (rootProps.getDetailPanelContent == null) {
-      return null;
-    }
-
-    return currentPage.rows.reduce<Record<GridRowId, number>>((acc, { id }, index) => {
-      acc[id] = index;
-      return acc;
-    }, {});
-  }, [currentPage.rows, rootProps.getDetailPanelContent]);
-
   const getDetailPanels = () => {
     const panels: React.ReactNode[] = [];
 
@@ -266,12 +253,15 @@ const DataGridProVirtualScroller = React.forwardRef<
       const content = detailPanelsContent[id];
 
       // Check if the id exists in the current page
-      const exists = rowsLookup![id] !== undefined;
+      const rowIndex = apiRef.current.getRowIndexRelativeToCurrentPage(id);
+      const exists = rowIndex !== undefined;
 
       if (React.isValidElement(content) && exists) {
         const height = detailPanelsHeights[id];
-        const rowIndex = rowsLookup![id];
-        const top = rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id);
+        const sizes = apiRef.current.unstable_getRowInternalSizes(id);
+        const spacingTop = sizes?.spacingTop || 0;
+        const top =
+          rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id) + spacingTop;
 
         panels.push(
           <VirtualScrollerDetailPanel

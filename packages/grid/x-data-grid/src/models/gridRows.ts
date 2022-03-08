@@ -80,7 +80,16 @@ export type GridRowsLookup = Record<GridRowId, GridRowModel>;
  */
 export type GridRowId = string | number;
 
-export type GridRowEntry = { id: GridRowId; model: GridRowModel };
+export interface GridRowEntry {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * The row model.
+   */
+  model: GridRowModel;
+}
 
 /**
  * The function to retrieve the id of a [[GridRowModel]].

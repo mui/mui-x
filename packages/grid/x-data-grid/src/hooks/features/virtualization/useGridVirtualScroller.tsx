@@ -19,7 +19,6 @@ import { GridRenderContext } from '../../../models';
 import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
-import type { GridRowIndexes } from '../../../components/GridRow';
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(
@@ -319,13 +318,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         isSelected = true;
       }
 
-      // currentPage.range.firstRowIndex + firstRowToRender + i
-
-      const indexes: GridRowIndexes = {
-        fromFilteredRows: currentPage.range.firstRowIndex + firstRowToRender + i,
-        fromPageRows: firstRowToRender + i,
-      };
-
       rows.push(
         <rootProps.components.Row
           key={id}
@@ -340,8 +332,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={indexes.fromFilteredRows}
-          indexes={indexes}
+          index={currentPage.range.firstRowIndex + firstRowToRender + i}
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}

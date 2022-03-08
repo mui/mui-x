@@ -100,6 +100,36 @@ If you need some rows to have different row heights this can be achieved using t
 > <DataGridPro getRowHeight={handleGetRowHeight} />
 > ```
 
+## Row spacing
+
+You can use the `getRowSpacing` prop to increase the spacing between rows.
+This prop is called with a [`GridRowSpacingParams`](/api/data-grid/grid-row-spacing-params/) object.
+
+```tsx
+const getRowSpacing = React.useCallback((params: GridRowSpacingParams) => {
+  return {
+    top: params.isFirstVisible ? 0 : 5,
+    bottom: params.isLastVisible ? 0 : 5,
+  };
+}, []);
+```
+
+{{"demo": "RowMarginGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+By default, setting `getRowSpacing` will change the `marginXXX` CSS properties of each row.
+To add a border instead, set `rowSpacingType` to `"border"` and customize the color and style.
+
+```tsx
+<DataGrid
+  getRowSpacing={...}
+  rowSpacingType="border"
+  sx={{ '& .MuiDataGrid-row': { borderTopColor: 'yellow', borderTopStyle: 'solid' } }}
+/>
+```
+
+> ⚠ Adding a bottom margin or border to rows that also have a [detail panel](/components/data-grid/group-pivot/#master-detail) is not recommended.
+> As alternative, increase the top spacing of the next row to compensate.
+
 ## Styling rows
 
 You can check the [styling rows](/components/data-grid/style/#styling-rows) section for more information.

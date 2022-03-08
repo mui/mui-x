@@ -28,8 +28,33 @@ export interface GridRowParams<R extends GridRowModel = GridRowModel> {
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }
 
+interface GridRowVisibilityParams {
+  /**
+   * Whether this row is the first visible or not.
+   */
+  isFirstVisible: boolean;
+  /**
+   * Whether this row is the last visible or not.
+   */
+  isLastVisible: boolean;
+  /**
+   * Index of the row in the whole sorted and filtered dataset.
+   */
+  indexRelatedToFilteredRows: number;
+  /**
+   * Index of the row in the current page.
+   * If the pagination is disabled, this value will be equal to the `fromFilteredRows` value.
+   */
+  indexRelativeToCurrentPage: number;
+}
+
 /**
- * Object passed as parameter in the row getRowHeight callback.
+ * Object passed as parameter in the row `getRowClassName` callback prop.
+ */
+export interface GridRowClassNameParams extends GridRowParams, GridRowVisibilityParams {}
+
+/**
+ * Object passed as parameter in the row `getRowHeight` callback prop.
  */
 export interface GridRowHeightParams extends GridRowEntry {
   /**
@@ -42,3 +67,16 @@ export interface GridRowHeightParams extends GridRowEntry {
  * The getRowHeight return value.
  */
 export type GridRowHeightReturnValue = number | null | undefined;
+
+/**
+ * Object passed as parameter in the row `getRowSpacing` callback prop.
+ */
+export interface GridRowSpacingParams extends GridRowEntry, GridRowVisibilityParams {}
+
+/**
+ * The getRowSpacing return value.
+ */
+export interface GridRowSpacing {
+  top?: number;
+  bottom?: number;
+}

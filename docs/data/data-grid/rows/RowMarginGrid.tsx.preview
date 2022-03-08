@@ -1,0 +1,9 @@
+<DataGrid
+  {...data}
+  getRowSpacing={getRowSpacing}
+  sx={{
+    [`& .${gridClasses.row}`]: {
+      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#000' : '#efefef'),
+    },
+  }}
+/>
