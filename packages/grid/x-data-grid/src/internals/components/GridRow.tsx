@@ -15,6 +15,7 @@ import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -90,6 +91,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
+  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
     hasScrollY: false,
@@ -254,7 +256,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     >
       <div
         className={classes.draggableContainer}
-        draggable={!rootProps.disableRowReorder}
+        // TODO: remove sortModel check once row reorder is sorting compatible
+        draggable={!rootProps.disableRowReorder && !sortModel.length}
         {...draggableEventHandlers}
       >
         {cells}

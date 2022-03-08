@@ -9,6 +9,7 @@ import {
   getDataGridUtilityClass,
   useGridSelector,
   CursorCoordinates,
+  gridSortModelSelector,
 } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -60,6 +61,7 @@ export const useGridRowReorder = (
   }));
 
   const dragRowId = useGridSelector(apiRef, gridRowReorderDragRowSelector);
+  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const dragRowNode = React.useRef<HTMLElement | null>(null);
   const originRowIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<any>();
@@ -72,7 +74,8 @@ export const useGridRowReorder = (
 
   const handleDragStart = React.useCallback<GridEventListener<GridEvents.rowDragStart>>(
     (params, event) => {
-      if (props.disableRowReorder) {
+      // TODO: remove sortModel check once row reorder is sorting compatible
+      if (props.disableRowReorder || sortModel.length) {
         return;
       }
 
@@ -96,7 +99,7 @@ export const useGridRowReorder = (
 
       originRowIndex.current = apiRef.current.getRowIndex(params.id);
     },
-    [props.disableRowReorder, classes.rowDragging, logger, apiRef],
+    [props.disableRowReorder, classes.rowDragging, logger, apiRef, sortModel],
   );
 
   const handleDragEnter = React.useCallback<GridEventListener<GridEvents.rowDragEnter>>(
@@ -148,7 +151,8 @@ export const useGridRowReorder = (
 
   const handleDragEnd = React.useCallback<GridEventListener<GridEvents.rowDragEnd>>(
     (params, event): void => {
-      if (props.disableRowReorder || !dragRowId) {
+      // TODO: remove sortModel check once row reorder is sorting compatible
+      if (props.disableRowReorder || !dragRowId || sortModel.length) {
         return;
       }
 
@@ -174,7 +178,7 @@ export const useGridRowReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [props.disableRowReorder, logger, apiRef, dragRowId],
+    [props.disableRowReorder, logger, apiRef, dragRowId, sortModel],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowDragStart, handleDragStart);
