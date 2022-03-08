@@ -42,7 +42,12 @@ describe('<DataGrid /> - Selection', () => {
       Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
   ) => (
     <div style={{ width: 300, height: 300 }}>
-      <DataGrid {...defaultData} {...props} autoHeight={isJSDOM} />
+      <DataGrid
+        {...defaultData}
+        {...props}
+        autoHeight={isJSDOM}
+        experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+      />
     </div>
   );
 
