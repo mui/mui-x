@@ -809,9 +809,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             <DataGrid {...baselineProps} rows={[]} rowHeight={rowHeight} autoHeight />
           </div>,
         );
-        expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].clientHeight).to.equal(
-          rowHeight * 2,
-        );
+        expect(
+          (document.querySelector('.MuiDataGrid-noRowsOverlay') as HTMLElement).clientHeight,
+        ).to.equal(rowHeight * 2);
       });
 
       it('should expand content height to one row height when there is an error', () => {
@@ -829,9 +829,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             />
           </div>,
         );
-        const errorOverlayElement = document.querySelectorAll(
-          '.MuiDataGrid-overlay',
-        )[0] as HTMLElement;
+        const errorOverlayElement = document.querySelector('.MuiDataGrid-overlay') as HTMLElement;
         expect(errorOverlayElement.textContent).to.equal(error.message);
         expect(errorOverlayElement.offsetHeight).to.equal(2 * rowHeight);
       });
@@ -963,7 +961,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           <DataGrid {...baselineProps} error={{ message }} />
         </div>,
       );
-      expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].textContent).to.equal(message);
+      expect((document.querySelector('.MuiDataGrid-overlay') as HTMLElement).textContent).to.equal(
+        message,
+      );
     });
   });
 
