@@ -14,7 +14,6 @@ import {
   gridFilteredDescendantCountLookupSelector,
   useFirstRender,
   GridColDef,
-  GridStateColDef,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPreProcessor,
@@ -217,13 +216,13 @@ export const useGridRowGrouping = (
   /**
    * PRE-PROCESSING
    */
-  const addColumnMenuButtons = React.useCallback(
-    (initialValue: JSX.Element[], columns: GridStateColDef) => {
+  const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
+    (initialValue, columns) => {
       if (props.disableRowGrouping) {
         return initialValue;
       }
 
-      let menuItems: React.ReactNode;
+      let menuItems: JSX.Element | null;
       if (isGroupingColumn(columns.field)) {
         menuItems = <GridRowGroupingColumnMenuItems />;
       } else if (columns.groupable) {

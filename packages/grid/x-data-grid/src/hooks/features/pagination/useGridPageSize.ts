@@ -13,29 +13,8 @@ import {
 import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
-const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
-
-export const pageSizeStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'pageSize' | 'initialState' | 'autoPageSize'>
-> = (state, props) => {
-  let pageSize: number;
-  if (props.pageSize != null) {
-    pageSize = props.pageSize;
-  } else if (props.initialState?.pagination?.pageSize != null) {
-    pageSize = props.initialState.pagination.pageSize;
-  } else {
-    pageSize = defaultPageSize(props.autoPageSize);
-  }
-
-  return {
-    ...state,
-    pagination: {
-      pageSize,
-    },
-  };
-};
+export const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
 
 const mergeStateWithPageSize =
   (pageSize: number) =>

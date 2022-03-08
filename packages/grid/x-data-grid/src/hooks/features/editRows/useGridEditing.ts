@@ -151,8 +151,8 @@ export function useGridEditing(
     [apiRef],
   );
 
-  const setEditCellProps = React.useCallback(
-    (params: GridEditCellPropsParams) => {
+  const setEditCellProps = React.useCallback<GridEditingSharedApi['unstable_setEditCellProps']>(
+    (params) => {
       const { id, field, props: editProps } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
       apiRef.current.setState((state) => {

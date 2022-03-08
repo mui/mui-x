@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridLinkOperator, GridRowsProp } from '@mui/x-data-grid';
@@ -163,10 +164,10 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should go to last page when page is controlled and the current page is greater than the last page', () => {
       const onPageChange = spy();
-      const TestCasePaginationFilteredData = (props) => {
+      const TestCasePaginationFilteredData = (props: Partial<DataGridProps>) => {
         const [page, setPage] = React.useState(1);
 
-        const handlePageChange = (newPage: number) => {
+        const handlePageChange: DataGridProps['onPageChange'] = (newPage) => {
           onPageChange(newPage);
           setPage(newPage);
         };
@@ -526,7 +527,7 @@ describe('<DataGrid /> - Pagination', () => {
       const [rows, setRows] = React.useState<GridRowsProp>([]);
       const [page, setPage] = React.useState(0);
 
-      const handlePageChange = (newPage) => {
+      const handlePageChange: DataGridProps['onPageChange'] = (newPage) => {
         setPage(newPage);
       };
 

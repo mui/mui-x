@@ -14,6 +14,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
 import { gridVisibleSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
+import { GridRowId } from '../../models/gridRows';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -67,7 +68,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
 
       // Convert to an object to make O(1) checking if a row exists or not
       // TODO create selector that returns visibleRowIds/paginatedVisibleRowIds as an object
-      return rowIds.reduce((acc, id) => {
+      return rowIds.reduce<Record<GridRowId, true>>((acc, id) => {
         acc[id] = true;
         return acc;
       }, {});

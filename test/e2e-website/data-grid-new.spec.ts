@@ -77,61 +77,63 @@ test.describe('DataGrid docs', () => {
     });
   });
 
-  test.describe('Search', () => {
-    const retryToggleSearch = async (page: Page, count = 3) => {
-      try {
-        await page.keyboard.press('Meta+k');
-        await page.waitForSelector('input#docsearch-input', { timeout: 2000 });
-      } catch (error) {
-        if (count === 0) {
-          throw error;
-        }
-        await retryToggleSearch(page, count - 1);
-      }
-    };
-    test('should have correct link when searching component', async ({ page }) => {
-      await page.goto(`/x/react-data-grid/getting-started/`);
+  // TODO: Enable these tests once the doc space searching is complete
+  //
+  // test.describe('Search', () => {
+  //   const retryToggleSearch = async (page: Page, count = 3) => {
+  //     try {
+  //       await page.keyboard.press('Meta+k');
+  //       await page.waitForSelector('input#docsearch-input', { timeout: 2000 });
+  //     } catch (error) {
+  //       if (count === 0) {
+  //         throw error;
+  //       }
+  //       await retryToggleSearch(page, count - 1);
+  //     }
+  //   };
+  //   test('should have correct link when searching component', async ({ page }) => {
+  //     await page.goto(`/x/react-data-grid/getting-started/`);
 
-      await retryToggleSearch(page);
+  //     await retryToggleSearch(page);
 
-      await page.type('input#docsearch-input', 'datagrid', { delay: 50 });
+  //     await page.type('input#docsearch-input', 'datagrid', { delay: 50 });
 
-      const anchor = await page.locator('.DocSearch-Hits a:has-text("Data Grid - Components")');
+  //     const anchor = await page.locator('.DocSearch-Hits a:has-text("Data Grid - Components")');
 
-      await expect(anchor.first()).toHaveAttribute(
-        'href',
-        `/x/react-data-grid/components/#main-content`,
-      );
-    });
+  //     await expect(anchor.first()).toHaveAttribute(
+  //       'href',
+  //       `/x/react-data-grid/components/#main-content`,
+  //     );
+  //   });
 
-    test('should have correct link when searching API', async ({ page }) => {
-      await page.goto(`/x/react-data-grid/getting-started/`);
+  //   test('should have correct link when searching API', async ({ page }) => {
+  //     await page.goto(`/x/react-data-grid/getting-started/`);
 
-      await retryToggleSearch(page);
+  //     await retryToggleSearch(page);
 
-      await page.type('input#docsearch-input', 'datagrid api', { delay: 50 });
+  //     await page.type('input#docsearch-input', 'datagrid api', { delay: 50 });
 
-      const anchor = await page.locator('.DocSearch-Hits a:has-text("DataGrid API")');
+  //     const anchor = await page.locator('.DocSearch-Hits a:has-text("DataGrid API")');
 
-      await expect(anchor.first()).toHaveAttribute(
-        'href',
-        `/x/api/data-grid/data-grid/#main-content`,
-      );
-    });
+  //     await expect(anchor.first()).toHaveAttribute(
+  //       'href',
+  //       `/x/api/data-grid/data-grid/#main-content`,
+  //     );
+  //   });
 
-    test('should have correct link when searching pro API', async ({ page }) => {
-      await page.goto(`/x/react-data-grid/getting-started/`);
+  //   test('should have correct link when searching pro API', async ({ page }) => {
+  //     await page.goto(`/x/react-data-grid/getting-started/`);
 
-      await retryToggleSearch(page);
+  //     await retryToggleSearch(page);
 
-      await page.type('input#docsearch-input', 'datagridpro api', { delay: 50 });
+  //     await page.type('input#docsearch-input', 'datagridpro api', { delay: 50 });
 
-      const anchor = await page.locator('.DocSearch-Hits a:has-text("DataGridPro API")');
+  //     const anchor = await page.locator('.DocSearch-Hits a:has-text("DataGridPro API")');
 
-      await expect(anchor.first()).toHaveAttribute(
-        'href',
-        `/x/api/data-grid/data-grid-pro/#main-content`,
-      );
-    });
-  });
+  //     await expect(anchor.first()).toHaveAttribute(
+  //       'href',
+  //       `/x/api/data-grid/data-grid-pro/#main-content`,
+  //     );
+  //   });
+  // });
 });

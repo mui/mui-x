@@ -4,7 +4,7 @@ import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { GridCoreApi } from '../../models/api/gridCoreApi';
+import { GridCoreApi, GridCorePrivateApi } from '../../models/api/gridCoreApi';
 import { EventManager } from '../../utils/EventManager';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
@@ -18,25 +18,31 @@ const wrapPublicApi = <PublicApi extends GridApiCommon, PrivateApi extends GridP
 
   privateApi.getPublicApi = () => publicApi;
 
-  privateApi.register = (visibility, methods) => {
+  const register: GridCorePrivateApi<PublicApi, PrivateApi>['register'] = (
+    visibility: 'public' | 'private',
+    methods,
+  ) => {
     const api = visibility === 'public' ? publicApi : privateApi;
     Object.keys(methods.current).forEach((methodName) => {
       if (!api.hasOwnProperty(methodName)) {
+        // @ts-ignore
         api[methodName] = (...args) => methods.current[methodName](...args);
       }
     });
   };
 
+  privateApi.register = register;
+
   const handler: ProxyHandler<PublicApi> = {
     get: (obj, prop) => {
-      if (obj[prop] !== undefined) {
-        return obj[prop];
+      if (obj.hasOwnProperty(prop)) {
+        return obj[prop as keyof PublicApi];
       }
 
-      return privateApi[prop];
+      return privateApi[prop as keyof PrivateApi];
     },
     set: (obj, prop, value) => {
-      obj[prop] = value;
+      obj[prop as keyof PublicApi] = value;
       return true;
     },
   };

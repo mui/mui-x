@@ -10,6 +10,7 @@ import {
 } from '../components';
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
+import { GridInternalApiContext } from '../context/GridInternalApiContext';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
@@ -23,17 +24,19 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   const { publicApiRef, internalApiRef } = useDataGridComponent(props);
 
   return (
-    <GridContextProvider publicApiRef={publicApiRef} internalApiRef={internalApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeaderPlaceholder />
-          <GridBody
-            ColumnHeadersComponent={DataGridColumnHeaders}
-            VirtualScrollerComponent={DataGridVirtualScroller}
-          />
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
-      </GridRoot>
+    <GridContextProvider apiRef={publicApiRef} props={props}>
+      <GridInternalApiContext.Provider value={internalApiRef}>
+        <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+          <GridErrorHandler>
+            <GridHeaderPlaceholder />
+            <GridBody
+              ColumnHeadersComponent={DataGridColumnHeaders}
+              VirtualScrollerComponent={DataGridVirtualScroller}
+            />
+            <GridFooterPlaceholder />
+          </GridErrorHandler>
+        </GridRoot>
+      </GridInternalApiContext.Provider>
     </GridContextProvider>
   );
 });
@@ -80,7 +83,8 @@ DataGridRaw.propTypes = {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: chainPropTypes(PropTypes.array.isRequired, (props: any) => {
+  columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
+    // @ts-ignore because otherwise `build:api` doesn't work
     if (props.columns && props.columns.some((column) => column.resizable)) {
       return new Error(
         [
@@ -267,7 +271,7 @@ DataGridRaw.propTypes = {
   loading: PropTypes.bool,
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
   /**

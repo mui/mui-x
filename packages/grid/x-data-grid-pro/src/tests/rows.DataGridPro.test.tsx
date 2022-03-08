@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -17,13 +18,12 @@ import {
   GridApi,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { DataGridProps } from '@mui/x-data-grid';
 import { getData } from 'storybook/src/data/data-service';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Rows', () => {
-  let baselineProps;
+  let baselineProps: DataGridProProps;
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
@@ -65,7 +65,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     describe('updateRows', () => {
       it('should apply getRowId before updating rows', () => {
-        const getRowId = (row) => `${row.clientId}`;
+        const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
         let apiRef: React.MutableRefObject<GridApi>;
         const Test = () => {
           apiRef = useGridApiRef();
@@ -89,7 +89,7 @@ describe('<DataGridPro /> - Rows', () => {
       let apiRef: React.MutableRefObject<GridApi>;
       const editableProps = { ...baselineProps };
       editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
-      const getRowId = (row) => `${row.clientId}`;
+      const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
 
       const Test = () => {
         apiRef = useGridApiRef();
@@ -114,7 +114,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should not clone the row', () => {
-      const getRowId = (row) => `${row.clientId}`;
+      const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
       let apiRef: React.MutableRefObject<GridApi>;
       const Test = () => {
         apiRef = useGridApiRef();
@@ -133,7 +133,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should not throttle even when props.throttleRowsMs is defined', () => {
       const { rows, columns } = getData(5, 2);
 
-      const Test = (props: Pick<DataGridProps, 'rows'>) => (
+      const Test = (props: Pick<DataGridProProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
             {...props}

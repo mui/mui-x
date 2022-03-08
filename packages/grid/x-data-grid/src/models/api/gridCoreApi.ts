@@ -92,7 +92,7 @@ export interface GridCorePrivateApi<
     T extends V extends 'public' ? Partial<PublicApi> : Partial<PrivateApi>,
   >(
     visibility: V,
-    methods: React.RefObject<T>,
+    methods: React.MutableRefObject<T>,
   ) => void;
 
   /**

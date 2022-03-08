@@ -10,6 +10,7 @@ import {
   GridRoot,
   GridContextProvider,
 } from '@mui/x-data-grid';
+import { GridInternalApiContext } from '@mui/x-data-grid/internals';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../components/Watermark';
 import { DataGridProProps } from '../models';
@@ -37,19 +38,21 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   const { publicApiRef, internalApiRef } = useDataGridProComponent(props.apiRef, props);
 
   return (
-    <GridContextProvider publicApiRef={publicApiRef} internalApiRef={internalApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeaderPlaceholder />
-          <GridBody
-            ColumnHeadersComponent={DataGridProColumnHeaders}
-            VirtualScrollerComponent={DataGridProVirtualScroller}
-          >
-            <Watermark />
-          </GridBody>
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
-      </GridRoot>
+    <GridContextProvider apiRef={publicApiRef} props={props}>
+      <GridInternalApiContext.Provider value={internalApiRef}>
+        <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+          <GridErrorHandler>
+            <GridHeaderPlaceholder />
+            <GridBody
+              ColumnHeadersComponent={DataGridProColumnHeaders}
+              VirtualScrollerComponent={DataGridProVirtualScroller}
+            >
+              <Watermark />
+            </GridBody>
+            <GridFooterPlaceholder />
+          </GridErrorHandler>
+        </GridRoot>
+      </GridInternalApiContext.Provider>
     </GridContextProvider>
   );
 });
@@ -394,7 +397,7 @@ DataGridProRaw.propTypes = {
   loading: PropTypes.bool,
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
   /**

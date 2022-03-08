@@ -7,6 +7,7 @@ import {
   GridPreferencePanelsValue,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import { expect } from 'chai';

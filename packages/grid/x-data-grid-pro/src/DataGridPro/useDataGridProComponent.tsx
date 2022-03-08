@@ -15,8 +15,7 @@ import {
   useGridKeyboard,
   useGridKeyboardNavigation,
   useGridPagination,
-  pageStateInitializer,
-  pageSizeStateInitializer,
+  paginationStateInitializer,
   useGridPreferencesPanel,
   useGridEditing,
   useGridRows,
@@ -75,8 +74,7 @@ export const useDataGridProComponent = (
    * Register all state initializers here.
    */
   useGridInitializeState(filterStateInitializer, internalApiRef, props);
-  useGridInitializeState(pageSizeStateInitializer, internalApiRef, props);
-  useGridInitializeState(pageStateInitializer, internalApiRef, props);
+  useGridInitializeState(paginationStateInitializer, internalApiRef, props);
   useGridInitializeState(sortingStateInitializer, internalApiRef, props);
   useGridInitializeState(columnPinningStateInitializer, internalApiRef, props);
   useGridInitializeState(rowGroupingStateInitializer, internalApiRef, props);

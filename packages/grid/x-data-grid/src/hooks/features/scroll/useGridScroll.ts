@@ -17,7 +17,12 @@ import { useGridNativeEventListener } from '../../utils/useGridNativeEventListen
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
-function scrollIntoView(dimensions) {
+function scrollIntoView(dimensions: {
+  clientHeight: number;
+  scrollTop: number;
+  offsetHeight: number;
+  offsetTop: number;
+}) {
   const { clientHeight, scrollTop, offsetHeight, offsetTop } = dimensions;
 
   const elementBottom = offsetTop + offsetHeight;

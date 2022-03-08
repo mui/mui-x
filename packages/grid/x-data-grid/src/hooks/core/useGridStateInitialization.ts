@@ -125,6 +125,6 @@ export const useGridStateInitialization = <Api extends GridInternalApiCommon>(
     updateControlState,
   };
 
-    useGridRegisterMethods(apiRef, 'public', statePublicApi);
-    useGridRegisterMethods(apiRef, 'private', statePrivateApi);
+  useGridRegisterMethods(apiRef, 'public', statePublicApi);
+  useGridRegisterMethods(apiRef, 'private', statePrivateApi);
 };

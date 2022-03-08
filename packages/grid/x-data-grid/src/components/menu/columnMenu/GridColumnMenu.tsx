@@ -6,12 +6,12 @@ import { GridColumnsMenuItem } from './GridColumnsMenuItem';
 import { GridFilterMenuItem } from './GridFilterMenuItem';
 import { HideGridColMenuItem } from './HideGridColMenuItem';
 import { SortGridMenuItems } from './SortGridMenuItems';
-import { useGridApiInternalContext } from '../../../hooks/utils/useGridApiContext';
+import { useGridInternalApiContext } from '../../../hooks/utils/useGridInternalApiContext';
 
 const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenu(props: GridColumnMenuProps, ref) {
     const { hideMenu, currentColumn } = props;
-    const apiRef = useGridApiInternalContext();
+    const apiRef = useGridInternalApiContext();
 
     const defaultButtons = [
       <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />, // TODO update types to allow `onClick` and `column` to be optional

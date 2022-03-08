@@ -4,6 +4,8 @@ export { GridVirtualScrollerRenderZone } from '../components/virtualization/Grid
 export { GridColumnHeaders } from '../components/columnHeaders/GridColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 
+export { GridInternalApiContext } from '../context/GridInternalApiContext';
+
 export { useGridRegisterPreProcessor } from '../hooks/core/preProcessing';
 export type { GridPreProcessor } from '../hooks/core/preProcessing';
 export type {
@@ -33,9 +35,10 @@ export type {
 export { useGridFocus } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
-export { useGridPagination } from '../hooks/features/pagination/useGridPagination';
-export { pageStateInitializer } from '../hooks/features/pagination/useGridPage';
-export { pageSizeStateInitializer } from '../hooks/features/pagination/useGridPageSize';
+export {
+  useGridPagination,
+  paginationStateInitializer,
+} from '../hooks/features/pagination/useGridPagination';
 export { useGridPreferencesPanel } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
 export { useGridEditing } from '../hooks/features/editRows/useGridEditing';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';

@@ -14,9 +14,10 @@ import { useGridFilter, filterStateInitializer } from '../hooks/features/filter/
 import { useGridFocus } from '../hooks/features/focus/useGridFocus';
 import { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
-import { useGridPagination } from '../hooks/features/pagination/useGridPagination';
-import { pageStateInitializer } from '../hooks/features/pagination/useGridPage';
-import { pageSizeStateInitializer } from '../hooks/features/pagination/useGridPageSize';
+import {
+  useGridPagination,
+  paginationStateInitializer,
+} from '../hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridEditing } from '../hooks/features/editRows/useGridEditing';
 import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
@@ -45,8 +46,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
    * Register all state initializers here.
    */
   useGridInitializeState(filterStateInitializer, internalApiRef, props);
-  useGridInitializeState(pageSizeStateInitializer, internalApiRef, props);
-  useGridInitializeState(pageStateInitializer, internalApiRef, props);
+  useGridInitializeState(paginationStateInitializer, internalApiRef, props);
   useGridInitializeState(rowsStateInitializer, internalApiRef, props);
   useGridInitializeState(sortingStateInitializer, internalApiRef, props);
   useGridInitializeState(columnsStateInitializer, internalApiRef, props);

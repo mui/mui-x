@@ -86,7 +86,7 @@ export const getGridStringOperators = (): GridFilterOperator[] => [
 
       return ({ value }): boolean =>
         value != null
-          ? filterItem.value.some((filterValue) => {
+          ? filterItem.value.some((filterValue: GridFilterItem['value']) => {
               return collator.compare(filterValue, value.toString() || '') === 0;
             })
           : false;
