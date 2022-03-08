@@ -218,6 +218,11 @@
       "nodeName": "the column header",
       "conditions": "the column is sorted"
     },
+    "columnHeader--filtered": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "the column has a filter applied to it"
+    },
     "columnHeader": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"

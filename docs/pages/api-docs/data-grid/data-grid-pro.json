@@ -306,6 +306,7 @@
       "columnHeader--numeric",
       "columnHeader--sortable",
       "columnHeader--sorted",
+      "columnHeader--filtered",
       "columnHeader",
       "columnHeaderCheckbox",
       "columnHeaderDraggableContainer",
