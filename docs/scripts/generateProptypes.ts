@@ -4,8 +4,7 @@ import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
 import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src';
 import { fixBabelGeneratorIssues, fixLineEndings } from 'docs/scripts/helpers';
-
-const tsconfig = ttp.loadConfig(path.resolve(__dirname, '../../tsconfig.json'));
+import { getTypeScriptProjects } from './getTypeScriptProjects';
 
 const prettierConfig = prettier.resolveConfig.sync(process.cwd(), {
   config: path.join(__dirname, '../../prettier.config.js'),
@@ -104,35 +103,31 @@ function findComponents(folderPath) {
 }
 
 async function run() {
-  const componentsToAddPropTypes = [
-    path.resolve(__dirname, '../../packages/grid/x-data-grid/src/DataGrid.tsx'),
-    path.resolve(__dirname, '../../packages/grid/x-data-grid-pro/src/DataGridPro.tsx'),
-  ];
+  const projects = getTypeScriptProjects();
 
-  const indexPath = path.resolve(__dirname, '../../packages/grid/_modules_/index.ts');
-  const program = ttp.createTSProgram([...componentsToAddPropTypes, indexPath], tsconfig);
-  const checker = program.getTypeChecker();
-  const indexFile = program.getSourceFile(indexPath)!;
-  const symbol = checker.getSymbolAtLocation(indexFile);
-  const exports = checker.getExportsOfModule(symbol!);
-
-  const componentsFolder = path.resolve(__dirname, '../../packages/grid/_modules_/grid/components');
-  const components = findComponents(componentsFolder);
-  components.forEach((component) => {
-    const componentName = path.basename(component).replace('.tsx', '');
-    const isExported = exports.find((e) => e.name === componentName);
-    if (isExported) {
-      componentsToAddPropTypes.push(component);
+  const promises = Array.from(projects.values()).flatMap((project) => {
+    const componentsToAddPropTypes: string[] = [];
+    if (project.otherComponentFiles) {
+      componentsToAddPropTypes.push(...project.otherComponentFiles);
     }
-  });
 
-  const promises = componentsToAddPropTypes.map<Promise<void>>(async (file) => {
-    try {
-      await generateProptypes(program, file);
-    } catch (error: any) {
-      error.message = `${file}: ${error.message}`;
-      throw error;
-    }
+    const components = findComponents(project.componentsFolder);
+    components.forEach((component) => {
+      const componentName = path.basename(component).replace('.tsx', '');
+      const isExported = !!project.exports[componentName];
+      if (isExported) {
+        componentsToAddPropTypes.push(component);
+      }
+    });
+
+    return componentsToAddPropTypes.map<Promise<void>>(async (file) => {
+      try {
+        await generateProptypes(project.program, file);
+      } catch (error: any) {
+        error.message = `${file}: ${error.message}`;
+        throw error;
+      }
+    });
   });
 
   const results = await Promise.allSettled(promises);

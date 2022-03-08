@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
@@ -52,13 +53,15 @@ describe('<DataGrid /> - Filter', () => {
             columns={[]}
             filterModel={{
               items: [
-                { id: 0, columnField: 'id' },
-                { id: 1, columnField: 'id' },
+                { id: 0, columnField: 'brand', operatorValue: 'contains' },
+                { id: 1, columnField: 'brand', operatorValue: 'contains' },
               ],
             }}
           />,
         );
-      }).toErrorDev('`model.items` has more than 1 item');
+      }).toErrorDev(
+        'MUI: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+      );
     });
 
     it('should apply the model', () => {
@@ -824,7 +827,7 @@ describe('<DataGrid /> - Filter', () => {
             {
               field: 'isPublished',
               type: 'boolean',
-              // The boolean cell does not handle the formatted value so we override it
+              // The boolean cell does not handle the formatted value, so we override it
               renderCell: (params) => {
                 const value = params.value as boolean | null | undefined;
 

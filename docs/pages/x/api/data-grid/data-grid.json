@@ -44,7 +44,12 @@
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
     },
-    "filterModel": { "type": { "name": "custom", "description": "any" } },
+    "filterModel": {
+      "type": {
+        "name": "shape",
+        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or' }"
+      }
+    },
     "getCellClassName": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
@@ -201,6 +206,7 @@
     "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
+    "FilterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
     "GroupingCriteriaCollapseIcon": {
       "default": "GridExpandMoreIcon",
@@ -236,6 +242,7 @@
       "cell--textRight",
       "cell--withRenderer",
       "cell",
+      "cellContent",
       "cellCheckbox",
       "checkboxInput",
       "columnHeader--alignCenter",
@@ -252,6 +259,7 @@
       "columnHeaderDropZone",
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
+      "columnHeaderTitleContainerContent",
       "columnHeaders",
       "columnHeadersInner",
       "columnHeadersInner--scrollable",
@@ -274,6 +282,11 @@
       "paper",
       "editBooleanCell",
       "filterForm",
+      "filterFormDeleteIcon",
+      "filterFormLinkOperatorInput",
+      "filterFormColumnInput",
+      "filterFormOperatorInput",
+      "filterFormValueInput",
       "editInputCell",
       "filterIcon",
       "footerContainer",
@@ -288,6 +301,7 @@
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",
+      "virtualScrollerContent--overflowed",
       "virtualScrollerRenderZone",
       "pinnedColumns",
       "pinnedColumns--left",
@@ -298,6 +312,7 @@
       "root",
       "row--editable",
       "row--editing",
+      "row--lastVisible",
       "row",
       "rowCount",
       "scrollArea",
@@ -315,6 +330,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-data-grid/src/DataGrid.tsx",
+  "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>"
 }

@@ -2,11 +2,12 @@ import * as React from 'react';
 import {
   DataGridPro,
   DataGridProProps,
-  GridApiRef,
+  GridApi,
   GridInitialState,
   GridPreferencePanelsValue,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import { expect } from 'chai';
@@ -17,7 +18,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - State Persistence', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = (props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) => {
     const data = useMovieData();

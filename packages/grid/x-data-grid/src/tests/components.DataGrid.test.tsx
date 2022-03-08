@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, ErrorBoundary } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
@@ -125,7 +126,7 @@ describe('<DataGrid /> - Components', () => {
         </ErrorBoundary>,
       );
     }).toErrorDev([
-      'MUI: Could not find the data grid context.',
+      'MUI: useGridRootProps should only be used inside the DataGrid/DataGridPro component.',
       'The above error occurred in the <ForwardRef(GridOverlay)> component',
     ]);
   });

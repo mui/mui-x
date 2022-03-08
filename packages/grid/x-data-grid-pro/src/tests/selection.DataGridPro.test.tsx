@@ -1,20 +1,22 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import {
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridPro,
   GridEvents,
   DataGridProProps,
+  GridSelectionModel,
 } from '@mui/x-data-grid-pro';
 import { getData } from 'storybook/src/data/data-service';
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
-  return [...getRows()]
+  return Array.from(getRows())
     .filter((row) => row.classList.contains('Mui-selected'))
     .map((row) =>
       Number(
@@ -26,7 +28,7 @@ function getSelectedRowIds() {
 describe('<DataGridPro /> - Selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestDataGridSelection = ({
     rowLength = 4,
@@ -222,7 +224,7 @@ describe('<DataGridPro /> - Selection', () => {
     it('should check if the rows selected by clicking on the rows are selected', () => {
       render(<TestDataGridSelection />);
 
-      fireEvent.click(getRow(1));
+      fireEvent.click(getCell(1, 0));
 
       expect(apiRef.current.isRowSelected(0)).to.equal(false);
       expect(apiRef.current.isRowSelected(1)).to.equal(true);
@@ -400,7 +402,7 @@ describe('<DataGridPro /> - Selection', () => {
   describe('controlled selection', () => {
     it('should not publish GRID_SELECTION_CHANGE if the selection state did not change ', () => {
       const handleSelectionChange = spy();
-      const selectionModel = [];
+      const selectionModel: GridSelectionModel = [];
       render(<TestDataGridSelection selectionModel={selectionModel} />);
       apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
       apiRef.current.setSelectionModel(selectionModel);

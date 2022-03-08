@@ -1,0 +1,5 @@
+<DataGrid
+  {...data}
+  loading={loading}
+  components={{ Toolbar: CustomToolbar }}
+/>

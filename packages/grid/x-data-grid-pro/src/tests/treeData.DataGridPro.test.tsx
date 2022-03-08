@@ -1,3 +1,4 @@
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
   getCell,
@@ -12,7 +13,7 @@ import {
   DataGridPro,
   DataGridProProps,
   GRID_TREE_DATA_GROUPING_FIELD,
-  GridApiRef,
+  GridApi,
   GridLinkOperator,
   GridRowsProp,
   GridRowTreeNodeConfig,
@@ -58,7 +59,7 @@ const baselineProps: DataGridProProps = {
 describe('<DataGridPro /> - Tree Data', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const Test = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
@@ -160,7 +161,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         ],
         getTreeDataPath: (row) => row.nameBis.split('.'),
         getRowId: (row) => row.nameBis,
-      });
+      } as DataGridProProps);
       expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'nameBis']);
       expect(getColumnValues(1)).to.deep.equal(['1', '2']);
     });
@@ -215,7 +216,9 @@ describe('<DataGridPro /> - Tree Data', () => {
         'B.B.A.A',
         'C',
       ]);
-      setProps({ getTreeDataPath: (row) => [...row.name.split('.').reverse()] });
+      setProps({
+        getTreeDataPath: (row) => [...row.name.split('.').reverse()],
+      } as DataGridProProps);
       expect(getColumnValues(1)).to.deep.equal([
         'A',
         'A.A',

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridProProps,
   gridClasses,
@@ -9,6 +9,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { expect } from 'chai';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, createEvent } from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
@@ -30,7 +31,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Column pinning', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
     apiRef = useGridApiRef();
@@ -212,6 +213,13 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M']);
   });
 
+  it('should not override the first left pinned column when checkboxSelection=true', () => {
+    render(
+      <TestCase nbCols={2} initialState={{ pinnedColumns: { left: ['id'] } }} checkboxSelection />,
+    );
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
+  });
+
   describe('props: onPinnedColumnsChange', () => {
     it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
@@ -294,16 +302,30 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(screen.queryByRole('menuitem', { name: 'Pin to right' })).to.equal(null);
     });
 
-    ['pinColumn', 'unpinColumn', 'getPinnedColumns', 'setPinnedColumns', 'isColumnPinned'].forEach(
-      (methodName) => {
-        it(`should throw an error when calling \`apiRef.current.${methodName}\``, () => {
-          render(<TestCase disableColumnPinning />);
-          expect(() => {
-            apiRef.current[methodName]();
-          }).to.throw();
-        });
-      },
-    );
+    it('should throw an error when calling `apiRef.current.pinColumn`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.pinColumn('id', GridPinnedPosition.left)).to.throw();
+    });
+
+    it('should throw an error when calling `apiRef.current.unpinColumn`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.unpinColumn('id')).to.throw();
+    });
+
+    it('should throw an error when calling `apiRef.current.getPinnedColumns`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.getPinnedColumns()).to.throw();
+    });
+
+    it('should throw an error when calling `apiRef.current.setPinnedColumns`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.setPinnedColumns({})).to.throw();
+    });
+
+    it('should throw an error when calling `apiRef.current.isColumnPinned`', () => {
+      render(<TestCase disableColumnPinning />);
+      expect(() => apiRef.current.isColumnPinned('is')).to.throw();
+    });
   });
 
   describe('apiRef', () => {
@@ -348,7 +370,6 @@ describe('<DataGridPro /> - Column pinning', () => {
         const renderZone = document.querySelector(
           `.${gridClasses.virtualScrollerRenderZone}`,
         ) as HTMLDivElement;
-        expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
         expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
         apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
         const leftColumns = document.querySelector(

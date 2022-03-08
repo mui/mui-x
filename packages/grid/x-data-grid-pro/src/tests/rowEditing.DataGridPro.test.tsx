@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { GridApiRef, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import {
+  GridApi,
+  DataGridProProps,
+  useGridApiRef,
+  DataGridPro,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -51,7 +58,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
@@ -200,7 +207,10 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should mark fields as invalid when an object with error is returned', async () => {
-    const preProcessEditCellProps = ({ props }) => ({ ...props, error: true });
+    const preProcessEditCellProps: GridColDef['preProcessEditCellProps'] = (params) => ({
+      ...params.props,
+      error: true,
+    });
     render(
       <TestCase
         editMode="row"
@@ -224,7 +234,8 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should mark fields as invalid when a promise with error is returned', async () => {
-    const preProcessEditCellProps = ({ props }) => Promise.resolve({ ...props, error: true });
+    const preProcessEditCellProps: GridColDef['preProcessEditCellProps'] = (params) =>
+      Promise.resolve({ ...params.props, error: true });
     render(
       <TestCase
         editMode="row"
@@ -402,5 +413,33 @@ describe('<DataGridPro /> - Row Editing', () => {
       value: 'ADIDAS',
       isValidating: true,
     });
+  });
+
+  it('should not crash when commiting a value with Enter without waiting for debounce', async function test() {
+    if (isJSDOM) {
+      this.skip(); // It only fails in a real browser.
+    }
+    const preProcessEditCellProps = spy(({ props }) => props);
+    render(
+      <TestCase
+        editMode="row"
+        experimentalFeatures={{ preventCommitWhileValidating: true }}
+        columns={[
+          {
+            field: 'brand',
+            editable: true,
+            preProcessEditCellProps,
+          },
+        ]}
+      />,
+    );
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    clock.runToLast();
+    expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
   });
 });

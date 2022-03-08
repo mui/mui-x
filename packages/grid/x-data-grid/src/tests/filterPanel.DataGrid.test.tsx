@@ -7,8 +7,10 @@ import {
   GridFilterInputValue,
   GridFilterInputValueProps,
   GridPreferencePanelsValue,
+  GridFilterItem,
 } from '@mui/x-data-grid';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+// @ts-ignore Remove once the test utils are typed
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { getColumnValues } from '../../../../../test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
@@ -18,15 +20,19 @@ function setColumnValue(columnValue: string) {
 }
 
 function setOperatorValue(operatorValue: string) {
-  fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+  fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
     target: { value: operatorValue },
   });
+}
+
+function deleteFilterForm() {
+  fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
 }
 
 function CustomInputValue(props: GridFilterInputValueProps) {
   const { item, applyValue } = props;
 
-  const handleFilterChange = (event) => {
+  const handleFilterChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     applyValue({ ...item, value: event.target.value });
   };
 
@@ -90,7 +96,7 @@ describe('<DataGrid /> - Filter panel', () => {
           },
           {
             value: 'equals',
-            getApplyFilterFn: (filterItem) => {
+            getApplyFilterFn: (filterItem: GridFilterItem) => {
               if (!filterItem.value) {
                 return null;
               }
@@ -98,7 +104,7 @@ describe('<DataGrid /> - Filter panel', () => {
                 sensitivity: 'base',
                 usage: 'search',
               });
-              return ({ value }): boolean => {
+              return ({ value }: { value: any }): boolean => {
                 return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
               };
             },
@@ -170,13 +176,13 @@ describe('<DataGrid /> - Filter panel', () => {
       />,
     );
     expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
-    expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
+    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('equals');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     setColumnValue('slogan');
 
     expect(getColumnValues(0)).to.deep.equal([]);
-    expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
+    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('equals');
     expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
   });
 
@@ -203,13 +209,13 @@ describe('<DataGrid /> - Filter panel', () => {
       />,
     );
     expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
-    expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
+    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('contains');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     setColumnValue('slogan');
 
     expect(getColumnValues(0)).to.deep.equal([]);
-    expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('from');
+    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('from');
     expect(screen.getByTestId('customInput').value).to.equal('');
   });
 
@@ -239,7 +245,7 @@ describe('<DataGrid /> - Filter panel', () => {
       />,
     );
     expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
-    expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
+    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('contains');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     expect(onFilterModelChange.callCount).to.equal(0);
@@ -249,7 +255,7 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
 
-    expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('isEmpty');
+    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('isEmpty');
   });
 
   it('should reset filter value if not available in the new valueOptions', () => {
@@ -432,5 +438,42 @@ describe('<DataGrid /> - Filter panel', () => {
     setOperatorValue('is');
 
     expect(getColumnValues(0)).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
+  });
+
+  it('should close filter panel when removing the last filter', async () => {
+    const onFilterModelChange = spy();
+
+    render(
+      <TestCase
+        rows={[
+          { id: 1, val: 'VAL_1' },
+          { id: 2, val: 'VAL_2' },
+          { id: 3, val: 'VAL_3' },
+        ]}
+        columns={[{ field: 'id' }, { field: 'val' }]}
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [{ columnField: 'val', operatorValue: 'contains', value: 'UK' }],
+            },
+          },
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        onFilterModelChange={onFilterModelChange}
+      />,
+    );
+    expect(screen.queryAllByRole('tooltip').length).to.deep.equal(1);
+
+    // TODO v6: remove the next two lines
+    deleteFilterForm();
+    expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
+
+    deleteFilterForm();
+    await waitFor(() => {
+      expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
+    });
   });
 });

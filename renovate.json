@@ -91,6 +91,10 @@
         "@mui/system",
         "@mui/utils"
       ]
+    },
+    {
+      "groupName": "Playwright",
+      "matchPackagePatterns": ["playwright", "@playwright/test"]
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],

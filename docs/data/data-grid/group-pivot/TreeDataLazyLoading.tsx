@@ -14,7 +14,7 @@ import {
   useGridApiRef,
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
-import { unstable_composeClasses as composeClasses } from '@mui/base';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 
@@ -181,7 +181,7 @@ interface GroupingCellWithLazyLoadingProps extends GridRenderCellParams {
  * But base the amount of children on a `row.descendantCount` property rather than on the internal lookups.
  */
 const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) => {
-  const { id, field, rowNode, row, hideDescendantCount } = props;
+  const { id, field, rowNode, row, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -226,7 +226,7 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
         )}
       </div>
       <span>
-        {rowNode.groupingKey}
+        {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
         {!hideDescendantCount && row.descendantCount > 0
           ? ` (${row.descendantCount})`
           : ''}

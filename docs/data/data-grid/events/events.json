@@ -49,13 +49,13 @@
   },
   {
     "name": "cellMouseDown",
-    "description": "Fired when a <code>mousedown</code> event happens in a cell..",
+    "description": "Fired when a <code>mousedown</code> event happens in a cell.",
     "params": "GridCellParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "name": "cellMouseUp",
-    "description": "Fired when a <code>mouseup</code> event happens in a cell..",
+    "description": "Fired when a <code>mouseup</code> event happens in a cell.",
     "params": "GridCellParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
@@ -181,7 +181,7 @@
   },
   {
     "name": "rowClick",
-    "description": "Fired when a row is clicked.",
+    "description": "Fired when a row is clicked.\nNot fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
@@ -260,7 +260,7 @@
   {
     "name": "stateChange",
     "description": "Fired when the state of the grid is updated.",
-    "params": "GridState",
+    "params": "any",
     "event": "MuiEvent<{}>"
   },
   {

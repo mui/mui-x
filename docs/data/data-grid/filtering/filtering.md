@@ -11,8 +11,8 @@ The filters can be modified through the grid interface in several ways:
 - By opening the column menu and clicking the _Filter_ menu item.
 - By clicking the _Filters_ button in the grid toolbar (if enabled).
 
-Each column types has its own filter operators.
-The demo below let you explore all the operators for each built-in column type.
+Each column type has its own filter operators.
+The demo below lets you explore all the operators for each built-in column type.
 
 _See [the dedicated section](#customize-the-operators) to learn how to create your own custom filter operator._
 
@@ -24,7 +24,9 @@ _See [the dedicated section](#customize-the-operators) to learn how to create yo
 >
 > To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/material-ui-pro/)
 
-The demo below lets you filter the rows according to several criteria at the same time.
+## Multi-filtering [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+The following demo lets you filter the rows according to several criteria at the same time.
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -42,7 +44,7 @@ A filter item represents a filtering rule and is composed of several elements:
 
 - `filterItem.columnField`: the field on which we want to apply the rule.
 - `filterItem.value`: the value to look for.
-- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the .
+- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
 - `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)): only useful when multiple filters are used.
 
 **Note**: Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
@@ -126,7 +128,7 @@ To disable the filter of a single column, set the `filterable` property in `Grid
 In the example below, the _rating_ column can not be filtered.
 
 ```js
-<Datagrid columns={[...columns, { field: 'rating', filterable: false }]} />
+<DataGrid columns={[...columns, { field: 'rating', filterable: false }]} />
 ```
 
 {{"demo": "DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -188,6 +190,14 @@ In the demo below, you can see how to create a completely new operator for the R
 
 {{"demo": "CustomRatingOperator.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Wrap built-in operators
+
+You can create custom operators that re-use the logic of the built-in ones.
+
+In the demo below, the selected rows are always visible even when they don't match the filtering rules.
+
+{{"demo": "CustomSelectionOperator.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Multiple values operator
 
 You can create a custom operator which accepts multiple values. To do this, provide an array of values to the `value` property of the `filterItem`.
@@ -232,10 +242,11 @@ In the demo below, the `rating` column only has the `<` and `>` operators.
 
 {{"demo": "RemoveBuiltInOperators.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Edit an operator
+### Custom input component
 
 The value used by the operator to look for has to be entered by the user.
-On most column types, a text field is used. However, a custom component can be rendered instead.
+On most column types, a text field is used.
+However, a custom component can be rendered instead.
 
 In the demo below, the `rating` column reuses the numeric operators but the rating component is used to enter the value of the filter.
 
@@ -259,15 +270,40 @@ const ratingColumnType: GridColTypeDef = {
 
 You can customize the rendering of the filter panel as shown in [the component section](/components/data-grid/components/#overriding-components) of the documentation.
 
+### Customize the filter panel content
+
+The customization of the filter panel content can be performed by passing props to the default `<GridFilterPanel />` component.
+The available props allow overriding:
+
+- The `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
+- The order of the column selector (can be `"asc"` or `"desc"`)
+- Any prop of the input components
+
+Input components can be [customized](/customization/how-to-customize/) by using two approaches.
+You can pass a `sx` prop to any input container or you can use CSS selectors on nested components of the filter panel.
+More details are available in the demo.
+
+| Props                    | CSS class                                 |
+| :----------------------- | :---------------------------------------- |
+| `deleteIconProps`        | `MuiDataGrid-filterFormDeleteIcon`        |
+| `linkOperatorInputProps` | `MuiDataGrid-filterFormLinkOperatorInput` |
+| `columnInputProps`       | `MuiDataGrid-filterFormColumnInput`       |
+| `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
+| `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
+
+{{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
+
+### Customize the filter panel position
+
 The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.
 
-{{"demo": "CustomFilterPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "CustomFilterPanelPosition.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Server-side filter
 
 Filtering can be run server-side by setting the `filterMode` prop to `server`, and implementing the `onFilterModelChange` handler.
 
-Below is a very simple demo on how you could achieve server-side filtering.
+The example below demonstrates how to achieve server-side filtering.
 
 {{"demo": "ServerFilterGrid.js", "bg": "inline"}}
 

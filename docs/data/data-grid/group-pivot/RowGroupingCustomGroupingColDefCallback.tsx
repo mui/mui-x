@@ -1,10 +1,11 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   GridColumns,
   gridColumnVisibilityModelSelector,
   GridEvents,
+  GridGroupingColDefOverride,
   GridRowGroupingModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -16,7 +17,7 @@ import Box from '@mui/material/Box';
 const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
 
 const useKeepGroupingColumnsHidden = (
-  apiRef: GridApiRef,
+  apiRef: React.MutableRefObject<GridApi>,
   columns: GridColumns,
   initialModel: GridRowGroupingModel,
   leafField?: string,
@@ -98,13 +99,25 @@ export default function RowGroupingCustomGroupingColDefCallback() {
           columns={columns}
           disableSelectionOnClick
           rowGroupingModel={rowGroupingModel}
-          groupingColDef={(params) =>
-            params.fields.includes('director')
-              ? {
-                  headerName: 'Director',
-                }
-              : {}
-          }
+          groupingColDef={(params) => {
+            const override: GridGroupingColDefOverride = {};
+            if (params.fields.includes('director')) {
+              return {
+                headerName: 'Director',
+                valueFormatter: (valueFormatterParams) => {
+                  const rowNode = apiRef.current.getRowNode(
+                    valueFormatterParams.id!,
+                  );
+                  if (rowNode?.groupingField === 'director') {
+                    return `by ${rowNode.groupingKey ?? ''}`;
+                  }
+                  return undefined;
+                },
+              };
+            }
+
+            return override;
+          }}
           experimentalFeatures={{
             rowGrouping: true,
           }}

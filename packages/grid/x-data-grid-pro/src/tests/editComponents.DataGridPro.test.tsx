@@ -1,11 +1,12 @@
 import * as React from 'react';
 import {
-  GridApiRef,
+  GridApi,
   DataGridProProps,
   useGridApiRef,
   DataGridPro,
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
@@ -76,7 +77,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
@@ -294,7 +295,7 @@ describe('<DataGridPro /> - Edit Components', () => {
               valueOptions: ['Nike', 'Adidas'],
               editable: true,
               renderEditCell: (params: any) => (
-                <GridEditSingleSelectCell {...params} open={false} /> // Force to appear closed
+                <GridEditSingleSelectCell {...params} open={false} /> // Force appearing closed
               ),
             },
           ]}
