@@ -592,6 +592,34 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
   });
 
+  it('should not call .preventDefault on key events inside a cell in edit mode', () => {
+    render(
+      <TestCase
+        columns={[
+          {
+            field: 'brand',
+            editable: true,
+            renderEditCell: () => <input type="text" data-testid="custom-input" />,
+          },
+        ]}
+      />,
+    );
+
+    const cell = getCell(0, 0);
+    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+    fireEvent.doubleClick(cell);
+    expect(cell).to.have.class('MuiDataGrid-cell--editing');
+
+    const input = screen.getByTestId('custom-input');
+    fireEvent.mouseUp(input);
+    fireEvent.click(input);
+    input.focus();
+
+    expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
+    expect(fireEvent.keyDown(input, { key: ' ' })).to.equal(true);
+    expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
+  });
+
   it('should stay in the edit mode when the element inside the cell triggers click but no mouseup', () => {
     render(
       <TestCase
