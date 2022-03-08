@@ -9,8 +9,14 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridFocusCellSelector } from './gridFocusStateSelector';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const focusStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  focus: { cell: null, columnHeader: null },
+  tabIndex: { cell: null, columnHeader: null },
+});
 
 /**
  * @requires useGridParamsApi (method)
@@ -23,11 +29,6 @@ export const useGridFocus = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
 
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    focus: { cell: null, columnHeader: null },
-    tabIndex: { cell: null, columnHeader: null },
-  }));
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
 
   const setCellFocus = React.useCallback<GridFocusApi['setCellFocus']>(
