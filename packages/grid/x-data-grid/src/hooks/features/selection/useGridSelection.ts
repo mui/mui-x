@@ -17,10 +17,37 @@ import {
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { GridSelectionModel } from '../../../models';
+
+const getSelectionModelPropValue = (
+  selectionModelProp: DataGridProcessedProps['selectionModel'],
+  prevSelectionModel?: GridSelectionModel,
+) => {
+  if (selectionModelProp == null) {
+    return selectionModelProp;
+  }
+
+  if (Array.isArray(selectionModelProp)) {
+    return selectionModelProp;
+  }
+
+  if (prevSelectionModel && prevSelectionModel[0] === selectionModelProp) {
+    return prevSelectionModel;
+  }
+
+  return [selectionModelProp];
+};
+
+export const selectionStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'selectionModel'>
+> = (state, props) => ({
+  ...state,
+  selection: getSelectionModelPropValue(props.selectionModel) ?? [],
+});
 
 /**
  * @requires useGridRows (state, method)
@@ -45,18 +72,11 @@ export const useGridSelection = (
   const logger = useGridLogger(apiRef, 'useGridSelection');
 
   const propSelectionModel = React.useMemo(() => {
-    if (props.selectionModel == null) {
-      return props.selectionModel;
-    }
-
-    if (Array.isArray(props.selectionModel)) {
-      return props.selectionModel;
-    }
-
-    return [props.selectionModel];
-  }, [props.selectionModel]);
-
-  useGridStateInit(apiRef, (state) => ({ ...state, selection: propSelectionModel ?? [] }));
+    return getSelectionModelPropValue(
+      props.selectionModel,
+      gridSelectionStateSelector(apiRef.current.state),
+    );
+  }, [apiRef, props.selectionModel]);
 
   const lastRowToggled = React.useRef<GridRowId | null>(null);
 
