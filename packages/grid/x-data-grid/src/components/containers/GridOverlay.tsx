@@ -1,12 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { alpha, styled } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
+import { Theme, alpha, styled } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
+export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement> & {
+  sx?: SxProps<Theme>;
+};
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 

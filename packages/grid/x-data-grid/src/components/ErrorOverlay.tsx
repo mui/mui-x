@@ -1,21 +1,13 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 
-const ErrorGridOverlay = styled(GridOverlay, {
-  shouldForwardProp: (prop) => prop !== 'rowHeight',
-})((props: GridOverlayProps & { rowHeight: number }) => {
-  return {
-    minHeight: props.rowHeight,
-    width: '100%',
-  };
-});
 export interface ErrorOverlayProps extends GridOverlayProps {
   message?: string;
   hasError: boolean;
   errorInfo: any;
-  rowHeight: number;
 }
 
 // TODO v6: rename to GridErrorOverlay
@@ -24,11 +16,12 @@ export const ErrorOverlay = React.forwardRef<HTMLDivElement, ErrorOverlayProps>(
     const { message, hasError, errorInfo, ...other } = props;
     const apiRef = useGridApiContext();
     const defaultLabel = apiRef.current.getLocaleText('errorOverlayDefaultLabel');
+    const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
     return (
-      <ErrorGridOverlay ref={ref} {...other}>
+      <GridOverlay ref={ref} sx={{ width: '100%', minHeight: rowHeight }} {...other}>
         {message || defaultLabel}
-      </ErrorGridOverlay>
+      </GridOverlay>
     );
   },
 );

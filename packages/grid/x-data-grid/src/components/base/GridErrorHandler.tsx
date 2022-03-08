@@ -24,7 +24,6 @@ function GridErrorHandler(props: { children: React.ReactNode }) {
           <rootProps.components.ErrorOverlay
             {...errorProps}
             {...rootProps.componentsProps?.errorOverlay}
-            rowHeight={rootProps.rowHeight}
           />
         </GridMainContainer>
       )}
