@@ -870,9 +870,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             rows={rows}
             columns={columns}
             columnTypes={{
-              number: {
-                extendType: 'number',
-              },
+              number: {},
             }}
           />
         </div>,
@@ -893,7 +891,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             columns={columns}
             columnTypes={{
               number: {
-                extendType: 'number',
                 width: 10,
                 minWidth: 200,
               },
