@@ -19,7 +19,7 @@ export const ErrorOverlay = React.forwardRef<HTMLDivElement, ErrorOverlayProps>(
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
     return (
-      <GridOverlay ref={ref} sx={{ width: '100%', minHeight: rowHeight }} {...other}>
+      <GridOverlay ref={ref} sx={{ width: '100%', minHeight: 2 * rowHeight }} {...other}>
         {message || defaultLabel}
       </GridOverlay>
     );

@@ -833,7 +833,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           '.MuiDataGrid-overlay',
         )[0] as HTMLElement;
         expect(errorOverlayElement.textContent).to.equal(error.message);
-        expect(errorOverlayElement.offsetHeight).to.equal(rowHeight);
+        expect(errorOverlayElement.offsetHeight).to.equal(2 * rowHeight);
       });
     });
 
