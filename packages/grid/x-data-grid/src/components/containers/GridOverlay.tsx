@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { SxProps } from '@mui/system';
@@ -36,7 +37,7 @@ const GridOverlayRoot = styled('div', {
   backgroundColor: alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
 }));
 
-export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(
+const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(
   props: GridOverlayProps,
   ref,
 ) {
@@ -47,3 +48,17 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
 
   return <GridOverlayRoot ref={ref} className={clsx(classes.root, className)} {...other} />;
 });
+
+GridOverlay.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { GridOverlay };
