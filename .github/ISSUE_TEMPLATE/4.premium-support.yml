@@ -1,7 +1,7 @@
-name: 'Pro plan: question ❔'
-description: I'm a Pro plan user, I can't find a solution to my problem with MUI X.
+name: 'Premium plan: question ❔'
+description: I'm a Premium plan user, I can't find a solution to my problem with MUI X.
 title: "[question] "
-labels: ['status: needs triage', 'pro plan', 'support: commercial']
+labels: ['status: needs triage', 'Premium plan', 'support: commercial']
 body:
   - type: markdown
     attributes:
@@ -13,7 +13,7 @@ body:
     id: contact
     attributes:
       label: Order ID 💳
-      description: The order ID of the purchased Pro plan. Community users can [learn more about support](https://mui.com/getting-started/support/) in the documentation.
+      description: The order ID of the purchased Premium plan. Community users can [learn more about support](https://mui.com/getting-started/support/) in the documentation.
       placeholder: 'ex. #11111'
     validations:
       required: true
