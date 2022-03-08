@@ -29,7 +29,6 @@ import {
   GridRowsInternalCache,
   GridRowsState,
 } from './gridRowsState';
-import { GridPreProcessor } from '@mui/x-data-grid/hooks/core/preProcessing';
 
 interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
@@ -93,21 +92,16 @@ const getRowsStateFromCache = (
     groupingResponse,
   );
 
-  const dataTopLevelRowCount = Object.values(processedGroupingResponse.tree).filter(
-    (node) => node.parent == null,
-  ).length;
-
-  const totalRowCount =
-    rowCount > processedGroupingResponse.ids.length
-      ? rowCount
-      : processedGroupingResponse.ids.length;
-  const totalTopLevelRowCount = rowCount > dataTopLevelRowCount ? rowCount : dataTopLevelRowCount;
+  const dataTopLevelRowCount =
+    processedGroupingResponse.treeDepth === 1
+      ? processedGroupingResponse.ids.length
+      : Object.values(groupingResponse.tree).filter((node) => node.parent == null).length;
 
   return {
     ...processedGroupingResponse,
     groupingResponseBeforeRowHydration: groupingResponse,
-    totalRowCount,
-    totalTopLevelRowCount,
+    totalRowCount: Math.max(rowCount, processedGroupingResponse.ids.length),
+    totalTopLevelRowCount: Math.max(rowCount, dataTopLevelRowCount),
   };
 };
 

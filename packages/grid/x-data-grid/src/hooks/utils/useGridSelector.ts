@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { GridApiCommon } from '../../models/api/gridApiCommon';
 import { OutputSelector } from '../../utils/createSelector';
-
-let warnedOnceStateNotInitialized = false;
+import { buildWarning } from '../../utils/warning';
 
 function isOutputSelector<Api extends GridApiCommon, T>(
   selector: any,
@@ -10,19 +9,18 @@ function isOutputSelector<Api extends GridApiCommon, T>(
   return selector.cache;
 }
 
+const stateNotInitializedWarning = buildWarning([
+  'MUI: `useGridSelector` has been called before the initialization of the state.',
+  'This hook can only be used inside the context of the grid.',
+]);
+
 export const useGridSelector = <Api extends GridApiCommon, T>(
   apiRef: React.MutableRefObject<Api>,
   selector: ((state: Api['state']) => T) | OutputSelector<Api['state'], T>,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
-    if (!warnedOnceStateNotInitialized && !apiRef.current.state) {
-      warnedOnceStateNotInitialized = true;
-      console.warn(
-        [
-          'MUI: `useGridSelector` has been called before the initialization of the state.',
-          'This hook can only be used inside the context of the grid.',
-        ].join('\n'),
-      );
+    if (!apiRef.current.state) {
+      stateNotInitializedWarning();
     }
   }
 

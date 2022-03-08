@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createSelector as reselectCreateSelector, Selector, SelectorResultArray } from 'reselect';
+import { buildWarning } from './warning';
 
 export interface OutputSelector<State, Result> {
   (apiRef: React.MutableRefObject<{ state: State; instanceId: number }>): Result;
@@ -35,7 +36,10 @@ type CreateSelectorFunction = <Selectors extends ReadonlyArray<Selector<any>>, R
 
 const cache: Record<number | string, Map<any[], any>> = {};
 
-let warnedOnce = false;
+const missingInstanceIdWarning = buildWarning([
+  'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
+  'To fix, call it with `apiRef`, e.g. `mySelector(apiRef)`, or pass the instance ID explicitly, e.g `mySelector(state, apiRef.current.instanceId)`.',
+]);
 
 export const createSelector: CreateSelectorFunction = (...args: any) => {
   const selector = (...selectorArgs: any[]) => {
@@ -45,14 +49,8 @@ export const createSelector: CreateSelectorFunction = (...args: any) => {
     const state = isApiRef ? stateOrApiRef.current.state : stateOrApiRef;
 
     if (process.env.NODE_ENV !== 'production') {
-      if (!warnedOnce && cacheKey === 'default') {
-        console.warn(
-          [
-            'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
-            'To fix, call it with `apiRef`, e.g. `mySelector(apiRef)`, or pass the instance ID explicitly, e.g `mySelector(state, apiRef.current.instanceId)`.',
-          ].join('\n'),
-        );
-        warnedOnce = true;
+      if (cacheKey === 'default') {
+        missingInstanceIdWarning();
       }
     }
 

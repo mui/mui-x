@@ -491,7 +491,7 @@ export default async function buildComponentsDocumentation(
   ];
 
   // Uncomment below to generate documentation for all exported components
-  // const componentsFolder = path.resolve(workspaceRoot, 'packages/grid/x-data-grid/src/internals/components');
+  // const componentsFolder = path.resolve(workspaceRoot, 'packages/grid/x-data-grid/src/components');
   // const components = findComponents(componentsFolder);
   // components.forEach((component) => {
   //   const componentName = path.basename(component.filename).replace('.tsx', '');
