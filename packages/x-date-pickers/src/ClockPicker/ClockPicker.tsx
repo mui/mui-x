@@ -558,7 +558,7 @@ ClockPicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {'hours' | 'minutes' | 'seconds'} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} clockType The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,

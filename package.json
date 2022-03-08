@@ -83,7 +83,7 @@
     "@eps1lon/enzyme-adapter-react-17": "^0.1.0",
     "@mui/icons-material": "^5.4.2",
     "@mui/material": "^5.4.3",
-    "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
+    "@mui/monorepo": "https://github.com/flaviendelangle/material-ui.git#doc-gen",
     "@mui/utils": "^5.4.2",
     "@octokit/plugin-retry": "^3.0.9",
     "@octokit/rest": "^18.12.0",

@@ -1,5 +1,6 @@
 import { createIsAfterIgnoreDatePart } from '../../utils/time-utils';
 import { useValidation, ValidationProps, Validator } from './useValidation';
+import {ClockPickerView} from "../../models";
 
 export interface ExportedTimeValidationProps<TDate> {
   /**
@@ -16,10 +17,10 @@ export interface ExportedTimeValidationProps<TDate> {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {'hours' | 'minutes' | 'seconds'} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} clockType The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
-  shouldDisableTime?: (timeValue: number, clockType: 'hours' | 'minutes' | 'seconds') => boolean;
+  shouldDisableTime?: (timeValue: number, clockType: ClockPickerView) => boolean;
   /**
    * Do not ignore date part when validating min/max time.
    * @default false
