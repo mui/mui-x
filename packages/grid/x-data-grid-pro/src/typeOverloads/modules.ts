@@ -32,7 +32,7 @@ export interface GridColDefPro<R extends GridValidRowModel = any, V = any> {
 
 declare module '@mui/x-data-grid' {
   export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V>
-    extends GridColDefPro<R, F> {}
+    extends GridColDefPro<R, V> {}
 
   interface GridEventLookup extends GridEventLookupPro {}
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, DataGridProProps, GridColDef, GridColumns } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 function SxTest() {
   <DataGridPro rows={[]} columns={[]} sx={{ color: 'primary.main' }} />;
