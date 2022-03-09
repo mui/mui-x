@@ -103,8 +103,12 @@ async function main() {
 
         const isFilteringDemo =
           pathURL.startsWith('/docs-components-data-grid-filtering') &&
-          !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL); // These cases don't render content
-        const isSortingDemo = pathURL.startsWith('/docs-components-data-grid-sorting');
+          // These cases don't render content
+          !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL);
+        const isSortingDemo =
+          pathURL.startsWith('/docs-components-data-grid-sorting') &&
+          // In this case country column is not visible
+          !/ExtendedSortComparator/.test(pathURL);
 
         if (isFilteringDemo || isSortingDemo) {
           // Wait for the flags to load
