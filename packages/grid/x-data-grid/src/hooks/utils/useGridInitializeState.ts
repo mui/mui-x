@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { GridInternalApiCommon } from '../../models/api/gridApiCommon';
 import { GridInternalApiCommunity } from '../../models/api/gridApiCommunity';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
 
 export type GridStateInitializer<
-  P,
+  P extends Partial<DataGridProcessedProps> = DataGridProcessedProps,
   Api extends GridInternalApiCommon = GridInternalApiCommunity,
 > = (
   state: DeepPartial<Api['state']>,
