@@ -212,18 +212,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     const initialRenderContext = computeRenderContext();
-    const hasRenderContextChanged =
-      !prevRenderContext.current ||
-      Object.keys(initialRenderContext).some(
-        (key) =>
-          initialRenderContext[key as keyof GridRenderContext] !==
-          prevRenderContext.current![key as keyof GridRenderContext],
-      );
-
-    if (!hasRenderContextChanged) {
-      return;
-    }
-
     prevRenderContext.current = initialRenderContext;
     updateRenderContext(initialRenderContext);
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridEvents } from '../../../models/events';
 import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
 import { GridColumnMenuApi } from '../../../models';
@@ -85,10 +85,6 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
   /**
    * EVENTS
    */
-  const handleRowsScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>((params) => {
-    console.log(params);
-  }, []);
-
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
-  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleRowsScroll);
+  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, hideColumnMenu);
 };
