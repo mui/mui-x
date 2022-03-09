@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.6.1
+
+_Mar 10, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+### `@mui/x-data-grid@v5.6.1` / `@mui/x-data-grid-pro@v5.6.1`
+
+#### Changes
+
+- [DataGrid] Display column's filter icon if a filter is applied (#4120) @DanailH
+- [DataGrid] Do not loop through rows to compute top level rows count wen the tree is flat (#4081) @flaviendelangle
+- [DataGrid] Fix extending built-in column types (#4114) @cherniavskii
+- [DataGrid] Use `buildWarning` and `wrapWithWarningOnCall` for deprecated methods and wrong usages (#4056) @flaviendelangle
+- [DataGridPro] Re-export the components removed by mistake during bundle split (#4134) @flaviendelangle
+
+### Docs
+
+- [docs] Fix links to prevent duplicate search result (#4130) @siriwatknp
+- [docs] Fix outdated links to localeTextConstants.ts (#4080) @patilvishal755
+- [docs] Neglect e2e tests related to search (#4118) @siriwatknp
+- [docs] Use regex instead of specific url in e2e-website-tests (#4121) @siriwatknp
+
+### Core
+
+- [core] Enforce `noImplicitAny` (#4084) @cherniavskii
+- [core] Initialize remaining states before feature hooks (#4036) @m4theushw
+- [core] Make is clearer this is only for questions (#4082) @oliviertassinari
+- [core] Merge `page` and `pageSize` state initializer into a single `pagination` state initializer (#4087) @flaviendelangle
+- [core] Prepare the api build scripts for multi packages support (#4111) @flaviendelangle
+- [test] Make focus state out-of-sync warning opt-in (#4129) @m4theushw
+- [test] Only test custom input keyboard event in edit mode (#4075) @alexfauquette
+
 ## 5.6.0
 
 _Mar 4, 2022_
