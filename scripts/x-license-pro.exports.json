@@ -1,0 +1,12 @@
+[
+  { "name": "generateLicence", "kind": "Function" },
+  { "name": "generateReleaseInfo", "kind": "Function" },
+  { "name": "LicenseDetails", "kind": "Interface" },
+  { "name": "LicenseInfo", "kind": "Class" },
+  { "name": "LicenseStatus", "kind": "Enum" },
+  { "name": "showExpiredLicenseError", "kind": "Function" },
+  { "name": "showInvalidLicenseError", "kind": "Function" },
+  { "name": "showNotFoundLicenseError", "kind": "Function" },
+  { "name": "useLicenseVerifier", "kind": "Function" },
+  { "name": "verifyLicense", "kind": "Function" }
+]
