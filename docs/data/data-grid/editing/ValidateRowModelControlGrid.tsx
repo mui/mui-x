@@ -41,7 +41,7 @@ export default function ValidateRowModelControlGrid() {
       editable: true,
     },
     {
-      field: 'lastLogin',
+      field: 'lastUpdated',
       headerName: 'Last Login',
       type: 'dateTime',
       width: 220,
