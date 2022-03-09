@@ -87,7 +87,12 @@ async function main() {
           this.timeout(0);
         }
 
-        if (pathURL === '/docs-components-data-grid-overview/DataGridProDemo') {
+        if (
+          [
+            '/docs-components-data-grid-overview/DataGridProDemo',
+            '/docs-components-data-grid-sorting/FullyCustomSortComparator',
+          ].includes(pathURL)
+        ) {
           this.timeout(6000);
         }
 
