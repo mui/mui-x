@@ -1,4 +1,4 @@
-import { GridCellMode, GridRowMode, GridCellValue } from '../gridCell';
+import { GridCellMode, GridRowMode } from '../gridCell';
 import { GridEditRowsModel, GridEditCellProps } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
@@ -54,7 +54,7 @@ export interface GridEditingSharedApi {
   /**
    * @ignore - do not document.
    */
-  unstable_parseValue: (id: GridRowId, field: string, value: GridCellValue) => GridCellValue;
+  unstable_parseValue: (id: GridRowId, field: string, value: any) => any;
 }
 
 /**

@@ -143,8 +143,8 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * Function that allows to apply a formatter before rendering its value.
    * @template V, F
-   * @param {F<V>} params Object containing parameters for the formatter.
-   * @returns {GridCellValue} The formatted value.
+   * @param {GridValueFormatterParams<V>} params Object containing parameters for the formatter.
+   * @returns {F} The formatted value.
    */
   valueFormatter?: (params: GridValueFormatterParams<V>) => F;
   /**
@@ -171,7 +171,7 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    * @param {GridRenderEditCellParams} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderEditCell?: (params: GridRenderEditCellParams) => React.ReactNode;
+  renderEditCell?: (params: GridRenderEditCellParams<V>) => React.ReactNode;
   /**
    * Callback fired when the edit props of the cell changes.
    * It allows to process the props that saved into the state.
@@ -247,7 +247,7 @@ export type GridEnrichedColDef<R extends GridValidRowModel = any, V = any, F = V
 
 export type GridColumns<R extends GridValidRowModel = any> = GridEnrichedColDef<R>[];
 
-export type GridColTypeDef = Omit<GridColDef<any, any, any>, 'field'> & {
+export type GridColTypeDef<V = any, F = V> = Omit<GridColDef<V, any, F>, 'field'> & {
   extendType?: GridNativeColTypes;
 };
 

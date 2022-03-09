@@ -6,9 +6,10 @@ import { GridRowParams } from '../params/gridRowParams';
 export interface GridParamsApi {
   /**
    * Gets the value of a cell at the given `id` and `field`.
+   * @template V
    * @param {GridRowId} id The id of the row.
    * @param {string} field The column field.
-   * @returns {GridCellValue} The cell value.
+   * @returns {v} The cell value.
    */
   getCellValue: <V extends any = any>(id: GridRowId, field: string) => V;
   /**

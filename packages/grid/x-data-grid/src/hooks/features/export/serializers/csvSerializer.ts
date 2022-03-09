@@ -1,10 +1,10 @@
-import { GridRowId, GridCellValue } from '../../../../models';
+import { GridRowId } from '../../../../models';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../../colDef';
 import { GridCellParams } from '../../../../models/params/gridCellParams';
 import { GridStateColDef } from '../../../../models/colDef/gridColDef';
 import { buildWarning } from '../../../../utils/warning';
 
-const serialiseCellValue = (value: GridCellValue, delimiterCharacter: string) => {
+const serialiseCellValue = (value: any, delimiterCharacter: string) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
 

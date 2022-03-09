@@ -1,4 +1,3 @@
-import { GridCellValue } from '../gridCell';
 import { GridEditCellProps } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 
@@ -11,7 +10,7 @@ export interface GridEditCellPropsParams {
 export interface GridEditCellValueParams {
   id: GridRowId;
   field: string;
-  value: GridCellValue;
+  value: any;
   debounceMs?: number;
 }
 
@@ -23,5 +22,5 @@ export interface GridCommitCellChangeParams {
 export interface GridCellEditCommitParams {
   id: GridRowId;
   field: string;
-  value: GridCellValue;
+  value: any;
 }
