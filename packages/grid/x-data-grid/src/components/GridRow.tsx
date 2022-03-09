@@ -51,11 +51,12 @@ type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
   isLastVisible: boolean;
+  isRowDraggable: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, isLastVisible, classes } = ownerState;
+  const { editable, editing, selected, isLastVisible, classes, isRowDraggable } = ownerState;
   const slots = {
     root: [
       'row',
@@ -63,8 +64,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       editable && 'row--editable',
       editing && 'row--editing',
       isLastVisible && 'row--lastVisible',
+      isRowDraggable && 'row--draggable',
     ],
-    draggableContainer: ['rowDraggableContainer'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -114,6 +115,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     hasScrollX: false,
     hasScrollY: false,
   };
+  const isRowDraggable = !rootProps.disableRowReorder && !sortModel.length && treeDepth === 1;
 
   const ownerState = {
     selected,
@@ -121,6 +123,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
     editable: rootProps.editMode === GridEditModes.Row,
+    isRowDraggable,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -306,17 +309,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
       onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
       onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
+      // TODO: remove sortModel check once row reorder is sorting compatible
+      draggable={isRowDraggable}
+      {...draggableEventHandlers}
       {...other}
     >
-      <div
-        className={classes.draggableContainer}
-        // TODO: remove sortModel check once row reorder is sorting compatible
-        draggable={!rootProps.disableRowReorder && !sortModel.length && treeDepth === 1}
-        {...draggableEventHandlers}
-      >
-        {cells}
-        {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} height={rowHeight} />}
-      </div>
+      {cells}
+      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} height={rowHeight} />}
     </div>
   );
 }

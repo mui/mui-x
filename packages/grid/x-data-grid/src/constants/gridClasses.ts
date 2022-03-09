@@ -322,6 +322,10 @@ export interface GridClasses {
    */
   'row--editing': string;
   /**
+   * Styles applied to the row element if the row is draggable.
+   */
+  'row--draggable': string;
+  /**
    * Styles applied to the floating row element when it is dragged.
    */
   'row--dragging': string;
@@ -333,10 +337,6 @@ export interface GridClasses {
    * Styles applied to the row element.
    */
   row: string;
-  /**
-   * Styles applied to the row's draggable container element.
-   */
-  rowDraggableContainer: string;
   /**
    * Styles applied to the footer row count element to show the total number of rows.
    * Only works when pagination is disabled.
@@ -463,10 +463,10 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'row',
   'row--editable',
   'row--editing',
+  'row--draggable',
   'row--dragging',
   'row--lastVisible',
   'rowCount',
-  'rowDraggableContainer',
   'scrollArea--left',
   'scrollArea--right',
   'scrollArea',

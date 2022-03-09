@@ -41,9 +41,9 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.menuList}`]: styles.menuList },
     { [`& .${gridClasses['row--editable']}`]: styles['row--editable'] },
     { [`& .${gridClasses['row--editing']}`]: styles['row--editing'] },
+    { [`& .${gridClasses['row--draggable']}`]: styles['row--draggable'] },
     { [`& .${gridClasses['row--dragging']}`]: styles['row--dragging'] },
     { [`& .${gridClasses.row}`]: styles.row },
-    { [`& .${gridClasses.rowDraggableContainer}`]: styles.rowDraggableContainer },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
     { [`& .${gridClasses.withBorder}`]: styles.withBorder },
     { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
@@ -301,7 +301,7 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses['cell--textCenter']}`]: {
       justifyContent: 'center',
     },
-    [`& .${gridClasses.columnHeaderDraggableContainer}, & .${gridClasses.rowDraggableContainer}`]: {
+    [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
       display: 'flex',
       width: '100%',
     },
