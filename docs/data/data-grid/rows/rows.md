@@ -127,8 +127,9 @@ To add a border instead, set `rowSpacingType` to `"border"` and customize the co
 />
 ```
 
-> ⚠ Adding a bottom margin or border to rows that also have a [detail panel](/components/data-grid/group-pivot/#master-detail) is not recommended.
-> As alternative, increase the top spacing of the next row to compensate.
+> ⚠ Adding a bottom margin or border to rows that also have a [detail panel](/components/data-grid/group-pivot/#master-detail) is not recommended because the detail panel relays on the bottom margin to work.
+> As an alternative, increase the top spacing of the next row to compensate.
+> It will be easier to always increase the next row spacing not matter if the detail panel is expanded or not, but you can use `gridDetailPanelExpandedRowIdsSelector` to only do when open.
 
 ## Styling rows
 
