@@ -3,7 +3,8 @@
   getRowSpacing={getRowSpacing}
   sx={{
     [`& .${gridClasses.row}`]: {
-      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#000' : '#efefef'),
+      bgcolor: (theme) =>
+        theme.palette.mode === 'light' ? grey[200] : grey[800],
     },
   }}
 />
