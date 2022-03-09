@@ -24,7 +24,7 @@ export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}
     if (mergedColumnTypes[colType]) {
       mergedColumnTypes[colType] = {
         ...mergedColumnTypes[colType],
-        ...customColumnTypes[colType],
+        ...colTypeDef,
       };
     } else {
       mergedColumnTypes[colType] = {
