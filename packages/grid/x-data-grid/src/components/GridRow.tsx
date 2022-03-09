@@ -20,6 +20,8 @@ import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { GridRowClassNameParams } from '../models/params/gridRowParams';
+import { useCurrentPageRows } from '../hooks/utils/useCurrentPageRows';
 import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
@@ -104,6 +106,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const currentPage = useCurrentPageRows(apiRef, rootProps);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
@@ -186,14 +189,35 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   );
 
   const style = {
+    ...styleProp,
     maxHeight: rowHeight,
     minHeight: rowHeight,
-    ...styleProp,
   };
 
-  const rowClassName =
-    typeof rootProps.getRowClassName === 'function' &&
-    rootProps.getRowClassName(apiRef.current.getRowParams(rowId));
+  const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
+
+  if (sizes?.spacingTop) {
+    const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
+    style[property] = sizes.spacingTop;
+  }
+
+  if (sizes?.spacingBottom) {
+    const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
+    style[property] = sizes.spacingBottom;
+  }
+
+  let rowClassName: string | null = null;
+
+  if (typeof rootProps.getRowClassName === 'function') {
+    const indexRelativeToCurrentPage = index - currentPage.range!.firstRowIndex;
+    const rowParams: GridRowClassNameParams = {
+      ...apiRef.current.getRowParams(rowId),
+      isFirstVisible: indexRelativeToCurrentPage === 0,
+      isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+    };
+
+    rowClassName = rootProps.getRowClassName(rowParams);
+  }
 
   const cells: JSX.Element[] = [];
 
