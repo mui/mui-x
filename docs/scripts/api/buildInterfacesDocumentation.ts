@@ -235,6 +235,7 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
       }'`;
     })
     .filter((el): el is string => !!el)
+    // Display the imports from the pro packages above imports from the community packages
     .sort((a, b) => b.length - a.length);
 
   imports += prettier.format(projectImports.join('\n// or\n'), {
