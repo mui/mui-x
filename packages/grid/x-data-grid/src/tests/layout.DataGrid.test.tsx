@@ -858,6 +858,49 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       ) as Element;
       expect(virtualScrollerContent.clientHeight).to.equal(virtualScroller.clientHeight);
     });
+
+    // See https://github.com/mui/mui-x/issues/4113
+    it('should preserve default width constraints when extending default column type', () => {
+      const rows = [{ id: 1, value: 1 }];
+      const columns = [{ field: 'id', type: 'number' }];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            columnTypes={{
+              number: {},
+            }}
+          />
+        </div>,
+      );
+
+      // default `width` should be used
+      expect(getCell(0, 0).offsetWidth).to.equal(100);
+    });
+
+    it('should allow to override default width constraints when extending default column type', () => {
+      const rows = [{ id: 1, value: 1 }];
+      const columns = [{ field: 'id', type: 'number' }];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            columnTypes={{
+              number: {
+                width: 10,
+                minWidth: 200,
+              },
+            }}
+          />
+        </div>,
+      );
+
+      expect(getCell(0, 0).offsetWidth).to.equal(200);
+    });
   });
 
   describe('warnings', () => {

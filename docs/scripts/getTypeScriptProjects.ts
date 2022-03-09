@@ -119,8 +119,8 @@ const createProject = (options: CreateProgramOptions): Project => {
 /**
  * Transforms a list of folders and files into a list of file paths containing components.
  * The file must have the name of the component.
- * @param {string} folders The folders from which we want to extract components
- * @param {string} files The files from which we want to extract components
+ * @param {string[]} folders The folders from which we want to extract components
+ * @param {string[]} files The files from which we want to extract components
  */
 const getComponentPaths =
   ({ folders = [], files = [] }: { folders?: string[]; files?: string[] }) =>
@@ -203,10 +203,10 @@ export const getTypeScriptProjects = () => {
   );
 
   projects.set(
-    'x-date-pickers-pro',
+    'x-date-pickers',
     createProject({
-      name: 'x-date-pickers-pro',
-      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
+      name: 'x-date-pickers',
+      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
@@ -218,10 +218,10 @@ export const getTypeScriptProjects = () => {
   );
 
   projects.set(
-    'x-date-pickers',
+    'x-date-pickers-pro',
     createProject({
-      name: 'x-date-pickers',
-      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
+      name: 'x-date-pickers-pro',
+      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],

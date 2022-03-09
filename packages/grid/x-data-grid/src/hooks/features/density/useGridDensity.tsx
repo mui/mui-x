@@ -6,9 +6,9 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridDensityApi } from '../../../models/api/gridDensityApi';
 import { GridDensityState } from './densityState';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridDensitySelector } from './densitySelector';
 import { isDeepEqual } from '../../../utils/utils';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const COMPACT_DENSITY_FACTOR = 0.7;
 export const COMFORTABLE_DENSITY_FACTOR = 1.3;
@@ -44,16 +44,18 @@ const getUpdatedDensityState = (
   }
 };
 
+export const densityStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'density' | 'headerHeight' | 'rowHeight'>
+> = (state, props) => ({
+  ...state,
+  density: getUpdatedDensityState(props.density, props.headerHeight, props.rowHeight),
+});
+
 export const useGridDensity = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'headerHeight' | 'rowHeight' | 'density'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');
-
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    density: getUpdatedDensityState(props.density, props.headerHeight, props.rowHeight),
-  }));
 
   const setDensity = React.useCallback<GridDensityApi['setDensity']>(
     (newDensity, newHeaderHeight = props.headerHeight, newRowHeight = props.rowHeight): void => {
