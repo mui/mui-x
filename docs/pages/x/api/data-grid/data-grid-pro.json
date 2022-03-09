@@ -61,7 +61,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ preventCommitWhileValidating?: bool, rowGrouping?: bool }"
+        "description": "{ preventCommitWhileValidating?: bool, rowGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
