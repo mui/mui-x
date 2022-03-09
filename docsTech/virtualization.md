@@ -15,8 +15,7 @@ This method is called in two context:
 - The main columns, in which it adds more rows and columns on each side of the context according to the value of `rowBuffer` and `columnBuffer`.
 - The left/right pinned columns. In this context, there is no column buffer because we render all the pinned column. Only the vertical component of the render context is used.
 
-
-Since the rendered HTML does not fill the space, we need to modify the position of the rendered blocks. To do avoid re-painting, we directly modify the style of the element to translate them 
+Since the rendered HTML does not fill the space, we need to modify the position of the rendered blocks. To do avoid re-painting, we directly modify the style of the element to translate them
 
 ```jsx
 componentRef!.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`
