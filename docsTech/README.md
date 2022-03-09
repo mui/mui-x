@@ -65,5 +65,5 @@ The other interest of events is that developers can listen to them by subscribin
 Here you will find more precision about how some features are designed.
 
 - [filtering](./filtering)
-- virtualization (TODO)
+- [virtualization](./virtualization)
 - print (TODO)
