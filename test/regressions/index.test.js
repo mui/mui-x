@@ -101,10 +101,12 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
-        if (
+        const isFilteringDemo =
           pathURL.startsWith('/docs-components-data-grid-filtering') &&
-          !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL) // These cases don't render content
-        ) {
+          !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL); // These cases don't render content
+        const isSortingDemo = pathURL.startsWith('/docs-components-data-grid-sorting');
+
+        if (isFilteringDemo || isSortingDemo) {
           // Wait for the flags to load
           await page.waitForResponse((response) =>
             response.url().startsWith('https://flagcdn.com'),
