@@ -13,6 +13,7 @@ export * from '@mui/x-data-grid/utils';
 export * from './DataGridPro';
 export * from './hooks';
 export * from './models';
+export * from './components';
 
 export { useGridApiContext, useGridApiRef, useGridRootProps } from './typeOverloads/reexports';
 export type { GridApiRef, GridApi, GridInitialState, GridState } from './typeOverloads/reexports';
