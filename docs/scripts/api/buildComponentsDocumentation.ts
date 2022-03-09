@@ -21,14 +21,8 @@ import {
 } from '@mui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
 import generateUtilityClass from '@mui/base/generateUtilityClass';
-import {
-  DocumentedInterfaces,
-  getJsdocDefaultValue,
-  linkify,
-  Project,
-  Projects,
-  writePrettifiedFile,
-} from './utils';
+import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
+import { Project, Projects } from '../getTypeScriptProjects';
 
 interface ReactApi extends ReactDocgenApi {
   /**
@@ -183,7 +177,7 @@ function parseComponentSource(src: string, componentObject: { filename: string }
 const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
-  outputDirectory: string;
+  documentationRoot: string;
   documentedInterfaces: DocumentedInterfaces;
   pagesMarkdown: ReadonlyArray<{
     components: readonly string[];
@@ -191,7 +185,7 @@ const buildComponentDocumentation = async (options: {
     pathname: string;
   }>;
 }) => {
-  const { filename, project, outputDirectory, documentedInterfaces } = options;
+  const { filename, project, documentationRoot, documentedInterfaces } = options;
 
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
@@ -201,7 +195,7 @@ const buildComponentDocumentation = async (options: {
   reactApi.slots = {};
 
   const demos: ReactApi['demos'] = [];
-  if (outputDirectory.includes('/x/')) {
+  if (documentationRoot.includes('/x/')) {
     if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
       demos.push(['/x/react-data-grid/#mit-version', 'DataGrid']);
     }
@@ -425,14 +419,22 @@ const buildComponentDocumentation = async (options: {
 
   // docs/pages/component-name.json
   writePrettifiedFile(
-    path.resolve(outputDirectory, `${kebabCase(reactApi.name)}.json`),
+    path.resolve(
+      documentationRoot,
+      project.documentationFolderName,
+      `${kebabCase(reactApi.name)}.json`,
+    ),
     JSON.stringify(pageContent),
     project,
   );
 
   // docs/pages/component-name.js
   writePrettifiedFile(
-    path.resolve(outputDirectory, `${kebabCase(reactApi.name)}.js`),
+    path.resolve(
+      documentationRoot,
+      project.documentationFolderName,
+      `${kebabCase(reactApi.name)}.js`,
+    ),
     `import * as React from 'react';
 import ApiPage from 'docsx/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
@@ -466,39 +468,14 @@ Page.getInitialProps = () => {
 
 interface BuildComponentsDocumentationOptions {
   projects: Projects;
-  outputDirectory: string;
+  documentationRoot: string;
   documentedInterfaces: DocumentedInterfaces;
 }
 
 export default async function buildComponentsDocumentation(
   options: BuildComponentsDocumentationOptions,
 ) {
-  const { outputDirectory, documentedInterfaces, projects } = options;
-
-  const dataGridProProject = projects.get('x-data-grid-pro')!;
-  const dataGridProject = projects.get('x-data-grid')!;
-
-  // TODO: Use the project fields instead of hard-coding the paths here
-  const componentsToGenerateDocs = [
-    path.resolve(
-      dataGridProject.workspaceRoot,
-      'packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx',
-    ),
-    path.resolve(
-      dataGridProProject.workspaceRoot,
-      'packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx',
-    ),
-  ];
-
-  // Uncomment below to generate documentation for all exported components
-  // const componentsFolder = path.resolve(workspaceRoot, 'packages/grid/x-data-grid/src/components');
-  // const components = findComponents(componentsFolder);
-  // components.forEach((component) => {
-  //   const componentName = path.basename(component.filename).replace('.tsx', '');
-  //   if (exports[componentName]) {
-  //     componentsToGenerateDocs.push(component.filename);
-  //   }
-  // });
+  const { documentationRoot, documentedInterfaces, projects } = options;
 
   const pagesMarkdown = findPagesMarkdown()
     .map((markdown) => {
@@ -510,33 +487,29 @@ export default async function buildComponentsDocumentation(
     })
     .filter((markdown) => markdown.components.length > 0);
 
-  const componentBuilds = componentsToGenerateDocs.map(async (filename) => {
-    const componentName = path.basename(filename).replace('.tsx', '');
-
-    let project: Project;
-    if (dataGridProject.exports[componentName]) {
-      project = dataGridProject;
-    } else if (dataGridProProject.exports[componentName]) {
-      project = dataGridProProject;
-    } else {
-      throw new Error(`Could not find component ${componentName} in any package`);
+  const promises = Array.from(projects.values()).flatMap((project) => {
+    if (!project.getComponentsWithApiDoc) {
+      return [];
     }
 
-    try {
-      return await buildComponentDocumentation({
-        filename,
-        project,
-        outputDirectory,
-        pagesMarkdown,
-        documentedInterfaces,
-      });
-    } catch (error: any) {
-      error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
-      throw error;
-    }
+    const componentsWithApiDoc = project.getComponentsWithApiDoc(project);
+    return componentsWithApiDoc.map<Promise<void>>(async (filename) => {
+      try {
+        return await buildComponentDocumentation({
+          filename,
+          project,
+          documentationRoot,
+          pagesMarkdown,
+          documentedInterfaces,
+        });
+      } catch (error: any) {
+        error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
+        throw error;
+      }
+    });
   });
 
-  const builds = await Promise.allSettled(componentBuilds);
+  const builds = await Promise.allSettled(promises);
 
   const fails = builds.filter(
     (promise): promise is PromiseRejectedResult => promise.status === 'rejected',
