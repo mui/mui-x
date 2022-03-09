@@ -146,7 +146,7 @@ Sorting can be run server-side by setting the `sortingMode` prop to `server`, an
 
 {{"demo": "SortingSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state)
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state/#access-the-state)
 
 ## API
 
