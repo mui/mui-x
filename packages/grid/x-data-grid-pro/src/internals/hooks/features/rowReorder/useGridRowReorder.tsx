@@ -10,6 +10,7 @@ import {
   useGridSelector,
   CursorCoordinates,
   gridSortModelSelector,
+  gridRowTreeDepthSelector,
 } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -62,6 +63,7 @@ export const useGridRowReorder = (
 
   const dragRowId = useGridSelector(apiRef, gridRowReorderDragRowSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
+  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
   const dragRowNode = React.useRef<HTMLElement | null>(null);
   const originRowIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<any>();
@@ -72,17 +74,22 @@ export const useGridRowReorder = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
 
+  // TODO: remove sortModel check once row reorder is sorting compatible
+  // remove treeDepth once row reorder is tree compatible
+  const isRowReorderDisabled = React.useCallback((): boolean => {
+    return props.disableRowReorder || !!sortModel.length || treeDepth !== 1;
+  }, [props.disableRowReorder, sortModel, treeDepth]);
+
   const handleDragStart = React.useCallback<GridEventListener<GridEvents.rowDragStart>>(
     (params, event) => {
-      // TODO: remove sortModel check once row reorder is sorting compatible
-      if (props.disableRowReorder || sortModel.length) {
+      if (isRowReorderDisabled()) {
         return;
       }
 
       logger.debug(`Start dragging row ${params.id}`);
       // Prevent drag events propagation.
       // For more information check here https://github.com/mui/mui-x/issues/2680.
-      event.stopPropagation();
+      // event.stopPropagation();
 
       dragRowNode.current = event.currentTarget;
       dragRowNode.current.classList.add(classes.rowDragging);
@@ -99,15 +106,15 @@ export const useGridRowReorder = (
 
       originRowIndex.current = apiRef.current.getRowIndex(params.id);
     },
-    [props.disableRowReorder, classes.rowDragging, logger, apiRef, sortModel],
+    [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
   );
 
   const handleDragEnter = React.useCallback<GridEventListener<GridEvents.rowDragEnter>>(
     (params, event) => {
-      event.preventDefault();
+      // event.preventDefault();
       // Prevent drag events propagation.
       // For more information check here https://github.com/mui/mui-x/issues/2680.
-      event.stopPropagation();
+      // event.stopPropagation();
     },
     [],
   );
@@ -118,11 +125,11 @@ export const useGridRowReorder = (
         return;
       }
 
-      logger.debug(`Dragging over rpw ${params.id}`);
-      event.preventDefault();
+      logger.debug(`Dragging over row ${params.id}`);
+      // event.preventDefault();
       // Prevent drag events propagation.
       // For more information check here https://github.com/mui/mui-x/issues/2680.
-      event.stopPropagation();
+      // event.stopPropagation();
 
       const coordinates = { x: event.clientX, y: event.clientY };
 
@@ -151,16 +158,15 @@ export const useGridRowReorder = (
 
   const handleDragEnd = React.useCallback<GridEventListener<GridEvents.rowDragEnd>>(
     (params, event): void => {
-      // TODO: remove sortModel check once row reorder is sorting compatible
-      if (props.disableRowReorder || !dragRowId || sortModel.length) {
+      if (isRowReorderDisabled() || !dragRowId) {
         return;
       }
 
       logger.debug('End dragging row');
-      event.preventDefault();
+      // event.preventDefault();
       // Prevent drag events propagation.
       // For more information check here https://github.com/mui/mui-x/issues/2680.
-      event.stopPropagation();
+      // event.stopPropagation();
 
       clearTimeout(removeDnDStylesTimeout.current);
       dragRowNode.current = null;
@@ -178,7 +184,7 @@ export const useGridRowReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [props.disableRowReorder, logger, apiRef, dragRowId, sortModel],
+    [isRowReorderDisabled, logger, apiRef, dragRowId],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowDragStart, handleDragStart);
