@@ -115,6 +115,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     hasScrollX: false,
     hasScrollY: false,
   };
+
   const isRowDraggable = !rootProps.disableRowReorder && !sortModel.length && treeDepth === 1;
 
   const ownerState = {
