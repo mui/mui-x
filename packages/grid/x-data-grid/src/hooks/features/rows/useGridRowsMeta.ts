@@ -13,10 +13,18 @@ import {
 import { gridFilterStateSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortingStateSelector } from '../sorting/gridSortingSelector';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  rowsMeta: {
+    currentPageTotalHeight: 0,
+    positions: [],
+  },
+});
 
 /**
  * @requires useGridPageSize (method)
@@ -34,14 +42,6 @@ export const useGridRowsMeta = (
   const filterState = useGridSelector(apiRef, gridFilterStateSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const sortingState = useGridSelector(apiRef, gridSortingStateSelector);
-
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    rowsMeta: {
-      currentPageTotalHeight: 0,
-      positions: [],
-    },
-  }));
 
   const hydrateRowsMeta = React.useCallback(() => {
     const { rows } = getCurrentPageRows(apiRef, {

@@ -105,10 +105,11 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
-    [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}`]: {
-      visibility: 'visible',
-      width: 'auto',
-    },
+    [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}, & .${gridClasses['columnHeader--filtered']} .${gridClasses.iconButtonContainer}`]:
+      {
+        visibility: 'visible',
+        width: 'auto',
+      },
     [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}) .${gridClasses.sortIcon}`]:
       {
         opacity: 0,

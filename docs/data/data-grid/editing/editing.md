@@ -144,7 +144,7 @@ The demo lets you edit the ratings by double-clicking the cell.
 
 ### Edit using external button [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-You can override the default [start editing](#start-editing) triggers using the [`event.defaultMuiPrevented`](/components/data-grid/events#disabling-the-default-behavior) on the synthetic React events.
+You can override the default [start editing](#start-editing) triggers using the [`event.defaultMuiPrevented`](/components/data-grid/events/#disabling-the-default-behavior) on the synthetic React events.
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "disableAd": true}}
 
