@@ -10,6 +10,16 @@ require('@babel/register')({
 
 createDOM();
 
+// The JSDOM implementation is too slow
+// https://github.com/jsdom/jsdom/issues/3234
+window.getComputedStyle = function getComputedStyleMock() {
+  return {
+    getPropertyValue: () => {
+      return undefined;
+    },
+  };
+};
+
 const { mochaHooks: otherMochaHooks } = require('./init');
 
 const mochaHooks = {
