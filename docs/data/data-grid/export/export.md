@@ -150,6 +150,23 @@ For more details on these options, please visit the [`csvOptions` api page](/api
 
 ## Print export
 
+### Modify the grid style
+
+By default, the printed grid is equivalent to printing a page containing only the grid.
+To modify style such as colors in print render, you can either use media selector `@media print` in your components.
+Or you can use `pageStyle` property of `printOptions`.
+
+For example, if the grid is in dark mode, the text color will be inappropriate for printing (too light).
+A solution is to override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity).
+
+```jsx
+<GridToolbarExport
+  printOptions={{
+    pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
+  }}
+/>
+```
+
 ### Customize grid display
 
 By default, the print export display all the DataGrid. It is possible to remove the footer and the toolbar by setting respectively `hideFooter` and `hideToolbar` to `true`.
