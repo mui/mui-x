@@ -183,7 +183,10 @@ function GridCell(props: GridCellProps) {
 
   let handleFocus: any = other.onFocus;
 
-  if (process.env.NODE_ENV === 'test') {
+  if (
+    process.env.NODE_ENV === 'test' &&
+    rootProps.experimentalFeatures?.warnIfFocusStateIsNotSynced
+  ) {
     handleFocus = (event: React.FocusEvent) => {
       const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === rowId && focusedCell.field === field) {
@@ -194,12 +197,12 @@ function GridCell(props: GridCellProps) {
       }
 
       if (!warnedOnce) {
-        console.error(
+        console.warn(
           [
             `MUI: The cell with id=${rowId} and field=${field} received focus.`,
             `According to the state, the focus should be at id=${focusedCell?.id}, field=${focusedCell?.field}.`,
-            'In the next render, the focus will be changed to match the state.',
-            'Call `fireEvent.mouseUp` and `fireEvent.click` before to sync the focus with the state.',
+            "Not syncing the state may cause unwanted behaviors since the `cellFocusIn` event won't be fired.",
+            'Call `fireEvent.mouseUp` before the `fireEvent.click` to sync the focus with the state.',
           ].join('\n'),
         );
 
