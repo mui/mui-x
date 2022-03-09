@@ -5,6 +5,6 @@
   hideFooterPagination
   onRowsScrollEnd={handleOnRowsScrollEnd}
   components={{
-    LoadingOverlay: CustomLoadingOverlay,
+    LoadingOverlay: LinearProgress,
   }}
 />

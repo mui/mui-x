@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
@@ -826,7 +827,7 @@ describe('<DataGrid /> - Filter', () => {
             {
               field: 'isPublished',
               type: 'boolean',
-              // The boolean cell does not handle the formatted value so we override it
+              // The boolean cell does not handle the formatted value, so we override it
               renderCell: (params) => {
                 const value = params.value as boolean | null | undefined;
 

@@ -87,7 +87,7 @@ If the `error` attribute is true, the value will never be committed.
 const columns: GridColDef[] = [
   {
     field: 'firstName',
-    preProcessEditCellProps: (params: GridEditCellPropsChangeParams) => {
+    preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
       const hasError = params.props.value.length < 3;
       return { ...params.props, error: hasError };
     },
@@ -144,7 +144,7 @@ The demo lets you edit the ratings by double-clicking the cell.
 
 ### Edit using external button [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-You can override the default [start editing](#start-editing) triggers using the [`event.defaultMuiPrevented`](/components/data-grid/events#disabling-the-default-behavior) on the synthetic React events.
+You can override the default [start editing](#start-editing) triggers using the [`event.defaultMuiPrevented`](/components/data-grid/events/#disabling-the-default-behavior) on the synthetic React events.
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "disableAd": true}}
 

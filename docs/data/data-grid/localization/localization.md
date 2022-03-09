@@ -11,7 +11,8 @@ The default locale of MUI is English (United States). If you want to use other l
 ## Translation keys
 
 You can use the `localeText` prop to pass in your own text and translations.
-You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts) in the GitHub repository.
+You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts)
+in the GitHub repository.
 In the following example, the labels of the density selector are customized.
 
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
@@ -100,7 +101,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Ukraine                 | uk-UA               | `ukUA`      |
 | Simplified Chinese      | zh-CN               | `zhCN`      |
 
-You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-data-grid/src/internals/locales) in the GitHub repository.
+You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-data-grid/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Data grid component depend on the [Localization strategy](/guides/localization/) of the whole library.

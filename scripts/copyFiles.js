@@ -1,5 +1,3 @@
-// Used by @mui/x-pickers and @mui/x-pickers-pro
-// TODO: use on all other packages
 // TODO: Unify with core
 
 /* eslint-disable no-console */
@@ -23,7 +21,7 @@ async function includeFileInBuild(file) {
  * That package.json contains information about esm for bundlers so that imports
  * like import Typography from '@mui/material/Typography' are tree-shakeable.
  *
- * It also tests that an this import can be used in TypeScript by checking
+ * It also tests that this import can be used in TypeScript by checking
  * if an index.d.ts is present at that path.
  * @param {object} param0
  * @param {string} param0.from
@@ -155,14 +153,20 @@ async function run() {
   try {
     const packageData = await createPackageFile();
 
-    await Promise.all(
-      [
-        // use enhanced readme from workspace root for `@mui/material`
-        packageData.name === '@mui/material' ? '../../README.md' : './README.md',
-        '../../CHANGELOG.md',
-        // '../../LICENSE',
-      ].map((file) => includeFileInBuild(file)),
-    );
+    const filesToCopy = [
+      // TODO: Improve if we want to use the core `copy-files.js` file
+      // use enhanced readme from workspace root for `@mui/material`
+      './README.md',
+      packageData.name.includes('grid') ? '../../../CHANGELOG.md' : '../../CHANGELOG.md',
+      // '../../LICENSE',
+    ];
+
+    // Be sure to replicate this behavior if unifying with the core
+    if (packageData.name === '@mui/x-license-pro') {
+      filesToCopy.push('./bin');
+    }
+
+    await Promise.all(filesToCopy.map((file) => includeFileInBuild(file)));
 
     await addLicense(packageData);
 

@@ -44,7 +44,7 @@ A filter item represents a filtering rule and is composed of several elements:
 
 - `filterItem.columnField`: the field on which we want to apply the rule.
 - `filterItem.value`: the value to look for.
-- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the .
+- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
 - `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)): only useful when multiple filters are used.
 
 **Note**: Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
@@ -273,7 +273,7 @@ You can customize the rendering of the filter panel as shown in [the component s
 ### Customize the filter panel content
 
 The customization of the filter panel content can be performed by passing props to the default `<GridFilterPanel />` component.
-The available props allow to override:
+The available props allow overriding:
 
 - The `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
 - The order of the column selector (can be `"asc"` or `"desc"`)
@@ -328,7 +328,7 @@ However, it can be implemented as in the demo below.
 
 {{"demo": "FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state)
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state/#access-the-state)
 
 ## API
 

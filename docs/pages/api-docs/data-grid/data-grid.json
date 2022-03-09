@@ -38,7 +38,10 @@
     "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ preventCommitWhileValidating?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+      }
     },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
@@ -206,6 +209,7 @@
     "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
+    "FilterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
     "GroupingCriteriaCollapseIcon": {
       "default": "GridExpandMoreIcon",
@@ -241,6 +245,7 @@
       "cell--textRight",
       "cell--withRenderer",
       "cell",
+      "cellContent",
       "cellCheckbox",
       "checkboxInput",
       "columnHeader--alignCenter",
@@ -251,12 +256,14 @@
       "columnHeader--numeric",
       "columnHeader--sortable",
       "columnHeader--sorted",
+      "columnHeader--filtered",
       "columnHeader",
       "columnHeaderCheckbox",
       "columnHeaderDraggableContainer",
       "columnHeaderDropZone",
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
+      "columnHeaderTitleContainerContent",
       "columnHeaders",
       "columnHeadersInner",
       "columnHeadersInner--scrollable",
@@ -298,6 +305,7 @@
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",
+      "virtualScrollerContent--overflowed",
       "virtualScrollerRenderZone",
       "pinnedColumns",
       "pinnedColumns--left",
@@ -309,6 +317,7 @@
       "row--editable",
       "row--editing",
       "row--dragging",
+      "row--lastVisible",
       "row",
       "rowDraggableContainer",
       "rowCount",
@@ -327,6 +336,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-data-grid/src/DataGrid.tsx",
+  "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
   "demos": "<ul><li><a href=\"/components/data-grid#mit-version\">DataGrid</a></li></ul>"
 }

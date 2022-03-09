@@ -181,7 +181,7 @@ interface GroupingCellWithLazyLoadingProps extends GridRenderCellParams {
  * But base the amount of children on a `row.descendantCount` property rather than on the internal lookups.
  */
 const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) => {
-  const { id, field, rowNode, row, hideDescendantCount } = props;
+  const { id, field, rowNode, row, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -226,7 +226,7 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
         )}
       </div>
       <span>
-        {rowNode.groupingKey}
+        {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
         {!hideDescendantCount && row.descendantCount > 0
           ? ` (${row.descendantCount})`
           : ''}

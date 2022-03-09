@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { GridApi, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import {
+  GridApi,
+  DataGridProProps,
+  useGridApiRef,
+  DataGridPro,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -57,7 +64,12 @@ describe('<DataGridPro /> - Row Editing', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPro
+          {...baselineProps}
+          apiRef={apiRef}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+          {...props}
+        />
       </div>
     );
   };
@@ -200,7 +212,10 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should mark fields as invalid when an object with error is returned', async () => {
-    const preProcessEditCellProps = ({ props }) => ({ ...props, error: true });
+    const preProcessEditCellProps: GridColDef['preProcessEditCellProps'] = (params) => ({
+      ...params.props,
+      error: true,
+    });
     render(
       <TestCase
         editMode="row"
@@ -224,7 +239,8 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should mark fields as invalid when a promise with error is returned', async () => {
-    const preProcessEditCellProps = ({ props }) => Promise.resolve({ ...props, error: true });
+    const preProcessEditCellProps: GridColDef['preProcessEditCellProps'] = (params) =>
+      Promise.resolve({ ...params.props, error: true });
     render(
       <TestCase
         editMode="row"
