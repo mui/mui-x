@@ -455,9 +455,7 @@ const StyledDataGridPro = styled(DataGridPro)({
 export function EditRowsControl() {
   const apiRef = useGridApiRef();
 
-  const [selectedCell, setSelectedCell] = React.useState<[string, string, any] | null>(
-    null,
-  );
+  const [selectedCell, setSelectedCell] = React.useState<[string, string, any] | null>(null);
   const [isEditable, setIsEditable] = React.useState<boolean>(false);
   const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
 

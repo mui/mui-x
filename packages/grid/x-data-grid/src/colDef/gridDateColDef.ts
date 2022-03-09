@@ -3,7 +3,7 @@ import { getGridDateOperators } from './gridDateOperators';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
 import { GridColTypeDef } from '../models/colDef/gridColDef';
 import { renderEditDateCell } from '../components/cell/GridEditDateCell';
-import {GridValueFormatterParams} from "../models/params/gridCellParams";
+import { GridValueFormatterParams } from '../models/params/gridCellParams';
 
 export function gridDateFormatter({ value }: GridValueFormatterParams<Date | string>) {
   if (value instanceof Date) {

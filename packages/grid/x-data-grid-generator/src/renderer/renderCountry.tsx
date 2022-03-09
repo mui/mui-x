@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
-import { CountryIsoOption } from "../services/static-data";
+import { CountryIsoOption } from '../services/static-data';
 
 interface CountryProps {
-  value: CountryIsoOption
+  value: CountryIsoOption;
 }
 
 const Country = React.memo(function Country(props: CountryProps) {
