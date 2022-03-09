@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { GridCellParams } from '../models/params/gridCellParams';
 
-const TestRenderCellParams = () => {
+const RenderCellParamsExplicitTyping = () => {
   return (
     <DataGrid
       rows={[]}
@@ -45,7 +45,7 @@ const TestRenderCellParams = () => {
   );
 };
 
-const TestCellParamsValue = () => {
+const CellParamsValue = () => {
   return (
     <DataGrid
       rows={[]}
@@ -61,7 +61,7 @@ const TestCellParamsValue = () => {
   );
 };
 
-const TestCellParamsRow = () => {
+const CellParamsRow = () => {
   return (
     <DataGrid
       rows={[]}
@@ -77,7 +77,7 @@ const TestCellParamsRow = () => {
   );
 };
 
-const TestCellParamsFormattedValue = () => {
+const CellParamsFormattedValue = () => {
   return (
     <DataGrid
       rows={[]}

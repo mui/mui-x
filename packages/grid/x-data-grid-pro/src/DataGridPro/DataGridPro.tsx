@@ -9,6 +9,7 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   GridContextProvider,
+  GridValidRowModel,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../components/Watermark';
@@ -54,7 +55,11 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   );
 });
 
-export const DataGridPro = React.memo(DataGridProRaw);
+type DataGridProComponent = <R extends GridValidRowModel>(
+  props: DataGridProProps<R> & React.RefAttributes<HTMLDivElement>,
+) => JSX.Element;
+
+export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
 DataGridProRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -322,7 +327,8 @@ DataGridProRaw.propTypes = {
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
    * Note that all paths must contain at least one element.
-   * @param {GridRowModel} row The row from which we want the path.
+   * @template R
+   * @param {R} row The row from which we want the path.
    * @returns {string[]} The path to the row.
    */
   getTreeDataPath: PropTypes.func,

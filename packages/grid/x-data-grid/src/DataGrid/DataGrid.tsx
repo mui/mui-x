@@ -14,6 +14,7 @@ import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
+import { GridValidRowModel } from '@mui/x-data-grid/models';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
@@ -38,7 +39,11 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   );
 });
 
-export const DataGrid = React.memo(DataGridRaw);
+type DataGridComponent = <R extends GridValidRowModel>(
+  props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
+) => JSX.Element;
+
+export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------

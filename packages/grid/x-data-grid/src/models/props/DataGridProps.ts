@@ -8,7 +8,7 @@ import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
-import { GridRowIdGetter, GridRowsProp } from '../gridRows';
+import { GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
@@ -33,10 +33,10 @@ export interface GridExperimentalFeatures {
 /**
  * The props users can give to the `DataGrid` component.
  */
-export type DataGridProps = Omit<
+export type DataGridProps<R extends GridValidRowModel = any> = Omit<
   Partial<DataGridPropsWithDefaultValues> &
     DataGridPropsWithComplexDefaultValueBeforeProcessing &
-    DataGridPropsWithoutDefaultValue,
+    DataGridPropsWithoutDefaultValue<R>,
   DataGridForcedPropsKey
 > & {
   pagination?: true;
@@ -305,7 +305,8 @@ export interface DataGridPropsWithDefaultValues {
 /**
  * The `DataGrid` props with no default value.
  */
-export interface DataGridPropsWithoutDefaultValue extends CommonProps {
+export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
+  extends CommonProps {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    * TODO: Remove `@internal` when opening `apiRef` to Community plan
@@ -340,13 +341,13 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
    */
-  getCellClassName?: (params: GridCellParams) => string;
+  getCellClassName?: (params: GridCellParams<any, R>) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {string} The CSS class to apply to the row.
    */
-  getRowClassName?: (params: GridRowParams) => string;
+  getRowClassName?: (params: GridRowParams<R>) => string;
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
@@ -358,19 +359,19 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {JSX.Element} The row detail element.
    */
-  getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
+  getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
   /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
-  isCellEditable?: (params: GridCellParams) => boolean;
+  isCellEditable?: (params: GridCellParams<any, R>) => boolean;
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
-  isRowSelectable?: (params: GridRowParams) => boolean;
+  isRowSelectable?: (params: GridRowParams<R>) => boolean;
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
@@ -630,7 +631,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: GridColumns;
+  columns: GridColumns<R>;
   /**
    * An error that will turn the grid into its error state and display the error component.
    */
@@ -638,7 +639,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Return the id of a given [[GridRowModel]].
    */
-  getRowId?: GridRowIdGetter;
+  getRowId?: GridRowIdGetter<R>;
   /**
    * If `true`, a  loading overlay is displayed.
    */
@@ -650,7 +651,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: GridRowsProp;
+  rows: GridRowsProp<R>;
   /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
