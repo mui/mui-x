@@ -4,7 +4,7 @@
 
 ### Data
 
-First, let see how the filtering is saved in the state. Here are the types of the filter model. It is made of a `linkOperator`, and a list of items. Each item corresponds to a line in the filtering panel. Each item correspond to a line in the filter panel.
+First, let's see how the filtering is saved in the state. Here are the types of the filter model. It is made of a `linkOperator`, and a list of items. Each item corresponds to a line in the filtering panel. Each item corresponds to a line in the filter panel.
 
 ```ts
 interface GridFilterModel {
@@ -33,6 +33,6 @@ All the components of the filter panel are in `components/panel/filterPanel`.
 The component tree structure is organized as follow:
 The `<GridFilterPanel/>` renders a `<GridFilterForm/>` for each `item` of the filter model.
 The input component is provided by the developers.
-Default ones are defined in `models/colDef/` files ending by "Operators" such as `gridSingleSelectOperators.ts`.
+Default ones are defined in `x-data-grid/scr/colDef/` files ending by "Operators" such as `gridSingleSelectOperators.ts`.
 
 ## Technical dept and tricky points
