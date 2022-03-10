@@ -87,12 +87,7 @@ async function main() {
           this.timeout(0);
         }
 
-        if (
-          [
-            '/docs-components-data-grid-overview/DataGridProDemo',
-            '/docs-components-data-grid-sorting/FullyCustomSortComparator',
-          ].includes(pathURL)
-        ) {
+        if (pathURL === '/docs-components-data-grid-overview/DataGridProDemo') {
           this.timeout(6000);
         }
 
@@ -106,16 +101,10 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
-        const isFilteringDemo =
+        if (
           pathURL.startsWith('/docs-components-data-grid-filtering') &&
-          // These cases don't render content
-          !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL);
-        const isSortingDemo =
-          pathURL.startsWith('/docs-components-data-grid-sorting') &&
-          // In this case country column is not visible
-          !/ExtendedSortComparator/.test(pathURL);
-
-        if (isFilteringDemo || isSortingDemo) {
+          !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL) // These cases don't render content
+        ) {
           // Wait for the flags to load
           await page.waitForResponse((response) =>
             response.url().startsWith('https://flagcdn.com'),
