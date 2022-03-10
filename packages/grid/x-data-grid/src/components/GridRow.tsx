@@ -23,7 +23,7 @@ import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
-import { useCurrentPageRows } from '../hooks/utils/useCurrentPageRows';
+import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
@@ -112,13 +112,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
-  const currentPage = useCurrentPageRows(apiRef, rootProps);
+  const currentPage = useGridVisibleRows(apiRef, rootProps);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
     hasScrollY: false,
   };
-
+  // TODO: remove sortModel and treeDepth checks once row reorder is compatible
   const isRowDraggable = !rootProps.disableRowReorder && !sortModel.length && treeDepth === 1;
 
   const ownerState = {
@@ -334,7 +334,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
       onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
       onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
-      // TODO: remove sortModel check once row reorder is sorting compatible
       draggable={isRowDraggable}
       {...draggableEventHandlers}
       {...other}
