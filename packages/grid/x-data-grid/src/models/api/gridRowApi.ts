@@ -48,9 +48,9 @@ export interface GridRowApi {
    */
   setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
   /**
-   * Gets the index of a row relative to the rows that are visible in the current page.
+   * Gets the index of a row relative to the rows that are reachable by scroll.
    * @param {GridRowId} id The row id.
    * @returns {number} The index of the row.
    */
-  getRowIndexRelativeToCurrentPage: (id: GridRowId) => number;
+  getRowIndexRelativeToVisibleRows: (id: GridRowId) => number;
 }
