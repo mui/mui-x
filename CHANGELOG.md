@@ -41,6 +41,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Initialize remaining states before feature hooks (#4036) @m4theushw
 - [core] Merge `page` and `pageSize` state initializer into a single `pagination` state initializer (#4087) @flaviendelangle
 - [core] Prepare `yarn docs:api:build` scripts for multi packages support (#4111) @flaviendelangle
+- [core] Upgrade `@mui/monorepo` (#4149) @cherniavskii
 - [core] Use `buildWarning` and `wrapWithWarningOnCall` for deprecated methods and wrong usages (#4056) @flaviendelangle
 - [test] Make focus state out-of-sync warning opt-in (#4129) @m4theushw
 - [test] Only test custom input keyboard event in edit mode (#4075) @alexfauquette
