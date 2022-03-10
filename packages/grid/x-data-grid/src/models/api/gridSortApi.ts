@@ -53,6 +53,7 @@ export interface GridSortApi {
    * The index is based on the sorted but unfiltered row list.
    * @param {GridRowId} id The `GridRowId` of the row.
    * @returns {number} The index of the row.
+   * @deprecated Use `getRowIndexRelativeToCurrentPage` instead.
    */
   getRowIndex: (id: GridRowId) => number;
 }

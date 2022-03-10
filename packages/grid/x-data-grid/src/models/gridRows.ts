@@ -82,7 +82,16 @@ export type GridRowsLookup<R extends GridValidRowModel = any> = Record<GridRowId
  */
 export type GridRowId = string | number;
 
-export type GridRowEntry<R extends GridValidRowModel = any> = { id: GridRowId; model: R };
+export interface GridRowEntry<R extends GridValidRowModel = any> {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * The row model.
+   */
+  model: R;
+}
 
 /**
  * The function to retrieve the id of a [[GridRowModel]].

@@ -16,6 +16,7 @@ import {
   DataGridPro,
   DataGridProProps,
   GridApi,
+  gridFocusCellSelector,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { getData } from 'storybook/src/data/data-service';
@@ -710,7 +711,7 @@ describe('<DataGridPro /> - Rows', () => {
 
       fireEvent.click(getCell(0, 0));
       setProps({ rows: baselineProps.rows.slice(1) });
-      expect(apiRef.current.state.focus.cell).to.equal(null);
+      expect(gridFocusCellSelector(apiRef)).to.equal(null);
     });
 
     it('should not reset focus when removing a row not containing the focus cell', () => {
@@ -719,7 +720,7 @@ describe('<DataGridPro /> - Rows', () => {
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
       setProps({ rows: baselineProps.rows.slice(1) });
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
@@ -731,7 +732,7 @@ describe('<DataGridPro /> - Rows', () => {
       fireEvent.mouseUp(cell);
       fireEvent.click(cell);
       fireEvent.keyDown(cell, { key: 'a' });
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
@@ -741,13 +742,13 @@ describe('<DataGridPro /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.mouseUp(getCell(2, 1));
       fireEvent.click(getCell(2, 1));
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[2].id,
         field: baselineProps.columns[1].field,
       });
@@ -757,12 +758,12 @@ describe('<DataGridPro /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.click(document.body);
-      expect(apiRef.current.state.focus.cell).to.deep.equal(null);
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal(null);
     });
 
     it('should publish "cellFocusOut" when clicking outside the focused cell', () => {
