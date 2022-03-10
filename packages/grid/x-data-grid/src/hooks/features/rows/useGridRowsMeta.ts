@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -45,7 +45,7 @@ export const useGridRowsMeta = (
   const filterState = useGridSelector(apiRef, gridFilterStateSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const sortingState = useGridSelector(apiRef, gridSortingStateSelector);
-  const currentPage = useCurrentPageRows(apiRef, props);
+  const currentPage = useGridVisibleRows(apiRef, props);
 
   const hydrateRowsMeta = React.useCallback(() => {
     apiRef.current.setState((state) => {
@@ -75,7 +75,7 @@ export const useGridRowsMeta = (
         const initialHeights: Record<string, number> = { base: baseRowHeight };
 
         if (getRowSpacing) {
-          const index = apiRef.current.getRowIndexRelativeToCurrentPage(row.id);
+          const index = apiRef.current.getRowIndexRelativeToVisibleRows(row.id);
 
           const spacing = getRowSpacing({
             ...row,

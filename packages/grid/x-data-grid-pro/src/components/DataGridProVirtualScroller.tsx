@@ -253,7 +253,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       const content = detailPanelsContent[id];
 
       // Check if the id exists in the current page
-      const rowIndex = apiRef.current.getRowIndexRelativeToCurrentPage(id);
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
       const exists = rowIndex !== undefined;
 
       if (React.isValidElement(content) && exists) {
