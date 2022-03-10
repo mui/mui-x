@@ -118,6 +118,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     hasScrollX: false,
     hasScrollY: false,
   };
+
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
   const isRowDraggable = !rootProps.disableRowReorder && !sortModel.length && treeDepth === 1;
 
