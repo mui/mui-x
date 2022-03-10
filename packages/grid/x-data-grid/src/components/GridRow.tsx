@@ -219,7 +219,7 @@ function GridRow(props: GridRowProps) {
       ...apiRef.current.getRowParams(rowId),
       isFirstVisible: indexRelativeToCurrentPage === 0,
       isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
-      indexRelatedToFilteredRows: index,
+      indexRelativeToExpandedRows: index,
       indexRelativeToCurrentPage,
     };
 

@@ -39,11 +39,12 @@ interface GridRowVisibilityParams {
   isLastVisible: boolean;
   /**
    * Index of the row in the whole sorted and filtered dataset.
+   * If some rows have children, this value only counts the expanded children.
    */
-  indexRelatedToFilteredRows: number;
+  indexRelativeToExpandedRows: number;
   /**
    * Index of the row in the current page.
-   * If the pagination is disabled, this value will be equal to the `fromFilteredRows` value.
+   * If the pagination is disabled, this value will be equal to the `indexRelativeToExpandedRows` value.
    */
   indexRelativeToCurrentPage: number;
 }
