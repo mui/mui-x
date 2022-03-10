@@ -351,13 +351,8 @@ GridRow.propTypes = {
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
-   * @deprecated Use `props.indexes.fromFilteredRows` instead.
    */
   index: PropTypes.number.isRequired,
-  indexes: PropTypes.shape({
-    fromFilteredRows: PropTypes.number.isRequired,
-    fromPageRows: PropTypes.number.isRequired,
-  }).isRequired,
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
   onClick: PropTypes.func,
