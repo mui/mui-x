@@ -23,7 +23,7 @@ import {
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import {
   GridRowsInternalCacheState,
   GridRowInternalCacheValue,
@@ -146,7 +146,7 @@ export const useGridRows = (
 
   const logger = useGridLogger(apiRef, 'useGridRows');
   const rowsCache = React.useRef(apiRef.current.state.rowsCache); // To avoid listing rowsCache as useEffect dep
-  const currentPage = useCurrentPageRows(apiRef, props);
+  const currentPage = useGridVisibleRows(apiRef, props);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef)[id] ?? null,
@@ -307,7 +307,7 @@ export const useGridRows = (
     [apiRef],
   );
 
-  const getRowIndexRelativeToCurrentPage = React.useCallback((id) => lookup[id], [lookup]);
+  const getRowIndexRelativeToVisibleRows = React.useCallback((id) => lookup[id], [lookup]);
 
   const setRowChildrenExpansion = React.useCallback<GridRowApi['setRowChildrenExpansion']>(
     (id, isExpanded) => {
@@ -345,7 +345,7 @@ export const useGridRows = (
     updateRows,
     setRowChildrenExpansion,
     getRowNode,
-    getRowIndexRelativeToCurrentPage,
+    getRowIndexRelativeToVisibleRows,
   };
 
   /**
