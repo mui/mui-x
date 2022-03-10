@@ -343,6 +343,7 @@
   { "name": "GridRowModel", "kind": "TypeAlias" },
   { "name": "GridRowModelUpdate", "kind": "Interface" },
   { "name": "GridRowModes", "kind": "Enum" },
+  { "name": "GridRowOrderChangeParams", "kind": "Interface" },
   { "name": "GridRowParams", "kind": "Interface" },
   { "name": "GridRowProps", "kind": "Interface" },
   { "name": "gridRowReorderDragRowSelector", "kind": "Variable" },

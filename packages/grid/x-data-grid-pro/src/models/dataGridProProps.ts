@@ -205,4 +205,11 @@ export interface DataGridProPropsWithoutDefaultValue
    * @returns {JSX.Element} The row detail element.
    */
   getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
+  /**
+   * Callback fired when a row is being reordered.
+   * @param {GridRowOrderChangeParams} params With all properties from [[GridRowOrderChangeParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowOrderChange?: GridEventListener<GridEvents.rowsScrollEnd>;
 }

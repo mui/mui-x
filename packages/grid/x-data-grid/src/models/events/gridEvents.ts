@@ -268,6 +268,10 @@ enum GridEvents {
    */
   columnOrderChange = 'columnOrderChange',
   /**
+   * Fired when the user ends reordering a row.
+   */
+  rowOrderChange = 'rowOrderChange',
+  /**
    * Fired when the rows are updated.
    * @ignore - do not document.
    */

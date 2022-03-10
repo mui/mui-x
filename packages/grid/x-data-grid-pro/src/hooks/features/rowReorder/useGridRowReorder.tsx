@@ -10,8 +10,10 @@ import {
   CursorCoordinates,
   gridSortModelSelector,
   gridRowTreeDepthSelector,
+  useGridApiOptionHandler,
 } from '@mui/x-data-grid';
 import { GridStateInitializer } from '@mui/x-data-grid/internals';
+import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro/models';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridRowReorderDragRowSelector } from './rowReorderSelector';
@@ -57,7 +59,7 @@ export const rowReorderStateInitializer: GridStateInitializer = (state) => ({
  */
 export const useGridRowReorder = (
   apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'disableRowReorder' | 'classes'>,
+  props: Pick<DataGridProProcessedProps, 'disableRowReorder' | 'onRowOrderChange' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
   const dragRowId = useGridSelector(apiRef, gridRowReorderDragRowSelector);
@@ -153,6 +155,13 @@ export const useGridRowReorder = (
 
         if (hasMovedTop || hasMovedBottom) {
           apiRef.current.setRowIndex(dragRowId, targetRowIndex);
+
+          const rowOrderChangeParams: GridRowOrderChangeParams = {
+            row: apiRef.current.getRow(dragRowId),
+            targetIndex: targetRowIndex,
+            oldIndex: dragRowIndex,
+          };
+          apiRef.current.publishEvent(GridEvents.rowOrderChange, rowOrderChangeParams);
         }
 
         cursorPosition.current = coordinates;
@@ -180,6 +189,14 @@ export const useGridRowReorder = (
       if (event.dataTransfer.dropEffect === 'none') {
         // Accessing params.field may contain the wrong field as header elements are reused
         apiRef.current.setRowIndex(dragRowId, originRowIndex.current!);
+
+        const rowOrderChangeParams: GridRowOrderChangeParams = {
+          row: apiRef.current.getRow(dragRowId),
+          targetIndex: originRowIndex.current!,
+          oldIndex: originRowIndex.current!,
+        };
+        apiRef.current.publishEvent(GridEvents.rowOrderChange, rowOrderChangeParams);
+
         originRowIndex.current = null;
       }
 
@@ -196,4 +213,5 @@ export const useGridRowReorder = (
   useGridApiEventHandler(apiRef, GridEvents.rowDragEnter, handleDragEnter);
   useGridApiEventHandler(apiRef, GridEvents.rowDragOver, handleDragOver);
   useGridApiEventHandler(apiRef, GridEvents.rowDragEnd, handleDragEnd);
+  useGridApiOptionHandler(apiRef, GridEvents.rowOrderChange, props.onRowOrderChange);
 };
