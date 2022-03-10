@@ -175,6 +175,7 @@ DataGridRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     preventCommitWhileValidating: PropTypes.bool,
+    warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
    * Filtering can be processed on the server or client-side.

@@ -61,7 +61,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ preventCommitWhileValidating?: bool, rowGrouping?: bool }"
+        "description": "{ preventCommitWhileValidating?: bool, rowGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -311,6 +311,7 @@
       "columnHeader--numeric",
       "columnHeader--sortable",
       "columnHeader--sorted",
+      "columnHeader--filtered",
       "columnHeader",
       "columnHeaderCheckbox",
       "columnHeaderDraggableContainer",
