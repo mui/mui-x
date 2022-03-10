@@ -23,6 +23,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - [DataGrid] Display column's filter icon if a filter is applied (#4120) @DanailH
 - [DataGrid] Do not loop through rows to compute top level rows count when the tree is flat (#4081) @flaviendelangle
+- [DataGrid] Rename API method (#4148) @m4theushw
 - [DataGrid] Support extending built-in column types (#4114) @cherniavskii
 - [DataGridPro] Re-export the components removed by mistake during bundle split (#4134) @flaviendelangle
 
