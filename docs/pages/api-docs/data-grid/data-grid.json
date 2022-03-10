@@ -58,6 +58,7 @@
     "getRowClassName": { "type": { "name": "func" } },
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
+    "getRowSpacing": { "type": { "name": "func" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
@@ -130,6 +131,10 @@
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
+    "rowSpacingType": {
+      "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
+      "default": "\"margin\""
+    },
     "rowsPerPageOptions": {
       "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
       "default": "[25, 50, 100]"

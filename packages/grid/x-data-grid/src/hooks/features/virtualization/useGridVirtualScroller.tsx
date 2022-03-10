@@ -332,7 +332,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
+          index={currentPage.range.firstRowIndex + firstRowToRender + i}
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}
