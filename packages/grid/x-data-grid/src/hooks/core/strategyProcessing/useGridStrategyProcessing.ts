@@ -65,7 +65,9 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
         strategiesCache.current[processorName] = {};
       }
 
-      const groupPreProcessors = strategiesCache.current[processorName]!;
+      const groupPreProcessors = strategiesCache.current[processorName] as {
+        [strategyName: string]: GridStrategyProcessor<any>;
+      };
       const previousProcessor = groupPreProcessors[strategyName];
       if (previousProcessor !== processor) {
         groupPreProcessors[strategyName] = processor;
