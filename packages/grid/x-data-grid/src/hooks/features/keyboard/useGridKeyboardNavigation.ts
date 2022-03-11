@@ -7,7 +7,7 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
-import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
 
@@ -27,7 +27,7 @@ export const useGridKeyboardNavigation = (
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
-  const currentPage = useCurrentPageRows(apiRef, props);
+  const currentPage = useGridVisibleRows(apiRef, props);
 
   const goToCell = React.useCallback(
     (colIndex: number, rowIndex: number) => {
