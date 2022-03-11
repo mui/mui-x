@@ -366,11 +366,10 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(columnProps.valueSetter.lastCall.args[0]).to.deep.equal({
           value: 'USD GBP',
           row: defaultData.rows[0],
-          originalRow: defaultData.rows[0],
         });
       });
 
-      it('should move focus to the cell below when cellToMoveFocus=below', async () => {
+      it('should move focus to the cell below when cellToFocusAfter=below', async () => {
         const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
           const ref = React.useRef<HTMLInputElement>(null);
           React.useLayoutEffect(() => {
@@ -388,12 +387,12 @@ describe('<DataGridPro /> - Cell Editing', () => {
         await apiRef.current.stopCellEditMode({
           id: 0,
           field: 'currencyPair',
-          cellToMoveFocus: 'below',
+          cellToFocusAfter: 'below',
         });
         expect(getCell(1, 1)).toHaveFocus();
       });
 
-      it('should move focus to the cell on the right when cellToMoveFocus=right', async () => {
+      it('should move focus to the cell on the right when cellToFocusAfter=right', async () => {
         const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
           const ref = React.useRef<HTMLInputElement>(null);
           React.useLayoutEffect(() => {
@@ -420,12 +419,12 @@ describe('<DataGridPro /> - Cell Editing', () => {
         await apiRef.current.stopCellEditMode({
           id: 0,
           field: 'currencyPair',
-          cellToMoveFocus: 'right',
+          cellToFocusAfter: 'right',
         });
         expect(getCell(0, 2)).toHaveFocus();
       });
 
-      it('should move focus to the cell on the left when cellToMoveFocus=left', async () => {
+      it('should move focus to the cell on the left when cellToFocusAfter=left', async () => {
         const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
           const ref = React.useRef<HTMLInputElement>(null);
           React.useLayoutEffect(() => {
@@ -452,7 +451,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         await apiRef.current.stopCellEditMode({
           id: 0,
           field: 'price1M',
-          cellToMoveFocus: 'left',
+          cellToFocusAfter: 'left',
         });
         expect(getCell(0, 1)).toHaveFocus();
       });
@@ -659,7 +658,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('cellFocusOut');
       });
 
-      it('should call stopCellEditMode with ignoreModifications=false and cellToMoveFocus=none', () => {
+      it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=none', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         fireEvent.doubleClick(getCell(0, 1));
@@ -668,7 +667,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          cellToMoveFocus: 'none',
+          cellToFocusAfter: 'none',
           ignoreModifications: false,
         });
       });
@@ -700,7 +699,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('escapeKeyDown');
       });
 
-      it('should call stopCellEditMode with ignoreModifications=true and cellToMoveFocus=none', () => {
+      it('should call stopCellEditMode with ignoreModifications=true and cellToFocusAfter=none', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
@@ -712,7 +711,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          cellToMoveFocus: 'none',
+          cellToFocusAfter: 'none',
           ignoreModifications: true,
         });
       });
@@ -732,7 +731,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
       });
 
-      it('should call stopCellEditMode with ignoreModifications=false and cellToMoveFocus=below', () => {
+      it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=below', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
@@ -744,7 +743,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          cellToMoveFocus: 'below',
+          cellToFocusAfter: 'below',
           ignoreModifications: false,
         });
       });
@@ -779,7 +778,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
       });
 
-      it('should call stopCellEditMode with ignoreModifications=false and cellToMoveFocus=right', () => {
+      it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=right', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
@@ -791,7 +790,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          cellToMoveFocus: 'right',
+          cellToFocusAfter: 'right',
           ignoreModifications: false,
         });
       });

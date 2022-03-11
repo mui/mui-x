@@ -161,7 +161,7 @@ interface GridStopCellEditModeParams {
    * To which cell to move focus after finishing editing.
    * @default "none"
    */
-  cellToMoveFocus?: 'none' | 'below' | 'right' | 'left';
+  cellToFocusAfter?: 'none' | 'below' | 'right' | 'left';
 }
 
 /**

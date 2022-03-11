@@ -152,13 +152,13 @@ export const useGridCellEditing = (
     (params) => {
       const { id, field, reason } = params;
 
-      let cellToMoveFocus: 'none' | 'below' | 'right' | 'left' = 'none';
+      let cellToFocusAfter: 'none' | 'below' | 'right' | 'left' = 'none';
       if (reason === GridCellEditStopReasons.enterKeyDown) {
-        cellToMoveFocus = 'below';
+        cellToFocusAfter = 'below';
       } else if (reason === GridCellEditStopReasons.tabKeyDown) {
-        cellToMoveFocus = 'right';
+        cellToFocusAfter = 'right';
       } else if (reason === GridCellEditStopReasons.shiftTabKeyDown) {
-        cellToMoveFocus = 'left';
+        cellToFocusAfter = 'left';
       }
 
       let ignoreModifications = reason === 'escapeKeyDown';
@@ -173,7 +173,7 @@ export const useGridCellEditing = (
         id,
         field,
         ignoreModifications,
-        cellToMoveFocus,
+        cellToFocusAfter,
       });
     },
     [apiRef],
@@ -249,7 +249,7 @@ export const useGridCellEditing = (
 
   const stopCellEditMode = React.useCallback<GridNewCellEditingApi['stopCellEditMode']>(
     async (params) => {
-      const { id, field, ignoreModifications, cellToMoveFocus = 'none' } = params;
+      const { id, field, ignoreModifications, cellToFocusAfter = 'none' } = params;
 
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
@@ -268,7 +268,7 @@ export const useGridCellEditing = (
         }
 
         let rowUpdate = column.valueSetter
-          ? column.valueSetter({ value, row, originalRow: row })
+          ? column.valueSetter({ value, row })
           : { ...row, [field]: value };
 
         if (processRowUpdate) {
@@ -284,14 +284,14 @@ export const useGridCellEditing = (
         }
       }
 
-      if (cellToMoveFocus !== 'none') {
+      if (cellToFocusAfter !== 'none') {
         // TODO Don't fire event and set focus manually here
         apiRef.current.publishEvent(
           GridEvents.cellNavigationKeyDown,
           apiRef.current.getCellParams(id, field),
           {
-            key: cellToMoveFocus === 'below' ? 'Enter' : 'Tab',
-            shiftKey: cellToMoveFocus === 'left',
+            key: cellToFocusAfter === 'below' ? 'Enter' : 'Tab',
+            shiftKey: cellToFocusAfter === 'left',
             preventDefault: () => {},
           } as any,
         );

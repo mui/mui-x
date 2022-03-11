@@ -1,1 +1,1 @@
-<DataGrid rows={rows} columns={columns} />
+<DataGrid {...data} columns={columns} />

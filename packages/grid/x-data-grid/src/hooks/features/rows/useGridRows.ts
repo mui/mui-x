@@ -22,6 +22,7 @@ import {
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import {
   GridRowsInternalCacheState,
   GridRowInternalCacheValue,
@@ -83,14 +84,16 @@ const getRowsStateFromCache = (
 
   const groupingResponse = apiRef.current.unstable_groupRows({ ...value, previousTree });
 
-  const dataTopLevelRowCount = Object.values(groupingResponse.tree).filter(
-    (node) => node.parent == null,
-  ).length;
-  const totalRowCount =
-    rowCount > groupingResponse.ids.length ? rowCount : groupingResponse.ids.length;
-  const totalTopLevelRowCount = rowCount > dataTopLevelRowCount ? rowCount : dataTopLevelRowCount;
+  const dataTopLevelRowCount =
+    groupingResponse.treeDepth === 1
+      ? groupingResponse.ids.length
+      : Object.values(groupingResponse.tree).filter((node) => node.parent == null).length;
 
-  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
+  return {
+    ...groupingResponse,
+    totalRowCount: Math.max(rowCount, groupingResponse.ids.length),
+    totalTopLevelRowCount: Math.max(rowCount, dataTopLevelRowCount),
+  };
 };
 
 export const rowsStateInitializer: GridStateInitializer<
@@ -142,11 +145,23 @@ export const useGridRows = (
 
   const logger = useGridLogger(apiRef, 'useGridRows');
   const rowsCache = React.useRef(apiRef.current.state.rowsCache); // To avoid listing rowsCache as useEffect dep
+  const currentPage = useGridVisibleRows(apiRef, props);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef)[id] ?? null,
     [apiRef],
   );
+
+  const lookup = React.useMemo(
+    () =>
+      currentPage.rows.reduce<Record<GridRowId, number>>((acc, { id }, index) => {
+        acc[id] = index;
+        return acc;
+      }, {}),
+    [currentPage.rows],
+  );
+
+  const getRowIndexRelativeToVisibleRows = React.useCallback((id) => lookup[id], [lookup]);
 
   const throttledRowsChange = React.useCallback(
     (newState: GridRowsInternalCacheState, throttle: boolean) => {
@@ -388,6 +403,7 @@ export const useGridRows = (
     updateRows,
     setRowChildrenExpansion,
     getRowNode,
+    getRowIndexRelativeToVisibleRows,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');

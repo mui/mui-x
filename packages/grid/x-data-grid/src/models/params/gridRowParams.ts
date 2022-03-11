@@ -28,8 +28,24 @@ export interface GridRowParams<R extends GridRowModel = GridRowModel> {
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }
 
+interface GridRowVisibilityParams {
+  /**
+   * Whether this row is the first visible or not.
+   */
+  isFirstVisible: boolean;
+  /**
+   * Whether this row is the last visible or not.
+   */
+  isLastVisible: boolean;
+}
+
 /**
- * Object passed as parameter in the row getRowHeight callback.
+ * Object passed as parameter in the row `getRowClassName` callback prop.
+ */
+export interface GridRowClassNameParams extends GridRowParams, GridRowVisibilityParams {}
+
+/**
+ * Object passed as parameter in the row `getRowHeight` callback prop.
  */
 export interface GridRowHeightParams extends GridRowEntry {
   /**
@@ -43,7 +59,7 @@ export interface GridRowHeightParams extends GridRowEntry {
  */
 export type GridRowHeightReturnValue = number | null | undefined;
 
-export enum GridRowEditStartReasons {
+enum GridRowEditStartReasons {
   enterKeyDown = 'enterKeyDown',
   cellDoubleClick = 'cellDoubleClick',
   printableKeyDown = 'printableKeyDown',
@@ -57,15 +73,17 @@ export interface GridRowEditStartParams<R extends GridRowModel = GridRowModel>
   extends GridRowParams<R> {
   /**
    * Which field triggered this event.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
-  field: string;
+  field?: string;
   /**
    * The reason for this event to be triggered.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
-  reason: GridRowEditStartReasons;
+  reason?: GridRowEditStartReasons;
 }
 
-export enum GridRowEditStopReasons {
+enum GridRowEditStopReasons {
   rowFocusOut = 'rowFocusOut',
   escapeKeyDown = 'escapeKeyDown',
   enterKeyDown = 'enterKeyDown',
@@ -75,10 +93,28 @@ export interface GridRowEditStopParams<R extends GridRowModel = GridRowModel>
   extends GridRowParams<R> {
   /**
    * Which field triggered this event.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
-  field: string;
+  field?: string;
   /**
    * The reason for this event to be triggered.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
-  reason: GridRowEditStopReasons;
+  reason?: GridRowEditStopReasons;
 }
+
+/**
+ * Object passed as parameter in the row `getRowSpacing` callback prop.
+ */
+export interface GridRowSpacingParams extends GridRowEntry, GridRowVisibilityParams {}
+
+/**
+ * The getRowSpacing return value.
+ */
+export interface GridRowSpacing {
+  top?: number;
+  bottom?: number;
+}
+
+// https://github.com/mui/mui-x/pull/3738#discussion_r798504277
+export { GridRowEditStartReasons, GridRowEditStopReasons };

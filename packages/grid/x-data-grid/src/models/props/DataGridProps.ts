@@ -15,7 +15,14 @@ import { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridColumnTypesRecord } from '../colDef';
 import type { GridColumns } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
-import { GridRowHeightParams, GridRowHeightReturnValue, GridRowParams } from '../params';
+import {
+  GridRowHeightParams,
+  GridRowHeightReturnValue,
+  GridRowParams,
+  GridRowSpacing,
+  GridRowSpacingParams,
+  GridRowClassNameParams,
+} from '../params';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
@@ -32,6 +39,11 @@ export interface GridExperimentalFeatures {
    * Enables the new API for cell editing and row editing.
    */
   newEditingApi: boolean;
+  /**
+   * Emits a warning if the cell receives focus without also syncing the focus state.
+   * Only works if NODE_ENV=test.
+   */
+  warnIfFocusStateIsNotSynced: boolean;
 }
 
 /**
@@ -89,7 +101,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   components?: Partial<GridSlotsComponent>;
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText?: Partial<GridLocaleText>;
 }
@@ -267,6 +279,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowsPerPageOptions: number[];
   /**
+   * Sets the type of space between rows added by `getRowSpacing`.
+   * @default "margin"
+   */
+  rowSpacingType: 'margin' | 'border';
+  /**
    * If `true`, the right border of the cells are displayed.
    * @default false
    */
@@ -347,16 +364,22 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   getCellClassName?: (params: GridCellParams) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
-  getRowClassName?: (params: GridRowParams) => string;
+  getRowClassName?: (params: GridRowClassNameParams) => string;
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
    * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
    */
   getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
+  /**
+   * Function that allows to specify the spacing between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row spacing values.
+   */
+  getRowSpacing?: (params: GridRowSpacingParams) => GridRowSpacing;
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -676,6 +699,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   experimentalFeatures?: Partial<GridExperimentalFeatures>;
   /**
    * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    * @param {GridRowModel} newRow Row object with the new values.
    * @param {GridRowModel} oldRow Row object with the old values.
    * @returns {Promise<GridRowModel>} A promise which resolves with the final values to update the row.

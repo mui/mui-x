@@ -171,14 +171,14 @@ export const useGridRowEditing = (
 
   const handleRowEditStart = React.useCallback<GridEventListener<GridEvents.rowEditStart>>(
     (params, event) => {
-      const { id, field, reason } = params as GridRowEditStartParams; // TODO v6: remove cast
+      const { id, field, reason } = params;
       apiRef.current.startRowEditMode({ id, fieldToFocus: field });
 
       if (
         reason === GridRowEditStartReasons.deleteKeyDown ||
         reason === GridRowEditStartReasons.printableKeyDown
       ) {
-        apiRef.current.setEditCellValue({ id, field, value: '' }, event);
+        apiRef.current.setEditCellValue({ id, field: field!, value: '' }, event);
       }
     },
     [apiRef],
@@ -186,7 +186,7 @@ export const useGridRowEditing = (
 
   const handleRowEditStop = React.useCallback<GridEventListener<GridEvents.rowEditStop>>(
     (params) => {
-      const { id, reason, field } = params as GridRowEditStopParams; // TODO v6: remove cast
+      const { id, reason, field } = params;
 
       apiRef.current.unstable_runPendingEditCellValueMutation(id);
 
@@ -348,7 +348,6 @@ export const useGridRowEditing = (
             rowUpdate = column.valueSetter({
               value: fieldProps.value,
               row: rowUpdate,
-              originalRow: row,
             });
           } else {
             rowUpdate[field] = fieldProps.value;

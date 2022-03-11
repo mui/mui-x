@@ -8,18 +8,18 @@ import {
   getSymbolDescription,
   getSymbolJSDocTags,
   linkify,
-  Project,
   resolveExportSpecifier,
   stringifySymbol,
   writePrettifiedFile,
 } from './utils';
+import { Project } from '../getTypeScriptProjects';
 
 interface BuildEventsDocumentationOptions {
   project: Project;
   documentedInterfaces: DocumentedInterfaces;
 }
 
-export default function buildEventsDocumentation(options: BuildEventsDocumentationOptions) {
+export default function buildGridEventsDocumentation(options: BuildEventsDocumentationOptions) {
   const { project, documentedInterfaces } = options;
 
   const gridEventsSymbol = resolveExportSpecifier(project.exports.GridEvents, project);

@@ -408,12 +408,10 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(column1Props.valueSetter.lastCall.args[0]).to.deep.equal({
           value: 'USD GBP',
           row: defaultData.rows[0],
-          originalRow: defaultData.rows[0],
         });
         expect(column2Props.valueSetter.lastCall.args[0]).to.deep.equal({
           value: 1,
           row: { ...defaultData.rows[0], currencyPair: 'USDGBP', _currencyPair: 'USD GBP' }, // Ensure that the row contains the values from the previous setter
-          originalRow: defaultData.rows[0],
         });
       });
 

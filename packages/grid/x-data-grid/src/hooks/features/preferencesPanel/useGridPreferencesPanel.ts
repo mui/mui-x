@@ -2,25 +2,25 @@ import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
 import { GridPreferencesPanelApi } from '../../../models/api/gridPreferencesPanelApi';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const preferencePanelStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'initialState'>
+> = (state, props) => ({
+  ...state,
+  preferencePanel: props.initialState?.preferencePanel ?? { open: false },
+});
 
 /**
  * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
  */
-export const useGridPreferencesPanel = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'initialState'>,
-): void => {
+export const useGridPreferencesPanel = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    preferencePanel: props.initialState?.preferencePanel ?? { open: false },
-  }));
   const hideTimeout = React.useRef<any>();
   const immediateTimeout = React.useRef<any>();
 
