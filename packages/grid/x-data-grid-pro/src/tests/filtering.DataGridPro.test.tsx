@@ -212,7 +212,11 @@ describe('<DataGridPro /> - Filter', () => {
     expect(onFilterModelChange.callCount).to.equal(0);
     expect(getColumnValues()).to.deep.equal([]);
 
-    const select = screen.queryByRole('combobox', { name: 'Logic operator' });
+    // The first combo is hidden and we include hidden elements to make the query faster
+    // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
+    const select = screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
+      isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
+    ];
     fireEvent.change(select, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(getColumnValues()).to.deep.equal([]);
