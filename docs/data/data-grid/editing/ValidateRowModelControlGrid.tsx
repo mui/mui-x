@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const VISIBLE_FIELDS = ['name', 'email', 'dateCreated', 'lastLogin'];
+const VISIBLE_FIELDS = ['name', 'email', 'dateCreated', 'lastUpdated'];
 
 function validateEmail(email) {
   const re =
