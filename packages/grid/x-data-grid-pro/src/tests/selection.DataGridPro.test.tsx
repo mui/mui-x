@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getActiveCell, getCell, getColumnValues, getRows } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import {
@@ -23,11 +23,6 @@ function getSelectedRowIds() {
         row.querySelector(`[role="cell"][data-colindex="${hasCheckbox ? 1 : 0}"]`)!.textContent,
       ),
     );
-}
-
-function fireClickEvent(cell: HTMLElement, event?: Partial<KeyboardEvent>) {
-  fireEvent.mouseUp(cell, event);
-  fireEvent.click(cell, event);
 }
 
 describe('<DataGridPro /> - Selection', () => {
@@ -398,51 +393,6 @@ describe('<DataGridPro /> - Selection', () => {
       const onSelectionModelChange = spy();
       render(<TestCase onSelectionModelChange={onSelectionModelChange} selectionModel={[0, 1]} />);
       expect(onSelectionModelChange.callCount).to.equal(0);
-    });
-  });
-
-  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
-  describe('keyboard navigation', () => {
-    it('should select row below when pressing "ArrowDown" + shiftKey', () => {
-      render(<TestCase />);
-      fireClickEvent(getCell(2, 1));
-      expect(getSelectedRowIds()).to.deep.equal([2]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown', shiftKey: true });
-      expect(getSelectedRowIds()).to.deep.equal([2, 3]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
-      expect(getSelectedRowIds()).to.deep.equal([2, 3]); // Already on the last row
-    });
-
-    it('should unselect previous row when pressing "ArrowDown" + shiftKey', () => {
-      render(<TestCase />);
-      fireClickEvent(getCell(3, 1));
-      expect(getSelectedRowIds()).to.deep.equal([3]);
-      fireClickEvent(getCell(1, 1), { shiftKey: true });
-      expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown', shiftKey: true });
-      expect(getSelectedRowIds()).to.deep.equal([2, 3]);
-    });
-
-    it('should not unselect row above when pressing "ArrowDown" + shiftKey', () => {
-      render(<TestCase />);
-      fireClickEvent(getCell(1, 1));
-      expect(getSelectedRowIds()).to.deep.equal([1]);
-      fireClickEvent(getCell(2, 1), { shiftKey: true });
-      expect(getSelectedRowIds()).to.deep.equal([1, 2]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown', shiftKey: true });
-      expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
-      expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]); // Already on the last row
-    });
-
-    it('should unselect previous row row when pressing "ArrowUp" + shiftKey', () => {
-      render(<TestCase />);
-      fireClickEvent(getCell(2, 1));
-      expect(getSelectedRowIds()).to.deep.equal([2]);
-      fireClickEvent(getCell(3, 1), { shiftKey: true });
-      expect(getSelectedRowIds()).to.deep.equal([2, 3]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp', shiftKey: true });
-      expect(getSelectedRowIds()).to.deep.equal([2]);
     });
   });
 });

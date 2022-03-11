@@ -23,6 +23,11 @@ export const useGridKeyboard = (apiRef: React.MutableRefObject<GridApiCommunity>
         return;
       }
 
+      if (event.key === ' ' && event.shiftKey) {
+        // This is a select event, so it's handled by the selection hook
+        return;
+      }
+
       if (isNavigationKey(event.key)) {
         apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, cellParams, event);
       }

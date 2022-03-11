@@ -414,38 +414,44 @@ export const useGridSelection = (
           return;
         }
 
-        const newCellIndex = apiRef.current.getRowIndexRelativeToVisibleRows(focusCell.id);
-        const previousCellIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
-        const isPreviousCellSelected = apiRef.current.isRowSelected(focusCell.id);
+        const isPreviousRowSelected = apiRef.current.isRowSelected(focusCell.id);
+        if (canHaveMultipleSelection) {
+          const newRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(focusCell.id);
+          const previousRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
 
-        let start: number;
-        let end: number;
+          let start: number;
+          let end: number;
 
-        if (newCellIndex > previousCellIndex) {
-          if (isPreviousCellSelected) {
-            // We are navigating to the bottom of the page and adding selected rows
-            start = previousCellIndex;
-            end = newCellIndex - 1;
+          if (newRowIndex > previousRowIndex) {
+            if (isPreviousRowSelected) {
+              // We are navigating to the bottom of the page and adding selected rows
+              start = previousRowIndex;
+              end = newRowIndex - 1;
+            } else {
+              // We are navigating to the bottom of the page and removing selected rows
+              start = previousRowIndex;
+              end = newRowIndex;
+            }
+          } else if (isPreviousRowSelected) {
+            // We are navigating to the top of the page and removing selected rows
+            start = newRowIndex + 1;
+            end = previousRowIndex;
           } else {
-            // We are navigating to the bottom of the page and removing selected rows
-            start = previousCellIndex;
-            end = newCellIndex;
+            // We are navigating to the top of the page and adding selected rows
+            start = newRowIndex;
+            end = previousRowIndex - 1;
           }
-        } else if (isPreviousCellSelected) {
-          // We are navigating to the top of the page and removing selected rows
-          start = newCellIndex + 1;
-          end = previousCellIndex;
-        } else {
-          // We are navigating to the top of the page and adding selected rows
-          start = newCellIndex;
-          end = previousCellIndex - 1;
-        }
 
-        const rowsBetweenStartAndEnd = visibleRows.rows.slice(start, end + 1).map((row) => row.id);
-        apiRef.current.selectRows(rowsBetweenStartAndEnd, !isPreviousCellSelected);
+          const rowsBetweenStartAndEnd = visibleRows.rows
+            .slice(start, end + 1)
+            .map((row) => row.id);
+          apiRef.current.selectRows(rowsBetweenStartAndEnd, !isPreviousRowSelected);
+        } else {
+          apiRef.current.selectRow(focusCell.id, !isPreviousRowSelected, true);
+        }
       }
     },
-    [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows],
+    [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows, canHaveMultipleSelection],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, removeOutdatedSelection);
