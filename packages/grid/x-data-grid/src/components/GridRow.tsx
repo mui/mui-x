@@ -27,7 +27,7 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelection
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GridRenderEditCellParams } from '../models';
 
-export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface GridRowProps {
   rowId: GridRowId;
   selected: boolean;
   /**
@@ -84,7 +84,7 @@ const EmptyCell = ({ width, height }: { width: number; height: number }) => {
   return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 };
 
-function GridRow(props: GridRowProps) {
+function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const {
     selected,
     rowId,
@@ -355,10 +355,6 @@ GridRow.propTypes = {
   index: PropTypes.number.isRequired,
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
-  onMouseEnter: PropTypes.func,
-  onMouseLeave: PropTypes.func,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.number.isRequired,
