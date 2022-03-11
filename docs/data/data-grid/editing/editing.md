@@ -28,8 +28,9 @@ You can make a column editable by enabling the `editable` property in its [colum
 <DataGrid columns={[{ field: 'name', editable: true }]} />
 ```
 
-This will enable the cell editing for the specified column.
-Note that there is also a row editing mode accessible by setting the `editMode` prop to `"row"`.
+This will allow to edit any cell from the specified column.
+By default, the cell editing mode is assumed, meaning that only a single cell can have its mode equals to `"edit"` each time.
+To edit simultaneously all cells of a row, you can use the row editing mode, accessible by setting the `editMode` prop to `"row"`.
 For more information, see the dedicated [section](#row-editing).
 
 The following demo shows an example of how to make the Name column editable.
@@ -39,13 +40,13 @@ Play with it by double-clicking or pressing <kbd class="key">Enter</kbd> in any 
 
 ### Start editing
 
-These are the ways to start editing a cell (or row if `editMode="row"`):
+There are a few ways to start editing a cell (or a row if `editMode="row"`):
 
 - Double-clicking a cell.
 - Pressing <kbd class="key">Enter</kbd>, <kbd class="key">Backspace</kbd> or <kbd class="key">Delete</kbd>.
-  Note that the existing content in the cell is first cleared if <kbd class="key">Backspace</kbd> or <kbd class="key">Delete</kbd> is pressed.
+  Note that when you press the <kbd class="key">Backspace</kbd> or <kbd class="key">Delete</kbd> key, any existing content in the cell will be deleted.
 - Pressing any printable key, for instance `a`, `E`, `0`, or `$`.
-- Calling `apiRef.current.startCellEditMode` passing the ID and field of the cell.
+- Calling `apiRef.current.startCellEditMode` passing the row ID and column field of the cell to edit.
 
   ```tsx
   apiRef.current.startCellEditMode({ id: 1, field: 'name' });
@@ -65,7 +66,7 @@ Once a cell is in edit mode, any of the following interactions will stop the edi
 - Pressing <kbd class="key">Tab</kbd> or <kbd class="key">Enter</kbd> saves the changes and stops the edit mode.
   In the case of <kbd class="key">Enter</kbd> it will also move the focus to the cell immediatelly below the current one.
 - Clicking outside the cell (or row) being edited saves the new value and stops the edit mode.
-- Calling `apiRef.current.stopCellEditMode({ id, field })` passing the ID and field of the cell.
+- Calling `apiRef.current.stopCellEditMode({ id, field })` passing the row ID and column field of the cell to edit.
 
   ```tsx
   apiRef.current.stopCellEditMode({ id: 1, field: 'name' });
@@ -92,10 +93,10 @@ Once a cell is in edit mode, any of the following interactions will stop the edi
   });
   ```
 
-### Control cell editability
+### Disable editing in specific cells within a row
 
 The `editable` property controls which cells are editable at the column level.
-To give flexibility, the `isCellEditable` callback prop allows to go further and define which cells are editable in each row.
+To give flexibility, the `isCellEditable` callback prop allows to define which cells are editable in each row.
 It is called with a [`GridCellParams`](/api/data-grid/grid-cell-params/) object and must return `true` if the cell is editable, or `false` if not.
 
 In the following demo, only the rows with an even `Age` value are editable.
@@ -107,7 +108,7 @@ The editable cells have a green background for better visibility.
 
 A value parser allows to modify the value entered by the user.
 It can be used, for instance, to convert the value sent by the edit component to a different format.
-To define a value parser, pass a function to the `valueParser` property in the column definition:
+To do so, use the `valueParser` property of the column definition:
 
 ```tsx
 const columns: GridColDef[] = [
@@ -119,9 +120,9 @@ const columns: GridColDef[] = [
 ];
 ```
 
-In the other hand, a value setter customizes how the row is updated with the new value.
+On the other hand, a value setter customizes how the row is updated with the new value.
 If you are already using a `valueGetter` to extract the value from a nested object, then the `valueSetter` will do the inverse task.
-To define a value setter, pass a function to the `valueSetter` property in the column definition.
+To do so, use the `valueSetter` property of the column definition.
 It will be called with an object containing the new value to be saved and the row where this value belongs to.
 
 ```tsx
@@ -136,7 +137,7 @@ const columns: GridColDef[] = [
 ```
 
 In the following demo, both value parser and value setter were defined for the "Full name" column.
-The value parser converts the value entered to uppercase while the value setter splits the value and saves it correctly into the row object:
+The value parser converts the value entered to uppercase while the value setter splits the value and saves it correctly into the row model:
 
 {{"demo": "ValueParserSetterGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -153,7 +154,7 @@ For convenience, you can also listen to these events using their equivalent prop
 - `onRowEditStart`
 - `onRowEditStop`
 
-The events and props are called with an object contaning the row ID and field that is being edited.
+These events and props are called with an object containing the row ID and column field of the cell that is being edited.
 Also, the object contains a `reason` param specifying which type of interaction caused the event to be fired (e.g. `cellDoubleClick` for when a double-click starts the edit mode).
 
 The following demo prevents stoping the edit mode of a cell when that same cell loses focus by a click outside it.
@@ -178,13 +179,13 @@ The general purpose of this property is to allow to pre-process the props that a
 The `preProcessEditCellProps` callback will be called with an object contaning the following attributes:
 
 - `id`: the row ID
-- `row`: the row object with values before the cell or row entered the edit mode
+- `row`: the row model with values before the cell or row entered the edit mode
 - `props`: the props, containing the value after the value parser, that will be passed to the edit component
 - `hasChanged`: determines if `props.value` is different from the last time this callback was called
 
 One type of pre-processing that can be done with it is data validation.
 To validate the data entered, pass a callback to `preProcessEditCellProps` checking if `props.value` is valid.
-If the new value is invalid, set `props.error` to a truthy value and return the mutated props, as shown in the example below.
+If the new value is invalid, set `props.error` to a truthy value and return the modified props, as shown in the example below.
 When the user tries to save the changed value, if the error attribute is truthy (invalid) the value will not be saved.
 
 ```tsx
@@ -199,18 +200,18 @@ const columns: GridColDef[] = [
 ];
 ```
 
-> ⚠ Mutating `props.value` inside the callback has no effect. To pre-process it, use a [value parser](#value-parser-and-value-setter).
+> ⚠ Changing `props.value` inside the callback has no effect. To pre-process it, use a [value parser](#value-parser-and-value-setter).
 
 The demo below contains an example of server-side data validation.
-The only difference, in comparison to the steps above, is that the callback returns a promise which resolves to the mutated props.
+The only difference, in comparison to the steps above, is that the callback returns a promise which resolves to the modified props.
 Note that the value passed to `props.error` is passed directly to the edit component as the `error` prop.
 While the promise is not resolved, the edit component will receive an `isProcessingProps` prop with value equal to `true`.
 
 {{"demo": "ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 > ⚠ If an interaction that saves and stops editing (e.g. pressing <kbd class="key">Enter</kbd>) occurs while processing the props, the changes made are discarded and the cell will immediatelly exit the edit mode.
-> To avoid losing the changes is important to communitate users about what is happening.
-> You can use the `isProcessingProps` prop to provide feedback while waiting the server to respond.
+> To avoid losing the changes, it is import to provide some feedback to users about the ongoing processing.
+> You can use the `isProcessingProps` prop to show a loader while waiting for the server to respond.
 
 ## Persistence
 
@@ -228,7 +229,7 @@ If while calling `processRowUpdate` you need to cancel the save process, like wh
 The next demo implements the first option.
 Instead of [validating](#validation) while typing, it validates in the server.
 If the new name is empty it will not allow to save and the cell is kept into edit mode.
-Also, it shows that `processRowUpdate` can be used to pre-process the row object that will be saved into the internal state.
+Also, it shows that `processRowUpdate` can be used to pre-process the row model that will be saved into the internal state.
 To leave the edit mode, press <kbd class="key">Escape</kbd> or enter a valid name.
 
 {{"demo": "ServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -247,9 +248,9 @@ The demo also employs validation to prevent entering an empty name.
 
 ## Create your own edit component
 
-Each of the built-in column types provide a equivalent component to edit the value of the cells.
-For custom defined columns or to override the existing components, you can provide a new edit component through the `renderEditCell` property in the column definition.
-This property works in a similar fashion to `renderCell`, rendered while cells are in view mode.
+Each of the built-in column types provide a component to edit the value of the cells.
+For custom column types or to override the existing components, you can provide a new edit component through the `renderEditCell` property in the column definition.
+This property works like the `renderCell` property, which is rendered while cells are in view mode.
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
@@ -266,7 +267,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-The `renderEditCell` property receives all params from `GridRenderEditCellParams`, based on `GridCellParams`.
+The `renderEditCell` property receives all params from `GridRenderEditCellParams`, which extends `GridCellParams`.
 Additionally, the props added during [pre-processing](#validation) are also available in the params.
 From all params, the following one are the most important:
 
@@ -274,8 +275,8 @@ From all params, the following one are the most important:
 - `error`: the error added during validation
 - `isProcessingProps`: whether `preProcessEditCellProps` is being executed or not
 
-Once a new value is entered into the input, it must sent to the grid.
-For this task, pass the row ID, field and the new value to a call to `apiRef.current.setEditCellValue`.
+Once a new value is entered into the input, it must be sent to the grid.
+For this task, pass the row ID, the column field and the new cell value to a call to `apiRef.current.setEditCellValue`.
 The new value will be parsed and validated and the `value` prop will reflect it in the next render.
 
 ```tsx
@@ -292,7 +293,7 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
 }
 ```
 
-The demo below implements a custom edit component, based on [Rating](https://mui.com/components/rating) from MUI Core, for the Rating column.
+The demo below implements a custom edit component, based on [Rating](https://mui.com/components/rating) from `@mui/material`, for the Rating column.
 
 {{"demo": "CustomEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -301,7 +302,7 @@ The demo below implements a custom edit component, based on [Rating](https://mui
 By default, each call to `apiRef.current.setEditCellValue` triggers a new render.
 If the edit component requires the user to type a new value, re-rendering the grid too often will drastically reduce performance.
 One way to avoid that is to debounce the API calls.
-Fortunally, `apiRef.current.setEditCellValue` provides support for debouncing out-of-box by setting the `debounceMs` param to a positive integer.
+To help with that, `apiRef.current.setEditCellValue` handles debouncing out-of-box by setting the `debounceMs` param to a positive integer.
 Once a value, corresponding to the number of milliseconds, is given no matter how many times the API method is called a new render will only occurs after the specifid amount of time has passed.
 
 ```tsx
@@ -309,7 +310,7 @@ apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs: 200 })
 ```
 
 Since now a new render only occurs after some time has passed, the `value` prop will not be updated on each `apiRef.current.setEditCellValue` call.
-To avoid the user to see a frozen UI, the edit component can keep the current value in an internal state and sync it once `value` changes.
+To avoid frozen UIs, the edit component can keep the current value in an internal state and sync it once `value` changes.
 To do that apply the following modifications to your edit compoment.
 
 ```diff
@@ -337,8 +338,8 @@ To do that apply the following modifications to your edit compoment.
 ### With auto-stop
 
 An edit component has an "auto-stop" behavior when it stops the edit mode as soon as the value is changed.
-To picture better imagine an edit component with a combo, created following the normal steps above.
-Usually it requires two clicks to change the value of the cell: one to select a new value and another click outside to save.
+To picture better, imagine an edit component with a combo, created following the steps above.
+By default, it would require two clicks to change the value of the cell: one click to select a new value and another click outside to save.
 This second click can be avoided if the first click also stops the edit mode.
 To create an edit component with auto-stop, call `apiRef.current.stopCellEditMode` after setting the new value.
 Since `apiRef.current.setEditCellValue` may do additional processing, it is necessary to first wait for it to resolve before stopping the edit mode.
@@ -363,12 +364,13 @@ The demo below implements an edit component with auto-stop, based on a native [S
 
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ We don't recommend using edit components in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+> ⚠ We don't recommend using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+> Instead, use the provided stop editing interactions to stop the edit mode.
 
 ## Row editing
 
 Row editing allows to edit all the cells of a row at once.
-It is based on the cell editing, thus everything from this guide applies to it too.
+It is based on the cell editing, so everything written above remains valid.
 To enable it, change the `editMode` prop to `"row"`, then set normally the `editable` property in the definition of the columns that should be editable.
 
 ```tsx
@@ -381,6 +383,7 @@ To [start](#start-editing) and [stop](#stop-editing) editing use the same shortc
 {{"demo": "BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 > ⚠ By design, when changing the value of a cell all `preProcessEditCellProps` callbacks from other columns are also called.
+> This happens to allow conditional validation (explained below) where the value of a cell impacts on the validation status of a another cell in the same row.
 > To only run validation if the value has changed check if the `hasChanged` param is `true`.
 
 ### Conditional validation
@@ -389,7 +392,7 @@ Having all cells of a row in edit mode allows validating a field based on the va
 To do that, start by adding the `preProcessEditCellProps` as explained in the [validation](#validation) section.
 When the callback is called, it will have an additional `otherFieldsProps` param contaning the props from the other fields in the same row.
 Use this param to check if the value from the current column is valid or not.
-Return normally the mutated `props` containing the error.
+Return normally the modified `props` containing the error.
 Once at the least one field has the `error` attribute equals to a truthy value the row will not leave the edit mode.
 
 The following demo requires a value for the "Payment method" column only if the "Is paid?" column was checked.
