@@ -103,7 +103,7 @@ export const useGridSelection = (
   const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection;
   const visibleRows = useGridVisibleRows(apiRef, props);
 
-  const expandRowRangeSelection = React.useCallback(
+  const expandMouseRowRangeSelection = React.useCallback(
     (id: GridRowId) => {
       let endId = id;
       const startId = lastRowToggled.current ?? id;
@@ -112,6 +112,9 @@ export const useGridSelection = (
         const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
         const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
         const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
+        if (startIndex === endIndex) {
+          return;
+        }
         if (startIndex > endIndex) {
           endId = visibleRowIds[endIndex + 1];
         } else {
@@ -330,7 +333,7 @@ export const useGridSelection = (
       }
 
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
-        expandRowRangeSelection(params.id);
+        expandMouseRowRangeSelection(params.id);
       } else {
         handleSingleRowSelection(params.id, event);
       }
@@ -340,7 +343,7 @@ export const useGridSelection = (
       canHaveMultipleSelection,
       checkboxSelection,
       apiRef,
-      expandRowRangeSelection,
+      expandMouseRowRangeSelection,
       handleSingleRowSelection,
     ],
   );
@@ -359,12 +362,12 @@ export const useGridSelection = (
   >(
     (params, event) => {
       if ((event.nativeEvent as any).shiftKey) {
-        expandRowRangeSelection(params.id);
+        expandMouseRowRangeSelection(params.id);
       } else {
         apiRef.current.selectRow(params.id, params.value);
       }
     },
-    [apiRef, expandRowRangeSelection],
+    [apiRef, expandMouseRowRangeSelection],
   );
 
   const handleHeaderSelectionCheckboxChange = React.useCallback<
@@ -433,14 +436,17 @@ export const useGridSelection = (
               start = previousRowIndex;
               end = newRowIndex;
             }
-          } else if (isPreviousRowSelected) {
-            // We are navigating to the top of the page and removing selected rows
-            start = newRowIndex + 1;
-            end = previousRowIndex;
           } else {
-            // We are navigating to the top of the page and adding selected rows
-            start = newRowIndex;
-            end = previousRowIndex - 1;
+            // eslint-disable-next-line no-lonely-if
+            if (isPreviousRowSelected) {
+              // We are navigating to the top of the page and removing selected rows
+              start = newRowIndex + 1;
+              end = previousRowIndex;
+            } else {
+              // We are navigating to the top of the page and adding selected rows
+              start = newRowIndex;
+              end = previousRowIndex - 1;
+            }
           }
 
           const rowsBetweenStartAndEnd = visibleRows.rows
