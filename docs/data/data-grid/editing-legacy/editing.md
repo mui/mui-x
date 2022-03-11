@@ -8,8 +8,7 @@ title: Data Grid - Editing (legacy)
 
 ## Cell editing
 
-Cell editing allows editing the value of one cell at a time.
-Set the `editable` property in the `GridColDef` object to `true` to allow editing cells of this column.
+To enable cell editing within a column, set the `editable` property in the `GridColDef` object to `true` to allow editing cells of this column.
 
 ```tsx
 <DataGrid columns={[{ field: 'name', editable: true }]} />
@@ -49,7 +48,7 @@ If a cell is in edit mode and has focus, any of the following interactions will 
 
 ### Control cell editability
 
-In addition to the `editable` flag on columns, control which cell is editable using the `isCellEditable` prop.
+In addition to the `editable` flag on columns, you can enable or disable editing of individual cells using the `isCellEditable` prop.
 
 In this demo, only the rows with an even `Age` value are editable.
 The editable cells have a green background for better visibility.
@@ -59,15 +58,15 @@ The editable cells have a green background for better visibility.
 ### Controlled editing
 
 The `editRowsModel` prop lets you control the editing state.
-You can handle the `onEditRowsModelChange` callback to control the `GridEditRowsModel` state.
+You can use the `onEditRowsModelChange` callback to control the `GridEditRowsModel` state.
 
 {{"demo": "CellEditControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Saving nested structures
 
-If you are using a `valueGetter` to extract the value from a nested object, then a `valueSetter` also needs to be provided.
-The first one receives the row object and must return the value to be displayed in the cell.
-In the other side, the second one does the inverse, receiving the new value entered and returning the updated row.
+If you are using a `valueGetter` to extract the value from a nested object, then you must also provides a `valueSetter`.
+The `valueGetter` receives the row object and must return the value to be displayed in the cell.
+The `valueSetter`, in turn, receives the new value and returns the updated row.
 
 The following demo shows how these two functions can be used:
 
@@ -78,9 +77,9 @@ The following demo shows how these two functions can be used:
 
 ### Client-side validation
 
-To validate the value in the cells, first add a `preProcessEditCellProps` callback to the [column definition](/api/data-grid/grid-col-def/) of the field to validate.
-Once it is called, validate the value provided in `params.props.value`.
-Then, return a new object contaning `params.props` and also the `error` attribute set to true or false.
+To validate the value of a cell, add the `preProcessEditCellProps` callback to the [column definition](/api/data-grid/grid-col-def/) of the field you wish to validate.
+Once it is called, you can validate the value provided in `params.props.value`.
+Then, return a new object containing `params.props` along with `error` attribute set to true or false.
 If the `error` attribute is true, the value will never be committed.
 
 ```tsx
@@ -105,7 +104,7 @@ Here is an example implementing an email validation:
 ### Server-side validation
 
 Server-side validation works like [client-side validation](#client-side-validation).
-The only difference is that when `preProcessEditCellProps` is called, a promise must be returned.
+The only difference is that when you call `preProcessEditCellProps`, you must return a promise.
 Once the value is validated in the server, the promise should be resolved with a new object containing the `error` attribute set to true or false.
 The grid will wait for the promise to be resolved before exiting the edit mode.
 
@@ -151,23 +150,23 @@ You can override the default [start editing](#start-editing) triggers using the 
 ### Events [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The editing feature leverages the event capability of the grid and the apiRef.
-The following events can be imported and used to customize the edition:
+You can import the following events to customize the editing experience:
 
-- `cellEditStart`: emitted when the cell turns to edit mode.
-- `cellEditStop`: emitted when the cell turns back to view mode.
-- `cellEditCommit`: emitted when the new value is committed.
-- `editCellPropsChange`: emitted when the props passed to the edit cell component are changed.
+- `cellEditStart`: triggered when a cell enters edit mode.
+- `cellEditStop`: triggered when a cell returns to view mode.
+- `cellEditCommit`: triggered when a new value is committed.
+- `editCellPropsChange`: triggered when a props passed to the edit cell component are changed.
 
-Catching events can be used to add a callback after an event while ignoring its triggers.
+You can use event catching to add a callback after an event while ignoring its triggers.
 
-The demo shows how to catch the start & end edit events to log which cell is editing in an info message:
+The demo shows how to catch the start and end edit events in order to log which cell has been edited in an info message:
 
 {{"demo": "CatchEditingEventsGrid.js", "bg": "inline", "disableAd": true}}
 
 ## Row editing
 
-Row editing allows to edit all the cells of a row at once.
-It is based on the [cell editing](/components/data-grid/editing/#cell-editing), thus most of the features are also supported.
+Row editing lets you edit all cells in a given row simultaneously.
+It supports most of the same features as those available for [cell editing](/components/data-grid/editing/#cell-editing).
 To enable it, change the edit mode to `"row"` using the `editMode` prop, then set to `true` the `editable` property in the `GridColDef` object of those columns that should be editable.
 
 ```tsx
@@ -178,7 +177,7 @@ To enable it, change the edit mode to `"row"` using the `editMode` prop, then se
 
 ### Start editing
 
-If a cell is editable and has focus, any of the following interactions will start the edit mode of the corresponding row:
+You can start editing a cell using any of the following interactions:
 
 - A <kbd class="key">Enter</kbd> keydown
 - A double click on the cell
@@ -195,10 +194,10 @@ If a cell is editable and has focus, any of the following interactions will star
 
 ### Stop editing
 
-If a row is in edit mode and one of its cells is focused, any of the following interactions will stop the edit mode:
+You can stop editing a cell using any of the following interactions:
 
-- A <kbd class="key">Escape</kbd> keydown. It will also roll back changes done in the row.
-- A <kbd class="key">Enter</kbd> keydown. It will also save and goes to the cell at the next row at the same column.
+- A <kbd class="key">Escape</kbd> keydown. This will also roll back any changes made to the row.
+- A <kbd class="key">Enter</kbd> keydown. This will also save the value and move the focus to the cell in the next row of the same column.
 - A mouse click outside the row
 - A call to `apiRef.current.setRowMode(id, 'view')`.
 
@@ -211,15 +210,18 @@ You can handle the `onEditRowsModelChange` callback to control the `GridEditRows
 
 ### Conditional validation [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Having all cells of a row in edit mode allows validating a field based on the value of another one.
-To accomplish that, start by adding the `preProcessEditCellProps` as explained in the [cell editing](#client-side-validation).
-When the callback is called, use the API to check the value of the other field and decide if the current value is valid or not.
+Having all cells of a row in edit mode allows validating a field based on the value of another one
+To do this, you will first need to add a `preProcessEditCellProps` callback to the [column definition](/api/data-grid/grid-col-def/).
+When all cells in a row are in edit mode, you can validate fields by comparing their values.
 Return a new object contaning `params.props` and the `error` attribute with the validation status.
 Once at the least one field has the `error` attribute equals to true no new value will be committed.
 
-**Note:** For server-side validation, the same [approach](#server-side-validation) from the cell editing can be used. The data grid will wait for all promises to resolve before commiting.
+> ⚠ Server-side validation works like [client-side validation](#client-side-validation).
+> The only difference is that when you call `preProcessEditCellProps`, you must return a promise.
+> Once the value is validated in the server, the promise should be resolved with a new object containing the `error` attribute set to true or false.
+> The grid will wait for the promise to be resolved before exiting the edit mode.
 
-The following demo requires a value for the "Payment method" column if the "Is paid?" column was checked.
+The following demo requires a value for the **Payment method** column if the **Is paid?** column is checked.
 
 {{"demo": "ConditionalValidationGrid.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
 
@@ -231,34 +233,34 @@ The following demo requires a value for the "Payment method" column if the "Is p
 
 You can [disable the default behavior](/components/data-grid/events/#disabling-the-default-behavior) of the grid and control the row edit using external buttons.
 
-Here is shown how a full-featured CRUD can be created.
+Here is how you can create a full-featured CRUD:
 
 {{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "disableAd": true}}
 
 ### Saving rows with nested structures
 
-Saving columns that make use of `valueGetter` can be done adding a `valueSetter`.
+You can save columns that make use of `valueGetter` by adding a `valueSetter`.
 The same [approach](/components/data-grid/editing/#saving-nested-structures) from the cell editing mode can be used here.
 Note that the `valueSetter` will be called for each field.
 
 ### Server-side persistence [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-If you want to send the updated data to your server, you can use the `onRowEditCommit` which is fired just before committing the new cell value to the grid.
+If you want to send the updated data to your server, you can use `onRowEditCommit` which is fired just before committing the new cell value to the grid.
 
-To access the new values for the row, use `apiRef.current.getEditRowsModel` to get all rows in edit mode, then use the id provided to get only the values for the row that was committed.
+To access the new values for the row, use `apiRef.current.getEditRowsModel` to enable edit mode on all rows, then use the ID provided to get only the values for the row that was committed.
 
-You can then decide if you want to send the whole row or only the modified fields, by checking them against the previous row values.
+You can then decide if you want to send the whole row or only the modified fields by checking them against the previous row values.
 
 {{"demo": "RowEditServerSidePersistence.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
 
 ### Events [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-The following events can be imported and used to customize the row edition:
+You can import the following events to customize the editing experience:
 
-- `rowEditStart`: emitted when the row turns to edit mode.
-- `rowEditStop`: emitted when the row turns back to view mode.
-- `rowEditCommit`: emitted when the new row values are committed.
-- `editCellPropsChange`: emitted when the props passed to an edit cell component are changed.
+- `rowEditStart`: triggered when a row enters edit mode.
+- `rowEditStop`: triggered when a row returns to view mode.
+- `rowEditCommit`: triggered when new row values are committed.
+- `editCellPropsChange`: triggered when the props passed to the edit cell component are changed.
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
