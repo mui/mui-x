@@ -5,8 +5,11 @@ export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
 
-export function findParentElementFromClassName(elem: Element, className: string): Element | null {
-  return elem.closest(`.${className}`);
+export function findParentElementFromClassName<E extends Element = Element>(
+  elem: Element,
+  className: string,
+): Element | null {
+  return elem.closest<E>(`.${className}`);
 }
 
 export function getRowEl(cell?: Element | null): HTMLElement | null {

@@ -8,20 +8,22 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { isGridCellRoot } from '../../../utils/domUtils';
+import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
+import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
-import { isKeyboardEvent } from '../../../utils/keyboardUtils';
+import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridSelectionModel } from '../../../models';
+import { gridClasses } from '../../../constants';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['selectionModel'],
@@ -52,6 +54,7 @@ export const selectionStateInitializer: GridStateInitializer<
 /**
  * @requires useGridRows (state, method)
  * @requires useGridParamsApi (method)
+ * @requires useGridFocus (state)
  */
 export const useGridSelection = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -388,22 +391,53 @@ export const useGridSelection = (
         return;
       }
 
-      // Get the most recent params because the cell mode may have changed by another listener
-      const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      const isEditMode = cellParams.cellMode === GridCellModes.Edit;
-      if (isEditMode) {
+      // Get the most recent cell mode because it may have been changed by another listener
+      if (apiRef.current.getCellMode(params.id, params.field) === GridCellModes.Edit) {
         return;
       }
 
       if (event.key === ' ' && event.shiftKey) {
         event.preventDefault();
-        handleSingleRowSelection(cellParams.id, event);
+        handleSingleRowSelection(params.id, event);
         return;
       }
 
       if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         selectRows(apiRef.current.getAllRowIds(), true);
+      }
+
+      if (isNavigationKey(event.key) && event.shiftKey) {
+        event.preventDefault();
+        const focusCell = gridFocusCellSelector(apiRef);
+        if (!focusCell) {
+          return;
+        }
+
+        const rowEl = findParentElementFromClassName<HTMLElement>(
+          event.target as HTMLDivElement,
+          gridClasses.row,
+        )!;
+
+        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
+        const startId = focusCell.id;
+        const endIndex = Number(rowEl.getAttribute('data-rowindex'));
+        const endId = gridVisibleSortedRowIdsSelector(apiRef)[endIndex];
+
+        if (startId === endId) {
+          return;
+        }
+
+        const startIndex = visibleRowIds.indexOf(startId);
+
+        const [start, end] =
+          startIndex > endIndex ? [endIndex, startIndex] : [startIndex + 1, endIndex];
+        const rowsBetweenStartAndEnd = visibleRowIds.slice(start, end + 1);
+
+        apiRef.current.selectRows(
+          rowsBetweenStartAndEnd,
+          !apiRef.current.isRowSelected(focusCell.id),
+        );
       }
     },
     [apiRef, handleSingleRowSelection, selectRows],

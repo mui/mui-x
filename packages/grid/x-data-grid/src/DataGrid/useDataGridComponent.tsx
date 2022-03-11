@@ -64,7 +64,6 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
-  useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
@@ -80,6 +79,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef, props);
+  useGridSelection(apiRef, props);
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);

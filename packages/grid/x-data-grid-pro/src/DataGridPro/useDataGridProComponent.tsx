@@ -109,7 +109,6 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
-  useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
@@ -131,6 +130,7 @@ export const useDataGridProComponent = (
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef, props);
+  useGridSelection(apiRef, props);
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);
