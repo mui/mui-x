@@ -11,7 +11,7 @@ import {
   createGroupingColDefForOneGroupingCriteria,
 } from './createGroupingColDef';
 import { getColDefOverrides, isGroupingColumn } from './gridRowGroupingUtils';
-import { GridApiPro, GridInternalApiPro } from '../../../models/gridApiPro';
+import { GridInternalApiPro } from '../../../models/gridApiPro';
 
 export const useGridRowGroupingPreProcessors = (
   apiRef: React.MutableRefObject<GridInternalApiPro>,

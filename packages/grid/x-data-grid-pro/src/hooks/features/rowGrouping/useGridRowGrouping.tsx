@@ -28,7 +28,7 @@ import {
   isDeepEqual,
 } from '@mui/x-data-grid/internals';
 import { GridGroupingValueGetterParams } from '../../../models';
-import { GridApiPro, GridInternalApiPro } from '../../../models/gridApiPro';
+import { GridInternalApiPro } from '../../../models/gridApiPro';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import {
   gridRowGroupingModelSelector,

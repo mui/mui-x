@@ -19,7 +19,7 @@ import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
-import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridSelectionModel } from '../../../models';
 
@@ -457,7 +457,7 @@ export const useGridSelection = (
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
 
     if (!canHaveMultipleSelection && currentSelection.length > 1) {
-      const { rows: currentPageRows } = getCurrentPageRows(apiRef, {
+      const { rows: currentPageRows } = getVisibleRows(apiRef, {
         pagination,
         paginationMode,
       });

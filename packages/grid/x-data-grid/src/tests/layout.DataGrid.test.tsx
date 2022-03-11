@@ -988,7 +988,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
   });
 
-  it('should allow style customization using the theme', () => {
+  it('should allow style customization using the theme', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const theme = createTheme({
       components: {
         MuiDataGrid: {
@@ -1028,7 +1032,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(window.getComputedStyle(getCell(0, 0)).backgroundColor).to.equal('rgb(0, 128, 0)');
   });
 
-  it('should support the sx prop', () => {
+  it('should support the sx prop', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const theme = createTheme({
       palette: {
         primary: {

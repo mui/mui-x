@@ -1,6 +1,7 @@
 import path from 'path';
 import * as ts from 'typescript';
-import { Project, Projects, writePrettifiedFile, resolveExportSpecifier } from './utils';
+import { writePrettifiedFile, resolveExportSpecifier } from './utils';
+import { Project, Projects } from '../getTypeScriptProjects';
 
 interface BuildExportsDocumentationOptions {
   projects: Projects;
