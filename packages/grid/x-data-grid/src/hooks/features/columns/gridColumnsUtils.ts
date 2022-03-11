@@ -354,7 +354,7 @@ export const createColumnsState = ({
           isVisibleBefore = true;
         } else {
           const currentState = gridColumnsSelector(apiRef.current.state);
-          isVisibleBefore = currentState.all.includes(field);
+          isVisibleBefore = !!currentState.lookup[field];
         }
       }
 
