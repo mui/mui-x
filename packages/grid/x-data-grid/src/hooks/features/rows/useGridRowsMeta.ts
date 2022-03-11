@@ -87,11 +87,10 @@ export const useGridRowsMeta = (
           initialHeights.spacingBottom = spacing.bottom ?? 0;
         }
 
-        const sizes = apiRef.current.applyPreProcessors(
-          'rowHeight',
-          initialHeights,
-          row,
-        ) as Record<string, number>;
+        const sizes = apiRef.current.applyPreProcessors('rowHeight', initialHeights, row) as Record<
+          string,
+          number
+        >;
 
         const finalRowHeight = Object.values(sizes).reduce((acc2, value) => acc2 + value, 0);
 
