@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.6.1
+
+_Mar 10, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- [DataGrid] Allow to add margins or borders between rows (#3848) @m4theushw
+
+  ```tsx
+  <DataGrid getRowSpacing={() => ({ top: 10, bottom: 10 })} />
+  ```
+
+  Check the [documentation](https://mui.com/components/data-grid/rows/#row-spacing) for more information.
+
+### `@mui/x-data-grid@v5.6.1` / `@mui/x-data-grid-pro@v5.6.1`
+
+#### Changes
+
+- [DataGrid] Display column's filter icon if a filter is applied (#4120) @DanailH
+- [DataGrid] Do not loop through rows to compute top level rows count when the tree is flat (#4081) @flaviendelangle
+- [DataGrid] Rename API method (#4148) @m4theushw
+- [DataGrid] Support extending built-in column types (#4114) @cherniavskii
+- [DataGridPro] Re-export the components removed by mistake during bundle split (#4134) @flaviendelangle
+
+### Docs
+
+- [docs] Fix links to prevent duplicate search result (#4130) @siriwatknp
+- [docs] Fix outdated links to `localeTextConstants.ts` (#4080) @patilvishal755
+- [docs] Neglect e2e tests related to search (#4118) @siriwatknp
+- [docs] Use regex instead of specific url in e2e-website-tests (#4121) @siriwatknp
+
+### Core
+
+- [core] Enforce `noImplicitAny` (#4084) @cherniavskii
+- [core] Improve the Pro support issue template (#4082) @oliviertassinari
+- [core] Initialize remaining states before feature hooks (#4036) @m4theushw
+- [core] Merge `page` and `pageSize` state initializer into a single `pagination` state initializer (#4087) @flaviendelangle
+- [core] Prepare `yarn docs:api:build` scripts for multi packages support (#4111) @flaviendelangle
+- [core] Upgrade `@mui/monorepo` (#4149) @cherniavskii
+- [core] Use `buildWarning` and `wrapWithWarningOnCall` for deprecated methods and wrong usages (#4056) @flaviendelangle
+- [test] Make focus state out-of-sync warning opt-in (#4129) @m4theushw
+- [test] Only test custom input keyboard event in edit mode (#4075) @alexfauquette
+
 ## 5.6.0
 
 _Mar 4, 2022_

@@ -94,10 +94,7 @@ test.describe('DataGrid docs', () => {
 
       const anchor = await page.locator('.DocSearch-Hits a:has-text("Data Grid - Components")');
 
-      await expect(anchor.first()).toHaveAttribute(
-        'href',
-        `/components/data-grid/components/#main-content`,
-      );
+      await expect(anchor.first()).toHaveAttribute('href', /^\/components\/data-grid\//);
     });
 
     test('should have correct link when searching API', async ({ page }) => {

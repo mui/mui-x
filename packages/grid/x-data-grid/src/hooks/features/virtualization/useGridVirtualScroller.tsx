@@ -11,7 +11,7 @@ import {
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../editRows/gridEditRowsSelector';
-import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
@@ -73,7 +73,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
-  const currentPage = useCurrentPageRows(apiRef, rootProps);
+  const currentPage = useGridVisibleRows(apiRef, rootProps);
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef<HTMLDivElement>(ref, rootRef);
@@ -332,7 +332,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
+          index={currentPage.range.firstRowIndex + firstRowToRender + i}
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}
