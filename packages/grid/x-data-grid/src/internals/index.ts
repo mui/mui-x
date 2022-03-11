@@ -34,8 +34,7 @@ export type {
   GridAggregatedFilterItemApplier,
 } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
-export { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
-export { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
+export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {
   useGridPagination,
   paginationStateInitializer,

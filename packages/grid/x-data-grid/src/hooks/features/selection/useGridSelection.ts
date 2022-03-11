@@ -51,9 +51,10 @@ export const selectionStateInitializer: GridStateInitializer<
 });
 
 /**
- * @requires useGridRows (state, method)
- * @requires useGridParamsApi (method)
- * @requires useGridFocus (state)
+ * @requires useGridRows (state, method) - can be after
+ * @requires useGridParamsApi (method) - can be after
+ * @requires useGridFocus (state) - can be after
+ * @requires useGridKeyboardNavigation (`cellKeyDown` event must first be consumed by it)
  */
 export const useGridSelection = (
   apiRef: React.MutableRefObject<GridApiCommunity>,

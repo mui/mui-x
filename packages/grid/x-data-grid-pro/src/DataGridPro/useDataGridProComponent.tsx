@@ -12,7 +12,6 @@ import {
   useGridFilter,
   filterStateInitializer,
   useGridFocus,
-  useGridKeyboard,
   useGridKeyboardNavigation,
   useGridPagination,
   paginationStateInitializer,
@@ -109,6 +108,8 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
+  useGridKeyboardNavigation(apiRef, props);
+  useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
@@ -128,9 +129,6 @@ export const useDataGridProComponent = (
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);
-  useGridKeyboard(apiRef);
-  useGridKeyboardNavigation(apiRef, props);
-  useGridSelection(apiRef, props);
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);
