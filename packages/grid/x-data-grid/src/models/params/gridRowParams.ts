@@ -59,7 +59,7 @@ export interface GridRowHeightParams extends GridRowEntry {
  */
 export type GridRowHeightReturnValue = number | null | undefined;
 
-export enum GridRowEditStartReasons {
+enum GridRowEditStartReasons {
   enterKeyDown = 'enterKeyDown',
   cellDoubleClick = 'cellDoubleClick',
   printableKeyDown = 'printableKeyDown',
@@ -81,7 +81,7 @@ export interface GridRowEditStartParams<R extends GridRowModel = GridRowModel>
   reason: GridRowEditStartReasons;
 }
 
-export enum GridRowEditStopReasons {
+enum GridRowEditStopReasons {
   rowFocusOut = 'rowFocusOut',
   escapeKeyDown = 'escapeKeyDown',
   enterKeyDown = 'enterKeyDown',
@@ -111,3 +111,6 @@ export interface GridRowSpacing {
   top?: number;
   bottom?: number;
 }
+
+// https://github.com/mui/mui-x/pull/3738#discussion_r798504277
+export { GridRowEditStartReasons, GridRowEditStopReasons };

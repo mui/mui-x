@@ -45,7 +45,7 @@ export interface GridCellEditCommitParams {
   value: GridCellValue;
 }
 
-export enum GridCellEditStartReasons {
+enum GridCellEditStartReasons {
   enterKeyDown = 'enterKeyDown',
   cellDoubleClick = 'cellDoubleClick',
   printableKeyDown = 'printableKeyDown',
@@ -62,7 +62,7 @@ export interface GridCellEditStartParams<V = any, R = any, F = V> extends GridCe
   reason: GridCellEditStartReasons;
 }
 
-export enum GridCellEditStopReasons {
+enum GridCellEditStopReasons {
   cellFocusOut = 'cellFocusOut',
   escapeKeyDown = 'escapeKeyDown',
   enterKeyDown = 'enterKeyDown',
@@ -79,3 +79,6 @@ export interface GridCellEditStopParams<V = any, R = any, F = V> extends GridCel
    */
   reason: GridCellEditStopReasons;
 }
+
+// https://github.com/mui/mui-x/pull/3738#discussion_r798504277
+export { GridCellEditStartReasons, GridCellEditStopReasons };
