@@ -18,7 +18,7 @@ import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
 import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
-import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
@@ -158,7 +158,7 @@ export function useGridDimensions(
       return 0;
     }
 
-    const currentPage = getCurrentPageRows(apiRef, {
+    const currentPage = getVisibleRows(apiRef, {
       pagination: props.pagination,
       paginationMode: props.paginationMode,
     });

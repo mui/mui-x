@@ -44,9 +44,11 @@ type OwnerState = GridColumnHeaderItemProps & {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { column, classes, isDragging, sortDirection, showRightBorder } = ownerState;
+  const { column, classes, isDragging, sortDirection, showRightBorder, filterItemsCounter } =
+    ownerState;
 
   const isColumnSorted = sortDirection != null;
+  const isColumnFiltered = filterItemsCounter != null && filterItemsCounter > 0;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
   const isColumnNumeric = column.type === 'number';
 
@@ -59,6 +61,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       column.sortable && 'columnHeader--sortable',
       isDragging && 'columnHeader--moving',
       isColumnSorted && 'columnHeader--sorted',
+      isColumnFiltered && 'columnHeader--filtered',
       isColumnNumeric && 'columnHeader--numeric',
       showRightBorder && 'withBorder',
     ],

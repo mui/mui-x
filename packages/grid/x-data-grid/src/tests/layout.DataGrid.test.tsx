@@ -858,6 +858,49 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       ) as Element;
       expect(virtualScrollerContent.clientHeight).to.equal(virtualScroller.clientHeight);
     });
+
+    // See https://github.com/mui/mui-x/issues/4113
+    it('should preserve default width constraints when extending default column type', () => {
+      const rows = [{ id: 1, value: 1 }];
+      const columns = [{ field: 'id', type: 'number' }];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            columnTypes={{
+              number: {},
+            }}
+          />
+        </div>,
+      );
+
+      // default `width` should be used
+      expect(getCell(0, 0).offsetWidth).to.equal(100);
+    });
+
+    it('should allow to override default width constraints when extending default column type', () => {
+      const rows = [{ id: 1, value: 1 }];
+      const columns = [{ field: 'id', type: 'number' }];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            columnTypes={{
+              number: {
+                width: 10,
+                minWidth: 200,
+              },
+            }}
+          />
+        </div>,
+      );
+
+      expect(getCell(0, 0).offsetWidth).to.equal(200);
+    });
   });
 
   describe('warnings', () => {
@@ -945,7 +988,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
   });
 
-  it('should allow style customization using the theme', () => {
+  it('should allow style customization using the theme', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const theme = createTheme({
       components: {
         MuiDataGrid: {
@@ -985,7 +1032,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(window.getComputedStyle(getCell(0, 0)).backgroundColor).to.equal('rgb(0, 128, 0)');
   });
 
-  it('should support the sx prop', () => {
+  it('should support the sx prop', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const theme = createTheme({
       palette: {
         primary: {

@@ -4,27 +4,7 @@ import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
 import * as ts from 'typescript';
 import FEATURE_TOGGLE from '../../src/featureToggle';
-
-export interface Project {
-  name: ProjectNames;
-  exports: Record<string, ts.Symbol>;
-  program: ts.Program;
-  checker: ts.TypeChecker;
-  workspaceRoot: string;
-  prettierConfigPath: string;
-  /**
-   * Folder containing all the components of this package
-   */
-  componentsFolder?: string;
-  /**
-   * Additional files containing components outside the components folder
-   */
-  otherComponentFiles?: string[];
-}
-
-export type ProjectNames = 'x-data-grid' | 'x-data-grid-pro';
-
-export type Projects = Map<ProjectNames, Project>;
+import { Project, ProjectNames } from '../getTypeScriptProjects';
 
 export type DocumentedInterfaces = Map<string, ProjectNames[]>;
 

@@ -31,7 +31,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
   };
 
-  it('should add a bottom margin to the expanded row', () => {
+  it('should add a bottom margin to the expanded row', function test() {
+    if (isJSDOM) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     render(<TestCase getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)} />);
     fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
     expect(getRow(0)).toHaveComputedStyle({ marginBottom: '500px' });
@@ -74,7 +78,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
   });
 
-  it('should position correctly the detail panels', () => {
+  it('should position correctly the detail panels', function test() {
+    if (isJSDOM) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const rowHeight = 50;
     const evenHeight = rowHeight;
     const oddHeight = 2 * rowHeight;

@@ -54,6 +54,7 @@ describe('<DataGrid /> - Keyboard', () => {
           headerHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ columnField: 'id', operatorValue: '>', value: 10 }] }}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
           {...props}
         />
       </div>

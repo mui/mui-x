@@ -23,6 +23,7 @@ import {
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import {
   GridRowsInternalCacheState,
   GridRowInternalCacheValue,
@@ -151,10 +152,20 @@ export const useGridRows = (
 
   const logger = useGridLogger(apiRef, 'useGridRows');
   const rowsCache = React.useRef(apiRef.current.state.rowsCache); // To avoid listing rowsCache as useEffect dep
+  const currentPage = useGridVisibleRows(apiRef, props);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef)[id] ?? null,
     [apiRef],
+  );
+
+  const lookup = React.useMemo(
+    () =>
+      currentPage.rows.reduce<Record<GridRowId, number>>((acc, { id }, index) => {
+        acc[id] = index;
+        return acc;
+      }, {}),
+    [currentPage.rows],
   );
 
   const throttledRowsChange = React.useCallback(
@@ -229,7 +240,7 @@ export const useGridRows = (
         );
       }
 
-      // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
+      // we remove duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = new Map<GridRowId, GridRowModel>();
 
       updates.forEach((update) => {
@@ -302,6 +313,8 @@ export const useGridRows = (
     [apiRef],
   );
 
+  const getRowIndexRelativeToVisibleRows = React.useCallback((id) => lookup[id], [lookup]);
+
   const setRowChildrenExpansion = React.useCallback<GridRowApi['setRowChildrenExpansion']>(
     (id, isExpanded) => {
       const currentNode = apiRef.current.getRowNode(id);
@@ -338,6 +351,7 @@ export const useGridRows = (
     updateRows,
     setRowChildrenExpansion,
     getRowNode,
+    getRowIndexRelativeToVisibleRows,
   };
 
   /**

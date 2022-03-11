@@ -64,7 +64,12 @@ describe('<DataGridPro /> - Row Editing', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPro
+          {...baselineProps}
+          apiRef={apiRef}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+          {...props}
+        />
       </div>
     );
   };
