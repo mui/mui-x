@@ -402,7 +402,7 @@ describe('<DataGridPro /> - Selection', () => {
   });
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
-  describe.only('keyboard navigation', () => {
+  describe('keyboard navigation', () => {
     it('should select row below when pressing "ArrowDown" + shiftKey', () => {
       render(<TestCase />);
       fireClickEvent(getCell(2, 1));

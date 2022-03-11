@@ -20,10 +20,9 @@ import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
-import { getVisibleRows } from '../../utils/useGridVisibleRows';
+import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridSelectionModel } from '../../../models';
-import { gridClasses } from '../../../constants';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['selectionModel'],
@@ -101,6 +100,7 @@ export const useGridSelection = (
   } = props;
 
   const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection;
+  const visibleRows = useGridVisibleRows(apiRef, props);
 
   const expandRowRangeSelection = React.useCallback(
     (id: GridRowId) => {
@@ -235,12 +235,12 @@ export const useGridSelection = (
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
-      const startIndex = visibleRowIds.indexOf(startId);
-      const endIndex = visibleRowIds.indexOf(endId);
+      // Using rows from all pages allow to select a range across several pages
+      const allPagesRowIds = gridVisibleSortedRowIdsSelector(apiRef);
+      const startIndex = allPagesRowIds.indexOf(startId);
+      const endIndex = allPagesRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
-      const rowsBetweenStartAndEnd = visibleRowIds.slice(start, end + 1);
-
+      const rowsBetweenStartAndEnd = allPagesRowIds.slice(start, end + 1);
       apiRef.current.selectRows(rowsBetweenStartAndEnd, isSelected, resetSelection);
     },
     [apiRef, logger],
@@ -414,22 +414,15 @@ export const useGridSelection = (
           return;
         }
 
-        const rowEl = findParentElementFromClassName<HTMLElement>(
-          event.target as HTMLDivElement,
-          gridClasses.row,
-        )!;
-
-        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
-        const newCellIndex = visibleRowIds.indexOf(focusCell.id);
-        const previousCellIndex = Number(rowEl.getAttribute('data-rowindex'));
-
-        const isFocusCellSelected = apiRef.current.isRowSelected(focusCell.id);
+        const newCellIndex = apiRef.current.getRowIndexRelativeToVisibleRows(focusCell.id);
+        const previousCellIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
+        const isPreviousCellSelected = apiRef.current.isRowSelected(focusCell.id);
 
         let start: number;
         let end: number;
 
         if (newCellIndex > previousCellIndex) {
-          if (isFocusCellSelected) {
+          if (isPreviousCellSelected) {
             // We are navigating to the bottom of the page and adding selected rows
             start = previousCellIndex;
             end = newCellIndex - 1;
@@ -438,7 +431,7 @@ export const useGridSelection = (
             start = previousCellIndex;
             end = newCellIndex;
           }
-        } else if (isFocusCellSelected) {
+        } else if (isPreviousCellSelected) {
           // We are navigating to the top of the page and removing selected rows
           start = newCellIndex + 1;
           end = previousCellIndex;
@@ -448,12 +441,11 @@ export const useGridSelection = (
           end = previousCellIndex - 1;
         }
 
-        const rowsBetweenStartAndEnd = visibleRowIds.slice(start, end + 1);
-
-        apiRef.current.selectRows(rowsBetweenStartAndEnd, !isFocusCellSelected);
+        const rowsBetweenStartAndEnd = visibleRows.rows.slice(start, end + 1).map((row) => row.id);
+        apiRef.current.selectRows(rowsBetweenStartAndEnd, !isPreviousCellSelected);
       }
     },
-    [apiRef, handleSingleRowSelection, selectRows],
+    [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, removeOutdatedSelection);
