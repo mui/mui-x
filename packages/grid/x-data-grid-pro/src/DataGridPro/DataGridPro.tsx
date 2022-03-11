@@ -705,6 +705,7 @@ DataGridProRaw.propTypes = {
   }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    * @param {GridRowModel} newRow Row object with the new values.
    * @param {GridRowModel} oldRow Row object with the old values.
    * @returns {Promise<GridRowModel>} A promise which resolves with the final values to update the row.
