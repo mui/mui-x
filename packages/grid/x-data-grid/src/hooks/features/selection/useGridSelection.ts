@@ -410,7 +410,7 @@ export const useGridSelection = (
       if (isNavigationKey(event.key) && event.shiftKey) {
         event.preventDefault();
         const focusCell = gridFocusCellSelector(apiRef);
-        if (!focusCell) {
+        if (!focusCell || focusCell.id === params.id) {
           return;
         }
 
@@ -420,24 +420,37 @@ export const useGridSelection = (
         )!;
 
         const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
-        const startId = focusCell.id;
-        const endIndex = Number(rowEl.getAttribute('data-rowindex'));
-        const endId = gridVisibleSortedRowIdsSelector(apiRef)[endIndex];
+        const newCellIndex = visibleRowIds.indexOf(focusCell.id);
+        const previousCellIndex = Number(rowEl.getAttribute('data-rowindex'));
 
-        if (startId === endId) {
-          return;
+        const isFocusCellSelected = apiRef.current.isRowSelected(focusCell.id);
+
+        let start: number;
+        let end: number;
+
+        if (newCellIndex > previousCellIndex) {
+          if (isFocusCellSelected) {
+            // We are navigating to the bottom of the page and adding selected rows
+            start = previousCellIndex;
+            end = newCellIndex - 1;
+          } else {
+            // We are navigating to the bottom of the page and removing selected rows
+            start = previousCellIndex;
+            end = newCellIndex;
+          }
+        } else if (isFocusCellSelected) {
+          // We are navigating to the top of the page and removing selected rows
+          start = newCellIndex + 1;
+          end = previousCellIndex;
+        } else {
+          // We are navigating to the top of the page and adding selected rows
+          start = newCellIndex;
+          end = previousCellIndex - 1;
         }
 
-        const startIndex = visibleRowIds.indexOf(startId);
-
-        const [start, end] =
-          startIndex > endIndex ? [endIndex, startIndex] : [startIndex + 1, endIndex];
         const rowsBetweenStartAndEnd = visibleRowIds.slice(start, end + 1);
 
-        apiRef.current.selectRows(
-          rowsBetweenStartAndEnd,
-          !apiRef.current.isRowSelected(focusCell.id),
-        );
+        apiRef.current.selectRows(rowsBetweenStartAndEnd, !isFocusCellSelected);
       }
     },
     [apiRef, handleSingleRowSelection, selectRows],
