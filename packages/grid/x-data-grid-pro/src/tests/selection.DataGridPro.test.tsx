@@ -30,7 +30,7 @@ describe('<DataGridPro /> - Selection', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = ({
+  const TestDataGridSelection = ({
     rowLength = 4,
     ...other
   }: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'> &
@@ -48,7 +48,14 @@ describe('<DataGridPro /> - Selection', () => {
 
   describe('prop: checkboxSelectionVisibleOnly = false', () => {
     it('should select all rows of all pages if no row is selected', () => {
-      render(<TestCase checkboxSelection pageSize={2} pagination rowsPerPageOptions={[2]} />);
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          pageSize={2}
+          pagination
+          rowsPerPageOptions={[2]}
+        />,
+      );
       const selectAllCheckbox = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
@@ -58,7 +65,14 @@ describe('<DataGridPro /> - Selection', () => {
     });
 
     it('should unselect all rows of all the pages if 1 row of another page is selected', () => {
-      render(<TestCase checkboxSelection pageSize={2} pagination rowsPerPageOptions={[2]} />);
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          pageSize={2}
+          pagination
+          rowsPerPageOptions={[2]}
+        />,
+      );
       fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
@@ -74,7 +88,11 @@ describe('<DataGridPro /> - Selection', () => {
       const rowLength = 10;
 
       render(
-        <TestCase checkboxSelection checkboxSelectionVisibleOnly={false} rowLength={rowLength} />,
+        <TestDataGridSelection
+          checkboxSelection
+          checkboxSelectionVisibleOnly={false}
+          rowLength={rowLength}
+        />,
       );
 
       const selectAllCheckbox = screen.getByRole('checkbox', {
@@ -87,7 +105,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     it('should set the header checkbox in a indeterminate state when some rows of other pages are not selected', () => {
       render(
-        <TestCase
+        <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly={false}
           pageSize={2}
@@ -110,7 +128,9 @@ describe('<DataGridPro /> - Selection', () => {
   describe('prop: checkboxSelectionVisibleOnly = true', () => {
     it('should throw a console error if used without pagination', () => {
       expect(() => {
-        render(<TestCase checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />);
+        render(
+          <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
+        );
       }).toErrorDev(
         'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
       );
@@ -118,7 +138,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     it('should select all the rows of the current page if no row of the current page is selected', () => {
       render(
-        <TestCase
+        <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly
           pageSize={2}
@@ -139,7 +159,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     it('should unselect all the rows of the current page if 1 row of the current page is selected', () => {
       render(
-        <TestCase
+        <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly
           pageSize={2}
@@ -162,7 +182,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     it('should not set the header checkbox in a indeterminate state when some rows of other pages are not selected', () => {
       render(
-        <TestCase
+        <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly
           pageSize={2}
@@ -184,7 +204,7 @@ describe('<DataGridPro /> - Selection', () => {
   describe('apiRef: getSelectedRows', () => {
     it('should handle the event internally before triggering onSelectionModelChange', () => {
       render(
-        <TestCase
+        <TestDataGridSelection
           onSelectionModelChange={(model) => {
             expect(apiRef.current.getSelectedRows()).to.have.length(1);
             expect(model).to.deep.equal([1]);
@@ -202,7 +222,7 @@ describe('<DataGridPro /> - Selection', () => {
 
   describe('apiRef: isRowSelected', () => {
     it('should check if the rows selected by clicking on the rows are selected', () => {
-      render(<TestCase />);
+      render(<TestDataGridSelection />);
 
       fireEvent.click(getCell(1, 0));
 
@@ -211,7 +231,7 @@ describe('<DataGridPro /> - Selection', () => {
     });
 
     it('should check if the rows selected with the selectionModel prop are selected', () => {
-      render(<TestCase selectionModel={[1]} />);
+      render(<TestDataGridSelection selectionModel={[1]} />);
 
       expect(apiRef.current.isRowSelected(0)).to.equal(false);
       expect(apiRef.current.isRowSelected(1)).to.equal(true);
@@ -221,7 +241,7 @@ describe('<DataGridPro /> - Selection', () => {
   describe('apiRef: selectRow', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();
-      render(<TestCase onSelectionModelChange={handleSelectionModelChange} />);
+      render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
       apiRef.current.selectRow(1);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1]);
       // Reset old selection
@@ -237,7 +257,7 @@ describe('<DataGridPro /> - Selection', () => {
     it('should not call onSelectionModelChange if the row is unselectable', () => {
       const handleSelectionModelChange = spy();
       render(
-        <TestCase
+        <TestDataGridSelection
           isRowSelectable={(params) => params.id > 0}
           onSelectionModelChange={handleSelectionModelChange}
         />,
@@ -252,7 +272,7 @@ describe('<DataGridPro /> - Selection', () => {
   describe('apiRef: selectRows', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();
-      render(<TestCase onSelectionModelChange={handleSelectionModelChange} />);
+      render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
 
       apiRef.current.selectRows([1, 2]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
@@ -271,7 +291,7 @@ describe('<DataGridPro /> - Selection', () => {
     it('should filter out unselectable rows before calling onSelectionModelChange', () => {
       const handleSelectionModelChange = spy();
       render(
-        <TestCase
+        <TestDataGridSelection
           isRowSelectable={(params) => params.id > 0}
           onSelectionModelChange={handleSelectionModelChange}
         />,
@@ -281,7 +301,7 @@ describe('<DataGridPro /> - Selection', () => {
     });
 
     it('should not select a range of several elements when disableMultipleSelection = true', () => {
-      render(<TestCase disableMultipleSelection />);
+      render(<TestDataGridSelection disableMultipleSelection />);
 
       apiRef.current.selectRows([0, 1, 2], true);
       expect(getSelectedRowIds()).to.deep.equal([]);
@@ -290,14 +310,14 @@ describe('<DataGridPro /> - Selection', () => {
 
   describe('apiRef: selectRowRange', () => {
     it('should select all the rows in the range', () => {
-      render(<TestCase />);
+      render(<TestDataGridSelection />);
 
       apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
     });
 
     it('should unselect all the rows in the range', () => {
-      render(<TestCase />);
+      render(<TestDataGridSelection />);
 
       apiRef.current.setSelectionModel([2, 3]);
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
@@ -306,7 +326,7 @@ describe('<DataGridPro /> - Selection', () => {
     });
 
     it('should not unselect the selected elements if the range is to be selected', () => {
-      render(<TestCase />);
+      render(<TestDataGridSelection />);
 
       apiRef.current.setSelectionModel([2]);
       apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
@@ -314,7 +334,7 @@ describe('<DataGridPro /> - Selection', () => {
     });
 
     it('should not reset the other selections when resetSelection = false', () => {
-      render(<TestCase />);
+      render(<TestDataGridSelection />);
 
       apiRef.current.setSelectionModel([0]);
       apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, false);
@@ -322,7 +342,7 @@ describe('<DataGridPro /> - Selection', () => {
     });
 
     it('should reset the other selections when resetSelection = true', () => {
-      render(<TestCase />);
+      render(<TestDataGridSelection />);
 
       apiRef.current.setSelectionModel([0]);
       apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, true);
@@ -330,14 +350,14 @@ describe('<DataGridPro /> - Selection', () => {
     });
 
     it('should not select unselectable rows inside the range', () => {
-      render(<TestCase isRowSelectable={(params) => Number(params.id) % 2 === 1} />);
+      render(<TestDataGridSelection isRowSelectable={(params) => Number(params.id) % 2 === 1} />);
 
       apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
       expect(getSelectedRowIds()).to.deep.equal([1, 3]);
     });
 
     it('should not select a range of several elements when disableMultipleSelection = true', () => {
-      render(<TestCase disableMultipleSelection />);
+      render(<TestDataGridSelection disableMultipleSelection />);
 
       apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
       expect(getSelectedRowIds()).to.deep.equal([]);
@@ -345,7 +365,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     it('should select only filtered rows selecting a range', () => {
       render(
-        <TestCase
+        <TestDataGridSelection
           filterModel={{ items: [{ columnField: 'id', value: 1, operatorValue: '!=' }] }}
         />,
       );
@@ -355,7 +375,7 @@ describe('<DataGridPro /> - Selection', () => {
   });
 
   it('should select only filtered rows after filter is applied', () => {
-    render(<TestCase checkboxSelection />);
+    render(<TestDataGridSelection checkboxSelection />);
     const selectAll = screen.getByRole('checkbox', {
       name: /select all rows/i,
     });
@@ -383,7 +403,7 @@ describe('<DataGridPro /> - Selection', () => {
     it('should not publish GRID_SELECTION_CHANGE if the selection state did not change ', () => {
       const handleSelectionChange = spy();
       const selectionModel: GridSelectionModel = [];
-      render(<TestCase selectionModel={selectionModel} />);
+      render(<TestDataGridSelection selectionModel={selectionModel} />);
       apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
       apiRef.current.setSelectionModel(selectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
@@ -391,7 +411,12 @@ describe('<DataGridPro /> - Selection', () => {
 
     it('should not call onSelectionModelChange on initialization if selectionModel contains more than one id and checkboxSelection=false', () => {
       const onSelectionModelChange = spy();
-      render(<TestCase onSelectionModelChange={onSelectionModelChange} selectionModel={[0, 1]} />);
+      render(
+        <TestDataGridSelection
+          onSelectionModelChange={onSelectionModelChange}
+          selectionModel={[0, 1]}
+        />,
+      );
       expect(onSelectionModelChange.callCount).to.equal(0);
     });
   });
