@@ -132,7 +132,7 @@ You can customize the rendering of the pagination in the footer following [the c
 
 {{"demo": "PaginationSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state)
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state/#access-the-state)
 
 ## API
 

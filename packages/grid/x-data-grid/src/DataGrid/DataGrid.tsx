@@ -176,6 +176,7 @@ DataGridRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
+    warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
    * Filtering can be processed on the server or client-side.
@@ -211,7 +212,7 @@ DataGridRaw.propTypes = {
   getDetailPanelContent: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
@@ -225,6 +226,12 @@ DataGridRaw.propTypes = {
    * Return the id of a given [[GridRowModel]].
    */
   getRowId: PropTypes.func,
+  /**
+   * Function that allows to specify the spacing between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row spacing values.
+   */
+  getRowSpacing: PropTypes.func,
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
@@ -269,7 +276,7 @@ DataGridRaw.propTypes = {
   loading: PropTypes.bool,
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/internals/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
   /**
@@ -570,6 +577,11 @@ DataGridRaw.propTypes = {
    * Set of rows of type [[GridRowsProp]].
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * Sets the type of space between rows added by `getRowSpacing`.
+   * @default "margin"
+   */
+  rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]

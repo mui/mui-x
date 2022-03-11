@@ -24,6 +24,8 @@ const VirtualScrollerRenderZoneRoot = styled('div', {
   overridesResolver: (props, styles) => styles.virtualScrollerRenderZone,
 })({
   position: 'absolute',
+  display: 'flex', // Prevents margin collapsing when using `getRowSpacing`
+  flexDirection: 'column',
 });
 
 const GridVirtualScrollerRenderZone = React.forwardRef<

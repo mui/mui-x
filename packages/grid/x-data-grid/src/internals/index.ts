@@ -15,13 +15,16 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
-export { useGridColumnMenu } from '../hooks/features/columnMenu/useGridColumnMenu';
+export {
+  useGridColumnMenu,
+  columnMenuStateInitializer,
+} from '../hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
 } from '../hooks/features/columns/gridColumnsInterfaces';
-export { useGridDensity } from '../hooks/features/density/useGridDensity';
+export { useGridDensity, densityStateInitializer } from '../hooks/features/density/useGridDensity';
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
@@ -30,18 +33,32 @@ export type {
   GridFilteringMethod,
   GridAggregatedFilterItemApplier,
 } from '../hooks/features/filter/gridFilterState';
-export { useGridFocus } from '../hooks/features/focus/useGridFocus';
+export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
 export {
   useGridPagination,
   paginationStateInitializer,
 } from '../hooks/features/pagination/useGridPagination';
-export { useGridPreferencesPanel } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
+export {
+  useGridPreferencesPanel,
+  preferencePanelStateInitializer,
+} from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
+export {
+  useGridEditing as useGridEditing_new,
+  editingStateInitializer as editingStateInitializer_new,
+} from '../hooks/features/editRows/useGridEditing.new';
+export {
+  useGridEditing as useGridEditing_old,
+  editingStateInitializer as editingStateInitializer_old,
+} from '../hooks/features/editRows/useGridEditing.old';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
-export { useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
+export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
-export { useGridSelection } from '../hooks/features/selection/useGridSelection';
+export {
+  useGridSelection,
+  selectionStateInitializer,
+} from '../hooks/features/selection/useGridSelection';
 export { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export { useGridRegisterSortingMethod } from '../hooks/features/sorting/useGridRegisterSortingMethod';
@@ -56,13 +73,9 @@ export { useGridStatePersistence } from '../hooks/features/statePersistence/useG
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
 export { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
 
-export { useGridEditing as useGridEditing_new } from '../hooks/features/editRows/useGridEditing.new';
-export { useGridEditing as useGridEditing_old } from '../hooks/features/editRows/useGridEditing.old';
-
-export { useCurrentPageRows } from '../hooks/utils/useCurrentPageRows';
+export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
-export { useGridStateInit } from '../hooks/utils/useGridStateInit';
 
 export type { GridComparatorFn, GridSortCellParams } from '../models/gridSortModel';
 
