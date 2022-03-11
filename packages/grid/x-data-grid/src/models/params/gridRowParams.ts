@@ -73,12 +73,14 @@ export interface GridRowEditStartParams<R extends GridRowModel = GridRowModel>
   extends GridRowParams<R> {
   /**
    * Which field triggered this event.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
-  field: string;
+  field?: string;
   /**
    * The reason for this event to be triggered.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
-  reason: GridRowEditStartReasons;
+  reason?: GridRowEditStartReasons;
 }
 
 enum GridRowEditStopReasons {
@@ -91,12 +93,14 @@ export interface GridRowEditStopParams<R extends GridRowModel = GridRowModel>
   extends GridRowParams<R> {
   /**
    * Which field triggered this event.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
-  field: string;
+  field?: string;
   /**
    * The reason for this event to be triggered.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
-  reason: GridRowEditStopReasons;
+  reason?: GridRowEditStopReasons;
 }
 
 /**

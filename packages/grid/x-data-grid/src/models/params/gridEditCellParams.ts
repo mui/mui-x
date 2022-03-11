@@ -58,8 +58,9 @@ enum GridCellEditStartReasons {
 export interface GridCellEditStartParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
   /**
    * The reason for this event to be triggered.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
-  reason: GridCellEditStartReasons;
+  reason?: GridCellEditStartReasons;
 }
 
 enum GridCellEditStopReasons {
@@ -76,8 +77,9 @@ enum GridCellEditStopReasons {
 export interface GridCellEditStopParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
   /**
    * The reason for this event to be triggered.
+   * Only available if `props.experimentalFeatures.newEditingApi: true`.
    */
-  reason: GridCellEditStopReasons;
+  reason?: GridCellEditStopReasons;
 }
 
 // https://github.com/mui/mui-x/pull/3738#discussion_r798504277
