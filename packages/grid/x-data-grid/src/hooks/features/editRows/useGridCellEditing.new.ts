@@ -268,7 +268,7 @@ export const useGridCellEditing = (
         }
 
         let rowUpdate = column.valueSetter
-          ? column.valueSetter({ value, row, originalRow: row })
+          ? column.valueSetter({ value, row })
           : { ...row, [field]: value };
 
         if (processRowUpdate) {

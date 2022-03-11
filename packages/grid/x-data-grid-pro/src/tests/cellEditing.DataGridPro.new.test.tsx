@@ -366,7 +366,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(columnProps.valueSetter.lastCall.args[0]).to.deep.equal({
           value: 'USD GBP',
           row: defaultData.rows[0],
-          originalRow: defaultData.rows[0],
         });
       });
 

@@ -348,7 +348,6 @@ export const useGridRowEditing = (
             rowUpdate = column.valueSetter({
               value: fieldProps.value,
               row: rowUpdate,
-              originalRow: row,
             });
           } else {
             rowUpdate[field] = fieldProps.value;
