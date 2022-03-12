@@ -55,7 +55,12 @@ export default function CellEditServerSidePersistence() {
         experimentalFeatures={{ newEditingApi: true }}
       />
       {!!snackbar && (
-        <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={6000}
+        >
           <Alert {...snackbar} onClose={handleCloseSnackbar} />
         </Snackbar>
       )}

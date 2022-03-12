@@ -162,14 +162,12 @@ const columns: GridColumns = [
     headerName: 'Date Created',
     type: 'date',
     width: 180,
-    editable: true,
   },
   {
     field: 'lastLogin',
     headerName: 'Last Login',
     type: 'dateTime',
     width: 220,
-    editable: true,
   },
 ];
 

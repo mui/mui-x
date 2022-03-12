@@ -33,7 +33,7 @@ By default, the cell editing mode is assumed, meaning that only a single cell ca
 To edit simultaneously all cells of a row, you can use the row editing mode, accessible by setting the `editMode` prop to `"row"`.
 For more information, see the dedicated [section](#row-editing).
 
-The following demo shows an example of how to make the Name column editable.
+The following demo shows an example of how to make all columns editable.
 Play with it by double-clicking or pressing <kbd class="key">Enter</kbd> in any cell from this column.
 
 {{"demo": "BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -60,7 +60,7 @@ There are a few ways to start editing a cell (or a row if `editMode="row"`):
 
 ### Stop editing
 
-Once a cell is in edit mode, any of the following interactions will stop the edit mode and, depending on the action, save or discard the changes made:
+Once a cell is in edit mode, any of the following interactions will stop the edit mode and, depending on the action, save or revert the changes made:
 
 - Pressing <kbd class="key">Escape</kbd> stops the edit mode and reverts the changes.
 - Pressing <kbd class="key">Tab</kbd> or <kbd class="key">Enter</kbd> saves the changes and stops the edit mode.
@@ -143,8 +143,8 @@ The value parser converts the value entered to uppercase while the value setter 
 
 ## Events
 
-The mouse and keyboard interactions that [start](#start-editing) and [stop](#stop-editing) the cell editing will fire, respectively, the events `cellEditStart` and `cellEditStop`.
-For row editing, the events are `rowEditStart` and `rowEditStop`.
+The mouse and keyboard interactions that [start](#start-editing) and [stop](#stop-editing) the cell editing will fire, respectively, the [events](/components/data-grid/events/) `'cellEditStart'` and `'cellEditStop'`.
+For row editing, the events are `'rowEditStart'` and `'rowEditStop'`.
 You can control how these events are handled and customize the behavior of the cell editing or row editing.
 
 For convenience, you can also listen to these events using their equivalent props:
@@ -155,10 +155,10 @@ For convenience, you can also listen to these events using their equivalent prop
 - `onRowEditStop`
 
 These events and props are called with an object containing the row ID and column field of the cell that is being edited.
-Also, the object contains a `reason` param specifying which type of interaction caused the event to be fired (e.g. `cellDoubleClick` for when a double-click starts the edit mode).
+Also, the object contains a `reason` param specifying which type of interaction caused the event to be fired (e.g. `'cellDoubleClick'` for when a double-click starts the edit mode).
 
 The following demo prevents stoping the edit mode of a cell when that same cell loses focus by a click outside it.
-To accomplish this task, the `onCellEditStop` prop was used to check if the `reason` is `cellFocusOut`.
+To accomplish this task, the `onCellEditStop` prop was used to check if the `reason` is `'cellFocusOut'`.
 If that condition is true, it [disables](/components/data-grid/events/#disabling-the-default-behavior) the default event behavior.
 The only ways to stop editing a cell now is to press <kbd class="key">Enter</kbd>, <kbd class="key">Escape</kbd> or <kbd class="key">Tab</kbd>.
 

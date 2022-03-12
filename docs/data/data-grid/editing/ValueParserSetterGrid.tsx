@@ -17,7 +17,10 @@ function setFullName(params: GridValueSetterParams) {
 }
 
 function parseFullName(value: GridCellValue) {
-  return String(value).toUpperCase();
+  return String(value)
+    .split(' ')
+    .map((str) => (str.length > 0 ? str[0].toUpperCase() + str.slice(1) : ''))
+    .join(' ');
 }
 
 export default function ValueParserSetterGrid() {
