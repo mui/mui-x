@@ -41,7 +41,10 @@ const pages = [
           { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
           { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
           { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
-          { pathname: '/x/api/data-grid/grid-row-class-name-params', title: 'GridRowClassNameParams' },
+          {
+            pathname: '/x/api/data-grid/grid-row-class-name-params',
+            title: 'GridRowClassNameParams',
+          },
           { pathname: '/x/api/data-grid/grid-row-params', title: 'GridRowParams' },
           { pathname: '/x/api/data-grid/grid-row-spacing-params', title: 'GridRowSpacingParams' },
           {
