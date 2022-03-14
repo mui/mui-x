@@ -627,9 +627,9 @@ describe('<DataGridPro /> - Rows', () => {
 
     const TestCase = (props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) => {
       apiRef = useGridApiRef();
-      const data = useData(props.nbRows || 100, props.nbCols || 10);
+      const data = useData(props.nbRows || 10, props.nbCols || 10);
       return (
-        <div style={{ width: 300, height: 300 }}>
+        <div style={{ width: 100, height: 300 }}>
           <DataGridPro
             apiRef={apiRef}
             columns={data.columns}
@@ -642,16 +642,16 @@ describe('<DataGridPro /> - Rows', () => {
     };
 
     it('should allow to disable virtualization', () => {
-      render(<TestCase nbRows={100} nbCols={10} />);
-      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(100);
-      expect(document.querySelectorAll('[role="cell"]')).to.have.length(100 * 10);
+      render(<TestCase />);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(10);
+      expect(document.querySelectorAll('[role="cell"]')).to.have.length(10 * 10);
     });
 
     it('should render the correct rows when changing pages', () => {
-      render(<TestCase nbRows={150} nbCols={10} pagination />);
-      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(100);
+      render(<TestCase pageSize={6} rowsPerPageOptions={[6]} pagination />);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
       apiRef.current.setPage(1);
-      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(50);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);
     });
   });
 

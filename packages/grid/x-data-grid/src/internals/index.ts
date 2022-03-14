@@ -66,7 +66,7 @@ export { useGridStatePersistence } from '../hooks/features/statePersistence/useG
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
 export { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
 
-export { useCurrentPageRows } from '../hooks/utils/useCurrentPageRows';
+export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
