@@ -33,12 +33,12 @@ In each package, the most used folders are:
 
 ### Accessing state
 
-The react components can access the state with either selectors or getter methods.
+The react components can [access the state](https://mui.com/components/data-grid/state/#access-the-state) with either selectors or getter methods.
 Here is an example.
 
 ```js
 const apiRef = useGridApiContext();
-
+// or
 const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
 const row = apiRef.current.getRow(id);
 ```
@@ -49,16 +49,20 @@ To update the state, the component can either call a setter or publish an event.
 
 ```js
 apiRef.current.setEditCellValue(newParams, event);
+// or
 apiRef.current.publishEvent(GridEvents.cellKeyDown, params, event as any);
 ```
 
-Publishing an event allows triggering multiple features. For example, `GridEvents.cellKeyDown` is listened by the focus, edit, and navigation feature hooks. Each of them defines an event handler responsible of modifying the state.
+An event can be consumed by multiple listeners.
+For example, `GridEvents.cellKeyDown` is listened by the focus, edit, selection, and navigation feature hooks.
+Each of them defines an event handler responsible for modifying their sub-state.
 
 ```js
 useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 ```
 
-The other interest of events is that developers can listen to them by subscribing to the event for example [the documentation](https://mui.com/components/data-grid/events/) or by providing a `on<Event>` prop such as `onEditCellPropsChange`. Notice that all the events do not have an associated prop `on<Event>`
+The other interest of events is that developers can listen to them by [subscribing to the event](https://mui.com/components/data-grid/events/#subscribing-to-events) or by providing a `on<Event>` prop such as `onEditCellPropsChange`.
+Notice that all the events do not have an associated prop `on<Event>`
 
 ## Specific features
 
