@@ -399,7 +399,7 @@ export const createColumnsState = ({
           !columnsStateWithoutColumnVisibilityModel.lookup[field].hide;
       });
     } else if (keepOnlyColumnsToUpsert) {
-      // At this point, `keepOnlyColumnsToUpsert` changes its meaning to keep the columns
+      // At this point, `keepOnlyColumnsToUpsert` has a new meaning: keep the columns
       // passed via `columnToUpsert` + columns added by the pre-processors. We do the following
       // cleanup because a given column may have been removed from the `columns` prop but it still
       // exists in the state.
