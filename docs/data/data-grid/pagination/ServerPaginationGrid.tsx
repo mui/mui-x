@@ -1,73 +1,37 @@
 import * as React from 'react';
-import { DataGrid, GridRowModel } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { DataGrid } from '@mui/x-data-grid';
+import { serverConfiguration, UseDemoDataOptions } from '@mui/x-data-grid-generator';
 
-/**
- * Simulates server data loading
- */
-const loadServerRows = (
-  page: number,
-  pageSize: number,
-  allRows: GridRowModel[],
-): Promise<GridRowModel[]> =>
-  new Promise<GridRowModel[]>((resolve) => {
-    setTimeout(() => {
-      resolve(allRows.slice(page * pageSize, (page + 1) * pageSize));
-    }, Math.random() * 200 + 100); // simulate network latency
-  });
-
-const useQuery = (page: number, pageSize: number, allRows: GridRowModel[]) => {
-  const [rowCount, setRowCount] = React.useState<number | undefined>(undefined);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [data, setData] = React.useState<GridRowModel[]>([]);
-
-  React.useEffect(() => {
-    let active = true;
-
-    setIsLoading(true);
-    setRowCount(undefined);
-    loadServerRows(page, pageSize, allRows).then((newRows) => {
-      if (!active) {
-        return;
-      }
-      setData(newRows);
-      setIsLoading(false);
-      setRowCount(allRows.length);
-    });
-
-    return () => {
-      active = false;
-    };
-  }, [page, pageSize, allRows]);
-
-  return { isLoading, data, rowCount };
+const DATASET_OPTION: UseDemoDataOptions = {
+  dataSet: 'Commodity',
+  rowLength: 100,
+  maxColumns: 6,
 };
 
-interface RowsState {
-  page: number;
-  pageSize: number;
-}
+const SERVER_OPTIONS = {
+  minDelay: 100,
+  maxDelay: 300,
+  useCursorPagination: false,
+};
 
-/**
- * TODO: Improve `useDemoData` to move the fake pagination inside it instead of "fetching" everything of slicing in the component
- */
+const { columns, initialState, useQuery } = serverConfiguration(
+  DATASET_OPTION,
+  SERVER_OPTIONS,
+);
+
 export default function ServerPaginationGrid() {
-  const { data: demoData } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 100,
-    maxColumns: 6,
-  });
+  const [page, setPage] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(5);
 
-  const [rowsState, setRowsState] = React.useState<RowsState>({
-    page: 0,
-    pageSize: 5,
-  });
-
-  const { isLoading, data, rowCount } = useQuery(
-    rowsState.page,
-    rowsState.pageSize,
-    demoData.rows,
+  const queryOptions = React.useMemo(
+    () => ({
+      page,
+      pageSize,
+    }),
+    [page, pageSize],
   );
+
+  const { isLoading, data, rowCount } = useQuery(queryOptions);
 
   // Some api client return undefine while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
@@ -81,18 +45,18 @@ export default function ServerPaginationGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        columns={demoData.columns}
         rows={data}
         rowCount={rowCountState}
         loading={isLoading}
         rowsPerPageOptions={[5]}
         pagination
-        {...rowsState}
+        page={page}
+        pageSize={pageSize}
         paginationMode="server"
-        onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
-        onPageSizeChange={(pageSize) =>
-          setRowsState((prev) => ({ ...prev, pageSize }))
-        }
+        onPageChange={(newPage) => setPage(newPage)}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+        columns={columns}
+        initialState={initialState}
       />
     </div>
   );

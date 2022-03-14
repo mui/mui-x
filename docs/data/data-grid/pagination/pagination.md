@@ -116,7 +116,7 @@ React.useEffect(() => {
 You can also handle servers with cursor-based pagination.
 To do so, you just have to keep track of the next cursor associated with each page you fetched.
 
-{{"demo": "CursorPaginationGrid.js", "bg": "inline"}}
+{{"demo": "CursorPaginationGrid.js", "bg": "inline", "defaultCodeOpen": false }}
 
 ## Custom pagination UI
 
@@ -126,7 +126,7 @@ You can customize the rendering of the pagination in the footer following [the c
 
 > ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
-{{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}
 
 ## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
