@@ -43,9 +43,11 @@ type DataGridComponent = <R extends GridValidRowModel>(
   props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element;
 
-export const DataGrid = <R extends GridValidRowModel>(props: DataGridProps<R>) => {
+export function DataGrid<R extends GridValidRowModel>(props: DataGridProps<R>): JSX.Element;
+
+export function DataGrid(props: any) {
   return <div>TEST</div>;
-};
+}
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
