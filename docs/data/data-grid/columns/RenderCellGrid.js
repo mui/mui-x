@@ -9,7 +9,7 @@ const columns = [
     width: 150,
     renderCell: (params) => (
       <strong>
-        {params.value.getFullYear()}
+        {params.value?.getFullYear() ?? ''}
         <Button
           variant="contained"
           color="primary"

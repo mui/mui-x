@@ -72,7 +72,13 @@ export default function RowGroupingGroupingValueGetter() {
         headerName: 'Decade',
         valueGetter: (params) => Math.floor(params.row.year / 10) * 10,
         groupingValueGetter: (params) => Math.floor(params.row.year / 10) * 10,
-        renderCell: (params) => `${params.value?.toString().slice(-2)}'s`,
+        renderCell: (params) => {
+          if (params.value == null) {
+            return '';
+          }
+
+          return `${params.value.toString().slice(-2)}'s`;
+        },
       } as GridColDef<Movie, number>,
     ],
     [data.columns],

@@ -28,9 +28,11 @@ export default function ValueParserGrid() {
             headerName: 'Tax Rate',
             width: 150,
             valueFormatter: (params) => {
-              const valueFormatted = Number(
-                (params.value ?? 0) * 100,
-              ).toLocaleString();
+              if (params.value == null) {
+                return '';
+              }
+
+              const valueFormatted = Number(params.value * 100).toLocaleString();
               return `${valueFormatted} %`;
             },
             valueParser: (value) => Number(value) / 100,
