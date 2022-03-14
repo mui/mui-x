@@ -14,7 +14,8 @@
     "access": "public"
   },
   "bin": {
-    "licensegen": "./bin/license-gen-script.js"
+    "licensegen": "./bin/license-gen-script.js",
+    "licensedecode": "./bin/license-decode-script.js"
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
