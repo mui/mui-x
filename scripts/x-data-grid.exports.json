@@ -12,7 +12,7 @@
   { "name": "daDK", "kind": "Variable" },
   { "name": "DATA_GRID_DEFAULT_SLOTS_COMPONENTS", "kind": "Variable" },
   { "name": "DATA_GRID_PROPS_DEFAULT_VALUES", "kind": "Variable" },
-  { "name": "DataGrid", "kind": "Function" },
+  { "name": "DataGrid", "kind": "Variable" },
   { "name": "DataGridProps", "kind": "TypeAlias" },
   { "name": "deDE", "kind": "Variable" },
   { "name": "DEFAULT_GRID_COL_TYPE_KEY", "kind": "Variable" },
