@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -49,6 +49,61 @@ describe('<DataGrid /> - Cells', () => {
         </div>,
       );
       expect(getCell(0, 0)).to.have.class('foobar');
+    });
+  });
+
+  describe('showCellRightBorder', () => {
+    function expectRightBorder(element: HTMLElement) {
+      expect(element).to.have.class(gridClasses.withBorder);
+
+      const computedStyle = window.getComputedStyle(element);
+      const color = computedStyle.getPropertyValue('border-right-color');
+      const width = computedStyle.getPropertyValue('border-right-width');
+
+      expect(width).to.equal('1px');
+      // should not be transparent
+      expect(color).to.not.equal('rgba(0, 0, 0, 0)');
+    }
+
+    it('should add right border to cells', function test() {
+      if (isJSDOM) {
+        // Doesn't work with mocked window.getComputedStyle
+        this.skip();
+      }
+
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'id' }, { field: 'brand' }]}
+            showCellRightBorder
+          />
+        </div>,
+      );
+
+      expectRightBorder(getCell(0, 0));
+      expectRightBorder(getCell(1, 0));
+      expectRightBorder(getCell(2, 0));
+    });
+
+    // See https://github.com/mui/mui-x/issues/4122
+    it('should add right border to cells in the last row', function test() {
+      if (isJSDOM) {
+        // Doesn't work with mocked window.getComputedStyle
+        this.skip();
+      }
+
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            autoHeight
+            columns={[{ field: 'id' }, { field: 'brand' }]}
+            showCellRightBorder
+          />
+        </div>,
+      );
+      expectRightBorder(getCell(2, 0));
     });
   });
 
