@@ -8,17 +8,18 @@ import {
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
 
-let sharedLicenseStatus: LicenseStatus | undefined;
+const sharedLicenseStatuses: { [key: string]: LicenseStatus | undefined } = {};
 
 export function useLicenseVerifier(): LicenseStatus {
   return React.useMemo(() => {
-    if (sharedLicenseStatus !== undefined) {
-      return sharedLicenseStatus;
+    const licenseKey = LicenseInfo.getKey();
+    if (sharedLicenseStatuses[licenseKey] !== undefined) {
+      return sharedLicenseStatuses[licenseKey]!;
     }
 
-    const licenseStatus = verifyLicense(LicenseInfo.getReleaseInfo(), LicenseInfo.getKey());
+    const licenseStatus = verifyLicense(LicenseInfo.getReleaseInfo(), licenseKey);
 
-    sharedLicenseStatus = licenseStatus;
+    sharedLicenseStatuses[licenseKey] = licenseStatus;
 
     if (licenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();
