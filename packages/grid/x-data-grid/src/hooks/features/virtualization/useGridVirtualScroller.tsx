@@ -235,17 +235,25 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       ? prevRenderContext.current
       : computeRenderContext();
 
-    const rowsScrolledSincePreviousRender = Math.abs(
+    const topRowsScrolledSincePreviousRender = Math.abs(
       nextRenderContext.firstRowIndex - prevRenderContext.current.firstRowIndex,
     );
+    const bottomRowsScrolledSincePreviousRender = Math.abs(
+      nextRenderContext.lastRowIndex - prevRenderContext.current.lastRowIndex,
+    );
 
-    const columnsScrolledSincePreviousRender = Math.abs(
+    const topColumnsScrolledSincePreviousRender = Math.abs(
       nextRenderContext.firstColumnIndex - prevRenderContext.current.firstColumnIndex,
+    );
+    const bottomColumnsScrolledSincePreviousRender = Math.abs(
+      nextRenderContext.lastColumnIndex - prevRenderContext.current.lastColumnIndex,
     );
 
     const shouldSetState =
-      rowsScrolledSincePreviousRender >= rootProps.rowThreshold ||
-      columnsScrolledSincePreviousRender >= rootProps.columnThreshold ||
+      topRowsScrolledSincePreviousRender >= rootProps.rowThreshold ||
+      bottomRowsScrolledSincePreviousRender >= rootProps.rowThreshold ||
+      topColumnsScrolledSincePreviousRender >= rootProps.columnThreshold ||
+      bottomColumnsScrolledSincePreviousRender >= rootProps.columnThreshold ||
       prevTotalWidth.current !== columnsTotalWidth;
 
     // TODO v6: rename event to a wider name, it's not only fired for row scrolling

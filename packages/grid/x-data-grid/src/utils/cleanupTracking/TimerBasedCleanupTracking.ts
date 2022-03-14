@@ -6,6 +6,12 @@ const CLEANUP_TIMER_LOOP_MILLIS = 1000;
 export class TimerBasedCleanupTracking implements CleanupTracking {
   timeouts? = new Map<number, NodeJS.Timeout>();
 
+  cleanupTimeout = CLEANUP_TIMER_LOOP_MILLIS;
+
+  constructor(timeout = CLEANUP_TIMER_LOOP_MILLIS) {
+    this.cleanupTimeout = timeout;
+  }
+
   register(object: any, unsubscribe: UnsubscribeFn, unregisterToken: UnregisterToken): void {
     if (!this.timeouts) {
       this.timeouts = new Map<number, NodeJS.Timeout>();
@@ -16,7 +22,7 @@ export class TimerBasedCleanupTracking implements CleanupTracking {
         unsubscribe();
       }
       this.timeouts!.delete(unregisterToken.cleanupToken);
-    }, CLEANUP_TIMER_LOOP_MILLIS);
+    }, this.cleanupTimeout);
 
     this.timeouts!.set(unregisterToken!.cleanupToken, timeout);
   }
