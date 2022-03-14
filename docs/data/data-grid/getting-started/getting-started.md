@@ -177,7 +177,7 @@ The enterprise components come in two plans: Pro and Premium.
 | **Column**                                                                                |           |                                    |
 | [Column groups](/components/data-grid/columns/#column-groups)                             |    🚧     |                 🚧                 |                     🚧                     |
 | [Column spanning](/components/data-grid/columns/#column-spanning)                         |    🚧     |                 🚧                 |                     🚧                     |
-| [Column resizing](/components/data-grid/columns/#column-resizing)                         |    ❌     |                 ✅                 |                     ✅                     |
+| [Column resizing](/components/data-grid/columns/#resizing)                                |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/components/data-grid/columns/#column-reorder)                           |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                   |           |                                    |                                            |
@@ -192,8 +192,8 @@ The enterprise components come in two plans: Pro and Premium.
 | [Cell range selection](/components/data-grid/selection/#range-selection)                  |    ❌     |                 ❌                 |                     🚧                     |
 | **Filtering**                                                                             |           |                                    |                                            |
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |                 🚧                 |                     🚧                     |
-| [Column filters](/components/data-grid/filtering/#column-filters)                         |    ✅     |                 ✅                 |                     ✅                     |
-| [Multi-column filtering](/components/data-grid/filtering/#single-and-multi-filtering)     |    ❌     |                 ✅                 |                     ✅                     |
+| [Column filters](/components/data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |
+| [Multi-column filtering](/components/data-grid/filtering/#multi-filtering)                |    ❌     |                 ✅                 |                     ✅                     |
 | **Sorting**                                                                               |           |                                    |                                            |
 | [Column sorting](/components/data-grid/sorting/)                                          |    ✅     |                 ✅                 |                     ✅                     |
 | [Multi-column sorting](/components/data-grid/sorting/#multi-sorting)                      |    ❌     |                 ✅                 |                     ✅                     |
@@ -215,7 +215,7 @@ The enterprise components come in two plans: Pro and Premium.
 | **Group & Pivot**                                                                         |           |                                    |                                            |
 | [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |                 ✅                 |                     ✅                     |
 | [Master detail](/components/data-grid/group-pivot/#master-detail)                         |    ❌     |                 ✅                 |                     ✅                     |
-| [Grouping](/components/data-grid/group-pivot/#grouping)                                   |    ❌     |                 ❌                 |                     🚧                     |
+| [Grouping](/components/data-grid/group-pivot/#row-grouping)                               |    ❌     |                 ❌                 |                     🚧                     |
 | [Aggregation](/components/data-grid/group-pivot/#aggregation)                             |    ❌     |                 ❌                 |                     🚧                     |
 | [Pivoting](/components/data-grid/group-pivot/#pivoting)                                   |    ❌     |                 ❌                 |                     🚧                     |
 | **Misc**                                                                                  |           |                                    |                                            |
