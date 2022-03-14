@@ -12,7 +12,8 @@ import {
   GridDensityTypes,
   GridEditModes,
   GridFeatureModeConstant,
-  GridSlotsComponent, GridValidRowModel,
+  GridSlotsComponent,
+  GridValidRowModel,
 } from '../models';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {

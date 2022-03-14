@@ -4,7 +4,8 @@ import {
   DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
   GRID_DEFAULT_LOCALE_TEXT,
   GridSlotsComponent,
-  DATA_GRID_PROPS_DEFAULT_VALUES, GridValidRowModel,
+  DATA_GRID_PROPS_DEFAULT_VALUES,
+  GridValidRowModel,
 } from '@mui/x-data-grid';
 import {
   DataGridProProps,
