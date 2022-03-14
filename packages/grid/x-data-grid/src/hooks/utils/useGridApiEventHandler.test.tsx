@@ -60,7 +60,9 @@ describe('useGridApiEventHandler', () => {
 
   describe('Timer-based implementation', () => {
     it('should unsubscribe event listeners registered by uncommitted components', async () => {
-      const useGridApiEventHandler = createUseGridApiEventHandler(new TimerBasedCleanupTracking());
+      const useGridApiEventHandler = createUseGridApiEventHandler(
+        new TimerBasedCleanupTracking(50),
+      );
       const unsubscribe = spy();
       const apiRef = {
         current: { subscribeEvent: spy(() => unsubscribe) },
@@ -80,7 +82,7 @@ describe('useGridApiEventHandler', () => {
       expect(apiRef.current.subscribeEvent.callCount).to.equal(2);
 
       unmount();
-      await sleep(1100);
+      await sleep(60);
 
       // Ensure that both event listeners were unsubscribed
       expect(unsubscribe.callCount).to.equal(2);

@@ -207,7 +207,7 @@ const columns: GridColDef[] = [
 
 {{"demo": "RenderCellGrid.js", "bg": "inline"}}
 
-**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#export-custom-rendered-cells) the data.
+**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#exported-cells) the data.
 
 > ⚠️ When using `renderCell` with object cell values
 > remember to handle [sorting](/components/data-grid/sorting/#custom-comparator).
@@ -217,7 +217,7 @@ const columns: GridColDef[] = [
 
 The `renderCell` render function allows customizing the rendered in "view mode" only.
 For the "edit mode", set the `renderEditCell` function to customize the edit component.
-Check the [editing page](/components/data-grid/editing) for more details about editing.
+Check the [editing page](/components/data-grid/editing/) for more details about editing.
 
 #### Expand cell renderer
 
@@ -542,7 +542,7 @@ Those selectors consider all the defined columns, including hidden ones.
 
 {{"demo": "ColumnsSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state).
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state/#access-the-state).
 
 ## API
 

@@ -61,7 +61,12 @@ describe('<DataGridPro /> - Cell Editing', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPro
+          {...baselineProps}
+          apiRef={apiRef}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+          {...props}
+        />
       </div>
     );
   };
@@ -611,7 +616,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
 
     const input = screen.getByTestId('custom-input');
-    fireEvent.mouseUp(input);
     fireEvent.click(input);
     input.focus();
 

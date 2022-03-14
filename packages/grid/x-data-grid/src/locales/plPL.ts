@@ -30,7 +30,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Eksportuj',
   toolbarExportLabel: 'Eksportuj',
   toolbarExportCSV: 'Pobierz jako plik CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'Drukuj',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Znajdź kolumnę',
@@ -42,7 +42,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
   filterPanelDeleteIconLabel: 'Usuń',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLinkOperator: 'Operator logiczny',
   filterPanelOperators: 'Operator',
 
   // TODO v6: rename to filterPanelOperator
@@ -65,12 +65,12 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'mniejsze lub równe',
   filterOperatorIsEmpty: 'jest pusty',
   filterOperatorIsNotEmpty: 'nie jest pusty',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'jest jednym z',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'dowolny',
+  filterValueTrue: 'prawda',
+  filterValueFalse: 'fałsz',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -97,37 +97,37 @@ const plPLGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} z ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionHeaderName: 'Pole wyboru',
+  checkboxSelectionSelectAllRows: 'Zaznacz wszystkie wiersze',
+  checkboxSelectionUnselectAllRows: 'Odznacz wszystkie wiersze',
+  checkboxSelectionSelectRow: 'Zaznacz wiersz',
+  checkboxSelectionUnselectRow: 'Odznacz wiersz',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'yes',
-  // booleanCellFalseLabel: 'no',
+  booleanCellTrueLabel: 'tak',
+  booleanCellFalseLabel: 'nie',
 
   // Actions cell more text
   actionsCellMore: 'więcej',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Przypnij do lewej',
+  pinToRight: 'Przypnij do prawej',
+  unpin: 'Odepnij',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Grupa',
+  treeDataExpand: 'pokaż elementy potomne',
+  treeDataCollapse: 'ukryj elementy potomne',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Grupa',
+  groupColumn: (name) => `Grupuj według ${name}`,
+  unGroupColumn: (name) => `Rozgrupuj ${name}`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'Rozwiń',
+  collapseDetailPanel: 'Zwiń',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

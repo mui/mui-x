@@ -24,15 +24,20 @@ export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'f
 export type GridColumnDimensionProperties = typeof COLUMNS_DIMENSION_PROPERTIES[number];
 
 export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
-  const allColumnTypes = { ...getGridDefaultColumnTypes(), ...customColumnTypes };
-  const mergedColumnTypes: GridColumnTypesRecord = {};
+  const mergedColumnTypes: GridColumnTypesRecord = { ...getGridDefaultColumnTypes() };
 
-  Object.entries(allColumnTypes).forEach(([colType, colTypeDef]) => {
-    colTypeDef = {
-      ...allColumnTypes[colTypeDef.extendType || DEFAULT_GRID_COL_TYPE_KEY],
-      ...colTypeDef,
-    };
-    mergedColumnTypes[colType] = colTypeDef;
+  Object.entries(customColumnTypes).forEach(([colType, colTypeDef]) => {
+    if (mergedColumnTypes[colType]) {
+      mergedColumnTypes[colType] = {
+        ...mergedColumnTypes[colType],
+        ...colTypeDef,
+      };
+    } else {
+      mergedColumnTypes[colType] = {
+        ...mergedColumnTypes[colTypeDef.extendType || DEFAULT_GRID_COL_TYPE_KEY],
+        ...colTypeDef,
+      };
+    }
   });
 
   return mergedColumnTypes;

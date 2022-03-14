@@ -809,9 +809,29 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             <DataGrid {...baselineProps} rows={[]} rowHeight={rowHeight} autoHeight />
           </div>,
         );
-        expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].clientHeight).to.equal(
-          rowHeight * 2,
+        expect(
+          (document.querySelector('.MuiDataGrid-overlay') as HTMLElement).clientHeight,
+        ).to.equal(rowHeight * 2);
+      });
+
+      it('should expand content height to one row height when there is an error', () => {
+        const error = { message: 'ERROR' };
+        const rowHeight = 50;
+
+        render(
+          <div style={{ width: 150 }}>
+            <DataGrid
+              columns={[{ field: 'brand' }]}
+              rows={[]}
+              autoHeight
+              error={error}
+              rowHeight={rowHeight}
+            />
+          </div>,
         );
+        const errorOverlayElement = document.querySelector('.MuiDataGrid-overlay') as HTMLElement;
+        expect(errorOverlayElement.textContent).to.equal(error.message);
+        expect(errorOverlayElement.offsetHeight).to.equal(2 * rowHeight);
       });
     });
 
@@ -857,6 +877,49 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         '.MuiDataGrid-virtualScrollerContent',
       ) as Element;
       expect(virtualScrollerContent.clientHeight).to.equal(virtualScroller.clientHeight);
+    });
+
+    // See https://github.com/mui/mui-x/issues/4113
+    it('should preserve default width constraints when extending default column type', () => {
+      const rows = [{ id: 1, value: 1 }];
+      const columns = [{ field: 'id', type: 'number' }];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            columnTypes={{
+              number: {},
+            }}
+          />
+        </div>,
+      );
+
+      // default `width` should be used
+      expect(getCell(0, 0).offsetWidth).to.equal(100);
+    });
+
+    it('should allow to override default width constraints when extending default column type', () => {
+      const rows = [{ id: 1, value: 1 }];
+      const columns = [{ field: 'id', type: 'number' }];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            columnTypes={{
+              number: {
+                width: 10,
+                minWidth: 200,
+              },
+            }}
+          />
+        </div>,
+      );
+
+      expect(getCell(0, 0).offsetWidth).to.equal(200);
     });
   });
 
@@ -941,11 +1004,17 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           <DataGrid {...baselineProps} error={{ message }} />
         </div>,
       );
-      expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].textContent).to.equal(message);
+      expect((document.querySelector('.MuiDataGrid-overlay') as HTMLElement).textContent).to.equal(
+        message,
+      );
     });
   });
 
-  it('should allow style customization using the theme', () => {
+  it('should allow style customization using the theme', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const theme = createTheme({
       components: {
         MuiDataGrid: {
@@ -985,7 +1054,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(window.getComputedStyle(getCell(0, 0)).backgroundColor).to.equal('rgb(0, 128, 0)');
   });
 
-  it('should support the sx prop', () => {
+  it('should support the sx prop', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const theme = createTheme({
       palette: {
         primary: {

@@ -7,7 +7,7 @@ import {
 import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
 import type { GridApiCommon, GridRowEntry } from '../../models';
 
-export const getCurrentPageRows = <Api extends GridApiCommon>(
+export const getVisibleRows = <Api extends GridApiCommon>(
   apiRef: React.MutableRefObject<Api>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
@@ -30,16 +30,17 @@ export const getCurrentPageRows = <Api extends GridApiCommon>(
 };
 
 /**
- * Compute the list of the rows in the current page
- * - If the pagination is disabled or in server mode, it equals all the visible rows
- * - If the row tree has several layers, it contains up to `state.pageSize` top level rows and all their descendants
- * - If the row tree is flat, it only contains up to `state.pageSize` rows
+ * Computes the list of rows that are reachable by scroll.
+ * Depending on whether pagination is enabled, it will return the rows in the current page.
+ * - If the pagination is disabled or in server mode, it equals all the visible rows.
+ * - If the row tree has several layers, it contains up to `state.pageSize` top level rows and all their descendants.
+ * - If the row tree is flat, it only contains up to `state.pageSize` rows.
  */
-export const useCurrentPageRows = <Api extends GridApiCommon>(
+export const useGridVisibleRows = <Api extends GridApiCommon>(
   apiRef: React.MutableRefObject<Api>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
-  const response = getCurrentPageRows(apiRef, props);
+  const response = getVisibleRows(apiRef, props);
 
   return React.useMemo(
     () => ({

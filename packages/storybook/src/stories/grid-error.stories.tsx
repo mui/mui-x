@@ -112,6 +112,17 @@ export const ThrowException = () => {
   );
 };
 
+export const ErrorWithAutoHeight = () => {
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
+
+  return (
+    <div style={{ width: '100%' }}>
+      <DataGridPro rows={rows} columns={cols} autoHeight error={{ message: 'ERROR' }} />
+    </div>
+  );
+};
+
 export const ShowErrorApi = () => {
   const api = useGridApiRef();
   const rows = React.useMemo(() => getRows(), []);
