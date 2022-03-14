@@ -31,7 +31,7 @@ By default, columns are ordered according to the order they are included in the 
 > ⚠️ The `columns` prop should keep the same reference between two renders.
 > The columns are designed to be definitions, to never change once the component is mounted.
 > Otherwise, you take the risk of losing the column width state (if resized).
-> You can create the array outside of the render function or memoize it.
+> You can create the array outside the render function or memoize it.
 
 ### Headers
 
@@ -207,7 +207,7 @@ const columns: GridColDef[] = [
 
 {{"demo": "RenderCellGrid.js", "bg": "inline"}}
 
-**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#export-custom-rendered-cells) the data.
+**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#exported-cells) the data.
 
 > ⚠️ When using `renderCell` with object cell values
 > remember to handle [sorting](/components/data-grid/sorting/#custom-comparator).
@@ -217,7 +217,7 @@ const columns: GridColDef[] = [
 
 The `renderCell` render function allows customizing the rendered in "view mode" only.
 For the "edit mode", set the `renderEditCell` function to customize the edit component.
-Check the [editing page](/components/data-grid/editing) for more details about editing.
+Check the [editing page](/components/data-grid/editing/) for more details about editing.
 
 #### Expand cell renderer
 
@@ -389,7 +389,7 @@ You can extend the native column types with your own by simply spreading the nec
 
 The demo below defines a new column type: `usdPrice` that extends the native `number` column type.
 
-```jsx
+```ts
 const usdPrice: GridColTypeDef = {
   type: 'number',
   width: 130,
@@ -527,6 +527,22 @@ Each cell takes up the width of one column.
 You can modify this default behavior with column spanning.
 It allows cells to span multiple columns.
 This is very close to the "column spanning" in an HTML `<table>`.
+
+## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+### Visible columns
+
+Those selectors do not take into account hidden columns.
+
+{{"demo": "VisibleColumnsSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
+### Defined columns
+
+Those selectors consider all the defined columns, including hidden ones.
+
+{{"demo": "ColumnsSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state/#access-the-state).
 
 ## API
 

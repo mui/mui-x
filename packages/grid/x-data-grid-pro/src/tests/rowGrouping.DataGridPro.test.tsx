@@ -1,3 +1,4 @@
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
   getColumnHeaderCell,
@@ -18,6 +19,7 @@ import {
   GridRowTreeNodeConfig,
   useGridApiRef,
   useGridRootProps,
+  GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 
@@ -892,6 +894,58 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
+    describe('prop: groupColDef.valueFormatter', () => {
+      it('should allow to format the value in object mode', () => {
+        render(
+          <Test
+            initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={1}
+            groupingColDef={{
+              valueFormatter: (params) => {
+                const node = apiRef.current.getRowNode(params.id!)!;
+                return `${node.groupingField} / ${node.groupingKey}`;
+              },
+            }}
+          />,
+        );
+
+        expect(getColumnValues(0)).to.deep.equal([
+          'category1 / Cat A (3)',
+          'category2 / Cat 1 (1)',
+          'category2 / Cat 2 (2)',
+          'category1 / Cat B (2)',
+          'category2 / Cat 2 (1)',
+          'category2 / Cat 1 (1)',
+        ]);
+      });
+
+      it('should allow to format the value in callback mode', () => {
+        render(
+          <Test
+            initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={1}
+            groupingColDef={() => ({
+              valueFormatter: (params) => {
+                const node = apiRef.current.getRowNode(params.id!)!;
+                return `${node.groupingField} / ${node.groupingKey}`;
+              },
+            })}
+          />,
+        );
+
+        expect(getColumnValues(0)).to.deep.equal([
+          'category1 / Cat A (3)',
+          'category2 / Cat 1 (1)',
+          'category2 / Cat 2 (2)',
+          'category1 / Cat B (2)',
+          'category2 / Cat 2 (1)',
+          'category2 / Cat 1 (1)',
+        ]);
+      });
+    });
+
     describe('prop: groupingColDef.hideDescendantCount', () => {
       it('should render descendant count when hideDescendantCount = false', () => {
         render(
@@ -987,7 +1041,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       ]);
 
       setProps({
-        groupingColDef: (params) =>
+        groupingColDef: (params: GridGroupingColDefOverrideParams) =>
           params.fields.includes('category2')
             ? {
                 headerName: 'Custom group',
@@ -1242,6 +1296,80 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           'id',
           'category1',
           'category2',
+        ]);
+      });
+    });
+
+    describe('prop: groupColDef.valueFormatter', () => {
+      it('should allow to format the value in object mode', () => {
+        render(
+          <Test
+            initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+            rowGroupingColumnMode="multiple"
+            defaultGroupingExpansionDepth={1}
+            groupingColDef={{
+              valueFormatter: (params) => {
+                const node = apiRef.current.getRowNode(params.id!)!;
+                return `${node.groupingField} / ${node.groupingKey}`;
+              },
+            }}
+          />,
+        );
+
+        expect(getColumnValues(0)).to.deep.equal([
+          'category1 / Cat A (3)',
+          '',
+          '',
+          'category1 / Cat B (2)',
+          '',
+          '',
+        ]);
+        expect(getColumnValues(1)).to.deep.equal([
+          '',
+          'category2 / Cat 1 (1)',
+          'category2 / Cat 2 (2)',
+          '',
+          'category2 / Cat 2 (1)',
+          'category2 / Cat 1 (1)',
+        ]);
+      });
+
+      it('should allow to format the value in callback mode', () => {
+        render(
+          <Test
+            initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+            rowGroupingColumnMode="multiple"
+            defaultGroupingExpansionDepth={1}
+            groupingColDef={({ fields }) => {
+              if (!fields.includes('category1')) {
+                return {};
+              }
+
+              return {
+                valueFormatter: (params) => {
+                  const node = apiRef.current.getRowNode(params.id!)!;
+                  return `${node.groupingField} / ${node.groupingKey}`;
+                },
+              };
+            }}
+          />,
+        );
+
+        expect(getColumnValues(0)).to.deep.equal([
+          'category1 / Cat A (3)',
+          '',
+          '',
+          'category1 / Cat B (2)',
+          '',
+          '',
+        ]);
+        expect(getColumnValues(1)).to.deep.equal([
+          '',
+          'Cat 1 (1)',
+          'Cat 2 (2)',
+          '',
+          'Cat 2 (1)',
+          'Cat 1 (1)',
         ]);
       });
     });
@@ -1937,7 +2065,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -1964,7 +2092,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2057,7 +2185,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -2084,7 +2212,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
           />,
         );
 
-        fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+        fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
           target: { value: '>' },
         });
         fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {

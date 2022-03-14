@@ -4,7 +4,7 @@ title: Data Grid - Getting started
 
 # Data Grid - Getting started
 
-<p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows and you are set.</p>
+<p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
 
 ## Installation
 
@@ -56,7 +56,7 @@ const rows: GridRowsProp = [
 ### Define columns
 
 Comparable to rows, columns are objects defined with a set of attributes of the `GridColDef` interface.
-They are mapped to rows through their `field` property.
+They are mapped to the rows through their `field` property.
 
 ```tsx
 const columns: GridColDef[] = [
@@ -71,7 +71,7 @@ You can import `GridColDef` to see all column properties.
 
 Putting it together, this is all you need to get started, as you can see in this live and interactive demo:
 
-```jsx
+```tsx
 import React from 'react';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 
@@ -177,7 +177,7 @@ The enterprise components come in two plans: Pro and Premium.
 | **Column**                                                                                |           |                                    |
 | [Column groups](/components/data-grid/columns/#column-groups)                             |    🚧     |                 🚧                 |                     🚧                     |
 | [Column spanning](/components/data-grid/columns/#column-spanning)                         |    🚧     |                 🚧                 |                     🚧                     |
-| [Column resizing](/components/data-grid/columns/#column-resizing)                         |    ❌     |                 ✅                 |                     ✅                     |
+| [Column resizing](/components/data-grid/columns/#resizing)                                |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/components/data-grid/columns/#column-reorder)                           |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                   |           |                                    |                                            |
@@ -192,8 +192,8 @@ The enterprise components come in two plans: Pro and Premium.
 | [Cell range selection](/components/data-grid/selection/#range-selection)                  |    ❌     |                 ❌                 |                     🚧                     |
 | **Filtering**                                                                             |           |                                    |                                            |
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |                 🚧                 |                     🚧                     |
-| [Column filters](/components/data-grid/filtering/#column-filters)                         |    ✅     |                 ✅                 |                     ✅                     |
-| [Multi-column filtering](/components/data-grid/filtering/#single-and-multi-filtering)     |    ❌     |                 ✅                 |                     ✅                     |
+| [Column filters](/components/data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |
+| [Multi-column filtering](/components/data-grid/filtering/#multi-filtering)                |    ❌     |                 ✅                 |                     ✅                     |
 | **Sorting**                                                                               |           |                                    |                                            |
 | [Column sorting](/components/data-grid/sorting/)                                          |    ✅     |                 ✅                 |                     ✅                     |
 | [Multi-column sorting](/components/data-grid/sorting/#multi-sorting)                      |    ❌     |                 ✅                 |                     ✅                     |
@@ -215,7 +215,7 @@ The enterprise components come in two plans: Pro and Premium.
 | **Group & Pivot**                                                                         |           |                                    |                                            |
 | [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |                 ✅                 |                     ✅                     |
 | [Master detail](/components/data-grid/group-pivot/#master-detail)                         |    ❌     |                 ✅                 |                     ✅                     |
-| [Grouping](/components/data-grid/group-pivot/#grouping)                                   |    ❌     |                 ❌                 |                     🚧                     |
+| [Grouping](/components/data-grid/group-pivot/#row-grouping)                               |    ❌     |                 ❌                 |                     🚧                     |
 | [Aggregation](/components/data-grid/group-pivot/#aggregation)                             |    ❌     |                 ❌                 |                     🚧                     |
 | [Pivoting](/components/data-grid/group-pivot/#pivoting)                                   |    ❌     |                 ❌                 |                     🚧                     |
 | **Misc**                                                                                  |           |                                    |                                            |

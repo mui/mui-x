@@ -7,6 +7,7 @@ import {
   DataGridPro,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
@@ -60,7 +61,12 @@ describe('<DataGridPro /> - Cell Editing', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPro
+          {...baselineProps}
+          apiRef={apiRef}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+          {...props}
+        />
       </div>
     );
   };
@@ -589,6 +595,33 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
     fireClickEvent(screen.getByRole('button', { name: /Click me/i }));
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
+  });
+
+  it('should not call .preventDefault on key events inside a cell in edit mode', () => {
+    render(
+      <TestCase
+        columns={[
+          {
+            field: 'brand',
+            editable: true,
+            renderEditCell: () => <input type="text" data-testid="custom-input" />,
+          },
+        ]}
+      />,
+    );
+
+    const cell = getCell(0, 0);
+    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+    fireEvent.doubleClick(cell);
+    expect(cell).to.have.class('MuiDataGrid-cell--editing');
+
+    const input = screen.getByTestId('custom-input');
+    fireEvent.click(input);
+    input.focus();
+
+    expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
+    expect(fireEvent.keyDown(input, { key: ' ' })).to.equal(true);
+    expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
   });
 
   it('should stay in the edit mode when the element inside the cell triggers click but no mouseup', () => {

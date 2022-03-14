@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridSortModel } from '@mui/x-data-grid';
@@ -47,7 +48,7 @@ describe('<DataGrid /> - Sorting', () => {
     const cols = [{ field: 'id' }];
     const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];
 
-    function Demo(props) {
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid autoHeight={isJSDOM} columns={cols} sortingMode="server" {...props} />

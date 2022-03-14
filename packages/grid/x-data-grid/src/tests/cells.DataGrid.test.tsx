@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
@@ -108,7 +109,11 @@ describe('<DataGrid /> - Cells', () => {
 
     render(
       <div style={{ width: 300, height: 500 }}>
-        <DataGrid {...baselineProps} columns={[{ field: 'brand', cellClassName: 'foobar' }]} />
+        <DataGrid
+          {...baselineProps}
+          columns={[{ field: 'brand', cellClassName: 'foobar' }]}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+        />
       </div>,
     );
 
@@ -117,6 +122,6 @@ describe('<DataGrid /> - Cells', () => {
 
     expect(() => {
       getCell(1, 0).focus();
-    }).toErrorDev(['MUI: The cell with id=1 and field=brand received focus.']);
+    }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
   });
 });

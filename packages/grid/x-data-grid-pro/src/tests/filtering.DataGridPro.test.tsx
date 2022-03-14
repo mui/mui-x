@@ -10,6 +10,7 @@ import {
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -211,7 +212,11 @@ describe('<DataGridPro /> - Filter', () => {
     expect(onFilterModelChange.callCount).to.equal(0);
     expect(getColumnValues()).to.deep.equal([]);
 
-    const select = screen.queryAllByRole('combobox', { name: /Operators/i })[1];
+    // The first combo is hidden and we include hidden elements to make the query faster
+    // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
+    const select = screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
+      isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
+    ];
     fireEvent.change(select, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(getColumnValues()).to.deep.equal([]);
@@ -331,9 +336,44 @@ describe('<DataGridPro /> - Filter', () => {
     expect(window.scrollY).to.equal(initialScrollPosition);
   });
 
+  it('should not scroll the page when opening the filter panel and the operator=isAnyOf', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+
+    render(
+      <div>
+        {/* To simulate a page that needs to be scrolled to reach the grid. */}
+        <div style={{ height: '100vh', width: '100vh' }} />
+        <TestCase
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                linkOperator: GridLinkOperator.Or,
+                items: [{ id: 1, columnField: 'brand', operatorValue: 'isAnyOf' }],
+              },
+            },
+          }}
+        />
+      </div>,
+    );
+
+    screen.getByRole('grid').scrollIntoView();
+    const initialScrollPosition = window.scrollY;
+    expect(initialScrollPosition).not.to.equal(0);
+    apiRef.current.hidePreferences();
+    clock.tick(100);
+    apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
+    expect(window.scrollY).to.equal(initialScrollPosition);
+  });
+
   describe('Server', () => {
     it('should refresh the filter panel when adding filters', () => {
-      function loadServerRows(commodityFilterValue) {
+      function loadServerRows(commodityFilterValue: string | undefined) {
         const serverRows = [
           { id: '1', commodity: 'rice' },
           { id: '2', commodity: 'soybeans' },
@@ -359,7 +399,7 @@ describe('<DataGridPro /> - Filter', () => {
 
       function AddServerFilterGrid() {
         const [rows, setRows] = React.useState<GridRowModel[]>([]);
-        const [filterValue, setFilterValue] = React.useState();
+        const [filterValue, setFilterValue] = React.useState<string>();
 
         const handleFilterChange = React.useCallback((newFilterModel: GridFilterModel) => {
           setFilterValue(newFilterModel.items[0].value);
@@ -479,7 +519,7 @@ describe('<DataGridPro /> - Filter', () => {
       const ControlCase = (props: Partial<DataGridProProps>) => {
         const { rows, columns, ...others } = props;
         const [caseFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
-        const handleFilterChange = (newModel) => {
+        const handleFilterChange: DataGridProProps['onFilterModelChange'] = (newModel) => {
           setFilterModel(newModel);
         };
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -15,15 +16,15 @@ import {
   DataGridPro,
   DataGridProProps,
   GridApi,
+  gridFocusCellSelector,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { DataGridProps } from '@mui/x-data-grid';
 import { getData } from 'storybook/src/data/data-service';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Rows', () => {
-  let baselineProps;
+  let baselineProps: DataGridProProps;
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
@@ -65,7 +66,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     describe('updateRows', () => {
       it('should apply getRowId before updating rows', () => {
-        const getRowId = (row) => `${row.clientId}`;
+        const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
         let apiRef: React.MutableRefObject<GridApi>;
         const Test = () => {
           apiRef = useGridApiRef();
@@ -89,7 +90,7 @@ describe('<DataGridPro /> - Rows', () => {
       let apiRef: React.MutableRefObject<GridApi>;
       const editableProps = { ...baselineProps };
       editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
-      const getRowId = (row) => `${row.clientId}`;
+      const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
 
       const Test = () => {
         apiRef = useGridApiRef();
@@ -114,7 +115,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should not clone the row', () => {
-      const getRowId = (row) => `${row.clientId}`;
+      const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
       let apiRef: React.MutableRefObject<GridApi>;
       const Test = () => {
         apiRef = useGridApiRef();
@@ -133,7 +134,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should not throttle even when props.throttleRowsMs is defined', () => {
       const { rows, columns } = getData(5, 2);
 
-      const Test = (props: Pick<DataGridProps, 'rows'>) => (
+      const Test = (props: Pick<DataGridProProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
             {...props}
@@ -626,9 +627,9 @@ describe('<DataGridPro /> - Rows', () => {
 
     const TestCase = (props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) => {
       apiRef = useGridApiRef();
-      const data = useData(props.nbRows || 100, props.nbCols || 10);
+      const data = useData(props.nbRows || 10, props.nbCols || 10);
       return (
-        <div style={{ width: 300, height: 300 }}>
+        <div style={{ width: 100, height: 300 }}>
           <DataGridPro
             apiRef={apiRef}
             columns={data.columns}
@@ -641,16 +642,16 @@ describe('<DataGridPro /> - Rows', () => {
     };
 
     it('should allow to disable virtualization', () => {
-      render(<TestCase nbRows={100} nbCols={10} />);
-      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(100);
-      expect(document.querySelectorAll('[role="cell"]')).to.have.length(100 * 10);
+      render(<TestCase />);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(10);
+      expect(document.querySelectorAll('[role="cell"]')).to.have.length(10 * 10);
     });
 
     it('should render the correct rows when changing pages', () => {
-      render(<TestCase nbRows={150} nbCols={10} pagination />);
-      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(100);
+      render(<TestCase pageSize={6} rowsPerPageOptions={[6]} pagination />);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
       apiRef.current.setPage(1);
-      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(50);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);
     });
   });
 
@@ -710,7 +711,7 @@ describe('<DataGridPro /> - Rows', () => {
 
       fireEvent.click(getCell(0, 0));
       setProps({ rows: baselineProps.rows.slice(1) });
-      expect(apiRef.current.state.focus.cell).to.equal(null);
+      expect(gridFocusCellSelector(apiRef)).to.equal(null);
     });
 
     it('should not reset focus when removing a row not containing the focus cell', () => {
@@ -719,7 +720,7 @@ describe('<DataGridPro /> - Rows', () => {
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
       setProps({ rows: baselineProps.rows.slice(1) });
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
@@ -731,7 +732,7 @@ describe('<DataGridPro /> - Rows', () => {
       fireEvent.mouseUp(cell);
       fireEvent.click(cell);
       fireEvent.keyDown(cell, { key: 'a' });
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
@@ -741,13 +742,13 @@ describe('<DataGridPro /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.mouseUp(getCell(2, 1));
       fireEvent.click(getCell(2, 1));
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[2].id,
         field: baselineProps.columns[1].field,
       });
@@ -757,12 +758,12 @@ describe('<DataGridPro /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      expect(apiRef.current.state.focus.cell).to.deep.equal({
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.click(document.body);
-      expect(apiRef.current.state.focus.cell).to.deep.equal(null);
+      expect(gridFocusCellSelector(apiRef)).to.deep.equal(null);
     });
 
     it('should publish "cellFocusOut" when clicking outside the focused cell', () => {

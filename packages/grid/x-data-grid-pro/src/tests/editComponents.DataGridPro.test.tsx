@@ -6,6 +6,7 @@ import {
   DataGridPro,
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
@@ -82,7 +83,12 @@ describe('<DataGridPro /> - Edit Components', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPro
+          {...baselineProps}
+          apiRef={apiRef}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+          {...props}
+        />
       </div>
     );
   };
@@ -294,7 +300,7 @@ describe('<DataGridPro /> - Edit Components', () => {
               valueOptions: ['Nike', 'Adidas'],
               editable: true,
               renderEditCell: (params: any) => (
-                <GridEditSingleSelectCell {...params} open={false} /> // Force to appear closed
+                <GridEditSingleSelectCell {...params} open={false} /> // Force appearing closed
               ),
             },
           ]}

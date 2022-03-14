@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer } from '@mui/monorepo/test/utils';
 import {
   DataGridPro,
@@ -20,7 +21,7 @@ const rows: GridRowsProp = [{ id: 1 }];
 const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
 
 /**
- * TODO: Remove deprecated tests on v6
+ * TODO v6: Remove deprecated tests
  */
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
@@ -87,14 +88,14 @@ describe('<DataGridPro /> - Columns Visibility', () => {
           />,
         );
         apiRef.current.setColumnVisibility('id', false);
-        expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(false);
+        expect(gridColumnLookupSelector(apiRef).id.hide).to.equal(false);
         expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
           id: false,
           idBis: false,
         });
 
         apiRef.current.setColumnVisibility('id', true);
-        expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(false);
+        expect(gridColumnLookupSelector(apiRef).id.hide).to.equal(false);
         expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
           id: true,
           idBis: false,
@@ -149,14 +150,14 @@ describe('<DataGridPro /> - Columns Visibility', () => {
         render(<TestDataGridPro />);
 
         apiRef.current.setColumnVisibility('id', false);
-        expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(true);
+        expect(gridColumnLookupSelector(apiRef).id.hide).to.equal(true);
         expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
           id: false,
           idBis: true,
         });
 
         apiRef.current.setColumnVisibility('id', true);
-        expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(false);
+        expect(gridColumnLookupSelector(apiRef).id.hide).to.equal(false);
         expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
           id: true,
           idBis: true,
