@@ -16,7 +16,7 @@ import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
 import { GridValidRowModel } from '../models/gridRows';
 
-const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
+const DataGridRaw = React.memo(React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
   ref,
 ) {
@@ -37,16 +37,13 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
       </GridRoot>
     </GridContextProvider>
   );
-});
+}));
 
-type DataGridComponent = <R extends GridValidRowModel>(
-  props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element;
 
 export function DataGrid<R extends GridValidRowModel>(props: DataGridProps<R>): JSX.Element;
 
 export function DataGrid(props: any) {
-  return <div>TEST</div>;
+  return <DataGridRaw {...props} />
 }
 
 DataGridRaw.propTypes = {
