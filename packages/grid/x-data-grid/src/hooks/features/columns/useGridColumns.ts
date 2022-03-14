@@ -22,13 +22,19 @@ import {
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridColumnVisibilityChangeParams } from '../../../models';
 import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridColumnsState, GridColumnVisibilityModel } from './gridColumnsInterfaces';
+import {
+  GridColumnDimensions,
+  GridColumnsInitialState,
+  GridColumnsState,
+  GridColumnVisibilityModel,
+} from './gridColumnsInterfaces';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   hydrateColumnsWidth,
   computeColumnTypes,
   createColumnsState,
   setColumnsState,
+  COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
 
 export const columnsStateInitializer: GridStateInitializer<
@@ -43,6 +49,7 @@ export const columnsStateInitializer: GridStateInitializer<
     apiRef,
     columnsTypes,
     columnsToUpsert: props.columns,
+    initialState: props.initialState?.columns,
     shouldRegenColumnVisibilityModelFromColumns: !shouldUseVisibleColumnModel,
     currentColumnVisibilityModel:
       props.columnVisibilityModel ?? props.initialState?.columns?.columnVisibilityModel ?? {},
@@ -160,6 +167,7 @@ export function useGridColumns(
             apiRef,
             columnsTypes,
             columnsToUpsert: [],
+            initialState: undefined,
             shouldRegenColumnVisibilityModelFromColumns: false,
             currentColumnVisibilityModel: model,
             reset: false,
@@ -177,6 +185,7 @@ export function useGridColumns(
         apiRef,
         columnsTypes,
         columnsToUpsert: columns as any,
+        initialState: undefined,
         shouldRegenColumnVisibilityModelFromColumns: true,
         reset: false,
       });
@@ -287,23 +296,40 @@ export function useGridColumns(
    */
   const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
     (prevState) => {
-      if (!shouldUseVisibleColumnModel) {
-        return prevState;
+      const columnsStateToExport: GridColumnsInitialState = {};
+
+      if (shouldUseVisibleColumnModel) {
+        const columnVisibilityModelToExport = gridColumnVisibilityModelSelector(apiRef);
+        const hasHiddenColumns = Object.values(columnVisibilityModelToExport).some(
+          (value) => value === false,
+        );
+
+        if (hasHiddenColumns) {
+          columnsStateToExport.columnVisibilityModel = columnVisibilityModelToExport;
+        }
       }
 
-      const columnVisibilityModelToExport = gridColumnVisibilityModelSelector(apiRef);
-      const hasHiddenColumns = Object.values(columnVisibilityModelToExport).some(
-        (value) => value === false,
-      );
-      if (!hasHiddenColumns) {
-        return prevState;
+      columnsStateToExport.orderedFields = gridColumnFieldsSelector(apiRef);
+
+      const columns = gridColumnDefinitionsSelector(apiRef);
+      const dimensions: Record<string, GridColumnDimensions> = {};
+      columns.forEach((colDef) => {
+        if (colDef.hasBeenResized) {
+          const colDefDimensions: GridColumnDimensions = {};
+          COLUMNS_DIMENSION_PROPERTIES.forEach((propertyName) => {
+            colDefDimensions[propertyName] = colDef[propertyName];
+          });
+          dimensions[colDef.field] = colDefDimensions;
+        }
+      });
+
+      if (Object.keys(dimensions).length > 0) {
+        columnsStateToExport.dimensions = dimensions;
       }
 
       return {
         ...prevState,
-        columns: {
-          columnVisibilityModel: columnVisibilityModelToExport,
-        },
+        columns: columnsStateToExport,
       };
     },
     [apiRef, shouldUseVisibleColumnModel],
@@ -311,22 +337,30 @@ export function useGridColumns(
 
   const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
     (params, context) => {
-      if (!shouldUseVisibleColumnModel) {
+      const columnVisibilityModelToImport = shouldUseVisibleColumnModel
+        ? context.stateToRestore.columns?.columnVisibilityModel
+        : undefined;
+      const initialState = context.stateToRestore.columns;
+
+      if (columnVisibilityModelToImport == null && initialState == null) {
         return params;
       }
 
-      const columnVisibilityModel = context.stateToRestore.columns?.columnVisibilityModel;
-      if (columnVisibilityModel != null) {
-        const columnsState = createColumnsState({
-          apiRef,
-          columnsTypes,
-          columnsToUpsert: [],
-          shouldRegenColumnVisibilityModelFromColumns: false,
-          currentColumnVisibilityModel: columnVisibilityModel,
-          reset: false,
-        });
-        apiRef.current.setState(setColumnsState(columnsState));
+      const columnsState = createColumnsState({
+        apiRef,
+        columnsTypes,
+        columnsToUpsert: [],
+        initialState,
+        shouldRegenColumnVisibilityModelFromColumns: !shouldUseVisibleColumnModel,
+        currentColumnVisibilityModel: columnVisibilityModelToImport,
+        reset: false,
+      });
+      apiRef.current.setState(setColumnsState(columnsState));
+
+      if (initialState != null) {
+        apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
       }
+
       return params;
     },
     [apiRef, shouldUseVisibleColumnModel, columnsTypes],
@@ -352,6 +386,7 @@ export function useGridColumns(
         apiRef,
         columnsTypes,
         columnsToUpsert: [],
+        initialState: undefined,
         shouldRegenColumnVisibilityModelFromColumns: !shouldUseVisibleColumnModel,
         reset: false,
       });
@@ -398,6 +433,7 @@ export function useGridColumns(
     const columnsState = createColumnsState({
       apiRef,
       columnsTypes,
+      initialState: undefined,
       // If the user provides a model, we don't want to set it in the state here because it has it's dedicated `useEffect` which calls `setColumnVisibilityModel`
       shouldRegenColumnVisibilityModelFromColumns: !shouldUseVisibleColumnModel,
       columnsToUpsert: props.columns,

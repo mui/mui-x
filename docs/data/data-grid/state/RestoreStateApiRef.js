@@ -142,6 +142,8 @@ ViewListItem.propTypes = {
     value: PropTypes.shape({
       columns: PropTypes.shape({
         columnVisibilityModel: PropTypes.object,
+        dimensions: PropTypes.object,
+        orderedFields: PropTypes.arrayOf(PropTypes.string),
       }),
       detailPanel: PropTypes.shape({
         expandedRowIds: PropTypes.arrayOf(
