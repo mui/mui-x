@@ -207,7 +207,7 @@ const columns: GridColDef[] = [
 
 {{"demo": "RenderCellGrid.js", "bg": "inline"}}
 
-**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#export-custom-rendered-cells) the data.
+**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#exported-cells) the data.
 
 > ⚠️ When using `renderCell` with object cell values
 > remember to handle [sorting](/components/data-grid/sorting/#custom-comparator).

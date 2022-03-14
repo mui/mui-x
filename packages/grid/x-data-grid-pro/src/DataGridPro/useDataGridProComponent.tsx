@@ -99,11 +99,11 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
+  useGridInitializeState(aggregationStateInitializer, apiRef, props);
   useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
-  useGridInitializeState(rowGroupingStateInitializer, apiRef, props); // FIXME Call in the same relative position that useGridRowGrouping is called
-  useGridInitializeState(aggregationStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
