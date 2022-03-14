@@ -57,6 +57,7 @@ const DataGridProRaw = React.memo(
   }),
 );
 
+// The function overloading is required to make the row generic work on the built package
 export function DataGridPro<R extends GridValidRowModel>(
   props: DataGridProProps<R> & React.RefAttributes<HTMLDivElement>,
 ): JSX.Element;
