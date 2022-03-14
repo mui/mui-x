@@ -16,41 +16,39 @@ import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
 import { GridValidRowModel } from '../models/gridRows';
 
-const DataGridRaw = React.memo(
-  React.forwardRef(function DataGrid<R extends GridValidRowModel>(
-    inProps: DataGridProps<R>,
-    ref: React.Ref<HTMLDivElement>,
-  ) {
-    const props = useDataGridProps(inProps);
-    const apiRef = useDataGridComponent(props);
+const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
+  inProps: DataGridProps<R>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useDataGridProps(inProps);
+  const apiRef = useDataGridComponent(props);
 
-    return (
-      <GridContextProvider apiRef={apiRef} props={props}>
-        <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-          <GridErrorHandler>
-            <GridHeaderPlaceholder />
-            <GridBody
-              ColumnHeadersComponent={DataGridColumnHeaders}
-              VirtualScrollerComponent={DataGridVirtualScroller}
-            />
-            <GridFooterPlaceholder />
-          </GridErrorHandler>
-        </GridRoot>
-      </GridContextProvider>
-    );
-  }),
-);
+  return (
+    <GridContextProvider apiRef={apiRef} props={props}>
+      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+        <GridErrorHandler>
+          <GridHeaderPlaceholder />
+          <GridBody
+            ColumnHeadersComponent={DataGridColumnHeaders}
+            VirtualScrollerComponent={DataGridVirtualScroller}
+          />
+          <GridFooterPlaceholder />
+        </GridErrorHandler>
+      </GridRoot>
+    </GridContextProvider>
+  );
+});
 
-// The function overloading is required to make the row generic work on the built package
-export function DataGrid<R extends GridValidRowModel>(
-  props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
-): JSX.Element;
-
-export function DataGrid(props: any) {
-  return <DataGridRaw {...props} />;
+interface DataGridComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): JSX.Element;
+  propTypes?: any;
 }
 
-DataGrid.propTypes = {
+export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
+
+DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
