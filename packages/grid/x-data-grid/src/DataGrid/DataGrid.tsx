@@ -16,37 +16,40 @@ import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
 import { GridValidRowModel } from '../models/gridRows';
 
-const DataGridRaw = React.memo(React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
-  inProps,
-  ref,
-) {
-  const props = useDataGridProps(inProps);
-  const apiRef = useDataGridComponent(props);
+const DataGridRaw = React.memo(
+  React.forwardRef(function DataGrid<R extends GridValidRowModel>(
+    inProps: DataGridProps<R>,
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    const props = useDataGridProps(inProps);
+    const apiRef = useDataGridComponent(props);
 
-  return (
-    <GridContextProvider apiRef={apiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeaderPlaceholder />
-          <GridBody
-            ColumnHeadersComponent={DataGridColumnHeaders}
-            VirtualScrollerComponent={DataGridVirtualScroller}
-          />
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
-      </GridRoot>
-    </GridContextProvider>
-  );
-}));
+    return (
+      <GridContextProvider apiRef={apiRef} props={props}>
+        <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+          <GridErrorHandler>
+            <GridHeaderPlaceholder />
+            <GridBody
+              ColumnHeadersComponent={DataGridColumnHeaders}
+              VirtualScrollerComponent={DataGridVirtualScroller}
+            />
+            <GridFooterPlaceholder />
+          </GridErrorHandler>
+        </GridRoot>
+      </GridContextProvider>
+    );
+  }),
+);
 
-
-export function DataGrid<R extends GridValidRowModel>(props: DataGridProps<R>): JSX.Element;
+export function DataGrid<R extends GridValidRowModel>(
+  props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
+): JSX.Element;
 
 export function DataGrid(props: any) {
-  return <DataGridRaw {...props} />
+  return <DataGridRaw {...props} />;
 }
 
-DataGridRaw.propTypes = {
+DataGrid.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
