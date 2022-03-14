@@ -30,38 +30,42 @@ if (process.env.NODE_ENV !== 'production' && RELEASE_INFO === '__RELEASE' + '_IN
 
 LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
-const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(function DataGridPro(
-  inProps,
-  ref,
-) {
-  const props = useDataGridProProps(inProps);
-  const apiRef = useDataGridProComponent(props.apiRef, props);
+const DataGridProRaw = React.memo(
+  React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
+    inProps: DataGridProProps<R>,
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    const props = useDataGridProProps(inProps);
+    const apiRef = useDataGridProComponent(props.apiRef, props);
 
-  return (
-    <GridContextProvider apiRef={apiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeaderPlaceholder />
-          <GridBody
-            ColumnHeadersComponent={DataGridProColumnHeaders}
-            VirtualScrollerComponent={DataGridProVirtualScroller}
-          >
-            <Watermark />
-          </GridBody>
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
-      </GridRoot>
-    </GridContextProvider>
-  );
-});
+    return (
+      <GridContextProvider apiRef={apiRef} props={props}>
+        <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+          <GridErrorHandler>
+            <GridHeaderPlaceholder />
+            <GridBody
+              ColumnHeadersComponent={DataGridProColumnHeaders}
+              VirtualScrollerComponent={DataGridProVirtualScroller}
+            >
+              <Watermark />
+            </GridBody>
+            <GridFooterPlaceholder />
+          </GridErrorHandler>
+        </GridRoot>
+      </GridContextProvider>
+    );
+  }),
+);
 
-type DataGridProComponent = <R extends GridValidRowModel>(
+export function DataGridPro<R extends GridValidRowModel>(
   props: DataGridProProps<R> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element;
+): JSX.Element;
 
-export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
+export function DataGridPro(props: any) {
+  return <DataGridProRaw {...props} />;
+}
 
-DataGridProRaw.propTypes = {
+DataGridPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |

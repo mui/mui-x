@@ -51,10 +51,10 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
 /**
  * The props of the `DataGridPro` component after the pre-processing phase.
  */
-export interface DataGridProProcessedProps
+export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridProPropsWithoutDefaultValue {}
+    DataGridProPropsWithoutDefaultValue<R> {}
 
 export type DataGridProForcedPropsKey = 'signature';
 
