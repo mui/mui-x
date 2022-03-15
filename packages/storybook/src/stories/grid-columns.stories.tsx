@@ -448,3 +448,24 @@ export function PinnedColumnWithCheckboxSelectionSnap() {
     </div>
   );
 }
+
+export function PinnedColumnsWithCellRightBorder() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 15,
+    maxColumns: 6,
+  });
+
+  const columns = data.columns.map((column) => ({ ...column, width: 150 }));
+
+  return (
+    <div style={{ height: 400, width: 600 }}>
+      <DataGridPro
+        {...data}
+        columns={columns}
+        initialState={{ pinnedColumns: { left: ['desk'], right: ['quantity'] } }}
+        showCellRightBorder
+      />
+    </div>
+  );
+}
