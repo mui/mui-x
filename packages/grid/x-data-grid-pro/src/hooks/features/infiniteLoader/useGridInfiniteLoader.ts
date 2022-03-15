@@ -9,7 +9,7 @@ import {
   gridVisibleColumnDefinitionsSelector,
   gridRowsMetaSelector,
 } from '@mui/x-data-grid';
-import { useCurrentPageRows } from '@mui/x-data-grid/internals';
+import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -28,7 +28,7 @@ export const useGridInfiniteLoader = (
   >,
 ): void => {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const currentPage = useCurrentPageRows(apiRef, props);
+  const currentPage = useGridVisibleRows(apiRef, props);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const contentHeight = Math.max(rowsMeta.currentPageTotalHeight, 1);
 

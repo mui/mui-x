@@ -1,8 +1,9 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 
-export const GridNoRowsOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(
+const GridNoRowsOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(
   function GridNoRowsOverlay(props, ref) {
     const apiRef = useGridApiContext();
     const noRowsLabel = apiRef.current.getLocaleText('noRowsLabel');
@@ -14,3 +15,17 @@ export const GridNoRowsOverlay = React.forwardRef<HTMLDivElement, GridOverlayPro
     );
   },
 );
+
+GridNoRowsOverlay.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { GridNoRowsOverlay };
