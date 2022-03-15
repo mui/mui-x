@@ -109,7 +109,7 @@ export const useGridSelection = (
         const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
         const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
         if (startIndex === endIndex) {
-            return
+          return;
         }
         if (startIndex > endIndex) {
           endId = visibleRowIds[endIndex + 1];

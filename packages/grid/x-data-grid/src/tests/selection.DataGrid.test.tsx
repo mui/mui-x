@@ -285,7 +285,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
       fireEvent.click(getCell(2, 0).querySelector('input'), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
-    })
+    });
 
     it('should keep only one selected row when turning off checkboxSelection', () => {
       const { setProps } = render(<TestDataGridSelection checkboxSelection />);
