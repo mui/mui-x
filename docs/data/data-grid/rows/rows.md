@@ -146,13 +146,30 @@ Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
-## 🚧 Row reorder [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #206](https://github.com/mui/mui-x/issues/206) if you want to see it land faster.
+## Row reorder [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 Row reorder is used to rearrange rows by dragging the row with the mouse.
+
+By default, `DataGridPro` allows row reordering by dragging any of the row cells and moving them up or down.
+
+{{"demo": "RowOrderingGrid.js", "disableAd": true, "bg": "inline"}}
+
+To capture changes in the order of the dragged row use the `onRowOrderChange` callback.
+
+To disable reordering on all rows, set the prop `disableRowReorder={true}`.
+
+{{"demo": "RowOrderingDisabledGrid.js", "disableAd": true, "bg": "inline"}}
+
+In addition, row reordering emits the following events that can be imported:
+
+- `rowDragStart`: emitted when dragging of a row starts.
+- `rowDragEnter`: emitted when the cursor enters another row while dragging.
+- `rowDragOver`: emitted when dragging a row over another row.
+- `rowDragEnd`: emitted when dragging of a row stops.
+
+> ⚠️ For now, row reordering is disabled if working is applied to the grid.
+>
+> In addition, if row grouping or Tree Data is used the row reordering is also disabled.
 
 ## 🚧 Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
