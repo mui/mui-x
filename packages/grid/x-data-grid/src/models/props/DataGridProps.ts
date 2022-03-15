@@ -36,6 +36,10 @@ export interface GridExperimentalFeatures {
    */
   preventCommitWhileValidating: boolean;
   /**
+   * Enables the new API for cell editing and row editing.
+   */
+  newEditingApi: boolean;
+  /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
    * Only works if NODE_ENV=test.
    */
@@ -694,4 +698,13 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalFeatures>;
+  /**
+   * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   * @template R
+   * @param {R} newRow Row object with the new values.
+   * @param {R} oldRow Row object with the old values.
+   * @returns {Promise<R> | R} The final values to update the row.
+   */
+  processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;
 }

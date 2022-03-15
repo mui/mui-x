@@ -1,5 +1,5 @@
 import { GridCellMode } from '../gridCell';
-import { GridRowId, GridRowModel, GridValidRowModel, GridRowTreeNodeConfig } from '../gridRows';
+import { GridRowId, GridRowModel, GridRowTreeNodeConfig, GridValidRowModel } from '../gridRows';
 import type { GridStateColDef } from '../colDef/gridColDef';
 import { GridEditCellProps } from '../gridEditRowModel';
 
@@ -34,7 +34,7 @@ export interface GridCellParams<V = any, R extends GridValidRowModel = any, F = 
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridStateColDef<R, V, F>;
+  colDef: GridStateColDef;
   /**
    * If true, the cell is editable.
    */
@@ -76,7 +76,9 @@ export interface GridRenderCellParams<V = any, R extends GridValidRowModel = any
 /**
  * GridEditCellProps containing api.
  */
-export interface GridRenderEditCellParams<V = any> extends GridEditCellProps<V> {
+export interface GridRenderEditCellParams<V = any, R extends GridValidRowModel = any, F = V>
+  extends GridCellParams<V, R, F>,
+    GridEditCellProps<V> {
   /**
    * GridApi that let you manipulate the grid.
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
@@ -87,7 +89,7 @@ export interface GridRenderEditCellParams<V = any> extends GridEditCellProps<V> 
 /**
  * Parameters passed to `colDef.valueGetter`.
  */
-export interface GridValueGetterParams<V = any, R extends GridValidRowModel = any>
+export interface GridValueGetterParams<V = any, R = any>
   extends Omit<GridCellParams<V, R, any>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
@@ -134,7 +136,7 @@ export interface GridValueFormatterParams<V = any> {
   /**
    * The cell value, if the column has valueGetter it is the value returned by it.
    */
-  value: V | undefined;
+  value: V;
   /**
    * GridApi that let you manipulate the grid.
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
@@ -158,4 +160,13 @@ export interface GridPreProcessEditCellProps {
    * The edit cell props.
    */
   props: GridEditCellProps;
+  /**
+   * Whether the new value is different from the stored value or not.
+   */
+  hasChanged?: boolean;
+  /**
+   * Object containing the props of the other fields.
+   * Only available for row editing and when using the new editing API.
+   */
+  otherFieldsProps?: Record<string, GridEditCellProps>;
 }

@@ -257,6 +257,10 @@ export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> =
   F
 > & {
   computedWidth: number;
+  /**
+   * If `true`, it means that at least one of the dimension's property of this column has been modified since the last time the column prop has changed.
+   */
+  hasBeenResized?: boolean;
 };
 
 /**

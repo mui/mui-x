@@ -143,7 +143,7 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  describe('props: initialState.filter', () => {
+  describe('prop: initialState.filter', () => {
     it('should allow to initialize the filterModel', () => {
       render(
         <TestCase
