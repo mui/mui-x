@@ -59,6 +59,50 @@ export interface GridRowHeightParams extends GridRowEntry {
  */
 export type GridRowHeightReturnValue = number | null | undefined;
 
+enum GridRowEditStartReasons {
+  enterKeyDown = 'enterKeyDown',
+  cellDoubleClick = 'cellDoubleClick',
+  printableKeyDown = 'printableKeyDown',
+  deleteKeyDown = 'deleteKeyDown',
+}
+
+/**
+ * Params passed to the `rowEditStart` event.
+ */
+export interface GridRowEditStartParams<R extends GridRowModel = GridRowModel>
+  extends GridRowParams<R> {
+  /**
+   * Which field triggered this event.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   */
+  field?: string;
+  /**
+   * The reason for this event to be triggered.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   */
+  reason?: GridRowEditStartReasons;
+}
+
+enum GridRowEditStopReasons {
+  rowFocusOut = 'rowFocusOut',
+  escapeKeyDown = 'escapeKeyDown',
+  enterKeyDown = 'enterKeyDown',
+}
+
+export interface GridRowEditStopParams<R extends GridRowModel = GridRowModel>
+  extends GridRowParams<R> {
+  /**
+   * Which field triggered this event.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   */
+  field?: string;
+  /**
+   * The reason for this event to be triggered.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   */
+  reason?: GridRowEditStopReasons;
+}
+
 /**
  * Object passed as parameter in the row `getRowSpacing` callback prop.
  */
@@ -71,3 +115,6 @@ export interface GridRowSpacing {
   top?: number;
   bottom?: number;
 }
+
+// https://github.com/mui/mui-x/pull/3738#discussion_r798504277
+export { GridRowEditStartReasons, GridRowEditStopReasons };

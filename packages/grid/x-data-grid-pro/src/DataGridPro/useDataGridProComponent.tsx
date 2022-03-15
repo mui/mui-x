@@ -17,7 +17,10 @@ import {
   useGridPagination,
   paginationStateInitializer,
   useGridPreferencesPanel,
-  useGridEditing,
+  useGridEditing_new,
+  useGridEditing_old,
+  editingStateInitializer_old,
+  editingStateInitializer_new,
   useGridRows,
   useGridRowsPreProcessors,
   rowsStateInitializer,
@@ -33,7 +36,6 @@ import {
   useGridSelectionPreProcessors,
   columnMenuStateInitializer,
   densityStateInitializer,
-  editingStateInitializer,
   focusStateInitializer,
   preferencePanelStateInitializer,
   rowsMetaStateInitializer,
@@ -99,7 +101,13 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
-  useGridInitializeState(editingStateInitializer, apiRef, props);
+  useGridInitializeState(
+    props.experimentalFeatures?.newEditingApi
+      ? editingStateInitializer_new
+      : editingStateInitializer_old,
+    apiRef,
+    props,
+  );
   useGridInitializeState(focusStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
@@ -120,7 +128,12 @@ export const useDataGridProComponent = (
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridDetailPanelCache(apiRef, props);
+
+  const useGridEditing = props.experimentalFeatures?.newEditingApi
+    ? useGridEditing_new
+    : useGridEditing_old;
   useGridEditing(apiRef, props);
+
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef);
