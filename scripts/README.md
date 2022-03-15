@@ -35,8 +35,8 @@ The following steps must be proposed as a pull request.
 - [ ] Checkout the last version of the working branch
 - [ ] Make sure you have the latest dependencies installed: `yarn`.
 - [ ] Build the packages: `yarn release:build`.
-- [ ] Release the versions on NPM: `yarn release:publish` (you need your 2FA device).
-- [ ] Create a new tag named with the release you just did `git tag v4.0.0-alpha.30 && git push upstream --tag`
+- [ ] Release the versions on npm: `yarn release:publish` (you need your 2FA device).
+- [ ] Create a new tag named with the release you just did `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`
 
 ### Publish the documentation
 
