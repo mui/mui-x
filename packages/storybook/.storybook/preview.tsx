@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { createTheme, ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import { ThemeProvider } from 'emotion-theming';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { configureActions } from '@storybook/addon-actions';
@@ -44,9 +47,37 @@ export const parameters = {
 };
 
 export const decorators = [
-  (Story) => (
-    <React.StrictMode>
-      <Story />
-    </React.StrictMode>
-  ),
+  (Story, context) => {
+    const theme = createTheme({
+      palette: {
+        mode: context.globals.theme,
+      },
+    });
+    return (
+      <React.StrictMode>
+        <MUIThemeProvider theme={theme}>
+          {/* See https://github.com/mui/material-ui/issues/24282#issuecomment-952211989 */}
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Story />
+          </ThemeProvider>
+        </MUIThemeProvider>
+      </React.StrictMode>
+    );
+  },
 ];
+
+export const globalTypes = {
+  theme: {
+    name: 'Theme',
+    description: 'MUI theme',
+    defaultValue: 'light',
+    toolbar: {
+      icon: 'circlehollow',
+      // Array of plain string values or MenuItem shape (see below)
+      items: ['light', 'dark'],
+      // Property that specifies if the name of the item will be displayed
+      showName: true,
+    },
+  },
+};
