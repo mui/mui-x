@@ -8,7 +8,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
+import { isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
@@ -23,7 +23,6 @@ import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
 import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridSelectionModel } from '../../../models';
-import { gridClasses } from '../../../constants/gridClasses';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['selectionModel'],
@@ -113,9 +112,6 @@ export const useGridSelection = (
         const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
         const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
         const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
-        if (startIndex === endIndex) {
-          return;
-        }
         if (startIndex > endIndex) {
           endId = visibleRowIds[endIndex + 1];
         } else {
