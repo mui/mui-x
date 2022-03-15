@@ -1,11 +1,75 @@
 import * as React from 'react';
-import { GridRowModel, GridFilterModel, GridSortModel, GridRowId } from '@mui/x-data-grid-pro';
+import {
+  getGridDefaultColumnTypes,
+  GridRowModel,
+  GridFilterModel,
+  GridSortModel,
+  GridRowId,
+  GridLinkOperator,
+  GridFilterOperator,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
 import {
   useDemoData,
   UseDemoDataOptions,
   getColumnsFromOptions,
   getInitialState,
 } from './useDemoData';
+
+const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridRowModel) => {
+  const params = { id: row.id, row, field, rowNode: {} };
+  // @ts-ignore
+  return colDef.valueGetter?.(params) || row[field];
+};
+const getFilteredRows = (
+  rows: GridRowModel[],
+  filterModel: GridFilterModel | undefined,
+  columnsWithDefaultColDef: GridColDef[],
+) => {
+  if (filterModel === undefined || filterModel.items.length === 0) {
+    return rows;
+  }
+
+  const valueGetters = filterModel.items.map(({ columnField }) =>
+    simplifiedValueGetter(
+      columnField,
+      columnsWithDefaultColDef.find(({ field }) => field === columnField) as any,
+    ),
+  );
+  const filterFunctions = filterModel.items.map((filterItem) => {
+    const { columnField, operatorValue } = filterItem;
+    const colDef = columnsWithDefaultColDef.find(({ field }) => field === columnField) as any;
+
+    const filterOperator: any = colDef.filterOperators.find(
+      ({ value }: GridFilterOperator) => operatorValue === value,
+    );
+
+    let parsedValue = filterItem.value;
+    if (colDef.valueParser) {
+      const parser = colDef.valueParser;
+      parsedValue = Array.isArray(filterItem.value)
+        ? filterItem.value?.map((x) => parser(x))
+        : parser(filterItem.value);
+    }
+
+    return filterOperator?.getApplyFilterFn({ filterItem, value: parsedValue }, colDef);
+  });
+
+  if (filterModel.linkOperator === GridLinkOperator.Or) {
+    return rows.filter((row: GridRowModel) =>
+      filterModel.items.some((_, index) => {
+        const value = valueGetters[index](row);
+        return filterFunctions[index] === null ? true : filterFunctions[index]({ value });
+      }),
+    );
+  }
+  return rows.filter((row: GridRowModel) =>
+    filterModel.items.every((_, index) => {
+      const value = valueGetters[index](row);
+      return filterFunctions[index] === null ? true : filterFunctions[index]({ value });
+    }),
+  );
+};
 
 /**
  * Simulates server data loading
@@ -14,6 +78,7 @@ const loadServerRows = (
   rows: GridRowModel[],
   queryOptions: QueryOptions,
   serverOptions: ServerOptions,
+  columnsWithDefaultColDef: GridColDef[],
 ): Promise<FakeServerResponse> => {
   const { minDelay = 100, maxDelay = 300, useCursorPagination } = serverOptions;
 
@@ -27,22 +92,24 @@ const loadServerRows = (
   let nextCursor;
   let firstRowIndex;
   let lastRowIndex;
-  const rowNumber = rows.length; // will be modified when filter will be implemented
+
+  const filteredRows = getFilteredRows(rows, queryOptions.filterModel, columnsWithDefaultColDef);
+  const rowNumber = filteredRows.length;
   if (!pageSize) {
     firstRowIndex = 0;
-    lastRowIndex = rows.length;
+    lastRowIndex = filteredRows.length;
   } else if (useCursorPagination) {
-    firstRowIndex = cursor ? rows.findIndex(({ id }) => id === cursor) : 0;
+    firstRowIndex = cursor ? filteredRows.findIndex(({ id }) => id === cursor) : 0;
     firstRowIndex = Math.max(firstRowIndex, 0); // if cursor not found return 0
     lastRowIndex = firstRowIndex + pageSize;
 
-    nextCursor = lastRowIndex >= rows.length ? undefined : rows[lastRowIndex].id;
+    nextCursor = lastRowIndex >= filteredRows.length ? undefined : filteredRows[lastRowIndex].id;
   } else {
     firstRowIndex = page * pageSize;
     lastRowIndex = (page + 1) * pageSize;
   }
   const response: FakeServerResponse = {
-    returnedRows: rows.slice(firstRowIndex, lastRowIndex),
+    returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex),
     nextCursor,
     rowNumber,
   };
@@ -81,6 +148,12 @@ export const serverConfiguration = (
   const columns = getColumnsFromOptions(dataSetOptions);
   const initialState = getInitialState(dataSetOptions, columns);
 
+  const defaultColDef = getGridDefaultColumnTypes();
+  const columnsWithDefaultColDef = columns.map((column) => ({
+    ...defaultColDef[column.type || 'string'],
+    ...column,
+  }));
+
   const useQuery = (queryOptions: QueryOptions) => {
     const {
       data: { rows },
@@ -105,7 +178,7 @@ export const serverConfiguration = (
       setIsLoading(true);
       setRowCount(undefined);
       setNextCursor(undefined);
-      loadServerRows(rows, queryOptions, serverOptions).then(
+      loadServerRows(rows, queryOptions, serverOptions, columnsWithDefaultColDef).then(
         ({ returnedRows, nextCursor: responseNextCursor, rowNumber }) => {
           if (!active) {
             return;
