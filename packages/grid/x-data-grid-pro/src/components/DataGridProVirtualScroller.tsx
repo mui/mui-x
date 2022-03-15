@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, darken, lighten } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
@@ -84,6 +84,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 interface VirtualScrollerPinnedColumnsProps {
   side: GridPinnedPosition;
+  showCellRightBorder: boolean;
 }
 
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
@@ -136,6 +137,14 @@ const VirtualScrollerPinnedColumns = styled('div', {
   }),
   ...(ownerState.side === GridPinnedPosition.left && { left: 0, float: 'left' }),
   ...(ownerState.side === GridPinnedPosition.right && { right: 0, float: 'right' }),
+  ...(ownerState.side === GridPinnedPosition.right &&
+    ownerState.showCellRightBorder && {
+      borderLeft: `1px solid ${
+        theme.palette.mode === 'light'
+          ? lighten(alpha(theme.palette.divider, 1), 0.88)
+          : darken(alpha(theme.palette.divider, 1), 0.68)
+      }`,
+    }),
 }));
 
 interface DataGridProVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -287,7 +296,10 @@ const DataGridProVirtualScroller = React.forwardRef<
           <VirtualScrollerPinnedColumns
             ref={leftColumns}
             className={classes.leftPinnedColumns}
-            ownerState={{ side: GridPinnedPosition.left }}
+            ownerState={{
+              side: GridPinnedPosition.left,
+              showCellRightBorder: rootProps.showCellRightBorder,
+            }}
             style={pinnedColumnsStyle}
           >
             {getRows({
@@ -301,7 +313,10 @@ const DataGridProVirtualScroller = React.forwardRef<
         {rightRenderContext && (
           <VirtualScrollerPinnedColumns
             ref={rightColumns}
-            ownerState={{ side: GridPinnedPosition.right }}
+            ownerState={{
+              side: GridPinnedPosition.right,
+              showCellRightBorder: rootProps.showCellRightBorder,
+            }}
             className={classes.rightPinnedColumns}
             style={pinnedColumnsStyle}
           >
