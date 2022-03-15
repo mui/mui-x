@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef, GridCellParams, GridRowParams } from '@mui/x-data-grid';
 
 function EnterpriseTest() {
   const apiRef = useGridApiRef();
@@ -36,4 +36,22 @@ function EnterpriseTest() {
 
 function SxTest() {
   <DataGrid rows={[]} columns={[]} sx={{ color: 'primary.main' }} />;
+}
+
+function CellEditingProps() {
+  <DataGrid
+    rows={[]}
+    columns={[]}
+    onCellEditStart={(params: GridCellParams) => {}}
+    onCellEditStop={(params: GridCellParams) => {}}
+  />;
+}
+
+function RowEditingProps() {
+  <DataGrid
+    rows={[]}
+    columns={[]}
+    onRowEditStart={(params: GridRowParams) => {}}
+    onRowEditStop={(params: GridRowParams) => {}}
+  />;
 }

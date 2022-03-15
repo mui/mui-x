@@ -4,12 +4,12 @@
   "properties": [
     {
       "name": "commitCellChange",
-      "description": "Updates the field at the given id with the value stored in the edit row model.",
+      "description": "Updates the field corresponding to the given id with the value stored in the edit row model.",
       "type": "(params: GridCommitCellChangeParams, event?: MuiBaseEvent) => boolean | Promise<boolean>"
     },
     {
       "name": "commitRowChange",
-      "description": "Updates the row at the given id with the values stored in the edit row model.",
+      "description": "Updates the row corresponding to the given id with the values stored in the edit row model.",
       "type": "(id: GridRowId, event?: MuiBaseEvent) => boolean | Promise<boolean>"
     },
     {
@@ -51,6 +51,26 @@
       "name": "setRowMode",
       "description": "Sets the mode of a row.",
       "type": "(id: GridRowId, mode: GridRowMode) => void"
+    },
+    {
+      "name": "startCellEditMode",
+      "description": "Puts the cell corresponding to the given row id and field into edit mode.",
+      "type": "(params: GridStartCellEditModeParams) => void"
+    },
+    {
+      "name": "startRowEditMode",
+      "description": "Puts the row corresponding to the given id into edit mode.",
+      "type": "(params: GridStartRowEditModeParams) => void"
+    },
+    {
+      "name": "stopCellEditMode",
+      "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.\nIf <code>params.ignoreModifications</code> is <code>false</code> it will discard the modifications made.",
+      "type": "(params: GridStopCellEditModeParams) => Promise<boolean>"
+    },
+    {
+      "name": "stopRowEditMode",
+      "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.\nIf <code>params.ignoreModifications</code> is <code>false</code> it will discard the modifications made.",
+      "type": "(params: GridStopRowEditModeParams) => Promise<boolean>"
     }
   ]
 }
