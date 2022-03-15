@@ -62,7 +62,6 @@ export const useGridRowReorder = (
   props: Pick<DataGridProProcessedProps, 'disableRowReorder' | 'onRowOrderChange' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
-  const dragRowId = useGridSelector(apiRef, gridRowReorderDragRowSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
   const dragRowNode = React.useRef<HTMLElement | null>(null);
@@ -116,22 +115,23 @@ export const useGridRowReorder = (
     [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
   );
 
-  const handleDragEnter = React.useCallback<GridEventListener<GridEvents.rowDragEnter>>(
-    (params, event) => {
-      event.preventDefault();
-      // Prevent drag events propagation.
-      // For more information check here https://github.com/mui/mui-x/issues/2680.
-      event.stopPropagation();
-    },
-    [],
-  );
+  const handleDragEnter = React.useCallback<
+    GridEventListener<GridEvents.cellDragEnter | GridEvents.rowDragEnter>
+  >((params, event) => {
+    event.preventDefault();
+    // Prevent drag events propagation.
+    // For more information check here https://github.com/mui/mui-x/issues/2680.
+    event.stopPropagation();
+  }, []);
 
-  const handleDragOver = React.useCallback<GridEventListener<GridEvents.rowDragOver>>(
+  const handleDragOver = React.useCallback<
+    GridEventListener<GridEvents.cellDragOver | GridEvents.rowDragOver>
+  >(
     (params, event) => {
-      if (!dragRowId) {
+      const dragRowId = gridRowReorderDragRowSelector(apiRef);
+      if (!dragRowId && dragRowId !== 0) {
         return;
       }
-
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.
@@ -167,12 +167,13 @@ export const useGridRowReorder = (
         cursorPosition.current = coordinates;
       }
     },
-    [apiRef, dragRowId, logger],
+    [apiRef, logger],
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<GridEvents.rowDragEnd>>(
     (params, event): void => {
-      if (isRowReorderDisabled() || !dragRowId) {
+      const dragRowId = gridRowReorderDragRowSelector(apiRef);
+      if (isRowReorderDisabled() || (!dragRowId && dragRowId !== 0)) {
         return;
       }
 
@@ -206,12 +207,14 @@ export const useGridRowReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [isRowReorderDisabled, logger, apiRef, dragRowId],
+    [isRowReorderDisabled, logger, apiRef],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowDragStart, handleDragStart);
   useGridApiEventHandler(apiRef, GridEvents.rowDragEnter, handleDragEnter);
   useGridApiEventHandler(apiRef, GridEvents.rowDragOver, handleDragOver);
   useGridApiEventHandler(apiRef, GridEvents.rowDragEnd, handleDragEnd);
+  useGridApiEventHandler(apiRef, GridEvents.cellDragEnter, handleDragEnter);
+  useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
   useGridApiOptionHandler(apiRef, GridEvents.rowOrderChange, props.onRowOrderChange);
 };

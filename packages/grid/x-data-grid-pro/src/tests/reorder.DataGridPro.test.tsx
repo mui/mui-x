@@ -6,6 +6,8 @@ import {
   getColumnHeadersTextContent,
   getColumnHeaderCell,
   getCell,
+  getRow,
+  getRowsFieldContent,
   raf,
 } from 'test/utils/helperFn';
 import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
@@ -79,173 +81,448 @@ describe('<DataGridPro /> - Reorder', () => {
       await raf();
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'id']);
     });
+
+    it('should not reset the column order when a prop change', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      const rows = [{ id: 0, brand: 'Nike' }];
+      const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+          </div>
+        );
+      };
+
+      const { forceUpdate } = render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      apiRef!.current.setColumnIndex('brand', 2);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+      forceUpdate(); // test stability
+      expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+    });
+
+    it('should allow to reorder columns by dropping outside the header row', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      const rows = [{ id: 0, brand: 'Nike' }];
+      const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      const dragCol = getColumnHeaderCell(0).firstChild!;
+      const targetCell = getCell(0, 2)!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCell);
+      const dragOverEvent = createDragOverEvent(targetCell);
+      fireEvent(targetCell, dragOverEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+    });
+
+    it('should cancel the reordering when dropping the column outside the grid', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      const rows = [{ id: 0, brand: 'Nike' }];
+      const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      const dragCol = getColumnHeaderCell(0).firstChild!;
+      const targetCell = getCell(0, 2);
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCell);
+      const dragOverEvent = createDragOverEvent(targetCell);
+      fireEvent(targetCell, dragOverEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+
+      const dragEndEvent = createDragEndEvent(dragCol, true);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    });
+
+    it('should keep the order of the columns when dragStart is fired and disableColumnReorder=true', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      const rows = [{ id: 0, brand: 'Nike' }];
+      const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      const columnHeader = getColumnHeaderCell(0);
+      const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
+      fireEvent.dragStart(columnHeaderDraggableContainer.firstChild);
+      expect(
+        columnHeaderDraggableContainer.classList.contains(gridClasses['columnHeader--dragging']),
+      ).to.equal(false);
+    });
+
+    it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      const rows = [{ id: 0, brand: 'Nike' }];
+      const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      const dragCol = getColumnHeaderCell(2).firstChild!;
+      const dragEndEvent = createDragEndEvent(dragCol, true);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    });
+
+    it('should call onColumnOrderChange after the column has been reordered', () => {
+      const onColumnOrderChange = spy();
+      let apiRef: React.MutableRefObject<GridApi>;
+      const Test = () => {
+        apiRef = useGridApiRef();
+        const data = useData(1, 3);
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro apiRef={apiRef} {...data} onColumnOrderChange={onColumnOrderChange} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+
+      const dragCol = getColumnHeaderCell(0).firstChild!;
+      const targetCell = getCell(0, 2)!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCell);
+      const dragOverEvent = createDragOverEvent(targetCell);
+      fireEvent(targetCell, dragOverEvent);
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+
+      expect(onColumnOrderChange.callCount).to.equal(1);
+      expect(onColumnOrderChange.lastCall.args[2].api.state.columns.all).to.deep.equal([
+        'currencyPair',
+        'price1M',
+        'id',
+      ]);
+    });
+
+    describe('column - disableReorder', () => {
+      it('should not allow to start dragging a column with disableReorder=true', () => {
+        let apiRef: React.MutableRefObject<GridApi>;
+        const rows = [{ id: 0, brand: 'Nike' }];
+        const columns = [
+          { field: 'brand' },
+          { field: 'desc', disableReorder: true },
+          { field: 'type' },
+        ];
+
+        const Test = () => {
+          apiRef = useGridApiRef();
+
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+            </div>
+          );
+        };
+
+        render(<Test />);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+        const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
+        const targetCol = getColumnHeaderCell(0).firstChild!;
+
+        fireEvent.dragStart(dragCol);
+
+        expect(dragCol).to.have.attribute('draggable', 'false');
+        expect(dragCol).not.to.have.class(gridClasses['columnHeader--dragging']);
+
+        fireEvent.dragEnter(targetCol);
+        const dragOverEvent = createDragOverEvent(targetCol);
+        fireEvent(targetCol, dragOverEvent);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+
+        const dragEndEvent = createDragEndEvent(dragCol);
+        fireEvent(dragCol, dragEndEvent);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      });
+
+      it('should not allow to drag left of first visible column if it has disableReorder=true', () => {
+        let apiRef: React.MutableRefObject<GridApi>;
+        const rows = [{ id: 0, brand: 'Nike' }];
+        const columns = [
+          { field: 'brand', disableReorder: true },
+          { field: 'desc' },
+          { field: 'type' },
+        ];
+
+        const Test = () => {
+          apiRef = useGridApiRef();
+
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+            </div>
+          );
+        };
+
+        render(<Test />);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+        const dragCol = getColumnHeaderCell(1).firstChild!;
+        const targetCol = getColumnHeaderCell(0).firstChild!;
+
+        fireEvent.dragStart(dragCol);
+        fireEvent.dragEnter(targetCol);
+        const dragOverEvent = createDragOverEvent(targetCol);
+        fireEvent(targetCol, dragOverEvent);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+
+        const dragEndEvent = createDragEndEvent(dragCol);
+        fireEvent(dragCol, dragEndEvent);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      });
+
+      it('should not allow to drag right of last visible column if it has disableReorder=true', () => {
+        let apiRef: React.MutableRefObject<GridApi>;
+        const rows = [{ id: 0, brand: 'Nike' }];
+        const columns = [
+          { field: 'brand' },
+          { field: 'desc' },
+          { field: 'type', disableReorder: true },
+        ];
+
+        const Test = () => {
+          apiRef = useGridApiRef();
+
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+            </div>
+          );
+        };
+
+        render(<Test />);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+        const dragCol = getColumnHeaderCell(1).firstChild!;
+        const targetCol = getColumnHeaderCell(2).firstChild!;
+
+        fireEvent.dragStart(dragCol);
+        fireEvent.dragEnter(targetCol);
+        const dragOverEvent = createDragOverEvent(targetCol);
+        fireEvent(targetCol, dragOverEvent);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+
+        const dragEndEvent = createDragEndEvent(dragCol);
+        fireEvent(dragCol, dragEndEvent);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      });
+
+      it('should allow to drag right of a column with disableReorder=true if it is not the last visible one', () => {
+        const rows = [{ id: 0, brand: 'Nike' }];
+        const columns = [
+          { field: 'brand' },
+          { field: 'desc', disableReorder: true },
+          { field: 'type' },
+        ];
+
+        const Test = () => {
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGridPro rows={rows} columns={columns} />
+            </div>
+          );
+        };
+
+        render(<Test />);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+        const dragCol = getColumnHeaderCell(0).firstChild!;
+        const targetCol = getColumnHeaderCell(2).firstChild!;
+
+        fireEvent.dragStart(dragCol);
+        fireEvent.dragEnter(targetCol);
+        const dragOverEvent2 = createDragOverEvent(targetCol);
+        fireEvent(targetCol, dragOverEvent2);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+
+        const dragEndEvent = createDragEndEvent(dragCol);
+        fireEvent(dragCol, dragEndEvent);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+      });
+    });
   });
 
-  it('should not reset the column order when a prop change', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
-    const rows = [{ id: 0, brand: 'Nike' }];
-    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+  describe('Rows', () => {
+    it('should cancel the reordering when dropping the row outside the grid', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      const rows = [
+        { id: 0, brand: 'Nike' },
+        { id: 1, brand: 'Adidas' },
+        { id: 2, brand: 'Puma' },
+      ];
+      const columns = [{ field: 'brand' }];
 
-    const Test = () => {
-      apiRef = useGridApiRef();
+      const Test = () => {
+        apiRef = useGridApiRef();
 
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
-        </div>
-      );
-    };
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+          </div>
+        );
+      };
 
-    const { forceUpdate } = render(<Test />);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    apiRef!.current.setColumnIndex('brand', 2);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
-    forceUpdate(); // test stability
-    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
-  });
+      render(<Test />);
 
-  it('should allow to reorder columns by dropping outside the header row', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
-    const rows = [{ id: 0, brand: 'Nike' }];
-    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      const dragRow = getRow(0)!;
+      const targetCell = getCell(1, 0);
 
-    const Test = () => {
-      apiRef = useGridApiRef();
+      fireEvent.dragStart(dragRow);
+      fireEvent.dragEnter(targetCell);
+      const dragOverEvent = createDragOverEvent(targetCell);
+      fireEvent(targetCell, dragOverEvent);
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
-        </div>
-      );
-    };
+      const dragEndEvent = createDragEndEvent(dragRow, true);
+      fireEvent(dragRow, dragEndEvent);
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
 
-    render(<Test />);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(0).firstChild!;
-    const targetCell = getCell(0, 2)!;
+    it('should keep the order of the rows when dragStart is fired and disableRowReorder=true', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      const rows = [
+        { id: 0, brand: 'Nike' },
+        { id: 1, brand: 'Adidas' },
+        { id: 2, brand: 'Puma' },
+      ];
+      const columns = [{ field: 'brand' }];
 
-    fireEvent.dragStart(dragCol);
-    fireEvent.dragEnter(targetCell);
-    const dragOverEvent = createDragOverEvent(targetCell);
-    fireEvent(targetCell, dragOverEvent);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+      const Test = () => {
+        apiRef = useGridApiRef();
 
-    const dragEndEvent = createDragEndEvent(dragCol);
-    fireEvent(dragCol, dragEndEvent);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
-  });
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableRowReorder />
+          </div>
+        );
+      };
 
-  it('should cancel the reordering when dropping the column outside the grid', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
-    const rows = [{ id: 0, brand: 'Nike' }];
-    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+      render(<Test />);
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      const row = getRow(0)!;
+      fireEvent.dragStart(row);
+      expect(row.classList.contains(gridClasses['row--dragging'])).to.equal(false);
+    });
 
-    const Test = () => {
-      apiRef = useGridApiRef();
+    it('should keep the order of the rows when dragEnd is fired and disableRowReorder=true', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      const rows = [
+        { id: 0, brand: 'Nike' },
+        { id: 1, brand: 'Adidas' },
+        { id: 2, brand: 'Puma' },
+      ];
+      const columns = [{ field: 'brand' }];
 
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
-        </div>
-      );
-    };
+      const Test = () => {
+        apiRef = useGridApiRef();
 
-    render(<Test />);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(0).firstChild!;
-    const targetCell = getCell(0, 2);
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableRowReorder />
+          </div>
+        );
+      };
 
-    fireEvent.dragStart(dragCol);
-    fireEvent.dragEnter(targetCell);
-    const dragOverEvent = createDragOverEvent(targetCell);
-    fireEvent(targetCell, dragOverEvent);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+      render(<Test />);
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      const row = getRow(0)!;
+      const dragEndEvent = createDragEndEvent(row, true);
+      fireEvent(row, dragEndEvent);
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
 
-    const dragEndEvent = createDragEndEvent(dragCol, true);
-    fireEvent(dragCol, dragEndEvent);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-  });
+    it('should call onRowOrderChange after the row has been reordered', () => {
+      const handleOnRowOrderChange = spy();
+      let apiRef: React.MutableRefObject<GridApi>;
+      const Test = () => {
+        apiRef = useGridApiRef();
+        const rows = [
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+          { id: 2, brand: 'Puma' },
+        ];
+        const columns = [{ field: 'brand' }];
 
-  it('should keep the order of the columns when dragStart is fired and disableColumnReorder=true', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
-    const rows = [{ id: 0, brand: 'Nike' }];
-    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              apiRef={apiRef}
+              rows={rows}
+              columns={columns}
+              onRowOrderChange={handleOnRowOrderChange}
+            />
+          </div>
+        );
+      };
 
-    const Test = () => {
-      apiRef = useGridApiRef();
+      render(<Test />);
 
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
-        </div>
-      );
-    };
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
-    render(<Test />);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const columnHeader = getColumnHeaderCell(0);
-    const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
-    fireEvent.dragStart(columnHeaderDraggableContainer.firstChild);
-    expect(
-      columnHeaderDraggableContainer.classList.contains(gridClasses['columnHeader--dragging']),
-    ).to.equal(false);
-  });
+      const row = getRow(0)!;
+      const targetRow = getRow(1)!;
+      fireEvent.dragStart(row);
+      fireEvent.dragEnter(targetRow);
+      const dragOverEvent = createDragOverEvent(targetRow);
+      fireEvent(targetRow, dragOverEvent);
+      const dragEndEvent = createDragEndEvent(row);
+      fireEvent(row, dragEndEvent);
 
-  it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
-    const rows = [{ id: 0, brand: 'Nike' }];
-    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
-
-    const Test = () => {
-      apiRef = useGridApiRef();
-
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
-        </div>
-      );
-    };
-
-    render(<Test />);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(2).firstChild!;
-    const dragEndEvent = createDragEndEvent(dragCol, true);
-    fireEvent(dragCol, dragEndEvent);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-  });
-
-  it('should call onColumnOrderChange after the column has been reordered', () => {
-    const onColumnOrderChange = spy();
-    let apiRef: React.MutableRefObject<GridApi>;
-    const Test = () => {
-      apiRef = useGridApiRef();
-      const data = useData(1, 3);
-
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} {...data} onColumnOrderChange={onColumnOrderChange} />
-        </div>
-      );
-    };
-
-    render(<Test />);
-
-    const dragCol = getColumnHeaderCell(0).firstChild!;
-    const targetCell = getCell(0, 2)!;
-
-    fireEvent.dragStart(dragCol);
-    fireEvent.dragEnter(targetCell);
-    const dragOverEvent = createDragOverEvent(targetCell);
-    fireEvent(targetCell, dragOverEvent);
-    const dragEndEvent = createDragEndEvent(dragCol);
-    fireEvent(dragCol, dragEndEvent);
-
-    expect(onColumnOrderChange.callCount).to.equal(1);
-    expect(onColumnOrderChange.lastCall.args[2].api.state.columns.all).to.deep.equal([
-      'currencyPair',
-      'price1M',
-      'id',
-    ]);
+      expect(handleOnRowOrderChange.callCount).to.equal(1);
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
   });
 
   it('should prevent drag events propagation', () => {
@@ -256,7 +533,7 @@ describe('<DataGridPro /> - Reorder', () => {
     let apiRef: React.MutableRefObject<GridApi>;
     const Test = () => {
       apiRef = useGridApiRef();
-      const data = useData(1, 3);
+      const data = useData(3, 3);
 
       return (
         <div
@@ -274,162 +551,36 @@ describe('<DataGridPro /> - Reorder', () => {
 
     render(<Test />);
 
+    // Column dragging
     const dragCol = getColumnHeaderCell(0).firstChild!;
     const targetCell = getCell(0, 2)!;
 
     fireEvent.dragStart(dragCol);
     fireEvent.dragEnter(targetCell);
-    const dragOverEvent = createDragOverEvent(targetCell);
-    fireEvent(targetCell, dragOverEvent);
-    const dragEndEvent = createDragEndEvent(dragCol);
-    fireEvent(dragCol, dragEndEvent);
+    const dragOverCellEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverCellEvent);
+    const dragEndColEvent = createDragEndEvent(dragCol);
+    fireEvent(dragCol, dragEndColEvent);
 
     expect(handleDragStart.callCount).to.equal(0);
     expect(handleDragEnter.callCount).to.equal(0);
     expect(handleDragOver.callCount).to.equal(0);
     expect(handleDragEnd.callCount).to.equal(0);
-  });
 
-  describe('column disableReorder', () => {
-    it('should not allow to start dragging a column with disableReorder=true', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
-      const rows = [{ id: 0, brand: 'Nike' }];
-      const columns = [
-        { field: 'brand' },
-        { field: 'desc', disableReorder: true },
-        { field: 'type' },
-      ];
+    // Row dragging
+    const dragRow = getRow(0)!;
+    const targetRow = getRow(1)!;
 
-      const Test = () => {
-        apiRef = useGridApiRef();
+    fireEvent.dragStart(dragRow);
+    fireEvent.dragEnter(targetRow);
+    const dragOverRowEvent = createDragOverEvent(targetRow);
+    fireEvent(targetRow, dragOverRowEvent);
+    const dragEndRowEvent = createDragEndEvent(dragRow);
+    fireEvent(dragRow, dragEndRowEvent);
 
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
-          </div>
-        );
-      };
-
-      render(<Test />);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
-      const targetCol = getColumnHeaderCell(0).firstChild!;
-
-      fireEvent.dragStart(dragCol);
-
-      expect(dragCol).to.have.attribute('draggable', 'false');
-      expect(dragCol).not.to.have.class(gridClasses['columnHeader--dragging']);
-
-      fireEvent.dragEnter(targetCol);
-      const dragOverEvent = createDragOverEvent(targetCol);
-      fireEvent(targetCol, dragOverEvent);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-
-      const dragEndEvent = createDragEndEvent(dragCol);
-      fireEvent(dragCol, dragEndEvent);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    });
-
-    it('should not allow to drag left of first visible column if it has disableReorder=true', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
-      const rows = [{ id: 0, brand: 'Nike' }];
-      const columns = [
-        { field: 'brand', disableReorder: true },
-        { field: 'desc' },
-        { field: 'type' },
-      ];
-
-      const Test = () => {
-        apiRef = useGridApiRef();
-
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
-          </div>
-        );
-      };
-
-      render(<Test />);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(1).firstChild!;
-      const targetCol = getColumnHeaderCell(0).firstChild!;
-
-      fireEvent.dragStart(dragCol);
-      fireEvent.dragEnter(targetCol);
-      const dragOverEvent = createDragOverEvent(targetCol);
-      fireEvent(targetCol, dragOverEvent);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-
-      const dragEndEvent = createDragEndEvent(dragCol);
-      fireEvent(dragCol, dragEndEvent);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    });
-
-    it('should not allow to drag right of last visible column if it has disableReorder=true', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
-      const rows = [{ id: 0, brand: 'Nike' }];
-      const columns = [
-        { field: 'brand' },
-        { field: 'desc' },
-        { field: 'type', disableReorder: true },
-      ];
-
-      const Test = () => {
-        apiRef = useGridApiRef();
-
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
-          </div>
-        );
-      };
-
-      render(<Test />);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(1).firstChild!;
-      const targetCol = getColumnHeaderCell(2).firstChild!;
-
-      fireEvent.dragStart(dragCol);
-      fireEvent.dragEnter(targetCol);
-      const dragOverEvent = createDragOverEvent(targetCol);
-      fireEvent(targetCol, dragOverEvent);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-
-      const dragEndEvent = createDragEndEvent(dragCol);
-      fireEvent(dragCol, dragEndEvent);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    });
-
-    it('should allow to drag right of a column with disableReorder=true if it is not the last visible one', () => {
-      const rows = [{ id: 0, brand: 'Nike' }];
-      const columns = [
-        { field: 'brand' },
-        { field: 'desc', disableReorder: true },
-        { field: 'type' },
-      ];
-
-      const Test = () => {
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro rows={rows} columns={columns} />
-          </div>
-        );
-      };
-
-      render(<Test />);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(0).firstChild!;
-      const targetCol = getColumnHeaderCell(2).firstChild!;
-
-      fireEvent.dragStart(dragCol);
-      fireEvent.dragEnter(targetCol);
-      const dragOverEvent2 = createDragOverEvent(targetCol);
-      fireEvent(targetCol, dragOverEvent2);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
-
-      const dragEndEvent = createDragEndEvent(dragCol);
-      fireEvent(dragCol, dragEndEvent);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
-    });
+    expect(handleDragStart.callCount).to.equal(0);
+    expect(handleDragEnter.callCount).to.equal(0);
+    expect(handleDragOver.callCount).to.equal(0);
+    expect(handleDragEnd.callCount).to.equal(0);
   });
 });
