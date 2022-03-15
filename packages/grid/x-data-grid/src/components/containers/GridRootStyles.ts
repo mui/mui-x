@@ -74,12 +74,12 @@ export const GridRootStyles = styled('div', {
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
       [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
-        borderColor: 'transparent',
+        borderBottomColor: 'transparent',
       },
     },
     [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
       {
-        borderColor: 'transparent',
+        borderBottomColor: 'transparent',
       },
     [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
       WebkitTapHighlightColor: 'transparent',

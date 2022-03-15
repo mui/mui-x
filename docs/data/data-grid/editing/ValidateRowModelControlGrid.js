@@ -1,12 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import {
-  randomCreatedDate,
-  randomEmail,
-  randomTraderName,
-  randomUpdatedDate,
-} from '@mui/x-data-grid-generator';
+import { useDemoData } from '@mui/x-data-grid-generator';
+
+const VISIBLE_FIELDS = ['name', 'email', 'dateCreated', 'lastUpdated'];
 
 function validateEmail(email) {
   const re =
@@ -15,6 +12,40 @@ function validateEmail(email) {
 }
 
 export default function ValidateRowModelControlGrid() {
+  const { data } = useDemoData({
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
+    rowLength: 5,
+  });
+
+  const columns = [
+    { field: 'name', headerName: 'Name', width: 180, editable: true },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 200,
+      editable: true,
+      preProcessEditCellProps: (params) => {
+        const isValid = validateEmail(params.props.value);
+        return { ...params.props, error: !isValid };
+      },
+    },
+    {
+      field: 'dateCreated',
+      headerName: 'Date Created',
+      type: 'date',
+      width: 180,
+      editable: true,
+    },
+    {
+      field: 'lastUpdated',
+      headerName: 'Last Login',
+      type: 'dateTime',
+      width: 220,
+      editable: true,
+    },
+  ];
+
   return (
     <Box
       sx={{
@@ -34,73 +65,7 @@ export default function ValidateRowModelControlGrid() {
         },
       }}
     >
-      <DataGrid rows={rows} columns={columns} />
+      <DataGrid {...data} columns={columns} />
     </Box>
   );
 }
-
-const columns = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
-  {
-    field: 'email',
-    headerName: 'Email',
-    width: 200,
-    editable: true,
-    preProcessEditCellProps: (params) => {
-      const isValid = validateEmail(params.props.value);
-      return { ...params.props, error: !isValid };
-    },
-  },
-  {
-    field: 'dateCreated',
-    headerName: 'Date Created',
-    type: 'date',
-    width: 180,
-    editable: true,
-  },
-  {
-    field: 'lastLogin',
-    headerName: 'Last Login',
-    type: 'dateTime',
-    width: 220,
-    editable: true,
-  },
-];
-
-const rows = [
-  {
-    id: 1,
-    name: randomTraderName(),
-    email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 2,
-    name: randomTraderName(),
-    email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 3,
-    name: randomTraderName(),
-    email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 4,
-    name: randomTraderName(),
-    email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 5,
-    name: randomTraderName(),
-    email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-];

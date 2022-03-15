@@ -112,6 +112,9 @@ export const useGridSelection = (
         const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
         const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
         const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
+        if (startIndex === endIndex) {
+          return;
+        }
         if (startIndex > endIndex) {
           endId = visibleRowIds[endIndex + 1];
         } else {
