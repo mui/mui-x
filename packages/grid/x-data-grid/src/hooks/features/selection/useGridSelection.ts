@@ -8,7 +8,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { isGridCellRoot } from '../../../utils/domUtils';
+import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
@@ -23,6 +23,7 @@ import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
 import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridSelectionModel } from '../../../models';
+import { gridClasses } from '../../../constants/gridClasses';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['selectionModel'],
@@ -388,35 +389,18 @@ export const useGridSelection = (
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
     (params, event) => {
-      // Ignore portal
-      // Do not apply shortcuts if the focus is not on the cell root component
-      // TODO replace with !event.currentTarget.contains(event.target as Element)
-      if (!isGridCellRoot(event.target as Element)) {
-        return;
-      }
-
       // Get the most recent cell mode because it may have been changed by another listener
       if (apiRef.current.getCellMode(params.id, params.field) === GridCellModes.Edit) {
         return;
       }
 
-      if (event.key === ' ' && event.shiftKey) {
-        event.preventDefault();
-        handleSingleRowSelection(params.id, event);
-        return;
-      }
-
-      if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
-        event.preventDefault();
-        selectRows(apiRef.current.getAllRowIds(), true);
-      }
-
       if (isNavigationKey(event.key) && event.shiftKey) {
-        event.preventDefault();
         const focusCell = gridFocusCellSelector(apiRef);
         if (!focusCell || focusCell.id === params.id) {
           return;
         }
+
+        event.preventDefault();
 
         const isPreviousRowSelected = apiRef.current.isRowSelected(focusCell.id);
         if (canHaveMultipleSelection) {
@@ -456,6 +440,24 @@ export const useGridSelection = (
         } else {
           apiRef.current.selectRow(focusCell.id, !isPreviousRowSelected, true);
         }
+      }
+
+      // Ignore portal
+      // Do not apply shortcuts if the focus is not on the cell root component
+      // TODO replace with !event.currentTarget.contains(event.target as Element)
+      if (!isGridCellRoot(event.target as Element)) {
+        return;
+      }
+
+      if (event.key === ' ' && event.shiftKey) {
+        event.preventDefault();
+        handleSingleRowSelection(params.id, event);
+        return;
+      }
+
+      if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
     [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows, canHaveMultipleSelection],
