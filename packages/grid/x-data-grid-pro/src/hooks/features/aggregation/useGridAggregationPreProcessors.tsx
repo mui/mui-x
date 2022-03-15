@@ -144,7 +144,7 @@ export const useGridAggregationPreProcessors = (
         tree,
       };
     },
-    [props.aggregationPosition],
+    [props.aggregationPosition, props.disableAggregation],
   );
 
   const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
