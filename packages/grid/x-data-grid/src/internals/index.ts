@@ -86,3 +86,4 @@ export { createSelector } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual } from '../utils/utils';
+export { getBorderColor } from '../utils/styleUtils';

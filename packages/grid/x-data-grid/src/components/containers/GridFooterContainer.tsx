@@ -1,10 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { styled, alpha, lighten, darken } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { getBorderColor } from '../../utils/styleUtils';
 
 export type GridFooterContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -25,10 +26,7 @@ const GridFooterContainerRoot = styled('div', {
   slot: 'FooterContainer',
   overridesResolver: (props, styles) => styles.footerContainer,
 })(({ theme }) => {
-  const borderColor =
-    theme.palette.mode === 'light'
-      ? lighten(alpha(theme.palette.divider, 1), 0.88)
-      : darken(alpha(theme.palette.divider, 1), 0.68);
+  const borderColor = getBorderColor(theme);
 
   return {
     display: 'flex',

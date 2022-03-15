@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha, darken, lighten } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
@@ -17,6 +17,7 @@ import {
   GridVirtualScrollerContent,
   GridVirtualScrollerRenderZone,
   useGridVirtualScroller,
+  getBorderColor,
 } from '@mui/x-data-grid/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -139,11 +140,7 @@ const VirtualScrollerPinnedColumns = styled('div', {
   ...(ownerState.side === GridPinnedPosition.right && { right: 0, float: 'right' }),
   ...(ownerState.side === GridPinnedPosition.right &&
     ownerState.showCellRightBorder && {
-      borderLeft: `1px solid ${
-        theme.palette.mode === 'light'
-          ? lighten(alpha(theme.palette.divider, 1), 0.88)
-          : darken(alpha(theme.palette.divider, 1), 0.68)
-      }`,
+      borderLeft: `1px solid ${getBorderColor(theme)}`,
     }),
 }));
 
