@@ -29,7 +29,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   rowGroupingColumnMode: 'single',
   getDetailPanelHeight: () => 500,
   aggregationFunctions: GRID_AGGREGATION_FUNCTIONS,
-  aggregationPosition: 'inline',
+  aggregationPosition: 'footer',
 };
 
 export const useDataGridProProps = (inProps: DataGridProProps) => {
@@ -64,6 +64,8 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
       ...themedProps,
       disableRowGrouping:
         themedProps.disableRowGrouping || !themedProps.experimentalFeatures?.rowGrouping,
+      disableAggregation:
+        themedProps.disableAggregation || !themedProps.experimentalFeatures?.aggregation,
       localeText,
       components,
       signature: 'DataGridPro',

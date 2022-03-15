@@ -138,7 +138,7 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
 
   /**
    * TODO: Move to `x-data-grid-premium
-   * @default "inline"
+   * @default "footer"
    */
   aggregationPosition: 'footer' | 'inline';
 }
