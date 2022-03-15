@@ -556,7 +556,7 @@ DataGridRaw.propTypes = {
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    * @param {GridRowModel} newRow Row object with the new values.
    * @param {GridRowModel} oldRow Row object with the old values.
-   * @returns {Promise<GridRowModel>} A promise which resolves with the final values to update the row.
+   * @returns {Promise<GridRowModel> | GridRowModel} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
   /**

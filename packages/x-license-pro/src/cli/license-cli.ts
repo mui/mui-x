@@ -1,19 +1,53 @@
 /* eslint-disable no-console */
 import * as yargs from 'yargs';
 import { generateLicence } from '../generateLicense/generateLicense';
+import { base64Decode } from '../encoding/base64';
 
 const oneDayInMs = 1000 * 60 * 60 * 24;
 
-interface HandlerArgv {
+interface LicenseGenArgv {
   order: string;
   expiry: string;
+}
+
+interface LicenseDecodeArgv {
+  key: string;
+}
+
+export function licenseDecodeCli() {
+  yargs
+    .command({
+      command: '$0',
+      describe: 'Decode a license key',
+      builder: (command) => {
+        return command.option('key', {
+          default: '',
+          alias: 'k',
+          describe: 'License key.',
+          type: 'string',
+        });
+      },
+      handler: (argv: yargs.ArgumentsCamelCase<LicenseDecodeArgv>) => {
+        if (!argv.key) {
+          throw new Error('MUI: You forgot to pass a license key. $ > licensegen -k xxx');
+        }
+
+        console.log(`Decoding license key "${argv.key}"`);
+        const license = base64Decode(argv.key.substr(32));
+        console.log(`Decoded license: \n${license}`);
+      },
+    })
+    .help()
+    .strict(true)
+    .version(false)
+    .parse();
 }
 
 export function licenseGenCli() {
   yargs
     .command({
       command: '$0',
-      describe: 'Generates Component.propTypes from TypeScript declarations',
+      describe: 'Generates a license key',
       builder: (command) => {
         return command
           .option('order', {
@@ -28,7 +62,7 @@ export function licenseGenCli() {
             type: 'string',
           });
       },
-      handler: (argv: yargs.ArgumentsCamelCase<HandlerArgv>) => {
+      handler: (argv: yargs.ArgumentsCamelCase<LicenseGenArgv>) => {
         if (!argv.order) {
           throw new Error('MUI: You forgot to pass an order number. $ > licensegen -o order_123.');
         }
