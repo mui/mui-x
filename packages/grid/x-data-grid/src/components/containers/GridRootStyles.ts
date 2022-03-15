@@ -71,7 +71,6 @@ export const GridRootStyles = styled('div', {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    overflow: "hidden",
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
       [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
