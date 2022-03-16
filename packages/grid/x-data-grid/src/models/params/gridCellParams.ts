@@ -75,7 +75,9 @@ export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellP
 /**
  * GridEditCellProps containing api.
  */
-export interface GridRenderEditCellParams extends GridEditCellProps {
+export interface GridRenderEditCellParams<V = any, R = any, F = V>
+  extends GridCellParams<V, R, F>,
+    GridEditCellProps<V> {
   /**
    * GridApi that let you manipulate the grid.
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
@@ -154,4 +156,13 @@ export interface GridPreProcessEditCellProps {
    * The edit cell props.
    */
   props: GridEditCellProps;
+  /**
+   * Whether the new value is different from the stored value or not.
+   */
+  hasChanged?: boolean;
+  /**
+   * Object containing the props of the other fields.
+   * Only available for row editing and when using the new editing API.
+   */
+  otherFieldsProps?: Record<string, GridEditCellProps>;
 }

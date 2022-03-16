@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license-pro",
-  "version": "5.6.0",
+  "version": "5.6.1",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -14,7 +14,8 @@
     "access": "public"
   },
   "bin": {
-    "licensegen": "./bin/license-gen-script.js"
+    "licensegen": "./bin/license-gen-script.js",
+    "licensedecode": "./bin/license-decode-script.js"
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
@@ -33,7 +34,7 @@
     "directory": "packages/x-license-pro"
   },
   "dependencies": {
-    "@mui/utils": "^5.4.2",
+    "@mui/utils": "^5.4.4",
     "esm": "^3.2.25",
     "yargs": "^17.3.1"
   },

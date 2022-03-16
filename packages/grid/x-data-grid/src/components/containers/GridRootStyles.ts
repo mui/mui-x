@@ -74,12 +74,12 @@ export const GridRootStyles = styled('div', {
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
       [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
-        borderColor: 'transparent',
+        borderBottomColor: 'transparent',
       },
     },
     [`& .${gridClasses['virtualScrollerContent--overflowed']} .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]:
       {
-        borderColor: 'transparent',
+        borderBottomColor: 'transparent',
       },
     [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
@@ -105,10 +105,11 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
-    [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}`]: {
-      visibility: 'visible',
-      width: 'auto',
-    },
+    [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}, & .${gridClasses['columnHeader--filtered']} .${gridClasses.iconButtonContainer}`]:
+      {
+        visibility: 'visible',
+        width: 'auto',
+      },
     [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}) .${gridClasses.sortIcon}`]:
       {
         opacity: 0,

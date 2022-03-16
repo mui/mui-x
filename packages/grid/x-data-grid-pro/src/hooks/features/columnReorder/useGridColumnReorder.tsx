@@ -8,7 +8,7 @@ import {
   GridEventListener,
   useGridLogger,
 } from '@mui/x-data-grid';
-import { useGridStateInit } from '@mui/x-data-grid/internals';
+import { GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -43,6 +43,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+export const columnReorderStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  columnReorder: { dragCol: '' },
+});
+
 /**
  * Only available in DataGridPro
  * @requires useGridColumns (method)
@@ -52,11 +57,6 @@ export const useGridColumnReorder = (
   props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
-
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    columnReorder: { dragCol: '' },
-  }));
 
   const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({

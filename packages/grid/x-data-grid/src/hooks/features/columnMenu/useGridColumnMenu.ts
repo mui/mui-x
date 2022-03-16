@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEvents } from '../../../models/events';
-import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
 import { GridColumnMenuApi } from '../../../models';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  columnMenu: { open: false },
+});
 
 /**
  * @requires useGridColumnResize (event)
@@ -12,8 +17,6 @@ import { GridColumnMenuApi } from '../../../models';
  */
 export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
-
-  useGridStateInit(apiRef, (state) => ({ ...state, columnMenu: { open: false } }));
 
   /**
    * API METHODS

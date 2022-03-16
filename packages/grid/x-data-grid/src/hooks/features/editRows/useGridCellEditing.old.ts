@@ -32,7 +32,11 @@ import {
   GridCellEditingApi,
   GridEditingSharedApi,
 } from '../../../models/api/gridEditingApi';
-import { GridCellEditCommitParams } from '../../../models/params/gridEditCellParams';
+import {
+  GridCellEditCommitParams,
+  GridCellEditStartParams,
+  GridCellEditStopParams,
+} from '../../../models/params/gridEditCellParams';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridCellMode } from '../../../models/gridCell';
 
@@ -100,7 +104,7 @@ export const useCellEditing = (
     (params, event = {}) => {
       const { id, field } = params;
 
-      apiRef.current.unstable_runPendingEditCellValueChangeDebounce(id, field);
+      apiRef.current.unstable_runPendingEditCellValueMutation(id, field);
 
       const model = apiRef.current.getEditRowsModel();
       if (!model[id] || !model[id][field]) {
@@ -222,12 +226,20 @@ export const useCellEditing = (
         !isModifierKeyPressed &&
         !(event.key === ' ' && event.shiftKey)
       ) {
-        apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
+        apiRef.current.publishEvent(
+          GridEvents.cellEditStart,
+          params as GridCellEditStartParams,
+          event,
+        );
       }
       if (!isEditMode && isDeleteKeys(event.key)) {
         apiRef.current.setEditCellValue({ id, field, value: '' });
         apiRef.current.commitCellChange({ id, field }, event);
-        apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
+        apiRef.current.publishEvent(
+          GridEvents.cellEditStop,
+          params as GridCellEditStopParams,
+          event,
+        );
       }
       if (isEditMode && isCellEditCommitKeys(event.key)) {
         const commitParams = { id, field };
@@ -237,7 +249,11 @@ export const useCellEditing = (
         }
       }
       if (isEditMode && isCellExitEditModeKeys(event.key)) {
-        apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
+        apiRef.current.publishEvent(
+          GridEvents.cellEditStop,
+          params as GridCellEditStopParams,
+          event,
+        );
       }
     },
     [apiRef],
@@ -248,7 +264,11 @@ export const useCellEditing = (
       if (!params.isEditable) {
         return;
       }
-      apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
+      apiRef.current.publishEvent(
+        GridEvents.cellEditStart,
+        params as GridCellEditStartParams,
+        event,
+      );
     },
     [apiRef],
   );
@@ -258,7 +278,7 @@ export const useCellEditing = (
       return;
     }
     await apiRef.current.commitCellChange(params, event);
-    apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
+    apiRef.current.publishEvent(GridEvents.cellEditStop, params as GridCellEditStopParams, event);
   };
 
   const handleCellFocusOut: GridEventListener<GridEvents.cellFocusOut> = useEventCallback(

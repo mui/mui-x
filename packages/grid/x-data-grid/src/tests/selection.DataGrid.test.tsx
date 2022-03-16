@@ -42,7 +42,12 @@ describe('<DataGrid /> - Selection', () => {
       Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
   ) => (
     <div style={{ width: 300, height: 300 }}>
-      <DataGrid {...defaultData} {...props} autoHeight={isJSDOM} />
+      <DataGrid
+        {...defaultData}
+        {...props}
+        autoHeight={isJSDOM}
+        experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+      />
     </div>
   );
 
@@ -270,6 +275,16 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       fireEvent.click(getCell(1, 0).querySelector('input'), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
+    });
+
+    it('should not change the selection with shift pressed when clicking on the last row of the selection', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      fireEvent.click(getCell(0, 0).querySelector('input'));
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      fireEvent.click(getCell(2, 0).querySelector('input'), { shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+      fireEvent.click(getCell(2, 0).querySelector('input'), { shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 
     it('should keep only one selected row when turning off checkboxSelection', () => {

@@ -241,8 +241,10 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     rowGrouping: PropTypes.bool,
+    warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
    * Filtering can be processed on the server or client-side.
@@ -292,7 +294,7 @@ DataGridProRaw.propTypes = {
   getDetailPanelHeight: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
@@ -306,6 +308,12 @@ DataGridProRaw.propTypes = {
    * Return the id of a given [[GridRowModel]].
    */
   getRowId: PropTypes.func,
+  /**
+   * Function that allows to specify the spacing between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row spacing values.
+   */
+  getRowSpacing: PropTypes.func,
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
@@ -684,6 +692,14 @@ DataGridProRaw.propTypes = {
     right: PropTypes.arrayOf(PropTypes.string),
   }),
   /**
+   * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   * @param {GridRowModel} newRow Row object with the new values.
+   * @param {GridRowModel} oldRow Row object with the old values.
+   * @returns {Promise<GridRowModel> | GridRowModel} The final values to update the row.
+   */
+  processRowUpdate: PropTypes.func,
+  /**
    * Number of extra rows to be rendered before/after the visible slice.
    * @default 3
    */
@@ -712,6 +728,11 @@ DataGridProRaw.propTypes = {
    * Set of rows of type [[GridRowsProp]].
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * Sets the type of space between rows added by `getRowSpacing`.
+   * @default "margin"
+   */
+  rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
