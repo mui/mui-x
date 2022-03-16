@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
-import { LicenseInfo } from '../utils/licenseInfo';
+import { LicenseInfo, MuiCommercialPackageName } from '../utils/licenseInfo';
 import {
   showExpiredLicenseError,
   showInvalidLicenseError,
@@ -8,18 +8,23 @@ import {
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
 
-const sharedLicenseStatuses: { [key: string]: LicenseStatus | undefined } = {};
+const sharedLicenseStatuses: {
+  [packageName in MuiCommercialPackageName]?: { key: string; status: LicenseStatus };
+} = {};
 
-export function useLicenseVerifier(): LicenseStatus {
+export function useLicenseVerifier(
+  packageName: MuiCommercialPackageName,
+  releaseInfo: string,
+): LicenseStatus {
   return React.useMemo(() => {
-    const licenseKey = LicenseInfo.getKey();
-    if (sharedLicenseStatuses[licenseKey] !== undefined) {
-      return sharedLicenseStatuses[licenseKey]!;
+    const licenseKey = LicenseInfo.getLicenseKey();
+    if (sharedLicenseStatuses[packageName]?.key === licenseKey) {
+      return sharedLicenseStatuses[packageName]!.status;
     }
 
-    const licenseStatus = verifyLicense(LicenseInfo.getReleaseInfo(), licenseKey);
+    const licenseStatus = verifyLicense(releaseInfo, licenseKey);
 
-    sharedLicenseStatuses[licenseKey] = licenseStatus;
+    sharedLicenseStatuses[packageName] = { key: licenseStatus, status: licenseStatus };
 
     if (licenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();
@@ -30,5 +35,5 @@ export function useLicenseVerifier(): LicenseStatus {
     }
 
     return licenseStatus;
-  }, []);
+  }, [packageName]);
 }

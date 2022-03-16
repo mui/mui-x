@@ -15,6 +15,9 @@ import { DataGridProProps } from '../models';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
+import { getReleaseInfo } from '../utils/releaseInfo';
+
+const releaseInfo = getReleaseInfo();
 
 const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(function DataGridPro(
   inProps,
@@ -22,7 +25,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
 ) {
   const props = useDataGridProProps(inProps);
   const apiRef = useDataGridProComponent(props.apiRef, props);
-  useLicenseVerifier();
+  useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
@@ -33,7 +36,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
           >
-            <Watermark />
+            <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
           </GridBody>
           <GridFooterPlaceholder />
         </GridErrorHandler>
