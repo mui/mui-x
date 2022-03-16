@@ -40,5 +40,5 @@ export function useLicenseVerifier(
     }
 
     return licenseStatus;
-  }, [packageName]);
+  }, [packageName, releaseInfo]);
 }
