@@ -57,14 +57,16 @@ dataGridComponentAPI.children = [
   { pathname: '/api-docs/data-grid/data-grid', title: 'DataGrid' },
   { pathname: '/api-docs/data-grid/data-grid-pro', title: 'DataGridPro' },
   { pathname: '/api-docs/data-grid/grid-api', title: 'GridApi' },
-  { pathname: '/api-docs/data-grid/grid-col-def', title: 'GridColDef' },
   { pathname: '/api-docs/data-grid/grid-cell-params', title: 'GridCellParams' },
-  { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
-  { pathname: '/api-docs/data-grid/grid-csv-export-options', title: 'GridCSVExportOptions' },
-  { pathname: '/api-docs/data-grid/grid-print-export-options', title: 'GridPrintExportOptions' },
-  { pathname: '/api-docs/data-grid/grid-filter-model', title: 'GridFilterModel' },
+  { pathname: '/api-docs/data-grid/grid-col-def', title: 'GridColDef' },
+  { pathname: '/api-docs/data-grid/grid-csv-export-options', title: 'GridCsvExportOptions' },
   { pathname: '/api-docs/data-grid/grid-filter-item', title: 'GridFilterItem' },
+  { pathname: '/api-docs/data-grid/grid-filter-model', title: 'GridFilterModel' },
   { pathname: '/api-docs/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
+  { pathname: '/api-docs/data-grid/grid-print-export-options', title: 'GridPrintExportOptions' },
+  { pathname: '/api-docs/data-grid/grid-row-class-name-params', title: 'GridRowClassNameParams' },
+  { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
+  { pathname: '/api-docs/data-grid/grid-row-spacing-params', title: 'GridRowSpacingParams' },
 ].map((page) => {
   return { ...page, linkProps: { linkAs: `${page.pathname.replace(/^\/api-docs/, '/api')}/` } };
 });
