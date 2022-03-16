@@ -562,9 +562,10 @@ DataGridRaw.propTypes = {
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.
-   * @param {GridRowModel} newRow Row object with the new values.
-   * @param {GridRowModel} oldRow Row object with the old values.
-   * @returns {Promise<GridRowModel> | GridRowModel} The final values to update the row.
+   * @template R
+   * @param {R} newRow Row object with the new values.
+   * @param {R} oldRow Row object with the old values.
+   * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
   /**
