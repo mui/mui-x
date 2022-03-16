@@ -23,7 +23,7 @@ export function useLicenseVerifier(
 ): LicenseStatus {
   return React.useMemo(() => {
     const licenseKey = LicenseInfo.getLicenseKey();
-    if (sharedLicenseStatuses[packageName]?.key === licenseKey) {
+    if (licenseKey && sharedLicenseStatuses[packageName]?.key === licenseKey) {
       return sharedLicenseStatuses[packageName]!.status;
     }
 
