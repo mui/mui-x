@@ -71,7 +71,6 @@ export const useGridAggregation = (
       apiRef.current.unstable_getCache('aggregation')?.sanitizedModelOnLastHydration;
 
     if (!isDeepEqual(lastAggregationModelApplied, aggregationModel)) {
-      console.log('HEY');
       // Refresh the column pre-processing
       // TODO: Add a clean way to re-run a pipe processing without faking a change
       apiRef.current.updateColumns([]);

@@ -181,7 +181,6 @@ export const wrapColumnWithAggregation = ({
   const wrappedValueFormatter: AggregationWrappedMethod<GridColDef['valueFormatter']> = (
     params,
   ) => {
-    console.log('HEY');
     if (params.id != null && aggregationFunction.valueFormatter) {
       const cellAggregationMode = getCellAggregationMode(params.id);
       if (cellAggregationMode) {
