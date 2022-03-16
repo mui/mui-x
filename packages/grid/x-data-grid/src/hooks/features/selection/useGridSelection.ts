@@ -395,49 +395,49 @@ export const useGridSelection = (
 
       if (isNavigationKey(event.key) && event.shiftKey) {
         const focusCell = gridFocusCellSelector(apiRef);
-        if (!focusCell || focusCell.id === params.id) {
-          return;
-        }
+        if (focusCell && focusCell.id !== params.id) {
+          event.preventDefault();
 
-        event.preventDefault();
+          const isPreviousRowSelected = apiRef.current.isRowSelected(focusCell.id);
+          if (canHaveMultipleSelection) {
+            const newRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(focusCell.id);
+            const previousRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
 
-        const isPreviousRowSelected = apiRef.current.isRowSelected(focusCell.id);
-        if (canHaveMultipleSelection) {
-          const newRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(focusCell.id);
-          const previousRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
+            let start: number;
+            let end: number;
 
-          let start: number;
-          let end: number;
-
-          if (newRowIndex > previousRowIndex) {
-            if (isPreviousRowSelected) {
-              // We are navigating to the bottom of the page and adding selected rows
-              start = previousRowIndex;
-              end = newRowIndex - 1;
+            if (newRowIndex > previousRowIndex) {
+              if (isPreviousRowSelected) {
+                // We are navigating to the bottom of the page and adding selected rows
+                start = previousRowIndex;
+                end = newRowIndex - 1;
+              } else {
+                // We are navigating to the bottom of the page and removing selected rows
+                start = previousRowIndex;
+                end = newRowIndex;
+              }
             } else {
-              // We are navigating to the bottom of the page and removing selected rows
-              start = previousRowIndex;
-              end = newRowIndex;
+              // eslint-disable-next-line no-lonely-if
+              if (isPreviousRowSelected) {
+                // We are navigating to the top of the page and removing selected rows
+                start = newRowIndex + 1;
+                end = previousRowIndex;
+              } else {
+                // We are navigating to the top of the page and adding selected rows
+                start = newRowIndex;
+                end = previousRowIndex - 1;
+              }
             }
+
+            const rowsBetweenStartAndEnd = visibleRows.rows
+              .slice(start, end + 1)
+              .map((row) => row.id);
+            apiRef.current.selectRows(rowsBetweenStartAndEnd, !isPreviousRowSelected);
           } else {
-            // eslint-disable-next-line no-lonely-if
-            if (isPreviousRowSelected) {
-              // We are navigating to the top of the page and removing selected rows
-              start = newRowIndex + 1;
-              end = previousRowIndex;
-            } else {
-              // We are navigating to the top of the page and adding selected rows
-              start = newRowIndex;
-              end = previousRowIndex - 1;
-            }
+            apiRef.current.selectRow(focusCell.id, !isPreviousRowSelected, true);
           }
 
-          const rowsBetweenStartAndEnd = visibleRows.rows
-            .slice(start, end + 1)
-            .map((row) => row.id);
-          apiRef.current.selectRows(rowsBetweenStartAndEnd, !isPreviousRowSelected);
-        } else {
-          apiRef.current.selectRow(focusCell.id, !isPreviousRowSelected, true);
+          return;
         }
       }
 
