@@ -2,7 +2,7 @@ name: Linting
 
 on:
   workflow_run:
-    workflows: ['PR check']
+    workflows: [PR check]
     types:
       - completed
 
