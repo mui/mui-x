@@ -52,4 +52,4 @@ function GridPanelWrapper(props: GridPanelWrapperProps) {
   );
 }
 
-export { GridPanelWrapper };
+export { GridPanelWrapper, GridPanelWrapperProps };
