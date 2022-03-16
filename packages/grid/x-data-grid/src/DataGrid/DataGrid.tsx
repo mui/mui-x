@@ -174,6 +174,7 @@ DataGridRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -550,6 +551,14 @@ DataGridRaw.propTypes = {
    * @default "client"
    */
   paginationMode: PropTypes.oneOf(['client', 'server']),
+  /**
+   * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   * @param {GridRowModel} newRow Row object with the new values.
+   * @param {GridRowModel} oldRow Row object with the old values.
+   * @returns {Promise<GridRowModel> | GridRowModel} The final values to update the row.
+   */
+  processRowUpdate: PropTypes.func,
   /**
    * Number of extra rows to be rendered before/after the visible slice.
    * @default 3

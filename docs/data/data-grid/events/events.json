@@ -20,13 +20,13 @@
   {
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
-    "params": "GridCellParams",
+    "params": "GridCellEditStartParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>"
   },
   {
     "name": "cellEditStop",
     "description": "Fired when the cell turns back to view mode.",
-    "params": "GridCellParams",
+    "params": "GridCellEditStopParams",
     "event": "MuiEvent<MuiBaseEvent>"
   },
   {
@@ -200,13 +200,13 @@
   {
     "name": "rowEditStart",
     "description": "Fired when the row turns to edit mode.",
-    "params": "GridRowParams",
+    "params": "GridRowEditStartParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>"
   },
   {
     "name": "rowEditStop",
     "description": "Fired when the row turns back to view mode.",
-    "params": "GridRowParams",
+    "params": "GridRowEditStopParams",
     "event": "MuiEvent<MuiBaseEvent>"
   },
   {
