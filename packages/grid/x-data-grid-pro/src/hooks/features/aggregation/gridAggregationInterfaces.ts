@@ -1,9 +1,12 @@
+import { GridValueFormatterParams } from '@mui/x-data-grid';
+
 interface GridAggregationParams<V = any> {
   values: V[];
 }
 
 export type GridAggregationFunction<V = any> = {
   apply: (params: GridAggregationParams<V>) => number;
+  valueFormatter?: (params: GridValueFormatterParams) => any;
   types: string[];
 };
 
