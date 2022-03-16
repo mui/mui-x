@@ -1,0 +1,27 @@
+name: Linting
+on: [push]
+
+jobs:
+  prose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Vale
+        uses: errata-ai/vale-action@v1
+        with:
+          # Optional
+          styles: |
+            https://github.com/errata-ai/Google/releases/latest/download/Google.zip
+            https://github.com/errata-ai/write-good/releases/latest/download/write-good.zip
+
+          # Optional
+          # config: https://raw.githubusercontent.com/errata-ai/vale/master/.vale.ini
+
+          # Optional
+          files: docs/data/
+        env:
+          # Required, set by GitHub actions automatically:
+          # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
