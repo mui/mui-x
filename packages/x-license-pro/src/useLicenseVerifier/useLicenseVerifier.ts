@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
-import { LicenseInfo, MuiCommercialPackageName } from '../utils/licenseInfo';
+import { LicenseInfo } from '../utils/licenseInfo';
 import {
   showExpiredLicenseError,
   showInvalidLicenseError,
   showNotFoundLicenseError,
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
+
+export type MuiCommercialPackageName =
+  | 'x-data-grid-pro'
+  | 'x-data-grid-premium'
+  | 'x-date-pickers-pro';
 
 const sharedLicenseStatuses: {
   [packageName in MuiCommercialPackageName]?: { key: string; status: LicenseStatus };
