@@ -1,14 +1,18 @@
-name: Linting
-on: [push]
+name: Vale
+on:
+  workflow_run:
+    workflows: ['PR check']
+    types:
+      - completed
 
 jobs:
-  prose:
+  vale:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Vale
+      - name: Grab pull request sha1
+        run: |
+          echo "PR_SHA=$pr_sha" >> $GITHUB_ENV
+      - name: Vale Linter
         uses: errata-ai/vale-action@v1
         with:
           # Optional
@@ -21,7 +25,7 @@ jobs:
 
           # Optional
           files: docs/data/
+
         env:
-          # Required, set by GitHub actions automatically:
-          # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          OVERRIDE_GITHUB_SHA: ${{env.PR_SHA}}
