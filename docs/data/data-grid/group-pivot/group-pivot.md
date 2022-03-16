@@ -452,7 +452,18 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 
 ## Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
+### Without grouping
+
+Example without row grouping and with aggregated values in a footer row
+
 {{"demo": "AggregationInitialState.js", "bg": "inline"}}
+
+### With grouping
+
+Example with row grouping and with aggregated values on the group row.
+You can also put the aggregated values on a footer row for each group.
+
+{{"demo": "AggregationRowGrouping.js", "bg": "inline"}}
 
 ## 🚧 Pivoting [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
