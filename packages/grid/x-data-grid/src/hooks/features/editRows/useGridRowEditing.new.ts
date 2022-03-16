@@ -138,6 +138,24 @@ export const useGridRowEditing = (
           reason = GridRowEditStopReasons.escapeKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridRowEditStopReasons.enterKeyDown;
+        } else if (event.key === 'Tab') {
+          const columnFields = gridColumnFieldsSelector(apiRef).filter((field) =>
+            apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
+          );
+
+          if (event.shiftKey) {
+            if (params.field === columnFields[0]) {
+              // Exit if user pressed Shift+Tab on the first field
+              reason = GridRowEditStopReasons.shiftTabKeyDown;
+            }
+          } else if (params.field === columnFields[columnFields.length - 1]) {
+            // Exit if user pressed Tab on the last field
+            reason = GridRowEditStopReasons.tabKeyDown;
+          }
+
+          if (reason) {
+            event.preventDefault(); // Prevent going to the next element in the tab sequence
+          }
         }
 
         if (reason) {

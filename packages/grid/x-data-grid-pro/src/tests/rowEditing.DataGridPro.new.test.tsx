@@ -759,5 +759,64 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
       });
     });
+
+    describe('by pressing Tab', () => {
+      it(`should publish 'rowEditStop' with reason=tabKeyDown if on the last column`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent(GridEvents.rowEditStop, listener);
+        const cell = getCell(0, 2);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.doubleClick(cell);
+        expect(listener.callCount).to.equal(0);
+        fireEvent.keyDown(cell, { key: 'Tab' });
+        expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
+      });
+
+      it(`should publish 'rowEditStop' with reason=shiftTabKeyDown if on the first column and Shift is pressed`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent(GridEvents.rowEditStop, listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.doubleClick(cell);
+        expect(listener.callCount).to.equal(0);
+        fireEvent.keyDown(cell, { key: 'Tab', shiftKey: true });
+        expect(listener.lastCall.args[0].reason).to.equal('shiftTabKeyDown');
+      });
+
+      it('should call stopRowEditMode with ignoreModifications=false and fieldFromRowBelowToFocus', () => {
+        render(<TestCase />);
+        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const cell = getCell(0, 2);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.doubleClick(cell);
+        fireEvent.keyDown(cell, { key: 'Tab' });
+        expect(spiedStopRowEditMode.callCount).to.equal(1);
+        expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
+          id: 0,
+          ignoreModifications: false,
+          fieldFromRowBelowToFocus: undefined,
+        });
+      });
+
+      it('should call stopRowEditMode with ignoreModifications=true if the props are being processed', () => {
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => resolve(props));
+        render(<TestCase />);
+        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const cell = getCell(0, 2);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.doubleClick(cell);
+        apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 'USD GBP' });
+        fireEvent.keyDown(cell, { key: 'Tab' });
+        expect(spiedStopRowEditMode.callCount).to.equal(1);
+        expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
+      });
+    });
   });
 });
