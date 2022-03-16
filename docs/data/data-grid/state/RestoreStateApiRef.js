@@ -140,6 +140,9 @@ ViewListItem.propTypes = {
   view: PropTypes.shape({
     label: PropTypes.string.isRequired,
     value: PropTypes.shape({
+      aggregation: PropTypes.shape({
+        model: PropTypes.object,
+      }),
       columns: PropTypes.shape({
         columnVisibilityModel: PropTypes.object,
         dimensions: PropTypes.object,
@@ -163,7 +166,12 @@ ViewListItem.propTypes = {
       }),
       preferencePanel: PropTypes.shape({
         open: PropTypes.bool.isRequired,
-        openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
+        /**
+         * Tab currently opened.
+         * @default GridPreferencePanelsValue.filter
+         * TODO v6: Remove the default behavior
+         */
+        openedPanelValue: PropTypes.oneOf(['aggregation', 'columns', 'filters']),
       }),
       rowGrouping: PropTypes.shape({
         model: PropTypes.arrayOf(PropTypes.string),

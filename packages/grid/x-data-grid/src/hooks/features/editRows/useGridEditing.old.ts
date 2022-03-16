@@ -14,8 +14,8 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridEventListener, GridRowId } from '../../../models';
-import { useCellEditing } from './useGridCellEditing';
-import { useGridRowEditing } from './useGridRowEditing';
+import { useCellEditing } from './useGridCellEditing.old';
+import { useGridRowEditing } from './useGridRowEditing.old';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const editingStateInitializer: GridStateInitializer = (state) => ({
@@ -107,8 +107,8 @@ export function useGridEditing(
     debounceMap.current[id][field] = [timeout, callbackToRunImmediately];
   };
 
-  const runPendingEditCellValueChangeDebounce = React.useCallback<
-    GridEditingSharedApi['unstable_runPendingEditCellValueChangeDebounce']
+  const runPendingEditCellValueMutation = React.useCallback<
+    GridEditingSharedApi['unstable_runPendingEditCellValueMutation']
   >((id, field) => {
     if (!debounceMap.current[id]) {
       return;
@@ -212,7 +212,7 @@ export function useGridEditing(
     setEditCellValue,
     unstable_setEditCellProps: setEditCellProps,
     unstable_parseValue: parseValue,
-    unstable_runPendingEditCellValueChangeDebounce: runPendingEditCellValueChangeDebounce,
+    unstable_runPendingEditCellValueMutation: runPendingEditCellValueMutation,
   };
 
   useGridApiMethod(apiRef, editingSharedApi, 'EditRowApi');

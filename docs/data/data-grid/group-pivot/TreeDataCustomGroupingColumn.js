@@ -101,6 +101,7 @@ CustomGridTreeDataGroupingCell.propTypes = {
      * The key used to group the children of this row.
      */
     groupingKey: PropTypes.oneOfType([
+      PropTypes.oneOf([null]),
       PropTypes.number,
       PropTypes.string,
       PropTypes.bool,
@@ -122,6 +123,11 @@ CustomGridTreeDataGroupingCell.propTypes = {
       PropTypes.number,
       PropTypes.string,
     ]).isRequired,
+    /**
+     * Position of the row among its sibling.
+     * @default 'body'
+     */
+    position: PropTypes.oneOf(['body', 'footer']),
   }).isRequired,
 };
 

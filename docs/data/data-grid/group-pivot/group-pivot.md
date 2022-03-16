@@ -450,13 +450,9 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 
 {{"demo": "DetailPanelApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## 🚧 Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+## Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #213](https://github.com/mui/mui-x/issues/213) if you want to see it land faster.
-
-When grouping, you will be able to apply an aggregation function to populate the group row with values.
+{{"demo": "AggregationInitialState.js", "bg": "inline"}}
 
 ## 🚧 Pivoting [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 

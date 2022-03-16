@@ -36,7 +36,6 @@ export interface GridColDefPro {
 
   /**
    * TODO: Move to `x-data-grid-premium
-   * @default A
    */
   availableAggregationFunctions?: string[];
 }

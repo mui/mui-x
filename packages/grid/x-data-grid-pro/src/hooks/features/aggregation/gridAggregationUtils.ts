@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {GridColDef, GridRowId, gridRowIdsSelector} from '@mui/x-data-grid';
+import { GridColDef, GridRowId, gridRowIdsSelector } from '@mui/x-data-grid';
 import { GridColumnRawLookup } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import {
@@ -120,15 +120,15 @@ export const wrapColumnWithAggregation = ({
         (isGroup && aggregationPositionRef.current === 'inline') ||
         (isFooter && aggregationPositionRef.current === 'footer')
       ) {
-        let rowIds: GridRowId[] | undefined
+        let rowIds: GridRowId[] | undefined;
         if (isFooter) {
           if (params.rowNode.parent == null) {
-            rowIds = gridRowIdsSelector(apiRef)
+            rowIds = gridRowIdsSelector(apiRef);
           } else {
-            rowIds = apiRef.current.getRowNode(params.rowNode.parent)?.children
+            rowIds = apiRef.current.getRowNode(params.rowNode.parent)?.children;
           }
         } else {
-          rowIds = params.rowNode.children
+          rowIds = params.rowNode.children;
         }
 
         const validRowIds = (rowIds ?? []).filter(

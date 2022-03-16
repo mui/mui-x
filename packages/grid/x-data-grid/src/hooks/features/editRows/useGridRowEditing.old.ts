@@ -13,7 +13,7 @@ import {
   GridCellModes,
 } from '../../../models/gridEditRowModel';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
+import { gridColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -22,6 +22,10 @@ import { GridEventListener } from '../../../models/events/gridEventListener';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { MuiBaseEvent } from '../../../models/muiEvent';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
+import {
+  GridRowEditStartParams,
+  GridRowEditStopParams,
+} from '../../../models/params/gridRowParams';
 import {
   useGridApiOptionHandler,
   useGridApiEventHandler,
@@ -36,7 +40,7 @@ export const useGridRowEditing = (
 ) => {
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
-  const columnFields = useGridSelector(apiRef, gridColumnFieldsSelector);
+  const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
 
   const buildCallback =
     <Args extends any[]>(callback: (...args: Args) => void) =>
@@ -56,10 +60,10 @@ export const useGridRowEditing = (
         const newEditRowsState: GridEditRowsModel = { ...state.editRows };
         if (mode === GridRowModes.Edit) {
           newEditRowsState[id] = {};
-          columnFields.forEach((field) => {
-            const cellParams = apiRef.current.getCellParams(id, field);
+          columns.forEach((column) => {
+            const cellParams = apiRef.current.getCellParams(id, column.field);
             if (cellParams.isEditable) {
-              newEditRowsState[id][field] = { value: cellParams.value };
+              newEditRowsState[id][column.field] = { value: cellParams.value };
             }
           });
         } else {
@@ -69,7 +73,7 @@ export const useGridRowEditing = (
       });
       apiRef.current.forceUpdate();
     },
-    [apiRef, columnFields],
+    [apiRef, columns],
   );
 
   const getRowMode = React.useCallback<GridEditingApi['getRowMode']>(
@@ -89,7 +93,7 @@ export const useGridRowEditing = (
         throw new Error(`MUI: You can't commit changes when the edit mode is 'cell'.`);
       }
 
-      apiRef.current.unstable_runPendingEditCellValueChangeDebounce(id);
+      apiRef.current.unstable_runPendingEditCellValueMutation(id);
 
       const model = apiRef.current.getEditRowsModel();
       const editRowProps = model[id];
@@ -225,12 +229,24 @@ export const useGridRowEditing = (
           if (!isValid && props.experimentalFeatures?.preventCommitWhileValidating) {
             return;
           }
-          apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
+          apiRef.current.publishEvent(
+            GridEvents.rowEditStop,
+            rowParams as GridRowEditStopParams,
+            event,
+          );
         } else if (event.key === 'Escape') {
-          apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
+          apiRef.current.publishEvent(
+            GridEvents.rowEditStop,
+            rowParams as GridRowEditStopParams,
+            event,
+          );
         }
       } else if (event.key === 'Enter') {
-        apiRef.current.publishEvent(GridEvents.rowEditStart, rowParams, event);
+        apiRef.current.publishEvent(
+          GridEvents.rowEditStart,
+          rowParams as GridRowEditStartParams,
+          event,
+        );
       }
     },
     [apiRef, props.experimentalFeatures?.preventCommitWhileValidating],
@@ -241,7 +257,7 @@ export const useGridRowEditing = (
       if (!params.isEditable) {
         return;
       }
-      const rowParams = apiRef.current.getRowParams(params.id);
+      const rowParams = apiRef.current.getRowParams(params.id) as GridRowEditStartParams;
       apiRef.current.publishEvent(GridEvents.rowEditStart, rowParams, event);
     },
     [apiRef],
@@ -338,7 +354,7 @@ export const useGridRowEditing = (
     focusTimeout.current = setTimeout(async () => {
       if (nextFocusedCell.current?.id !== params.id) {
         await apiRef.current.commitRowChange(params.id, event);
-        const rowParams = apiRef.current.getRowParams(params.id);
+        const rowParams = apiRef.current.getRowParams(params.id) as GridRowEditStopParams;
         apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
       }
     });

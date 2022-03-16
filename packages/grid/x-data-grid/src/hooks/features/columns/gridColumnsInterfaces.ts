@@ -16,6 +16,10 @@ export interface GridColumnsState {
    */
   all: string[];
   lookup: GridColumnLookup;
+  /**
+   * The column lookup without any pre-processing.
+   * It is used when we need to remove a wrapped around a user column.
+   */
   lookupBeforePreProcessing: GridColumnRawLookup;
   columnVisibilityModel: GridColumnVisibilityModel;
 }
