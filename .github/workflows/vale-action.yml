@@ -1,0 +1,37 @@
+name: Linting
+
+on:
+  workflow_run:
+    workflows: [PR check]
+    types:
+      - completed
+
+jobs:
+  prose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Open sha file
+        uses: actions/download-artifact@v3
+        with:
+          name: pull-request-sha
+      - name: Grab pull request sha1
+        run: |
+          pr_sha=`cat pr-sha.txt`
+          echo "PR_SHA=$pr_sha" >> $GITHUB_ENV
+
+      - name: Vale
+        uses: errata-ai/vale-action@v1
+        with:
+          styles: |
+            https://github.com/errata-ai/Google/releases/latest/download/Google.zip
+            https://github.com/errata-ai/write-good/releases/latest/download/write-good.zip
+
+          files: docs/data
+        env:
+          # Required, set by GitHub actions automatically:
+          # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          OVERRIDE_GITHUB_SHA: ${{env.PR_SHA}}
