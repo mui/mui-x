@@ -1,5 +1,23 @@
 [
   {
+    "name": "gridAggregationModelSelector",
+    "returnType": "GridAggregationModel",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridAggregationSanitizedModelSelector",
+    "returnType": "GridAggregationModel",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridAggregationStateSelector",
+    "returnType": "GridAggregationState",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef[]",
     "category": "Columns",

@@ -1,5 +1,11 @@
 [
   {
+    "name": "aggregationModelChange",
+    "description": "Fired when the aggregation model changes.",
+    "params": "GridAggregationModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",
     "params": "GridCellParams",
