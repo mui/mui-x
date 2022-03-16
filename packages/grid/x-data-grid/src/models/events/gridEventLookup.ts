@@ -11,6 +11,7 @@ import type {
   GridRowSelectionCheckboxParams,
   GridScrollParams,
 } from '../params';
+import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
@@ -21,6 +22,7 @@ import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridPreProcessingGroup } from '../../hooks/core/preProcessing';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
+import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -165,20 +167,26 @@ export interface GridEventLookup
   // Edit
   cellModeChange: { params: GridCellParams };
   cellEditStart: {
-    params: GridCellParams;
+    params: GridCellEditStartParams;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  cellEditStop: { params: GridCellParams; event: MuiBaseEvent };
+  cellEditStop: {
+    params: GridCellEditStopParams;
+    event: MuiBaseEvent;
+  };
   cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
   editCellPropsChange: {
     params: GridEditCellPropsParams;
     event: React.SyntheticEvent<HTMLElement> | {};
   };
   rowEditStart: {
-    params: GridRowParams;
+    params: GridRowEditStartParams;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  rowEditStop: { params: GridRowParams; event: MuiBaseEvent };
+  rowEditStop: {
+    params: GridRowEditStopParams;
+    event: MuiBaseEvent;
+  };
   rowEditCommit: { params: GridRowId; event: MuiBaseEvent };
 
   // Focus
