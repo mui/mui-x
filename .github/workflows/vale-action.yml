@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
-      - name: Grab pull request sha1
+      - name: Open sha file
         uses: actions/download-artifact@v3
         with:
           name: pull-request-sha
-      - shell: bash
+      - name: Grab pull request sha1
         run: |
           pr_sha=`cat pr-sha.txt`
           echo "PR_SHA=$pr_sha" >> $GITHUB_ENV

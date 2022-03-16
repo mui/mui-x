@@ -4,7 +4,6 @@ name: PR check
 
 on:
   pull_request:
-    # Sequence of patterns matched against refs/heads
     branches:
       - master
 
