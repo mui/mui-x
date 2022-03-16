@@ -261,7 +261,7 @@ export const sanitizeAggregationModel = (
   const sanitizedModel: GridAggregationModel = {};
 
   Object.keys(model).forEach((field) => {
-    if (columnsLookup[field].aggregable !== false) {
+    if (columnsLookup[field] && columnsLookup[field].aggregable !== false) {
       sanitizedModel[field] = model[field];
     }
   });

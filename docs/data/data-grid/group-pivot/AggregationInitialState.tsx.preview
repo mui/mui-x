@@ -1,1 +1,8 @@
-TEST
+<DataGridPro
+  {...data}
+  initialState={{
+    aggregation: {
+      model: { gross: { method: 'sum' } },
+    },
+  }}
+/>
