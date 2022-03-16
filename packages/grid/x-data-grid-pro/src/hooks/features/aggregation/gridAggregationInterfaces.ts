@@ -15,7 +15,6 @@ export type GridAggregationModel = Record<string, GridAggregationItem>;
 
 export interface GridAggregationState {
   model: GridAggregationModel;
-  unstable_sanitizedModelOnLastHydration: GridAggregationModel;
 }
 
 export interface GridAggregationInitialState {

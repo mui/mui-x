@@ -11,7 +11,6 @@ import { GridApiPro } from '../../../models/gridApiPro';
 import {
   gridAggregationModelSelector,
   gridAggregationSanitizedModelSelector,
-  gridAggregationStateSelector,
 } from './gridAggregationSelectors';
 import { GridAggregationApi } from './gridAggregationInterfaces';
 import { mergeStateWithAggregationModel } from './gridAggregationUtils';
@@ -23,7 +22,6 @@ export const aggregationStateInitializer: GridStateInitializer<
   ...state,
   aggregation: {
     model: props.aggregationModel ?? props.initialState?.aggregation?.model ?? {},
-    unstable_sanitizedModelOnLastHydration: {},
   },
 });
 
@@ -69,11 +67,11 @@ export const useGridAggregation = (
     GridEventListener<GridEvents.columnsChange>
   >(() => {
     const aggregationModel = gridAggregationSanitizedModelSelector(apiRef);
-    const lastAggregationModelApplied = gridAggregationStateSelector(
-      apiRef.current.state,
-    ).unstable_sanitizedModelOnLastHydration;
+    const lastAggregationModelApplied =
+      apiRef.current.unstable_getCache('aggregation')?.sanitizedModelOnLastHydration;
 
     if (!isDeepEqual(lastAggregationModelApplied, aggregationModel)) {
+      console.log('HEY');
       // Refresh the column pre-processing
       // TODO: Add a clean way to re-run a pipe processing without faking a change
       apiRef.current.updateColumns([]);

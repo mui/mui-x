@@ -4,6 +4,7 @@ export { GridVirtualScrollerRenderZone } from '../components/virtualization/Grid
 export { GridColumnHeaders } from '../components/columnHeaders/GridColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 
+export type { GridCaches } from '../hooks/core/caches';
 export { useGridRegisterPreProcessor } from '../hooks/core/preProcessing';
 export type { GridPreProcessor } from '../hooks/core/preProcessing';
 export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';

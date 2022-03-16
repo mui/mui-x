@@ -41,9 +41,8 @@ export const useGridAggregationPreProcessors = (
         columnsState.lookup,
       );
 
-      const lastAggregationModelApplied = gridAggregationStateSelector(
-        apiRef.current.state,
-      ).unstable_sanitizedModelOnLastHydration;
+      const lastAggregationModelApplied =
+        apiRef.current.unstable_getCache('aggregation')?.sanitizedModelOnLastHydration ?? {};
 
       columnsState.all.forEach((field) => {
         const shouldHaveAggregation = !props.disableAggregation && !!aggregationModel[field];
@@ -52,15 +51,11 @@ export const useGridAggregationPreProcessors = (
         if (!shouldHaveAggregation && haveAggregationColumn) {
           columnsState.lookup[field] = unwrapColumnFromAggregation({
             colDef: columnsState.lookup[field],
-            colDefBeforePreProcessing: columnsState.lookupBeforePreProcessing[field],
           });
         } else if (shouldHaveAggregation) {
-          const colDef = haveAggregationColumn
-            ? unwrapColumnFromAggregation({
-                colDef: columnsState.lookup[field],
-                colDefBeforePreProcessing: columnsState.lookupBeforePreProcessing[field],
-              })
-            : columnsState.lookup[field];
+          const colDef = unwrapColumnFromAggregation({
+            colDef: columnsState.lookup[field],
+          });
 
           columnsState.lookup[field] = wrapColumnWithAggregation({
             colDef,
@@ -72,13 +67,9 @@ export const useGridAggregationPreProcessors = (
         }
       });
 
-      apiRef.current.setState((state) => ({
-        ...state,
-        aggregation: {
-          ...state.aggregation,
-          unstable_sanitizedModelOnLastHydration: aggregationModel,
-        },
-      }));
+      apiRef.current.unstable_setCache('aggregation', {
+        sanitizedModelOnLastHydration: aggregationModel,
+      });
 
       return columnsState;
     },

@@ -285,7 +285,6 @@ export const applyInitialState = (
   const newColumnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'> = {
     all: newOrderedFields,
     lookup: newColumnLookup,
-    lookupBeforePreProcessing: newColumnLookupBeforePreprocessing,
   };
 
   return newColumnsState;
@@ -350,14 +349,12 @@ export const createColumnsState = ({
     columnsStateWithoutColumnVisibilityModel = {
       all: [],
       lookup: {},
-      lookupBeforePreProcessing: {},
     };
   } else {
     const currentState = gridColumnsSelector(apiRef.current.state);
     columnsStateWithoutColumnVisibilityModel = {
       all: [...currentState.all],
       lookup: { ...currentState.lookup },
-      lookupBeforePreProcessing: { ...currentState.lookupBeforePreProcessing },
     };
   }
 
@@ -371,8 +368,6 @@ export const createColumnsState = ({
         ...newColumn,
       };
       columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = mergedColumn;
-      columnsStateWithoutColumnVisibilityModel.lookupBeforePreProcessing[newColumn.field] =
-        mergedColumn;
       columnsStateWithoutColumnVisibilityModel.all.push(newColumn.field);
     } else {
       const mergedColumn = {
@@ -388,8 +383,6 @@ export const createColumnsState = ({
       }
 
       columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = mergedColumn;
-      columnsStateWithoutColumnVisibilityModel.lookupBeforePreProcessing[newColumn.field] =
-        mergedColumn;
     }
   });
 
