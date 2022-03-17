@@ -21,6 +21,7 @@ import { gridClasses } from '../../../constants/gridClasses';
  * @requires useGridDimensions (method) - can be after
  * @requires useGridFocus (method) - can be after
  * @requires useGridScroll (method) - can be after
+ * @requires useGridColumnSpanning (method) - can be after
  */
 export const useGridKeyboardNavigation = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -29,12 +30,26 @@ export const useGridKeyboardNavigation = (
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const currentPage = useGridVisibleRows(apiRef, props);
 
+  /**
+   * @colIndex index of the column to focus
+   * @rowIndex index of the row to focus
+   * @closestColResolution Which closest column cell to focus when cell has `colSpan`.
+   */
   const goToCell = React.useCallback(
-    (colIndex: number, rowIndex: number) => {
+    (colIndex: number, rowIndex: number, closestColResolution: 'left' | 'right' = 'left') => {
+      const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
+      const rowId = visibleSortedRows[rowIndex]?.id;
+      const nextCellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, colIndex);
+      if (nextCellColSpanInfo && nextCellColSpanInfo.collapsedByColSpan) {
+        if (closestColResolution === 'left') {
+          colIndex = nextCellColSpanInfo.leftVisibleCellIndex;
+        } else if (closestColResolution === 'right') {
+          colIndex = nextCellColSpanInfo.rightVisibleCellIndex;
+        }
+      }
       logger.debug(`Navigating to cell row ${rowIndex}, col ${colIndex}`);
       apiRef.current.scrollToIndexes({ colIndex, rowIndex });
       const field = apiRef.current.getVisibleColumns()[colIndex].field;
-      const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
       const node = visibleSortedRows[rowIndex];
       apiRef.current.setCellFocus(node.id, field);
     },
@@ -93,7 +108,7 @@ export const useGridKeyboardNavigation = (
 
         case 'ArrowRight': {
           if (colIndexBefore < lastColIndex) {
-            goToCell(colIndexBefore + 1, rowIndexBefore);
+            goToCell(colIndexBefore + 1, rowIndexBefore, 'right');
           }
           break;
         }
@@ -108,9 +123,9 @@ export const useGridKeyboardNavigation = (
         case 'Tab': {
           // "Tab" is only triggered by the row / cell editing feature
           if (event.shiftKey && colIndexBefore > firstColIndex) {
-            goToCell(colIndexBefore - 1, rowIndexBefore);
+            goToCell(colIndexBefore - 1, rowIndexBefore, 'left');
           } else if (!event.shiftKey && colIndexBefore < lastColIndex) {
-            goToCell(colIndexBefore + 1, rowIndexBefore);
+            goToCell(colIndexBefore + 1, rowIndexBefore, 'right');
           }
           break;
         }

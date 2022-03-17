@@ -18,6 +18,8 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
+import { GridApiCommon } from '../../../models/api/gridApiCommon';
+import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
@@ -475,3 +477,54 @@ export const mergeColumnsState =
     ...state,
     columns: columnsState,
   });
+
+export function getFirstNonSpannedColumnToRender({
+  firstColumnToRender,
+  apiRef,
+  firstRowToRender,
+  lastRowToRender,
+}: {
+  firstColumnToRender: number;
+  apiRef: React.MutableRefObject<GridApiCommon>;
+  firstRowToRender: number;
+  lastRowToRender: number;
+}) {
+  let firstNonSpannedColumnToRender = firstColumnToRender;
+  const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
+  const renderedRows = visibleSortedRows.slice(firstRowToRender, lastRowToRender);
+  renderedRows.forEach((row) => {
+    const rowId = row.id;
+    const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, firstColumnToRender);
+    if (cellColSpanInfo && cellColSpanInfo.collapsedByColSpan) {
+      firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
+    }
+  });
+  return firstNonSpannedColumnToRender;
+}
+
+export function getFirstColumnIndexToRender({
+  firstColumnIndex,
+  minColumnIndex,
+  columnBuffer,
+  firstRowToRender,
+  lastRowToRender,
+  apiRef,
+}: {
+  firstColumnIndex: number;
+  minColumnIndex: number;
+  columnBuffer: number;
+  apiRef: React.MutableRefObject<GridApiCommon>;
+  firstRowToRender: number;
+  lastRowToRender: number;
+}) {
+  const initialFirstColumnToRender = Math.max(firstColumnIndex - columnBuffer, minColumnIndex);
+
+  const firstColumnToRender = getFirstNonSpannedColumnToRender({
+    firstColumnToRender: initialFirstColumnToRender,
+    apiRef,
+    firstRowToRender,
+    lastRowToRender,
+  });
+
+  return firstColumnToRender;
+}

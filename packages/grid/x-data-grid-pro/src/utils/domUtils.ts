@@ -15,6 +15,9 @@ export function findGridCellElementsFromCol(col: HTMLElement): NodeListOf<Elemen
   if (!root) {
     throw new Error('MUI: The root element is not found.');
   }
-  const cells = root.querySelectorAll(`.${gridClasses.cell}[data-field="${field}"]`);
+  const cells = root.querySelectorAll(
+    // Include cells that have colspan > 1 and allocate `field` cell space
+    `.${gridClasses.cell}[data-field="${field}"], .${gridClasses.cell}[data-colspan-allocates-field-${field}="1"]`,
+  );
   return cells;
 }

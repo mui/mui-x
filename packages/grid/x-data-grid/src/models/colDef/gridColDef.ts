@@ -220,6 +220,11 @@ export interface GridColDef {
    * @default false
    */
   disableExport?: boolean;
+  /**
+   * Number of columns a grid cell should span.
+   * @default 1
+   */
+  colSpan?: number | ((params: GridCellParams) => number | undefined);
 }
 
 export interface GridActionsColDef extends GridColDef {

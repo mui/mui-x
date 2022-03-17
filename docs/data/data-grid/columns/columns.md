@@ -509,6 +509,61 @@ To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECK
 
 {{"demo": "ColumnPinningApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
+## Column spanning
+
+Each cell takes up the width of one column.
+You can modify this default behavior with column spanning.
+It allows cells to span multiple columns.
+This is very close to the "column spanning" in an HTML `<table>`.
+
+To change the number of columns a cell should span, use the `colSpan` property available in `GridColDef`:
+
+```ts
+interface GridColDef {
+  /**
+   * Number of columns a grid cell should span.
+   * @default 1
+   */
+  colSpan?: number | ((params: GridCellParams) => number | undefined);
+  …
+}
+```
+
+> When using `colSpan`, sorting and filtering might not work as expected.
+> Make sure to disable [sorting](/components/data-grid/sorting/#disable-the-sorting) and [filtering](/components/data-grid/filtering/#disable-the-filters) for the column(s) that are affected by `colSpan`.
+
+<!-- markdownlint-disable-next-line MD028 -->
+
+> While [column reorder](/components/data-grid/columns/#column-reorder) works with `colSpan`, disabling it can be useful to avoid confusing grid layout.
+
+### Number signature
+
+The `colSpan` number signature allows to span all the cells in the column:
+
+```ts
+interface GridColDef {
+  colSpan?: number;
+}
+```
+
+{{"demo": "ColumnSpanningNumber.js", "bg": "inline"}}
+
+### Function signature
+
+The `colSpan` function signature is useful for spanning only specific cells in the column. The function receives [`GridCellParams`](/api/data-grid/grid-cell-params/) as the first argument:
+
+```ts
+interface GridColDef {
+  colSpan?: (params: GridCellParams) => number | undefined;
+}
+```
+
+{{"demo": "ColumnSpanningFunction.js", "bg": "inline", "defaultCodeOpen": false}}
+
+Function signature can also be useful to derive `colSpan` value from row data:
+
+{{"demo": "ColumnSpanningDerived.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## 🚧 Column groups
 
 > ⚠️ This feature isn't implemented yet. It's coming.
@@ -516,17 +571,6 @@ To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECK
 > 👍 Upvote [issue #195](https://github.com/mui/mui-x/issues/195) if you want to see it land faster.
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
-
-## 🚧 Column spanning
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #192](https://github.com/mui/mui-x/issues/192) if you want to see it land faster.
-
-Each cell takes up the width of one column.
-You can modify this default behavior with column spanning.
-It allows cells to span multiple columns.
-This is very close to the "column spanning" in an HTML `<table>`.
 
 ## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

@@ -19,6 +19,10 @@ import { GridRenderContext } from '../../../models';
 import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import {
+  getFirstNonSpannedColumnToRender,
+  getFirstColumnIndexToRender,
+} from '../columns/gridColumnsUtils';
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(
@@ -41,6 +45,25 @@ export function getIndexFromScroll(
     ? getIndexFromScroll(offset, positions, sliceStart, pivot)
     : getIndexFromScroll(offset, positions, pivot + 1, sliceEnd);
 }
+
+export const getRenderableIndexes = ({
+  firstIndex,
+  lastIndex,
+  buffer,
+  minFirstIndex,
+  maxLastIndex,
+}: {
+  firstIndex: number;
+  lastIndex: number;
+  buffer: number;
+  minFirstIndex: number;
+  maxLastIndex: number;
+}) => {
+  return [
+    clamp(firstIndex - buffer, minFirstIndex, maxLastIndex),
+    clamp(lastIndex + buffer, minFirstIndex, maxLastIndex),
+  ];
+};
 
 interface UseGridVirtualScrollerProps {
   ref: React.Ref<HTMLDivElement>;
@@ -141,41 +164,23 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
 
-  const getRenderableIndexes = ({
-    firstIndex,
-    lastIndex,
-    buffer,
-    minFirstIndex,
-    maxLastIndex,
-  }: {
-    firstIndex: number;
-    lastIndex: number;
-    buffer: number;
-    minFirstIndex: number;
-    maxLastIndex: number;
-  }) => {
-    return [
-      clamp(firstIndex - buffer, minFirstIndex, maxLastIndex),
-      clamp(lastIndex + buffer, minFirstIndex, maxLastIndex),
-    ];
-  };
-
   const updateRenderZonePosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
-      const [firstRowToRender] = getRenderableIndexes({
+      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
         firstIndex: nextRenderContext.firstRowIndex,
         lastIndex: nextRenderContext.lastRowIndex,
         minFirstIndex: 0,
-        maxLastIndex: currentPage.range?.lastRowIndex || 0,
+        maxLastIndex: currentPage.rows.length,
         buffer: rootProps.rowBuffer,
       });
 
-      const [firstColumnToRender] = getRenderableIndexes({
-        firstIndex: nextRenderContext.firstColumnIndex,
-        lastIndex: nextRenderContext.lastColumnIndex,
-        minFirstIndex: renderZoneMinColumnIndex,
-        maxLastIndex: renderZoneMaxColumnIndex,
-        buffer: rootProps.columnBuffer,
+      const firstColumnToRender = getFirstColumnIndexToRender({
+        firstColumnIndex: nextRenderContext.firstColumnIndex,
+        minColumnIndex: renderZoneMinColumnIndex,
+        columnBuffer: rootProps.columnBuffer,
+        firstRowToRender,
+        lastRowToRender,
+        apiRef,
       });
 
       const top = gridRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
@@ -188,9 +193,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     },
     [
       apiRef,
-      currentPage.range?.lastRowIndex,
+      currentPage.rows.length,
       onRenderZonePositioning,
-      renderZoneMaxColumnIndex,
       renderZoneMinColumnIndex,
       rootProps.columnBuffer,
       rootProps.rowBuffer,
@@ -299,7 +303,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       buffer: rowBuffer,
     });
 
-    const [firstColumnToRender, lastColumnToRender] = getRenderableIndexes({
+    const renderedRows = currentPage.rows.slice(firstRowToRender, lastRowToRender);
+
+    for (let i = 0; i < renderedRows.length; i += 1) {
+      const row = renderedRows[i];
+      apiRef.current.unstable_calculateColSpan({ rowId: row.id, minFirstColumn, maxLastColumn });
+    }
+
+    const [initialFirstColumnToRender, lastColumnToRender] = getRenderableIndexes({
       firstIndex: nextRenderContext.firstColumnIndex,
       lastIndex: nextRenderContext.lastColumnIndex,
       minFirstIndex: minFirstColumn,
@@ -307,7 +318,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       buffer: columnBuffer,
     });
 
-    const renderedRows = currentPage.rows.slice(firstRowToRender, lastRowToRender);
+    const firstColumnToRender = getFirstNonSpannedColumnToRender({
+      firstColumnToRender: initialFirstColumnToRender,
+      apiRef,
+      firstRowToRender,
+      lastRowToRender,
+    });
+
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     const rows: JSX.Element[] = [];

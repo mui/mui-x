@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useForkRef } from '@mui/material/utils';
+import { defaultMemoize } from 'reselect';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
@@ -20,6 +21,9 @@ import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
+import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
 
 interface UseGridColumnHeadersProps {
   innerRef?: React.Ref<HTMLDivElement>;
@@ -48,17 +52,38 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
+  const currentPage = useGridVisibleRows(apiRef, rootProps);
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
   }, [apiRef]);
 
+  // memoize `getFirstColumnIndexToRender`, since it's called on scroll
+  const getFirstColumnIndexToRenderRef = React.useRef<typeof getFirstColumnIndexToRender>(
+    defaultMemoize(getFirstColumnIndexToRender, {
+      equalityCheck: (a, b) =>
+        ['firstColumnIndex', 'minColumnIndex', 'columnBuffer'].every((key) => a[key] === b[key]),
+    }),
+  );
+
   const updateInnerPosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
-      const firstColumnToRender = Math.max(
-        nextRenderContext!.firstColumnIndex - rootProps.columnBuffer,
+      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+        firstIndex: nextRenderContext.firstRowIndex,
+        lastIndex: nextRenderContext.lastRowIndex,
+        minFirstIndex: 0,
+        maxLastIndex: currentPage.rows.length,
+        buffer: rootProps.rowBuffer,
+      });
+
+      const firstColumnToRender = getFirstColumnIndexToRenderRef.current({
+        firstColumnIndex: nextRenderContext!.firstColumnIndex,
         minColumnIndex,
-      );
+        columnBuffer: rootProps.columnBuffer,
+        firstRowToRender,
+        lastRowToRender,
+        apiRef,
+      });
 
       const offset =
         firstColumnToRender > 0
@@ -67,7 +92,14 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       innerRef!.current!.style.transform = `translate3d(${-offset}px, 0px, 0px)`;
     },
-    [columnPositions, minColumnIndex, rootProps.columnBuffer],
+    [
+      columnPositions,
+      minColumnIndex,
+      rootProps.columnBuffer,
+      apiRef,
+      currentPage.rows.length,
+      rootProps.rowBuffer,
+    ],
   );
 
   const handleScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(
@@ -143,10 +175,22 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     const columns: JSX.Element[] = [];
 
-    const firstColumnToRender = Math.max(
-      nextRenderContext!.firstColumnIndex! - rootProps.columnBuffer,
-      minFirstColumn,
-    );
+    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      firstIndex: nextRenderContext.firstRowIndex,
+      lastIndex: nextRenderContext.lastRowIndex,
+      minFirstIndex: 0,
+      maxLastIndex: currentPage.rows.length,
+      buffer: rootProps.rowBuffer,
+    });
+
+    const firstColumnToRender = getFirstColumnIndexToRenderRef.current({
+      firstColumnIndex: nextRenderContext!.firstColumnIndex,
+      minColumnIndex: minFirstColumn,
+      columnBuffer: rootProps.columnBuffer,
+      apiRef,
+      firstRowToRender,
+      lastRowToRender,
+    });
 
     const lastColumnToRender = Math.min(
       nextRenderContext.lastColumnIndex! + rootProps.columnBuffer,
