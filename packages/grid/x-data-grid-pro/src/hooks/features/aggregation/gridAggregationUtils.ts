@@ -266,11 +266,11 @@ export const getAvailableAggregationFunctions = ({
 
   if (column.availableAggregationFunctions != null) {
     return column.availableAggregationFunctions;
-  } else {
-    return Object.keys(aggregationFunctions).filter((name) =>
-      aggregationFunctions[name].types.includes(column.type!),
-    );
   }
+
+  return Object.keys(aggregationFunctions).filter((name) =>
+    aggregationFunctions[name].types.includes(column.type!),
+  );
 };
 
 export const mergeStateWithAggregationModel =

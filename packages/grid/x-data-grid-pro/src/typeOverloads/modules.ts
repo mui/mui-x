@@ -45,6 +45,7 @@ export interface GridColDefPro {
   availableAggregationFunctions?: string[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface GridRenderCellParamsPro<V = any, R = any, F = V> {
   /**
    * TODO: Move to `x-data-grid-premium

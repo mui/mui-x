@@ -12,10 +12,7 @@ import {
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridAggregationColumnMenuItems } from '../../../components/GridAggregationColumnMenuItems';
 import { GridAggregationPanel } from '../../../components/GridAggregationPanel';
-import {
-  gridAggregationModelSelector,
-  gridAggregationStateSelector,
-} from './gridAggregationSelectors';
+import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 

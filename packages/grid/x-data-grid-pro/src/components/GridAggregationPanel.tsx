@@ -42,7 +42,7 @@ export const GridAggregationPanel = () => {
           }),
         }))
         .filter((column) => column.availableAggregationFunctions.length > 1),
-    [visibleColumns],
+    [visibleColumns, rootProps.aggregationFunctions],
   );
 
   const handleChange = (colDef: GridColDef) => (event: React.ChangeEvent<HTMLSelectElement>) => {

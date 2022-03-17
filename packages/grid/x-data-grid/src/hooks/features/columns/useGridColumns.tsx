@@ -36,7 +36,7 @@ import {
   mergeColumnsState,
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
-import { GridPreferencePanelsValue } from '@mui/x-data-grid';
+import { GridPreferencePanelsValue } from '../preferencesPanel';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columnTypes' | 'columns'>

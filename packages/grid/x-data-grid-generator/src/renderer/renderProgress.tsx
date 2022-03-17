@@ -1,10 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import {
-  gridAggregationModelSelector,
-  gridAggregationSanitizedModelSelector,
-  GridRenderCellParams,
-} from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { styled } from '@mui/material/styles';
 
 interface ProgressBarProps {
