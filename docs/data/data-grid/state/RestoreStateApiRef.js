@@ -163,6 +163,11 @@ ViewListItem.propTypes = {
       }),
       preferencePanel: PropTypes.shape({
         open: PropTypes.bool.isRequired,
+        /**
+         * Tab currently opened.
+         * @default GridPreferencePanelsValue.filter
+         * TODO v6: Remove the default behavior
+         */
         openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
       }),
       rowGrouping: PropTypes.shape({
