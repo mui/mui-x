@@ -25,8 +25,16 @@ import {
   useGridPreferencesPanel,
   preferencePanelStateInitializer,
 } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
-import { useGridEditing, editingStateInitializer } from '../hooks/features/editRows/useGridEditing';
+import {
+  useGridEditing as useGridEditing_old,
+  editingStateInitializer as editingStateInitializer_old,
+} from '../hooks/features/editRows/useGridEditing.old';
+import {
+  useGridEditing as useGridEditing_new,
+  editingStateInitializer as editingStateInitializer_new,
+} from '../hooks/features/editRows/useGridEditing.new';
 import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+import { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 import { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 import {
   selectionStateInitializer,
@@ -50,6 +58,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
    * Register all pre-processors called during state initialization here.
    */
   useGridSelectionPreProcessors(internalApiRef, props);
+  useGridRowsPreProcessors(internalApiRef);
 
   /**
    * Register all state initializers here.
@@ -57,7 +66,13 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(selectionStateInitializer, internalApiRef, props);
   useGridInitializeState(columnsStateInitializer, internalApiRef, props);
   useGridInitializeState(rowsStateInitializer, internalApiRef, props);
-  useGridInitializeState(editingStateInitializer, internalApiRef, props);
+  useGridInitializeState(
+    props.experimentalFeatures?.newEditingApi
+      ? editingStateInitializer_new
+      : editingStateInitializer_old,
+    internalApiRef,
+    props,
+  );
   useGridInitializeState(focusStateInitializer, internalApiRef, props);
   useGridInitializeState(sortingStateInitializer, internalApiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, internalApiRef, props);
@@ -71,7 +86,12 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridColumns(internalApiRef, props);
   useGridRows(internalApiRef, props);
   useGridParamsApi(internalApiRef);
+
+  const useGridEditing = props.experimentalFeatures?.newEditingApi
+    ? useGridEditing_new
+    : useGridEditing_old;
   useGridEditing(internalApiRef, props);
+
   useGridFocus(internalApiRef, props);
   useGridSorting(internalApiRef, props);
   useGridPreferencesPanel(internalApiRef);

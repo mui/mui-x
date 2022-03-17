@@ -4,7 +4,7 @@ title: Data Grid - Demo
 
 # Data Grid - Demo
 
-<p class="description">Use the demo below to explore the available features</p>
+<p class="description">Use the demo below to explore the available features.</p>
 
 {{"demo": "FullFeaturedDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 

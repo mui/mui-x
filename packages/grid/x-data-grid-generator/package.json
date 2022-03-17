@@ -13,9 +13,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "bin": {
-    "datagen": "./bin/data-gen-script.js"
-  },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",

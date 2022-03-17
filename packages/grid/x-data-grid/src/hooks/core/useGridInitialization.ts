@@ -7,7 +7,7 @@ import { useGridApiInitialization } from './useGridApiInitialization';
 import { useGridErrorHandler } from './useGridErrorHandler';
 import { useGridLocaleText } from './useGridLocaleText';
 import { useGridPreProcessing } from './preProcessing';
-import { useGridRowGroupsPreProcessing } from './rowGroupsPreProcessing';
+import { useGridStrategyProcessing } from './strategyProcessing';
 import { useGridStateInitialization } from './useGridStateInitialization';
 
 /**
@@ -22,7 +22,7 @@ export const useGridInitialization = <Api extends GridApiCommon>(
   useGridErrorHandler(internalApiRef, props);
   useGridStateInitialization(internalApiRef, props);
   useGridPreProcessing(internalApiRef);
-  useGridRowGroupsPreProcessing(internalApiRef);
+  useGridStrategyProcessing(internalApiRef);
   useGridLocaleText(internalApiRef, props);
 
   return { publicApiRef, internalApiRef };

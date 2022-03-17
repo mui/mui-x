@@ -4,7 +4,7 @@ import {
   GridRowTreeConfig,
   GridKeyValue,
 } from '@mui/x-data-grid';
-import { GridRowGroupParams, GridRowGroupingResult } from '@mui/x-data-grid/internals';
+import { GridRowTreeCreationParams, GridRowTreeCreationValue } from '@mui/x-data-grid/internals';
 
 type GridGroupingCriteriaToIdTree = {
   [field: string]: {
@@ -17,7 +17,7 @@ export interface BuildRowTreeGroupingCriteria {
   key: GridKeyValue;
 }
 
-interface BuildRowTreeParams extends GridRowGroupParams {
+interface BuildRowTreeParams extends GridRowTreeCreationParams {
   rows: { id: GridRowId; path: BuildRowTreeGroupingCriteria[] }[];
   defaultGroupingExpansionDepth: number;
   isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
@@ -62,7 +62,7 @@ interface TempRowTreeNode extends Omit<GridRowTreeNodeConfig, 'children' | 'chil
  }
  ```
  */
-export const buildRowTree = (params: BuildRowTreeParams): GridRowGroupingResult => {
+export const buildRowTree = (params: BuildRowTreeParams): GridRowTreeCreationValue => {
   // During the build, we store the children as a Record to avoid linear complexity when checking if a children is already defined.
   const tempTree: Record<GridRowId, TempRowTreeNode> = {};
   let treeDepth = 1;

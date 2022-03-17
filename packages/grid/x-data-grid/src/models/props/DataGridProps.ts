@@ -8,7 +8,7 @@ import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
-import { GridRowIdGetter, GridRowsProp } from '../gridRows';
+import { GridRowIdGetter, GridRowsProp, GridRowModel } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
@@ -35,6 +35,10 @@ export interface GridExperimentalFeatures {
    * Will be part of the premium-plan when fully ready.
    */
   preventCommitWhileValidating: boolean;
+  /**
+   * Enables the new API for cell editing and row editing.
+   */
+  newEditingApi: boolean;
   /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
    * Only works if NODE_ENV=test.
@@ -693,4 +697,15 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalFeatures>;
+  /**
+   * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   * @param {GridRowModel} newRow Row object with the new values.
+   * @param {GridRowModel} oldRow Row object with the old values.
+   * @returns {Promise<GridRowModel> | GridRowModel} The final values to update the row.
+   */
+  processRowUpdate?: (
+    newRow: GridRowModel,
+    oldRow: GridRowModel,
+  ) => Promise<GridRowModel> | GridRowModel;
 }
