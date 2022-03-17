@@ -62,6 +62,20 @@ DataGridProRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * TODO: Move to `x-data-grid-premium
+   * @default GRID_AGGREGATION_FUNCTIONS
+   */
+  aggregationFunctions: PropTypes.object,
+  /**
+   * TODO: Move to `x-data-grid-premium
+   */
+  aggregationModel: PropTypes.object,
+  /**
+   * TODO: Move to `x-data-grid-premium
+   * @default "footer"
+   */
+  aggregationPosition: PropTypes.oneOf(['footer', 'inline']),
+  /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
   apiRef: PropTypes.shape({
@@ -155,6 +169,11 @@ DataGridProRaw.propTypes = {
   detailPanelExpandedRowIds: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   ),
+  /**
+   * If `true`, the aggregation is disabled.
+   * @default false
+   */
+  disableAggregation: PropTypes.bool,
   /**
    * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
@@ -253,6 +272,7 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    aggregation: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     rowGrouping: PropTypes.bool,
@@ -424,6 +444,13 @@ DataGridProRaw.propTypes = {
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce: PropTypes.string,
+  /**
+   * Callback fired when the row grouping model changes.
+   * TODO: Move to `x-data-grid-premium
+   * @param {GridAggregationModel} model The aggregated columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onAggregationModelChange: PropTypes.func,
   /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -642,6 +669,7 @@ DataGridProRaw.propTypes = {
   onRowEditStop: PropTypes.func,
   /**
    * Callback fired when the row grouping model changes.
+   * TODO: Move to `x-data-grid-premium
    * @param {GridRowGroupingModel} model Columns used as grouping criteria.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
