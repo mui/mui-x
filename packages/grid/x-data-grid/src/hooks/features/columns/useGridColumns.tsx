@@ -39,15 +39,7 @@ import {
 import { GridPreferencePanelsValue } from '../preferencesPanel';
 
 export const columnsStateInitializer: GridStateInitializer<
-  Pick<
-    DataGridProcessedProps,
-    | 'columnVisibilityModel'
-    | 'initialState'
-    | 'columnTypes'
-    | 'columns'
-    | 'components'
-    | 'componentsProps'
-  >
+  Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columnTypes' | 'columns'>
 > = (state, props, apiRef) => {
   const isUsingColumnVisibilityModel =
     !!props.columnVisibilityModel || !!props.initialState?.columns?.columnVisibilityModel;
@@ -88,6 +80,8 @@ export function useGridColumns(
     | 'columnTypes'
     | 'checkboxSelection'
     | 'classes'
+    | 'components'
+    | 'componentsProps'
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
