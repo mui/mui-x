@@ -96,7 +96,7 @@ const getRowsStateFromCache = (
   const dataTopLevelRowCount =
     processedGroupingResponse.treeDepth === 1
       ? processedGroupingResponse.ids.length
-      : Object.values(groupingResponse.tree).filter((node) => node.parent == null).length;
+      : Object.values(processedGroupingResponse.tree).filter((node) => node.parent == null).length;
 
   return {
     ...processedGroupingResponse,
