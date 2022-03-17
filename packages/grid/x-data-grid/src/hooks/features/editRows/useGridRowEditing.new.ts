@@ -329,75 +329,74 @@ export const useGridRowEditing = (
   );
 
   const stopRowEditMode = React.useCallback<GridNewRowEditingApi['stopRowEditMode']>(
-    async (params) => {
+    (params) => {
       const { id, ignoreModifications, fieldFromRowBelowToFocus } = params;
 
       throwIfNotInMode(id, GridRowModes.Edit);
 
       apiRef.current.unstable_runPendingEditCellValueMutation(id);
 
-      let canUpdate = true;
-
-      if (!ignoreModifications) {
-        const editingState = gridEditRowsStateSelector(apiRef.current.state);
-        const row = apiRef.current.getRow(id)!;
-
-        const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
-          (fieldProps) => fieldProps.isProcessingProps,
-        );
-
-        if (isSomeFieldProcessingProps) {
-          return false;
+      const updateFocusedCellIfNeeded = () => {
+        if (fieldFromRowBelowToFocus) {
+          // TODO Don't fire event and set focus manually here
+          apiRef.current.publishEvent(
+            GridEvents.cellNavigationKeyDown,
+            apiRef.current.getCellParams(id, fieldFromRowBelowToFocus),
+            { key: 'Enter', preventDefault: () => {} } as any,
+          );
         }
+      };
 
-        const hasSomeFieldWithError = Object.values(editingState[id]).some(
-          (fieldProps) => fieldProps.error,
-        );
+      if (ignoreModifications) {
+        updateFocusedCellIfNeeded();
+        updateOrDeleteRowState(id, null);
+        return;
+      }
 
-        if (hasSomeFieldWithError) {
-          return false;
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const row = apiRef.current.getRow(id)!;
+
+      const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
+        (fieldProps) => fieldProps.isProcessingProps,
+      );
+
+      if (isSomeFieldProcessingProps) {
+        return;
+      }
+
+      const hasSomeFieldWithError = Object.values(editingState[id]).some(
+        (fieldProps) => fieldProps.error,
+      );
+
+      if (hasSomeFieldWithError) {
+        return;
+      }
+
+      let rowUpdate = { ...row };
+
+      Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
+        const column = apiRef.current.getColumn(field);
+        if (column.valueSetter) {
+          rowUpdate = column.valueSetter({
+            value: fieldProps.value,
+            row: rowUpdate,
+          });
+        } else {
+          rowUpdate[field] = fieldProps.value;
         }
+      });
 
-        let rowUpdate = { ...row };
-
-        Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
-          const column = apiRef.current.getColumn(field);
-          if (column.valueSetter) {
-            rowUpdate = column.valueSetter({
-              value: fieldProps.value,
-              row: rowUpdate,
-            });
-          } else {
-            rowUpdate[field] = fieldProps.value;
-          }
+      if (processRowUpdate) {
+        Promise.resolve(processRowUpdate(rowUpdate, row)).then((finalRowUpdate) => {
+          apiRef.current.updateRows([finalRowUpdate]);
+          updateFocusedCellIfNeeded();
+          updateOrDeleteRowState(id, null);
         });
-
-        if (processRowUpdate) {
-          try {
-            rowUpdate = await Promise.resolve(processRowUpdate(rowUpdate, row));
-          } catch {
-            canUpdate = false;
-          }
-        }
-
+      } else {
         apiRef.current.updateRows([rowUpdate]);
+        updateFocusedCellIfNeeded();
+        updateOrDeleteRowState(id, null);
       }
-
-      if (fieldFromRowBelowToFocus) {
-        // TODO Don't fire event and set focus manually here
-        apiRef.current.publishEvent(
-          GridEvents.cellNavigationKeyDown,
-          apiRef.current.getCellParams(id, fieldFromRowBelowToFocus),
-          { key: 'Enter', preventDefault: () => {} } as any,
-        );
-      }
-
-      if (!canUpdate) {
-        return false;
-      }
-
-      updateOrDeleteRowState(id, null);
-      return true;
     },
     [apiRef, processRowUpdate, throwIfNotInMode, updateOrDeleteRowState],
   );

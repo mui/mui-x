@@ -248,61 +248,58 @@ export const useGridCellEditing = (
   );
 
   const stopCellEditMode = React.useCallback<GridNewCellEditingApi['stopCellEditMode']>(
-    async (params) => {
+    (params) => {
       const { id, field, ignoreModifications, cellToFocusAfter = 'none' } = params;
 
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
       apiRef.current.unstable_runPendingEditCellValueMutation(id, field);
 
-      let canUpdate = true;
-
-      if (!ignoreModifications) {
-        const editingState = gridEditRowsStateSelector(apiRef.current.state);
-        const row = apiRef.current.getRow(id)!;
-        const column = apiRef.current.getColumn(field);
-        const { value, error, isProcessingProps } = editingState[id][field];
-
-        if (error || isProcessingProps) {
-          return false;
+      const updateFocusedCellIfNeeded = () => {
+        if (cellToFocusAfter !== 'none') {
+          // TODO Don't fire event and set focus manually here
+          apiRef.current.publishEvent(
+            GridEvents.cellNavigationKeyDown,
+            apiRef.current.getCellParams(id, field),
+            {
+              key: cellToFocusAfter === 'below' ? 'Enter' : 'Tab',
+              shiftKey: cellToFocusAfter === 'left',
+              preventDefault: () => {},
+            } as any,
+          );
         }
+      };
 
-        let rowUpdate = column.valueSetter
-          ? column.valueSetter({ value, row })
-          : { ...row, [field]: value };
-
-        if (processRowUpdate) {
-          try {
-            rowUpdate = await Promise.resolve(processRowUpdate(rowUpdate, row));
-          } catch {
-            canUpdate = false;
-          }
-        }
-
-        if (canUpdate) {
-          apiRef.current.updateRows([rowUpdate]);
-        }
+      if (ignoreModifications) {
+        updateFocusedCellIfNeeded();
+        updateOrDeleteFieldState(id, field, null);
+        return;
       }
 
-      if (cellToFocusAfter !== 'none') {
-        // TODO Don't fire event and set focus manually here
-        apiRef.current.publishEvent(
-          GridEvents.cellNavigationKeyDown,
-          apiRef.current.getCellParams(id, field),
-          {
-            key: cellToFocusAfter === 'below' ? 'Enter' : 'Tab',
-            shiftKey: cellToFocusAfter === 'left',
-            preventDefault: () => {},
-          } as any,
-        );
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const row = apiRef.current.getRow(id)!;
+      const column = apiRef.current.getColumn(field);
+      const { value, error, isProcessingProps } = editingState[id][field];
+
+      if (error || isProcessingProps) {
+        return;
       }
 
-      if (!canUpdate) {
-        return false;
-      }
+      const rowUpdate = column.valueSetter
+        ? column.valueSetter({ value, row })
+        : { ...row, [field]: value };
 
-      updateOrDeleteFieldState(id, field, null);
-      return true;
+      if (processRowUpdate) {
+        Promise.resolve(processRowUpdate(rowUpdate, row)).then((finalRowUpdate) => {
+          apiRef.current.updateRows([finalRowUpdate]);
+          updateFocusedCellIfNeeded();
+          updateOrDeleteFieldState(id, field, null);
+        });
+      } else {
+        apiRef.current.updateRows([rowUpdate]);
+        updateFocusedCellIfNeeded();
+        updateOrDeleteFieldState(id, field, null);
+      }
     },
     [apiRef, processRowUpdate, throwIfNotInMode, updateOrDeleteFieldState],
   );
