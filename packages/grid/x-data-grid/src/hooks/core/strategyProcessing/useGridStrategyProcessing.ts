@@ -20,6 +20,10 @@ export const GRID_STRATEGIES_PROCESSORS: {
   sorting: 'rowTree',
 };
 
+type UntypedStrategyProcessors = {
+  [strategyName: string]: GridStrategyProcessor<any>;
+};
+
 /**
  * Implements a variant of the Strategy Pattern (see https://en.wikipedia.org/wiki/Strategy_pattern)
  *
@@ -41,7 +45,7 @@ export const GRID_STRATEGIES_PROCESSORS: {
  *
  * These hooks must use:
  * - `apiRef.current.unstable_applyStrategyProcessor` to run a processor.
- * - `GridEvents.strategyActivityChange` to update something when the active strategy changes.
+ * - `GridEvents.strategyAvailabilityChange` to update something when the active strategy changes.
  *    Warning: Be careful not to apply the processor several times.
  *    For instance `GridEvents.rowsSet` is fired by `useGridRows` whenever the active strategy changes.
  *    So listening to both would most likely run your logic twice.
@@ -61,33 +65,34 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
     GridStrategyProcessingApi['unstable_registerStrategyProcessor']
   >(
     (strategyName, processorName, processor: GridStrategyProcessor<any>) => {
+      const cleanup = () => {
+        const { [strategyName]: removedPreProcessor, ...otherProcessors } =
+          strategiesCache.current[processorName]!;
+        strategiesCache.current[processorName] = otherProcessors as UntypedStrategyProcessors;
+      };
+
       if (!strategiesCache.current[processorName]) {
         strategiesCache.current[processorName] = {};
       }
 
-      const groupPreProcessors = strategiesCache.current[processorName] as {
-        [strategyName: string]: GridStrategyProcessor<any>;
-      };
+      const groupPreProcessors = strategiesCache.current[
+        processorName
+      ] as UntypedStrategyProcessors;
       const previousProcessor = groupPreProcessors[strategyName];
-      if (previousProcessor !== processor) {
-        groupPreProcessors[strategyName] = processor;
+      groupPreProcessors[strategyName] = processor;
 
-        if (
-          (previousProcessor as GridStrategyProcessor<any> | undefined) &&
-          strategyName ===
-            apiRef.current.unstable_getActiveStrategy(GRID_STRATEGIES_PROCESSORS[processorName])
-        ) {
-          apiRef.current.publishEvent(GridEvents.activeStrategyProcessorChange, processorName);
-        }
+      if (previousProcessor === processor) {
+        return cleanup;
       }
 
-      return () => {
-        const { [strategyName]: removedPreProcessor, ...otherProcessors } =
-          strategiesCache.current[processorName]!;
-        strategiesCache.current[processorName] = otherProcessors as {
-          [strategyName: string]: GridStrategyProcessor<any>;
-        };
-      };
+      if (
+        strategyName ===
+        apiRef.current.unstable_getActiveStrategy(GRID_STRATEGIES_PROCESSORS[processorName])
+      ) {
+        apiRef.current.publishEvent(GridEvents.activeStrategyProcessorChange, processorName);
+      }
+
+      return cleanup;
     },
     [apiRef],
   );
@@ -136,7 +141,7 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
   >(
     (strategyGroup, strategyName, isAvailable) => {
       availableStrategies.current.set(strategyName, { group: strategyGroup, isAvailable });
-      apiRef.current.publishEvent(GridEvents.strategyActivityChange);
+      apiRef.current.publishEvent(GridEvents.strategyAvailabilityChange);
     },
     [apiRef],
   );

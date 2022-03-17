@@ -1,4 +1,4 @@
-import { GridCaches, GridKeyValue } from '@mui/x-data-grid';
+import { GridKeyValue } from '@mui/x-data-grid';
 import type { GridRowScrollEndParams, GridGroupingValueGetterParams } from '../models';
 import type { GridPinnedColumns, GridRowGroupingModel, GridAggregationModel } from '../hooks';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';

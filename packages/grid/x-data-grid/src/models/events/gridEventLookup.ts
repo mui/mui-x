@@ -149,7 +149,7 @@ export interface GridEventLookup
   activeStrategyProcessorChange: {
     params: GridStrategyProcessorName;
   };
-  strategyActivityChange: {};
+  strategyAvailabilityChange: {};
 
   // Columns
   columnsChange: { params: string[] };
