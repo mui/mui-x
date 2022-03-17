@@ -205,7 +205,11 @@ describe('<DataGridPro /> - Layout', () => {
     expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
   });
 
-  it('should support the sx prop', () => {
+  it('should support the sx prop', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const theme = createTheme({
       palette: {
         primary: {

@@ -4,6 +4,8 @@ import {
   GridColumnsState,
   GridColumnsRawState,
   GridColumnVisibilityModel,
+  GridColumnRawLookup,
+  GridColumnsInitialState,
 } from './gridColumnsInterfaces';
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
@@ -16,6 +18,10 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
+
+export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
+
+export type GridColumnDimensionProperties = typeof COLUMNS_DIMENSION_PROPERTIES[number];
 
 export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
   const mergedColumnTypes: GridColumnTypesRecord = { ...getGridDefaultColumnTypes() };
@@ -224,6 +230,61 @@ export const hydrateColumnsWidth = (
 let columnTypeWarnedOnce = false;
 
 /**
+ * Apply the order and the dimensions of the initial state.
+ * The columns not registered in `orderedFields` will be placed after the imported columns.
+ */
+export const applyInitialState = (
+  columnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'>,
+  initialState: GridColumnsInitialState | undefined,
+) => {
+  if (!initialState) {
+    return columnsState;
+  }
+
+  const { orderedFields = [], dimensions = {} } = initialState;
+
+  const columnsWithUpdatedDimensions = Object.keys(dimensions);
+  if (columnsWithUpdatedDimensions.length === 0 && orderedFields.length === 0) {
+    return columnsState;
+  }
+
+  const orderedFieldsLookup: Record<string, true> = {};
+  const cleanOrderedFields: string[] = [];
+
+  for (let i = 0; i < orderedFields.length; i += 1) {
+    const field = orderedFields[i];
+
+    // Ignores the fields in the initialState that matches no field on the current column state
+    if (columnsState.lookup[field]) {
+      orderedFieldsLookup[field] = true;
+      cleanOrderedFields.push(field);
+    }
+  }
+
+  const newOrderedFields =
+    cleanOrderedFields.length === 0
+      ? columnsState.all
+      : [...cleanOrderedFields, ...columnsState.all.filter((field) => !orderedFieldsLookup[field])];
+
+  const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
+  for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
+    const field = columnsWithUpdatedDimensions[i];
+    newColumnLookup[field] = {
+      ...newColumnLookup[field],
+      ...dimensions[field],
+      hasBeenResized: true,
+    };
+  }
+
+  const newColumnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'> = {
+    all: newOrderedFields,
+    lookup: newColumnLookup,
+  };
+
+  return newColumnsState;
+};
+
+/**
  * @deprecated Should have been internal only, you can inline the logic.
  */
 export const getGridColDef = (
@@ -256,20 +317,29 @@ export const getGridColDef = (
 export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
+  initialState,
   columnsTypes,
   currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   shouldRegenColumnVisibilityModelFromColumns,
-  reset,
+  keepOnlyColumnsToUpsert = false,
 }: {
   columnsToUpsert: GridColDef[];
+  initialState: GridColumnsInitialState | undefined;
   columnsTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
+  keepOnlyColumnsToUpsert: boolean;
   apiRef: React.MutableRefObject<GridApiCommunity>;
-  reset: boolean;
 }) => {
-  let columnsStateWithoutColumnVisibilityModel: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
-  if (reset) {
+  const isInsideStateInitializer = !apiRef.current.state.columns;
+
+  let columnsStateWithoutColumnVisibilityModel: Omit<
+    GridColumnsRawState,
+    'columnVisibilityModel' | 'lookup'
+  > & {
+    lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
+  };
+  if (isInsideStateInitializer || keepOnlyColumnsToUpsert) {
     columnsStateWithoutColumnVisibilityModel = {
       all: [],
       lookup: {},
@@ -293,10 +363,19 @@ export const createColumnsState = ({
       };
       columnsStateWithoutColumnVisibilityModel.all.push(newColumn.field);
     } else {
-      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = {
+      const mergedColumn = {
         ...columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field],
         ...newColumn,
       };
+
+      if (
+        !mergedColumn.hasBeenResized &&
+        COLUMNS_DIMENSION_PROPERTIES.some((propertyName) => newColumn[propertyName] !== undefined)
+      ) {
+        mergedColumn.hasBeenResized = true;
+      }
+
+      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = mergedColumn;
     }
   });
 
@@ -311,46 +390,76 @@ export const createColumnsState = ({
   // TODO v6: remove the sync between the columns `hide` option and the model.
   let columnVisibilityModel: GridColumnVisibilityModel = {};
   if (shouldRegenColumnVisibilityModelFromColumns) {
-    if (reset) {
+    let hasModelChanged = false;
+
+    const newColumnVisibilityModel = { ...currentColumnVisibilityModel };
+    if (isInsideStateInitializer) {
       columnsStateWithPreProcessing.all.forEach((field) => {
-        columnVisibilityModel[field] = !columnsStateWithoutColumnVisibilityModel.lookup[field].hide;
+        newColumnVisibilityModel[field] =
+          !columnsStateWithoutColumnVisibilityModel.lookup[field].hide;
       });
-    } else {
-      const newColumnVisibilityModel = { ...currentColumnVisibilityModel };
-      let hasModelChanged = false;
-
-      columnsStateWithPreProcessing.all.forEach((field) => {
-        // If neither the `columnsToUpsert` nor the pre-processors updated the column,
-        // Then we don't want to update the visibility status of the column in the model.
-        if (
-          !columnsToUpsertLookup[field] &&
-          columnsLookupBeforePreProcessing[field] === columnsStateWithPreProcessing.lookup[field]
-        ) {
-          return;
-        }
-
-        const isVisibleBefore = currentColumnVisibilityModel[field] ?? true;
-        const isVisibleAfter = !columnsStateWithPreProcessing.lookup[field].hide;
-
-        if (isVisibleAfter !== isVisibleBefore) {
+    } else if (keepOnlyColumnsToUpsert) {
+      // At this point, `keepOnlyColumnsToUpsert` has a new meaning: keep the columns
+      // passed via `columnToUpsert` + columns added by the pre-processors. We do the following
+      // cleanup because a given column may have been removed from the `columns` prop but it still
+      // exists in the state.
+      Object.keys(newColumnVisibilityModel).forEach((field) => {
+        if (!columnsStateWithPreProcessing.lookup[field]) {
+          delete newColumnVisibilityModel[field];
           hasModelChanged = true;
-
-          newColumnVisibilityModel[field] = isVisibleAfter;
         }
       });
+    }
 
-      if (hasModelChanged) {
-        columnVisibilityModel = newColumnVisibilityModel;
-      } else {
-        columnVisibilityModel = currentColumnVisibilityModel;
+    columnsStateWithPreProcessing.all.forEach((field) => {
+      // If neither the `columnsToUpsert` nor the pre-processors updated the column,
+      // Then we don't want to update the visibility status of the column in the model.
+      if (
+        !columnsToUpsertLookup[field] &&
+        columnsLookupBeforePreProcessing[field] === columnsStateWithPreProcessing.lookup[field]
+      ) {
+        return;
       }
+
+      // We always assume that a column not in the model is visible by default. However, there's an
+      // edge case where the column is not in the model but it also doesn't exist in the `columns`
+      // prop, meaning that the column is being added. In that case, we assume that the column was
+      // not visible before for it be added to the model.
+      let isVisibleBefore = currentColumnVisibilityModel[field];
+      if (isVisibleBefore === undefined) {
+        if (isInsideStateInitializer) {
+          isVisibleBefore = true;
+        } else {
+          const currentState = gridColumnsSelector(apiRef.current.state);
+          isVisibleBefore = !!currentState.lookup[field];
+        }
+      }
+
+      const isVisibleAfter = !columnsStateWithPreProcessing.lookup[field].hide;
+
+      if (isVisibleAfter !== isVisibleBefore) {
+        hasModelChanged = true;
+
+        newColumnVisibilityModel[field] = isVisibleAfter;
+      }
+    });
+
+    if (hasModelChanged || isInsideStateInitializer) {
+      columnVisibilityModel = newColumnVisibilityModel;
+    } else {
+      columnVisibilityModel = currentColumnVisibilityModel;
     }
   } else {
     columnVisibilityModel = currentColumnVisibilityModel;
   }
 
+  const columnsStateWithPortableColumns = applyInitialState(
+    columnsStateWithPreProcessing,
+    initialState,
+  );
+
   const columnsState: GridColumnsRawState = {
-    ...columnsStateWithPreProcessing,
+    ...columnsStateWithPortableColumns,
     columnVisibilityModel,
   };
 
@@ -360,7 +469,7 @@ export const createColumnsState = ({
   );
 };
 
-export const setColumnsState =
+export const mergeColumnsState =
   (columnsState: GridColumnsState) =>
   (state: GridStateCommunity): GridStateCommunity => ({
     ...state,

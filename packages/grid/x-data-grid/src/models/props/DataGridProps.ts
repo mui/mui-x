@@ -8,14 +8,21 @@ import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
-import { GridRowIdGetter, GridRowsProp } from '../gridRows';
+import { GridRowIdGetter, GridRowsProp, GridRowModel } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridColumnTypesRecord } from '../colDef';
 import type { GridColumns } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
-import { GridRowHeightParams, GridRowHeightReturnValue, GridRowParams } from '../params';
+import {
+  GridRowHeightParams,
+  GridRowHeightReturnValue,
+  GridRowParams,
+  GridRowSpacing,
+  GridRowSpacingParams,
+  GridRowClassNameParams,
+} from '../params';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
@@ -28,6 +35,10 @@ export interface GridExperimentalFeatures {
    * Will be part of the premium-plan when fully ready.
    */
   preventCommitWhileValidating: boolean;
+  /**
+   * Enables the new API for cell editing and row editing.
+   */
+  newEditingApi: boolean;
   /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
    * Only works if NODE_ENV=test.
@@ -268,6 +279,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowsPerPageOptions: number[];
   /**
+   * Sets the type of space between rows added by `getRowSpacing`.
+   * @default "margin"
+   */
+  rowSpacingType: 'margin' | 'border';
+  /**
    * If `true`, the right border of the cells are displayed.
    * @default false
    */
@@ -348,16 +364,22 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   getCellClassName?: (params: GridCellParams) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
-  getRowClassName?: (params: GridRowParams) => string;
+  getRowClassName?: (params: GridRowClassNameParams) => string;
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
    * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
    */
   getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
+  /**
+   * Function that allows to specify the spacing between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row spacing values.
+   */
+  getRowSpacing?: (params: GridRowSpacingParams) => GridRowSpacing;
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -675,4 +697,15 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalFeatures>;
+  /**
+   * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   * @param {GridRowModel} newRow Row object with the new values.
+   * @param {GridRowModel} oldRow Row object with the old values.
+   * @returns {Promise<GridRowModel> | GridRowModel} The final values to update the row.
+   */
+  processRowUpdate?: (
+    newRow: GridRowModel,
+    oldRow: GridRowModel,
+  ) => Promise<GridRowModel> | GridRowModel;
 }

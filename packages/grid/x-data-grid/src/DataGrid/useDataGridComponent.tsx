@@ -25,8 +25,16 @@ import {
   useGridPreferencesPanel,
   preferencePanelStateInitializer,
 } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
-import { useGridEditing, editingStateInitializer } from '../hooks/features/editRows/useGridEditing';
+import {
+  useGridEditing as useGridEditing_old,
+  editingStateInitializer as editingStateInitializer_old,
+} from '../hooks/features/editRows/useGridEditing.old';
+import {
+  useGridEditing as useGridEditing_new,
+  editingStateInitializer as editingStateInitializer_new,
+} from '../hooks/features/editRows/useGridEditing.new';
 import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+import { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 import { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 import {
   selectionStateInitializer,
@@ -47,6 +55,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
    * Register all pre-processors called during state initialization here.
    */
   useGridSelectionPreProcessors(apiRef, props);
+  useGridRowsPreProcessors(apiRef);
 
   /**
    * Register all state initializers here.
@@ -54,7 +63,13 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
-  useGridInitializeState(editingStateInitializer, apiRef, props);
+  useGridInitializeState(
+    props.experimentalFeatures?.newEditingApi
+      ? editingStateInitializer_new
+      : editingStateInitializer_old,
+    apiRef,
+    props,
+  );
   useGridInitializeState(focusStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
@@ -68,7 +83,12 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+
+  const useGridEditing = props.experimentalFeatures?.newEditingApi
+    ? useGridEditing_new
+    : useGridEditing_old;
   useGridEditing(apiRef, props);
+
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef);
