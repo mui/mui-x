@@ -387,9 +387,9 @@ export const useGridRows = (
   );
 
   const handleStrategyActivityChange = React.useCallback<
-    GridEventListener<GridEvents.strategyActivityChange>
+    GridEventListener<GridEvents.strategyAvailabilityChange>
   >(() => {
-    // `rowTreeCreation` is the only processor ran when `strategyActivityChange` is fired.
+    // `rowTreeCreation` is the only processor ran when `strategyAvailabilityChange` is fired.
     // All the other processors listen to `rowsSet` which will be published by the `groupRows` method below.
     if (
       apiRef.current.unstable_getActiveStrategy('rowTree') !== gridRowGroupingNameSelector(apiRef)
@@ -403,7 +403,11 @@ export const useGridRows = (
     GridEvents.activeStrategyProcessorChange,
     handleStrategyProcessorChange,
   );
-  useGridApiEventHandler(apiRef, GridEvents.strategyActivityChange, handleStrategyActivityChange);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.strategyAvailabilityChange,
+    handleStrategyActivityChange,
+  );
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 
