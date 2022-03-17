@@ -8,6 +8,7 @@ import {
 import { GridColumnRawLookup, isNumber } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import {
+  GridAggregationCellMeta,
   GridAggregationFunction,
   GridAggregationItem,
   GridAggregationModel,
@@ -87,6 +88,7 @@ const sizeAgg: GridAggregationFunction<number> = {
 
     return params.value.toLocaleString();
   },
+  hasCellUnit: false,
   types: ['number'],
 };
 
@@ -118,7 +120,11 @@ export const wrapColumnWithAggregation = ({
 }) => {
   const aggregationFunction = aggregationFunctions?.[currentAggregation.method];
 
-  const { valueGetter: originalValueGetter, valueFormatter: originalValueFormatter } = colDef;
+  const {
+    valueGetter: originalValueGetter,
+    valueFormatter: originalValueFormatter,
+    renderCell: originalRenderCell,
+  } = colDef;
 
   if (!aggregationFunction) {
     throw new Error(`MUI: No aggregation registered with the name ${currentAggregation}`);
@@ -178,6 +184,11 @@ export const wrapColumnWithAggregation = ({
     return params.row[params.field];
   };
 
+  const aggregationMeta: GridAggregationCellMeta = {
+    hasCellUnit: aggregationFunction.hasCellUnit ?? true,
+    name: currentAggregation.method,
+  };
+
   const wrappedValueFormatter: AggregationWrappedMethod<GridColDef['valueFormatter']> = (
     params,
   ) => {
@@ -195,15 +206,26 @@ export const wrapColumnWithAggregation = ({
     return params.value;
   };
 
+  const wrappedRenderCell: AggregationWrappedMethod<GridColDef['renderCell']> | undefined =
+    originalRenderCell
+      ? (params) => originalRenderCell({ ...params, aggregation: aggregationMeta })
+      : undefined;
+
   wrappedValueGetter.isWrappedWithAggregation = true;
   wrappedValueGetter.originalMethod = originalValueGetter;
   wrappedValueFormatter.isWrappedWithAggregation = true;
   wrappedValueFormatter.originalMethod = originalValueFormatter;
 
+  if (wrappedRenderCell) {
+    wrappedRenderCell.isWrappedWithAggregation = true;
+    wrappedRenderCell.originalMethod = originalRenderCell;
+  }
+
   return {
     ...colDef,
     valueGetter: wrappedValueGetter,
     valueFormatter: wrappedValueFormatter,
+    renderCell: wrappedRenderCell,
   };
 };
 
@@ -212,15 +234,19 @@ export const unwrapColumnFromAggregation = ({ colDef }: { colDef: GridColDef }) 
   const valueFormatter = colDef.valueFormatter as AggregationWrappedMethod<
     GridColDef['valueFormatter']
   >;
-  if (valueGetter?.isWrappedWithAggregation || valueFormatter?.isWrappedWithAggregation) {
+  const renderCell = colDef.renderCell as AggregationWrappedMethod<GridColDef['renderCell']>;
+  if (
+    valueGetter?.isWrappedWithAggregation ||
+    valueFormatter?.isWrappedWithAggregation ||
+    renderCell?.isWrappedWithAggregation
+  ) {
     return {
       ...colDef,
-      valueGetter: valueGetter?.isWrappedWithAggregation
-        ? valueGetter.originalMethod
-        : colDef.valueGetter,
+      valueGetter: valueGetter?.isWrappedWithAggregation ? valueGetter.originalMethod : valueGetter,
       valueFormatter: valueFormatter?.isWrappedWithAggregation
         ? valueFormatter.originalMethod
-        : colDef.valueFormatter,
+        : valueFormatter,
+      renderCell: renderCell?.isWrappedWithAggregation ? renderCell.originalMethod : renderCell,
     };
   }
 

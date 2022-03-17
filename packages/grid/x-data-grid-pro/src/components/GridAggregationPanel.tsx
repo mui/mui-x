@@ -2,11 +2,11 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import {
-  gridColumnDefinitionsSelector,
   GridPanelContent,
   GridPanelWrapper,
   useGridSelector,
   GridColDef,
+  gridVisibleColumnDefinitionsSelector,
 } from '@mui/x-data-grid';
 import { getAvailableAggregationFunctions } from '../hooks/features/aggregation/gridAggregationUtils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -28,12 +28,12 @@ const GridAggregationPanelRowRoot = styled('div')({
 export const GridAggregationPanel = () => {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
+  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
 
   const aggregableColumns = React.useMemo(
     () =>
-      columns
+      visibleColumns
         .map((column) => ({
           definition: column,
           availableAggregationFunctions: getAvailableAggregationFunctions({
@@ -42,7 +42,7 @@ export const GridAggregationPanel = () => {
           }),
         }))
         .filter((column) => column.availableAggregationFunctions.length > 1),
-    [columns],
+    [visibleColumns],
   );
 
   const handleChange = (colDef: GridColDef) => (event: React.ChangeEvent<HTMLSelectElement>) => {

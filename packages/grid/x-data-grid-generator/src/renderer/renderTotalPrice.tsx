@@ -47,5 +47,12 @@ export function renderTotalPrice(params: GridRenderCellParams) {
   if (params.value == null) {
     return '';
   }
+
+  // If the aggregated value don't have the same unit as the other cell
+  // Then we fall back to the default rendering based on `valueGetter` instead of rendering the total price UI.
+  if (params.aggregation && !params.aggregation.hasCellUnit) {
+    return null;
+  }
+
   return <TotalPrice value={params.value} />;
 }

@@ -1,6 +1,11 @@
 import { GridKeyValue } from '@mui/x-data-grid';
 import type { GridRowScrollEndParams, GridGroupingValueGetterParams } from '../models';
-import type { GridPinnedColumns, GridRowGroupingModel, GridAggregationModel } from '../hooks';
+import type {
+  GridPinnedColumns,
+  GridRowGroupingModel,
+  GridAggregationModel,
+  GridAggregationCellMeta,
+} from '../hooks';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 
 export interface GridControlledStateEventLookupPro {
@@ -40,6 +45,13 @@ export interface GridColDefPro {
   availableAggregationFunctions?: string[];
 }
 
+export interface GridRenderCellParamsPro<V = any, R = any, F = V> {
+  /**
+   * TODO: Move to `x-data-grid-premium
+   */
+  aggregation?: GridAggregationCellMeta;
+}
+
 export interface GridCachesPro {
   aggregation: {
     sanitizedModelOnLastHydration: GridAggregationModel;
@@ -54,6 +66,9 @@ declare module '@mui/x-data-grid' {
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
 
   interface GridPreProcessingGroupLookup extends GridPreProcessingGroupLookupPro {}
+
+  interface GridRenderCellParams<V = any, R = any, F = V>
+    extends GridRenderCellParamsPro<V, R, F> {}
 }
 
 declare module '@mui/x-data-grid/internals' {
