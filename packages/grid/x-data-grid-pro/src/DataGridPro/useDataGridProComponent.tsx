@@ -118,9 +118,9 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
-  useGridKeyboardNavigation(apiRef, props);
   useGridRowGrouping(apiRef, props);
   useGridTreeData(apiRef);
+  useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
