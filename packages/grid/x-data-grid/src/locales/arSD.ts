@@ -9,23 +9,23 @@ const arSDGrid: Partial<GridLocaleText> = {
   errorOverlayDefaultLabel: 'حدث خطأ.',
 
   // Density selector toolbar button text
-  toolbarDensity: 'كثافة',
-  toolbarDensityLabel: 'كثافة',
-  toolbarDensityCompact: 'مدمج',
-  toolbarDensityStandard: 'المعيار',
+  toolbarDensity: 'الكثافة',
+  toolbarDensityLabel: 'الكثافة',
+  toolbarDensityCompact: 'مضغوط',
+  toolbarDensityStandard: 'قياسي',
   toolbarDensityComfortable: 'مريح',
 
   // Columns selector toolbar button text
   toolbarColumns: 'الأعمدة',
-  toolbarColumnsLabel: 'حدد الأعمدة',
+  toolbarColumnsLabel: 'حدد أعمدة',
 
   // Filters toolbar button text
-  toolbarFilters: 'الفلاتر',
-  toolbarFiltersLabel: 'اظهر الفلاتر',
-  toolbarFiltersTooltipHide: 'إخفاء الفلاتر',
-  toolbarFiltersTooltipShow: 'اظهر الفلاتر',
+  toolbarFilters: 'المُرشِحات',
+  toolbarFiltersLabel: 'إظهار المرشِحات',
+  toolbarFiltersTooltipHide: 'إخفاء المرشِحات',
+  toolbarFiltersTooltipShow: 'اظهر المرشِحات',
   toolbarFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} فلاتر نشطة` : `${count} فلاتر نشطة`,
+    count !== 1 ? `${count} من المرشِحات النشطة` : `مرشِح نشط`,
 
   // Export selector toolbar button text
   toolbarExport: 'تصدير',
@@ -34,63 +34,63 @@ const arSDGrid: Partial<GridLocaleText> = {
   // toolbarExportPrint: 'Print',
 
   // Columns panel text
-  columnsPanelTextFieldLabel: 'ايجاد عمود',
+  columnsPanelTextFieldLabel: 'البحث عن العمود',
   columnsPanelTextFieldPlaceholder: 'عنوان العمود',
   columnsPanelDragIconLabel: 'إعادة ترتيب العمود',
-  columnsPanelShowAllButton: 'عرض الكل',
-  columnsPanelHideAllButton: 'اخفاء الكل',
+  columnsPanelShowAllButton: 'إظهار الكل',
+  columnsPanelHideAllButton: 'إخفاء الكل',
 
   // Filter panel text
-  filterPanelAddFilter: 'اضف فلتر',
+  filterPanelAddFilter: 'إضافة مرشِح',
   filterPanelDeleteIconLabel: 'حذف',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'العاملين',
+  filterPanelLinkOperator: 'عامل منطقي',
+  filterPanelOperators: 'عامل',
 
   // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'و',
-  filterPanelOperatorOr: 'او',
+  filterPanelOperatorOr: 'أو',
   filterPanelColumns: 'الأعمدة',
-  filterPanelInputLabel: 'قيمة',
-  filterPanelInputPlaceholder: 'قيمة التصفية',
+  filterPanelInputLabel: 'القيمة',
+  filterPanelInputPlaceholder: 'ترشِيح قيمة',
 
   // Filter operators text
-  filterOperatorContains: 'يحتوي على',
+  filterOperatorContains: 'يحتوي',
   filterOperatorEquals: 'يساوي',
-  filterOperatorStartsWith: 'يبدأ ب',
+  filterOperatorStartsWith: 'يبدأ بـ',
   filterOperatorEndsWith: 'ينتهي بـ',
   filterOperatorIs: 'يكون',
   filterOperatorNot: 'ليس',
-  filterOperatorAfter: 'يكون بعد',
-  filterOperatorOnOrAfter: 'في أو بعد',
-  filterOperatorBefore: 'يكون',
-  filterOperatorOnOrBefore: 'في أو قبل',
-  filterOperatorIsEmpty: 'فارغ',
-  filterOperatorIsNotEmpty: 'ليس فارغا',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorAfter: 'بعد',
+  filterOperatorOnOrAfter: 'عند أو بعد',
+  filterOperatorBefore: 'بعد',
+  filterOperatorOnOrBefore: 'عند أو قبل',
+  filterOperatorIsEmpty: 'خالي',
+  filterOperatorIsNotEmpty: 'غير خالي',
+  filterOperatorIsAnyOf: 'أي من',
 
   // Filter values text
   filterValueAny: 'أي',
-  filterValueTrue: 'صحيح',
-  filterValueFalse: 'خاطئة',
+  filterValueTrue: 'صائب',
+  filterValueFalse: 'خاطئ',
 
   // Column menu text
   columnMenuLabel: 'القائمة',
   columnMenuShowColumns: 'إظهار الأعمدة',
-  columnMenuFilter: 'فلتر',
+  columnMenuFilter: 'المرشِح',
   columnMenuHideColumn: 'إخفاء',
-  columnMenuUnsort: 'غير مرتب',
-  columnMenuSortAsc: 'الترتيب حسب ASC',
-  columnMenuSortDesc: 'الترتيب حسب DESC',
+  columnMenuUnsort: 'الغاء الفرز',
+  columnMenuSortAsc: 'الفرز تصاعدياً',
+  columnMenuSortDesc: 'الفرز تنازلياً',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} فلاتر نشطة` : `${count} فلاتر نشطة`,
-  columnHeaderFiltersLabel: 'اظهر الفلاتر',
-  columnHeaderSortIconLabel: 'ترتيب',
+    count !== 1 ? `${count} من المرشِحات النشطة` : `مرشِح نشط`,
+  columnHeaderFiltersLabel: 'إظهار المرشحات',
+  columnHeaderSortIconLabel: 'فرز',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1 ? `${count.toLocaleString()} صفوف مختارة` : `${count.toLocaleString()} صفوف مختارة`,
+    count !== 1 ? `تم تحديد ${count.toLocaleString()} من الصفوف` : `تم تحديد صف واحد`,
 
   // Total row amount footer text
   footerTotalRows: 'إجمالي الصفوف:',
@@ -100,37 +100,37 @@ const arSDGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} من ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  checkboxSelectionHeaderName: 'تحديد',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionHeaderName: 'تحديد خانة الاختيار',
+  checkboxSelectionSelectAllRows: 'تحديد كل الصفوف',
+  checkboxSelectionUnselectAllRows: 'الغاء تحديد كل الصفوف',
+  checkboxSelectionSelectRow: 'تحديد صف',
+  checkboxSelectionUnselectRow: 'الغاء تحديد الصف',
 
   // Boolean cell text
-  booleanCellTrueLabel: 'صحيح',
-  booleanCellFalseLabel: 'خاطئة',
+  booleanCellTrueLabel: 'نعم',
+  booleanCellFalseLabel: 'لا',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'المزيد',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'التدبيس يميناً',
+  pinToRight: 'التدبيس يساراً',
+  unpin: 'الغاء التدبيس',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'تجميع',
+  treeDataExpand: 'رؤية الأبناء',
+  treeDataCollapse: 'إخفاء الأبناء',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'تجميع',
+  groupColumn: (name) => `تجميع حسب ${name}`,
+  unGroupColumn: (name) => `إيقاف التجميع حسب ${name}`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'توسيع',
+  collapseDetailPanel: 'طوي',
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);
