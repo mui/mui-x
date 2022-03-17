@@ -98,6 +98,13 @@ GridTreeDataGroupingCell.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * TODO: Move to `x-data-grid-premium
+   */
+  aggregation: PropTypes.shape({
+    hasCellUnit: PropTypes.bool.isRequired,
+    name: PropTypes.string.isRequired,
+  }),
+  /**
    * GridApi that let you manipulate the grid.
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */

@@ -58,6 +58,7 @@
   { "name": "GridActionsColDef", "kind": "Interface" },
   { "name": "GridAddIcon", "kind": "Variable" },
   { "name": "GridAggregationApi", "kind": "Interface" },
+  { "name": "GridAggregationCellMeta", "kind": "Interface" },
   { "name": "GridAggregationFunction", "kind": "TypeAlias" },
   { "name": "GridAggregationInitialState", "kind": "Interface" },
   { "name": "GridAggregationItem", "kind": "Interface" },
