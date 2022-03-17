@@ -81,7 +81,7 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
       const previousProcessor = groupPreProcessors[strategyName];
       groupPreProcessors[strategyName] = processor;
 
-      if (previousProcessor === processor) {
+      if (!previousProcessor || previousProcessor === processor) {
         return cleanup;
       }
 
