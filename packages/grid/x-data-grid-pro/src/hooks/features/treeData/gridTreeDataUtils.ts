@@ -12,6 +12,8 @@ interface FilterRowTreeFromTreeDataParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
 }
 
+export const TREE_DATA_STRATEGY = 'tree-data';
+
 /**
  * A node is visible if one of the following criteria is met:
  * - One of its children is passing the filter

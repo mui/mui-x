@@ -34,6 +34,7 @@ import {
   editingStateInitializer as editingStateInitializer_new,
 } from '../hooks/features/editRows/useGridEditing.new';
 import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+import { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 import { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 import {
   selectionStateInitializer,
@@ -54,6 +55,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
    * Register all pre-processors called during state initialization here.
    */
   useGridSelectionPreProcessors(apiRef, props);
+  useGridRowsPreProcessors(apiRef);
 
   /**
    * Register all state initializers here.

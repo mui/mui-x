@@ -1,12 +1,18 @@
 import * as React from 'react';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
-import { GridPreProcessingGroup, PreProcessorCallback } from './gridPreProcessingApi';
+import { GridPreProcessingGroup, GridPreProcessor } from './gridPreProcessingApi';
 
-export const useGridRegisterPreProcessor = <Api extends GridApiCommon>(
+/**
+ * TODO: Rename `useGridRegisterPipeProcessor`
+ */
+export const useGridRegisterPreProcessor = <
+  Api extends GridApiCommon,
+  G extends GridPreProcessingGroup,
+>(
   apiRef: React.MutableRefObject<Api>,
-  group: GridPreProcessingGroup,
-  callback: PreProcessorCallback,
+  group: G,
+  callback: GridPreProcessor<G>,
 ) => {
   const cleanup = React.useRef<(() => void) | null>();
   const id = React.useRef(`mui-${Math.round(Math.random() * 1e9)}`);
