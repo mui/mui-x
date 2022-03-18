@@ -20,7 +20,7 @@ import { GridStateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
-import { GridColumnSpanning } from './gridColumnSpanning';
+import { GridColumnSpanningApi } from './gridColumnSpanning';
 import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridStrategyProcessingApi } from '../../hooks/core/strategyProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
@@ -57,5 +57,5 @@ export interface GridApiCommon
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
-    GridColumnSpanning,
+    GridColumnSpanningApi,
     GridStateApiUntyped {}

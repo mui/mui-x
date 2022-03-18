@@ -2,7 +2,7 @@ import React from 'react';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridColumnIndex, GridCellColSpanInfo } from '../../../models/gridColumnSpanning';
 import { GridRowId } from '../../../models/gridRows';
-import { GridColumnSpanning } from '../../../models/api/gridColumnSpanning';
+import { GridColumnSpanningApi } from '../../../models/api/gridColumnSpanning';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -27,12 +27,11 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     [],
   );
 
-  const getCellColSpanInfo = React.useCallback<GridColumnSpanning['unstable_getCellColSpanInfo']>(
-    (rowId, columnIndex) => {
-      return lookup.current[rowId]?.[columnIndex];
-    },
-    [],
-  );
+  const getCellColSpanInfo = React.useCallback<
+    GridColumnSpanningApi['unstable_getCellColSpanInfo']
+  >((rowId, columnIndex) => {
+    return lookup.current[rowId]?.[columnIndex];
+  }, []);
 
   // Calculate `colSpan` for the cell.
   const calculateCellColSpan = React.useCallback(
@@ -112,7 +111,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
   );
 
   // Calculate `colSpan` for each cell in the row
-  const calculateColSpan = React.useCallback<GridColumnSpanning['unstable_calculateColSpan']>(
+  const calculateColSpan = React.useCallback<GridColumnSpanningApi['unstable_calculateColSpan']>(
     ({ rowId, minFirstColumn, maxLastColumn }) => {
       const visibleColumns = apiRef.current.getVisibleColumns();
 
@@ -133,7 +132,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     [apiRef, calculateCellColSpan],
   );
 
-  const columnSpanningApi: GridColumnSpanning = {
+  const columnSpanningApi: GridColumnSpanningApi = {
     unstable_getCellColSpanInfo: getCellColSpanInfo,
     unstable_calculateColSpan: calculateColSpan,
   };

@@ -1,9 +1,11 @@
 import { GridColumnIndex, GridCellColSpanInfo } from '../gridColumnSpanning';
 import { GridRowId } from '../gridRows';
+
 /**
  * The Column Spanning API interface that is available in the grid `apiRef`.
  */
-export interface GridColumnSpanning {
+
+export interface GridColumnSpanningApi {
   /**
    * Returns cell colSpan info.
    * @param {GridRowId} rowId The row id
