@@ -13,7 +13,7 @@ type GridStateApiUntyped = {
 };
 
 /**
- * The api of `DataGridPro`.
+ * The api of `DataGridPremium`.
  * TODO: Do not redefine manually the pro features
  */
 export interface GridApiPremium

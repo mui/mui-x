@@ -13,7 +13,7 @@ import {
 } from '../models/dataGridPremiumProps';
 
 /**
- * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
+ * The default values of `DataGridPremiumPropsWithDefaultValue` to inject in the props of DataGridPremium.
  */
 export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDefaultValue = {
   ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,

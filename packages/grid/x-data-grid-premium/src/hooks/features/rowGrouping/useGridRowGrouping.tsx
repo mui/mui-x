@@ -44,7 +44,6 @@ export const rowGroupingStateInitializer: GridStateInitializer<
 });
 
 /**
- * Only available in DataGridPro
  * @requires useGridColumns (state, method) - can be after, async only
  * @requires useGridRows (state, method) - can be after, async only
  * @requires useGridParamsApi (method) - can be after, async only

@@ -108,7 +108,6 @@ export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
 });
 
 /**
- * Only available in DataGridPro
  * @requires useGridColumns (method, event)
  * TODO: improve experience for last column
  */

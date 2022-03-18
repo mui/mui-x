@@ -5,14 +5,14 @@ import {
 import type { GridRowGroupingState, GridRowGroupingInitialState } from '../hooks';
 
 /**
- * The state of `DataGridPro`.
+ * The state of `DataGridPremium`.
  */
 export interface GridStatePremium extends GridStatePro {
   rowGrouping: GridRowGroupingState;
 }
 
 /**
- * The initial state of `DataGridPro`.
+ * The initial state of `DataGridPremium`.
  */
 export interface GridInitialStatePremium extends GridInitialStatePro {
   rowGrouping?: GridRowGroupingInitialState;
