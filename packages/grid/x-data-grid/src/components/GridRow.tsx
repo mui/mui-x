@@ -53,12 +53,12 @@ type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
   isLastVisible: boolean;
-  isRowDraggable: boolean;
+  isDraggable: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, isLastVisible, classes, isRowDraggable } = ownerState;
+  const { editable, editing, selected, isLastVisible, classes, isDraggable } = ownerState;
   const slots = {
     root: [
       'row',
@@ -66,7 +66,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       editable && 'row--editable',
       editing && 'row--editing',
       isLastVisible && 'row--lastVisible',
-      isRowDraggable && 'row--draggable',
+      isDraggable && 'row--draggable',
     ],
   };
 
@@ -120,7 +120,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   };
 
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
-  const isRowDraggable = !rootProps.disableRowReorder && !sortModel.length && treeDepth === 1;
+  const isDraggable = !rootProps.disableRowReorder && !sortModel.length && treeDepth === 1;
 
   const ownerState = {
     selected,
@@ -128,7 +128,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
     editable: rootProps.editMode === GridEditModes.Row,
-    isRowDraggable,
+    isDraggable,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -165,7 +165,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   const draggableEventHandlers = {
     onDragStart: publish(GridEvents.rowDragStart),
-    onDragEnter: publish(GridEvents.rowDragEnter),
     onDragOver: publish(GridEvents.rowDragOver),
     onDragEnd: publish(GridEvents.rowDragEnd),
   };
@@ -335,7 +334,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
       onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
       onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
-      draggable={isRowDraggable}
+      draggable={isDraggable}
       {...draggableEventHandlers}
       {...other}
     >

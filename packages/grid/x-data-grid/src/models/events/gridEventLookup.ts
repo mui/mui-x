@@ -31,10 +31,6 @@ export interface GridRowEventLookup {
     params: GridRowParams;
     event: React.DragEvent<HTMLElement>;
   };
-  rowDragEnter: {
-    params: GridRowParams;
-    event: React.DragEvent<HTMLElement>;
-  };
   rowDragOver: {
     params: GridRowParams;
     event: React.DragEvent<HTMLElement>;

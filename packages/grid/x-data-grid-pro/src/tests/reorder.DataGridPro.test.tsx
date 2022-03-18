@@ -579,7 +579,6 @@ describe('<DataGridPro /> - Reorder', () => {
     fireEvent(dragRow, dragEndRowEvent);
 
     expect(handleDragStart.callCount).to.equal(0);
-    expect(handleDragEnter.callCount).to.equal(0);
     expect(handleDragOver.callCount).to.equal(0);
     expect(handleDragEnd.callCount).to.equal(0);
   });

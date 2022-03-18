@@ -163,7 +163,6 @@ To disable reordering on all rows, set the prop `disableRowReorder={true}`.
 In addition, row reordering emits the following events that can be imported:
 
 - `rowDragStart`: emitted when dragging of a row starts.
-- `rowDragEnter`: emitted when the cursor enters another row while dragging.
 - `rowDragOver`: emitted when dragging a row over another row.
 - `rowDragEnd`: emitted when dragging of a row stops.
 

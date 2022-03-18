@@ -70,10 +70,7 @@ import {
 } from '../hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelCache } from '../hooks/features/detailPanel/useGridDetailPanelCache';
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
-import {
-  useGridRowReorder,
-  rowReorderStateInitializer,
-} from '../hooks/features/rowReorder/useGridRowReorder';
+import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -110,7 +107,6 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);
-  useGridInitializeState(rowReorderStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 

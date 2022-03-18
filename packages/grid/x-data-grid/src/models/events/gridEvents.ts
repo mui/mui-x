@@ -131,12 +131,6 @@ enum GridEvents {
    */
   rowDragOver = 'rowDragOver',
   /**
-   * Fired when the dragged row enters a valid drop target.
-   * It's mapped to the `dragend` DOM event.
-   * @ignore - do not document.
-   */
-  rowDragEnter = 'rowDragEnter',
-  /**
    * Fired when the dragging of a row ends.
    * @ignore - do not document.
    */
