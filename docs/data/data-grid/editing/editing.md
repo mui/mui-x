@@ -51,7 +51,7 @@ Users can start editing a cell (or row if `editMode="row"`) with any of the foll
   apiRef.current.startCellEditMode({ id: 1, field: 'name' });
   ```
 
-- Calling `apiRef.current.startRowEditMode` passing the ID of the row (only available if `editMode="row"`).
+- Calling `apiRef.current.startRowEditMode` passing the ID of the row (only available if `editMode="row"`)
 
   ```tsx
   apiRef.current.startRowEditMode({ id: 1 });
