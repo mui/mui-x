@@ -153,17 +153,35 @@ For more details on these options, please visit the [`csvOptions` api page](/api
 ### Modify the grid style
 
 By default, the printed grid is equivalent to printing a page containing only the grid.
-To modify style such as colors in print render, you can either use media selector `@media print` in your components.
-Or you can use `pageStyle` property of `printOptions`.
+To modify the styles used for printing, such as colors, you can either use the `@media print` media query or the `pageStyle` property of `printOptions`.
 
 For example, if the grid is in dark mode, the text color will be inappropriate for printing (too light).
-A solution is to override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity).
+
+With media query, you have to start your `sx` object with `@media print` key, such that all the style inside are only applied when printing.
 
 ```jsx
-<GridToolbarExport
-  printOptions={{
-    pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
+<DataGrid
+  sx={{
+    "@media print": {
+      ".MuiDataGrid-main": { color: 'rgba(0, 0, 0, 0.87)' }
+    }
   }}
+  {/* ... */}
+/>
+```
+
+With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity).
+
+```jsx
+<DataGrid
+  componentsProps={{
+    GridToolbar: {
+      printOptions:{
+        pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
+      }
+    }
+  }}
+  {/* ... */}
 />
 ```
 
