@@ -35,7 +35,7 @@ const GridPanelWrapperRoot = styled('div', {
 
 const isEnabled = () => true;
 
-interface GridPanelWrapperProps
+export interface GridPanelWrapperProps
   extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
     MUIStyledCommonProps<Theme> {}
 
