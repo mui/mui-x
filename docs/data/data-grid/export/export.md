@@ -185,6 +185,10 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
+> ⚠️ Due to the fact that the Print export relies on the usage of an `iframe` to prepare and only alow for the data grid to be printed and not the entire page there is a limitation around the usage of `X-Frame-Options`.
+>
+> In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN`
+
 ## 🚧 Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
