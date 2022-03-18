@@ -77,7 +77,7 @@ export const useGridScroll = (
             rowId,
             params.colIndex,
           );
-          if (cellColSpanInfo && !cellColSpanInfo.collapsedByColSpan) {
+          if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
             cellWidth = cellColSpanInfo.cellProps.width;
           }
         }

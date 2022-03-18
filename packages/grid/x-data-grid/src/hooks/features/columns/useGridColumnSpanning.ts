@@ -78,7 +78,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
             ] = '1';
 
             setCellColSpanInfo(rowId, columnIndex + j, {
-              collapsedByColSpan: true,
+              spannedByColSpan: true,
               rightVisibleCellIndex: Math.min(columnIndex + colSpan, columnsLength - 1),
               leftVisibleCellIndex: columnIndex,
             });
@@ -87,7 +87,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
       }
 
       setCellColSpanInfo(rowId, columnIndex, {
-        collapsedByColSpan: false,
+        spannedByColSpan: false,
         cellProps: {
           colSpan,
           width,

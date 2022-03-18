@@ -284,7 +284,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       indexRelativeToAllColumns,
     );
 
-    if (cellColSpanInfo && !cellColSpanInfo.collapsedByColSpan) {
+    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
       const { colSpan, width, other: otherCellProps } = cellColSpanInfo.cellProps;
 
       cells.push(

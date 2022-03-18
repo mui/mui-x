@@ -2,12 +2,12 @@ export type GridColumnIndex = number;
 
 export type GridCellColSpanInfo =
   | {
-      collapsedByColSpan: true;
+      spannedByColSpan: true;
       rightVisibleCellIndex: GridColumnIndex;
       leftVisibleCellIndex: GridColumnIndex;
     }
   | {
-      collapsedByColSpan: false;
+      spannedByColSpan: false;
       cellProps: {
         colSpan: number;
         width: number;

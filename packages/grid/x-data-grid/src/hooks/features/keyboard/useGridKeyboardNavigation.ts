@@ -40,7 +40,7 @@ export const useGridKeyboardNavigation = (
       const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
       const rowId = visibleSortedRows[rowIndex]?.id;
       const nextCellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, colIndex);
-      if (nextCellColSpanInfo && nextCellColSpanInfo.collapsedByColSpan) {
+      if (nextCellColSpanInfo && nextCellColSpanInfo.spannedByColSpan) {
         if (closestColResolution === 'left') {
           colIndex = nextCellColSpanInfo.leftVisibleCellIndex;
         } else if (closestColResolution === 'right') {

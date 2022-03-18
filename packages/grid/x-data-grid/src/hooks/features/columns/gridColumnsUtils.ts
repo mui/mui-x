@@ -495,7 +495,7 @@ export function getFirstNonSpannedColumnToRender({
   renderedRows.forEach((row) => {
     const rowId = row.id;
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, firstColumnToRender);
-    if (cellColSpanInfo && cellColSpanInfo.collapsedByColSpan) {
+    if (cellColSpanInfo && cellColSpanInfo.spannedByColSpan) {
       firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
     }
   });
