@@ -4,7 +4,6 @@ import {
   gridPageSelector,
   gridPageCountSelector,
   useGridApiContext,
-  useGridApiRef,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -33,14 +32,11 @@ export default function UseGridSelector() {
     maxColumns: 10,
   });
 
-  const apiRef = useGridApiRef();
-
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
         loading={loading}
-        apiRef={apiRef}
         pagination
         pageSize={10}
         hideFooter

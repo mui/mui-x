@@ -14,7 +14,7 @@ import { GridDragIcon } from '../icons';
 import { GridPanelContent } from './GridPanelContent';
 import { GridPanelFooter } from './GridPanelFooter';
 import { GridPanelHeader } from './GridPanelHeader';
-import { GridPanelWrapper } from './GridPanelWrapper';
+import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -58,7 +58,9 @@ const GridIconButtonRoot = styled(IconButton)({
   justifyContent: 'flex-end',
 });
 
-export function GridColumnsPanel() {
+export interface GridColumnsPanelProps extends GridPanelWrapperProps {}
+
+export function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
@@ -109,7 +111,7 @@ export function GridColumnsPanel() {
   }, []);
 
   return (
-    <GridPanelWrapper>
+    <GridPanelWrapper {...props}>
       <GridPanelHeader>
         <rootProps.components.BaseTextField
           label={apiRef.current.getLocaleText('columnsPanelTextFieldLabel')}

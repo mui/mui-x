@@ -39,6 +39,8 @@ const GridColumnHeadersRoot = styled('div', {
     display: 'flex',
     alignItems: 'center',
     borderBottom: `1px solid ${borderColor}`,
+    borderTopLeftRadius: theme.shape.borderRadius,
+    borderTopRightRadius: theme.shape.borderRadius,
   };
 });
 
