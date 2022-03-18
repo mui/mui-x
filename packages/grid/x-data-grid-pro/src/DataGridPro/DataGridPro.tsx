@@ -221,11 +221,6 @@ DataGridProRaw.propTypes = {
    */
   disableMultipleSelection: PropTypes.bool,
   /**
-   * If `true`, the row grouping is disabled.
-   * @default false
-   */
-  disableRowGrouping: PropTypes.bool,
-  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -255,7 +250,6 @@ DataGridProRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
-    rowGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -641,12 +635,6 @@ DataGridProRaw.propTypes = {
    */
   onRowEditStop: PropTypes.func,
   /**
-   * Callback fired when the row grouping model changes.
-   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowGroupingModelChange: PropTypes.func,
-  /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
@@ -721,16 +709,6 @@ DataGridProRaw.propTypes = {
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
    */
   rowCount: PropTypes.number,
-  /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
-   * @default 'single'
-   */
-  rowGroupingColumnMode: PropTypes.oneOf(['multiple', 'single']),
-  /**
-   * Set the row grouping model of the grid.
-   */
-  rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
   /**
    * Set the height in pixel of a row in the grid.
    * @default 52

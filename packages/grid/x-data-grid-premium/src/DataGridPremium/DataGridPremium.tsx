@@ -256,7 +256,6 @@ DataGridPremiumRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
-    rowGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -373,7 +372,7 @@ DataGridPremiumRaw.propTypes = {
    */
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
-   * The initial state of the DataGridPro.
+   * The initial state of the DataGridPremium.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */

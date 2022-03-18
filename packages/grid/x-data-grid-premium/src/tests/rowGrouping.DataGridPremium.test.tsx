@@ -18,7 +18,6 @@ import {
   GridRowsProp,
   GridRowTreeNodeConfig,
   useGridApiRef,
-  useGridRootProps,
   GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';

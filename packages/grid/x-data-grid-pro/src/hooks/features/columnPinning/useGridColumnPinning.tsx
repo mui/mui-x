@@ -11,7 +11,6 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
   GridEventListener,
-  GridEventLookup,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPreProcessor,
