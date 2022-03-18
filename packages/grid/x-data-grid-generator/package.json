@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@mui/base": "^5.0.0-alpha.71",
-    "@mui/x-data-grid-pro": "5.6.1",
+    "@mui/x-data-grid-premium": "5.6.1",
     "chance": "^1.1.8",
     "clsx": "^1.1.1",
     "lru-cache": "^7.6.0"
