@@ -1,4 +1,4 @@
-import { GridKeyValue } from '@mui/x-data-grid';
+import { GridKeyValue, GridRowParams } from '@mui/x-data-grid';
 import type {
   GridRowScrollEndParams,
   GridGroupingValueGetterParams,
@@ -15,6 +15,22 @@ export interface GridControlledStateEventLookupPro {
 export interface GridEventLookupPro {
   rowsScrollEnd: { params: GridRowScrollEndParams };
   rowOrderChange: { params: GridRowOrderChangeParams };
+  rowDragStart: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragEnter: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragOver: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragEnd: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
 }
 
 export interface GridPreProcessingGroupLookupPro {
