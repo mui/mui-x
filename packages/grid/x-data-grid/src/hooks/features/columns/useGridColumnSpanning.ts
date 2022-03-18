@@ -48,20 +48,29 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
       const columnsLength = visibleColumns.length;
       const column = visibleColumns[columnIndex];
 
-      let width = column.computedWidth;
-
       let colSpan =
         typeof column.colSpan === 'function' ? column.colSpan(cellParams) : column.colSpan;
 
-      if (typeof colSpan === 'undefined') {
+      if (!colSpan) {
         colSpan = 1;
       }
 
-      // Attributes used by `useGridColumnResize` to update column width during resizing.
-      // This makes resizing smooth even for cells with colspan > 1.
-      const dataColSpanAttributes: Record<string, string> = {};
+      if (colSpan === 1) {
+        setCellColSpanInfo(rowId, columnIndex, {
+          spannedByColSpan: false,
+          cellProps: {
+            colSpan: 1,
+            width: column.computedWidth,
+            other: {},
+          },
+        });
+      } else {
+        // Attributes used by `useGridColumnResize` to update column width during resizing.
+        // This makes resizing smooth even for cells with colspan > 1.
+        const dataColSpanAttributes: Record<string, string> = {};
 
-      if (colSpan > 1) {
+        let width = column.computedWidth;
+
         for (let j = 1; j < colSpan; j += 1) {
           const nextColumnIndex = columnIndex + j;
           // Cells should be spanned only within their column section (left-pinned, right-pinned and unpinned).
@@ -83,17 +92,17 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
               leftVisibleCellIndex: columnIndex,
             });
           }
+
+          setCellColSpanInfo(rowId, columnIndex, {
+            spannedByColSpan: false,
+            cellProps: {
+              colSpan,
+              width,
+              other: dataColSpanAttributes,
+            },
+          });
         }
       }
-
-      setCellColSpanInfo(rowId, columnIndex, {
-        spannedByColSpan: false,
-        cellProps: {
-          colSpan,
-          width,
-          other: dataColSpanAttributes,
-        },
-      });
 
       return {
         colSpan,
@@ -101,6 +110,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     },
     [apiRef, setCellColSpanInfo],
   );
+
   // Calculate `colSpan` for each cell in the row
   const calculateColSpan = React.useCallback<GridColumnSpanning['unstable_calculateColSpan']>(
     ({ rowId, minFirstColumn, maxLastColumn }) => {
