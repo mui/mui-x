@@ -9,6 +9,7 @@ type GridStateApiUntyped = {
 
 /**
  * The api of `DataGridPro`.
+ * TODO: Do not redefine manually the pro features
  */
 export interface GridApiPremium
   extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
