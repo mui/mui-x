@@ -25,6 +25,12 @@ export interface GridRowApi {
    */
   setRows: (rows: GridRowModel[]) => void;
   /**
+   * Moves a row from its original position to the position given by `targetIndexPosition`.
+   * @param {GridRowId} rowId The row id
+   * @param {number} targetIndexPosition The new position (0-based).
+   */
+  setRowIndex: (rowId: GridRowId, targetIndexPosition: number) => void;
+  /**
    * Allows to updates, insert and delete rows in a single call.
    * @param {GridRowModelUpdate[]} updates An array of rows with an `action` specifying what to do.
    */

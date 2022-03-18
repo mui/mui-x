@@ -27,6 +27,22 @@ export interface GridRowEventLookup {
   rowDoubleClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   rowMouseEnter: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  rowDragStart: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragEnter: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragOver: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragEnd: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
 }
 
 export interface GridColumnHeaderEventLookup {

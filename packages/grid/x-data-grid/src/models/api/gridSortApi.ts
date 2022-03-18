@@ -56,10 +56,4 @@ export interface GridSortApi {
    * @deprecated Use `getRowIndexRelativeToVisibleRows` instead.
    */
   getRowIndex: (id: GridRowId) => number;
-  /**
-   * Moves a row from its original position to the position given by `targetIndexPosition`.
-   * @param {GridRowId} rowId The row id
-   * @param {number} targetIndexPosition The new position (0-based).
-   */
-  setRowIndex: (rowId: GridRowId, targetIndexPosition: number) => void;
 }

@@ -204,31 +204,6 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const setRowIndex = React.useCallback<GridSortApi['setRowIndex']>(
-    (rowId, targetIndexPosition) => {
-      const allRows = gridSortedRowIdsSelector(apiRef);
-      const oldIndexPosition = allRows.findIndex((row) => row === rowId);
-      if (oldIndexPosition === targetIndexPosition) {
-        return;
-      }
-
-      logger.debug(`Moving row ${rowId} to index ${targetIndexPosition}`);
-
-      const updatedRows = [...allRows];
-      updatedRows.splice(targetIndexPosition, 0, updatedRows.splice(oldIndexPosition, 1)[0]);
-
-      apiRef.current.setState((state) => ({
-        ...state,
-        sorting: {
-          ...state.sorting,
-          sortedRows: updatedRows,
-        },
-      }));
-      apiRef.current.forceUpdate();
-    },
-    [apiRef, logger],
-  );
-
   const getRowIdFromRowIndex = React.useCallback<GridSortApi['getRowIdFromRowIndex']>(
     (index) => apiRef.current.getSortedRowIds()[index],
     [apiRef],
@@ -241,7 +216,6 @@ export const useGridSorting = (
     getRowIndex,
     getRowIdFromRowIndex,
     setSortModel,
-    setRowIndex,
     sortColumn,
     applySorting,
   };

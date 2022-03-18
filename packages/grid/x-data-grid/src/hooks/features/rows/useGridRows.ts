@@ -332,6 +332,32 @@ export const useGridRows = (
     [apiRef],
   );
 
+  const setRowIndex = React.useCallback<GridRowApi['setRowIndex']>(
+    (rowId, targetIndexPosition) => {
+      const allRows = gridRowIdsSelector(apiRef);
+      const oldIndexPosition = allRows.findIndex((row) => row === rowId);
+      if (oldIndexPosition === targetIndexPosition) {
+        return;
+      }
+
+      logger.debug(`Moving row ${rowId} to index ${targetIndexPosition}`);
+
+      const updatedRows = [...allRows];
+      updatedRows.splice(targetIndexPosition, 0, updatedRows.splice(oldIndexPosition, 1)[0]);
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          ids: updatedRows,
+        },
+      }));
+      apiRef.current.forceUpdate();
+      apiRef.current.applySorting();
+    },
+    [apiRef, logger],
+  );
+
   React.useEffect(() => {
     return () => {
       if (rowsCache.current.timeout !== null) {
@@ -400,6 +426,7 @@ export const useGridRows = (
     getRowsCount,
     getAllRowIds,
     setRows,
+    setRowIndex,
     updateRows,
     setRowChildrenExpansion,
     getRowNode,

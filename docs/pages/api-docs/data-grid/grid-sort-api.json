@@ -33,11 +33,6 @@
       "type": "() => GridSortModel"
     },
     {
-      "name": "setRowIndex",
-      "description": "Moves a row from its original position to the position given by <code>targetIndexPosition</code>.",
-      "type": "(rowId: GridRowId, targetIndexPosition: number) => void"
-    },
-    {
       "name": "setSortModel",
       "description": "Updates the sort model and triggers the sorting of rows.",
       "type": "(model: GridSortModel) => void"
