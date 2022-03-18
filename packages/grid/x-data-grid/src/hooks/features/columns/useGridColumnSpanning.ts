@@ -6,7 +6,6 @@ import { GridColumnSpanning } from '../../../models/api/gridColumnSpanning';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
@@ -41,9 +40,10 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
       columnIndex: number;
       rowId: GridRowId;
       cellParams: GridCellParams;
-      renderedColumns: GridStateColDef[];
+      minFirstColumnIndex: number;
+      maxLastColumnIndex: number;
     }) => {
-      const { columnIndex, rowId, cellParams, renderedColumns } = params;
+      const { columnIndex, rowId, cellParams, minFirstColumnIndex, maxLastColumnIndex } = params;
       const visibleColumns = apiRef.current.getVisibleColumns();
       const columnsLength = visibleColumns.length;
       const column = visibleColumns[columnIndex];
@@ -64,9 +64,9 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
       if (colSpan > 1) {
         for (let j = 1; j < colSpan; j += 1) {
           const nextColumnIndex = columnIndex + j;
-          const nextColumn = visibleColumns[nextColumnIndex];
-          // Use `renderedColumns` here to calculate colSpan for pinned and non-pinned columns in isolation.
-          if (renderedColumns.includes(nextColumn)) {
+          // Cells should be spanned only within their column section (left-pinned, right-pinned and unpinned).
+          if (nextColumnIndex >= minFirstColumnIndex && nextColumnIndex < maxLastColumnIndex) {
+            const nextColumn = visibleColumns[nextColumnIndex];
             width += nextColumn.computedWidth;
 
             dataColSpanAttributes[
@@ -105,16 +105,14 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
   const calculateColSpan = React.useCallback<GridColumnSpanning['unstable_calculateColSpan']>(
     ({ rowId, minFirstColumn, maxLastColumn }) => {
       const visibleColumns = apiRef.current.getVisibleColumns();
-      // `minFirstColumn` and `maxLastColumn` are used to make `colSpan` work with pinned columns.
-      // Cells should be spanned only within their column section.
-      const renderedColumns = visibleColumns.slice(minFirstColumn, maxLastColumn);
 
       for (let i = minFirstColumn; i < maxLastColumn; i += 1) {
         const column = visibleColumns[i];
         const cellProps = calculateCellColSpan({
           columnIndex: i,
           rowId,
-          renderedColumns,
+          minFirstColumnIndex: minFirstColumn,
+          maxLastColumnIndex: maxLastColumn,
           cellParams: apiRef.current.getCellParams(rowId, column.field),
         });
         if (cellProps.colSpan > 1) {
