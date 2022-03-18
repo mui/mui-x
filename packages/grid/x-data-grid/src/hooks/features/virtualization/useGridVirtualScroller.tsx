@@ -15,7 +15,7 @@ import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
-import { GridRenderContext } from '../../../models';
+import { GridRenderContext, GridRowEntry } from '../../../models';
 import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
@@ -303,10 +303,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       buffer: rowBuffer,
     });
 
-    const renderedRows = currentPage.rows.slice(firstRowToRender, lastRowToRender);
+    const renderedRows: GridRowEntry[] = [];
 
-    for (let i = 0; i < renderedRows.length; i += 1) {
-      const row = renderedRows[i];
+    for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
+      const row = currentPage.rows[i];
+      renderedRows.push(row);
+
       apiRef.current.unstable_calculateColSpan({ rowId: row.id, minFirstColumn, maxLastColumn });
     }
 
