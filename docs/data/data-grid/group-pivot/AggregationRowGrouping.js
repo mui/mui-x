@@ -1,37 +1,51 @@
-import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
+import { useMovieData } from '@mui/x-data-grid-generator';
 
-const VISIBLE_FIELDS = ['quantity', 'filledQuantity', 'totalPrice'];
+const COLUMNS = [
+  { field: 'title', headerName: 'Title', width: 200, groupable: false },
+  {
+    field: 'company',
+    headerName: 'Company',
+    width: 200,
+  },
+  {
+    field: 'gross',
+    headerName: 'Gross',
+    type: 'number',
+    width: 150,
+    groupable: false,
+    valueFormatter: ({ value }) => {
+      if (!value || typeof value !== 'number') {
+        return value;
+      }
+      return `${value.toLocaleString()}$`;
+    },
+  },
+];
 
-export default function RowGroupingFullExample() {
-  const { data, loading } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 100,
-    maxColumns: 25,
-    visibleFields: VISIBLE_FIELDS,
-  });
-
-  const apiRef = useGridApiRef();
+export default function RowGroupingInitialState() {
+  const data = useMovieData();
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        {...data}
-        apiRef={apiRef}
-        loading={loading}
+        // Avoid scroll while we don't have pinned rows
+        rows={data.rows.slice(0, 4)}
+        columns={COLUMNS}
         disableSelectionOnClick
-        aggregationPosition="inline"
         initialState={{
-          ...data.initialState,
           rowGrouping: {
-            model: ['commodity'],
+            model: ['company'],
           },
           aggregation: {
             model: {
-              quantity: { method: 'sum' },
-              filledQuantity: { method: 'size' },
-              totalPrice: { method: 'max' },
+              gross: { method: 'sum' },
+            },
+          },
+          columns: {
+            columnVisibilityModel: {
+              company: false,
             },
           },
         }}

@@ -1,18 +1,41 @@
 import * as React from 'react';
-import { useMovieData } from '@mui/x-data-grid-generator';
 import { DataGridPro } from '@mui/x-data-grid-pro';
+import { useMovieData } from '@mui/x-data-grid-generator';
 
-export default function AggregationInitialState() {
+const COLUMNS = [
+  { field: 'title', headerName: 'Title', width: 200, groupable: false },
+  {
+    field: 'gross',
+    headerName: 'Gross',
+    type: 'number',
+    width: 150,
+    valueFormatter: ({ value }) => {
+      if (!value || typeof value !== 'number') {
+        return value;
+      }
+      return `${value.toLocaleString()}$`;
+    },
+  },
+];
+
+export default function RowGroupingInitialState() {
   const data = useMovieData();
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        {...data}
+        // Avoid scroll while we don't have pinned rows
+        rows={data.rows.slice(0, 4)}
+        columns={COLUMNS}
         initialState={{
           aggregation: {
-            model: { gross: { method: 'sum' } },
+            model: {
+              gross: { method: 'sum' },
+            },
           },
+        }}
+        experimentalFeatures={{
+          aggregation: true,
         }}
       />
     </div>
