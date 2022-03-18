@@ -12,10 +12,8 @@ export interface GridSortingInitialState {
 
 export type GridSortingModelApplier = (rowList: GridRowTreeNodeConfig[]) => GridRowId[];
 
-export interface GridSortingParams {
+export interface GridSortingMethodParams {
   sortRowList: GridSortingModelApplier | null;
 }
 
-export type GridSortingMethod = (params: GridSortingParams) => GridRowId[];
-
-export type GridSortingMethodCollection = { [methodName: string]: GridSortingMethod };
+export type GridSortingMethodValue = GridRowId[];
