@@ -1,5 +1,5 @@
-import { gridColumnLookupSelector } from '@mui/x-data-grid';
-import { createSelector } from '@mui/x-data-grid/internals';
+import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
+import { createSelector } from '@mui/x-data-grid-pro/internals';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 
 export const gridRowGroupingStateSelector = (state: GridStatePremium) => state.rowGrouping;

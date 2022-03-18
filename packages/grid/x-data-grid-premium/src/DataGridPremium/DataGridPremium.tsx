@@ -9,7 +9,7 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   GridContextProvider,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import {
   Watermark,
   DataGridProVirtualScroller,

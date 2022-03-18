@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommon, useGridApiRef as useCommunityGridApiRef } from '@mui/x-data-grid';
+import { GridApiCommon, useGridApiRef as useCommunityGridApiRef } from '@mui/x-data-grid-pro';
 import { GridApiPremium } from '../../models/gridApiPremium';
 
 export const useGridApiRef = useCommunityGridApiRef as <

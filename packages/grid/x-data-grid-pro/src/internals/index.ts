@@ -1,3 +1,5 @@
+export * from '@mui/x-data-grid/internals';
+
 // TODO: Move to `@mui/x-license-pro`
 export { Watermark } from '../components/Watermark';
 export { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';

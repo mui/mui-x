@@ -6,14 +6,14 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   gridFilteredDescendantCountLookupSelector,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPreProcessor,
   GridPreProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
   isDeepEqual,
-} from '@mui/x-data-grid/internals';
+} from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   gridRowGroupingModelSelector,

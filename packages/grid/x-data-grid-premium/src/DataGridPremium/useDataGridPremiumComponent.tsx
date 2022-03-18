@@ -40,8 +40,6 @@ import {
   preferencePanelStateInitializer,
   rowsMetaStateInitializer,
   selectionStateInitializer,
-} from '@mui/x-data-grid/internals';
-import {
   useGridColumnReorder,
   columnReorderStateInitializer,
   useGridColumnResize,

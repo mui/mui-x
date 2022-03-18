@@ -5,8 +5,8 @@ import {
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
   GridFilterState,
-} from '@mui/x-data-grid';
-import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals';
+} from '@mui/x-data-grid-pro';
+import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';

@@ -8,7 +8,7 @@ import {
   gridRowTreeSelector,
   useFirstRender,
   GridColDef,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPreProcessor,
   GridColumnRawLookup,
@@ -16,8 +16,6 @@ import {
   GridHydrateColumnsValue,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
-} from '@mui/x-data-grid/internals';
-import {
   sortRowTree,
   buildRowTree,
   BuildRowTreeGroupingCriteria,

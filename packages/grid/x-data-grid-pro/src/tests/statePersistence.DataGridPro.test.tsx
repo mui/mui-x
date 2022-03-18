@@ -3,7 +3,6 @@ import {
   DataGridPro,
   DataGridProProps,
   GridApi,
-  gridClasses,
   GridColDef,
   GridInitialState,
   GridPreferencePanelsValue,

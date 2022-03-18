@@ -9,7 +9,7 @@ import {
   getDataGridUtilityClass,
   GridEvents,
   GridRenderCellParams,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';

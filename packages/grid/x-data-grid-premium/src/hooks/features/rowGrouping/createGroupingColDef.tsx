@@ -5,9 +5,9 @@ import {
   GridStateColDef,
   GridComparatorFn,
   GridRenderCellParams,
-} from '@mui/x-data-grid';
-import { GridColumnRawLookup } from '@mui/x-data-grid/internals';
-import { GridGroupingColDefOverride } from '@mui/x-data-grid-pro';
+  GridGroupingColDefOverride,
+} from '@mui/x-data-grid-pro';
+import { GridColumnRawLookup } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColumnLeafCell';

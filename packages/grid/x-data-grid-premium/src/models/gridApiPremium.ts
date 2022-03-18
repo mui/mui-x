@@ -1,5 +1,10 @@
-import { GridApiCommon, GridStateApi, GridStatePersistenceApi } from '@mui/x-data-grid';
-import { GridColumnPinningApi, GridDetailPanelApi } from '@mui/x-data-grid-pro';
+import {
+  GridApiCommon,
+  GridStateApi,
+  GridStatePersistenceApi,
+  GridColumnPinningApi,
+  GridDetailPanelApi,
+} from '@mui/x-data-grid-pro';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi } from '../hooks';
 

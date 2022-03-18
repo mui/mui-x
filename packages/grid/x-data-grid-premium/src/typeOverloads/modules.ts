@@ -1,4 +1,4 @@
-import { GridKeyValue } from '@mui/x-data-grid';
+import { GridKeyValue } from '@mui/x-data-grid-pro';
 import type { GridControlledStateEventLookupPro } from '@mui/x-data-grid-pro/typeOverloads/modules';
 import type { GridGroupingValueGetterParams } from '../models';
 import type { GridRowGroupingModel } from '../hooks';

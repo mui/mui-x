@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { GridCallbackDetails } from '@mui/x-data-grid';
-import {
-  DataGridPropsWithComplexDefaultValueAfterProcessing,
-  DataGridPropsWithComplexDefaultValueBeforeProcessing,
-} from '@mui/x-data-grid/internals';
+import { GridCallbackDetails } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
   DataGridProPropsWithDefaultValue,
   DataGridProPropsWithoutDefaultValue,
+  DataGridPropsWithComplexDefaultValueAfterProcessing,
+  DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridInitialStatePremium } from './gridStatePremium';
