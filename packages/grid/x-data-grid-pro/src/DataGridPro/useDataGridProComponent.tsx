@@ -108,6 +108,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
+  useGridInitializeState(rowReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
   useGridSelection(apiRef, props);
