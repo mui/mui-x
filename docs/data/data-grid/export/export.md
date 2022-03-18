@@ -185,7 +185,7 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠️ Due to the fact that the Print export relies on the usage of an `iframe` to prepare and only print the data grid and not the entire page, there is a limitation around the usage of `X-Frame-Options`.
+> ⚠️ Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
 >
 > In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN`.
 
