@@ -84,7 +84,6 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
             });
           }
         }
-        dataColSpanAttributes['aria-colspan'] = String(colSpan);
       }
 
       setCellColSpanInfo(rowId, columnIndex, {

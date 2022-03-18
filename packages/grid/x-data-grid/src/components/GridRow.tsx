@@ -305,6 +305,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           tabIndex={tabIndex}
           className={clsx(classNames)}
           colSpan={colSpan}
+          aria-colspan={String(colSpan)}
           {...otherCellProps}
           {...rootProps.componentsProps?.cell}
         >
