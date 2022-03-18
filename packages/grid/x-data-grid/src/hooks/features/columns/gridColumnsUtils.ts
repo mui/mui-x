@@ -491,14 +491,20 @@ export function getFirstNonSpannedColumnToRender({
 }) {
   let firstNonSpannedColumnToRender = firstColumnToRender;
   const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
-  const renderedRows = visibleSortedRows.slice(firstRowToRender, lastRowToRender);
-  renderedRows.forEach((row) => {
-    const rowId = row.id;
-    const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, firstColumnToRender);
-    if (cellColSpanInfo && cellColSpanInfo.spannedByColSpan) {
-      firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
+  for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
+    const row = visibleSortedRows[i];
+    if (row) {
+      const rowId = visibleSortedRows[i].id;
+      const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+        rowId,
+        firstColumnToRender,
+      );
+      if (cellColSpanInfo && cellColSpanInfo.spannedByColSpan) {
+        firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
+      }
     }
-  });
+  }
+
   return firstNonSpannedColumnToRender;
 }
 
