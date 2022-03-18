@@ -5,12 +5,14 @@
     "packages/x-license-pro",
     "packages/grid/x-data-grid",
     "packages/grid/x-data-grid-pro",
+    "packages/grid/x-data-grid-premium",
     "packages/grid/x-data-grid-generator"
   ],
   "publishDirectory": {
     "@mui/x-license-pro": "packages/x-license-pro/build",
     "@mui/x-data-grid": "packages/grid/x-data-grid/build",
     "@mui/x-data-grid-pro": "packages/grid/x-data-grid-pro/build",
+    "@mui/x-data-grid-premium": "packages/grid/x-data-grid-premium/build",
     "@mui/x-data-grid-generator": "packages/grid/x-data-grid-generator/build"
   },
   "sandboxes": [

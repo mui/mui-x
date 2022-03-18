@@ -5,6 +5,8 @@
 ## Import
 
 ```js
+import { GridColDef } from '@mui/x-data-grid-premium';
+// or
 import { GridColDef } from '@mui/x-data-grid-pro';
 // or
 import { GridColDef } from '@mui/x-data-grid';

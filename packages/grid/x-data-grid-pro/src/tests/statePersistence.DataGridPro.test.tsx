@@ -1,14 +1,15 @@
 import * as React from 'react';
+// TODO: Split tests for row grouping inside a new `statePersistence.DataGridPremium.test.tsx`
 import {
-  DataGridPro,
-  DataGridProProps,
+  DataGridPremium,
+  DataGridPremiumProps,
   GridApi,
   GridColDef,
   GridInitialState,
   GridPreferencePanelsValue,
   GridRowsProp,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
@@ -81,17 +82,17 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
 };
 
-describe('<DataGridPro /> - State Persistence', () => {
+describe('<DataGridPremium /> - State Persistence', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) => {
+  const TestCase = (props: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'>) => {
     apiRef = useGridApiRef();
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro
+        <DataGridPremium
           rows={rows}
           columns={columns}
           pagination
@@ -99,7 +100,6 @@ describe('<DataGridPro /> - State Persistence', () => {
           apiRef={apiRef}
           disableVirtualization
           rowsPerPageOptions={[100, 1]}
-          experimentalFeatures={{ rowGrouping: true }} // To enable the `rowGroupingModel in export / restore
           {...props}
           initialState={{
             ...props.initialState,
@@ -219,7 +219,7 @@ describe('<DataGridPro /> - State Persistence', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
+            <DataGridPremium
               rows={rows}
               columns={[
                 {

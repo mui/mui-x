@@ -21,10 +21,8 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   treeData: false,
   defaultGroupingExpansionDepth: 0,
   disableColumnPinning: false,
-  disableRowGrouping: false,
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
-  rowGroupingColumnMode: 'single',
   getDetailPanelHeight: () => 500,
 };
 
@@ -58,8 +56,6 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
     () => ({
       ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
       ...themedProps,
-      disableRowGrouping:
-        themedProps.disableRowGrouping || !themedProps.experimentalFeatures?.rowGrouping,
       localeText,
       components,
       signature: 'DataGridPro',

@@ -14,13 +14,13 @@ import {
   GridStateInitializer,
   isDeepEqual,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
   gridRowGroupingStateSelector,
 } from './gridRowGroupingSelector';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   getRowGroupingFieldFromGroupingCriteria,
   ROW_GROUPING_STRATEGY,
@@ -31,10 +31,10 @@ import {
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
 import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
-import { GridInitialStatePro } from '../../../models/gridStatePro';
+import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
-  Pick<DataGridProProcessedProps, 'rowGroupingModel' | 'initialState'>
+  Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
 > = (state, props) => ({
   ...state,
   rowGrouping: {
@@ -48,12 +48,11 @@ export const rowGroupingStateInitializer: GridStateInitializer<
  * @requires useGridColumns (state, method) - can be after, async only
  * @requires useGridRows (state, method) - can be after, async only
  * @requires useGridParamsApi (method) - can be after, async only
- * TODO: Move the the Premium plan once available and remove the `experimentalFeatures.rowGrouping` flag
  */
 export const useGridRowGrouping = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridApiPremium>,
   props: Pick<
-    DataGridProProcessedProps,
+    DataGridPremiumProcessedProps,
     | 'initialState'
     | 'rowGroupingModel'
     | 'onRowGroupingModelChange'
@@ -197,7 +196,7 @@ export const useGridRowGrouping = (
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
-    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
+    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePremium>) => {
       if (props.disableRowGrouping) {
         return params;
       }

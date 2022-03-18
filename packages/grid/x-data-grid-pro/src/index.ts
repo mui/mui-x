@@ -15,5 +15,7 @@ export * from './hooks';
 export * from './models';
 export * from './components';
 
+export type { DataGridProProps, GridExperimentalProFeatures } from './models/dataGridProProps';
+
 export { useGridApiContext, useGridApiRef, useGridRootProps } from './typeOverloads/reexports';
 export type { GridApiRef, GridApi, GridInitialState, GridState } from './typeOverloads/reexports';

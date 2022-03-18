@@ -1,4 +1,4 @@
-import { GridColumns, GridRowModel } from '@mui/x-data-grid-pro';
+import { GridColumns, GridRowModel } from '@mui/x-data-grid-premium';
 
 type Movie = {
   id: number;
