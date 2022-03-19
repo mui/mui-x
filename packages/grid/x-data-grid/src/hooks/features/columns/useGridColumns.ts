@@ -193,8 +193,6 @@ export function useGridColumns(
         keepOnlyColumnsToUpsert: false,
       });
       setGridColumnsState(columnsState);
-      // previousColumnsProp.current = columns;
-      // previousColumnTypesProp.current = columnTypes;
     },
     [apiRef, setGridColumnsState, columnTypes],
   );
