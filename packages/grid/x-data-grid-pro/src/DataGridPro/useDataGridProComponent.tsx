@@ -17,8 +17,12 @@ import {
   useGridPagination,
   paginationStateInitializer,
   useGridPreferencesPanel,
-  useGridEditing,
+  useGridEditing_new,
+  useGridEditing_old,
+  editingStateInitializer_old,
+  editingStateInitializer_new,
   useGridRows,
+  useGridRowsPreProcessors,
   rowsStateInitializer,
   useGridRowsMeta,
   useGridParamsApi,
@@ -32,7 +36,6 @@ import {
   useGridSelectionPreProcessors,
   columnMenuStateInitializer,
   densityStateInitializer,
-  editingStateInitializer,
   focusStateInitializer,
   preferencePanelStateInitializer,
   rowsMetaStateInitializer,
@@ -84,20 +87,27 @@ export const useDataGridProComponent = (
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
-  useGridColumnPinningPreProcessors(apiRef, props); // Must be the last because it changes the order of the columns.
+  // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
+  // Because it changes the order of the columns.
+  useGridColumnPinningPreProcessors(apiRef, props);
+  useGridRowsPreProcessors(apiRef);
 
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
   useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
-  useGridInitializeState(rowGroupingStateInitializer, apiRef, props); // FIXME Call in the same relative position that useGridRowGrouping is called
   useGridInitializeState(columnsStateInitializer, apiRef, props);
-  useGridRowGrouping(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
-  useGridTreeData(apiRef, props); // FIXME Needs to be called before the rows state initialization because it registers a rows group builder
   useGridInitializeState(rowsStateInitializer, apiRef, props);
-  useGridInitializeState(editingStateInitializer, apiRef, props);
+  useGridInitializeState(
+    props.experimentalFeatures?.newEditingApi
+      ? editingStateInitializer_new
+      : editingStateInitializer_old,
+    apiRef,
+    props,
+  );
   useGridInitializeState(focusStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
@@ -109,6 +119,8 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
+  useGridRowGrouping(apiRef, props);
+  useGridTreeData(apiRef);
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
@@ -116,7 +128,12 @@ export const useDataGridProComponent = (
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridDetailPanelCache(apiRef, props);
+
+  const useGridEditing = props.experimentalFeatures?.newEditingApi
+    ? useGridEditing_new
+    : useGridEditing_old;
   useGridEditing(apiRef, props);
+
   useGridFocus(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef);

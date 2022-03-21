@@ -6,11 +6,8 @@ export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHe
 
 export { useGridRegisterPreProcessor } from '../hooks/core/preProcessing';
 export type { GridPreProcessor } from '../hooks/core/preProcessing';
-export type {
-  GridRowGroupingPreProcessing,
-  GridRowGroupParams,
-  GridRowGroupingResult,
-} from '../hooks/core/rowGroupsPreProcessing';
+export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
+export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
@@ -23,16 +20,13 @@ export { useGridColumns, columnsStateInitializer } from '../hooks/features/colum
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
+  GridHydrateColumnsValue,
 } from '../hooks/features/columns/gridColumnsInterfaces';
 export { useGridDensity, densityStateInitializer } from '../hooks/features/density/useGridDensity';
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
-export { useGridRegisterFilteringMethod } from '../hooks/features/filter/useGridRegisterFilteringMethod';
-export type {
-  GridFilteringMethod,
-  GridAggregatedFilterItemApplier,
-} from '../hooks/features/filter/gridFilterState';
+export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
@@ -44,8 +38,20 @@ export {
   useGridPreferencesPanel,
   preferencePanelStateInitializer,
 } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
-export { useGridEditing, editingStateInitializer } from '../hooks/features/editRows/useGridEditing';
+export {
+  useGridEditing as useGridEditing_new,
+  editingStateInitializer as editingStateInitializer_new,
+} from '../hooks/features/editRows/useGridEditing.new';
+export {
+  useGridEditing as useGridEditing_old,
+  editingStateInitializer as editingStateInitializer_old,
+} from '../hooks/features/editRows/useGridEditing.old';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
+export type {
+  GridRowTreeCreationParams,
+  GridRowTreeCreationValue,
+} from '../hooks/features/rows/gridRowsState';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export {
@@ -54,11 +60,7 @@ export {
 } from '../hooks/features/selection/useGridSelection';
 export { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
-export { useGridRegisterSortingMethod } from '../hooks/features/sorting/useGridRegisterSortingMethod';
-export type {
-  GridSortingMethod,
-  GridSortingModelApplier,
-} from '../hooks/features/sorting/gridSortingState';
+export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
 export { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
@@ -86,3 +88,5 @@ export { createSelector } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual } from '../utils/utils';
+
+export type { GridApiCommunity } from '../models/api/gridApiCommunity';
