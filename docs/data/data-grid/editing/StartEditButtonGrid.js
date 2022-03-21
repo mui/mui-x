@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -10,7 +10,8 @@ import {
 } from '@mui/x-data-grid-generator';
 
 function EditToolbar(props) {
-  const { selectedCellParams, apiRef, setSelectedCellParams } = props;
+  const apiRef = useGridApiContext();
+  const { selectedCellParams, setSelectedCellParams } = props;
 
   const handleClick = async () => {
     if (!selectedCellParams) {
@@ -18,14 +19,10 @@ function EditToolbar(props) {
     }
     const { id, field, cellMode } = selectedCellParams;
     if (cellMode === 'edit') {
-      // Wait for the validation to run
-      const isValid = await apiRef.current.commitCellChange({ id, field });
-      if (isValid) {
-        apiRef.current.setCellMode(id, field, 'view');
-        setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
-      }
+      apiRef.current.stopCellEditMode({ id, field });
+      setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
     } else {
-      apiRef.current.setCellMode(id, field, 'edit');
+      apiRef.current.startCellEditMode({ id, field });
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
     }
   };
@@ -57,59 +54,43 @@ function EditToolbar(props) {
 }
 
 EditToolbar.propTypes = {
-  apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
-  }).isRequired,
   selectedCellParams: PropTypes.any,
   setSelectedCellParams: PropTypes.func.isRequired,
 };
 
 export default function StartEditButtonGrid() {
-  const apiRef = useGridApiRef();
   const [selectedCellParams, setSelectedCellParams] = React.useState(null);
 
   const handleCellClick = React.useCallback((params) => {
     setSelectedCellParams(params);
   }, []);
 
-  const handleDoubleCellClick = React.useCallback((params, event) => {
+  const handleCellEditStart = (params, event) => {
     event.defaultMuiPrevented = true;
-  }, []);
+  };
 
-  // Prevent from rolling back on escape
-  const handleCellKeyDown = React.useCallback((params, event) => {
-    if (['Escape', 'Delete', 'Backspace', 'Enter'].includes(event.key)) {
-      event.defaultMuiPrevented = true;
-    }
-  }, []);
-
-  // Prevent from committing on focus out
-  const handleCellFocusOut = React.useCallback((params, event) => {
-    if (params.cellMode === 'edit' && event) {
-      event.defaultMuiPrevented = true;
-    }
-  }, []);
+  const handleCellEditStop = (params, event) => {
+    event.defaultMuiPrevented = true;
+  };
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
-        apiRef={apiRef}
         onCellClick={handleCellClick}
-        onCellDoubleClick={handleDoubleCellClick}
-        onCellFocusOut={handleCellFocusOut}
-        onCellKeyDown={handleCellKeyDown}
+        onCellEditStart={handleCellEditStart}
+        onCellEditStop={handleCellEditStop}
         components={{
           Toolbar: EditToolbar,
         }}
         componentsProps={{
           toolbar: {
             selectedCellParams,
-            apiRef,
             setSelectedCellParams,
           },
         }}
+        experimentalFeatures={{ newEditingApi: true }}
       />
     </div>
   );

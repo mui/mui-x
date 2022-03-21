@@ -16,7 +16,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridNewRowEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridEditingStateSelector } from './gridEditRowsSelector';
+import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
 import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
@@ -138,6 +138,24 @@ export const useGridRowEditing = (
           reason = GridRowEditStopReasons.escapeKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridRowEditStopReasons.enterKeyDown;
+        } else if (event.key === 'Tab') {
+          const columnFields = gridColumnFieldsSelector(apiRef).filter((field) =>
+            apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
+          );
+
+          if (event.shiftKey) {
+            if (params.field === columnFields[0]) {
+              // Exit if user pressed Shift+Tab on the first field
+              reason = GridRowEditStopReasons.shiftTabKeyDown;
+            }
+          } else if (params.field === columnFields[columnFields.length - 1]) {
+            // Exit if user pressed Tab on the last field
+            reason = GridRowEditStopReasons.tabKeyDown;
+          }
+
+          if (reason) {
+            event.preventDefault(); // Prevent going to the next element in the tab sequence
+          }
         }
 
         if (reason) {
@@ -194,7 +212,7 @@ export const useGridRowEditing = (
         reason === GridRowEditStopReasons.enterKeyDown ? field : undefined;
 
       let ignoreModifications = reason === 'escapeKeyDown';
-      const editingState = gridEditingStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
       if (!ignoreModifications) {
         // The user wants to stop editing the cell but we can't wait for the props to be processed.
         // In this case, discard the modifications if any field is processing its props.
@@ -228,7 +246,7 @@ export const useGridRowEditing = (
       if (props.editMode === GridEditModes.Cell) {
         return GridRowModes.View;
       }
-      const editingState = gridEditingStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
       const isEditing = editingState[id] && Object.keys(editingState[id]).length > 0;
       return isEditing ? GridRowModes.Edit : GridRowModes.View;
     },
@@ -311,75 +329,74 @@ export const useGridRowEditing = (
   );
 
   const stopRowEditMode = React.useCallback<GridNewRowEditingApi['stopRowEditMode']>(
-    async (params) => {
+    (params) => {
       const { id, ignoreModifications, fieldFromRowBelowToFocus } = params;
 
       throwIfNotInMode(id, GridRowModes.Edit);
 
       apiRef.current.unstable_runPendingEditCellValueMutation(id);
 
-      let canUpdate = true;
-
-      if (!ignoreModifications) {
-        const editingState = gridEditingStateSelector(apiRef.current.state);
-        const row = apiRef.current.getRow(id)!;
-
-        const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
-          (fieldProps) => fieldProps.isProcessingProps,
-        );
-
-        if (isSomeFieldProcessingProps) {
-          return false;
+      const updateFocusedCellIfNeeded = () => {
+        if (fieldFromRowBelowToFocus) {
+          // TODO Don't fire event and set focus manually here
+          apiRef.current.publishEvent(
+            GridEvents.cellNavigationKeyDown,
+            apiRef.current.getCellParams(id, fieldFromRowBelowToFocus),
+            { key: 'Enter', preventDefault: () => {} } as any,
+          );
         }
+      };
 
-        const hasSomeFieldWithError = Object.values(editingState[id]).some(
-          (fieldProps) => fieldProps.error,
-        );
+      if (ignoreModifications) {
+        updateFocusedCellIfNeeded();
+        updateOrDeleteRowState(id, null);
+        return;
+      }
 
-        if (hasSomeFieldWithError) {
-          return false;
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const row = apiRef.current.getRow(id)!;
+
+      const isSomeFieldProcessingProps = Object.values(editingState[id]).some(
+        (fieldProps) => fieldProps.isProcessingProps,
+      );
+
+      if (isSomeFieldProcessingProps) {
+        return;
+      }
+
+      const hasSomeFieldWithError = Object.values(editingState[id]).some(
+        (fieldProps) => fieldProps.error,
+      );
+
+      if (hasSomeFieldWithError) {
+        return;
+      }
+
+      let rowUpdate = { ...row };
+
+      Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
+        const column = apiRef.current.getColumn(field);
+        if (column.valueSetter) {
+          rowUpdate = column.valueSetter({
+            value: fieldProps.value,
+            row: rowUpdate,
+          });
+        } else {
+          rowUpdate[field] = fieldProps.value;
         }
+      });
 
-        let rowUpdate = { ...row };
-
-        Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
-          const column = apiRef.current.getColumn(field);
-          if (column.valueSetter) {
-            rowUpdate = column.valueSetter({
-              value: fieldProps.value,
-              row: rowUpdate,
-            });
-          } else {
-            rowUpdate[field] = fieldProps.value;
-          }
+      if (processRowUpdate) {
+        Promise.resolve(processRowUpdate(rowUpdate, row)).then((finalRowUpdate) => {
+          apiRef.current.updateRows([finalRowUpdate]);
+          updateFocusedCellIfNeeded();
+          updateOrDeleteRowState(id, null);
         });
-
-        if (processRowUpdate) {
-          try {
-            rowUpdate = await Promise.resolve(processRowUpdate(rowUpdate, row));
-          } catch {
-            canUpdate = false;
-          }
-        }
-
+      } else {
         apiRef.current.updateRows([rowUpdate]);
+        updateFocusedCellIfNeeded();
+        updateOrDeleteRowState(id, null);
       }
-
-      if (fieldFromRowBelowToFocus) {
-        // TODO Don't fire event and set focus manually here
-        apiRef.current.publishEvent(
-          GridEvents.cellNavigationKeyDown,
-          apiRef.current.getCellParams(id, fieldFromRowBelowToFocus),
-          { key: 'Enter', preventDefault: () => {} } as any,
-        );
-      }
-
-      if (!canUpdate) {
-        return false;
-      }
-
-      updateOrDeleteRowState(id, null);
-      return true;
     },
     [apiRef, processRowUpdate, throwIfNotInMode, updateOrDeleteRowState],
   );
@@ -400,7 +417,7 @@ export const useGridRowEditing = (
         parsedValue = column.valueParser(value, apiRef.current.getCellParams(id, field));
       }
 
-      let editingState = gridEditingStateSelector(apiRef.current.state);
+      let editingState = gridEditRowsStateSelector(apiRef.current.state);
       let newProps = { ...editingState[id][field], value: parsedValue };
 
       if (!column.preProcessEditCellProps) {
@@ -434,7 +451,7 @@ export const useGridRowEditing = (
               return;
             }
 
-            editingState = gridEditingStateSelector(apiRef.current.state);
+            editingState = gridEditRowsStateSelector(apiRef.current.state);
             processedProps = { ...processedProps, isProcessingProps: false };
             // We don't reuse the value from the props pre-processing because when the
             // promise resolves it may be already outdated. The only exception to this rule
@@ -461,7 +478,7 @@ export const useGridRowEditing = (
           fieldProps = { ...fieldProps, isProcessingProps: true };
           updateOrDeleteFieldState(id, thisField, fieldProps);
 
-          editingState = gridEditingStateSelector(apiRef.current.state);
+          editingState = gridEditRowsStateSelector(apiRef.current.state);
           const { [thisField]: ignoredField, ...otherFieldsProps } = editingState[id];
 
           const promise = Promise.resolve(
@@ -489,7 +506,7 @@ export const useGridRowEditing = (
 
         Promise.all(promises).then(() => {
           if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
-            editingState = gridEditingStateSelector(apiRef.current.state);
+            editingState = gridEditRowsStateSelector(apiRef.current.state);
             resolve(!editingState[id][field].error);
           } else {
             resolve(false);

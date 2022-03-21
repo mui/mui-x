@@ -1,3 +1,8 @@
 <StyledBox>
-  <DataGridPro apiRef={apiRef} rows={rows} columns={columns} editMode="row" />
+  <DataGrid
+    rows={rows}
+    columns={columns}
+    editMode="row"
+    experimentalFeatures={{ newEditingApi: true }}
+  />
 </StyledBox>
