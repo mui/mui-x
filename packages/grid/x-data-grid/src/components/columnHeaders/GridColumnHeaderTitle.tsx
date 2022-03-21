@@ -48,7 +48,7 @@ const ColumnHeaderInnerTitle = React.forwardRef<
 export interface GridColumnHeaderTitleProps {
   label: string;
   columnWidth: number;
-  description?: string;
+  description?: React.ReactNode;
 }
 
 // No React.memo here as if we display the sort icon, we need to recalculate the isOver
@@ -85,7 +85,7 @@ GridColumnHeaderTitle.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   columnWidth: PropTypes.number.isRequired,
-  description: PropTypes.string,
+  description: PropTypes.node,
   label: PropTypes.string.isRequired,
 } as any;
 
