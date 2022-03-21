@@ -1,1 +1,6 @@
-<DataGrid editMode="row" rows={rows} columns={columns} />
+<DataGrid
+  editMode="row"
+  rows={rows}
+  columns={columns}
+  experimentalFeatures={{ newEditingApi: true }}
+/>

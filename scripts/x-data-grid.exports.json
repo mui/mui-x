@@ -166,7 +166,6 @@
   { "name": "GridEditCellValueParams", "kind": "Interface" },
   { "name": "GridEditingApi", "kind": "Interface" },
   { "name": "GridEditingState", "kind": "TypeAlias" },
-  { "name": "gridEditingStateSelector", "kind": "Variable" },
   { "name": "GridEditInputCell", "kind": "Function" },
   { "name": "GridEditMode", "kind": "TypeAlias" },
   { "name": "GridEditModes", "kind": "Enum" },

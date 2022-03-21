@@ -1,16 +1,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import {
-  DataGridPro,
-  GridColumns,
-  GridRowsProp,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
+import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import { randomPrice } from '@mui/x-data-grid-generator';
 
 const StyledBox = styled(Box)(({ theme }) => ({
-  height: 400,
+  height: 300,
   width: '100%',
   '& .MuiDataGrid-cell--editing': {
     backgroundColor: 'rgb(255,215,115, 0.19)',
@@ -53,8 +48,6 @@ const rows: GridRowsProp = [
 ];
 
 export default function ConditionalValidationGrid() {
-  const apiRef = useGridApiRef();
-
   const columns: GridColumns = [
     { field: 'expense', headerName: 'Expense', width: 160, editable: true },
     {
@@ -86,8 +79,7 @@ export default function ConditionalValidationGrid() {
       width: 160,
       editable: true,
       preProcessEditCellProps: (params) => {
-        const editRowsModel = apiRef.current.getEditRowsModel();
-        const isPaidProps = editRowsModel[params.id].isPaid;
+        const isPaidProps = params.otherFieldsProps!.isPaid;
         const hasError = isPaidProps.value && !params.props.value;
         return { ...params.props, error: hasError };
       },
@@ -96,7 +88,12 @@ export default function ConditionalValidationGrid() {
 
   return (
     <StyledBox>
-      <DataGridPro apiRef={apiRef} rows={rows} columns={columns} editMode="row" />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        editMode="row"
+        experimentalFeatures={{ newEditingApi: true }}
+      />
     </StyledBox>
   );
 }
