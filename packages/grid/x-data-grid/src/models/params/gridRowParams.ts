@@ -88,6 +88,8 @@ enum GridRowEditStopReasons {
   rowFocusOut = 'rowFocusOut',
   escapeKeyDown = 'escapeKeyDown',
   enterKeyDown = 'enterKeyDown',
+  tabKeyDown = 'tabKeyDown',
+  shiftTabKeyDown = 'shiftTabKeyDown',
 }
 
 export interface GridRowEditStopParams<R extends GridValidRowModel = any> extends GridRowParams<R> {

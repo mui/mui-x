@@ -209,9 +209,8 @@ export interface GridNewCellEditingApi
    * Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
-   * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
    */
-  stopCellEditMode(params: GridStopCellEditModeParams): Promise<boolean>;
+  stopCellEditMode(params: GridStopCellEditModeParams): void;
   /**
    * Updates the value of a cell being edited.
    * Don't call this method directly, prefer `setEditCellValue`.
@@ -234,9 +233,8 @@ export interface GridNewRowEditingApi
    * Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
-   * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
    */
-  stopRowEditMode(params: GridStopRowEditModeParams): Promise<boolean>;
+  stopRowEditMode(params: GridStopRowEditModeParams): void;
   /**
    * Updates the value of a cell being edited.
    * Don't call this method directly, prefer `setEditCellValue`.

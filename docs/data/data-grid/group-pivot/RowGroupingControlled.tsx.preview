@@ -1,6 +1,5 @@
 <DataGridPro
   {...data}
-  apiRef={apiRef}
   rowGroupingModel={rowGroupingModel}
   onRowGroupingModelChange={(model) => setRowGroupingModel(model)}
   experimentalFeatures={{
