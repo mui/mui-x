@@ -253,6 +253,16 @@ describe('<DataGridPro /> - Cell Editing', () => {
     });
 
     describe('stopCellEditMode', () => {
+      const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
+        const ref = React.useRef<HTMLInputElement>(null);
+        React.useLayoutEffect(() => {
+          if (hasFocus) {
+            ref.current!.focus();
+          }
+        }, [hasFocus]);
+        return <input ref={ref} />;
+      };
+
       it('should throw an error when the cell is not in edit mode', () => {
         render(<TestCase />);
         expect(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })).to.throw(
@@ -370,15 +380,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
 
       it('should move focus to the cell below when cellToFocusAfter=below', async () => {
-        const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
-          const ref = React.useRef<HTMLInputElement>(null);
-          React.useLayoutEffect(() => {
-            if (hasFocus) {
-              ref.current!.focus();
-            }
-          }, [hasFocus]);
-          return <input ref={ref} />;
-        };
         columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(<TestCase />);
 
@@ -393,15 +394,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
 
       it('should move focus to the cell on the right when cellToFocusAfter=right', async () => {
-        const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
-          const ref = React.useRef<HTMLInputElement>(null);
-          React.useLayoutEffect(() => {
-            if (hasFocus) {
-              ref.current!.focus();
-            }
-          }, [hasFocus]);
-          return <input ref={ref} />;
-        };
         columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(
           <TestCase
@@ -425,15 +417,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
 
       it('should move focus to the cell on the left when cellToFocusAfter=left', async () => {
-        const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
-          const ref = React.useRef<HTMLInputElement>(null);
-          React.useLayoutEffect(() => {
-            if (hasFocus) {
-              ref.current!.focus();
-            }
-          }, [hasFocus]);
-          return <input ref={ref} />;
-        };
         columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(
           <TestCase

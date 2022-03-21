@@ -29,7 +29,12 @@ export const useGridCellEditing = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'editMode' | 'processRowUpdate' | 'onCellEditStart' | 'onCellEditStop'
+    | 'editMode'
+    | 'processRowUpdate'
+    | 'onCellEditStart'
+    | 'onCellEditStop'
+    | 'pagination'
+    | 'paginationMode'
   >,
 ) => {
   const { processRowUpdate } = props;
@@ -257,16 +262,7 @@ export const useGridCellEditing = (
 
       const updateFocusedCellIfNeeded = () => {
         if (cellToFocusAfter !== 'none') {
-          // TODO Don't fire event and set focus manually here
-          apiRef.current.publishEvent(
-            GridEvents.cellNavigationKeyDown,
-            apiRef.current.getCellParams(id, field),
-            {
-              key: cellToFocusAfter === 'below' ? 'Enter' : 'Tab',
-              shiftKey: cellToFocusAfter === 'left',
-              preventDefault: () => {},
-            } as any,
-          );
+          apiRef.current.unstable_moveFocusToRelativeCell(id, field, cellToFocusAfter);
         }
       };
 

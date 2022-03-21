@@ -160,7 +160,11 @@ export const useGridRowEditing = (
 
         if (reason) {
           const rowParams = apiRef.current.getRowParams(params.id);
-          const newParams: GridRowEditStopParams = { ...rowParams, reason, field: params.field };
+          const newParams: GridRowEditStopParams = {
+            ...rowParams,
+            reason,
+            field: params.field,
+          };
           apiRef.current.publishEvent(GridEvents.rowEditStop, newParams, event);
         }
       } else if (params.isEditable) {
@@ -208,8 +212,14 @@ export const useGridRowEditing = (
 
       apiRef.current.unstable_runPendingEditCellValueMutation(id);
 
-      const fieldFromRowBelowToFocus =
-        reason === GridRowEditStopReasons.enterKeyDown ? field : undefined;
+      let cellToFocusAfter: 'below' | 'right' | 'left' | 'none' | undefined;
+      if (reason === GridRowEditStopReasons.enterKeyDown) {
+        cellToFocusAfter = 'below';
+      } else if (reason === GridRowEditStopReasons.tabKeyDown) {
+        cellToFocusAfter = 'right';
+      } else if (reason === GridRowEditStopReasons.shiftTabKeyDown) {
+        cellToFocusAfter = 'left';
+      }
 
       let ignoreModifications = reason === 'escapeKeyDown';
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
@@ -221,7 +231,7 @@ export const useGridRowEditing = (
         });
       }
 
-      apiRef.current.stopRowEditMode({ id, ignoreModifications, fieldFromRowBelowToFocus });
+      apiRef.current.stopRowEditMode({ id, ignoreModifications, field, cellToFocusAfter });
     },
     [apiRef],
   );
@@ -330,20 +340,15 @@ export const useGridRowEditing = (
 
   const stopRowEditMode = React.useCallback<GridNewRowEditingApi['stopRowEditMode']>(
     (params) => {
-      const { id, ignoreModifications, fieldFromRowBelowToFocus } = params;
+      const { id, ignoreModifications, field: focusedField, cellToFocusAfter = 'none' } = params;
 
       throwIfNotInMode(id, GridRowModes.Edit);
 
       apiRef.current.unstable_runPendingEditCellValueMutation(id);
 
       const updateFocusedCellIfNeeded = () => {
-        if (fieldFromRowBelowToFocus) {
-          // TODO Don't fire event and set focus manually here
-          apiRef.current.publishEvent(
-            GridEvents.cellNavigationKeyDown,
-            apiRef.current.getCellParams(id, fieldFromRowBelowToFocus),
-            { key: 'Enter', preventDefault: () => {} } as any,
-          );
+        if (cellToFocusAfter !== 'none' && focusedField) {
+          apiRef.current.unstable_moveFocusToRelativeCell(id, focusedField, cellToFocusAfter);
         }
       };
 

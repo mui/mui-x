@@ -192,9 +192,16 @@ interface GridStopRowEditModeParams {
    */
   ignoreModifications?: boolean;
   /**
-   * The field from the row below to move the focus after updating the row.
+   * The field that has focus when the editing is stopped.
+   * Used to calculate which cell to move the focus after finishing editing.
    */
-  fieldFromRowBelowToFocus?: string;
+  field?: string;
+  /**
+   * To which cell to move focus after finishing editing.
+   * Only works if the field is also specified.
+   * @default "none"
+   */
+  cellToFocusAfter?: 'none' | 'below' | 'right' | 'left';
 }
 
 export interface GridNewCellEditingApi

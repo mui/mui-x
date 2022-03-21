@@ -11,6 +11,9 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { gridFocusCellSelector } from './gridFocusStateSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
+import { clamp } from '../../../utils/utils';
 
 export const focusStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -25,7 +28,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
  */
 export const useGridFocus = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'rows'>,
+  props: Pick<DataGridProcessedProps, 'rows' | 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
 
@@ -81,6 +84,50 @@ export const useGridFocus = (
       apiRef.current.forceUpdate();
     },
     [apiRef, logger],
+  );
+
+  const moveFocusToRelativeCell = React.useCallback<
+    GridFocusApi['unstable_moveFocusToRelativeCell']
+  >(
+    (id, field, direction) => {
+      let columnIndexToFocus = apiRef.current.getColumnIndex(field);
+      let rowIndexToFocus = apiRef.current.getRowIndexRelativeToVisibleRows(id);
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+
+      if (direction === 'right') {
+        columnIndexToFocus += 1;
+      } else if (direction === 'left') {
+        columnIndexToFocus -= 1;
+      } else {
+        rowIndexToFocus += 1;
+      }
+
+      if (columnIndexToFocus >= visibleColumns.length) {
+        // Go to next row if we are at the last column
+        rowIndexToFocus += 1;
+        columnIndexToFocus = 0;
+      } else if (columnIndexToFocus < 0) {
+        // Go to previous row if we are at the first column
+        rowIndexToFocus -= 1;
+        columnIndexToFocus = visibleColumns.length - 1;
+      }
+
+      const currentPage = getVisibleRows(apiRef, {
+        pagination: props.pagination,
+        paginationMode: props.paginationMode,
+      });
+
+      rowIndexToFocus = clamp(
+        rowIndexToFocus,
+        currentPage.range!.firstRowIndex,
+        currentPage.range!.lastRowIndex,
+      );
+
+      const rowToFocus = currentPage.rows[rowIndexToFocus];
+      const columnToFocus = visibleColumns[columnIndexToFocus];
+      apiRef.current.setCellFocus(rowToFocus.id, columnToFocus.field);
+    },
+    [apiRef, props.pagination, props.paginationMode],
   );
 
   const handleCellDoubleClick = React.useCallback<GridEventListener<GridEvents.cellDoubleClick>>(
@@ -195,6 +242,7 @@ export const useGridFocus = (
     {
       setCellFocus,
       setColumnHeaderFocus,
+      unstable_moveFocusToRelativeCell: moveFocusToRelativeCell,
     },
     'GridFocusApi',
   );
