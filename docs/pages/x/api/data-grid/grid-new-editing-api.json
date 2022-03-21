@@ -1,0 +1,46 @@
+{
+  "name": "GridNewEditingApi",
+  "description": "",
+  "properties": [
+    {
+      "name": "getCellMode",
+      "description": "Gets the mode of a cell.",
+      "type": "(id: GridRowId, field: string) => GridCellMode"
+    },
+    {
+      "name": "getRowMode",
+      "description": "Gets the mode of a row.",
+      "type": "(id: GridRowId) => GridRowMode"
+    },
+    {
+      "name": "isCellEditable",
+      "description": "Controls if a cell is editable.",
+      "type": "(params: GridCellParams) => boolean"
+    },
+    {
+      "name": "setEditCellValue",
+      "description": "Sets the value of the edit cell.\nCommonly used inside the edit cell component.",
+      "type": "(params: GridEditCellValueParams, event?: MuiBaseEvent) => Promise<boolean> | void"
+    },
+    {
+      "name": "startCellEditMode",
+      "description": "Puts the cell corresponding to the given row id and field into edit mode.",
+      "type": "(params: GridStartCellEditModeParams) => void"
+    },
+    {
+      "name": "startRowEditMode",
+      "description": "Puts the row corresponding to the given id into edit mode.",
+      "type": "(params: GridStartRowEditModeParams) => void"
+    },
+    {
+      "name": "stopCellEditMode",
+      "description": "Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.\nIf <code>params.ignoreModifications</code> is <code>false</code> it will discard the modifications made.",
+      "type": "(params: GridStopCellEditModeParams) => void"
+    },
+    {
+      "name": "stopRowEditMode",
+      "description": "Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.\nIf <code>params.ignoreModifications</code> is <code>false</code> it will discard the modifications made.",
+      "type": "(params: GridStopRowEditModeParams) => void"
+    }
+  ]
+}
