@@ -31,19 +31,19 @@ export const useGridKeyboardNavigation = (
   const currentPage = useGridVisibleRows(apiRef, props);
 
   /**
-   * @colIndex index of the column to focus
-   * @rowIndex index of the row to focus
-   * @closestColResolution Which closest column cell to focus when cell has `colSpan`.
+   * @param {number} colIndex Index of the column to focus
+   * @param {number} rowIndex index of the row to focus
+   * @param {string} closestColumnToUse Which closest column cell to use when the cell is spanned by `colSpan`.
    */
   const goToCell = React.useCallback(
-    (colIndex: number, rowIndex: number, closestColResolution: 'left' | 'right' = 'left') => {
+    (colIndex: number, rowIndex: number, closestColumnToUse: 'left' | 'right' = 'left') => {
       const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
       const rowId = visibleSortedRows[rowIndex]?.id;
       const nextCellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, colIndex);
       if (nextCellColSpanInfo && nextCellColSpanInfo.spannedByColSpan) {
-        if (closestColResolution === 'left') {
+        if (closestColumnToUse === 'left') {
           colIndex = nextCellColSpanInfo.leftVisibleCellIndex;
-        } else if (closestColResolution === 'right') {
+        } else if (closestColumnToUse === 'right') {
           colIndex = nextCellColSpanInfo.rightVisibleCellIndex;
         }
       }
