@@ -49,7 +49,6 @@ export default function RestoreStateInitialState() {
     count: 0,
     initialState: undefined,
   });
-
   const syncState = React.useCallback((newInitialState) => {
     setSavedState((prev) => ({
       ...prev,
