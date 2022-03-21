@@ -1,5 +1,6 @@
-import { GridAggregationFunction, GridValueFormatterParams } from '@mui/x-data-grid-pro';
-import { isNumber } from '@mui/x-data-grid/utils/utils';
+import { GridValueFormatterParams } from '@mui/x-data-grid';
+import { isNumber } from '@mui/x-data-grid/internals';
+import { GridAggregationFunction } from './gridAggregationInterfaces';
 
 const sumAgg: GridAggregationFunction<number> = {
   apply: ({ values }) => {
