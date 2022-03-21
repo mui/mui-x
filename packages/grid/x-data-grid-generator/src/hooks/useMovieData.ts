@@ -7,6 +7,7 @@ type Movie = {
   director: string;
   company: string;
   year: number;
+  imdbRating: number;
   composer: { name: string };
   cinematicUniverse?: string;
 };
@@ -57,6 +58,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'James Cameron',
     company: '20th Century Fox',
     year: 2009,
+    imdbRating: 7.9,
     composer: {
       name: 'James Horner',
     },
@@ -68,6 +70,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Anthony & Joe Russo',
     company: 'Disney Studios',
     year: 2019,
+    imdbRating: 8.4,
     cinematicUniverse: 'Marvel Cinematic Universe',
     composer: {
       name: 'Alan Silvestri',
@@ -80,6 +83,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'James Cameron',
     company: '20th Century Fox',
     year: 1997,
+    imdbRating: 7.9,
     composer: {
       name: 'James Horner',
     },
@@ -91,6 +95,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'J. J. Abrams',
     company: 'Disney Studios',
     year: 2015,
+    imdbRating: 7.9,
     cinematicUniverse: 'Star Wars',
     composer: {
       name: 'John Williams',
@@ -103,6 +108,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Anthony & Joe Russo',
     company: 'Disney Studios',
     year: 2018,
+    imdbRating: 8.5,
     cinematicUniverse: 'Star Wars',
     composer: {
       name: 'Alan Silvestri',
@@ -115,6 +121,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Colin Trevorrow',
     company: 'Universal Pictures',
     year: 2015,
+    imdbRating: 7.0,
     cinematicUniverse: 'Jurassic Park',
     composer: {
       name: 'Michael Giacchino',
@@ -127,6 +134,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Jon Favreau',
     company: 'Disney Studios',
     year: 2019,
+    imdbRating: 6.9,
     composer: {
       name: 'Hans Zimmer',
     },
@@ -138,6 +146,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Joss Whedon',
     company: 'Disney Studios',
     year: 2012,
+    imdbRating: 8.1,
     cinematicUniverse: 'Marvel Cinematic Universe',
     composer: {
       name: 'Alan Silvestri',
@@ -150,6 +159,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'James Wan',
     company: 'Universal Pictures',
     year: 2015,
+    imdbRating: 7.2,
     cinematicUniverse: 'Fast & Furious',
     composer: {
       name: 'Brian Tyler',
@@ -162,6 +172,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Chris Buck & Jennifer Lee',
     company: 'Disney Studios',
     year: 2019,
+    imdbRating: 6.8,
     cinematicUniverse: 'Frozen',
     composer: {
       name: 'Christophe Beck',
@@ -174,6 +185,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Joss Whedon',
     company: 'Disney Studios',
     year: 2015,
+    imdbRating: 7.3,
     cinematicUniverse: 'Marvel Cinematic Universe',
     composer: {
       name: 'Danny Elfman',
@@ -186,6 +198,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Ryan Coogler',
     company: 'Disney Studios',
     year: 2018,
+    imdbRating: 7.3,
     cinematicUniverse: 'Marvel Cinematic Universe',
     composer: {
       name: 'Ludwig Göransson',
@@ -198,6 +211,8 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'David Yates',
     company: 'Warner Bros. Pictures',
     year: 2011,
+    cinematicUniverse: 'Harry Potter',
+    imdbRating: 8.2,
     composer: {
       name: 'Alexandre Desplat',
     },
@@ -209,6 +224,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Rian Johnson',
     company: 'Disney Studios',
     year: 2017,
+    imdbRating: 6.9,
     cinematicUniverse: 'Star Wars',
     composer: {
       name: 'John Williams',
@@ -222,6 +238,7 @@ const ROWS: GridRowModel<Movie>[] = [
     company: 'Universal Pictures',
     year: 2018,
     cinematicUniverse: 'Jurassic Park',
+    imdbRating: 6.2,
     composer: {
       name: 'Michael Giacchino',
     },
@@ -233,6 +250,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Chris Buck & Jennifer Lee',
     company: 'Disney Studios',
     year: 2013,
+    imdbRating: 7.5,
     cinematicUniverse: 'Frozen',
     composer: {
       name: 'Christophe Beck',
@@ -245,6 +263,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Bill Condon',
     company: 'Disney Studios',
     year: 2017,
+    imdbRating: 7.1,
     composer: {
       name: 'Alan Menken',
     },
@@ -256,6 +275,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Brad Bird',
     company: 'Disney Studios',
     year: 2018,
+    imdbRating: 7.6,
     composer: {
       name: 'Michael Giacchino',
     },
@@ -267,6 +287,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'F. Gary Gray',
     company: 'Universal Pictures',
     year: 2017,
+    imdbRating: 6.6,
     cinematicUniverse: 'Fast & Furious',
     composer: {
       name: 'Brian Tyler',
@@ -279,6 +300,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Shane Black',
     company: 'Disney Studios',
     year: 2013,
+    imdbRating: 7.2,
     cinematicUniverse: 'Marvel Cinematic Universe',
     composer: {
       name: 'Brian Tyler',
@@ -291,6 +313,7 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'Pierre Coffin & Kyle Balda',
     company: 'Universal Pictures',
     year: 2015,
+    imdbRating: 6.4,
     composer: {
       name: 'Heitor Pereira',
     },

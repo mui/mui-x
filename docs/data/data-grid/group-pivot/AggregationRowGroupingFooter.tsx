@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const COLUMNS = [
+const COLUMNS: GridColDef[] = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
     field: 'company',
@@ -24,14 +24,16 @@ const COLUMNS = [
   },
 ];
 
-export default function RowGroupingInitialState() {
+export default function AggregationRowGroupingFooter() {
   const data = useMovieData();
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 319, width: '100%' }}>
       <DataGridPro
-        // Avoid scroll while we don't have pinned rows
-        rows={data.rows.slice(0, 4)}
+        // The two following props are here to avoid scroll in the demo while we don't have pinned rows
+        pagination
+        pageSize={4}
+        {...data}
         columns={COLUMNS}
         disableSelectionOnClick
         initialState={{
@@ -40,7 +42,7 @@ export default function RowGroupingInitialState() {
           },
           aggregation: {
             model: {
-              gross: { method: 'sum' },
+              gross: { functionName: 'sum' },
             },
           },
           columns: {

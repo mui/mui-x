@@ -1,11 +1,11 @@
 <DataGridPro
-  // Avoid scroll while we don't have pinned rows
-  rows={data.rows.slice(0, 4)}
+  // The following prop is here to avoid scroll in the demo while we don't have pinned rows
+  rows={data.rows.slice(0, 3)}
   columns={COLUMNS}
   initialState={{
     aggregation: {
       model: {
-        gross: { method: 'sum' },
+        gross: { functionName: 'sum' },
       },
     },
   }}

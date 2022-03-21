@@ -56,7 +56,7 @@ export const useGridAggregationPreProcessors = (
 
           columnsState.lookup[field] = wrapColumnWithAggregation({
             colDef,
-            currentAggregation: aggregationModel[field],
+            aggregationItem: aggregationModel[field],
             apiRef,
             aggregationFunctions: props.aggregationFunctions,
             aggregationPositionRef,

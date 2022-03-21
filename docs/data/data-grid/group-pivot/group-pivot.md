@@ -452,18 +452,43 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 
 ## Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-### Without grouping
+### Set aggregation
 
-Example without row grouping and with aggregated values in a footer row
+#### Initialize the aggregation
 
 {{"demo": "AggregationInitialState.js", "bg": "inline"}}
 
-### With grouping
+#### Controlled aggregation
 
-Example with row grouping and with aggregated values on the group row.
-You can also put the aggregated values on a footer row for each group.
+TODO
 
-{{"demo": "AggregationRowGrouping.js", "bg": "inline"}}
+### Usage with row grouping
+
+#### Footer
+
+Example with row grouping and with aggregated values on a footer row for each group.
+
+{{"demo": "AggregationRowGroupingFooter.js", "bg": "inline"}}
+
+#### Inline
+
+You can also put the aggregated values on the group row itself.
+
+{{"demo": "AggregationRowGroupingInline.js", "bg": "inline"}}
+
+### Custom aggregation function
+
+{{"demo": "AggregationCustomFunction.js", "bg": "inline"}}
+
+### Aggregation with custom rendering
+
+If the column you are aggregating from have a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide whether you want to render your custom UI for it.
+
+This objects contains a `hasCellUnit` which lets you know if the current aggregation has the same unit as the rest of this column's data (for instance, if your column is in `$`, does the aggregated value is also in `$` or is it unit-less)
+
+In the example below, you can see that all the aggregation function are rendered with the rating UI except the `size` one because it is not a valid rating.
+
+{{"demo": "AggregationRenderCell.js", "bg": "inline"}}
 
 ## 🚧 Pivoting [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 

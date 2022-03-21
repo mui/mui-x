@@ -4,8 +4,8 @@ interface GridAggregationParams<V = any> {
   values: V[];
 }
 
-export type GridAggregationFunction<V = any> = {
-  apply: (params: GridAggregationParams<V>) => number;
+export type GridAggregationFunction<V = any, AV = V> = {
+  apply: (params: GridAggregationParams<V>) => AV;
   valueFormatter?: (params: GridValueFormatterParams) => any;
   types: string[];
 
@@ -16,7 +16,7 @@ export type GridAggregationFunction<V = any> = {
 };
 
 export interface GridAggregationItem {
-  method: string;
+  functionName: string;
 }
 
 export type GridAggregationModel = Record<string, GridAggregationItem>;

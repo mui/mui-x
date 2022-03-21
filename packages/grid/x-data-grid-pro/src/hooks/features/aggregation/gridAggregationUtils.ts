@@ -1,11 +1,6 @@
 import * as React from 'react';
-import {
-  GridColDef,
-  GridRowId,
-  gridRowIdsSelector,
-  GridValueFormatterParams,
-} from '@mui/x-data-grid';
-import { GridColumnRawLookup, isNumber } from '@mui/x-data-grid/internals';
+import { GridColDef, GridRowId, gridRowIdsSelector } from '@mui/x-data-grid';
+import { GridColumnRawLookup } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import {
   GridAggregationCellMeta,
@@ -15,146 +10,57 @@ import {
 } from './gridAggregationInterfaces';
 import { GridStatePro } from '../../../models/gridStatePro';
 
-const sumAgg: GridAggregationFunction<number> = {
-  apply: ({ values }) => {
-    let sum = 0;
-    for (let i = 0; i < values.length; i += 1) {
-      sum += values[i];
-    }
+const AGGREGATION_WRAPPABLE_METHODS = [
+  'valueGetter',
+  'valueFormatter',
+  'renderCell',
+  'filterOperators',
+] as const;
 
-    return sum;
-  },
-  types: ['number'],
-};
+type AggregationWrappableMethodName = typeof AGGREGATION_WRAPPABLE_METHODS[number];
 
-const minAgg: GridAggregationFunction<number> = {
-  apply: ({ values }) => {
-    if (values.length === 0) {
-      return Number.NaN;
-    }
-
-    let min: number = +Infinity;
-    for (let i = 0; i < values.length; i += 1) {
-      const value = values[i];
-      if (value < min) {
-        min = value;
-      }
-    }
-
-    return min;
-  },
-  types: ['number'],
-};
-
-const maxAgg: GridAggregationFunction<number> = {
-  apply: ({ values }) => {
-    if (values.length === 0) {
-      return Number.NaN;
-    }
-
-    let max: number = -Infinity;
-    for (let i = 0; i < values.length; i += 1) {
-      const value = values[i];
-      if (value > max) {
-        max = value;
-      }
-    }
-
-    return max;
-  },
-  types: ['number'],
-};
-
-const avgAgg: GridAggregationFunction<number> = {
-  apply: (params) => {
-    if (params.values.length === 0) {
-      return Number.NaN;
-    }
-
-    const sum = sumAgg.apply(params);
-    return sum / params.values.length;
-  },
-  types: ['number'],
-};
-
-const sizeAgg: GridAggregationFunction<number> = {
-  apply: ({ values }) => {
-    return values.length;
-  },
-  valueFormatter: (params: GridValueFormatterParams) => {
-    if (params.value == null || !isNumber(params.value)) {
-      return params.value;
-    }
-
-    return params.value.toLocaleString();
-  },
-  hasCellUnit: false,
-  types: ['number'],
-};
-
-export const GRID_AGGREGATION_FUNCTIONS = {
-  avg: avgAgg,
-  min: minAgg,
-  max: maxAgg,
-  size: sizeAgg,
-  sum: sumAgg,
-};
-
-type AggregationWrappedMethod<M extends Function | undefined> = M & {
+type AggregationWrappedMethod<M extends Function | object> = M & {
   originalMethod?: M;
   isWrappedWithAggregation?: boolean;
 };
 
-export const wrapColumnWithAggregation = ({
-  colDef,
+type AggregationWrappedColDefProperty<M extends AggregationWrappableMethodName> = NonNullable<
+  GridColDef[M]
+> extends Function
+  ? AggregationWrappedMethod<NonNullable<GridColDef[M]>> | undefined
+  : NonNullable<GridColDef[M]> extends object[]
+  ? AggregationWrappedMethod<NonNullable<GridColDef[M]>[number]>[]
+  : never;
+
+const getCellAggregationMode = (id: GridRowId, aggregationPosition: 'inline' | 'footer') => {
+  const isGroup = id.toString().startsWith('auto-generated-row-');
+
+  if (isGroup && aggregationPosition === 'inline') {
+    return 'inline';
+  }
+
+  const isFooter = id.toString().startsWith('auto-generated-group-footer-');
+  if (isFooter && aggregationPosition === 'footer') {
+    return 'footer';
+  }
+
+  return null;
+};
+
+const getWrappedValueGetter = ({
   apiRef,
-  currentAggregation,
-  aggregationFunctions,
-  aggregationPositionRef,
+  valueGetter,
+  aggregationPosition,
+  aggregationFunction,
 }: {
-  colDef: GridColDef;
   apiRef: React.MutableRefObject<GridApiPro>;
-  currentAggregation: GridAggregationItem;
-  aggregationFunctions: Record<string, GridAggregationFunction>;
-  aggregationPositionRef: React.RefObject<'inline' | 'footer'>;
-}) => {
-  const aggregationFunction = aggregationFunctions?.[currentAggregation.method];
-
-  const {
-    valueGetter: originalValueGetter,
-    valueFormatter: originalValueFormatter,
-    renderCell: originalRenderCell,
-  } = colDef;
-
-  if (!aggregationFunction) {
-    throw new Error(`MUI: No aggregation registered with the name ${currentAggregation}`);
-  }
-
-  if (!aggregationFunction.types.includes(colDef.type!)) {
-    throw new Error(
-      `MUI: The current aggregation function is not application to the type "${colDef.type}"`,
-    );
-  }
-
-  const getCellAggregationMode = (id: GridRowId) => {
-    const isGroup = id.toString().startsWith('auto-generated-row-');
-
-    if (isGroup && aggregationPositionRef.current === 'inline') {
-      return 'inline';
-    }
-
-    const isFooter = id.toString().startsWith('auto-generated-group-footer-');
-    if (isFooter && aggregationPositionRef.current === 'footer') {
-      return 'footer';
-    }
-
-    return null;
-  };
-
-  const wrappedValueGetter: AggregationWrappedMethod<GridColDef['valueGetter']> = (params) => {
+  valueGetter: GridColDef['valueGetter'];
+  aggregationPosition: 'inline' | 'footer';
+  aggregationFunction: GridAggregationFunction;
+}): AggregationWrappedColDefProperty<'valueGetter'> => {
+  const wrappedValueGetter: AggregationWrappedColDefProperty<'valueGetter'> = (params) => {
     if (params.rowNode.isAutoGenerated) {
-      const cellAggregationMode = getCellAggregationMode(params.id);
-
+      const cellAggregationMode = getCellAggregationMode(params.id, aggregationPosition);
       if (cellAggregationMode) {
         let rowIds: GridRowId[] | undefined;
         if (cellAggregationMode === 'footer') {
@@ -177,80 +83,209 @@ export const wrapColumnWithAggregation = ({
       }
     }
 
-    if (originalValueGetter) {
-      return originalValueGetter(params);
+    if (valueGetter) {
+      return valueGetter(params);
     }
 
     return params.row[params.field];
   };
 
-  const aggregationMeta: GridAggregationCellMeta = {
-    hasCellUnit: aggregationFunction.hasCellUnit ?? true,
-    name: currentAggregation.method,
-  };
+  wrappedValueGetter.isWrappedWithAggregation = true;
+  wrappedValueGetter.originalMethod = valueGetter;
 
-  const wrappedValueFormatter: AggregationWrappedMethod<GridColDef['valueFormatter']> = (
-    params,
-  ) => {
-    if (params.id != null && aggregationFunction.valueFormatter) {
-      const cellAggregationMode = getCellAggregationMode(params.id);
+  return wrappedValueGetter;
+};
+
+const getWrappedValueFormatter = ({
+  valueFormatter,
+  aggregationPosition,
+  aggregationFunction,
+}: {
+  valueFormatter: GridColDef['valueFormatter'];
+  aggregationPosition: 'inline' | 'footer';
+  aggregationFunction: GridAggregationFunction;
+}): AggregationWrappedColDefProperty<'valueFormatter'> | undefined => {
+  if (!aggregationFunction.valueFormatter) {
+    return valueFormatter;
+  }
+
+  const wrappedValueFormatter: AggregationWrappedColDefProperty<'valueFormatter'> = (params) => {
+    if (params.id != null) {
+      const cellAggregationMode = getCellAggregationMode(params.id, aggregationPosition);
       if (cellAggregationMode) {
-        return aggregationFunction.valueFormatter(params);
+        return aggregationFunction.valueFormatter!(params);
       }
     }
 
-    if (originalValueFormatter) {
-      return originalValueFormatter(params);
+    if (valueFormatter) {
+      return valueFormatter(params);
     }
 
     return params.value;
   };
 
-  const wrappedRenderCell: AggregationWrappedMethod<GridColDef['renderCell']> | undefined =
-    originalRenderCell
-      ? (params) => originalRenderCell({ ...params, aggregation: aggregationMeta })
-      : undefined;
-
-  wrappedValueGetter.isWrappedWithAggregation = true;
-  wrappedValueGetter.originalMethod = originalValueGetter;
   wrappedValueFormatter.isWrappedWithAggregation = true;
-  wrappedValueFormatter.originalMethod = originalValueFormatter;
+  wrappedValueFormatter.originalMethod = valueFormatter;
 
-  if (wrappedRenderCell) {
-    wrappedRenderCell.isWrappedWithAggregation = true;
-    wrappedRenderCell.originalMethod = originalRenderCell;
+  return wrappedValueFormatter;
+};
+
+const getWrappedRenderCell = ({
+  renderCell,
+  aggregationPosition,
+  aggregationFunction,
+  aggregationItem,
+}: {
+  renderCell: GridColDef['renderCell'];
+  aggregationPosition: 'inline' | 'footer';
+  aggregationFunction: GridAggregationFunction;
+  aggregationItem: GridAggregationItem;
+}): AggregationWrappedColDefProperty<'renderCell'> | undefined => {
+  if (!renderCell) {
+    return undefined;
   }
+
+  const aggregationMeta: GridAggregationCellMeta = {
+    hasCellUnit: aggregationFunction.hasCellUnit ?? true,
+    name: aggregationItem.functionName,
+  };
+
+  const wrappedRenderCell: AggregationWrappedColDefProperty<'renderCell'> = (params) => {
+    const cellAggregationMode = getCellAggregationMode(params.id, aggregationPosition);
+    if (cellAggregationMode) {
+      return renderCell({ ...params, aggregation: aggregationMeta });
+    }
+
+    return renderCell(params);
+  };
+  wrappedRenderCell.isWrappedWithAggregation = true;
+  wrappedRenderCell.originalMethod = renderCell;
+
+  return wrappedRenderCell;
+};
+
+const getWrappedFilterOperators = ({
+  filterOperators,
+}: {
+  filterOperators: GridColDef['filterOperators'];
+}): AggregationWrappedColDefProperty<'filterOperators'> => {
+  return filterOperators!.map((operator) => {
+    return {
+      ...operator,
+      getApplyFilterFn: (filterItem, column) => {
+        const originalFn = operator.getApplyFilterFn(filterItem, column);
+        if (!originalFn) {
+          return null;
+        }
+
+        return (params) => {
+          // We only want to filter leaves
+          // TODO: Improve check to only skip aggregation autogenerate rows
+          if (params.rowNode.isAutoGenerated) {
+            return true;
+          }
+
+          return originalFn(params);
+        };
+      },
+    };
+  });
+};
+
+export const wrapColumnWithAggregation = ({
+  colDef,
+  apiRef,
+  aggregationItem,
+  aggregationFunctions,
+  aggregationPositionRef,
+}: {
+  colDef: GridColDef;
+  apiRef: React.MutableRefObject<GridApiPro>;
+  aggregationItem: GridAggregationItem;
+  aggregationFunctions: Record<string, GridAggregationFunction>;
+  aggregationPositionRef: React.MutableRefObject<'inline' | 'footer'>;
+}): GridColDef => {
+  const aggregationFunction = aggregationFunctions?.[aggregationItem.functionName];
+  if (!aggregationFunction) {
+    throw new Error(
+      `MUI: No aggregation registered with the name ${aggregationItem?.functionName}`,
+    );
+  }
+
+  if (!aggregationFunction.types.includes(colDef.type!)) {
+    throw new Error(
+      `MUI: The current aggregation function is not application to the type "${colDef.type}"`,
+    );
+  }
+
+  const aggregationPosition = aggregationPositionRef.current;
 
   return {
     ...colDef,
-    valueGetter: wrappedValueGetter,
-    valueFormatter: wrappedValueFormatter,
-    renderCell: wrappedRenderCell,
+    valueGetter: getWrappedValueGetter({
+      apiRef,
+      valueGetter: colDef.valueGetter,
+      aggregationPosition,
+      aggregationFunction,
+    }),
+    valueFormatter: getWrappedValueFormatter({
+      valueFormatter: colDef.valueFormatter,
+      aggregationPosition,
+      aggregationFunction,
+    }),
+    renderCell: getWrappedRenderCell({
+      renderCell: colDef.renderCell,
+      aggregationPosition,
+      aggregationFunction,
+      aggregationItem,
+    }),
+    filterOperators: getWrappedFilterOperators({
+      filterOperators: colDef.filterOperators,
+    }),
   };
 };
 
 export const unwrapColumnFromAggregation = ({ colDef }: { colDef: GridColDef }) => {
-  const valueGetter = colDef.valueGetter as AggregationWrappedMethod<GridColDef['valueGetter']>;
-  const valueFormatter = colDef.valueFormatter as AggregationWrappedMethod<
-    GridColDef['valueFormatter']
-  >;
-  const renderCell = colDef.renderCell as AggregationWrappedMethod<GridColDef['renderCell']>;
-  if (
-    valueGetter?.isWrappedWithAggregation ||
-    valueFormatter?.isWrappedWithAggregation ||
-    renderCell?.isWrappedWithAggregation
-  ) {
-    return {
-      ...colDef,
-      valueGetter: valueGetter?.isWrappedWithAggregation ? valueGetter.originalMethod : valueGetter,
-      valueFormatter: valueFormatter?.isWrappedWithAggregation
-        ? valueFormatter.originalMethod
-        : valueFormatter,
-      renderCell: renderCell?.isWrappedWithAggregation ? renderCell.originalMethod : renderCell,
-    };
+  let hasUnwrappedSomeProperty = false;
+
+  const unwrappedColDef: GridColDef = { ...colDef };
+
+  AGGREGATION_WRAPPABLE_METHODS.forEach((propertyName) => {
+    const propertyValue = unwrappedColDef[propertyName];
+    if (propertyValue == null) {
+      return;
+    }
+
+    if (Array.isArray(propertyValue)) {
+      let hasUnwrappedSomeSubProperty = false;
+      const unwrappedPropertyValue: any = [];
+
+      propertyValue.forEach((propertySubValue) => {
+        if ((propertySubValue as any).isWrappedWithAggregation) {
+          hasUnwrappedSomeSubProperty = true;
+          unwrappedPropertyValue.push((propertySubValue as any).originalMethod);
+        } else {
+          unwrappedPropertyValue.push(propertySubValue);
+        }
+
+        if (hasUnwrappedSomeSubProperty) {
+          hasUnwrappedSomeProperty = true;
+          unwrappedColDef[propertyName] = unwrappedPropertyValue;
+        }
+      });
+    }
+
+    if ((propertyValue as any)?.isWrappedWithAggregation) {
+      hasUnwrappedSomeProperty = true;
+      unwrappedColDef[propertyName] = (propertyValue as any).originalMethod;
+    }
+  });
+
+  if (!hasUnwrappedSomeProperty) {
+    return colDef;
   }
 
-  return colDef;
+  return unwrappedColDef;
 };
 
 export const getAvailableAggregationFunctions = ({
