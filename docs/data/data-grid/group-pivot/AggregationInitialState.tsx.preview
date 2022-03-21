@@ -1,15 +1,15 @@
 <DataGridPro
-    // Avoid scroll while we don't have pinned rows
-    rows={data.rows.slice(0, 4)}
-    columns={COLUMNS}
-    initialState={{
-        aggregation: {
-            model: {
-                gross: { method: 'sum' }
-            }
-        },
-    }}
-    experimentalFeatures={{
-        aggregation: true,
-    }}
+  // Avoid scroll while we don't have pinned rows
+  rows={data.rows.slice(0, 4)}
+  columns={COLUMNS}
+  initialState={{
+    aggregation: {
+      model: {
+        gross: { method: 'sum' },
+      },
+    },
+  }}
+  experimentalFeatures={{
+    aggregation: true,
+  }}
 />
