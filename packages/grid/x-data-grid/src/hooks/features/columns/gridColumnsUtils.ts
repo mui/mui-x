@@ -380,16 +380,16 @@ export const createColumnsState = ({
       columnsStateWithoutColumnVisibilityModel.all.push(field);
     }
 
-    const validDimensions = COLUMNS_DIMENSION_PROPERTIES.reduce<string[]>((acc, key) => {
-      const value = newColumn[key];
-      return typeof value === 'number' && value !== Infinity ? [...acc, key] : acc;
-    }, []);
+    let hasValidDimension = false;
+    if (!existingState.hasBeenResized) {
+      hasValidDimension = COLUMNS_DIMENSION_PROPERTIES.some((key) => newColumn[key] !== undefined);
+    }
 
     columnsStateWithoutColumnVisibilityModel.lookup[field] = {
       ...existingState,
       hide: newColumn.hide == null ? false : newColumn.hide,
       ...newColumn,
-      hasBeenResized: existingState.hasBeenResized || validDimensions.length > 0,
+      hasBeenResized: existingState.hasBeenResized || hasValidDimension,
     };
   });
 
