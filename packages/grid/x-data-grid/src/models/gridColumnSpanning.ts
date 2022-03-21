@@ -11,6 +11,5 @@ export type GridCellColSpanInfo =
       cellProps: {
         colSpan: number;
         width: number;
-        other?: Record<string, any>;
       };
     };

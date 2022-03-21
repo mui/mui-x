@@ -285,7 +285,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     );
 
     if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
-      const { colSpan, width, other: otherCellProps } = cellColSpanInfo.cellProps;
+      const { colSpan, width } = cellColSpanInfo.cellProps;
 
       cells.push(
         <rootProps.components.Cell
@@ -306,7 +306,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           className={clsx(classNames)}
           colSpan={colSpan}
           aria-colspan={String(colSpan)}
-          {...otherCellProps}
           {...rootProps.componentsProps?.cell}
         >
           {content}

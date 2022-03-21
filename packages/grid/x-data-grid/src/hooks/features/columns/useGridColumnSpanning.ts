@@ -60,14 +60,9 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
           cellProps: {
             colSpan: 1,
             width: column.computedWidth,
-            other: {},
           },
         });
       } else {
-        // Attributes used by `useGridColumnResize` to update column width during resizing.
-        // This makes resizing smooth even for cells with colspan > 1.
-        const dataColSpanAttributes: Record<string, string> = {};
-
         let width = column.computedWidth;
 
         for (let j = 1; j < colSpan; j += 1) {
@@ -76,14 +71,6 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
           if (nextColumnIndex >= minFirstColumnIndex && nextColumnIndex < maxLastColumnIndex) {
             const nextColumn = visibleColumns[nextColumnIndex];
             width += nextColumn.computedWidth;
-
-            dataColSpanAttributes[
-              /**
-               * `.toLowerCase()` is used to avoid React warning when using camelCase field name.
-               * querySelectorAll() still works when querying with camelCase field name.
-               */
-              `data-colspan-allocates-field-${nextColumn.field.toLowerCase()}`
-            ] = '1';
 
             setCellColSpanInfo(rowId, columnIndex + j, {
               spannedByColSpan: true,
@@ -97,7 +84,6 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
             cellProps: {
               colSpan,
               width,
-              other: dataColSpanAttributes,
             },
           });
         }

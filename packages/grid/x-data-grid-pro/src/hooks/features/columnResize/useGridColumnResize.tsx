@@ -120,7 +120,7 @@ export const useGridColumnResize = (
 
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
-  const colCellElementsRef = React.useRef<NodeListOf<Element>>();
+  const colCellElementsRef = React.useRef<Element[]>();
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
@@ -241,7 +241,8 @@ export const useGridColumnResize = (
 
       colCellElementsRef.current = findGridCellElementsFromCol(
         colElementRef.current,
-      ) as NodeListOf<Element>;
+        apiRef.current,
+      );
 
       const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
       doc.body.style.cursor = 'col-resize';
@@ -345,9 +346,7 @@ export const useGridColumnResize = (
       apiRef.current.columnHeadersElementRef?.current!,
       colDef.field,
     ) as HTMLDivElement;
-    colCellElementsRef.current = findGridCellElementsFromCol(
-      colElementRef.current,
-    ) as NodeListOf<Element>;
+    colCellElementsRef.current = findGridCellElementsFromCol(colElementRef.current, apiRef.current);
 
     separatorSide.current = getSeparatorSide(event.target);
 
