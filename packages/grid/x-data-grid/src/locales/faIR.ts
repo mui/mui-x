@@ -127,8 +127,8 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'گروه‌بندی',
-  groupColumn: name => `گروه‌بندی براساس ${name}`,
-  unGroupColumn: name => `لغو گروه‌بندی براساس ${name}`,
+  groupColumn: (name) => `گروه‌بندی براساس ${name}`,
+  unGroupColumn: (name) => `لغو گروه‌بندی براساس ${name}`,
 
   // Master/detail
   expandDetailPanel: 'بازکردن پنل جزئیات',
