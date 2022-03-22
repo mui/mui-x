@@ -18,16 +18,8 @@ npm install @mui/x-data-grid
 yarn add @mui/x-data-grid
 ```
 
-The grid has a peer dependency on one MUI component.
-If you are not already using MUI in your project, you can install it with:
-
-```sh
-// with npm
-npm install @mui/material
-
-// with yarn
-yarn add @mui/material
-```
+> The grid has a peer dependency on `@mui/material`.
+> If you are not already using it in your project, you can install it following the instructions on the [MUI Core documentation](/getting-started/installation/).
 
 ## Quickstart
 
