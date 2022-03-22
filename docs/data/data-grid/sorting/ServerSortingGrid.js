@@ -23,7 +23,7 @@ export default function ServerSortingGrid() {
 
   const handleSortModelChange = React.useCallback((sortModel) => {
     // Here you save the data you need from the sort model
-    setQueryOptions({ sortModel: { ...sortModel } });
+    setQueryOptions({ sortModel: [...sortModel] });
   }, []);
 
   const { isLoading, data } = useQuery(queryOptions);
