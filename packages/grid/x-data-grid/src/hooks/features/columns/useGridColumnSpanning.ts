@@ -47,14 +47,10 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
       const columnsLength = visibleColumns.length;
       const column = visibleColumns[columnIndex];
 
-      let colSpan =
+      const colSpan =
         typeof column.colSpan === 'function' ? column.colSpan(cellParams) : column.colSpan;
 
-      if (!colSpan) {
-        colSpan = 1;
-      }
-
-      if (colSpan === 1) {
+      if (!colSpan || colSpan === 1) {
         setCellColSpanInfo(rowId, columnIndex, {
           spannedByColSpan: false,
           cellProps: {
@@ -62,36 +58,32 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
             width: column.computedWidth,
           },
         });
-      } else {
-        let width = column.computedWidth;
-
-        for (let j = 1; j < colSpan; j += 1) {
-          const nextColumnIndex = columnIndex + j;
-          // Cells should be spanned only within their column section (left-pinned, right-pinned and unpinned).
-          if (nextColumnIndex >= minFirstColumnIndex && nextColumnIndex < maxLastColumnIndex) {
-            const nextColumn = visibleColumns[nextColumnIndex];
-            width += nextColumn.computedWidth;
-
-            setCellColSpanInfo(rowId, columnIndex + j, {
-              spannedByColSpan: true,
-              rightVisibleCellIndex: Math.min(columnIndex + colSpan, columnsLength - 1),
-              leftVisibleCellIndex: columnIndex,
-            });
-          }
-
-          setCellColSpanInfo(rowId, columnIndex, {
-            spannedByColSpan: false,
-            cellProps: {
-              colSpan,
-              width,
-            },
-          });
-        }
+        return { colSpan: 1 };
       }
 
-      return {
-        colSpan,
-      };
+      let width = column.computedWidth;
+
+      for (let j = 1; j < colSpan; j += 1) {
+        const nextColumnIndex = columnIndex + j;
+        // Cells should be spanned only within their column section (left-pinned, right-pinned and unpinned).
+        if (nextColumnIndex >= minFirstColumnIndex && nextColumnIndex < maxLastColumnIndex) {
+          const nextColumn = visibleColumns[nextColumnIndex];
+          width += nextColumn.computedWidth;
+
+          setCellColSpanInfo(rowId, columnIndex + j, {
+            spannedByColSpan: true,
+            rightVisibleCellIndex: Math.min(columnIndex + colSpan, columnsLength - 1),
+            leftVisibleCellIndex: columnIndex,
+          });
+        }
+
+        setCellColSpanInfo(rowId, columnIndex, {
+          spannedByColSpan: false,
+          cellProps: { colSpan, width },
+        });
+      }
+
+      return { colSpan };
     },
     [apiRef, setCellColSpanInfo],
   );
