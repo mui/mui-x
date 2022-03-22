@@ -43,7 +43,7 @@ export default function AggregationRowGroupingInline() {
           },
           aggregation: {
             model: {
-              gross: { functionName: 'sum' },
+              gross: 'sum',
             },
           },
           columns: {

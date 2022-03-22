@@ -23,7 +23,7 @@ import {
 } from './gridGroupingColDefOverride';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridInitialStatePro } from './gridStatePro';
-import type { GridAggregationModel, GridAggregationFunction } from '../hooks/features/aggregation';
+import type { GridAggregationModel, GridAggregationFunction, GridAggregationPosition } from '../hooks/features/aggregation';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -140,7 +140,7 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * TODO: Move to `x-data-grid-premium
    * @default "footer"
    */
-  aggregationPosition: 'footer' | 'inline';
+  aggregationPosition: GridAggregationPosition;
 }
 
 export interface DataGridProPropsWithoutDefaultValue

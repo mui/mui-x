@@ -87,6 +87,10 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
       [apiRef, props],
     );
 
+    if (rowNode.position === 'footer') {
+        return null
+    }
+
     const isSelectable =
       !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
 

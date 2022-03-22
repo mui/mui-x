@@ -42,7 +42,7 @@ export default function AggregationRowGroupingFooter() {
           },
           aggregation: {
             model: {
-              gross: { functionName: 'sum' },
+              gross: 'sum',
             },
           },
           columns: {

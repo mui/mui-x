@@ -96,6 +96,7 @@ export const useGridAggregationPreProcessors = (
           depth: 0,
           groupingKey: null,
           groupingField: null,
+            position: 'footer'
         };
       }
 
@@ -117,6 +118,7 @@ export const useGridAggregationPreProcessors = (
           depth: node.depth + 1,
           groupingKey: null,
           groupingField: null,
+            position: 'footer'
         };
 
         tree[parentId] = {

@@ -53,7 +53,7 @@ export default function AggregationCustomFunction() {
         initialState={{
           aggregation: {
             model: {
-              director: { functionName: 'firstAlphabetical' },
+              director: 'firstAlphabetical',
             },
           },
         }}

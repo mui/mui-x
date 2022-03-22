@@ -15,11 +15,7 @@ export type GridAggregationFunction<V = any, AV = V> = {
   hasCellUnit?: boolean;
 };
 
-export interface GridAggregationItem {
-  functionName: string;
-}
-
-export type GridAggregationModel = Record<string, GridAggregationItem>;
+export type GridAggregationModel = Record<string, string>;
 
 export interface GridAggregationState {
   model: GridAggregationModel;
@@ -37,6 +33,8 @@ export interface GridAggregationApi {
   setAggregationModel: (model: GridAggregationModel) => void;
 }
 
+export type GridAggregationPosition = 'inline' | 'footer'
+
 export interface GridAggregationCellMeta {
   /**
    * If `true`, the current aggregated value has the same unit as the value of the other cells of this row.
@@ -45,5 +43,5 @@ export interface GridAggregationCellMeta {
    * For instance, "size" aggregation has no unit.
    */
   hasCellUnit: boolean;
-  name: string;
+  item: string;
 }

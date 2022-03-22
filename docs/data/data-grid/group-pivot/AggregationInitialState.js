@@ -30,7 +30,7 @@ export default function AggregationInitialState() {
         initialState={{
           aggregation: {
             model: {
-              gross: { functionName: 'sum' },
+              gross: 'sum',
             },
           },
         }}

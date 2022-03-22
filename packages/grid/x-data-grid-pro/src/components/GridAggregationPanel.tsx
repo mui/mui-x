@@ -46,16 +46,16 @@ export const GridAggregationPanel = () => {
   );
 
   const handleChange = (colDef: GridColDef) => (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const functionName = event.target.value || undefined;
+    const item = event.target.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
     let newModel: GridAggregationModel;
-    if (functionName === undefined) {
+    if (item === undefined) {
       const { [colDef.field]: itemToRemove, ...rest } = currentModel;
       newModel = rest;
     } else {
       newModel = {
         ...currentModel,
-        [colDef.field]: { ...currentModel[colDef.field], functionName },
+        [colDef.field]: item,
       };
     }
 
@@ -73,7 +73,7 @@ export const GridAggregationPanel = () => {
                 inputProps={{
                   'aria-label': 'TODO',
                 }}
-                value={aggregationModel[column.definition.field]?.functionName ?? ''}
+                value={aggregationModel[column.definition.field] ?? ''}
                 onChange={handleChange(column.definition)}
                 native
                 size="small"

@@ -5,8 +5,8 @@ import { GridApiPro } from '../../../models/gridApiPro';
 import {
   GridAggregationCellMeta,
   GridAggregationFunction,
-  GridAggregationItem,
   GridAggregationModel,
+  GridAggregationPosition,
 } from './gridAggregationInterfaces';
 import { GridStatePro } from '../../../models/gridStatePro';
 
@@ -32,7 +32,7 @@ type AggregationWrappedColDefProperty<M extends AggregationWrappableMethodName> 
   ? AggregationWrappedMethod<NonNullable<GridColDef[M]>[number]>[]
   : never;
 
-const getCellAggregationMode = (id: GridRowId, aggregationPosition: 'inline' | 'footer') => {
+const getCellAggregationMode = (id: GridRowId, aggregationPosition: GridAggregationPosition): GridAggregationPosition | null => {
   const isGroup = id.toString().startsWith('auto-generated-row-');
 
   if (isGroup && aggregationPosition === 'inline') {
@@ -55,7 +55,7 @@ const getWrappedValueGetter = ({
 }: {
   apiRef: React.MutableRefObject<GridApiPro>;
   valueGetter: GridColDef['valueGetter'];
-  aggregationPosition: 'inline' | 'footer';
+  aggregationPosition: GridAggregationPosition;
   aggregationFunction: GridAggregationFunction;
 }): AggregationWrappedColDefProperty<'valueGetter'> => {
   const wrappedValueGetter: AggregationWrappedColDefProperty<'valueGetter'> = (params) => {
@@ -102,7 +102,7 @@ const getWrappedValueFormatter = ({
   aggregationFunction,
 }: {
   valueFormatter: GridColDef['valueFormatter'];
-  aggregationPosition: 'inline' | 'footer';
+  aggregationPosition: GridAggregationPosition;
   aggregationFunction: GridAggregationFunction;
 }): AggregationWrappedColDefProperty<'valueFormatter'> | undefined => {
   if (!aggregationFunction.valueFormatter) {
@@ -137,9 +137,9 @@ const getWrappedRenderCell = ({
   aggregationItem,
 }: {
   renderCell: GridColDef['renderCell'];
-  aggregationPosition: 'inline' | 'footer';
+  aggregationPosition: GridAggregationPosition;
   aggregationFunction: GridAggregationFunction;
-  aggregationItem: GridAggregationItem;
+  aggregationItem: string;
 }): AggregationWrappedColDefProperty<'renderCell'> | undefined => {
   if (!renderCell) {
     return undefined;
@@ -147,7 +147,7 @@ const getWrappedRenderCell = ({
 
   const aggregationMeta: GridAggregationCellMeta = {
     hasCellUnit: aggregationFunction.hasCellUnit ?? true,
-    name: aggregationItem.functionName,
+    item: aggregationItem,
   };
 
   const wrappedRenderCell: AggregationWrappedColDefProperty<'renderCell'> = (params) => {
@@ -169,7 +169,7 @@ const getWrappedFilterOperators = ({
   aggregationPosition,
 }: {
   filterOperators: GridColDef['filterOperators'];
-  aggregationPosition: 'inline' | 'footer';
+  aggregationPosition: GridAggregationPosition;
 }): AggregationWrappedColDefProperty<'filterOperators'> => {
   return filterOperators!.map((operator) => {
     return {
@@ -203,14 +203,14 @@ export const wrapColumnWithAggregation = ({
 }: {
   colDef: GridColDef;
   apiRef: React.MutableRefObject<GridApiPro>;
-  aggregationItem: GridAggregationItem;
+  aggregationItem: string;
   aggregationFunctions: Record<string, GridAggregationFunction>;
-  aggregationPositionRef: React.MutableRefObject<'inline' | 'footer'>;
+  aggregationPositionRef: React.MutableRefObject<GridAggregationPosition>;
 }): GridColDef => {
-  const aggregationFunction = aggregationFunctions?.[aggregationItem.functionName];
+  const aggregationFunction = aggregationFunctions?.[aggregationItem];
   if (!aggregationFunction) {
     throw new Error(
-      `MUI: No aggregation registered with the name ${aggregationItem?.functionName}`,
+      `MUI: No aggregation registered with the name ${aggregationItem}`,
     );
   }
 
