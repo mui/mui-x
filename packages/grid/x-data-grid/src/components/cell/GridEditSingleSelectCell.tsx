@@ -104,7 +104,11 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
       return;
     }
     if (reason === 'backdropClick' || isEscapeKey(event.key)) {
-      api.setCellMode(id, field, 'view');
+      if (rootProps.experimentalFeatures?.newEditingApi) {
+        api.stopCellEditMode({ id, field, ignoreModifications: true });
+      } else {
+        api.setCellMode(id, field, 'view');
+      }
     }
   };
 

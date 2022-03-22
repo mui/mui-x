@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { GridCellIndexCoordinates, GridScrollParams } from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import { GridColDef } from '../../../models/colDef/gridColDef';
@@ -5,26 +6,20 @@ import {
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
-import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
-import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
-import { GridColumnsRawState } from '../../features/columns/gridColumnsInterfaces';
+import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry } from '../../../models/gridRows';
-
-export type PreProcessorCallback = (value: any, params?: any) => any;
 
 export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
 
 export interface GridPreProcessingGroupLookup {
   hydrateColumns: {
-    value: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+    value: GridHydrateColumnsValue;
   };
   scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
-  columnMenu: { value: JSX.Element[]; context: GridColDef };
-  filteringMethod: { value: GridFilteringMethodCollection };
-  sortingMethod: { value: GridSortingMethodCollection };
+  columnMenu: { value: React.ReactNode[]; context: GridColDef };
   exportState: { value: GridInitialStateCommunity };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;
@@ -54,14 +49,14 @@ export interface GridPreProcessingApi {
    * Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.
    * @param {GridPreProcessingGroup} group The name of the group to bind this pre-processor to.
    * @param {number} id An unique and static identifier of the pre-processor.
-   * @param {PreProcessorCallback} callback The pre-processor to register.
+   * @param {GridPreProcessor} callback The pre-processor to register.
    * @returns {() => void} A function to unregister the pre-processor.
    * @ignore - do not document.
    */
-  unstable_registerPreProcessor: (
+  unstable_registerPreProcessor: <G extends GridPreProcessingGroup>(
     group: GridPreProcessingGroup,
     id: string,
-    callback: PreProcessorCallback,
+    callback: GridPreProcessor<G>,
   ) => () => void;
   /**
    * Apply on the value the pre-processors registered on the given group.
