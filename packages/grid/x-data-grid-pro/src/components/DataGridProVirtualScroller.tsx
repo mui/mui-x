@@ -17,7 +17,6 @@ import {
   GridVirtualScrollerContent,
   GridVirtualScrollerRenderZone,
   useGridVirtualScroller,
-  getBorderColor,
 } from '@mui/x-data-grid/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -62,10 +61,11 @@ type OwnerState = {
   classes: DataGridProProcessedProps['classes'];
   leftPinnedColumns: GridPinnedColumns['left'];
   rightPinnedColumns: GridPinnedColumns['right'];
+  showCellRightBorder: boolean;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, leftPinnedColumns, rightPinnedColumns } = ownerState;
+  const { classes, leftPinnedColumns, rightPinnedColumns, showCellRightBorder } = ownerState;
 
   const slots = {
     leftPinnedColumns: [
@@ -75,6 +75,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     rightPinnedColumns: [
       'pinnedColumns',
       rightPinnedColumns && rightPinnedColumns.length > 0 && 'pinnedColumns--right',
+      showCellRightBorder && 'withBorder',
     ],
     detailPanels: ['detailPanels'],
     detailPanel: ['detailPanel'],
@@ -140,7 +141,8 @@ const VirtualScrollerPinnedColumns = styled('div', {
   ...(ownerState.side === GridPinnedPosition.right && { right: 0, float: 'right' }),
   ...(ownerState.side === GridPinnedPosition.right &&
     ownerState.showCellRightBorder && {
-      borderLeft: `1px solid ${getBorderColor(theme)}`,
+      borderLeftWidth: '1px',
+      borderLeftStyle: 'solid',
     }),
 }));
 
@@ -188,7 +190,12 @@ const DataGridProVirtualScroller = React.forwardRef<
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
 
-  const ownerState = { classes: rootProps.classes, leftPinnedColumns, rightPinnedColumns };
+  const ownerState = {
+    classes: rootProps.classes,
+    leftPinnedColumns,
+    rightPinnedColumns,
+    showCellRightBorder: rootProps.showCellRightBorder,
+  };
   const classes = useUtilityClasses(ownerState);
 
   const {

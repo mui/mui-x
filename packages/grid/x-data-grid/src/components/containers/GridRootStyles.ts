@@ -286,7 +286,11 @@ export const GridRootStyles = styled('div', {
       gridGap: theme.spacing(1),
     },
     [`& .${gridClasses.withBorder}`]: {
-      borderRight: `1px solid ${borderColor}`,
+      borderColor,
+    },
+    [`& .${gridClasses.withRightBorder}`]: {
+      borderRightWidth: '1px',
+      borderRightStyle: 'solid',
     },
     [`& .${gridClasses['cell--textLeft']}`]: {
       justifyContent: 'flex-start',

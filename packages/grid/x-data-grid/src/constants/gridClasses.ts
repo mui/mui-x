@@ -475,6 +475,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'pinnedColumnHeaders--left',
   'pinnedColumnHeaders--right',
   'withBorder',
+  'withRightBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
   'groupingCriteriaCell',
