@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { LicenseInfo } from '@mui/x-license-pro';
-import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
+import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
+import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
   GridErrorHandler,
@@ -11,30 +11,22 @@ import {
   GridContextProvider,
 } from '@mui/x-data-grid-pro';
 import {
-  Watermark,
   DataGridProVirtualScroller,
   DataGridProColumnHeaders,
 } from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import { DataGridPremiumProps } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
+import { getReleaseInfo } from '../utils/releaseInfo';
 
-// This is the package release date. Each package version should update this const
-// automatically when a new version is published on npm.
-let RELEASE_INFO = '__RELEASE_INFO__';
-
-// eslint-disable-next-line no-useless-concat
-if (process.env.NODE_ENV !== 'production' && RELEASE_INFO === '__RELEASE' + '_INFO__') {
-  // eslint-disable-next-line no-underscore-dangle
-  RELEASE_INFO = ponyfillGlobal.__MUI_RELEASE_INFO__;
-}
-
-LicenseInfo.setReleaseInfo(RELEASE_INFO);
+const releaseInfo = getReleaseInfo();
 
 const DataGridPremiumRaw = React.forwardRef<HTMLDivElement, DataGridPremiumProps>(
   function DataGridPremium(inProps, ref) {
     const props = useDataGridPremiumProps(inProps);
     const apiRef = useDataGridPremiumComponent(props.apiRef, props);
+
+    useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
     return (
       <GridContextProvider apiRef={apiRef} props={props}>
@@ -45,7 +37,7 @@ const DataGridPremiumRaw = React.forwardRef<HTMLDivElement, DataGridPremiumProps
               ColumnHeadersComponent={DataGridProColumnHeaders}
               VirtualScrollerComponent={DataGridProVirtualScroller}
             >
-              <Watermark />
+              <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
             </GridBody>
             <GridFooterPlaceholder />
           </GridErrorHandler>

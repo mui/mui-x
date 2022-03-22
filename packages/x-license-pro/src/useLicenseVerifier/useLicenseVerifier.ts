@@ -8,16 +8,37 @@ import {
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
 
-export function useLicenseVerifier(): LicenseStatus {
+export type MuiCommercialPackageName =
+  | 'x-data-grid-pro'
+  | 'x-data-grid-premium'
+  | 'x-date-pickers-pro';
+
+const sharedLicenseStatuses: {
+  [packageName in MuiCommercialPackageName]?: { key: string; status: LicenseStatus };
+} = {};
+
+export function useLicenseVerifier(
+  packageName: MuiCommercialPackageName,
+  releaseInfo: string,
+): LicenseStatus {
   return React.useMemo(() => {
-    const newLicenseStatus = verifyLicense(LicenseInfo.getReleaseInfo(), LicenseInfo.getKey());
-    if (newLicenseStatus === LicenseStatus.Invalid) {
+    const licenseKey = LicenseInfo.getLicenseKey();
+    if (licenseKey && sharedLicenseStatuses[packageName]?.key === licenseKey) {
+      return sharedLicenseStatuses[packageName]!.status;
+    }
+
+    const licenseStatus = verifyLicense(releaseInfo, licenseKey);
+
+    sharedLicenseStatuses[packageName] = { key: licenseStatus, status: licenseStatus };
+
+    if (licenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();
-    } else if (newLicenseStatus === LicenseStatus.NotFound) {
+    } else if (licenseStatus === LicenseStatus.NotFound) {
       showNotFoundLicenseError();
-    } else if (newLicenseStatus === LicenseStatus.Expired) {
+    } else if (licenseStatus === LicenseStatus.Expired) {
       showExpiredLicenseError();
     }
-    return newLicenseStatus;
-  }, []);
+
+    return licenseStatus;
+  }, [packageName, releaseInfo]);
 }
