@@ -321,7 +321,7 @@ export default function RowSelectorPlayground() {
     );
   }, [hasTreeStructure]);
 
-  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [selectedRows, setSelectedRows] = React.useState<string[]>([]);
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [],
   });
