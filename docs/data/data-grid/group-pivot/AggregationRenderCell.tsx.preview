@@ -1,14 +1,14 @@
 <DataGridPro
-    rows={rows}
-    columns={COLUMNS}
-    initialState={{
-        aggregation: {
-            model: {
-                imdbRating: { functionName: 'avg' },
-            },
-        },
-    }}
-    experimentalFeatures={{
-        aggregation: true,
-    }}
+  rows={rows}
+  columns={COLUMNS}
+  initialState={{
+    aggregation: {
+      model: {
+        imdbRating: { functionName: 'avg' },
+      },
+    },
+  }}
+  experimentalFeatures={{
+    aggregation: true,
+  }}
 />
