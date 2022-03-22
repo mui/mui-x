@@ -338,5 +338,17 @@ describe('e2e', () => {
       });
       expect(scrollLeft).not.to.equal(0);
     });
+
+    // https://github.com/mui/mui-x/issues/4190
+    it('should move the focus from left pinned column to the cell in main render zone after pressing Tab during row editing', async () => {
+      await renderFixture('DataGridPro/RowEditingWithPinnedColumns');
+
+      await page.dblclick('[role="cell"][data-field="column0"]');
+      await page.keyboard.down('Tab');
+
+      expect(
+        await page.evaluate(() => (document.activeElement as HTMLInputElement).value),
+      ).to.equal('0-1');
+    });
   });
 });
