@@ -22,6 +22,9 @@ import {
 } from '../DateRangePicker/DateRangePickerView';
 import { ExportedDateRangePickerInputProps } from '../DateRangePicker/DateRangePickerInput';
 import { parseRangeInputValue } from '../internal/utils/date-utils';
+import { getReleaseInfo } from '../internal/utils/releaseInfo';
+
+const releaseInfo = getReleaseInfo();
 
 interface BaseDateRangePickerProps<TDate>
   extends ExportedDateRangePickerViewProps<TDate>,
@@ -103,7 +106,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiStaticDateRangePicker' });
-  useLicenseVerifier();
+  useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
     calendars = 2,

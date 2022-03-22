@@ -20,6 +20,9 @@ import {
   DateRangeValidationError,
 } from '../internal/hooks/validation/useDateRangeValidation';
 import { parseRangeInputValue } from '../internal/utils/date-utils';
+import { getReleaseInfo } from '../internal/utils/releaseInfo';
+
+const releaseInfo = getReleaseInfo();
 
 interface BaseDateRangePickerProps<TDate>
   extends ExportedDateRangePickerViewProps<TDate>,
@@ -101,7 +104,7 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
-  useLicenseVerifier();
+  useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
     calendars = 2,
