@@ -5,7 +5,6 @@ import { GridRowId } from '../../../models/gridRows';
 import { GridColumnSpanningApi } from '../../../models/api/gridColumnSpanning';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../models/events/gridEvents';
-import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
@@ -38,17 +37,18 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     (params: {
       columnIndex: number;
       rowId: GridRowId;
-      cellParams: GridCellParams;
       minFirstColumnIndex: number;
       maxLastColumnIndex: number;
     }) => {
-      const { columnIndex, rowId, cellParams, minFirstColumnIndex, maxLastColumnIndex } = params;
+      const { columnIndex, rowId, minFirstColumnIndex, maxLastColumnIndex } = params;
       const visibleColumns = apiRef.current.getVisibleColumns();
       const columnsLength = visibleColumns.length;
       const column = visibleColumns[columnIndex];
 
       const colSpan =
-        typeof column.colSpan === 'function' ? column.colSpan(cellParams) : column.colSpan;
+        typeof column.colSpan === 'function'
+          ? column.colSpan(apiRef.current.getCellParams(rowId, column.field))
+          : column.colSpan;
 
       if (!colSpan || colSpan === 1) {
         setCellColSpanInfo(rowId, columnIndex, {
@@ -91,23 +91,19 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
   // Calculate `colSpan` for each cell in the row
   const calculateColSpan = React.useCallback<GridColumnSpanningApi['unstable_calculateColSpan']>(
     ({ rowId, minFirstColumn, maxLastColumn }) => {
-      const visibleColumns = apiRef.current.getVisibleColumns();
-
       for (let i = minFirstColumn; i < maxLastColumn; i += 1) {
-        const column = visibleColumns[i];
         const cellProps = calculateCellColSpan({
           columnIndex: i,
           rowId,
           minFirstColumnIndex: minFirstColumn,
           maxLastColumnIndex: maxLastColumn,
-          cellParams: apiRef.current.getCellParams(rowId, column.field),
         });
         if (cellProps.colSpan > 1) {
           i += cellProps.colSpan - 1;
         }
       }
     },
-    [apiRef, calculateCellColSpan],
+    [calculateCellColSpan],
   );
 
   const columnSpanningApi: GridColumnSpanningApi = {
