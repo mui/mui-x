@@ -21,6 +21,38 @@ const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridR
   // @ts-ignore
   return colDef.valueGetter?.(params) || row[field];
 };
+
+const getRowComparator = (
+  sortModel: GridSortModel | undefined,
+  columnsWithDefaultColDef: GridColDef[],
+) => {
+  if (!sortModel) {
+    const comparator = () => 0;
+    return comparator;
+  }
+  const sortOperators = sortModel.map((sortItem) => {
+    const columnField = sortItem.field;
+    const colDef = columnsWithDefaultColDef.find(({ field }) => field === columnField) as any;
+    return {
+      ...sortItem,
+      valueGetter: simplifiedValueGetter(columnField, colDef),
+      sortComparator: colDef.sortComparator,
+    };
+  });
+
+  const comparator = (row1: GridRowModel, row2: GridRowModel) =>
+    sortOperators.reduce((acc, { valueGetter, sort, sortComparator }) => {
+      if (acc !== 0) {
+        return acc;
+      }
+      const v1 = valueGetter(row1);
+      const v2 = valueGetter(row2);
+      return sort === 'desc' ? -1 * sortComparator(v1, v2) : sortComparator(v1, v2);
+    }, 0);
+
+  return comparator;
+};
+
 const getFilteredRows = (
   rows: GridRowModel[],
   filterModel: GridFilterModel | undefined,
@@ -93,7 +125,11 @@ const loadServerRows = (
   let firstRowIndex;
   let lastRowIndex;
 
-  const filteredRows = getFilteredRows(rows, queryOptions.filterModel, columnsWithDefaultColDef);
+  let filteredRows = getFilteredRows(rows, queryOptions.filterModel, columnsWithDefaultColDef);
+
+  const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+  filteredRows = [...filteredRows].sort(rowComparator);
+
   const rowNumber = filteredRows.length;
   if (!pageSize) {
     firstRowIndex = 0;
