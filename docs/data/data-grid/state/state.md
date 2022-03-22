@@ -64,6 +64,14 @@ Some selectors are yet to be documented.
 
 {{"demo": "SelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
+### Row selectors
+
+Rows can be impacted by many features such as sorting, filtering, grouping, or pagination.
+Depending on your use case, you could want to apply the effect of only some features.
+To help you to find the right selector, here is a tool to experiment with row selectors.
+
+{{"demo": "RowSelectorPlayground.js", "bg": "inline", "hideToolbar": true}}
+
 ## Save and restore the state
 
 > ⚠️ This feature isn't implemented yet. It's coming.
