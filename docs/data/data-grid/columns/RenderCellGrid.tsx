@@ -15,6 +15,14 @@ const columns: GridColDef[] = [
           color="primary"
           size="small"
           style={{ marginLeft: 16 }}
+          // Remove button from tab sequence when cell does not have focus
+          tabIndex={params.hasFocus ? 0 : -1}
+          onKeyDown={(event) => {
+            if (event.key === ' ') {
+              // Prevent key navigation when focus is on button
+              event.stopPropagation();
+            }
+          }}
         >
           Open
         </Button>
