@@ -26,6 +26,9 @@ import {
   DateRangePickerViewDesktop,
   ExportedDesktopDateRangeCalendarProps,
 } from './DateRangePickerViewDesktop';
+import { getReleaseInfo } from '../internal/utils/releaseInfo';
+
+const releaseInfo = getReleaseInfo();
 
 type BaseCalendarPropsToReuse<TDate> = Omit<
   ExportedCalendarPickerProps<TDate>,
@@ -224,7 +227,7 @@ export function DateRangePickerView<TDate>(props: DateRangePickerViewProps<TDate
 
   return (
     <div className={className}>
-      <Watermark />
+      <Watermark releaseInfo={releaseInfo} />
       {toShowToolbar && (
         <DateRangePickerToolbar
           date={date}
