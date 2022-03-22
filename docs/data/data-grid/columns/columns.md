@@ -511,8 +511,8 @@ To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECK
 
 ## Column spanning
 
-Each cell takes up the width of one column.
-You can modify this default behavior with column spanning.
+By default, each cell takes up the width of one column.
+You can modify this behavior with column spanning.
 It allows cells to span multiple columns.
 This is very close to the "column spanning" in an HTML `<table>`.
 
@@ -529,12 +529,12 @@ interface GridColDef {
 }
 ```
 
-> When using `colSpan`, sorting and filtering might not work as expected.
+> ⚠ When using `colSpan`, sorting and filtering might not work as expected.
 > Make sure to disable [sorting](/components/data-grid/sorting/#disable-the-sorting) and [filtering](/components/data-grid/filtering/#disable-the-filters) for the column(s) that are affected by `colSpan`.
 
 <!-- markdownlint-disable-next-line MD028 -->
 
-> While [column reorder](/components/data-grid/columns/#column-reorder) works with `colSpan`, disabling it can be useful to avoid confusing grid layout.
+> ⚠ While [column reorder](/components/data-grid/columns/#column-reorder) works with `colSpan`, disabling it can be useful to avoid confusing grid layout.
 
 ### Number signature
 
