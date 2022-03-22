@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLicenseVerifier } from '../useLicenseVerifier';
+import { useLicenseVerifier, MuiCommercialPackageName } from '../useLicenseVerifier';
 import { LicenseStatus } from '../utils/licenseStatus';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
@@ -15,8 +15,14 @@ function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   }
 }
 
-export function Watermark() {
-  const licenseStatus = useLicenseVerifier();
+interface WatermarkProps {
+  packageName: MuiCommercialPackageName;
+  releaseInfo: string;
+}
+
+export function Watermark(props: WatermarkProps) {
+  const { packageName, releaseInfo } = props;
+  const licenseStatus = useLicenseVerifier(packageName, releaseInfo);
 
   if (licenseStatus === LicenseStatus.Valid) {
     return null;

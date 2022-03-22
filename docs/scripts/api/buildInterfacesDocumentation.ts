@@ -43,6 +43,8 @@ const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridCsvExportApi',
   'GridScrollApi',
   'GridEditingApi',
+  'GridOldEditingApi',
+  'GridNewEditingApi',
   'GridRowGroupingApi',
   'GridColumnPinningApi',
   'GridDetailPanelApi',

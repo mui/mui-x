@@ -1,7 +1,0 @@
-<DataGridPro
-  components={{ Toolbar: CustomToolbar }}
-  loading={loading}
-  apiRef={apiRef}
-  pagination
-  {...data}
-/>

@@ -8,17 +8,28 @@ import {
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
 
-let sharedLicenseStatus: LicenseStatus | undefined;
+export type MuiCommercialPackageName =
+  | 'x-data-grid-pro'
+  | 'x-data-grid-premium'
+  | 'x-date-pickers-pro';
 
-export function useLicenseVerifier(): LicenseStatus {
+const sharedLicenseStatuses: {
+  [packageName in MuiCommercialPackageName]?: { key: string; status: LicenseStatus };
+} = {};
+
+export function useLicenseVerifier(
+  packageName: MuiCommercialPackageName,
+  releaseInfo: string,
+): LicenseStatus {
   return React.useMemo(() => {
-    if (sharedLicenseStatus !== undefined) {
-      return sharedLicenseStatus;
+    const licenseKey = LicenseInfo.getLicenseKey();
+    if (licenseKey && sharedLicenseStatuses[packageName]?.key === licenseKey) {
+      return sharedLicenseStatuses[packageName]!.status;
     }
 
-    const licenseStatus = verifyLicense(LicenseInfo.getReleaseInfo(), LicenseInfo.getKey());
+    const licenseStatus = verifyLicense(releaseInfo, licenseKey);
 
-    sharedLicenseStatus = licenseStatus;
+    sharedLicenseStatuses[packageName] = { key: licenseStatus, status: licenseStatus };
 
     if (licenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();
@@ -29,5 +40,5 @@ export function useLicenseVerifier(): LicenseStatus {
     }
 
     return licenseStatus;
-  }, []);
+  }, [packageName, releaseInfo]);
 }

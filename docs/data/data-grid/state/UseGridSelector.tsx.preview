@@ -1,7 +1,6 @@
 <DataGridPro
   {...data}
   loading={loading}
-  apiRef={apiRef}
   pagination
   pageSize={10}
   hideFooter

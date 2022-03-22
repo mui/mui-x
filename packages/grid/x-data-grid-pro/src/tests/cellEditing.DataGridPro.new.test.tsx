@@ -16,6 +16,8 @@ import { getCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { getData } from 'storybook/src/data/data-service';
 
+const nativeSetTimeout = setTimeout;
+
 describe('<DataGridPro /> - Cell Editing', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
@@ -251,20 +253,18 @@ describe('<DataGridPro /> - Cell Editing', () => {
     });
 
     describe('stopCellEditMode', () => {
-      it('should reject when the cell is not in edit mode', async () => {
+      it('should throw an error when the cell is not in edit mode', () => {
         render(<TestCase />);
-        return apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }).catch((error) => {
-          expect(error.message).to.equal(
-            'MUI: The cell with id=0 and field=currencyPair is not in edit mode.',
-          );
-        });
+        expect(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })).to.throw(
+          'MUI: The cell with id=0 and field=currencyPair is not in edit mode.',
+        );
       });
 
       it('should update the row with the new value stored', async () => {
         render(<TestCase />);
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        await apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
         expect(getCell(0, 1).textContent).to.equal('USD GBP');
       });
 
@@ -272,7 +272,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         render(<TestCase />);
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        await apiRef.current.stopCellEditMode({
+        apiRef.current.stopCellEditMode({
           id: 0,
           field: 'currencyPair',
           ignoreModifications: true,
@@ -284,12 +284,11 @@ describe('<DataGridPro /> - Cell Editing', () => {
         columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
           new Promise((resolve) => {
             // Simulates the user stopping the editing while processing the props
-            apiRef.current
-              .stopCellEditMode({
-                id: 0,
-                field: 'currencyPair',
-              })
-              .then(() => resolve(props));
+            apiRef.current.stopCellEditMode({
+              id: 0,
+              field: 'currencyPair',
+            });
+            resolve(props);
           });
         render(<TestCase />);
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
@@ -305,7 +304,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         render(<TestCase />);
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        await apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
         expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
       });
 
@@ -314,7 +313,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        await apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
         expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
       });
 
@@ -323,7 +322,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
         render(<TestCase processRowUpdate={processRowUpdate} />);
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        await apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        await new Promise((resolve) => nativeSetTimeout(resolve));
         expect(processRowUpdate.callCount).to.equal(1);
         expect(getCell(0, 1).textContent).to.equal('USD-GBP');
       });
@@ -333,7 +333,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         render(<TestCase processRowUpdate={processRowUpdate} />);
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        await apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
         expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'USD GBP',
@@ -347,7 +347,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         };
         render(<TestCase processRowUpdate={processRowUpdate} />);
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
-        await apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        expect(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })).to.throw();
         expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
       });
 
@@ -357,7 +357,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         render(<TestCase processRowUpdate={processRowUpdate} />);
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        await apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
         expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'USDGBP',
@@ -384,7 +384,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         expect(getCell(0, 1).querySelector('input')).toHaveFocus();
-        await apiRef.current.stopCellEditMode({
+        apiRef.current.stopCellEditMode({
           id: 0,
           field: 'currencyPair',
           cellToFocusAfter: 'below',
@@ -416,7 +416,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
         expect(getCell(0, 1).querySelector('input')).toHaveFocus();
-        await apiRef.current.stopCellEditMode({
+        apiRef.current.stopCellEditMode({
           id: 0,
           field: 'currencyPair',
           cellToFocusAfter: 'right',
@@ -448,7 +448,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
         apiRef.current.startCellEditMode({ id: 0, field: 'price1M' });
         expect(getCell(0, 2).querySelector('input')).toHaveFocus();
-        await apiRef.current.stopCellEditMode({
+        apiRef.current.stopCellEditMode({
           id: 0,
           field: 'price1M',
           cellToFocusAfter: 'left',
@@ -466,7 +466,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           value: 'USD GBP',
           debounceMs: 100,
         });
-        await apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
         expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
         expect(processRowUpdate.lastCall.args[0].currencyPair).to.equal('USD GBP');
       });

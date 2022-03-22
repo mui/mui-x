@@ -54,7 +54,7 @@ const config: StorybookConfig = {
     });
 
     config.module.rules.push({
-      test: /\.ts$/,
+      test: /\.(ts|tsx)$/,
       loader: 'string-replace-loader',
       options: {
         search: '__RELEASE_INFO__',

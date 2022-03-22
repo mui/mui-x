@@ -4,6 +4,7 @@
   { "name": "LicenseDetails", "kind": "Interface" },
   { "name": "LicenseInfo", "kind": "Class" },
   { "name": "LicenseStatus", "kind": "Enum" },
+  { "name": "MuiCommercialPackageName", "kind": "TypeAlias" },
   { "name": "showExpiredLicenseError", "kind": "Function" },
   { "name": "showInvalidLicenseError", "kind": "Function" },
   { "name": "showNotFoundLicenseError", "kind": "Function" },
