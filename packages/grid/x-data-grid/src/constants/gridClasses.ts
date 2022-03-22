@@ -364,8 +364,13 @@ export interface GridClasses {
   toolbarFilterList: string;
   /**
    * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
+   * Sets border color only.
    */
   withBorder: string;
+  /**
+   * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
+   */
+  withRightBorder: string;
   /**
    * Styles applied to the root of the grouping column of the tree data.
    */

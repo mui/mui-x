@@ -333,6 +333,7 @@
       "toolbarContainer",
       "toolbarFilterList",
       "withBorder",
+      "withRightBorder",
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle"
     ],

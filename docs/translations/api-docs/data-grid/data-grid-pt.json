@@ -465,6 +465,11 @@
       "nodeName": "the toolbar filter list element"
     },
     "withBorder": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.\nSets border color only.",
+      "nodeName": "both the cell and the column header",
+      "conditions": "<code>showColumnRightBorder={true}</code>"
+    },
+    "withRightBorder": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "both the cell and the column header",
       "conditions": "<code>showColumnRightBorder={true}</code>"
