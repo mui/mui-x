@@ -35,6 +35,7 @@ export interface GridCellProps {
   cellMode?: GridCellMode;
   children: React.ReactNode;
   tabIndex: 0 | -1;
+  colSpan?: number;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -100,6 +101,7 @@ function GridCell(props: GridCellProps) {
     showRightBorder,
     extendRowFullWidth,
     row,
+    colSpan,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -219,6 +221,7 @@ function GridCell(props: GridCellProps) {
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
+      aria-colspan={colSpan}
       style={style}
       tabIndex={cellMode === 'view' || !isEditable ? tabIndex : -1}
       onClick={publish(GridEvents.cellClick, onClick)}
@@ -250,6 +253,7 @@ GridCell.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   colIndex: PropTypes.number.isRequired,
+  colSpan: PropTypes.number,
   field: PropTypes.string.isRequired,
   formattedValue: PropTypes.oneOfType([
     PropTypes.instanceOf(Date),

@@ -149,7 +149,7 @@ export const useGridColumnResize = (
       const div = element as HTMLDivElement;
       let finalWidth: `${number}px`;
 
-      if (div.getAttribute('colspan') === '1') {
+      if (div.getAttribute('aria-colspan') === '1') {
         finalWidth = `${newWidth}px`;
       } else {
         // Cell with colspan > 1 cannot be just updated width new width.
