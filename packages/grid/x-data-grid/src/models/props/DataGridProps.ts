@@ -708,4 +708,9 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
     newRow: GridRowModel,
     oldRow: GridRowModel,
   ) => Promise<GridRowModel> | GridRowModel;
+  /**
+   * Callback called when `processRowUpdate` throws an error or rejects.
+   * @param {any} error The error thrown.
+   */
+  onProcessRowUpdateError?: (error: any) => void;
 }

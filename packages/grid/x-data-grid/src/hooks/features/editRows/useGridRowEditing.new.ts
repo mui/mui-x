@@ -32,13 +32,13 @@ export const useGridRowEditing = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'editMode' | 'processRowUpdate' | 'onRowEditStart' | 'onRowEditStop'
+    'editMode' | 'processRowUpdate' | 'onRowEditStart' | 'onRowEditStop' | 'onProcessRowUpdateError'
   >,
 ) => {
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
 
-  const { processRowUpdate } = props;
+  const { processRowUpdate, onProcessRowUpdateError } = props;
 
   const runIfEditModeIsRow =
     <Args extends any[]>(callback: (...args: Args) => void) =>
@@ -387,18 +387,30 @@ export const useGridRowEditing = (
       });
 
       if (processRowUpdate) {
-        Promise.resolve(processRowUpdate(rowUpdate, row)).then((finalRowUpdate) => {
-          apiRef.current.updateRows([finalRowUpdate]);
-          updateFocusedCellIfNeeded();
-          updateOrDeleteRowState(id, null);
-        });
+        const handleError = (errorThrown: any) => {
+          if (onProcessRowUpdateError) {
+            onProcessRowUpdateError(errorThrown);
+          }
+        };
+
+        try {
+          Promise.resolve(processRowUpdate(rowUpdate, row))
+            .then((finalRowUpdate) => {
+              apiRef.current.updateRows([finalRowUpdate]);
+              updateFocusedCellIfNeeded();
+              updateOrDeleteRowState(id, null);
+            })
+            .catch(handleError);
+        } catch (errorThrown) {
+          handleError(errorThrown);
+        }
       } else {
         apiRef.current.updateRows([rowUpdate]);
         updateFocusedCellIfNeeded();
         updateOrDeleteRowState(id, null);
       }
     },
-    [apiRef, processRowUpdate, throwIfNotInMode, updateOrDeleteRowState],
+    [apiRef, onProcessRowUpdateError, processRowUpdate, throwIfNotInMode, updateOrDeleteRowState],
   );
 
   const setRowEditingEditCellValue = React.useCallback<
