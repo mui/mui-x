@@ -120,7 +120,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   };
 
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
-  const isDraggable = !rootProps.disableRowReorder && !sortModel.length && treeDepth === 1;
+  const isDraggable = !!rootProps.enableRowReorder && !sortModel.length && treeDepth === 1;
 
   const ownerState = {
     selected,

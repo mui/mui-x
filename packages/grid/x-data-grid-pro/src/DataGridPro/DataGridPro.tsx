@@ -217,11 +217,6 @@ DataGridProRaw.propTypes = {
    */
   disableRowGrouping: PropTypes.bool,
   /**
-   * If `true`, the reordering of rows is disabled.
-   * @default false
-   */
-  disableRowReorder: PropTypes.bool,
-  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -240,6 +235,11 @@ DataGridProRaw.propTypes = {
    * Set the edit rows model of the grid.
    */
   editRowsModel: PropTypes.object,
+  /**
+   * If `true`, the reordering of rows is enabled.
+   * @default false
+   */
+  enableRowReorder: PropTypes.bool,
   /**
    * An error that will turn the grid into its error state and display the error component.
    */

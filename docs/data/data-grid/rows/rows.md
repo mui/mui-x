@@ -150,15 +150,11 @@ This is very close to the "row spanning" in an HTML `<table>`.
 
 Row reorder is used to rearrange rows by dragging the row with the mouse.
 
-By default, `DataGridPro` allows row reordering by dragging any of the row cells and moving them up or down.
+By default, `DataGridPro` does not allow row reordering. To enable reordering on all rows by dragging any of the row cells and moving them up or down, set the prop `enableRowReorder={true}`.
 
 {{"demo": "RowOrderingGrid.js", "disableAd": true, "bg": "inline"}}
 
 To capture changes in the order of the dragged row use the `onRowOrderChange` callback.
-
-To disable reordering on all rows, set the prop `disableRowReorder={true}`.
-
-{{"demo": "RowOrderingDisabledGrid.js", "disableAd": true, "bg": "inline"}}
 
 In addition, row reordering emits the following events that can be imported:
 

@@ -34,7 +34,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  */
 export const useGridRowReorder = (
   apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'disableRowReorder' | 'onRowOrderChange' | 'classes'>,
+  props: Pick<DataGridProProcessedProps, 'enableRowReorder' | 'onRowOrderChange' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
@@ -55,8 +55,8 @@ export const useGridRowReorder = (
   // TODO: remove sortModel check once row reorder is sorting compatible
   // remove treeDepth once row reorder is tree compatible
   const isRowReorderDisabled = React.useMemo((): boolean => {
-    return props.disableRowReorder || !!sortModel.length || treeDepth !== 1;
-  }, [props.disableRowReorder, sortModel, treeDepth]);
+    return !props.enableRowReorder || !!sortModel.length || treeDepth !== 1;
+  }, [props.enableRowReorder, sortModel, treeDepth]);
 
   const handleDragStart = React.useCallback<GridEventListener<GridEvents.rowDragStart>>(
     (params, event) => {

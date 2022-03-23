@@ -50,7 +50,6 @@
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleSelection": { "type": { "name": "bool" } },
     "disableRowGrouping": { "type": { "name": "bool" } },
-    "disableRowReorder": { "type": { "name": "bool" } },
     "disableSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
@@ -58,6 +57,7 @@
       "default": "\"cell\""
     },
     "editRowsModel": { "type": { "name": "object" } },
+    "enableRowReorder": { "type": { "name": "bool" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
       "type": {

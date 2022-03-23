@@ -408,7 +408,7 @@ describe('<DataGridPro /> - Reorder', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} enableRowReorder />
           </div>
         );
       };
@@ -430,7 +430,7 @@ describe('<DataGridPro /> - Reorder', () => {
       expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
-    it('should keep the order of the rows when dragStart is fired and disableRowReorder=true', () => {
+    it('should keep the order of the rows when dragStart is fired and enableRowReorder=false', () => {
       let apiRef: React.MutableRefObject<GridApi>;
       const rows = [
         { id: 0, brand: 'Nike' },
@@ -444,7 +444,7 @@ describe('<DataGridPro /> - Reorder', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableRowReorder />
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
           </div>
         );
       };
@@ -456,7 +456,7 @@ describe('<DataGridPro /> - Reorder', () => {
       expect(row.classList.contains(gridClasses['row--dragging'])).to.equal(false);
     });
 
-    it('should keep the order of the rows when dragEnd is fired and disableRowReorder=true', () => {
+    it('should keep the order of the rows when dragEnd is fired and enableRowReorder=false', () => {
       let apiRef: React.MutableRefObject<GridApi>;
       const rows = [
         { id: 0, brand: 'Nike' },
@@ -470,7 +470,7 @@ describe('<DataGridPro /> - Reorder', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableRowReorder />
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
           </div>
         );
       };
@@ -502,6 +502,7 @@ describe('<DataGridPro /> - Reorder', () => {
               rows={rows}
               columns={columns}
               onRowOrderChange={handleOnRowOrderChange}
+              enableRowReorder
             />
           </div>
         );
@@ -544,7 +545,7 @@ describe('<DataGridPro /> - Reorder', () => {
           onDragEnd={handleDragEnd}
           style={{ width: 300, height: 300 }}
         >
-          <DataGridPro apiRef={apiRef} {...data} />
+          <DataGridPro apiRef={apiRef} {...data} enableRowReorder />
         </div>
       );
     };

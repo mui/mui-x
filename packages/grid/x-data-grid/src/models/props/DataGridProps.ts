@@ -78,7 +78,7 @@ export type DataGridForcedPropsKey =
   | 'disableMultipleSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
-  | 'disableRowReorder'
+  | 'enableRowReorder'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
@@ -322,11 +322,6 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
-  /**
-   * If `true`, the reordering of rows is disabled.
-   * @default false
-   */
-  disableRowReorder: boolean;
 }
 
 /**
@@ -714,4 +709,9 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
     newRow: GridRowModel,
     oldRow: GridRowModel,
   ) => Promise<GridRowModel> | GridRowModel;
+  /**
+   * If `true`, the reordering of rows is enabled.
+   * @default false
+   */
+  enableRowReorder?: boolean;
 }
