@@ -58,6 +58,8 @@ export const useGridFilter = (
     | 'onFilterModelChange'
     | 'filterMode'
     | 'disableMultipleColumnsFiltering'
+    | 'components'
+    | 'componentsProps'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -248,6 +250,18 @@ export const useGridFilter = (
     [apiRef, props.disableMultipleColumnsFiltering],
   );
 
+  const preferencePanelPreProcessing = React.useCallback<GridPreProcessor<'preferencePanel'>>(
+    (initialValue, value) => {
+      if (value === GridPreferencePanelsValue.filters) {
+        const FilterPanel = props.components.FilterPanel;
+        return <FilterPanel {...props.componentsProps?.filterPanel} />;
+      }
+
+      return initialValue;
+    },
+    [props.components.FilterPanel, props.componentsProps?.filterPanel],
+  );
+
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       if (props.filterMode === GridFeatureModeConstant.client && params.isRowMatchingFilters) {
@@ -276,6 +290,7 @@ export const useGridFilter = (
 
   useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'filtering', flatFilteringMethod);
 
   /**
