@@ -1,8 +1,10 @@
 <DataGridPro
   columns={columns}
   rows={rows}
-  pinnedColumns={{
-    left: ['day'],
+  initialState={{
+    pinnedColumns: {
+      left: ['day'],
+    },
   }}
   autoHeight
   disableExtendRowFullWidth

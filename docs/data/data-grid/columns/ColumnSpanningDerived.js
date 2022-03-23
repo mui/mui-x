@@ -8,38 +8,85 @@ const slotTimesLookup = {
   2: '11:00 - 12:00',
   3: '12:00 - 13:00',
   4: '13:00 - 14:00',
+  5: '14:00 - 15:00',
+  6: '15:00 - 16:00',
+  7: '16:00 - 17:00',
 };
 
 const rows = [
   {
     id: 1,
     day: 'Monday',
-    slots: ['Maths', 'English', 'English', 'Lab', 'Lab'],
+    slots: ['Maths', 'English', 'English', 'Lab', 'Break', 'Lab', 'Music', 'Music'],
   },
   {
     id: 2,
     day: 'Tuesday',
-    slots: ['Chemistry', 'Chemistry', 'Chemistry', 'Physics', 'Maths'],
+    slots: [
+      'Chemistry',
+      'Chemistry',
+      'Chemistry',
+      'Physics',
+      'Break',
+      'Maths',
+      'Lab',
+      'Dance',
+    ],
   },
   {
     id: 3,
     day: 'Wednesday',
-    slots: ['Physics', 'Chemistry', 'Physics', 'Maths', 'Maths'],
+    slots: [
+      'Physics',
+      'English',
+      'Maths',
+      'Maths',
+      'Break',
+      'Chemistry',
+      'Chemistry',
+    ],
+  },
+  {
+    id: 4,
+    day: 'Thursday',
+    slots: [
+      'Music',
+      'Music',
+      'Chemistry',
+      'Chemistry',
+      'Break',
+      'Chemistry',
+      'English',
+      'English',
+    ],
+  },
+  {
+    id: 5,
+    day: 'Friday',
+    slots: ['Maths', 'Dance', 'Dance', 'Physics', 'Break', 'English'],
   },
 ];
 
-function slotColSpan({ row, field, value }) {
-  const index = Number(field);
-  let colSpan = 1;
-  let nextIndex = index + 1;
-  let nextValue = row.slots[nextIndex];
-  while (nextValue === value) {
-    colSpan += 1;
-    nextIndex += 1;
-    nextValue = row.slots[nextIndex];
-  }
-  return colSpan;
-}
+const slotColumnCommonFields = {
+  sortable: false,
+  filterable: false,
+  minWidth: 140,
+  cellClassName: (params) => params.value,
+  colSpan: ({ row, field, value }) => {
+    const index = Number(field);
+    let colSpan = 1;
+    for (let i = index + 1; i < row.slots.length; i += 1) {
+      const nextValue = row.slots[i];
+      console.log('value', value, 'nextValue', nextValue);
+      if (nextValue === value) {
+        colSpan += 1;
+      } else {
+        break;
+      }
+    }
+    return colSpan;
+  },
+};
 
 const columns = [
   {
@@ -49,68 +96,90 @@ const columns = [
   {
     field: '0',
     headerName: slotTimesLookup[0],
-    sortable: false,
-    filterable: false,
-    valueGetter: ({ row }) => {
-      return row.slots[0];
-    },
-    colSpan: slotColSpan,
-    flex: 1,
+    valueGetter: ({ row }) => row.slots[0],
+    ...slotColumnCommonFields,
   },
   {
     field: '1',
     headerName: slotTimesLookup[1],
-    sortable: false,
-    filterable: false,
-    valueGetter: ({ row }) => {
-      return row.slots[1];
-    },
-    colSpan: slotColSpan,
-    flex: 1,
+    valueGetter: ({ row }) => row.slots[1],
+    ...slotColumnCommonFields,
   },
   {
     field: '2',
     headerName: slotTimesLookup[2],
-    sortable: false,
-    filterable: false,
-    valueGetter: ({ row }) => {
-      return row.slots[2];
-    },
-    colSpan: slotColSpan,
-    flex: 1,
+    valueGetter: ({ row }) => row.slots[2],
+    ...slotColumnCommonFields,
   },
   {
     field: '3',
     headerName: slotTimesLookup[3],
-    sortable: false,
-    filterable: false,
-    valueGetter: ({ row }) => {
-      return row.slots[3];
-    },
-    colSpan: slotColSpan,
-    flex: 1,
+    valueGetter: ({ row }) => row.slots[3],
+    ...slotColumnCommonFields,
   },
   {
     field: '4',
     headerName: slotTimesLookup[4],
-    sortable: false,
-    filterable: false,
-    valueGetter: ({ row }) => {
-      return row.slots[4];
-    },
-    colSpan: slotColSpan,
-    flex: 1,
+    valueGetter: ({ row }) => row.slots[4],
+    ...slotColumnCommonFields,
+  },
+  {
+    field: '5',
+    headerName: slotTimesLookup[5],
+    valueGetter: ({ row }) => row.slots[5],
+    ...slotColumnCommonFields,
+  },
+  {
+    field: '6',
+    headerName: slotTimesLookup[6],
+    valueGetter: ({ row }) => row.slots[6],
+    ...slotColumnCommonFields,
+  },
+  {
+    field: '7',
+    headerName: slotTimesLookup[7],
+    valueGetter: ({ row }) => row.slots[7],
+    ...slotColumnCommonFields,
   },
 ];
 
+console.log('columns', columns);
+
+const rootStyles = {
+  width: '100%',
+  '& .Maths': {
+    backgroundColor: 'rgba(157, 255, 118, 0.49)',
+  },
+  '& .English': {
+    backgroundColor: 'rgba(255, 255, 10, 0.49)',
+  },
+  '& .Lab': {
+    backgroundColor: 'rgba(150, 150, 150, 0.49)',
+  },
+  '& .Chemistry': {
+    backgroundColor: 'rgba(255, 150, 150, 0.49)',
+  },
+  '& .Physics': {
+    backgroundColor: 'rgba(10, 150, 255, 0.49)',
+  },
+  '& .Music': {
+    backgroundColor: 'rgba(224, 183, 60, 0.55)',
+  },
+  '& .Dance': {
+    backgroundColor: 'rgba(200, 150, 255, 0.49)',
+  },
+};
+
 export default function ColumnSpanningDerived() {
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={rootStyles}>
       <DataGridPro
         columns={columns}
         rows={rows}
-        pinnedColumns={{
-          left: ['day'],
+        initialState={{
+          pinnedColumns: {
+            left: ['day'],
+          },
         }}
         autoHeight
         disableExtendRowFullWidth
