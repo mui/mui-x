@@ -589,6 +589,21 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
+
+  /**
+   * Callback fired when a preferencePanel is closed.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPanelClose?: GridEventListener<GridEvents.panelClose>;
+  /**
+   * Callback fired when a preferencePanel is opened.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPanelOpen?: GridEventListener<GridEvents.panelOpen>;
   /**
    * Set the edit rows model of the grid.
    */

@@ -25,6 +25,7 @@ export interface GridPanelProps
    */
   classes?: Partial<GridPanelClasses>;
   open: boolean;
+  onPanelClose?: () => void;
 }
 
 export const gridPanelClasses = generateUtilityClasses('MuiDataGrid', ['panel', 'paper']);
@@ -49,22 +50,24 @@ const GridPaperRoot = styled(Paper, {
 }));
 
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, classes: classesProp, ...other } = props;
+  const { children, className, classes: classesProp, onPanelClose, ...other } = props;
   const apiRef = useGridApiContext();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
 
   const handleClickAway = React.useCallback(() => {
-    apiRef.current.hidePreferences();
-  }, [apiRef]);
+    if (typeof onPanelClose === 'function') {
+      onPanelClose();
+    }
+  }, [onPanelClose]);
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
-      if (isEscapeKey(event.key)) {
-        apiRef.current.hidePreferences();
+      if (isEscapeKey(event.key) && typeof onPanelClose === 'function') {
+        onPanelClose();
       }
     },
-    [apiRef],
+    [onPanelClose],
   );
 
   const modifiers = React.useMemo(
@@ -121,6 +124,7 @@ GridPanel.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  onPanelClose: PropTypes.func,
   /**
    * If `true`, the component is shown.
    */

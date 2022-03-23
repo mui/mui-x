@@ -5,6 +5,7 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridEvents } from '../../models';
 
 export const GridPreferencesPanel = React.forwardRef<
   HTMLDivElement,
@@ -21,11 +22,31 @@ export const GridPreferencesPanel = React.forwardRef<
     preferencePanelState.openedPanelValue ?? GridPreferencePanelsValue.filters,
   );
 
+  const handleClose = React.useCallback(() => {
+    apiRef.current.hidePreferences();
+    apiRef.current.publishEvent(GridEvents.panelClose, {
+      openedPanelValue: preferencePanelState.openedPanelValue,
+    });
+  }, [apiRef, preferencePanelState]);
+
+  const handleOpen = React.useCallback(() => {
+    apiRef.current.publishEvent(GridEvents.panelOpen, {
+      openedPanelValue: preferencePanelState.openedPanelValue,
+    });
+  }, [apiRef, preferencePanelState]);
+
+  React.useEffect(() => {
+    if (preferencePanelState.open) {
+      handleOpen();
+    }
+  }, [handleOpen, preferencePanelState.open]);
+
   return (
     <rootProps.components.Panel
       ref={ref}
       as={rootProps.components.BasePopper}
       open={columns.length > 0 && preferencePanelState.open}
+      onPanelClose={handleClose}
       {...rootProps.componentsProps?.panel}
       {...props}
       {...rootProps.componentsProps?.basePopper}

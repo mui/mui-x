@@ -324,6 +324,14 @@ enum GridEvents {
    * @ignore - do not document.
    */
   virtualScrollerContentSizeChange = 'virtualScrollerContentSizeChange',
+  /**
+   * Callback fired when a preferencePanel is closed.
+   */
+  panelClose = 'panelClose',
+  /**
+   * Callback fired when a preferencePanel is opened.
+   */
+  panelOpen = 'panelOpen',
 }
 
 export type GridEventsStr = keyof GridEventLookup;
