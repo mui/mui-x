@@ -12,7 +12,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { gridPageSelector } from './gridPaginationSelector';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { buildWarning } from '../../../utils/warning';
 
 export const getPageCount = (rowCount: number, pageSize: number): number => {
@@ -95,7 +95,7 @@ export const useGridPage = (
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
       const pageToExport = gridPageSelector(apiRef);
 
@@ -122,7 +122,7 @@ export const useGridPage = (
     [apiRef, props.page, props.initialState?.pagination?.page],
   );
 
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
       // We apply the constraint even if the page did not change in case the pageSize changed.
       const page = context.stateToRestore.pagination?.page ?? gridPageSelector(apiRef);
@@ -132,8 +132,8 @@ export const useGridPage = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
    * EVENTS

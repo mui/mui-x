@@ -382,7 +382,7 @@ export const createColumnsState = ({
   const columnsLookupBeforePreProcessing = { ...columnsStateWithoutColumnVisibilityModel.lookup };
 
   const columnsStateWithPreProcessing: Omit<GridColumnsRawState, 'columnVisibilityModel'> =
-    apiRef.current.unstable_applyPreProcessors(
+    apiRef.current.unstable_applyPipeProcessors(
       'hydrateColumns',
       columnsStateWithoutColumnVisibilityModel,
     );
