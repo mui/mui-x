@@ -18,6 +18,8 @@ import {
   GridActionsCellItem,
   GridEventListener,
   GridEvents,
+  GridRowId,
+  GridRowModel,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -74,7 +76,8 @@ function EditToolbar(props: EditToolbarProps) {
   const handleClick = () => {
     const id = randomId();
     apiRef.current.updateRows([{ id, isNew: true }]);
-    apiRef.current.setRowMode(id, 'edit');
+    apiRef.current.startRowEditMode({ id });
+
     // Wait for the grid to render with the new row
     setTimeout(() => {
       apiRef.current.scrollToIndexes({
@@ -110,42 +113,33 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleCellFocusOut: GridEventListener<GridEvents.cellFocusOut> = (
-    params,
-    event,
-  ) => {
-    event.defaultMuiPrevented = true;
-  };
-
-  const handleEditClick = (id) => (event) => {
+  const handleEditClick = (id: GridRowId) => (event: React.MouseEvent) => {
     event.stopPropagation();
-    apiRef.current.setRowMode(id, 'edit');
+    apiRef.current.startRowEditMode({ id });
   };
 
-  const handleSaveClick = (id) => async (event) => {
+  const handleSaveClick = (id: GridRowId) => async (event: React.MouseEvent) => {
     event.stopPropagation();
-    // Wait for the validation to run
-    const isValid = await apiRef.current.commitRowChange(id);
-    if (isValid) {
-      apiRef.current.setRowMode(id, 'view');
-      const row = apiRef.current.getRow(id);
-      apiRef.current.updateRows([{ ...row, isNew: false }]);
-    }
+    await apiRef.current.stopRowEditMode({ id });
   };
 
-  const handleDeleteClick = (id) => (event) => {
+  const handleDeleteClick = (id: GridRowId) => (event: React.MouseEvent) => {
     event.stopPropagation();
     apiRef.current.updateRows([{ id, _action: 'delete' }]);
   };
 
-  const handleCancelClick = (id) => (event) => {
+  const handleCancelClick = (id: GridRowId) => async (event: React.MouseEvent) => {
     event.stopPropagation();
-    apiRef.current.setRowMode(id, 'view');
+    await apiRef.current.stopRowEditMode({ id, ignoreModifications: true });
 
     const row = apiRef.current.getRow(id);
     if (row!.isNew) {
       apiRef.current.updateRows([{ id, _action: 'delete' }]);
     }
+  };
+
+  const processRowUpdate = async (newRow: GridRowModel) => {
+    return { ...newRow, isNew: false };
   };
 
   const columns: GridColumns = [
@@ -231,13 +225,14 @@ export default function FullFeaturedCrudGrid() {
         editMode="row"
         onRowEditStart={handleRowEditStart}
         onRowEditStop={handleRowEditStop}
-        onCellFocusOut={handleCellFocusOut}
+        processRowUpdate={processRowUpdate}
         components={{
           Toolbar: EditToolbar,
         }}
         componentsProps={{
           toolbar: { apiRef },
         }}
+        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );
