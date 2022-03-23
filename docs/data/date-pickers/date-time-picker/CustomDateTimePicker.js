@@ -46,7 +46,6 @@ export default function CustomDateTimePicker() {
             setValue(newValue);
           }}
           label="With error handler"
-          // eslint-disable-next-line no-console
           onError={console.log}
           minDate={new Date('2018-01-01T00:00')}
           inputFormat="yyyy/MM/dd hh:mm a"
