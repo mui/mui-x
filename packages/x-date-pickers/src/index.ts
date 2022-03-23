@@ -3,6 +3,8 @@ export * from './CalendarPickerSkeleton';
 export * from './ClockPicker';
 export * from './DatePicker';
 export * from './DateTimePicker';
+export * from './DesktopDatePicker';
+export * from './DesktopDateTimePicker';
 export * from './DesktopTimePicker';
 export * from './LocalizationProvider';
 export * from './MobileDatePicker';
