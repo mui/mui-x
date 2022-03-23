@@ -5,11 +5,12 @@
   editMode="row"
   onRowEditStart={handleRowEditStart}
   onRowEditStop={handleRowEditStop}
-  onCellFocusOut={handleCellFocusOut}
+  processRowUpdate={processRowUpdate}
   components={{
     Toolbar: EditToolbar,
   }}
   componentsProps={{
     toolbar: { apiRef },
   }}
+  experimentalFeatures={{ newEditingApi: true }}
 />

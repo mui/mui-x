@@ -178,6 +178,13 @@ export const DataGridProColumnHeaders = React.forwardRef<
           )}
         </GridColumnHeadersPinnedColumnHeaders>
       )}
+      <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
+        {getColumns({
+          renderContext,
+          minFirstColumn: leftPinnedColumns.length,
+          maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
+        })}
+      </GridColumnHeadersInner>
       {rightRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
           ownerState={{ side: GridPinnedPosition.right }}
@@ -194,13 +201,6 @@ export const DataGridProColumnHeaders = React.forwardRef<
           )}
         </GridColumnHeadersPinnedColumnHeaders>
       )}
-      <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
-        {getColumns({
-          renderContext,
-          minFirstColumn: leftPinnedColumns.length,
-          maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
-        })}
-      </GridColumnHeadersInner>
     </GridColumnHeaders>
   );
 });
