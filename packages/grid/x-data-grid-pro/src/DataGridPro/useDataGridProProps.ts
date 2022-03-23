@@ -6,6 +6,7 @@ import {
   GridSlotsComponent,
   DATA_GRID_PROPS_DEFAULT_VALUES,
 } from '@mui/x-data-grid';
+import { buildWarning } from '@mui/x-data-grid/internals';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
@@ -25,6 +26,14 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   disableChildrenSorting: false,
   getDetailPanelHeight: () => 500,
 };
+
+const rowGroupingWarning = buildWarning(
+  [
+    'The row grouping have been moved to the new `@mui/x-data-grid-premium` package',
+    'Your application should continue to work with `@mui/x-data-grid-pro` but all the row-grouping related features will not be present',
+  ],
+  'error',
+);
 
 export const useDataGridProProps = (inProps: DataGridProProps) => {
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
@@ -51,6 +60,19 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
 
     return mergedComponents;
   }, [themedProps.components]);
+
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useEffect(() => {
+      const legacyExperimentalFeatures = themedProps.experimentalFeatures as {
+        rowGrouping?: boolean;
+      };
+
+      if (legacyExperimentalFeatures.rowGrouping) {
+        rowGroupingWarning();
+      }
+    }, [themedProps.experimentalFeatures]);
+  }
 
   return React.useMemo<DataGridProProcessedProps>(
     () => ({
