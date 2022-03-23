@@ -57,7 +57,11 @@ const GridActionsCell = (props: GridActionsCellProps) => {
   return (
     <div className={gridClasses.actionsCell}>
       {iconButtons.map((button, index) =>
-        React.cloneElement(button, { key: index, touchRippleRef: handleTouchRippleRef(index) }),
+        React.cloneElement(button, {
+          key: index,
+          touchRippleRef: handleTouchRippleRef(index),
+          tabIndex: hasFocus ? 0 : -1,
+        }),
       )}
 
       {menuButtons.length > 0 && (
@@ -70,6 +74,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
           aria-haspopup="true"
           size="small"
           onClick={showMenu}
+          tabIndex={hasFocus ? 0 : -1}
         >
           <rootProps.components.MoreActionsIcon fontSize="small" />
         </IconButton>
@@ -85,7 +90,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
           position={position}
           aria-labelledby={buttonId}
         >
-          <MenuList className={gridClasses.menuList}>
+          <MenuList autoFocus={open} className={gridClasses.menuList}>
             {menuButtons.map((button, index) => React.cloneElement(button, { key: index }))}
           </MenuList>
         </GridMenu>
