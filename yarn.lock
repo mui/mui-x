@@ -4354,10 +4354,10 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.179.tgz#490ec3288088c91295780237d2497a3aa9dfb5c5"
   integrity sha512-uwc1x90yCKqGcIOAT6DwOSuxnrAbpkdPsUOZtwrXb4D/6wZs+6qG7QnIawDuZWg0sWpxl+ltIKCaLoMlna678w==
 
-"@types/lru-cache@^7.4.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@types/lru-cache/-/lru-cache-7.4.0.tgz#74e50606962cb90448d928d6f0c7c872592fc84d"
-  integrity sha512-jZ/Tb2/3vXw4VYd9AImFC/n6XT3WywZNAxwY8Ox9eM87M9ta9G7KzCx4aKo2Zllvr02k40eY328cjOO3WuK5Kw==
+"@types/lru-cache@^7.5.0":
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/@types/lru-cache/-/lru-cache-7.5.0.tgz#4b7dfa2583d82c9377feddb04c386bed88e6b274"
+  integrity sha512-uZGjbDsQpBxLR0znOeyAneSfMfEDDhi6FFKBY0sDI3EQMwcWCZfUZsOg3WhMTF0arvkvFquLMdrxAhCNgqpoww==
 
 "@types/mdast@^3.0.0":
   version "3.0.3"
@@ -12821,10 +12821,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-lru-cache@^7.6.0:
-  version "7.6.0"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.6.0.tgz#33c9a9815ce6e4c0e2d5d151f6a28400770e7ce0"
-  integrity sha512-zjOf6cyMI7rcN+5MtLsT4GnDjc6D9XHi8kYcsfXTqWC+yLdSiU3/jtEPX9wZE77+XLtnmdIWu3+291hkizfH+Q==
+lru-cache@^7.7.1:
+  version "7.7.1"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.7.1.tgz#03d2846b1ad2dcc7931a9340b8711d9798fcb0c6"
+  integrity sha512-cRffBiTW8s73eH4aTXqBcTLU0xQnwGV3/imttRHGWCrbergmnK4D6JXQd8qin5z43HnDwRI+o7mVW0LEB+tpAw==
 
 lz-string@^1.4.4:
   version "1.4.4"
