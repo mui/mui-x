@@ -33,7 +33,7 @@ export interface GridAggregationApi {
   setAggregationModel: (model: GridAggregationModel) => void;
 }
 
-export type GridAggregationPosition = 'inline' | 'footer'
+export type GridAggregationPosition = 'inline' | 'footer';
 
 export interface GridAggregationCellMeta {
   /**

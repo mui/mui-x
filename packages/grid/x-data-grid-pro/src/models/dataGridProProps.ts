@@ -23,7 +23,11 @@ import {
 } from './gridGroupingColDefOverride';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridInitialStatePro } from './gridStatePro';
-import type { GridAggregationModel, GridAggregationFunction, GridAggregationPosition } from '../hooks/features/aggregation';
+import type {
+  GridAggregationModel,
+  GridAggregationFunction,
+  GridAggregationPosition,
+} from '../hooks/features/aggregation';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -216,6 +220,7 @@ export interface DataGridProPropsWithoutDefaultValue
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
+  isGroupAggregated?: (rowNode: GridRowTreeNodeConfig | null) => boolean;
   /**
    * The grouping column used by the tree data.
    */

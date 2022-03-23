@@ -28,11 +28,8 @@ export default function AggregationRowGroupingFooter() {
   const data = useMovieData();
 
   return (
-    <div style={{ height: 319, width: '100%' }}>
+    <div style={{ height: 370, width: '100%' }}>
       <DataGridPro
-        // The two following props are here to avoid scroll in the demo while we don't have pinned rows
-        pagination
-        pageSize={4}
         {...data}
         columns={COLUMNS}
         disableSelectionOnClick

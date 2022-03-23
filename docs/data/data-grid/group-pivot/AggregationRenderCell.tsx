@@ -40,7 +40,7 @@ export default function AggregationRenderCell() {
   }, [data.rows]);
 
   return (
-    <div style={{ height: 319, width: '100%' }}>
+    <div style={{ height: 318, width: '100%' }}>
       <DataGridPro
         rows={rows}
         columns={COLUMNS}

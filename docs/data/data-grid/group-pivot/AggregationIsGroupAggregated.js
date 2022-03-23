@@ -1,12 +1,17 @@
 import * as React from 'react';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const COLUMNS: GridColDef[] = [
+const COLUMNS = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
     field: 'company',
     headerName: 'Company',
+    width: 200,
+  },
+  {
+    field: 'director',
+    headerName: 'Director',
     width: 200,
   },
   {
@@ -24,7 +29,7 @@ const COLUMNS: GridColDef[] = [
   },
 ];
 
-export default function AggregationRowGroupingInline() {
+export default function AggregationIsGroupAggregated() {
   const data = useMovieData();
 
   return (
@@ -33,10 +38,9 @@ export default function AggregationRowGroupingInline() {
         {...data}
         columns={COLUMNS}
         disableSelectionOnClick
-        aggregationPosition="inline"
         initialState={{
           rowGrouping: {
-            model: ['company'],
+            model: ['company', 'director'],
           },
           aggregation: {
             model: {
@@ -46,6 +50,7 @@ export default function AggregationRowGroupingInline() {
           columns: {
             columnVisibilityModel: {
               company: false,
+              director: false,
             },
           },
         }}
@@ -53,6 +58,7 @@ export default function AggregationRowGroupingInline() {
           rowGrouping: true,
           aggregation: true,
         }}
+        isGroupAggregated={(groupNode) => groupNode != null}
       />
     </div>
   );

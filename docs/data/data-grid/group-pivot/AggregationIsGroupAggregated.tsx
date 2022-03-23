@@ -10,6 +10,11 @@ const COLUMNS: GridColDef[] = [
     width: 200,
   },
   {
+    field: 'director',
+    headerName: 'Director',
+    width: 200,
+  },
+  {
     field: 'gross',
     headerName: 'Gross',
     type: 'number',
@@ -24,7 +29,7 @@ const COLUMNS: GridColDef[] = [
   },
 ];
 
-export default function AggregationRowGroupingInline() {
+export default function AggregationIsGroupAggregated() {
   const data = useMovieData();
 
   return (
@@ -33,10 +38,9 @@ export default function AggregationRowGroupingInline() {
         {...data}
         columns={COLUMNS}
         disableSelectionOnClick
-        aggregationPosition="inline"
         initialState={{
           rowGrouping: {
-            model: ['company'],
+            model: ['company', 'director'],
           },
           aggregation: {
             model: {
@@ -46,6 +50,7 @@ export default function AggregationRowGroupingInline() {
           columns: {
             columnVisibilityModel: {
               company: false,
+              director: false,
             },
           },
         }}
@@ -53,6 +58,7 @@ export default function AggregationRowGroupingInline() {
           rowGrouping: true,
           aggregation: true,
         }}
+        isGroupAggregated={(groupNode) => groupNode != null}
       />
     </div>
   );

@@ -464,21 +464,40 @@ TODO
 
 ### Usage with row grouping
 
-#### Footer
+When using aggregation with row grouping, all the groups will contain the aggregated value
 
-Example with row grouping and with aggregated values on a footer row for each group.
+{{"demo": "AggregationRowGroupingFooter.js", "bg": "inline", "defaultCodeOpen": false}}
 
-{{"demo": "AggregationRowGroupingFooter.js", "bg": "inline"}}
+#### Render aggregated values on the group rows
 
-#### Inline
-
-You can also put the aggregated values on the group row itself.
+You can also put the aggregated values on the group row itself by setting the `aggregationPosition` to `"inline"`
 
 {{"demo": "AggregationRowGroupingInline.js", "bg": "inline"}}
 
+#### Only aggregate some groups
+
+You can limit the aggregation to some groups with the `isGroupAggregated` prop.
+This function receives the group from which the grid is trying to aggregate or `null` if trying to aggregate the root group.
+
+```tsx
+// Will aggregate all the groups but not the root
+isGroupAggregated={(groupNode) => groupNode != null}
+
+// Will only aggregate the company groups, director groups and the root will not be aggregated
+isGroupAggregated={(groupNode) => groupNode?.groupingField === 'company'}
+
+// Will only aggregate the company group "Universal Pictures"
+isGroupAggregated={(groupNode) => groupNode?.groupingKey === 'Universal Pictures'}
+```
+
+{{"demo": "AggregationIsGroupAggregated.js", "bg": "inline"}}
+
+> ⚠️ If you are using `aggregationPosition: "inline"`, there is no root footer,
+> so the root will not be aggregated, even is `isGroupAggregated` says otherwise.
+
 ### Custom aggregation function
 
-{{"demo": "AggregationCustomFunction.js", "bg": "inline"}}
+{{"demo": "AggregationCustomFunction.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Aggregation with custom rendering
 
@@ -488,7 +507,7 @@ This objects contains a `hasCellUnit` which lets you know if the current aggrega
 
 In the example below, you can see that all the aggregation function are rendered with the rating UI except the `size` one because it is not a valid rating.
 
-{{"demo": "AggregationRenderCell.js", "bg": "inline"}}
+{{"demo": "AggregationRenderCell.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## 🚧 Pivoting [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
