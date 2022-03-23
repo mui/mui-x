@@ -227,7 +227,7 @@ export function DateRangePickerView<TDate>(props: DateRangePickerViewProps<TDate
 
   return (
     <div className={className}>
-      <Watermark packageName='x-date-pickers-pro' releaseInfo={releaseInfo} />
+      <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {toShowToolbar && (
         <DateRangePickerToolbar
           date={date}

@@ -2,7 +2,7 @@
 title: Componente React Seletor de data e hora
 components: DateTimePicker,DesktopDateTimePicker,MobileDateTimePicker,StaticDateTimePicker
 githubLabel: 'component: DateTimePicker'
-packageName: '@material-ui/lab'
+packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
 ---
 
