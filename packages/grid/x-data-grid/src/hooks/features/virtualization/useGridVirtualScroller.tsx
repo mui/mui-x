@@ -19,10 +19,7 @@ import { GridRenderContext, GridRowEntry } from '../../../models';
 import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
-import {
-  getFirstNonSpannedColumnToRender,
-  getFirstColumnIndexToRender,
-} from '../columns/gridColumnsUtils';
+import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(
@@ -174,13 +171,19 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         buffer: rootProps.rowBuffer,
       });
 
-      const firstColumnToRender = getFirstColumnIndexToRender({
-        firstColumnIndex: nextRenderContext.firstColumnIndex,
-        minColumnIndex: renderZoneMinColumnIndex,
-        columnBuffer: rootProps.columnBuffer,
+      const [initialFirstColumnToRender] = getRenderableIndexes({
+        firstIndex: nextRenderContext.firstColumnIndex,
+        lastIndex: nextRenderContext.lastColumnIndex,
+        minFirstIndex: renderZoneMinColumnIndex,
+        maxLastIndex: renderZoneMaxColumnIndex,
+        buffer: rootProps.columnBuffer,
+      });
+
+      const firstColumnToRender = getFirstNonSpannedColumnToRender({
+        firstColumnToRender: initialFirstColumnToRender,
+        apiRef,
         firstRowToRender,
         lastRowToRender,
-        apiRef,
       });
 
       const top = gridRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
@@ -196,6 +199,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       currentPage.rows.length,
       onRenderZonePositioning,
       renderZoneMinColumnIndex,
+      renderZoneMaxColumnIndex,
       rootProps.columnBuffer,
       rootProps.rowBuffer,
     ],
