@@ -15,7 +15,7 @@ const RenderDate = (params) => {
       input?.focus();
     } else if (rippleRef.current) {
       // Only available in @mui/material v5.4.1 or later
-      rippleRef.current.stop();
+      rippleRef.current.stop({});
     }
   }, [hasFocus]);
 
