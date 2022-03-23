@@ -209,11 +209,10 @@ const columns: GridColDef[] = [
 {{"demo": "RenderCellGrid.js", "bg": "inline", "defaultCodeOpen": false }}
 
 > ⚠️ Using `renderCell`, requires paying attention to the following points.
+> If the type of the value returned by `valueGetter` does not correspond to the column's `type`, you should:
 >
-> - If the value returned `valueGetter` does not correspond to the column `type`, you should:
->
->   - handle [sorting](/components/data-grid/sorting/#custom-comparator) by providing `sortComparator` to the column.
->   - set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#exported-cells) the data.
+> - handle [sorting](/components/data-grid/sorting/#custom-comparator) by providing `sortComparator` to the column.
+> - set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#exported-cells) the data.
 
 #### Render edit cell
 
