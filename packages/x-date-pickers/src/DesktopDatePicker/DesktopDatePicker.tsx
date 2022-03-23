@@ -87,10 +87,10 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
   );
 }) as DesktopDatePickerComponent;
 
-DesktopDatePicker.propTypes /* remove-proptypes */ = {
+DesktopDatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // |     To update them edit TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Regular expression to detect "accepted" symbols.
@@ -102,32 +102,28 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
    * @default false
    */
   allowSameDateSelection: PropTypes.bool,
-  /**
-   * @ignore
-   */
   autoFocus: PropTypes.bool,
-  /**
-   * @ignore
-   */
   children: PropTypes.node,
   /**
    * className applied to the root component.
    */
   className: PropTypes.string,
   /**
+   * If `true`, it shows the clear action in the picker dialog.
+   * @default false
+   */
+  clearable: PropTypes.bool,
+  /**
+   * Clear text message.
+   * @default 'Clear'
+   */
+  clearText: PropTypes.node,
+  /**
    * The components used for each slot.
    * Either a string to use a HTML element or a component.
    * @default {}
    */
-  components: PropTypes.shape({
-    LeftArrowButton: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    OpenPickerIcon: PropTypes.elementType,
-    RightArrowButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-    SwitchViewButton: PropTypes.elementType,
-    SwitchViewIcon: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each slot inside.
    * @default {}
@@ -173,15 +169,17 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
+   * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
+   * @returns {string} The aria-text to render inside the dialog.
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
    * Get aria-label text for switching between views button.
+   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
+   * @returns {string} The label of the view.
    */
   getViewSwitchingButtonText: PropTypes.func,
-  /**
-   * @ignore
-   */
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -191,9 +189,6 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
    * Format string.
    */
   inputFormat: PropTypes.string,
-  /**
-   * @ignore
-   */
   InputProps: PropTypes.object,
   /**
    * Pass a ref to the `input` element.
@@ -204,13 +199,6 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
       current: PropTypes.object,
     }),
   ]),
-  /**
-   * @ignore
-   */
-  key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
-   * @ignore
-   */
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
@@ -236,10 +224,13 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
   minDate: PropTypes.any,
   /**
    * Callback fired when date is accepted @DateIOType.
+   * @param {TDateValue} date The date that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
+   * @param {DateRange<TDate>} date The new parsed date.
+   * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
   /**
@@ -254,10 +245,14 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
    *
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
+   *
+   * @param {TError} reason The reason why the current value is not valid.
+   * @param {TDateValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
    * Callback firing on month change. @DateIOType
+   * @param {TDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -267,10 +262,12 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
   onOpen: PropTypes.func,
   /**
    * Callback fired on view change.
+   * @param {CalendarPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
    * Callback firing on year change @DateIOType.
+   * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
   /**
@@ -309,6 +306,10 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
   reduceAnimations: PropTypes.bool,
   /**
    * Custom renderer for day. Check the [PickersDay](https://mui.com/api/pickers-day/) component.
+   * @param {TDate} day The day to render.
+   * @param {Array<TDate | null>} selectedDates The dates currently selected.
+   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
+   * @returns {JSX.Element} The element representing the day.
    */
   renderDay: PropTypes.func,
   /**
@@ -318,15 +319,20 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
    * @example ```jsx
    * renderInput={props => <TextField {...props} />}
    * ````
+   * @param {MuiTextFieldPropsType} props The props of the input.
+   * @returns {React.ReactNode} The node to render as the input.
    */
   renderInput: PropTypes.func.isRequired,
   /**
    * Component displaying when passed `loading` true.
+   * @returns {React.ReactNode} The node to render when loading.
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading: PropTypes.func,
   /**
    * Custom formatter to be passed into Rifm component.
+   * @param {string} str The un-formatted string.
+   * @returns {string} The formatted string.
    */
   rifmFormatter: PropTypes.func,
   /**
@@ -335,11 +341,15 @@ DesktopDatePicker.propTypes /* remove-proptypes */ = {
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
+   * @param {TDate} day The date to check.
+   * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @param {TDate} year The year to test.
+   * @returns {boolean} Return `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**

@@ -8,13 +8,9 @@
     },
     "allowSameDateSelection": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
-    "components": {
-      "type": {
-        "name": "shape",
-        "description": "{ LeftArrowButton?: elementType, LeftArrowIcon?: elementType, OpenPickerIcon?: elementType, RightArrowButton?: elementType, RightArrowIcon?: elementType, SwitchViewButton?: elementType, SwitchViewIcon?: elementType }"
-      },
-      "default": "{}"
-    },
+    "clearable": { "type": { "name": "bool" } },
+    "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
+    "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "disableCloseOnSelect": {
