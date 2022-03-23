@@ -143,7 +143,7 @@ interface GridStartCellEditModeParams {
 /**
  * Params passed to `apiRef.current.stopCellEditMode`.
  */
-interface GridStopCellEditModeParams {
+export interface GridStopCellEditModeParams {
   /**
    * The row id.
    */
@@ -181,7 +181,7 @@ interface GridStartRowEditModeParams {
 /**
  * Params passed to `apiRef.current.stopRowEditMode`.
  */
-interface GridStopRowEditModeParams {
+export interface GridStopRowEditModeParams {
   /**
    * The row id.
    */
@@ -193,12 +193,12 @@ interface GridStopRowEditModeParams {
   ignoreModifications?: boolean;
   /**
    * The field that has focus when the editing is stopped.
-   * Used to calculate which cell to move the focus after finishing editing.
+   * Used to calculate which cell to move the focus to after finishing editing.
    */
   field?: string;
   /**
    * To which cell to move focus after finishing editing.
-   * Only works if the field is also specified.
+   * Only works if the field is also specified, otherwise focus stay in the same cell.
    * @default "none"
    */
   cellToFocusAfter?: 'none' | 'below' | 'right' | 'left';

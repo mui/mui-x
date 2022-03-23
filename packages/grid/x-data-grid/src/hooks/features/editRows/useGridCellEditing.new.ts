@@ -13,7 +13,11 @@ import {
 } from '../../../models/gridEditRowModel';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridNewCellEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
+import {
+  GridNewCellEditingApi,
+  GridEditingSharedApi,
+  GridStopCellEditModeParams,
+} from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridRowId } from '../../../models/gridRows';
@@ -29,12 +33,7 @@ export const useGridCellEditing = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'editMode'
-    | 'processRowUpdate'
-    | 'onCellEditStart'
-    | 'onCellEditStop'
-    | 'pagination'
-    | 'paginationMode'
+    'editMode' | 'processRowUpdate' | 'onCellEditStart' | 'onCellEditStop'
   >,
 ) => {
   const { processRowUpdate } = props;
@@ -157,7 +156,7 @@ export const useGridCellEditing = (
     (params) => {
       const { id, field, reason } = params;
 
-      let cellToFocusAfter: 'none' | 'below' | 'right' | 'left' = 'none';
+      let cellToFocusAfter: GridStopCellEditModeParams['cellToFocusAfter'];
       if (reason === GridCellEditStopReasons.enterKeyDown) {
         cellToFocusAfter = 'below';
       } else if (reason === GridCellEditStopReasons.tabKeyDown) {

@@ -14,7 +14,11 @@ import {
 } from '../../../models/gridEditRowModel';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridNewRowEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
+import {
+  GridNewRowEditingApi,
+  GridEditingSharedApi,
+  GridStopRowEditModeParams,
+} from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridRowId } from '../../../models/gridRows';
@@ -212,7 +216,7 @@ export const useGridRowEditing = (
 
       apiRef.current.unstable_runPendingEditCellValueMutation(id);
 
-      let cellToFocusAfter: 'below' | 'right' | 'left' | 'none' | undefined;
+      let cellToFocusAfter: GridStopRowEditModeParams['cellToFocusAfter'];
       if (reason === GridRowEditStopReasons.enterKeyDown) {
         cellToFocusAfter = 'below';
       } else if (reason === GridRowEditStopReasons.tabKeyDown) {
