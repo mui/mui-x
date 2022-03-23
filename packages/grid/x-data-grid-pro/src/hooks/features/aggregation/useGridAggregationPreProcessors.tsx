@@ -72,7 +72,13 @@ export const useGridAggregationPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, props.aggregationFunctions, props.disableAggregation, aggregationPositionRef],
+    [
+      apiRef,
+      props.aggregationFunctions,
+      props.disableAggregation,
+      props.isGroupAggregated,
+      aggregationPositionRef,
+    ],
   );
 
   const addGroupFooterRows = React.useCallback<GridPreProcessor<'hydrateRows'>>(

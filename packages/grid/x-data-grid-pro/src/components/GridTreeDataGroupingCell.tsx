@@ -102,7 +102,7 @@ GridTreeDataGroupingCell.propTypes = {
    */
   aggregation: PropTypes.shape({
     hasCellUnit: PropTypes.bool.isRequired,
-    name: PropTypes.string.isRequired,
+    item: PropTypes.string.isRequired,
   }),
   /**
    * GridApi that let you manipulate the grid.

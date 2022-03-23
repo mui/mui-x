@@ -394,6 +394,7 @@ DataGridProRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
   isCellEditable: PropTypes.func,
+  isGroupAggregated: PropTypes.func,
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
