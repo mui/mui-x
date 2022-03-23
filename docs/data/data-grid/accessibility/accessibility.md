@@ -45,6 +45,28 @@ The user can override this setting with the toolbar density selector if provided
 
 The grid responds to keyboard interactions from the user and emits events when key presses happen on the grid cells.
 
+### Tab sequence
+
+According to [WCAG](https://www.w3.org/TR/wai-aria-practices-1.1/#grid), only one of the focusable elements contained by the grid should be included in the page tab sequence.
+
+In the example bellow the second grid does not remove links from the tab sequence, which implies having the pass throw all the rows before accessing the elements after the grid.
+Which can be a pain for large rows.
+
+{{"demo": "FocusManagement.js", "bg": "inline"}}
+
+If you are customizing cell rendering with [`renderCell`](/components/data-grid/columns/#render-cell) method, you become responsible of removing focusable elements from the page tab sequence.
+To do so, use the `hasFocus` property from the `renderCell` input, to know if the rendered cell has the focus, and so if the elements should be removed from the tab sequence.
+
+```jsx
+renderCell: (params) => (
+  <Box>
+    <Link tabIndex={params.hasFocus ? 0 : -1} href="/#">
+      more info
+    </Link>
+  </Box>
+);
+```
+
 ### Navigation
 
 Use the arrow keys to move the focus.

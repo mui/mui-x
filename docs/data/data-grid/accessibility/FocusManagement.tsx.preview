@@ -1,0 +1,12 @@
+<div>
+    <p>Correct focus management</p>
+    <div style={{ height: 300 }}>
+        <DataGrid rows={rows} columns={correctColumns} />
+    </div>
+</div>
+<div>
+    <p>Without focus management</p>
+    <div style={{ height: 300 }}>
+        <DataGrid rows={rows} columns={wrongColumns} />
+    </div>
+</div>

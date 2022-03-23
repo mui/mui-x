@@ -214,9 +214,6 @@ const columns: GridColDef[] = [
 >
 >   - handle [sorting](/components/data-grid/sorting/#custom-comparator) by providing `sortComparator` to the column.
 >   - set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#exported-cells) the data.
->
-> - According to [WAI-ARIA](https://www.w3.org/TR/wai-aria-practices-1.1/#grid), only one of the focusable elements contained by the grid should be included in the page tab sequence.
->   To render focusable elements, use `params.hasFocus` to remove them from the tab sequence when the cell does not have the focus.
 
 #### Render edit cell
 
