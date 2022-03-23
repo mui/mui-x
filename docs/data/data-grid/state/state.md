@@ -67,7 +67,7 @@ Some selectors are yet to be documented.
 ## Save and restore the state
 
 The current state of the grid can be exported using `apiRef.current.exportState()`.
-It can then be restored by either passing it to the `initialState` prop or to the `apiRef.current.restoreState()` method.
+It can then be restored by either passing the returned value to the `initialState` prop or to the `apiRef.current.restoreState()` method.
 
 Watch out for controlled models and their callbacks (`onFilterModelChange` if you use `filterModel`, for instance), as the grid will call those callbacks when restoring the state.
 But if the callback is not defined or if calling it does not update the prop value, then the restored value will not be applied.
@@ -75,7 +75,7 @@ But if the callback is not defined or if calling it does not update the prop val
 ### Restore the state with `initialState`
 
 You can pass the state returned by `apiRef.current.exportState()` to the `initialState` prop.
-In the demo bellow, clicking on _Recreate the 2nd grid_ will re-mount the 2nd grid with the current state of the 1st grid.
+In the demo below, clicking on **Recreate the 2nd grid** will re-mount the 2nd grid with the current state of the 1st grid.
 
 > ⚠️ If you restore the page using `initialState` before the data is fetched, the grid will automatically move to the 1st page.
 

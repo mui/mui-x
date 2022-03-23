@@ -19,9 +19,12 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DoneIcon from '@mui/icons-material/Done';
 import Fade from '@mui/material/Fade';
 import Popper from '@mui/material/Popper';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 const demoReducer = (state, action) => {
   switch (action.type) {
@@ -167,6 +170,11 @@ ViewListItem.propTypes = {
       }),
       preferencePanel: PropTypes.shape({
         open: PropTypes.bool.isRequired,
+        /**
+         * Tab currently opened.
+         * @default GridPreferencePanelsValue.filter
+         * TODO v6: Remove the default behavior
+         */
         openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
       }),
       rowGrouping: PropTypes.shape({
@@ -184,36 +192,38 @@ const NewViewListButton = (props) => {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
-  if (isAddingView) {
-    return (
-      <React.Fragment>
-        <TextField
-          value={label}
-          onChange={onLabelChange}
-          size="small"
-          label="Custom view label"
-          variant="standard"
-        />
-        <IconButton
-          edge="end"
-          aria-label="save"
-          size="small"
-          onClick={() => {
-            onSubmit();
-            setIsAddingView(false);
-          }}
-          disabled={!isValid}
-        >
-          <DoneIcon />
-        </IconButton>
-      </React.Fragment>
-    );
-  }
-
   return (
-    <Button endIcon={<AddIcon />} onClick={() => setIsAddingView(true)}>
-      Add a custom view
-    </Button>
+    <React.Fragment>
+      <Button endIcon={<AddIcon />} onClick={() => setIsAddingView(true)}>
+        Add a custom view
+      </Button>
+      <Dialog onClose={() => setIsAddingView(false)} open={isAddingView}>
+        <DialogTitle>New custom view</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            value={label}
+            onChange={onLabelChange}
+            margin="dense"
+            size="small"
+            label="Custom view label"
+            variant="standard"
+          />
+          <DialogActions>
+            <Button onClick={() => setIsAddingView(false)}>Cancel</Button>
+            <Button
+              onClick={() => {
+                onSubmit();
+                setIsAddingView(false);
+              }}
+              disabled={!isValid}
+            >
+              Create view
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    </React.Fragment>
   );
 };
 
@@ -275,6 +285,7 @@ const CustomToolbar = () => {
       <Button
         aria-describedby={popperId}
         type="button"
+        size="small"
         onClick={handlePopperAnchorClick}
       >
         Custom views ({Object.keys(state.views).length})

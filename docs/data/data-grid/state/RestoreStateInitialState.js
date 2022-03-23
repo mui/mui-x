@@ -4,13 +4,13 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import {
-  DataGridPro,
+  DataGrid,
   GridToolbarContainer,
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
   useGridApiContext,
   useGridRootProps,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const GridCustomToolbar = ({ syncState }) => {
@@ -60,7 +60,7 @@ export default function RestoreStateInitialState() {
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Box sx={{ width: '100%', height: 336, bgcolor: 'background.paper' }}>
-        <DataGridPro
+        <DataGrid
           {...data}
           loading={loading}
           components={{ Toolbar: GridCustomToolbar }}
@@ -68,7 +68,7 @@ export default function RestoreStateInitialState() {
         />
       </Box>
       <Box sx={{ width: '100%', height: 300, bgcolor: 'background.paper' }}>
-        <DataGridPro
+        <DataGrid
           {...data}
           loading={loading}
           initialState={savedState.initialState}

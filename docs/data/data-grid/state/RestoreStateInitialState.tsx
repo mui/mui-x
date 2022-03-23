@@ -49,6 +49,7 @@ export default function RestoreStateInitialState() {
     count: number;
     initialState: GridInitialState | undefined;
   }>({ count: 0, initialState: undefined });
+
   const syncState = React.useCallback((newInitialState: GridInitialState) => {
     setSavedState((prev) => ({
       ...prev,
