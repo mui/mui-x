@@ -37,6 +37,8 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DataGrid] Fix `showCellRightBorder` not working in the last row (#4140) @cherniavskii
 - [DataGrid] Fix error overlay not visible when `autoHeight` is enabled (#4110) @cherniavskii
 - [DataGrid] Fix white blank when scrolling (#4158) @alexfauquette
+- [DataGrid] Adjust type of the `description` prop in `GridColumnHeaderTitle` (#4247) @baahrens
+- [DataGrid] Fix focus after stopping row edit mode (#4252) @m4theushw
 - [DataGridPro] Fix pinned columns edge overflow with custom `borderRadius` (#4188) @socramm9
 - [DataGridPro] Fix tab switching order with pinned columns and `editMode="row"` (#4198) @cherniavskii
 - [l10n] Improve Persian (fa-IR) locale (#4227) @SaeedZhiany
