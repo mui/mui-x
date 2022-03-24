@@ -68,7 +68,7 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
         rowGrouping?: boolean;
       };
 
-      if (legacyExperimentalFeatures.rowGrouping) {
+      if (legacyExperimentalFeatures?.rowGrouping) {
         rowGroupingWarning();
       }
     }, [themedProps.experimentalFeatures]);
