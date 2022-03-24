@@ -42,9 +42,9 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DataGridPro] Fix pinned columns edge overflow with custom `borderRadius` (#4188) @socramm9
 - [DataGridPro] Fix tab switching order with pinned columns and `editMode="row"` (#4198) @cherniavskii
 - [l10n] Improve Persian (fa-IR) locale (#4227) @SaeedZhiany
-- [l10n] Add missing translations for Polish (pl-PL) (#4153) @pbmchc
-- [l10n] Update Arabic (Sudan) (ar-SD) locale (#4212) @shadigaafar
-- [l10n] Translate `filterOperatorIsAnyOf` in Korean (ko-KR) locale (#4245) @kyeongsoosoo
+- [l10n] Improve Polish (pl-PL) locale (#4153) @pbmchc
+- [l10n] Improve Arabic (ar-SD) locale (#4212) @shadigaafar
+- [l10n] Improve Korean (ko-KR) locale (#4245) @kyeongsoosoo
 
 ### Docs
 
