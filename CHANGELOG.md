@@ -9,7 +9,7 @@ _Mar 24, 2022_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- ✏ Add a new editing API with better support for server-side persistence and validation (#3963) @m4theushw
+- ✏ Add a new editing API with better support for server-side persistence and validation (#3963, #4060) @m4theushw
 
   The new API is stable, but to avoid any breaking changes or conflicts with the old API, you must add the following flag to access it:
 
@@ -17,9 +17,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   <DataGrid experimentalFeatures={{ newEditingApi: true }} />
   ```
 
-  Users relying on the old API (legacy) don't need to worry as it will continue to work until v6.
-
-- 📃 Add docs for the new editing API (#4060) @m4theushw
+  ⚠ Users relying on the old API (legacy) don't need to worry as it will continue to work until v6.
 
   The new API also features brand new documentation with more useful demos and guides explaining how to create custom edit components.
   Visit the new [documentation](https://mui.com/components/data-grid/editing/) for more information.
