@@ -529,12 +529,12 @@ interface GridColDef {
 }
 ```
 
-> ⚠ When using `colSpan`, sorting and filtering might not work as expected.
-> Make sure to disable [sorting](/components/data-grid/sorting/#disable-the-sorting) and [filtering](/components/data-grid/filtering/#disable-the-filters) for the column(s) that are affected by `colSpan`.
-
-<!-- markdownlint-disable-next-line MD028 -->
-
-> ⚠ While [column reorder](/components/data-grid/columns/#column-reorder) works with `colSpan`, disabling it can be useful to avoid confusing grid layout.
+> ⚠ When using `colSpan`, some other features may be pointless or may not work as expected (depending on the data model). To avoid confusing grid layout, consider disabling the following features for the column(s) that are affected by `colSpan`:
+>
+> - [sorting](/components/data-grid/sorting/#disable-the-sorting)
+> - [filtering](/components/data-grid/filtering/#disable-the-filters)
+> - [column reorder](/components/data-grid/columns/#column-reorder)
+> - [hiding columns](/components/data-grid/columns/#column-visibility)
 
 ### Number signature
 
