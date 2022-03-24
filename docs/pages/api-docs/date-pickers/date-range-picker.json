@@ -96,8 +96,10 @@
   },
   "slots": {},
   "name": "DateRangePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateRangePicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

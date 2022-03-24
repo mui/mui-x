@@ -101,8 +101,8 @@
   },
   "slots": {},
   "name": "DatePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDatePicker" },
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

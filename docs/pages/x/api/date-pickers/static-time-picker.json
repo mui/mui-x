@@ -78,8 +78,10 @@
   },
   "slots": {},
   "name": "StaticTimePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticTimePicker" },
+  "spread": false,
+  "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers/src/StaticTimePicker/StaticTimePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

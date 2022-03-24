@@ -12,8 +12,7 @@
   },
   "slots": {},
   "name": "LocalizationProvider",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiLocalizationProvider" },
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
   "demos": "<ul></ul>"
 }

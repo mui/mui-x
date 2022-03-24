@@ -19,8 +19,10 @@
   },
   "slots": {},
   "name": "MonthPicker",
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMonthPicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MonthPicker/MonthPicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

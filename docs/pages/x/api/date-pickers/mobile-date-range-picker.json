@@ -89,8 +89,10 @@
   },
   "slots": {},
   "name": "MobileDateRangePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateRangePicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/MobileDateRangePicker/MobileDateRangePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

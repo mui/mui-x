@@ -30,9 +30,11 @@
       "disabled"
     ],
     "globalClasses": { "selected": "Mui-selected", "disabled": "Mui-disabled" },
-    "name": "MuiDataGrid"
+    "name": "MuiPickersDay"
   },
-  "forwardsRefTo": "GridRoot",
+  "spread": true,
+  "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers/src/PickersDay/PickersDay.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

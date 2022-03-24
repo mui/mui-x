@@ -79,8 +79,10 @@
   },
   "slots": {},
   "name": "DesktopTimePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopTimePicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DesktopTimePicker/DesktopTimePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

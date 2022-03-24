@@ -86,8 +86,10 @@
   },
   "slots": {},
   "name": "StaticDateRangePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateRangePicker" },
+  "spread": false,
+  "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers-pro/src/StaticDateRangePicker/StaticDateRangePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

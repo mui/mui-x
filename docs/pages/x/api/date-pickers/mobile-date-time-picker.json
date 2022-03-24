@@ -110,8 +110,8 @@
   },
   "slots": {},
   "name": "MobileDateTimePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/MobileDateTimePicker/MobileDateTimePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

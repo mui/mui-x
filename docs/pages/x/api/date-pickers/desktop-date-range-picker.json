@@ -87,8 +87,10 @@
   },
   "slots": {},
   "name": "DesktopDateRangePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateRangePicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DesktopDateRangePicker/DesktopDateRangePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

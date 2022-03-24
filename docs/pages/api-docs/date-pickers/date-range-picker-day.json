@@ -41,9 +41,11 @@
       "notSelectedDate"
     ],
     "globalClasses": {},
-    "name": "MuiDataGrid"
+    "name": "MuiDateRangePickerDay"
   },
-  "forwardsRefTo": "GridRoot",
+  "spread": false,
+  "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePickerDay/DateRangePickerDay.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

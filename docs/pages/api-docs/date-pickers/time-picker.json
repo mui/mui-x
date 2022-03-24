@@ -88,8 +88,10 @@
   },
   "slots": {},
   "name": "TimePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimePicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

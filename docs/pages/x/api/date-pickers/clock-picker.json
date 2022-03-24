@@ -55,8 +55,10 @@
   },
   "slots": {},
   "name": "ClockPicker",
-  "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiClockPicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/ClockPicker/ClockPicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }

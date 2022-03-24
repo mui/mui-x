@@ -92,8 +92,8 @@
   },
   "slots": {},
   "name": "DesktopDatePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
-  "forwardsRefTo": "GridRoot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDatePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDatePicker/DesktopDatePicker.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>"
 }
