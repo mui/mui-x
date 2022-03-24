@@ -22,7 +22,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   The new API also features brand new documentation with more useful demos and guides explaining how to create custom edit components.
   Visit the new [documentation](https://mui.com/components/data-grid/editing/) for more information.
 
-- 🎉 Allow to export and restore the order of the columns and their dimensions (#3816) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bug and typo fixes
 
