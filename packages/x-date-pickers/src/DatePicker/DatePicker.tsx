@@ -24,8 +24,8 @@ type DatePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Date Picker](https://mui.com/components/date-picker/)
- * - [Pickers](https://mui.com/components/pickers/)
+ * - [Date Picker](https://mui.com/components/x/react-date-pickers/date-picker/)
+ * - [Pickers](https://mui.com/x/react-date-pickers/)
  *
  * API:
  *

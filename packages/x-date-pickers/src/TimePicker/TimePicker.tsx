@@ -24,8 +24,8 @@ type TimePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Pickers](https://mui.com/components/pickers/)
- * - [Time Picker](https://mui.com/components/time-picker/)
+ * - [Pickers](https://mui.com/x/react-date-pickers/)
+ * - [Time Picker](https://mui.com/components/x/react-date-pickers/time-picker/)
  *
  * API:
  *

@@ -35,7 +35,7 @@ type StaticTimePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Time Picker](https://mui.com/components/time-picker/)
+ * - [Time Picker](https://mui.com/components/x/react-date-pickers/time-picker/)
  *
  * API:
  *
