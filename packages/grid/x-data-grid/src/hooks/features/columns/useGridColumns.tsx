@@ -36,6 +36,7 @@ import {
   mergeColumnsState,
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
+import { GridPreferencePanelsValue } from '../preferencesPanel';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columnTypes' | 'columns'>
@@ -79,6 +80,8 @@ export function useGridColumns(
     | 'columnTypes'
     | 'checkboxSelection'
     | 'classes'
+    | 'components'
+    | 'componentsProps'
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
@@ -366,8 +369,21 @@ export function useGridColumns(
     [apiRef, isUsingColumnVisibilityModel, columnsTypes],
   );
 
+  const preferencePanelPreProcessing = React.useCallback<GridPreProcessor<'preferencePanel'>>(
+    (initialValue, value) => {
+      if (value === GridPreferencePanelsValue.columns) {
+        const ColumnsPanel = props.components.ColumnsPanel;
+        return <ColumnsPanel {...props.componentsProps?.columnsPanel} />;
+      }
+
+      return initialValue;
+    },
+    [props.components.ColumnsPanel, props.componentsProps?.columnsPanel],
+  );
+
   useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPreProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
 
   /**
    * EVENTS

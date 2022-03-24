@@ -30,8 +30,8 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Export selector toolbar button text
   toolbarExport: 'خروجی',
   toolbarExportLabel: 'خروجی',
-  toolbarExportCSV: 'دانلود به‌صورت CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportCSV: 'دانلود به صورت CSV',
+  toolbarExportPrint: 'چاپ',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'پیداکردن ستون',
@@ -43,7 +43,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',
   filterPanelDeleteIconLabel: 'حذف',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLinkOperator: 'عملگر منطقی',
   filterPanelOperators: 'عملگرها',
 
   // TODO v6: rename to filterPanelOperator
@@ -66,7 +66,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'معادل یا قبلش',
   filterOperatorIsEmpty: 'خالی است',
   filterOperatorIsNotEmpty: 'خالی نیست',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'هر یک از',
 
   // Filter values text
   filterValueAny: 'هرچیزی',
@@ -102,11 +102,11 @@ const faIRGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} از ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  checkboxSelectionHeaderName: 'انتخاب چک‌باکس',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionHeaderName: 'چک‌باکس انتخاب',
+  checkboxSelectionSelectAllRows: 'انتخاب همه‌ی ردیف‌ها',
+  checkboxSelectionUnselectAllRows: 'لغو انتخاب همه‌ی ردیف‌ها',
+  checkboxSelectionSelectRow: 'انتخاب ردیف',
+  checkboxSelectionUnselectRow: 'لغو انتخاب ردیف',
 
   // Boolean cell text
   booleanCellTrueLabel: 'صحیح',
@@ -116,23 +116,23 @@ const faIRGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'بیشتر',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'سنجاق کردن به چپ',
+  pinToRight: 'سنجاق کردن به راست',
+  unpin: 'برداشتن سنجاق',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'گروه‌بندی',
+  treeDataExpand: 'نمایش فرزندان',
+  treeDataCollapse: 'پنهان‌سازی فرزندان',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'گروه‌بندی',
+  groupColumn: (name) => `گروه‌بندی براساس ${name}`,
+  unGroupColumn: (name) => `لغو گروه‌بندی براساس ${name}`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'بازکردن پنل جزئیات',
+  collapseDetailPanel: 'بستن پنل جزئیات',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);
