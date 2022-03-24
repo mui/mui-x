@@ -11,17 +11,17 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - ✏ Add a new editing API with better support for server-side persistence and validation (#3963) @m4theushw
 
-  The new API is only accessible by enabling the following flag:
+  The new API is stable, but to avoid any breaking changes or conflicts with the old API, you must add the following flag to access it:
 
   ```tsx
   <DataGrid experimentalFeatures={{ newEditingApi: true }} />
   ```
 
-  Users relaying on the old API (legacy) don't need worry as it will continue to work until v6.
+  Users relying on the old API (legacy) don't need to worry as it will continue to work until v6.
 
 - 📃 Add docs for the new editing API (#4060) @m4theushw
 
-  The new API also features a brand new documentation with more useful demos and guides explaining how to create custom edit components.
+  The new API also features brand new documentation with more useful demos and guides explaining how to create custom edit components.
   Visit the new [documentation](https://mui.com/components/data-grid/editing/) for more information.
 
 - 🎉 Allow to export and restore the order of the columns and their dimensions (#3816) @flaviendelangle
