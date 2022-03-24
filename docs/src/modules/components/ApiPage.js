@@ -259,7 +259,14 @@ function ApiDocs(props) {
     inheritanceSuffix = t('api-docs.inheritanceSuffixTransition');
   }
 
-  const packageName = componentName === 'DataGrid' ? '@mui/x-data-grid' : '@mui/x-data-grid-pro';
+  let packageName;
+  if (componentName === 'DataGrid') {
+    packageName = '@mui/x-data-grid';
+  } else if (componentName === 'DataGridPro') {
+    packageName = '@mui/x-data-grid-pro';
+  } else {
+    packageName = '@mui/x-data-grid-premium';
+  }
   let importStatements = `import { ${componentName} } from '${packageName}';`;
   if (componentName.startsWith('Grid')) {
     importStatements = `
