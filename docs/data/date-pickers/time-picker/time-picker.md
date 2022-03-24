@@ -15,7 +15,7 @@ The selected time is indicated by the filled circle at the end of the clock hand
 
 ## Basic usage
 
-The date picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
+The time picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
 
 {{"demo": "BasicTimePicker.js"}}
 

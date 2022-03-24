@@ -14,7 +14,7 @@ Seletores de hora permitem que o usuário selecione um horário simples (no form
 
 ## Utilização Básica
 
-The date picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
+The time picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
 
 {{"demo": "BasicTimePicker.js"}}
 

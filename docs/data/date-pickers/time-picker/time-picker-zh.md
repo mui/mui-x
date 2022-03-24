@@ -14,7 +14,7 @@ materialDesign: https://material.io/components/time-pickers
 
 ## 基本用法
 
-The date picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
+The time picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
 
 {{"demo": "BasicTimePicker.js"}}
 
