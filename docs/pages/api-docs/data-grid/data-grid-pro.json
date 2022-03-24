@@ -234,6 +234,10 @@
     "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
     "Cell": { "default": "GridCell", "type": { "name": "elementType" } },
     "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnHeaderFilterIcon": {
+      "default": "GridColumnHeaderFilterIcon",
+      "type": { "name": "elementType" }
+    },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",
