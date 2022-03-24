@@ -146,6 +146,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell checkbox element"
     },
+    "cellReorder": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the cell reorder element"
+    },
     "checkboxInput": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
@@ -206,6 +210,10 @@
     "columnHeaderDraggableContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's draggable container element"
+    },
+    "rowDraggableContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the row's draggable container element inside the special row reorder cell"
     },
     "columnHeaderDropZone": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -427,14 +435,9 @@
       "nodeName": "the row element",
       "conditions": "the row is in edit mode"
     },
-    "row--draggable": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the row element",
-      "conditions": "the row is draggable"
-    },
     "row--dragging": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the floating row element",
+      "nodeName": "the floating special row reorder cell element",
       "conditions": "it is dragged"
     },
     "row--lastVisible": {
@@ -533,6 +536,7 @@
     "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
     "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
-    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel."
+    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
+    "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row."
   }
 }

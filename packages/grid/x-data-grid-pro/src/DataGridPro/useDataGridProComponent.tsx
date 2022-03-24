@@ -74,6 +74,7 @@ import {
 import { useGridDetailPanelCache } from '../hooks/features/detailPanel/useGridDetailPanelCache';
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
+import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -85,6 +86,7 @@ export const useDataGridProComponent = (
    * Register all pre-processors called during state initialization here.
    */
   useGridSelectionPreProcessors(apiRef, props);
+  useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);

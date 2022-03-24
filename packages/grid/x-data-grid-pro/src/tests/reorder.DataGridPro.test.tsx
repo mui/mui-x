@@ -6,7 +6,6 @@ import {
   getColumnHeadersTextContent,
   getColumnHeaderCell,
   getCell,
-  getRow,
   getRowsFieldContent,
   raf,
 } from 'test/utils/helperFn';
@@ -416,17 +415,17 @@ describe('<DataGridPro /> - Reorder', () => {
       render(<Test />);
 
       expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      const dragRow = getRow(0)!;
+      const rowReorderCell = getCell(0, 0).firstChild!;
       const targetCell = getCell(1, 0);
 
-      fireEvent.dragStart(dragRow);
+      fireEvent.dragStart(rowReorderCell);
       fireEvent.dragEnter(targetCell);
       const dragOverEvent = createDragOverEvent(targetCell);
       fireEvent(targetCell, dragOverEvent);
       expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
-      const dragEndEvent = createDragEndEvent(dragRow, true);
-      fireEvent(dragRow, dragEndEvent);
+      const dragEndEvent = createDragEndEvent(rowReorderCell, true);
+      fireEvent(rowReorderCell, dragEndEvent);
       expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
@@ -451,9 +450,11 @@ describe('<DataGridPro /> - Reorder', () => {
 
       render(<Test />);
       expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      const row = getRow(0)!;
-      fireEvent.dragStart(row);
-      expect(row.classList.contains(gridClasses['row--dragging'])).to.equal(false);
+      const rowReorderCell = getCell(0, 0).firstChild!;
+      fireEvent.dragStart(rowReorderCell);
+      expect(
+        (rowReorderCell as HTMLElement).classList.contains(gridClasses['row--dragging']),
+      ).to.equal(false);
     });
 
     it('should keep the order of the rows when dragEnd is fired and enableRowReorder=false', () => {
@@ -477,9 +478,9 @@ describe('<DataGridPro /> - Reorder', () => {
 
       render(<Test />);
       expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      const row = getRow(0)!;
-      const dragEndEvent = createDragEndEvent(row, true);
-      fireEvent(row, dragEndEvent);
+      const rowReorderCell = getCell(0, 0).firstChild!;
+      const dragEndEvent = createDragEndEvent(rowReorderCell, true);
+      fireEvent(rowReorderCell, dragEndEvent);
       expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
@@ -512,14 +513,14 @@ describe('<DataGridPro /> - Reorder', () => {
 
       expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
-      const row = getRow(0)!;
-      const targetRow = getRow(1)!;
-      fireEvent.dragStart(row);
-      fireEvent.dragEnter(targetRow);
-      const dragOverEvent = createDragOverEvent(targetRow);
-      fireEvent(targetRow, dragOverEvent);
-      const dragEndEvent = createDragEndEvent(row);
-      fireEvent(row, dragEndEvent);
+      const rowReorderCell = getCell(0, 0).firstChild!;
+      const targetCell = getCell(1, 0)!;
+      fireEvent.dragStart(rowReorderCell);
+      fireEvent.dragEnter(targetCell);
+      const dragOverEvent = createDragOverEvent(targetCell);
+      fireEvent(targetCell, dragOverEvent);
+      const dragEndEvent = createDragEndEvent(rowReorderCell);
+      fireEvent(rowReorderCell, dragEndEvent);
 
       expect(handleOnRowOrderChange.callCount).to.equal(1);
       expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
@@ -553,8 +554,8 @@ describe('<DataGridPro /> - Reorder', () => {
     render(<Test />);
 
     // Column dragging
-    const dragCol = getColumnHeaderCell(0).firstChild!;
-    const targetCell = getCell(0, 2)!;
+    const dragCol = getColumnHeaderCell(1).firstChild!;
+    const targetCell = getCell(1, 2)!;
 
     fireEvent.dragStart(dragCol);
     fireEvent.dragEnter(targetCell);
@@ -569,15 +570,15 @@ describe('<DataGridPro /> - Reorder', () => {
     expect(handleDragEnd.callCount).to.equal(0);
 
     // Row dragging
-    const dragRow = getRow(0)!;
-    const targetRow = getRow(1)!;
+    const rowReorderCell = getCell(0, 0).firstChild!;
+    const targetRowReorderCell = getCell(1, 0)!;
 
-    fireEvent.dragStart(dragRow);
-    fireEvent.dragEnter(targetRow);
-    const dragOverRowEvent = createDragOverEvent(targetRow);
-    fireEvent(targetRow, dragOverRowEvent);
-    const dragEndRowEvent = createDragEndEvent(dragRow);
-    fireEvent(dragRow, dragEndRowEvent);
+    fireEvent.dragStart(rowReorderCell);
+    fireEvent.dragEnter(targetRowReorderCell);
+    const dragOverRowEvent = createDragOverEvent(targetRowReorderCell);
+    fireEvent(targetRowReorderCell, dragOverRowEvent);
+    const dragEndRowEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndRowEvent);
 
     expect(handleDragStart.callCount).to.equal(0);
     expect(handleDragOver.callCount).to.equal(0);

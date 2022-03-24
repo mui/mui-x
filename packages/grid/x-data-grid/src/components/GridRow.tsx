@@ -20,8 +20,6 @@ import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
-import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName } from '../utils/domUtils';
@@ -53,12 +51,11 @@ type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
   isLastVisible: boolean;
-  isDraggable: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, isLastVisible, classes, isDraggable } = ownerState;
+  const { editable, editing, selected, isLastVisible, classes } = ownerState;
   const slots = {
     root: [
       'row',
@@ -66,7 +63,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       editable && 'row--editable',
       editing && 'row--editing',
       isLastVisible && 'row--lastVisible',
-      isDraggable && 'row--draggable',
     ],
   };
 
@@ -110,8 +106,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
@@ -119,16 +113,12 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     hasScrollY: false,
   };
 
-  // TODO: remove sortModel and treeDepth checks once row reorder is compatible
-  const isDraggable = !!rootProps.enableRowReorder && !sortModel.length && treeDepth === 1;
-
   const ownerState = {
     selected,
     isLastVisible,
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
     editable: rootProps.editMode === GridEditModes.Row,
-    isDraggable,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -162,12 +152,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       },
     [apiRef, rowId],
   );
-
-  const draggableEventHandlers = {
-    onDragStart: publish(GridEvents.rowDragStart),
-    onDragOver: publish(GridEvents.rowDragOver),
-    onDragEnd: publish(GridEvents.rowDragEnd),
-  };
 
   const publishClick = React.useCallback(
     (event) => {
@@ -334,8 +318,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
       onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
       onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
-      draggable={isDraggable}
-      {...draggableEventHandlers}
       {...other}
     >
       {cells}

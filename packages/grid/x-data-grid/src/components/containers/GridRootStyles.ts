@@ -17,6 +17,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.cell}`]: styles.cell },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
+    { [`& .${gridClasses.cellReorder}`]: styles.cellReorder },
     { [`& .${gridClasses.checkboxInput}`]: styles.checkboxInput },
     { [`& .${gridClasses['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
     { [`& .${gridClasses['columnHeader--alignLeft']}`]: styles['columnHeader--alignLeft'] },
@@ -41,7 +42,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.menuList}`]: styles.menuList },
     { [`& .${gridClasses['row--editable']}`]: styles['row--editable'] },
     { [`& .${gridClasses['row--editing']}`]: styles['row--editing'] },
-    { [`& .${gridClasses['row--draggable']}`]: styles['row--draggable'] },
     { [`& .${gridClasses['row--dragging']}`]: styles['row--dragging'] },
     { [`& .${gridClasses.row}`]: styles.row },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
@@ -254,6 +254,9 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
     },
+    [`& .${gridClasses.cellReorder}`]: {
+      cursor: 'move',
+    },
     [`& .${gridClasses.cell}.${gridClasses['cell--editing']}`]: {
       padding: 1,
       display: 'flex',
@@ -305,11 +308,24 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       width: '100%',
     },
+    [`& .${gridClasses.rowDraggableContainer}`]: {
+      display: 'none',
+    },
     [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
       background: theme.palette.background.paper,
       padding: '0 12px',
       borderRadius: theme.shape.borderRadius,
       opacity: theme.palette.action.disabledOpacity,
+    },
+    [`& .${gridClasses['row--dragging']}`]: {
+      background: theme.palette.background.paper,
+      padding: '0 12px',
+      borderRadius: theme.shape.borderRadius,
+      opacity: theme.palette.action.disabledOpacity,
+
+      [`& .${gridClasses.rowDraggableContainer}`]: {
+        display: 'flex',
+      },
     },
     [`& .${gridClasses.treeDataGroupingCell}`]: {
       display: 'flex',

@@ -46,6 +46,10 @@ export interface GridClasses {
    */
   cellCheckbox: string;
   /**
+   * Styles applied to the cell reorder element.
+   */
+  cellReorder: string;
+  /**
    * Styles applied to the selection checkbox element.
    */
   checkboxInput: string;
@@ -97,6 +101,10 @@ export interface GridClasses {
    * Styles applied to the column header's draggable container element.
    */
   columnHeaderDraggableContainer: string;
+  /**
+   * Styles applied to the row's draggable container element inside the special row reorder cell.
+   */
+  rowDraggableContainer: string;
   /**
    * Styles applied to the column headers wrapper if a column is being dragged.
    */
@@ -322,11 +330,7 @@ export interface GridClasses {
    */
   'row--editing': string;
   /**
-   * Styles applied to the row element if the row is draggable.
-   */
-  'row--draggable': string;
-  /**
-   * Styles applied to the floating row element when it is dragged.
+   * Styles applied to the floating special row reorder cell element when it is dragged.
    */
   'row--dragging': string;
   /**
@@ -403,6 +407,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'cell',
   'cellContent',
   'cellCheckbox',
+  'cellReorder',
   'checkboxInput',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',
@@ -463,9 +468,9 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'row',
   'row--editable',
   'row--editing',
-  'row--draggable',
-  'row--dragging',
   'row--lastVisible',
+  'row--dragging',
+  'rowDraggableContainer',
   'rowCount',
   'scrollArea--left',
   'scrollArea--right',
