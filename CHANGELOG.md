@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 24, 2022_
 
-We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - ✏ Add a new editing API with better support for server-side persistence and validation (#3963, #4060) @m4theushw
 
