@@ -20,6 +20,7 @@ export interface GridPreProcessingGroupLookup {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
+  exportMenu: { value: React.ReactNode[]; context: any };
   columnMenu: { value: React.ReactNode[]; context: GridColDef };
   exportState: { value: GridInitialStateCommunity };
   restoreState: {

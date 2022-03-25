@@ -50,6 +50,7 @@ const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridDetailPanelApi',
   'GridPrintExportApi',
   'GridDisableVirtualizationApi',
+  'GridExcelExportApi',
 ];
 
 const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
@@ -66,6 +67,7 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColDef',
   'GridCsvExportOptions',
   'GridPrintExportOptions',
+  'GridExcelExportOptions',
 
   // Filters
   'GridFilterModel',

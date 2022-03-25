@@ -4,3 +4,4 @@ export * from './columnReorder';
 export * from './columnResize';
 export * from './treeData';
 export * from './detailPanel';
+export * from './export';

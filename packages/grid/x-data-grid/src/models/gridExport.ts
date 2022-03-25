@@ -19,17 +19,43 @@ export interface GridExportOptions {
   allColumns?: boolean;
 }
 
-export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity> {
+/**
+ * The options applicable to any document export format (CSV and Excel).
+ */
+export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommunity>
+  extends GridExportOptions {
+  /**
+   * The string used as the file name.
+   * @default `document.title`
+   */
+  fileName?: string;
+  /**
+   * If `true`, the first row of the file will include the headers of the grid.
+   * @default true
+   */
+  includeHeaders?: boolean;
+  /**
+   * Function that returns the id of the rows to export on the order they should be exported.
+   * @param {GridGetRowsToExportParams} params With all properties from [[GridGetRowsToExportParams]].
+   * @returns {GridRowId[]} The id of the rows to export.
+   */
+  getRowsToExport?: (params: GridGetRowsToExportParams<Api>) => GridRowId[];
+}
+
+export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity> {
   /**
    * The API of the grid.
    */
   apiRef: React.MutableRefObject<Api>;
 }
 
+export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
+  extends GridGetRowsToExportParams<Api> {}
+
 /**
  * The options to apply on the CSV export.
  */
-export interface GridCsvExportOptions extends GridExportOptions {
+export interface GridCsvExportOptions extends GridFileExportOptions {
   /**
    * The character used to separate fields.
    * @default ','
@@ -98,3 +124,8 @@ export interface GridPrintExportOptions extends GridExportOptions {
  * Available export formats.
  */
 export type GridExportFormat = 'csv' | 'print';
+
+/**
+ * Available export extensions.
+ */
+export type GridExportExtension = 'csv';

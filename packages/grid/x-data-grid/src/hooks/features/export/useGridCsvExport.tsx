@@ -1,25 +1,12 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridFilteredSortedRowIdsSelector } from '../filter';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
-import { GridCsvExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
+import { GridCsvExportOptions } from '../../../models/gridExport';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
-import { GridRowId } from '../../../models';
-import { getColumnsToExport } from './utils';
-
-const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
-  const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
-  const selectedRows = apiRef.current.getSelectedRows();
-
-  if (selectedRows.size > 0) {
-    return filteredSortedRowIds.filter((id) => selectedRows.has(id));
-  }
-
-  return filteredSortedRowIds;
-};
+import { getColumnsToExport, defaultGetRowsToExport } from './utils';
 
 /**
  * @requires useGridColumns (state)
