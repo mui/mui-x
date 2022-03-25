@@ -21,9 +21,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import {
   DataGridPro,
+  GridColumns,
+  GridRowsProp,
   gridRowIdsSelector,
   useGridApiRef,
   GridEvents,
+  GridFilterModel,
   gridSortedRowIdsSelector,
   gridFilteredSortedRowIdsSelector,
   gridVisibleSortedRowIdsSelector,
@@ -35,7 +38,7 @@ import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
 const getTreeDataPath = (row) => [row.bicycleType, row.color];
 
-const allColumns = [
+const allColumns: GridColumns = [
   {
     field: 'bicycleType',
     headerName: 'Bicycle Type',
@@ -62,7 +65,7 @@ const allColumns = [
   },
 ];
 
-const rows = [
+const rows: GridRowsProp = [
   {
     id: 'Touring-blue-945',
     bicycleType: 'Touring Bike',
@@ -143,15 +146,26 @@ function TabPanel(props) {
   );
 }
 
-const defaultOptions = {
+interface RowSelectorOptions {
+  applySorting?: boolean;
+  applyFiltering?: boolean;
+  ignoreCollapsed?: boolean;
+  onlyTopLevelRows?: boolean;
+  restrainToCurrentPage?: boolean;
+}
+
+const defaultOptions: RowSelectorOptions = {
   applySorting: false,
   applyFiltering: false,
   ignoreCollapsed: false,
   onlyTopLevelRows: false,
   restrainToCurrentPage: false,
 };
-
-const availableSelectors = [
+const availableSelectors: {
+  example: { ids?: string; entries?: string };
+  idsSelectorCallbak: any;
+  options: RowSelectorOptions;
+}[] = [
   {
     example: { ids: `gridRowIdsSelector(apiRef)` },
     idsSelectorCallbak: gridRowIdsSelector,
@@ -208,6 +222,7 @@ const availableSelectors = [
       onlyTopLevelRows: true,
     },
   },
+
   {
     example: {
       entries: `gridPaginatedVisibleSortedGridRowEntriesSelector`,
@@ -215,17 +230,6 @@ const availableSelectors = [
     },
     idsSelectorCallbak: (apiRef) =>
       gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef).map(({ id }) => id),
-    options: {
-      ...defaultOptions,
-      applySorting: true,
-      applyFiltering: true,
-      restrainToCurrentPage: true,
-    },
-  },
-  {
-    example: { ids: `apiRef.current.getRowIndexRelativeToVisibleRows()` },
-    idsSelectorCallbak: (apiRef) =>
-      apiRef.current.getRowIndexRelativeToVisibleRows(),
     options: {
       ...defaultOptions,
       applySorting: true,
@@ -244,11 +248,6 @@ const formatedSelector = (selectorExample) => {
 };
 
 export default function RowSelectorPlayground() {
-  const [tabPanemIndex, setTabPanemIndex] = React.useState(0);
-
-  const handleChangeTabPanel = (event, newValue) => {
-    setTabPanemIndex(newValue);
-  };
   const apiRef = useGridApiRef();
 
   const [hasTreeStructure, setHasTreeStructure] = React.useState(false);
@@ -259,8 +258,15 @@ export default function RowSelectorPlayground() {
   const [onlyTopLevelRows, setOnlyTopLevelRows] = React.useState(false);
   const [restrainToCurrentPage, setRestrainToCurrentPage] = React.useState(false);
 
-  const deductedValues = {};
-  if (restrainToCurrentPage) {
+  const deductedValues: RowSelectorOptions = {};
+  if (!hasPagination) {
+    deductedValues.restrainToCurrentPage = false;
+  }
+  if (
+    deductedValues.restrainToCurrentPage === undefined
+      ? restrainToCurrentPage
+      : deductedValues.restrainToCurrentPage
+  ) {
     // The page does not make sens whithout sorting/filtering
     deductedValues.applyFiltering = true;
     deductedValues.applySorting = true;
@@ -268,9 +274,6 @@ export default function RowSelectorPlayground() {
   if (!hasTreeStructure) {
     deductedValues.ignoreCollapsed = false;
     deductedValues.onlyTopLevelRows = false;
-  }
-  if (!hasPagination) {
-    deductedValues.restrainToCurrentPage = false;
   }
   if (
     onlyTopLevelRows &&
@@ -297,7 +300,6 @@ export default function RowSelectorPlayground() {
 
   const idsSelectorCallbak = possibleSelector?.[0]?.idsSelectorCallbak;
   const idsSelector = possibleSelector?.[0]?.example?.ids;
-  const entriesSelector = possibleSelector?.[0]?.example?.entries;
 
   const columns = React.useMemo(() => {
     if (!hasTreeStructure) {
@@ -308,11 +310,10 @@ export default function RowSelectorPlayground() {
     );
   }, [hasTreeStructure]);
 
-  const [selectedRows, setSelectedRows] = React.useState([]);
-  const [filterModel, setFilterModel] = React.useState({
+  const [selectedRows, setSelectedRows] = React.useState<string[]>([]);
+  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [],
   });
-
   const [updateIndex, setUpdateIndex] = React.useState(0);
 
   React.useEffect(() => {
@@ -438,6 +439,7 @@ export default function RowSelectorPlayground() {
 ${formatedSelector(idsSelector)}`}
           language="tsx"
         />
+
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -490,7 +492,7 @@ ${formatedSelector(idsSelector)}`}
                 }}
               >
                 <p style={{ height: '2rem', marginTop: '1rem', marginBottom: 0 }}>
-                  Retruned ids
+                  Returned ids
                 </p>
                 <List dense sx={{ overflow: 'auto', maxHeight: '300px' }}>
                   {selectedRows.map((id) => (

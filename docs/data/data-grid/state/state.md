@@ -70,7 +70,7 @@ Rows can be impacted by many features such as sorting, filtering, grouping, or p
 Depending on your use case, you could want to apply the effect of only some features.
 To help you to find the right selector, here is a tool to experiment with row selectors.
 
-{{"demo": "RowSelectorPlayground.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "RowSelectorPlaygroundNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## Save and restore the state
 

@@ -13,21 +13,17 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-
 import {
   DataGridPro,
-  GridColumns,
-  GridRowsProp,
   gridRowIdsSelector,
   useGridApiRef,
   GridEvents,
-  GridFilterModel,
   gridSortedRowIdsSelector,
   gridFilteredSortedRowIdsSelector,
   gridVisibleSortedRowIdsSelector,
@@ -35,11 +31,11 @@ import {
   gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '@mui/x-data-grid-pro';
 
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode'
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
 const getTreeDataPath = (row) => [row.bicycleType, row.color];
 
-const allColumns: GridColumns = [
+const allColumns = [
   {
     field: 'bicycleType',
     headerName: 'Bicycle Type',
@@ -66,7 +62,7 @@ const allColumns: GridColumns = [
   },
 ];
 
-const rows: GridRowsProp = [
+const rows = [
   {
     id: 'Touring-blue-945',
     bicycleType: 'Touring Bike',
@@ -147,110 +143,87 @@ function TabPanel(props) {
   );
 }
 
-interface RowSelectorOptions {
-  applySorting?: boolean;
-  applyFiltering?: boolean;
-  ignoreCollapsed?: boolean;
-  onlyTopLevelRows?: boolean;
-  restrainToCurrentPage?: boolean;
-}
-
-const defaultOptions: RowSelectorOptions = {
+const defaultOptions = {
   applySorting: false,
   applyFiltering: false,
   ignoreCollapsed: false,
   onlyTopLevelRows: false,
   restrainToCurrentPage: false,
 };
-const availableSelectors: {
-  example: { ids?: string; entries?: string };
-  idsSelectorCallbak: any;
-  options: RowSelectorOptions;
-}[] = [
-    {
-      example: { ids: `gridRowIdsSelector(apiRef)` },
-      idsSelectorCallbak: gridRowIdsSelector,
-      options: { ...defaultOptions },
-    },
-    {
-      example: {
-        ids: `gridSortedRowIdsSelector(apiRef)`,
-        entries: `gridSortedRowEntriesSelector`,
-      },
-      idsSelectorCallbak: gridSortedRowIdsSelector,
-      options: {
-        ...defaultOptions,
-        applySorting: true,
-      },
-    },
-    {
-      example: {
-        ids: `gridFilteredSortedRowIdsSelector(apiRef)`,
-        entries: `gridFilteredSortedRowEntriesSelector`,
-      },
-      idsSelectorCallbak: gridFilteredSortedRowIdsSelector,
-      options: {
-        ...defaultOptions,
-        applySorting: true,
-        applyFiltering: true,
-      },
-    },
-    {
-      example: {
-        ids: `gridVisibleSortedRowIdsSelector(apiRef)`,
-        entries: `gridVisibleSortedRowEntriesSelector`,
-      },
-      idsSelectorCallbak: gridVisibleSortedRowIdsSelector,
-      options: {
-        ...defaultOptions,
-        applySorting: true,
-        applyFiltering: true,
-        ignoreCollapsed: true,
-      },
-    },
-    {
-      example: {
-        entries: `gridVisibleSortedTopLevelRowEntriesSelector`,
-        ids: `gridVisibleSortedTopLevelRowEntriesSelector(apiRef).map(({ id }) => id)`,
-      },
-      idsSelectorCallbak: (apiRef) =>
-        gridVisibleSortedTopLevelRowEntriesSelector(apiRef).map(({ id }) => id),
-      options: {
-        ...defaultOptions,
-        applySorting: true,
-        applyFiltering: true,
-        ignoreCollapsed: true,
-        onlyTopLevelRows: true,
-      },
-    },
 
-    {
-      example: {
-        entries: `gridPaginatedVisibleSortedGridRowEntriesSelector`,
-        ids: `gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef).map(({ id }) => id)`,
-      },
-      idsSelectorCallbak: (apiRef) =>
-        gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef).map(({ id }) => id),
-      options: {
-        ...defaultOptions,
-        applySorting: true,
-        applyFiltering: true,
-        restrainToCurrentPage: true,
-      },
+const availableSelectors = [
+  {
+    example: { ids: `gridRowIdsSelector(apiRef)` },
+    idsSelectorCallbak: gridRowIdsSelector,
+    options: { ...defaultOptions },
+  },
+  {
+    example: {
+      ids: `gridSortedRowIdsSelector(apiRef)`,
+      entries: `gridSortedRowEntriesSelector`,
     },
-    {
-      example: { ids: `apiRef.current.getRowIndexRelativeToVisibleRows()` },
-      idsSelectorCallbak: (apiRef) =>
-        apiRef.current.getRowIndexRelativeToVisibleRows(),
-      options: {
-        ...defaultOptions,
-        applySorting: true,
-        applyFiltering: true,
-        ignoreCollapsed: true,
-        restrainToCurrentPage: true,
-      },
+    idsSelectorCallbak: gridSortedRowIdsSelector,
+    options: {
+      ...defaultOptions,
+      applySorting: true,
     },
-  ];
+  },
+  {
+    example: {
+      ids: `gridFilteredSortedRowIdsSelector(apiRef)`,
+      entries: `gridFilteredSortedRowEntriesSelector`,
+    },
+    idsSelectorCallbak: gridFilteredSortedRowIdsSelector,
+    options: {
+      ...defaultOptions,
+      applySorting: true,
+      applyFiltering: true,
+    },
+  },
+  {
+    example: {
+      ids: `gridVisibleSortedRowIdsSelector(apiRef)`,
+      entries: `gridVisibleSortedRowEntriesSelector`,
+    },
+    idsSelectorCallbak: gridVisibleSortedRowIdsSelector,
+    options: {
+      ...defaultOptions,
+      applySorting: true,
+      applyFiltering: true,
+      ignoreCollapsed: true,
+    },
+  },
+  {
+    example: {
+      entries: `gridVisibleSortedTopLevelRowEntriesSelector`,
+      ids: `gridVisibleSortedTopLevelRowEntriesSelector(apiRef).map(({ id }) => id)`,
+    },
+    idsSelectorCallbak: (apiRef) =>
+      gridVisibleSortedTopLevelRowEntriesSelector(apiRef).map(({ id }) => id),
+    options: {
+      ...defaultOptions,
+      applySorting: true,
+      applyFiltering: true,
+      ignoreCollapsed: true,
+      onlyTopLevelRows: true,
+    },
+  },
+  {
+    example: {
+      entries: `gridPaginatedVisibleSortedGridRowEntriesSelector`,
+      ids: `gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef).map(({ id }) => id)`,
+    },
+    idsSelectorCallbak: (apiRef) =>
+      gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef).map(({ id }) => id),
+    options: {
+      ...defaultOptions,
+      applySorting: true,
+      applyFiltering: true,
+      ignoreCollapsed: true,
+      restrainToCurrentPage: true,
+    },
+  },
+];
 
 const formatedSelector = (selectorExample) => {
   if (!selectorExample) {
@@ -260,11 +233,6 @@ const formatedSelector = (selectorExample) => {
 };
 
 export default function RowSelectorPlayground() {
-  const [tabPanemIndex, setTabPanemIndex] = React.useState(0);
-
-  const handleChangeTabPanel = (event, newValue) => {
-    setTabPanemIndex(newValue);
-  };
   const apiRef = useGridApiRef();
 
   const [hasTreeStructure, setHasTreeStructure] = React.useState(false);
@@ -275,8 +243,15 @@ export default function RowSelectorPlayground() {
   const [onlyTopLevelRows, setOnlyTopLevelRows] = React.useState(false);
   const [restrainToCurrentPage, setRestrainToCurrentPage] = React.useState(false);
 
-  const deductedValues: RowSelectorOptions = {};
-  if (restrainToCurrentPage) {
+  const deductedValues = {};
+  if (!hasPagination) {
+    deductedValues.restrainToCurrentPage = false;
+  }
+  if (
+    deductedValues.restrainToCurrentPage === undefined
+      ? restrainToCurrentPage
+      : deductedValues.restrainToCurrentPage
+  ) {
     // The page does not make sens whithout sorting/filtering
     deductedValues.applyFiltering = true;
     deductedValues.applySorting = true;
@@ -284,9 +259,6 @@ export default function RowSelectorPlayground() {
   if (!hasTreeStructure) {
     deductedValues.ignoreCollapsed = false;
     deductedValues.onlyTopLevelRows = false;
-  }
-  if (!hasPagination) {
-    deductedValues.restrainToCurrentPage = false;
   }
   if (
     onlyTopLevelRows &&
@@ -313,7 +285,6 @@ export default function RowSelectorPlayground() {
 
   const idsSelectorCallbak = possibleSelector?.[0]?.idsSelectorCallbak;
   const idsSelector = possibleSelector?.[0]?.example?.ids;
-  const entriesSelector = possibleSelector?.[0]?.example?.entries;
 
   const columns = React.useMemo(() => {
     if (!hasTreeStructure) {
@@ -324,10 +295,11 @@ export default function RowSelectorPlayground() {
     );
   }, [hasTreeStructure]);
 
-  const [selectedRows, setSelectedRows] = React.useState<string[]>([]);
-  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [filterModel, setFilterModel] = React.useState({
     items: [],
   });
+
   const [updateIndex, setUpdateIndex] = React.useState(0);
 
   React.useEffect(() => {
@@ -361,7 +333,7 @@ export default function RowSelectorPlayground() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Box sx={{ display: 'flex' }} >
+      <Box sx={{ display: 'flex' }}>
         <FormControl sx={{ m: 1 }} component="fieldset" variant="standard">
           <FormLabel component="legend">Describe your grid</FormLabel>
           <FormGroup>
@@ -448,10 +420,11 @@ export default function RowSelectorPlayground() {
         </FormControl>
       </Box>
       <Box>
-
-        <HighlightedCode code={`// Rows ids selector:
-${formatedSelector(idsSelector)}`} language="tsx" />
-
+        <HighlightedCode
+          code={`// Rows ids selector:
+${formatedSelector(idsSelector)}`}
+          language="tsx"
+        />
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -461,10 +434,8 @@ ${formatedSelector(idsSelector)}`} language="tsx" />
             <Typography>Interactive example</Typography>
           </AccordionSummary>
           <AccordionDetails>
-
             <Box sx={{ display: 'flex' }}>
               <Box sx={{ width: '70%' }}>
-
                 <Box sx={{ height: '300px' }}>
                   <DataGridPro
                     apiRef={apiRef}
@@ -506,7 +477,7 @@ ${formatedSelector(idsSelector)}`} language="tsx" />
                 }}
               >
                 <p style={{ height: '2rem', marginTop: '1rem', marginBottom: 0 }}>
-                  Retruned ids
+                  Returned ids
                 </p>
                 <List dense sx={{ overflow: 'auto', maxHeight: '300px' }}>
                   {selectedRows.map((id) => (
