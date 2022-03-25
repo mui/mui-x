@@ -1,4 +1,4 @@
-<DataGridPro
+<DataGridPremium
   treeData
   getTreeDataPath={(row) => row.path}
   rows={rows}
@@ -7,5 +7,5 @@
   defaultGroupingExpansionDepth={-1}
   components={{ Toolbar: GridToolbar }}
   componentsProps={{ toolbar: { excelOptions } }}
-  experimentalFeatures={{ excelExport: true }}
+
 />

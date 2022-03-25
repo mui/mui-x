@@ -1,10 +1,10 @@
 import * as React from 'react';
 import 'exceljs';
 import {
-  DataGridPro,
+  DataGridPremium,
   GridToolbarContainer,
   GridToolbarExport,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 
 const rows = [
   {
@@ -127,13 +127,12 @@ function CustomToolbar() {
 export default function ExcelExport() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         rows={rows}
         columns={columns}
         components={{
           Toolbar: CustomToolbar,
         }}
-        experimentalFeatures={{ excelExport: true }}
       />
     </div>
   );

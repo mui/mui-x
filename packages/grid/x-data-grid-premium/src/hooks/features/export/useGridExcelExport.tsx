@@ -2,14 +2,12 @@ import * as React from 'react';
 import { useGridApiMethod, useGridLogger, GridExportDisplayOptions } from '@mui/x-data-grid';
 import {
   useGridRegisterPreProcessor,
-  buildWarning,
   exportAs,
   getColumnsToExport,
   defaultGetRowsToExport,
   GridPreProcessor,
 } from '@mui/x-data-grid/internals';
-import { DataGridProProps } from '../../../models/dataGridProProps';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridExcelExportApi,
   GridExportExtension,
@@ -17,14 +15,6 @@ import {
 } from './gridExcelExportInterface';
 import { buildExcel } from './serializer/excelSerializer';
 import { GridExcelExportMenuItem } from '../../../components';
-
-const inactivatedError = buildWarning(
-  [
-    'MUI: Excel export is experimental and must be activated by setting',
-    '<DataGridPro experimentalFeatures={{ excelExport: true }} />',
-  ],
-  'error',
-);
 
 /**
  * @requires useGridColumns (state)
@@ -34,19 +24,13 @@ const inactivatedError = buildWarning(
  * @requires useGridParamsApi (method)
  */
 export const useGridExcelExport = (
-  apiRef: React.MutableRefObject<GridApiPro>,
-  props: Partial<Pick<DataGridProProps, 'experimentalFeatures'>>,
+  apiRef: React.MutableRefObject<GridApiPremium>,
 ): void => {
-  const featureIsActivated = props?.experimentalFeatures?.excelExport;
 
   const logger = useGridLogger(apiRef, 'useGridExcelExport');
 
   const getDataAsExcel = React.useCallback<GridExcelExportApi['getDataAsExcel']>(
     (options = {}) => {
-      if (!featureIsActivated) {
-        inactivatedError();
-        return null;
-      }
       logger.debug(`Get data as excel`);
 
       const getRowsToExport = options.getRowsToExport ?? defaultGetRowsToExport;
@@ -66,16 +50,12 @@ export const useGridExcelExport = (
         apiRef.current,
       );
     },
-    [featureIsActivated, logger, apiRef],
+    [logger, apiRef],
   );
 
   const exportDataAsExcel = React.useCallback<GridExcelExportApi['exportDataAsExcel']>(
     async (options) => {
       logger.debug(`Export data as excel`);
-      if (!featureIsActivated) {
-        inactivatedError();
-        return;
-      }
 
       const workbook = await getDataAsExcel(options);
       if (workbook === null) {
@@ -88,7 +68,7 @@ export const useGridExcelExport = (
 
       exportAs<GridExportExtension>(blob, 'xlsx', options?.fileName);
     },
-    [logger, featureIsActivated, getDataAsExcel],
+    [logger, getDataAsExcel],
   );
 
   const excelExportApi: GridExcelExportApi = {
@@ -106,15 +86,12 @@ export const useGridExcelExport = (
       initialValue,
       options: { excelOptions: GridExcelExportOptions & GridExportDisplayOptions },
     ) => {
-      if (!featureIsActivated) {
-        return initialValue;
-      }
       if (options.excelOptions?.disableToolbarButton) {
         return initialValue;
       }
       return [...initialValue, <GridExcelExportMenuItem options={options.excelOptions} />];
     },
-    [featureIsActivated],
+    [],
   );
 
   useGridRegisterPreProcessor(apiRef, 'exportMenu', addExportMenuButtons);

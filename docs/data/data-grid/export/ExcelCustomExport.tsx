@@ -1,6 +1,6 @@
 import * as React from 'react';
 import 'exceljs';
-import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
+import { DataGridPremium, GridToolbar } from '@mui/x-data-grid-premium';
 
 const rows = [
   {
@@ -311,7 +311,7 @@ const excelOptions = { exceljsPreProcess, exceljsPostProcess };
 export default function ExcelCustomExport() {
   return (
     <div style={{ height: 500, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         treeData
         getTreeDataPath={(row) => row.path}
         rows={rows}
@@ -320,7 +320,6 @@ export default function ExcelCustomExport() {
         defaultGroupingExpansionDepth={-1}
         components={{ Toolbar: GridToolbar }}
         componentsProps={{ toolbar: { excelOptions } }}
-        experimentalFeatures={{ excelExport: true }}
       />
     </div>
   );

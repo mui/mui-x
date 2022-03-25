@@ -226,16 +226,6 @@ The demo below shows how to add a JSON export.
 
 ## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-> ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
->
-> To avoid future regression for users of the Pro plan, the feature needs to be explicitly activated using the `excelExport` experimental feature flag.
->
-> ```tsx
-> <DataGridPro experimentalFeatures={{ excelExport: true }} {...otherProps} />
-> ```
->
-> The feature is stable in its current form, and we encourage users willing to migrate to the Premium plan once available to start using it.
-
 The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
 
 Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/components/data-grid/columns/#converting-types) as needed.

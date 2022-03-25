@@ -2,19 +2,19 @@ import * as React from 'react';
 import {
   GridColumns,
   useGridApiRef,
-  DataGridPro,
+  DataGridPremium,
   GridApi,
   GridToolbar,
-  DataGridProProps,
+  DataGridPremiumProps,
   GridActionsCellItem,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Export Excel', () => {
+describe('<DataGridPremium /> - Export Excel', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -40,49 +40,23 @@ describe('<DataGridPro /> - Export Excel', () => {
     autoHeight: isJSDOM,
   };
 
-  const TestCaseExcelExport = (props: Partial<DataGridProProps>) => {
+  const TestCaseExcelExport = (props: Partial<DataGridPremiumProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
   };
 
-  describe('experimental feature', () => {
-    it('should not work if not enabled', () => {
+  describe('export interface', () => {
+    it('should generate a file', () => {
       render(<TestCaseExcelExport />);
-
-      expect(() => {
-        apiRef.current.getDataAsExcel();
-      }).toErrorDev(
-        [
-          'MUI: Excel export is experimental and must be activated by setting',
-          '<DataGridPro experimentalFeatures={{ excelExport: true }} />',
-        ].join('\n'),
-      );
-    });
-
-    it('should not display export option if not enabled', () => {
-      render(<TestCaseExcelExport components={{ Toolbar: GridToolbar }} />);
-
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
-      expect(screen.queryByRole('menuitem', { name: 'Print' })).not.to.equal(null);
-      expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).to.equal(null);
-    });
-
-    it('should generate a file if enabled', () => {
-      render(<TestCaseExcelExport experimentalFeatures={{ excelExport: true }} />);
       expect(apiRef.current.getDataAsExcel()).not.to.equal(null);
     });
 
-    it('should display export option if enabled', () => {
-      render(
-        <TestCaseExcelExport
-          experimentalFeatures={{ excelExport: true }}
-          components={{ Toolbar: GridToolbar }}
-        />,
-      );
+    it('should display export option', () => {
+      render(<TestCaseExcelExport components={{ Toolbar: GridToolbar }} />);
 
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -96,7 +70,7 @@ describe('<DataGridPro /> - Export Excel', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
+            <DataGridPremium
               columns={[
                 { field: 'str' },
                 { field: 'nb', type: 'number' },
@@ -117,7 +91,6 @@ describe('<DataGridPro /> - Export Excel', () => {
                 },
               ]}
               apiRef={apiRef}
-              experimentalFeatures={{ excelExport: true }}
             />
           </div>
         );
@@ -153,7 +126,7 @@ describe('<DataGridPro /> - Export Excel', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
+            <DataGridPremium
               columns={[{ field: 'option', type: 'singleSelect', valueOptions: ['Yes', 'No'] }]}
               rows={[
                 {
@@ -162,7 +135,6 @@ describe('<DataGridPro /> - Export Excel', () => {
                 },
               ]}
               apiRef={apiRef}
-              experimentalFeatures={{ excelExport: true }}
             />
           </div>
         );
@@ -183,7 +155,7 @@ describe('<DataGridPro /> - Export Excel', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
+            <DataGridPremium
               columns={[
                 { field: 'str' },
                 {
@@ -201,7 +173,6 @@ describe('<DataGridPro /> - Export Excel', () => {
                 },
               ]}
               apiRef={apiRef}
-              experimentalFeatures={{ excelExport: true }}
             />
           </div>
         );

@@ -23,9 +23,7 @@ import {
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
-  excelExport: boolean;
-}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
 /**
  * The props users can give to the `DataGridProProps` component.
