@@ -13,7 +13,11 @@ import {
 } from '../../../models/gridEditRowModel';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridNewCellEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
+import {
+  GridNewCellEditingApi,
+  GridEditingSharedApi,
+  GridStopCellEditModeParams,
+} from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridRowId } from '../../../models/gridRows';
@@ -152,7 +156,7 @@ export const useGridCellEditing = (
     (params) => {
       const { id, field, reason } = params;
 
-      let cellToFocusAfter: 'none' | 'below' | 'right' | 'left' = 'none';
+      let cellToFocusAfter: GridStopCellEditModeParams['cellToFocusAfter'];
       if (reason === GridCellEditStopReasons.enterKeyDown) {
         cellToFocusAfter = 'below';
       } else if (reason === GridCellEditStopReasons.tabKeyDown) {
@@ -257,16 +261,7 @@ export const useGridCellEditing = (
 
       const updateFocusedCellIfNeeded = () => {
         if (cellToFocusAfter !== 'none') {
-          // TODO Don't fire event and set focus manually here
-          apiRef.current.publishEvent(
-            GridEvents.cellNavigationKeyDown,
-            apiRef.current.getCellParams(id, field),
-            {
-              key: cellToFocusAfter === 'below' ? 'Enter' : 'Tab',
-              shiftKey: cellToFocusAfter === 'left',
-              preventDefault: () => {},
-            } as any,
-          );
+          apiRef.current.unstable_moveFocusToRelativeCell(id, field, cellToFocusAfter);
         }
       };
 
