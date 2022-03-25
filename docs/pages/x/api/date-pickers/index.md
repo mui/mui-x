@@ -1,4 +1,4 @@
-# Date Pickers - API Reference
+# Date and Time Pickers - API Reference
 
 <p class="description">This page contains an index to the most important APIs of the date pickers.</p>
 

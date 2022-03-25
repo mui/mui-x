@@ -58,7 +58,7 @@ const pages = [
   {
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
-    title: 'Date Pickers',
+    title: 'Date and Time Pickers',
     icon: 'TableViewIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
