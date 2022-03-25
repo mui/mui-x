@@ -54,7 +54,13 @@
   "peerDependencies": {
     "@mui/material": "^5.2.8",
     "@mui/system": "^5.2.8",
-    "react": "^17.0.2"
+    "react": "^17.0.2",
+    "exceljs": "^4.3.0"
+  },
+  "peerDependenciesMeta": {
+    "exceljs": {
+      "optional": true
+    }
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

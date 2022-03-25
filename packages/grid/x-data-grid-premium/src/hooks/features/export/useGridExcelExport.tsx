@@ -23,10 +23,7 @@ import { GridExcelExportMenuItem } from '../../../components';
  * @requires useGridSelection (state)
  * @requires useGridParamsApi (method)
  */
-export const useGridExcelExport = (
-  apiRef: React.MutableRefObject<GridApiPremium>,
-): void => {
-
+export const useGridExcelExport = (apiRef: React.MutableRefObject<GridApiPremium>): void => {
   const logger = useGridLogger(apiRef, 'useGridExcelExport');
 
   const getDataAsExcel = React.useCallback<GridExcelExportApi['getDataAsExcel']>(

@@ -4,9 +4,5 @@
     "types": ["react", "mocha", "node"],
     "noImplicitAny": true
   },
-  "include": [
-    "src/**/*",
-    "../../../node_modules/@mui/monorepo/test/utils/initMatchers.ts",
-    "../x-data-grid-premium/src/components/GridExcelExportMenuItem.tsx"
-  ]
+  "include": ["src/**/*", "../../../node_modules/@mui/monorepo/test/utils/initMatchers.ts"]
 }
