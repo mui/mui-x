@@ -90,9 +90,7 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1
-      ? `${count.toLocaleString()} rækker valgt`
-      : `Én række valgt`,
+    count !== 1 ? `${count.toLocaleString()} rækker valgt` : `Én række valgt`,
 
   // Total row amount footer text
   footerTotalRows: 'Antal rækker i alt:',
@@ -127,8 +125,8 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Gruppér',
-  groupColumn: name => `Gruppér efter ${name}`,
-  unGroupColumn: name => `Fjern gruppéring efter ${name}`,
+  groupColumn: (name) => `Gruppér efter ${name}`,
+  unGroupColumn: (name) => `Fjern gruppéring efter ${name}`,
 
   // Master/detail
   expandDetailPanel: 'Udvid',
