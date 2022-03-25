@@ -29,8 +29,8 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
 
 const rowGroupingWarning = buildWarning(
   [
-    'The row grouping have been moved to the new `@mui/x-data-grid-premium` package',
-    'Your application should continue to work with `@mui/x-data-grid-pro` but all the row-grouping related features will not be present',
+    'MUI: The row grouping has been moved to the new `@mui/x-data-grid-premium` package.',
+    'Your application should continue to work with `@mui/x-data-grid-pro` but all the row-grouping related features will not be present.',
   ],
   'error',
 );
