@@ -3,19 +3,22 @@ import * as React from 'react';
 import { debounce } from '@mui/material/utils';
 
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
+import Accordion from '@mui/material/Accordion'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import AccordionDetails from '@mui/material/AccordionDetails'
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 import {
   DataGridPro,
@@ -31,6 +34,8 @@ import {
   gridVisibleSortedTopLevelRowEntriesSelector,
   gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '@mui/x-data-grid-pro';
+
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode'
 
 const getTreeDataPath = (row) => [row.bicycleType, row.color];
 
@@ -162,98 +167,96 @@ const availableSelectors: {
   idsSelectorCallbak: any;
   options: RowSelectorOptions;
 }[] = [
-  {
-    example: { ids: `gridRowIdsSelector` },
-    idsSelectorCallbak: gridRowIdsSelector,
-    options: { ...defaultOptions },
-  },
-  {
-    example: {
-      ids: `gridSortedRowIdsSelector`,
-      entries: `gridSortedRowEntriesSelector`,
+    {
+      example: { ids: `gridRowIdsSelector(apiRef)` },
+      idsSelectorCallbak: gridRowIdsSelector,
+      options: { ...defaultOptions },
     },
-    idsSelectorCallbak: gridSortedRowIdsSelector,
-    options: {
-      ...defaultOptions,
-      applySorting: true,
+    {
+      example: {
+        ids: `gridSortedRowIdsSelector(apiRef)`,
+        entries: `gridSortedRowEntriesSelector`,
+      },
+      idsSelectorCallbak: gridSortedRowIdsSelector,
+      options: {
+        ...defaultOptions,
+        applySorting: true,
+      },
     },
-  },
-  {
-    example: {
-      ids: `gridFilteredSortedRowIdsSelector`,
-      entries: `gridFilteredSortedRowEntriesSelector`,
+    {
+      example: {
+        ids: `gridFilteredSortedRowIdsSelector(apiRef)`,
+        entries: `gridFilteredSortedRowEntriesSelector`,
+      },
+      idsSelectorCallbak: gridFilteredSortedRowIdsSelector,
+      options: {
+        ...defaultOptions,
+        applySorting: true,
+        applyFiltering: true,
+      },
     },
-    idsSelectorCallbak: gridFilteredSortedRowIdsSelector,
-    options: {
-      ...defaultOptions,
-      applySorting: true,
-      applyFiltering: true,
+    {
+      example: {
+        ids: `gridVisibleSortedRowIdsSelector(apiRef)`,
+        entries: `gridVisibleSortedRowEntriesSelector`,
+      },
+      idsSelectorCallbak: gridVisibleSortedRowIdsSelector,
+      options: {
+        ...defaultOptions,
+        applySorting: true,
+        applyFiltering: true,
+        ignoreCollapsed: true,
+      },
     },
-  },
-  {
-    example: {
-      ids: `gridVisibleSortedRowIdsSelector`,
-      entries: `gridVisibleSortedRowEntriesSelector`,
+    {
+      example: {
+        entries: `gridVisibleSortedTopLevelRowEntriesSelector`,
+        ids: `gridVisibleSortedTopLevelRowEntriesSelector(apiRef).map(({ id }) => id)`,
+      },
+      idsSelectorCallbak: (apiRef) =>
+        gridVisibleSortedTopLevelRowEntriesSelector(apiRef).map(({ id }) => id),
+      options: {
+        ...defaultOptions,
+        applySorting: true,
+        applyFiltering: true,
+        ignoreCollapsed: true,
+        onlyTopLevelRows: true,
+      },
     },
-    idsSelectorCallbak: gridVisibleSortedRowIdsSelector,
-    options: {
-      ...defaultOptions,
-      applySorting: true,
-      applyFiltering: true,
-      ignoreCollapsed: true,
-    },
-  },
-  {
-    example: {
-      entries: `gridVisibleSortedTopLevelRowEntriesSelector`,
-      ids: 'gridVisibleSortedTopLevelRowEntriesSelector(apiRef).map(({ id }) => id)',
-    },
-    idsSelectorCallbak: (apiRef) =>
-      gridVisibleSortedTopLevelRowEntriesSelector(apiRef).map(({ id }) => id),
-    options: {
-      ...defaultOptions,
-      applySorting: true,
-      applyFiltering: true,
-      ignoreCollapsed: true,
-      onlyTopLevelRows: true,
-    },
-  },
 
-  {
-    example: {
-      entries: `gridPaginatedVisibleSortedGridRowEntriesSelector`,
-      ids: 'gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef).map(({ id }) => id)',
+    {
+      example: {
+        entries: `gridPaginatedVisibleSortedGridRowEntriesSelector`,
+        ids: `gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef).map(({ id }) => id)`,
+      },
+      idsSelectorCallbak: (apiRef) =>
+        gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef).map(({ id }) => id),
+      options: {
+        ...defaultOptions,
+        applySorting: true,
+        applyFiltering: true,
+        restrainToCurrentPage: true,
+      },
     },
-    idsSelectorCallbak: (apiRef) =>
-      gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef).map(({ id }) => id),
-    options: {
-      ...defaultOptions,
-      applySorting: true,
-      applyFiltering: true,
-      restrainToCurrentPage: true,
+    {
+      example: { ids: `apiRef.current.getRowIndexRelativeToVisibleRows()` },
+      idsSelectorCallbak: (apiRef) =>
+        apiRef.current.getRowIndexRelativeToVisibleRows(),
+      options: {
+        ...defaultOptions,
+        applySorting: true,
+        applyFiltering: true,
+        ignoreCollapsed: true,
+        restrainToCurrentPage: true,
+      },
     },
-  },
-  {
-    example: { ids: `apiRef.current.getRowIndexRelativeToVisibleRows()` },
-    idsSelectorCallbak: (apiRef) =>
-      apiRef.current.getRowIndexRelativeToVisibleRows(),
-    options: {
-      ...defaultOptions,
-      applySorting: true,
-      applyFiltering: true,
-      ignoreCollapsed: true,
-      restrainToCurrentPage: true,
-    },
-  },
-];
+  ];
 
-const formatedSelector = (selectorName) => {
-  if (!selectorName) {
+const formatedSelector = (selectorExample) => {
+  if (!selectorExample) {
     return '// no dedicated Selector';
   }
-  return `${selectorName}: (apiRef: GridApiRef) => number
-// or
-${selectorName}: (state: GridState, instanceId?: number) => number`;
+  return `const selected_ids = ${selectorExample}`;
 };
 
 export default function RowSelectorPlayground() {
@@ -358,7 +361,7 @@ export default function RowSelectorPlayground() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ display: 'flex' }} elevation={1}>
+      <Box sx={{ display: 'flex' }} >
         <FormControl sx={{ m: 1 }} component="fieldset" variant="standard">
           <FormLabel component="legend">Describe your grid</FormLabel>
           <FormGroup>
@@ -443,107 +446,79 @@ export default function RowSelectorPlayground() {
             </FormGroup>
           </Box>
         </FormControl>
-      </Paper>
+      </Box>
       <Box>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={tabPanemIndex}
-            onChange={handleChangeTabPanel}
-            aria-label="basic tabs example"
+
+        <HighlightedCode code={`// Rows ids selector:
+${formatedSelector(idsSelector)}`} language="tsx" />
+
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="data-grid-with-selected-ids"
+            id="show-data-grid-with-selected-ids"
           >
-            <Tab label="Grid Example" />
-            <Tab label="Ids selector" />
-            <Tab label="Entity selector" />
-          </Tabs>
-        </Box>
-        <TabPanel value={tabPanemIndex} index={0}>
-          <Box sx={{ display: 'flex' }}>
-            <Box sx={{ width: '70%' }}>
-              <Box sx={{ width: '100%', display: 'flex', height: '3rem' }}>
-                <Typography>Maximum price</Typography>
-                <Slider
-                  sx={{ maxWidth: 200, ml: 2 }}
-                  size="small"
-                  defaultValue={900}
-                  aria-label="maximum price"
-                  valueLabelDisplay="auto"
-                  min={100}
-                  max={1200}
-                  onChangeCommitted={handleFilterChange}
-                  onChange={debouncedHandleFilterChange}
-                />
+            <Typography>Interactive example</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+
+            <Box sx={{ display: 'flex' }}>
+              <Box sx={{ width: '70%' }}>
+
+                <Box sx={{ height: '300px' }}>
+                  <DataGridPro
+                    apiRef={apiRef}
+                    columns={columns}
+                    rows={rows}
+                    groupingColDef={{ headerName: 'Bicycle' }}
+                    treeData={hasTreeStructure}
+                    getTreeDataPath={getTreeDataPath}
+                    pageSize={hasPagination ? 2 : 100}
+                    rowsPerPageOptions={[2]}
+                    pagination={hasPagination}
+                    onSortModelChange={callRowSelector}
+                    onPageChange={callRowSelector}
+                    filterModel={filterModel}
+                    disableColumnMenu
+                  />
+                </Box>
+                <Box sx={{ width: '100%', display: 'flex', height: '3rem' }}>
+                  <Typography>Maximum price</Typography>
+                  <Slider
+                    sx={{ maxWidth: 200, ml: 2 }}
+                    size="small"
+                    defaultValue={900}
+                    aria-label="maximum price"
+                    valueLabelDisplay="auto"
+                    min={100}
+                    max={1200}
+                    onChangeCommitted={handleFilterChange}
+                    onChange={debouncedHandleFilterChange}
+                  />
+                </Box>
               </Box>
-              <Box sx={{ height: '300px' }}>
-                <DataGridPro
-                  apiRef={apiRef}
-                  columns={columns}
-                  rows={rows}
-                  groupingColDef={{ headerName: 'Bicycle' }}
-                  treeData={hasTreeStructure}
-                  getTreeDataPath={getTreeDataPath}
-                  pageSize={hasPagination ? 2 : 100}
-                  rowsPerPageOptions={[2]}
-                  pagination={hasPagination}
-                  onSortModelChange={callRowSelector}
-                  onPageChange={callRowSelector}
-                  filterModel={filterModel}
-                  disableColumnMenu
-                />
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  ml: 2,
+                  maxWidth: '28%',
+                }}
+              >
+                <p style={{ height: '2rem', marginTop: '1rem', marginBottom: 0 }}>
+                  Retruned ids
+                </p>
+                <List dense sx={{ overflow: 'auto', maxHeight: '300px' }}>
+                  {selectedRows.map((id) => (
+                    <ListItem key={id}>
+                      <ListItemText primary={id} />
+                    </ListItem>
+                  ))}
+                </List>
               </Box>
             </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                ml: 2,
-                maxWidth: '28%',
-              }}
-            >
-              <p style={{ height: '2rem', marginTop: '1rem', marginBottom: 0 }}>
-                Retruned ids
-              </p>
-              <List dense sx={{ overflow: 'auto', maxHeight: '300px' }}>
-                {selectedRows.map((id) => (
-                  <ListItem key={id}>
-                    <ListItemText primary={id} />
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-          </Box>
-        </TabPanel>
-        <TabPanel value={tabPanemIndex} index={1}>
-          <Box
-            sx={{
-              pl: 3,
-              backgroundColor: 'black',
-              color: 'white',
-              py: 1,
-            }}
-          >
-            <pre>
-              {`// Rows ids selector: 
-
-${formatedSelector(idsSelector)}`}
-            </pre>
-          </Box>
-        </TabPanel>
-        <TabPanel value={tabPanemIndex} index={2}>
-          <Box
-            sx={{
-              pl: 3,
-              backgroundColor: 'black',
-              color: 'white',
-              py: 1,
-            }}
-          >
-            <pre>
-              {`// Rows entities selector: 
-
-${formatedSelector(entriesSelector)}`}
-            </pre>
-          </Box>
-        </TabPanel>
+          </AccordionDetails>
+        </Accordion>
       </Box>
     </Box>
   );
