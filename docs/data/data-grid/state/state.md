@@ -83,6 +83,9 @@ In the demo below, clicking on **Recreate the 2nd grid** will re-mount the 2nd g
 
 ### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
+You can pass the state returned by `apiRef.current.exportState()` to the `apiRef.current.restoreState` method.
+In the demo below, clicking on **Save current view** will create a snapshot of the state that you can apply on the grid later through the **Custom view** menu.
+
 {{"demo": "RestoreStateApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
 
 #### Restore part of the state

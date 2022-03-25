@@ -178,36 +178,45 @@ const NewViewListButton = (props: {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
+  const handleSubmitForm: React.FormEventHandler = (e) => {
+    onSubmit();
+    setIsAddingView(false);
+    e.preventDefault();
+  };
+
   return (
     <React.Fragment>
-      <Button endIcon={<AddIcon />} onClick={() => setIsAddingView(true)}>
-        Add a custom view
+      <Button
+        endIcon={<AddIcon />}
+        size="small"
+        onClick={() => setIsAddingView(true)}
+      >
+        Save current view
       </Button>
       <Dialog onClose={() => setIsAddingView(false)} open={isAddingView}>
-        <DialogTitle>New custom view</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            value={label}
-            onChange={onLabelChange}
-            margin="dense"
-            size="small"
-            label="Custom view label"
-            variant="standard"
-          />
+        <form onSubmit={handleSubmitForm}>
+          <DialogTitle>New custom view</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              value={label}
+              onChange={onLabelChange}
+              margin="dense"
+              size="small"
+              label="Custom view label"
+              variant="standard"
+              fullWidth
+            />
+          </DialogContent>
           <DialogActions>
-            <Button onClick={() => setIsAddingView(false)}>Cancel</Button>
-            <Button
-              onClick={() => {
-                onSubmit();
-                setIsAddingView(false);
-              }}
-              disabled={!isValid}
-            >
+            <Button type="button" onClick={() => setIsAddingView(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={!isValid}>
               Create view
             </Button>
           </DialogActions>
-        </DialogContent>
+        </form>
       </Dialog>
     </React.Fragment>
   );
@@ -269,7 +278,7 @@ const CustomToolbar = () => {
         size="small"
         onClick={handlePopperAnchorClick}
       >
-        Custom views ({Object.keys(state.views).length})
+        Custom view ({Object.keys(state.views).length})
       </Button>
       <ClickAwayListener onClickAway={handleClosePopper}>
         <Popper
