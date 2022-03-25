@@ -8,7 +8,6 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
