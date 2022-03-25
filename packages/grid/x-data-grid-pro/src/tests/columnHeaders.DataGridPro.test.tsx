@@ -32,6 +32,26 @@ describe('<DataGridPro /> - Column Headers', () => {
     ],
   };
 
+  it('should not scroll the column headers when a column is focused', function test() {
+    if (isJSDOM) {
+      this.skip(); // JSDOM version of .focus() doesn't scroll
+    }
+    render(
+      <div style={{ width: 102, height: 500 }}>
+        <DataGridPro
+          {...baselineProps}
+          columns={[{ field: 'brand' }, { field: 'foundationYear' }]}
+        />
+      </div>,
+    );
+    const columnHeaders = document.querySelector('.MuiDataGrid-columnHeaders')!;
+    expect(columnHeaders.scrollLeft).to.equal(0);
+    const columnCell = getColumnHeaderCell(0);
+    columnCell.focus();
+    fireEvent.keyDown(columnCell, { key: 'End' });
+    expect(columnHeaders.scrollLeft).to.equal(0);
+  });
+
   describe('GridColumnHeaderMenu', () => {
     it('should close the menu when the window is scrolled', () => {
       render(
