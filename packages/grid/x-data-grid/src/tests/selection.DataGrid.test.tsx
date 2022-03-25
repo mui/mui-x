@@ -165,13 +165,13 @@ describe('<DataGrid /> - Selection', () => {
 
       fireEvent.keyDown(cell00, { key: ' ', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      //
-      // fireEvent.keyDown(cell00, {
-      //   key: 'ArrowDown',
-      //   shiftKey: true,
-      // });
-      //
-      // expect(getSelectedRowIds()).to.deep.equal([1]);
+
+      fireEvent.keyDown(cell00, {
+        key: 'ArrowDown',
+        shiftKey: true,
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([1]);
     });
   });
 

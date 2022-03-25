@@ -400,6 +400,7 @@ export const useGridSelection = (
       }
 
       if (isNavigationKey(event.key) && event.shiftKey) {
+        // The cell that has focus after the keyboard navigation
         const focusCell = gridFocusCellSelector(apiRef);
         if (focusCell && focusCell.id !== params.id) {
           event.preventDefault();
@@ -433,7 +434,6 @@ export const useGridSelection = (
               start = newRowIndex + 1;
               end = previousRowIndex;
             } else {
-              console.log('HEY');
               // We are navigating to the top of the page and adding selected rows
               start = newRowIndex;
               end = previousRowIndex;
