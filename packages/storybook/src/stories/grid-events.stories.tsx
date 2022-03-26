@@ -27,8 +27,8 @@ export function AllEvents() {
       onSelectionModelChange={(params) => action('onSelectionChange', { depth: 1 })(params)}
       onPageChange={(params) => action('onPageChange')(params)}
       onPageSizeChange={(params) => action('onPageSizeChange')(params)}
-      onPanelClose={(params) => action('onPanelClose')(params)}
-      onPanelOpen={(params) => action('onPanelOpen')(params)}
+      onPreferencePanelClose={(params) => action('onPreferencePanelClose')(params)}
+      onPreferencePanelOpen={(params) => action('onPreferencePanelOpen')(params)}
       onSortModelChange={(params) => action('onSortModelChange')(params)}
       onStateChange={(params) => action('onStateChange')(params)}
     />
@@ -107,26 +107,26 @@ export const OnColumnHeaderClick = () => {
   );
 };
 
-export const OnPanelClose = () => {
+export const OnPreferencePanelClose = () => {
   const data = useData(2000, 200);
 
   return (
     <DataGridPro
       rows={data.rows}
       columns={data.columns}
-      onPanelClose={(params) => action('Panel Close')(params)}
+      onPreferencePanelClose={(params) => action('PreferencePanel Close')(params)}
     />
   );
 };
 
-export const OnPanelOpen = () => {
+export const OnPreferencePanelOpen = () => {
   const data = useData(2000, 200);
 
   return (
     <DataGridPro
       rows={data.rows}
       columns={data.columns}
-      onPanelOpen={(params) => action('Panel Open')(params)}
+      onPreferencePanelOpen={(params) => action('PreferencePanel Open')(params)}
     />
   );
 };

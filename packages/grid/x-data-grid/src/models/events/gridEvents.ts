@@ -327,11 +327,11 @@ enum GridEvents {
   /**
    * Callback fired when a preferencePanel is closed.
    */
-  panelClose = 'panelClose',
+  preferencePanelClose = 'preferencePanelClose',
   /**
    * Callback fired when a preferencePanel is opened.
    */
-  panelOpen = 'panelOpen',
+  preferencePanelOpen = 'preferencePanelOpen',
 }
 
 export type GridEventsStr = keyof GridEventLookup;

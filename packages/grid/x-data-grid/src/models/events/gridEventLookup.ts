@@ -220,6 +220,6 @@ export interface GridEventLookup
   };
 
   // PreferencePanel
-  panelClose: { params: GridPreferencePanelParams };
-  panelOpen: { params: GridPreferencePanelParams };
+  preferencePanelClose: { params: GridPreferencePanelParams };
+  preferencePanelOpen: { params: GridPreferencePanelParams };
 }

@@ -454,14 +454,14 @@ DataGridRaw.propTypes = {
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPanelClose: PropTypes.func,
+  onPreferencePanelClose: PropTypes.func,
   /**
    * Callback fired when a preferencePanel is opened.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPanelOpen: PropTypes.func,
+  onPreferencePanelOpen: PropTypes.func,
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].

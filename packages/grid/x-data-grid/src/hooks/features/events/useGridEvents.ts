@@ -23,8 +23,8 @@ export function useGridEvents(
     | 'onCellDoubleClick'
     | 'onCellKeyDown'
     | 'onCellFocusOut'
-    | 'onPanelClose'
-    | 'onPanelOpen'
+    | 'onPreferencePanelClose'
+    | 'onPreferencePanelOpen'
     | 'onRowDoubleClick'
     | 'onRowClick'
     | 'onError'
@@ -48,8 +48,8 @@ export function useGridEvents(
   useGridApiOptionHandler(apiRef, GridEvents.cellKeyDown, props.onCellKeyDown);
   useGridApiOptionHandler(apiRef, GridEvents.cellFocusOut, props.onCellFocusOut);
 
-  useGridApiOptionHandler(apiRef, GridEvents.panelClose, props.onPanelClose);
-  useGridApiOptionHandler(apiRef, GridEvents.panelOpen, props.onPanelOpen);
+  useGridApiOptionHandler(apiRef, GridEvents.preferencePanelClose, props.onPreferencePanelClose);
+  useGridApiOptionHandler(apiRef, GridEvents.preferencePanelOpen, props.onPreferencePanelOpen);
 
   useGridApiOptionHandler(apiRef, GridEvents.rowDoubleClick, props.onRowDoubleClick);
   useGridApiOptionHandler(apiRef, GridEvents.rowClick, props.onRowClick);
