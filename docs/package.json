@@ -72,7 +72,7 @@
     "react-text-mask": "^5.4.3",
     "recast": "^0.20.5",
     "rimraf": "^3.0.2",
-    "styled-components": "^5.3.3",
+    "styled-components": "^5.3.5",
     "stylis": "^4.0.13",
     "stylis-plugin-rtl": "^2.1.1",
     "stylis-plugin-rtl-sc": "npm:stylis-plugin-rtl@^2.1.1",
