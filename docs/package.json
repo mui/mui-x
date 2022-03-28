@@ -31,7 +31,7 @@
     "@mui/utils": "^5.4.4",
     "@trendmicro/react-interpolate": "^0.5.5",
     "@types/lodash": "^4.14.179",
-    "@types/react-dom": "^17.0.13",
+    "@types/react-dom": "^17.0.14",
     "@types/react-router-dom": "^5.3.3",
     "accept-language": "^3.0.18",
     "address": "^1.1.2",
