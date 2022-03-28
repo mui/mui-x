@@ -9,7 +9,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   errorOverlayDefaultLabel: 'Der skete en fejl.',
 
   // Density selector toolbar button text
-  // toolbarDensity: 'Density',
+  toolbarDensity: 'Tæthed',
   toolbarDensityLabel: 'Tæthed',
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
@@ -20,7 +20,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarColumnsLabel: 'Vælg kolonne',
 
   // Filters toolbar button text
-  // toolbarFilters: 'Filters',
+  toolbarFilters: 'Filtre',
   toolbarFiltersLabel: 'Vis filtre',
   toolbarFiltersTooltipHide: 'Skjul filtre',
   toolbarFiltersTooltipShow: 'Vis filtre',
@@ -31,7 +31,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // toolbarExport: 'Export',
   toolbarExportLabel: 'Eksporter',
   toolbarExportCSV: 'Download som CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'Print',
   // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
@@ -44,12 +44,12 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
   filterPanelDeleteIconLabel: 'Slet',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLinkOperator: 'Logisk operator',
   filterPanelOperators: 'Operatorer',
 
   // TODO v6: rename to filterPanelOperator
-  // filterPanelOperatorAnd: 'And',
-  // filterPanelOperatorOr: 'Or',
+  filterPanelOperatorAnd: 'Og',
+  filterPanelOperatorOr: 'Eller',
   filterPanelColumns: 'Kolonne',
   filterPanelInputLabel: 'Værdi',
   filterPanelInputPlaceholder: 'Filter værdi',
@@ -59,25 +59,25 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterOperatorEquals: 'Lig med',
   filterOperatorStartsWith: 'Begynder med',
   filterOperatorEndsWith: 'Ender med',
-  filterOperatorIs: 'På',
-  filterOperatorNot: 'Ikke på',
+  filterOperatorIs: 'Er lig med',
+  filterOperatorNot: 'Er ikke lig med',
   filterOperatorAfter: 'Efter',
   filterOperatorOnOrAfter: 'På eller efter',
   filterOperatorBefore: 'Før',
   filterOperatorOnOrBefore: 'På eller før',
-  filterOperatorIsEmpty: 'Indeholder data',
-  filterOperatorIsNotEmpty: 'Indeholder ikke data',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsEmpty: 'Indeholder ikke data',
+  filterOperatorIsNotEmpty: 'Indeholder data',
+  filterOperatorIsAnyOf: 'indeholder en af',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'hvilken som helst',
+  filterValueTrue: 'positiv',
+  filterValueFalse: 'negativ',
 
   // Column menu text
-  // columnMenuLabel: 'Menu',
+  columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Vis Kolonner',
-  // columnMenuFilter: 'Filter',
+  columnMenuFilter: 'Filtre',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Fjern sortering',
   columnMenuSortAsc: 'Sorter stigende',
@@ -85,18 +85,16 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} aktive filtre` : `${count} aktivt filter`,
+    count !== 1 ? `${count} aktive filtre` : `Ét aktivt filter`,
   columnHeaderFiltersLabel: 'Vis filtre',
   columnHeaderSortIconLabel: 'Sorter',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1
-      ? `${count.toLocaleString()} rækker valgt`
-      : `${count.toLocaleString()} række valgt`,
+    count !== 1 ? `${count.toLocaleString()} rækker valgt` : `Én række valgt`,
 
   // Total row amount footer text
-  footerTotalRows: 'Totale rækker:',
+  footerTotalRows: 'Antal rækker i alt:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
@@ -104,14 +102,14 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Afkrydsningsvalg',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Vælg alle rækker',
+  checkboxSelectionUnselectAllRows: 'Fravælg alle rækker',
+  checkboxSelectionSelectRow: 'Vælg række',
+  checkboxSelectionUnselectRow: 'Fravælg række',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'yes',
-  // booleanCellFalseLabel: 'no',
+  booleanCellTrueLabel: 'ja',
+  booleanCellFalseLabel: 'nej',
 
   // Actions cell more text
   actionsCellMore: 'mere',
@@ -127,13 +125,13 @@ const daDKGrid: Partial<GridLocaleText> = {
   treeDataCollapse: 'Skjul underelementer',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Gruppér',
+  groupColumn: (name) => `Gruppér efter ${name}`,
+  unGroupColumn: (name) => `Fjern gruppéring efter ${name}`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'Udvid',
+  collapseDetailPanel: 'Kollaps',
 };
 
 export const daDK: Localization = getGridLocalization(daDKGrid, daDKCore);
