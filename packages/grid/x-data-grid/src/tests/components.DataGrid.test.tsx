@@ -77,7 +77,7 @@ describe('<DataGrid /> - Components', () => {
       expect(getRow(0)).to.have.attr('data-name', 'foobar');
     });
 
-    it('should pass the props from componentsProps.columnHeaderFilterIcon to the column header filter icon', () => {
+    it('should pass the props from componentsProps.columnHeaderFilterIconButton to the column header filter icon', () => {
       const onClick = spy();
       render(
         <div style={{ width: 300, height: 500 }}>
@@ -88,7 +88,7 @@ describe('<DataGrid /> - Components', () => {
               items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }],
             }}
             disableVirtualization
-            componentsProps={{ columnHeaderFilterIcon: { onClick } }}
+            componentsProps={{ columnHeaderFilterIconButton: { onClick } }}
           />
         </div>,
       );

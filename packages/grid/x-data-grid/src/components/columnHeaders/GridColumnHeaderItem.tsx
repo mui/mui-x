@@ -186,10 +186,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnTitleIconButtons = (
     <React.Fragment>
       {!rootProps.disableColumnFilter && (
-        <rootProps.components.ColumnHeaderFilterIcon
+        <rootProps.components.ColumnHeaderFilterIconButton
           field={column.field}
           counter={filterItemsCounter}
-          {...rootProps.componentsProps?.columnHeaderFilterIcon}
+          {...rootProps.componentsProps?.columnHeaderFilterIconButton}
         />
       )}
 

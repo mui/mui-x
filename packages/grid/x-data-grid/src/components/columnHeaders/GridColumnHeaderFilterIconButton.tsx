@@ -12,13 +12,13 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 
-export interface ColumnHeaderFilterIconProps {
+export interface ColumnHeaderFilterIconButtonProps {
   field: string;
   counter?: number;
   onClick?: (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-type OwnerState = ColumnHeaderFilterIconProps & {
+type OwnerState = ColumnHeaderFilterIconButtonProps & {
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -32,7 +32,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
+function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonProps) {
   const { counter, field, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -98,7 +98,7 @@ function GridColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   );
 }
 
-GridColumnHeaderFilterIcon.propTypes = {
+GridColumnHeaderFilterIconButton.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -108,4 +108,4 @@ GridColumnHeaderFilterIcon.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridColumnHeaderFilterIcon };
+export { GridColumnHeaderFilterIconButton };
