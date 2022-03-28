@@ -21,7 +21,7 @@ import {
 } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridColumnVisibilityChangeParams } from '../../../models';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GridColumnDimensions,
   GridColumnsInitialState,
@@ -297,7 +297,7 @@ export function useGridColumns(
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
       const columnsStateToExport: GridColumnsInitialState = {};
 
@@ -338,7 +338,7 @@ export function useGridColumns(
     [apiRef, isUsingColumnVisibilityModel],
   );
 
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
       const columnVisibilityModelToImport = isUsingColumnVisibilityModel
         ? context.stateToRestore.columns?.columnVisibilityModel
@@ -369,7 +369,7 @@ export function useGridColumns(
     [apiRef, isUsingColumnVisibilityModel, columnsTypes],
   );
 
-  const preferencePanelPreProcessing = React.useCallback<GridPreProcessor<'preferencePanel'>>(
+  const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
       if (value === GridPreferencePanelsValue.columns) {
         const ColumnsPanel = props.components.ColumnsPanel;
@@ -381,15 +381,15 @@ export function useGridColumns(
     [props.components.ColumnsPanel, props.componentsProps?.columnsPanel],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
 
   /**
    * EVENTS
    */
-  const handlePreProcessorRegister = React.useCallback<
-    GridEventListener<GridEvents.preProcessorRegister>
+  const handlepipeProcessorRegister = React.useCallback<
+    GridEventListener<GridEvents.pipeProcessorRegister>
   >(
     (name) => {
       if (name !== 'hydrateColumns') {
@@ -423,7 +423,7 @@ export function useGridColumns(
     }
   };
 
-  useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
+  useGridApiEventHandler(apiRef, GridEvents.pipeProcessorRegister, handlepipeProcessorRegister);
   useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleGridSizeChange);
 
   useGridApiOptionHandler(

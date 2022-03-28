@@ -10,9 +10,9 @@ import { GridRowEntry } from '../../../models/gridRows';
 import { GridHydrateRowsValue } from '../../features/rows/gridRowsState';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 
-export type GridPreProcessingGroup = keyof GridPreProcessingGroupLookup;
+export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
-export interface GridPreProcessingGroupLookup {
+export interface GridPipeProcessingLookup {
   hydrateColumns: {
     value: GridHydrateColumnsValue;
   };
@@ -33,43 +33,44 @@ export interface GridPreProcessingGroupLookup {
   preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
 }
 
-export type GridPreProcessor<P extends GridPreProcessingGroup> = (
-  value: GridPreProcessingGroupLookup[P]['value'],
-  context: GridPreProcessingGroupLookup[P] extends { context: any }
-    ? GridPreProcessingGroupLookup[P]['context']
+export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (
+  value: GridPipeProcessingLookup[P]['value'],
+  context: GridPipeProcessingLookup[P] extends { context: any }
+    ? GridPipeProcessingLookup[P]['context']
     : undefined,
-) => GridPreProcessingGroupLookup[P]['value'];
+) => GridPipeProcessingLookup[P]['value'];
 
-type GridPreProcessorsApplierArg<
-  P extends GridPreProcessingGroup,
+type GridPipeProcessorsApplierArgs<
+  P extends GridPipeProcessorGroup,
   T extends { value: any },
 > = T extends { context: any } ? [P, T['value'], T['context']] : [P, T['value']];
 
-type GridPreProcessorsApplier = <P extends GridPreProcessingGroup>(
-  ...params: GridPreProcessorsApplierArg<P, GridPreProcessingGroupLookup[P]>
-) => GridPreProcessingGroupLookup[P]['value'];
+type GridPipeProcessorsApplier = <P extends GridPipeProcessorGroup>(
+  ...params: GridPipeProcessorsApplierArgs<P, GridPipeProcessingLookup[P]>
+) => GridPipeProcessingLookup[P]['value'];
 
-export interface GridPreProcessingApi {
+export interface GridPipeProcessingApi {
   /**
    * Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.
-   * @param {GridPreProcessingGroup} group The name of the group to bind this pre-processor to.
-   * @param {number} id An unique and static identifier of the pre-processor.
-   * @param {GridPreProcessor} callback The pre-processor to register.
-   * @returns {() => void} A function to unregister the pre-processor.
+   * @param {GridPipeProcessorGroup} group The group on which this processor should be applied.
+   * @param {number} id An unique and static identifier of the processor.
+   * @param {GridPipeProcessor} processor The processor to register.
+   * @returns {() => void} A function to unregister the processor.
    * @ignore - do not document.
    */
-  unstable_registerPreProcessor: <G extends GridPreProcessingGroup>(
-    group: GridPreProcessingGroup,
+  unstable_registerPipeProcessor: <G extends GridPipeProcessorGroup>(
+    processorName: GridPipeProcessorGroup,
     id: string,
-    callback: GridPreProcessor<G>,
+    callback: GridPipeProcessor<G>,
   ) => () => void;
   /**
-   * Apply on the value the pre-processors registered on the given group.
-   * @param {GridPreProcessingGroup} group The name of the processing group.
-   * @param {any} value The value to pass to the first pre-processor.
-   * @param {any} params Additional params to pass to the pre-processors.
-   * @returns {any} The value after passing through all pre-processors.
+   * Run all the processors registered for the given group.
+   * @template T
+   * @param {GridPipeProcessorGroup} group The group from which we want to apply the processors.
+   * @param {T['value']} value The initial value to pass to the first processor.
+   * @param {T['context]} context Context object that will be passed to each processor.
+   * @returns {T['value]} The value after passing through all pre-processors.
    * @ignore - do not document.
    */
-  unstable_applyPreProcessors: GridPreProcessorsApplier;
+  unstable_applyPipeProcessors: GridPipeProcessorsApplier;
 }

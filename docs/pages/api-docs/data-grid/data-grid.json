@@ -242,6 +242,7 @@
   "name": "DataGrid",
   "styles": {
     "classes": [
+      "actionsCell",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -334,7 +335,9 @@
       "toolbarFilterList",
       "withBorder",
       "treeDataGroupingCell",
-      "treeDataGroupingCellToggle"
+      "treeDataGroupingCellToggle",
+      "groupingCriteriaCell",
+      "groupingCriteriaCellToggle"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"
