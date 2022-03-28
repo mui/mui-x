@@ -18,12 +18,22 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
+import { buildWarning } from '../../../utils/warning';
 import {
   GridCellEditStartParams,
   GridCellEditStopParams,
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
+
+const missingOnProcessRowUpdateErrorWarning = buildWarning(
+  [
+    'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+  ],
+  'error',
+);
 
 export const useGridCellEditing = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -297,6 +307,8 @@ export const useGridCellEditing = (
         const handleError = (errorThrown: any) => {
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
+          } else {
+            missingOnProcessRowUpdateErrorWarning();
           }
         };
 
