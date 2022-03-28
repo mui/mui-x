@@ -18,7 +18,6 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { doesSupportPreventScroll } from '../../utils/utils';
 
 export interface GridCellProps {
   align: GridAlignment;
@@ -44,6 +43,20 @@ export interface GridCellProps {
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
   [x: string]: any; // TODO it should not accept unspecified props
+}
+
+// Based on https://stackoverflow.com/a/59518678
+let cachedSupportsPreventScroll: boolean;
+function doesSupportPreventScroll(): boolean {
+  if (cachedSupportsPreventScroll === undefined) {
+    document.createElement('div').focus({
+      get preventScroll() {
+        cachedSupportsPreventScroll = true;
+        return false;
+      },
+    });
+  }
+  return cachedSupportsPreventScroll;
 }
 
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'isEditable'> & {

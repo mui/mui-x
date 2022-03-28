@@ -19,7 +19,6 @@ import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { doesSupportPreventScroll } from '../../utils/utils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -203,12 +202,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
-      elementToFocus?.focus({ preventScroll: true });
-
-      if (!doesSupportPreventScroll()) {
-        // A ponyfill for .focus({ preventScroll: true })
-        apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
-      }
+      elementToFocus?.focus();
+      apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
     }
   }, [apiRef, hasFocus]);
 
