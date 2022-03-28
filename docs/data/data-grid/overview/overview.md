@@ -45,7 +45,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 ### MIT vs. commercial
 
-> Please check the [Licenses section](/components/data-grid/getting-started/#licenses) for more details between the different versions.
+> Please check the [Licenses section](/x/advanced-components/#licenses) for more details between the different versions.
 
 ## Features
 
