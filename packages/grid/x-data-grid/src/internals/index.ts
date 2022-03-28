@@ -4,8 +4,8 @@ export { GridVirtualScrollerRenderZone } from '../components/virtualization/Grid
 export { GridColumnHeaders } from '../components/columnHeaders/GridColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 
-export { useGridRegisterPreProcessor } from '../hooks/core/preProcessing';
-export type { GridPreProcessor } from '../hooks/core/preProcessing';
+export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
+export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
 export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
 export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';

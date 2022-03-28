@@ -13,8 +13,8 @@ import {
   GridEventListener,
 } from '@mui/x-data-grid';
 import {
-  useGridRegisterPreProcessor,
-  GridPreProcessor,
+  useGridRegisterPipeProcessor,
+  GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
@@ -124,7 +124,7 @@ export const useGridColumnPinning = (
   /**
    * PRE-PROCESSING
    */
-  const calculateScrollLeft = React.useCallback<GridPreProcessor<'scrollToIndexes'>>(
+  const calculateScrollLeft = React.useCallback<GridPipeProcessor<'scrollToIndexes'>>(
     (initialValue, params) => {
       if (props.disableColumnPinning) {
         return initialValue;
@@ -166,7 +166,7 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns, props.disableColumnPinning],
   );
 
-  const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
+  const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (initialValue, column) => {
       if (props.disableColumnPinning) {
         return initialValue;
@@ -181,7 +181,7 @@ export const useGridColumnPinning = (
     [props.disableColumnPinning],
   );
 
-  const checkIfCanBeReordered = React.useCallback<GridPreProcessor<'canBeReordered'>>(
+  const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(
     (initialValue, { targetIndex }) => {
       const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
@@ -208,7 +208,7 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns],
   );
 
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
       const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
       if (
@@ -226,7 +226,7 @@ export const useGridColumnPinning = (
     [apiRef],
   );
 
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
       const newPinnedColumns = context.stateToRestore.pinnedColumns;
       if (newPinnedColumns != null) {
@@ -238,11 +238,11 @@ export const useGridColumnPinning = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
-  useGridRegisterPreProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
-  useGridRegisterPreProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
-  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'pinnedColumns',
