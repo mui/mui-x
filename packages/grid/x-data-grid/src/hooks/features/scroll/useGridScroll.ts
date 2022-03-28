@@ -92,7 +92,7 @@ export const useGridScroll = (
         });
       }
 
-      scrollCoordinates = apiRef.current.unstable_applyPreProcessors(
+      scrollCoordinates = apiRef.current.unstable_applyPipeProcessors(
         'scrollToIndexes',
         scrollCoordinates,
         params,

@@ -12,7 +12,7 @@ export interface GridEventLookupPro {
   rowsScrollEnd: { params: GridRowScrollEndParams };
 }
 
-export interface GridPreProcessingGroupLookupPro {
+export interface GridPipeProcessingLookupPro {
   canBeReordered: {
     value: boolean;
     context: GridCanBeReorderedPreProcessingContext;
@@ -35,5 +35,5 @@ declare module '@mui/x-data-grid' {
 
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
 
-  interface GridPreProcessingGroupLookup extends GridPreProcessingGroupLookupPro {}
+  interface GridPipeProcessingLookup extends GridPipeProcessingLookupPro {}
 }

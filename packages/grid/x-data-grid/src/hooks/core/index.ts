@@ -1,1 +1,1 @@
-export type { GridPreProcessingGroupLookup } from './preProcessing';
+export type { GridPipeProcessingLookup } from './pipeProcessing';
