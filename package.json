@@ -88,7 +88,7 @@
     "@octokit/rest": "^18.12.0",
     "@playwright/test": "1.20.0",
     "@testing-library/react": "^12.1.4",
-    "@types/babel__core": "^7.1.18",
+    "@types/babel__core": "^7.1.19",
     "@types/chai": "^4.3.0",
     "@types/chai-dom": "^0.0.12",
     "@types/enzyme": "^3.10.11",
