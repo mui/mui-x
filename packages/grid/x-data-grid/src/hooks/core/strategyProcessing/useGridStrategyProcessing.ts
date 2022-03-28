@@ -59,7 +59,10 @@ type UntypedStrategyProcessors = {
  * =====================================================================================================================
  *
  * Each processor name is part of a strategy group which can only have one active strategy at the time.
- * For now, there is only one strategy group which is `rowTree`.
+ * For now, there is only one strategy group named `rowTree` which customize
+ * - row tree creation algorithm.
+ * - sorting algorithm.
+ * - filtering algorithm.
  */
 export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
   const availableStrategies = React.useRef(
