@@ -2,6 +2,10 @@ import { generateUtilityClasses, generateUtilityClass } from '@mui/material';
 
 export interface GridClasses {
   /**
+   * Styles applied to the root element of the cell with type="actions"
+   */
+  actionsCell: string;
+  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -367,13 +371,21 @@ export interface GridClasses {
    */
   withBorder: string;
   /**
-   * Styles applied to the root of the grouping column of the tree data.
+   * Styles applied to the root of the grouping cell of the tree data.
    */
   treeDataGroupingCell: string;
   /**
-   * Styles applied to the toggle of the grouping column of the tree data.
+   * Styles applied to the toggle of the grouping cell of the tree data.
    */
   treeDataGroupingCellToggle: string;
+  /**
+   * Styles applied to the root element of the grouping criteria cell
+   */
+  groupingCriteriaCell: string;
+  /**
+   * Styles applied to the toggle of the grouping criteria cell
+   */
+  groupingCriteriaCellToggle: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -382,7 +394,7 @@ export function getDataGridUtilityClass(slot: string): string {
   return generateUtilityClass('MuiDataGrid', slot);
 }
 
-export const gridClasses = generateUtilityClasses('MuiDataGrid', [
+export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'actionsCell',
   'autoHeight',
   'booleanCell',

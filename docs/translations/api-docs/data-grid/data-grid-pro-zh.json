@@ -129,6 +129,9 @@
     "treeData": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
   },
   "classDescriptions": {
+    "actionsCell": {
+      "description": "Styles applied to the root element of the cell with type=\"actions\""
+    },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
@@ -502,11 +505,17 @@
     },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root of the grouping column of the tree data"
+      "nodeName": "the root of the grouping cell of the tree data"
     },
     "treeDataGroupingCellToggle": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toggle of the grouping column of the tree data"
+      "nodeName": "the toggle of the grouping cell of the tree data"
+    },
+    "groupingCriteriaCell": {
+      "description": "Styles applied to the root element of the grouping criteria cell"
+    },
+    "groupingCriteriaCellToggle": {
+      "description": "Styles applied to the toggle of the grouping criteria cell"
     }
   },
   "slotDescriptions": {
