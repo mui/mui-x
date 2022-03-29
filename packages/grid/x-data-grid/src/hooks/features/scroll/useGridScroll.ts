@@ -13,7 +13,6 @@ import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -140,16 +139,4 @@ export const useGridScroll = (
     getScrollPosition,
   };
   useGridApiMethod(apiRef, scrollApi, 'GridScrollApi');
-
-  const preventScroll = React.useCallback((event: any) => {
-    event.target.scrollLeft = 0;
-    event.target.scrollTop = 0;
-  }, []);
-
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    'scroll',
-    preventScroll,
-  );
 };
