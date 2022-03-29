@@ -84,7 +84,7 @@ export const useGridRowsMeta = (
             isFirstVisible: indexRelativeToCurrentPage === 0,
             isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
             indexRelativeToExpandedRows:
-              indexRelativeToCurrentPage + currentPage.range!.firstRowIndex,
+              indexRelativeToCurrentPage + currentPage.range?.firstRowIndex!,
             indexRelativeToCurrentPage,
           });
 
@@ -115,7 +115,7 @@ export const useGridRowsMeta = (
       };
     });
     apiRef.current.forceUpdate();
-  }, [apiRef, currentPage.rows, currentPage.range, getRowSpacing, getRowHeight]);
+  }, [apiRef, currentPage.rows, currentPage.range?.firstRowIndex, getRowSpacing, getRowHeight]);
 
   const getTargetRowHeight = (rowId: GridRowId): number =>
     rowsHeightLookup.current[rowId]?.value || rowHeight;
