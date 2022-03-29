@@ -175,13 +175,13 @@
   },
   {
     "name": "preferencePanelClose",
-    "description": "Callback fired when a preferencePanel is closed.",
+    "description": "Callback fired when the preferences panel is closed.",
     "params": "GridPreferencePanelParams",
     "event": "MuiEvent<{}>"
   },
   {
     "name": "preferencePanelOpen",
-    "description": "Callback fired when a preferencePanel is opened.",
+    "description": "Callback fired when the preferences panel is opened.",
     "params": "GridPreferencePanelParams",
     "event": "MuiEvent<{}>"
   },

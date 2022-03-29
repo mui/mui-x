@@ -457,14 +457,14 @@ DataGridRaw.propTypes = {
    */
   onPageSizeChange: PropTypes.func,
   /**
-   * Callback fired when a preferencePanel is closed.
+   * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPreferencePanelClose: PropTypes.func,
   /**
-   * Callback fired when a preferencePanel is opened.
+   * Callback fired when the preferences panel is opened.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.

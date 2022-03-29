@@ -591,14 +591,14 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
   /**
-   * Callback fired when a preferencePanel is closed.
+   * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPreferencePanelClose?: GridEventListener<GridEvents.preferencePanelClose>;
   /**
-   * Callback fired when a preferencePanel is opened.
+   * Callback fired when the preferences panel is opened.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
