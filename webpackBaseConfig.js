@@ -44,7 +44,7 @@ module.exports = {
         loader: 'raw-loader',
       },
       {
-        test: /\.tsx$/,
+        test: /\.(ts|tsx)$/,
         loader: 'string-replace-loader',
         options: {
           search: '__RELEASE_INFO__',

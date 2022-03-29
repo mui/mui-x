@@ -20,7 +20,7 @@ const RenderDate = (params: GridRenderCellParams<Date>) => {
 
   return (
     <strong>
-      {value.getFullYear()}
+      {value?.getFullYear() ?? ''}
       <Button
         component="button"
         ref={buttonElement}

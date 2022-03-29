@@ -11,7 +11,7 @@ export function generateReleaseInfo() {
 
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
-export function verifyLicense(releaseInfo: string, encodedLicense: string) {
+export function verifyLicense(releaseInfo: string, encodedLicense: string | undefined) {
   if (!releaseInfo) {
     throw new Error('MUI: The release information is missing. Not able to validate license.');
   }

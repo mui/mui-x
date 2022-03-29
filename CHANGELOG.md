@@ -3,13 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.7.0
+
+_Mar 24, 2022_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- ✏ Add a new editing API with better support for server-side persistence and validation (#3963, #4060) @m4theushw
+
+  The new API is stable, but to avoid any breaking changes or conflicts with the old API, you must add the following flag to access it:
+
+  ```tsx
+  <DataGrid experimentalFeatures={{ newEditingApi: true }} />
+  ```
+
+  ⚠ Users relying on the old API (legacy) don't need to worry as it will continue to work until v6.
+
+  The new API also features brand new documentation with more useful demos and guides explaining how to create custom edit components.
+  Visit the new [documentation](https://mui.com/components/data-grid/editing/) for more information.
+
+- 📚 Documentation improvements
+- 🐞 Bug and typo fixes
+
+### `@mui/x-data-grid@v5.7.0` / `@mui/x-data-grid-pro@v5.7.0`
+
+#### Changes
+
+- [DataGrid] Add column order and dimensions to the portable state (#3816) @flaviendelangle
+- [DataGrid] Add new editing API (#3963) @m4theushw
+- [DataGrid] Allow to customize `ColumnsPanel` with `componentsProps` prop (#4207) @alexfauquette
+- [DataGrid] Do not unselect row when <kbd>Shift</kbd> + click on the last selected row of a range (#4196) @flaviendelangle
+- [DataGrid] Fix `showCellRightBorder` not working in the last row (#4140) @cherniavskii
+- [DataGrid] Fix error overlay not visible when `autoHeight` is enabled (#4110) @cherniavskii
+- [DataGrid] Fix white blank when scrolling (#4158) @alexfauquette
+- [DataGrid] Adjust type of the `description` prop in `GridColumnHeaderTitle` (#4247) @baahrens
+- [DataGrid] Fix focus after stopping row edit mode (#4252) @m4theushw
+- [DataGridPro] Fix pinned columns edge overflow with custom `borderRadius` (#4188) @socramm9
+- [DataGridPro] Fix tab switching order with pinned columns and `editMode="row"` (#4198) @cherniavskii
+- [l10n] Improve Persian (fa-IR) locale (#4227) @SaeedZhiany
+- [l10n] Improve Polish (pl-PL) locale (#4153) @pbmchc
+- [l10n] Improve Arabic (ar-SD) locale (#4212) @shadigaafar
+- [l10n] Improve Korean (ko-KR) locale (#4245) @kyeongsoosoo
+
+### Docs
+
+- [docs] Clean demo (#4073) @alexfauquette
+- [docs] Delete restore state demos (#4220) @flaviendelangle
+- [docs] Document Print export `X-Frame-Options` limitation (#4222) @DanailH
+- [docs] Add docs for the new editing API (#4060) @m4theushw
+- [docs] Explain how to use `printOptions.pageStyle` (#4138) @alexfauquette
+- [docs] Fix 301 links (#4165) @oliviertassinari
+- [docs] Fix 404 API links (#4164) @oliviertassinari
+- [docs] Fix broken anchor links (#4162) @alexfauquette
+- [docs] Remove useless `apiRef` from demos (#4221) @flaviendelangle
+- [docs] Sync the headers with core (#4195) @oliviertassinari
+
+### Core
+
+- [core] Add CLI to decode license key (#4126) @flaviendelangle
+- [core] Fix Lerna package change detection (#4202) @oliviertassinari
+- [core] Implement strategy pattern for pre-processors (#4030) @flaviendelangle
+- [core] Keep same reference to the column visibility model if no column has changed (#4154) @m4theushw
+- [core] Prepare `@mui/x-license-pro` for date pickers (#4123) @flaviendelangle
+- [core] Remove datagen from `@mui/x-data-grid-generator` bundle (#4163) @m4theushw
+- [core] Remove lodash `isDeepEqual` (#4159) @flaviendelangle
+- [core] Use a pipe processor for `GridPreferencePanel` children (#4216) @flaviendelangle
+- [core] Add markdown documentation for contributors (#3447) @alexfauquette
+- [test] Add regression test for `showCellRightBorder` (#4191) @cherniavskii
+- [test] Mock `getComputedStyle` to speed up unit tests (#4142) @m4theushw
+- [test] Upgrade CircleCI convenience image (#4143) @m4theushw
+
 ## 5.6.1
 
 _Mar 10, 2022_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- [DataGrid] Allow to add margins or borders between rows (#3848) @m4theushw
+- ✨ Allow to add margins or borders between rows (#3848) @m4theushw
 
   ```tsx
   <DataGrid getRowSpacing={() => ({ top: 10, bottom: 10 })} />
