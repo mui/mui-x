@@ -253,6 +253,7 @@
   { "name": "GridFooterPlaceholder", "kind": "Function" },
   { "name": "GridGroupingColDefOverride", "kind": "Interface" },
   { "name": "GridGroupingColDefOverrideParams", "kind": "Interface" },
+  { "name": "GridGroupingCriteriaRowGetter", "kind": "Interface" },
   { "name": "GridGroupingValueGetterParams", "kind": "Interface" },
   { "name": "GridHeader", "kind": "Variable" },
   { "name": "GridHeaderCheckbox", "kind": "Variable" },
