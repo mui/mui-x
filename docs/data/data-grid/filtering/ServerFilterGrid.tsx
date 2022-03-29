@@ -1,20 +1,8 @@
 import * as React from 'react';
 import { DataGrid, GridFilterModel } from '@mui/x-data-grid';
-import { serverConfiguration, UseDemoDataOptions } from '@mui/x-data-grid-generator';
+import { createFakeServer } from '@mui/x-data-grid-generator';
 
-const DATASET_OPTION: UseDemoDataOptions = {
-  dataSet: 'Commodity',
-  rowLength: 100,
-  maxColumns: 6,
-};
-
-const SERVER_OPTIONS = {
-  minDelay: 100,
-  maxDelay: 300,
-  useCursorPagination: true,
-};
-
-const { columns, useQuery } = serverConfiguration(DATASET_OPTION, SERVER_OPTIONS);
+const { columns, useQuery } = createFakeServer();
 
 export default function ServerFilterGrid() {
   const [queryOptions, setQueryOptions] = React.useState({});

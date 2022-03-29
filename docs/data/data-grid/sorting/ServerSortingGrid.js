@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { serverConfiguration } from '@mui/x-data-grid-generator';
+import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
@@ -10,13 +10,7 @@ const DATASET_OPTION = {
   rowLength: 100,
 };
 
-const SERVER_OPTIONS = {
-  minDelay: 100,
-  maxDelay: 300,
-  useCursorPagination: true,
-};
-
-const { columns, useQuery } = serverConfiguration(DATASET_OPTION, SERVER_OPTIONS);
+const { columns, useQuery } = createFakeServer(DATASET_OPTION);
 
 export default function ServerSortingGrid() {
   const [queryOptions, setQueryOptions] = React.useState({});

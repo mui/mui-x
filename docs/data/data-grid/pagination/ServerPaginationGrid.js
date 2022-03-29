@@ -1,23 +1,8 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { serverConfiguration } from '@mui/x-data-grid-generator';
+import { createFakeServer } from '@mui/x-data-grid-generator';
 
-const DATASET_OPTION = {
-  dataSet: 'Commodity',
-  rowLength: 100,
-  maxColumns: 6,
-};
-
-const SERVER_OPTIONS = {
-  minDelay: 100,
-  maxDelay: 300,
-  useCursorPagination: false,
-};
-
-const { columns, initialState, useQuery } = serverConfiguration(
-  DATASET_OPTION,
-  SERVER_OPTIONS,
-);
+const { columns, initialState, useQuery } = createFakeServer();
 
 export default function ServerPaginationGrid() {
   const [page, setPage] = React.useState(0);
@@ -33,7 +18,7 @@ export default function ServerPaginationGrid() {
 
   const { isLoading, data, rowCount } = useQuery(queryOptions);
 
-  // Some api client return undefine while loading
+  // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
   const [rowCountState, setRowCountState] = React.useState(rowCount || 0);
   React.useEffect(() => {

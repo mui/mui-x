@@ -1,5 +1,6 @@
 [
   { "name": "ColumnsOptions", "kind": "Interface" },
+  { "name": "createFakeServer", "kind": "Variable" },
   { "name": "DemoDataReturnType", "kind": "TypeAlias" },
   { "name": "DemoLink", "kind": "Variable" },
   { "name": "generateFilledQuantity", "kind": "Variable" },
@@ -68,7 +69,6 @@
   { "name": "renderRating", "kind": "Function" },
   { "name": "renderStatus", "kind": "Function" },
   { "name": "renderTotalPrice", "kind": "Function" },
-  { "name": "serverConfiguration", "kind": "Variable" },
   { "name": "ServerOptions", "kind": "Interface" },
   { "name": "useDemoData", "kind": "Variable" },
   { "name": "UseDemoDataOptions", "kind": "Interface" },

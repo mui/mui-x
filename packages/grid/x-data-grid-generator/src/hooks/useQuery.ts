@@ -177,12 +177,27 @@ export interface QueryOptions {
   sortModel?: GridSortModel;
 }
 
-export const serverConfiguration = (
-  dataSetOptions: UseDemoDataOptions,
-  serverOptions: ServerOptions,
+const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
+  dataSet: 'Commodity',
+  rowLength: 100,
+  maxColumns: 6,
+};
+
+const DEFAULT_SERVER_OPTIONS: ServerOptions = {
+  minDelay: 100,
+  maxDelay: 300,
+  useCursorPagination: true,
+};
+
+export const createFakeServer = (
+  dataSetOptions?: Partial<UseDemoDataOptions>,
+  serverOptions?: Partial<ServerOptions>,
 ) => {
-  const columns = getColumnsFromOptions(dataSetOptions);
-  const initialState = getInitialState(dataSetOptions, columns);
+  const dataSetOptionsWithDefault = { ...DEFAULT_DATASET_OPTIONS, ...dataSetOptions };
+  const serverOptionsWithDefault = { ...DEFAULT_SERVER_OPTIONS, ...serverOptions };
+
+  const columns = getColumnsFromOptions(dataSetOptionsWithDefault);
+  const initialState = getInitialState(dataSetOptionsWithDefault, columns);
 
   const defaultColDef = getGridDefaultColumnTypes();
   const columnsWithDefaultColDef = columns.map((column) => ({
@@ -194,7 +209,7 @@ export const serverConfiguration = (
     const {
       data: { rows },
       loading: dataGenerationIsLoading,
-    } = useDemoData(dataSetOptions);
+    } = useDemoData(dataSetOptionsWithDefault);
 
     const queryOptionsRef = React.useRef(queryOptions);
     const [rowCount, setRowCount] = React.useState<number | undefined>(undefined);
@@ -214,7 +229,7 @@ export const serverConfiguration = (
       setIsLoading(true);
       setRowCount(undefined);
       setNextCursor(undefined);
-      loadServerRows(rows, queryOptions, serverOptions, columnsWithDefaultColDef).then(
+      loadServerRows(rows, queryOptions, serverOptionsWithDefault, columnsWithDefaultColDef).then(
         ({ returnedRows, nextCursor: responseNextCursor, rowNumber }) => {
           if (!active) {
             return;
