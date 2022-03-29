@@ -27,38 +27,49 @@ type UntypedStrategyProcessors = {
 /**
  * Implements a variant of the Strategy Pattern (see https://en.wikipedia.org/wiki/Strategy_pattern)
  *
- * Some plugins contain custom logic that must only be run if the right strategy is active.
- * For instance, the tree data plugin has:
- * - custom row tree creation algorithm.
- * - custom sorting algorithm.
- * - custom filtering algorithm.
+ * More information and detailed example in (TODO add link to technical doc when ready)
  *
- * These plugins must use:
- * - `apiRef.current.unstable_registerStrategyProcessor` to register their processors.
+ * Some plugins contains custom logic that must only be applied if the right strategy is active.
+ * For instance, the row grouping plugin has a custom filtering algorithm.
+ * This algorithm must be applied by the filtering plugin if the row grouping is the current way of grouping rows,
+ * but not if the tree data is the current way of grouping rows.
+ *
+ * =====================================================================================================================
+ *
+ * The plugin containing the custom logic must use:
+ *
+ * - `useGridRegisterStrategyProcessor` to register their processor.
+ *   When the processor of the active strategy changes, it will fire `GridEvents.activeStrategyProcessorChange` to re-apply the processor.
+ *
  * - `apiRef.current.unstable_setStrategyAvailability` to tell if their strategy can be used.
  *
- * Some hooks need to run the custom logic of the active strategy.
- * For instance, the `useGridFiltering` wants to run:
- * - the tree data filtering if the tree data is the current way of grouping rows.
- * - the row grouping filtering if the row grouping is the current way of grouping rows.
- * - the flat filtering if there is no grouping of the rows (equivalent to the "none" strategy).
+ * =====================================================================================================================
  *
- * These hooks must use:
- * - `apiRef.current.unstable_applyStrategyProcessor` to run a processor.
+ * The plugin or component that needs to apply the custom logic of the current strategy must use:
+ *
+ * - `apiRef.current.unstable_applyStrategyProcessor` to run the processor of the active strategy for a given processor name.
+ *
  * - `GridEvents.strategyAvailabilityChange` to update something when the active strategy changes.
  *    Warning: Be careful not to apply the processor several times.
  *    For instance `GridEvents.rowsSet` is fired by `useGridRows` whenever the active strategy changes.
  *    So listening to both would most likely run your logic twice.
- * - `GridEvents.activeStrategyProcessorChange` to update something when the processor of the active strategy changes
+ *
+ * - `GridEvents.activeStrategyProcessorChange` to update something when the processor of the active strategy changes.
+ *
+ * =====================================================================================================================
  *
  * Each processor name is part of a strategy group which can only have one active strategy at the time.
+ * For now, there is only one strategy group named `rowTree` which customize
+ * - row tree creation algorithm.
+ * - sorting algorithm.
+ * - filtering algorithm.
  */
 export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
   const availableStrategies = React.useRef(
     new Map<string, { group: GridStrategyGroup; isAvailable: () => boolean }>(),
   );
   const strategiesCache = React.useRef<{
-    [P in GridStrategyProcessorName]?: { [strategyName: string]: GridStrategyProcessor<P> };
+    [P in GridStrategyProcessorName]?: { [strategyName: string]: GridStrategyProcessor<any> };
   }>({});
 
   const registerStrategyProcessor = React.useCallback<
@@ -68,7 +79,7 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
       const cleanup = () => {
         const { [strategyName]: removedPreProcessor, ...otherProcessors } =
           strategiesCache.current[processorName]!;
-        strategiesCache.current[processorName] = otherProcessors as UntypedStrategyProcessors;
+        strategiesCache.current[processorName] = otherProcessors;
       };
 
       if (!strategiesCache.current[processorName]) {

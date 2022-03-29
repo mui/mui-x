@@ -1,6 +1,7 @@
 import { GridFilterInputDate } from '../components/panel/filterPanel/GridFilterInputDate';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
+import { GridCellParams } from '../models/params/gridCellParams';
 
 const dateRegex = /(\d+)-(\d+)-(\d+)/;
 const dateTimeRegex = /(\d+)-(\d+)-(\d+)T(\d+):(\d+)/;
@@ -22,7 +23,7 @@ function buildApplyFilterFn(
 
   const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
 
-  return ({ value }: { value: any }): boolean => {
+  return ({ value }: GridCellParams<string | number | Date, any, any>): boolean => {
     if (!value) {
       return false;
     }
@@ -44,10 +45,12 @@ function buildApplyFilterFn(
   };
 }
 
-export const getGridDateOperators = (showTime?: boolean): GridFilterOperator[] => [
+export const getGridDateOperators = (
+  showTime?: boolean,
+): GridFilterOperator<any, string | number | Date, any>[] => [
   {
     value: 'is',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       return buildApplyFilterFn(filterItem, (value1, value2) => value1 === value2, showTime);
     },
     InputComponent: GridFilterInputDate,
@@ -55,7 +58,7 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator[] =
   },
   {
     value: 'not',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       return buildApplyFilterFn(filterItem, (value1, value2) => value1 !== value2, showTime);
     },
     InputComponent: GridFilterInputDate,
@@ -63,7 +66,7 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator[] =
   },
   {
     value: 'after',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       return buildApplyFilterFn(filterItem, (value1, value2) => value1 > value2, showTime);
     },
     InputComponent: GridFilterInputDate,
@@ -71,7 +74,7 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator[] =
   },
   {
     value: 'onOrAfter',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       return buildApplyFilterFn(filterItem, (value1, value2) => value1 >= value2, showTime);
     },
     InputComponent: GridFilterInputDate,
@@ -79,7 +82,7 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator[] =
   },
   {
     value: 'before',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       return buildApplyFilterFn(
         filterItem,
         (value1, value2) => value1 < value2,
@@ -92,7 +95,7 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator[] =
   },
   {
     value: 'onOrBefore',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       return buildApplyFilterFn(filterItem, (value1, value2) => value1 <= value2, showTime);
     },
     InputComponent: GridFilterInputDate,

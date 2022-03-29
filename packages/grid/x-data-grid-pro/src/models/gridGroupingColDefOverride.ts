@@ -1,8 +1,8 @@
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridValidRowModel } from '@mui/x-data-grid';
 
-export interface GridGroupingColDefOverride
+export interface GridGroupingColDefOverride<R extends GridValidRowModel = any>
   extends Omit<
-    GridColDef,
+    GridColDef<R>,
     | 'editable'
     | 'valueSetter'
     | 'field'

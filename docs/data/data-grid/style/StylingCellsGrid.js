@@ -12,11 +12,16 @@ const columns = [
     field: 'score',
     type: 'number',
     width: 140,
-    cellClassName: (params) =>
-      clsx('super-app', {
+    cellClassName: (params) => {
+      if (params.value == null) {
+        return '';
+      }
+
+      return clsx('super-app', {
         negative: params.value < 0,
         positive: params.value > 0,
-      }),
+      });
+    },
   },
 ];
 
