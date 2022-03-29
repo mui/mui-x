@@ -5,12 +5,11 @@ import {
   GridColumns,
   GridEvents,
   GridRowGroupingModel,
-  GridGroupingValueGetterParams,
-  GridRenderCellParams,
   useGridApiRef,
   gridColumnVisibilityModelSelector,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
-import { useMovieData } from '@mui/x-data-grid-generator';
+import { useMovieData, Movie } from '@mui/x-data-grid-generator';
 
 const INITIAL_GROUPING_COLUMN_MODEL = ['composer', 'decade'];
 
@@ -64,22 +63,23 @@ export default function RowGroupingGroupingValueGetter() {
       {
         field: 'composer',
         headerName: 'Composer',
-        renderCell: (params: GridRenderCellParams<{ name: string } | undefined>) =>
-          params.value?.name,
-        groupingValueGetter: (
-          params: GridGroupingValueGetterParams<{ name: string }>,
-        ) => params.value.name,
+        renderCell: (params) => params.value?.name,
+        groupingValueGetter: (params) => params.value.name,
         width: 200,
-      },
+      } as GridColDef<Movie, { name: string }>,
       {
         field: 'decade',
         headerName: 'Decade',
-        valueGetter: (params): number => Math.floor(params.row.year / 10) * 10,
-        groupingValueGetter: (params): number =>
-          Math.floor(params.row.year / 10) * 10,
-        renderCell: (params: GridRenderCellParams<number>) =>
-          `${params.value.toString().slice(-2)}'s`,
-      },
+        valueGetter: (params) => Math.floor(params.row.year / 10) * 10,
+        groupingValueGetter: (params) => Math.floor(params.row.year / 10) * 10,
+        renderCell: (params) => {
+          if (params.value == null) {
+            return '';
+          }
+
+          return `${params.value.toString().slice(-2)}'s`;
+        },
+      } as GridColDef<Movie, number>,
     ],
     [data.columns],
   );

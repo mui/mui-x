@@ -121,7 +121,7 @@ renderCellExpand.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
 };
 
 const columns = [

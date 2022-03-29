@@ -149,7 +149,7 @@ export const useGridRows = (
   const currentPage = useGridVisibleRows(apiRef, props);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
-    (id) => gridRowsLookupSelector(apiRef)[id] ?? null,
+    (id) => (gridRowsLookupSelector(apiRef)[id] as any) ?? null,
     [apiRef],
   );
 

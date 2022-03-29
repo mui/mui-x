@@ -9,8 +9,8 @@ import {
   GridCellParams,
 } from '@mui/x-data-grid';
 import {
-  useGridRegisterPreProcessor,
-  GridPreProcessor,
+  useGridRegisterPipeProcessor,
+  GridPipeProcessor,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
@@ -85,7 +85,7 @@ export const useGridDetailPanel = (
   useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 
-  const addDetailHeight = React.useCallback<GridPreProcessor<'rowHeight'>>(
+  const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
     (initialValue, row) => {
       if (expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
         return { ...initialValue, detail: 0 };
@@ -99,7 +99,7 @@ export const useGridDetailPanel = (
     [apiRef, expandedRowIds],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'rowHeight', addDetailHeight);
+  useGridRegisterPipeProcessor(apiRef, 'rowHeight', addDetailHeight);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'detailPanels',

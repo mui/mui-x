@@ -10,6 +10,7 @@ export type GridRowMode = 'edit' | 'view';
 
 /**
  * The cell value type.
+ * @deprecated Use `any` or the V generic passed to most interfaces.
  */
 export type GridCellValue = string | number | boolean | Date | null | undefined | object;
 

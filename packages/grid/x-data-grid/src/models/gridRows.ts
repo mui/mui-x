@@ -1,16 +1,18 @@
 import type { GridKeyValue } from './colDef/gridColDef';
 
-export type GridRowsProp = Readonly<GridRowModel[]>;
+export type GridValidRowModel = { [key: string]: any };
+
+export type GridRowsProp<R = any> = Readonly<GridRowModel<R>[]>;
 
 /**
  * @deprecated prefer GridRowModel.
  */
-export type GridRowData<T = { [key: string]: any }> = T;
+export type GridRowData = GridValidRowModel;
 
 /**
  * The key value object representing the data of a row.
  */
-export type GridRowModel<T = { [key: string]: any }> = T;
+export type GridRowModel<R extends GridValidRowModel = any> = R;
 
 export type GridUpdateAction = 'delete';
 
@@ -73,14 +75,14 @@ export interface GridRowsMeta {
 
 export type GridRowTreeConfig = Record<GridRowId, GridRowTreeNodeConfig>;
 
-export type GridRowsLookup = Record<GridRowId, GridRowModel>;
+export type GridRowsLookup<R extends GridValidRowModel = any> = Record<GridRowId, R>;
 
 /**
  * The type of Id supported by the grid.
  */
 export type GridRowId = string | number;
 
-export interface GridRowEntry {
+export interface GridRowEntry<R extends GridValidRowModel = any> {
   /**
    * The row id.
    */
@@ -88,13 +90,13 @@ export interface GridRowEntry {
   /**
    * The row model.
    */
-  model: GridRowModel;
+  model: R;
 }
 
 /**
  * The function to retrieve the id of a [[GridRowModel]].
  */
-export type GridRowIdGetter = (row: GridRowModel) => GridRowId;
+export type GridRowIdGetter<R extends GridValidRowModel = any> = (row: R) => GridRowId;
 
 /**
  * An helper function to check if the id provided is valid.
