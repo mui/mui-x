@@ -601,6 +601,11 @@ DataGridProRaw.propTypes = {
    */
   onPinnedColumnsChange: PropTypes.func,
   /**
+   * Callback called when `processRowUpdate` throws an error or rejects.
+   * @param {any} error The error thrown.
+   */
+  onProcessRowUpdateError: PropTypes.func,
+  /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.

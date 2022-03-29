@@ -229,7 +229,8 @@ If you need to cancel the save process while calling `processRowUpdate`—for in
 
 The following demo implements the first option: rejecting the promise.
 Instead of [validating](#validation) while typing, it validates in the server.
-If the new name is empty, then it will not be saved and the cell will remain in edit mode.
+If the new name is empty, then the promise responsible for saving the row will be rejected and the cell will remain in edit mode.
+Additionally, `onProcessRowUpdateError` is called to display the error message.
 The demo also shows that `processRowUpdate` can be used to pre-process the row model that will be saved into the internal state.
 To exit edit mode, press <kbd class="key">Escape</kbd> or enter a valid name.
 

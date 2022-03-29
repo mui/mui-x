@@ -110,6 +110,7 @@
     "onFilterModelChange": { "type": { "name": "func" } },
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
+    "onProcessRowUpdateError": { "type": { "name": "func" } },
     "onResize": { "type": { "name": "func" } },
     "onRowClick": { "type": { "name": "func" } },
     "onRowDoubleClick": { "type": { "name": "func" } },
