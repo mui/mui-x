@@ -265,6 +265,7 @@ export const applyInitialState = (
   const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
     const field = columnsWithUpdatedDimensions[i];
+
     newColumnLookup[field] = {
       ...newColumnLookup[field],
       ...dimensions[field],
@@ -314,14 +315,14 @@ export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
   initialState,
-  columnsTypes,
+  columnTypes,
   currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   shouldRegenColumnVisibilityModelFromColumns,
   keepOnlyColumnsToUpsert = false,
 }: {
   columnsToUpsert: GridColDef[];
   initialState: GridColumnsInitialState | undefined;
-  columnsTypes: GridColumnTypesRecord;
+  columnTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
   keepOnlyColumnsToUpsert: boolean;
@@ -335,7 +336,7 @@ export const createColumnsState = ({
   > & {
     lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
   };
-  if (isInsideStateInitializer || keepOnlyColumnsToUpsert) {
+  if (isInsideStateInitializer) {
     columnsStateWithoutColumnVisibilityModel = {
       all: [],
       lookup: {},
@@ -343,37 +344,58 @@ export const createColumnsState = ({
   } else {
     const currentState = gridColumnsSelector(apiRef.current.state);
     columnsStateWithoutColumnVisibilityModel = {
-      all: [...currentState.all],
-      lookup: { ...currentState.lookup },
+      all: keepOnlyColumnsToUpsert ? [] : [...currentState.all],
+      lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
     };
+  }
+
+  let columnsToKeep: Record<string, boolean> = {};
+  if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
+    columnsToKeep = Object.keys(columnsStateWithoutColumnVisibilityModel.lookup).reduce(
+      (acc, key) => ({ ...acc, [key]: false }),
+      {},
+    );
   }
 
   const columnsToUpsertLookup: Record<string, true> = {};
   columnsToUpsert.forEach((newColumn) => {
-    columnsToUpsertLookup[newColumn.field] = true;
-    if (columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] == null) {
+    const { field } = newColumn;
+    columnsToUpsertLookup[field] = true;
+    columnsToKeep[field] = true;
+    let existingState = columnsStateWithoutColumnVisibilityModel.lookup[field];
+
+    if (existingState == null) {
       // New Column
-      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = {
-        ...getGridColDef(columnsTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
-        ...newColumn,
+      existingState = {
+        ...getGridColDef(columnTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
+        field,
+        hasBeenResized: false,
       };
-      columnsStateWithoutColumnVisibilityModel.all.push(newColumn.field);
-    } else {
-      const mergedColumn = {
-        ...columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field],
-        ...newColumn,
-      };
-
-      if (
-        !mergedColumn.hasBeenResized &&
-        COLUMNS_DIMENSION_PROPERTIES.some((propertyName) => newColumn[propertyName] !== undefined)
-      ) {
-        mergedColumn.hasBeenResized = true;
-      }
-
-      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = mergedColumn;
+      columnsStateWithoutColumnVisibilityModel.all.push(field);
+    } else if (keepOnlyColumnsToUpsert) {
+      columnsStateWithoutColumnVisibilityModel.all.push(field);
     }
+
+    let hasValidDimension = false;
+    if (!existingState.hasBeenResized) {
+      hasValidDimension = COLUMNS_DIMENSION_PROPERTIES.some((key) => newColumn[key] !== undefined);
+    }
+
+    columnsStateWithoutColumnVisibilityModel.lookup[field] = {
+      ...existingState,
+      hide: newColumn.hide == null ? false : newColumn.hide,
+      ...newColumn,
+      hasBeenResized: existingState.hasBeenResized || hasValidDimension,
+    };
   });
+
+  if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
+    Object.keys(columnsStateWithoutColumnVisibilityModel.lookup).forEach((field) => {
+      if (!columnsToKeep![field]) {
+        delete columnsStateWithoutColumnVisibilityModel.lookup[field];
+      }
+    });
+  }
 
   const columnsLookupBeforePreProcessing = { ...columnsStateWithoutColumnVisibilityModel.lookup };
 

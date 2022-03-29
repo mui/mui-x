@@ -112,7 +112,6 @@ const quantityOnlyOperators = [
 export default function CustomMultiValueOperator() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
 
-  const columns = [...data.columns];
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [
       {
@@ -124,15 +123,21 @@ export default function CustomMultiValueOperator() {
     ],
   });
 
-  if (columns.length > 0) {
-    const quantityColumn = columns.find((col) => col.field === 'quantity');
-    const newQuantityColumn = {
-      ...quantityColumn!,
-      filterOperators: quantityOnlyOperators,
-    };
-    const quantityColIndex = columns.findIndex((col) => col.field === 'unitPrice');
-    columns[quantityColIndex] = newQuantityColumn;
-  }
+  const columns = React.useMemo(() => {
+    const newColumns = [...data.columns];
+
+    if (newColumns.length > 0) {
+      const index = newColumns.findIndex((col) => col.field === 'quantity');
+      const quantityColumn = newColumns[index];
+
+      newColumns[index] = {
+        ...quantityColumn,
+        filterOperators: quantityOnlyOperators,
+      };
+    }
+
+    return newColumns;
+  }, [data.columns]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
