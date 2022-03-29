@@ -1,4 +1,4 @@
-import { GridValueFormatterParams } from '@mui/x-data-grid';
+import { GridValueFormatterParams, GridRowId } from '@mui/x-data-grid';
 
 interface GridAggregationParams<V = any> {
   values: V[];
@@ -17,10 +17,16 @@ export type GridAggregationFunction<V = any, AV = V> = {
 
 export type GridAggregationModel = Record<string, string>;
 
+export type GridAggregationLookup = {
+  [rowId: GridRowId]: {
+    [field: string]: any;
+  };
+};
+
 export interface GridAggregationState {
   model: GridAggregationModel;
+  lookup: GridAggregationLookup;
 }
-
 export interface GridAggregationInitialState {
   model?: GridAggregationModel;
 }

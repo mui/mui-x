@@ -15,3 +15,8 @@ export const gridAggregationSanitizedModelSelector = createSelector(
   gridColumnLookupSelector,
   (model, columnsLookup) => sanitizeAggregationModel(model, columnsLookup),
 );
+
+export const gridAggregationLookupSelector = createSelector(
+  gridAggregationStateSelector,
+  (aggregationState) => aggregationState.lookup,
+);

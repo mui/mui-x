@@ -14,6 +14,7 @@ import {
 } from './gridAggregationSelectors';
 import { GridAggregationApi } from './gridAggregationInterfaces';
 import { mergeStateWithAggregationModel } from './gridAggregationUtils';
+import { createAggregationLookup } from './creatAggregationLookup';
 
 export const aggregationStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'aggregationModel' | 'initialState'>,
@@ -29,7 +30,12 @@ export const useGridAggregation = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'onAggregationModelChange' | 'initialState' | 'aggregationModel'
+    | 'onAggregationModelChange'
+    | 'initialState'
+    | 'aggregationModel'
+    | 'isGroupAggregated'
+    | 'aggregationPosition'
+    | 'aggregationFunctions'
   >,
 ) => {
   apiRef.current.unstable_updateControlState({
@@ -54,6 +60,22 @@ export const useGridAggregation = (
     [apiRef],
   );
 
+  const aggregationPositionRef = React.useRef(props.aggregationPosition);
+  aggregationPositionRef.current = props.aggregationPosition;
+  const applyAggregation = React.useCallback(() => {
+    const aggregationLookup = createAggregationLookup({
+      apiRef,
+      aggregationPositionRef,
+      isGroupAggregated: props.isGroupAggregated,
+      aggregationFunctions: props.aggregationFunctions,
+    });
+
+    apiRef.current.setState((state) => ({
+      ...state,
+      aggregation: { ...state.aggregation, lookup: aggregationLookup },
+    }));
+  }, [apiRef, props.isGroupAggregated, props.aggregationFunctions]);
+
   const aggregationApi: GridAggregationApi = {
     setAggregationModel,
   };
@@ -71,13 +93,15 @@ export const useGridAggregation = (
       apiRef.current.unstable_getCache('aggregation')?.sanitizedModelOnLastHydration;
 
     if (!isDeepEqual(lastAggregationModelApplied, aggregationModel)) {
+      applyAggregation();
       // Refresh the column pre-processing
       // TODO: Add a clean way to re-run a pipe processing without faking a change
       apiRef.current.updateColumns([]);
     }
-  }, [apiRef]);
+  }, [apiRef, applyAggregation]);
 
   useGridApiEventHandler(apiRef, GridEvents.aggregationModelChange, checkAggregationModelDiff);
+  useGridApiEventHandler(apiRef, GridEvents.filteredRowsSet, applyAggregation);
 
   /**
    * EFFECTS

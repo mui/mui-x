@@ -5,11 +5,13 @@ import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-gri
 import { GridApiPro } from '../../../models/gridApiPro';
 import {
   getAvailableAggregationFunctions,
-  wrapColumnWithAggregation,
-  unwrapColumnFromAggregation,
   sanitizeAggregationModel,
   addFooterRows,
 } from './gridAggregationUtils';
+import {
+  wrapColumnWithAggregation,
+  unwrapColumnFromAggregation,
+} from './wrapColumnWithAggregation';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridAggregationColumnMenuItems } from '../../../components/GridAggregationColumnMenuItems';
 import { GridAggregationPanel } from '../../../components/GridAggregationPanel';
