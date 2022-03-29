@@ -56,7 +56,7 @@ const ProgressBar = React.memo(function ProgressBar(props: ProgressBarProps) {
   );
 });
 
-export function renderProgress(params: GridRenderCellParams) {
+export function renderProgress(params: GridRenderCellParams<number, any, any>) {
   if (params.value == null) {
     return '';
   }
@@ -67,5 +67,5 @@ export function renderProgress(params: GridRenderCellParams) {
     return null;
   }
 
-  return <ProgressBar value={Number(params.value)} />;
+  return <ProgressBar value={params.value} />;
 }

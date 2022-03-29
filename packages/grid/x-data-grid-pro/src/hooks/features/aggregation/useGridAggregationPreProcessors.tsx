@@ -1,7 +1,7 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
 import { GridPreferencePanelsValue } from '@mui/x-data-grid';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '@mui/x-data-grid/internals';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import {
   getAvailableAggregationFunctions,
@@ -27,7 +27,7 @@ export const useGridAggregationPreProcessors = (
   const aggregationPositionRef = React.useRef(props.aggregationPosition);
   aggregationPositionRef.current = props.aggregationPosition;
 
-  const updateAggregatedColumns = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
+  const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       if (props.disableAggregation) {
         return columnsState;
@@ -81,7 +81,7 @@ export const useGridAggregationPreProcessors = (
     ],
   );
 
-  const addGroupFooterRows = React.useCallback<GridPreProcessor<'hydrateRows'>>(
+  const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       if (props.disableAggregation || props.aggregationPosition === 'inline') {
         return groupingParams;
@@ -92,7 +92,7 @@ export const useGridAggregationPreProcessors = (
     [props.aggregationPosition, props.disableAggregation, props.isGroupAggregated],
   );
 
-  const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
+  const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (initialValue, column) => {
       if (props.disableAggregation) {
         return initialValue;
@@ -111,7 +111,7 @@ export const useGridAggregationPreProcessors = (
     [props.aggregationFunctions, props.disableAggregation],
   );
 
-  const preferencePanelPreProcessing = React.useCallback<GridPreProcessor<'preferencePanel'>>(
+  const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
       if (value === GridPreferencePanelsValue.aggregation) {
         return <GridAggregationPanel />;
@@ -122,8 +122,8 @@ export const useGridAggregationPreProcessors = (
     [],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateAggregatedColumns);
-  useGridRegisterPreProcessor(apiRef, 'hydrateRows', addGroupFooterRows);
-  useGridRegisterPreProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
-  useGridRegisterPreProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateAggregatedColumns);
+  useGridRegisterPipeProcessor(apiRef, 'hydrateRows', addGroupFooterRows);
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
 };

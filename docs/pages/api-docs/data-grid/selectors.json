@@ -19,7 +19,7 @@
   },
   {
     "name": "gridColumnDefinitionsSelector",
-    "returnType": "GridStateColDef[]",
+    "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Columns",
     "description": "Get the columns as an array.",
     "supportsApiRef": true
@@ -153,7 +153,7 @@
   },
   {
     "name": "gridFilterableColumnDefinitionsSelector",
-    "returnType": "GridStateColDef[]",
+    "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Columns",
     "description": "Get the filterable columns as an array.",
     "supportsApiRef": true
@@ -167,7 +167,7 @@
   },
   {
     "name": "gridFilteredSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
+    "returnType": "{ id: GridRowId; model: any }[]",
     "category": "Filtering",
     "description": "Get the id and the model of the rows accessible after the filtering process.\nContains the collapsed children.",
     "supportsApiRef": true
@@ -220,7 +220,7 @@
   },
   {
     "name": "gridPaginatedVisibleSortedGridRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
+    "returnType": "{ id: GridRowId; model: any }[]",
     "category": "Pagination",
     "description": "Get the id and the model of each row to include in the current page if the pagination is enabled.",
     "supportsApiRef": true
@@ -307,7 +307,7 @@
   },
   {
     "name": "gridRowsLookupSelector",
-    "returnType": "GridRowsLookup",
+    "returnType": "GridRowsLookup<any>",
     "description": "",
     "supportsApiRef": true
   },
@@ -338,7 +338,7 @@
   },
   {
     "name": "gridSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
+    "returnType": "{ id: GridRowId; model: any }[]",
     "category": "Sorting",
     "description": "Get the id and the model of the rows after the sorting process.",
     "supportsApiRef": true
@@ -376,7 +376,7 @@
   },
   {
     "name": "gridVisibleColumnDefinitionsSelector",
-    "returnType": "GridStateColDef[]",
+    "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Visible Columns",
     "description": "Get the visible columns as a lookup (an object containing the field for keys and the definition for values).",
     "supportsApiRef": true
@@ -397,7 +397,7 @@
   },
   {
     "name": "gridVisibleSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
+    "returnType": "{ id: GridRowId; model: any }[]",
     "category": "Filtering",
     "description": "Get the id and the model of the rows accessible after the filtering process.\nDoes not contain the collapsed children.",
     "supportsApiRef": true
@@ -411,7 +411,7 @@
   },
   {
     "name": "gridVisibleSortedTopLevelRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
+    "returnType": "{ id: GridRowId; model: any }[]",
     "category": "Filtering",
     "description": "Get the id and the model of the top level rows accessible after the filtering process.",
     "supportsApiRef": true
@@ -431,7 +431,7 @@
   },
   {
     "name": "selectedGridRowsSelector",
-    "returnType": "Map<GridRowId, { [key: string]: any }>",
+    "returnType": "Map<GridRowId, any>",
     "description": "",
     "supportsApiRef": true
   },

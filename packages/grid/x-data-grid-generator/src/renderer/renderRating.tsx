@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams, GridRowId } from '@mui/x-data-grid-pro';
 import Rating from '@mui/material/Rating';
 
 interface RatingValueProps {
@@ -25,10 +25,10 @@ const RatingValue = React.memo(function RatingValue(props: RatingValueProps) {
   );
 });
 
-export function renderRating(params: GridRenderCellParams) {
+export function renderRating(params: GridRenderCellParams<number, { id: GridRowId }, any>) {
   if (params.value == null) {
     return '';
   }
 
-  return <RatingValue value={Number(params.value)} name={params.row.id.toString()} />;
+  return <RatingValue value={params.value} name={params.row.id.toString()} />;
 }

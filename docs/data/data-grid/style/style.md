@@ -65,9 +65,9 @@ interface GridRowParams<R extends GridRowModel = GridRowModel> {
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
    * @param {string} field The field.
-   * @returns {GridCellValue} The cell value.
+   * @returns {any} The cell value.
    */
-  getValue: (id: GridRowId, field: string) => GridCellValue;
+  getValue: (id: GridRowId, field: string) => any;
 }
 ```
 

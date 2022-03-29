@@ -1,4 +1,4 @@
-import { GridKeyValue } from '@mui/x-data-grid';
+import { GridKeyValue, GridValidRowModel } from '@mui/x-data-grid';
 import type { GridRowScrollEndParams, GridGroupingValueGetterParams } from '../models';
 import type {
   GridPinnedColumns,
@@ -25,14 +25,17 @@ export interface GridPipeProcessingLookupPro {
   };
 }
 
-export interface GridColDefPro {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export interface GridColDefPro<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * Function that transforms a complex cell value into a key that be used for grouping the rows.
    * TODO: Move to `x-data-grid-premium`
    * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
-  groupingValueGetter?: (params: GridGroupingValueGetterParams) => GridKeyValue | null | undefined;
+  groupingValueGetter?: (
+    params: GridGroupingValueGetterParams<V, R>,
+  ) => GridKeyValue | null | undefined;
 
   /**
    * TODO: Move to `x-data-grid-premium
@@ -60,7 +63,8 @@ export interface GridCachesPro {
 }
 
 declare module '@mui/x-data-grid' {
-  export interface GridColDef extends GridColDefPro {}
+  export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V>
+    extends GridColDefPro<R, V, F> {}
 
   interface GridEventLookup extends GridEventLookupPro {}
 

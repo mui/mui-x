@@ -88,7 +88,7 @@ const getRowsStateFromCache = (
     previousTree,
   });
 
-  const processedGroupingResponse = apiRef.current.unstable_applyPreProcessors(
+  const processedGroupingResponse = apiRef.current.unstable_applyPipeProcessors(
     'hydrateRows',
     groupingResponse,
   );
@@ -155,7 +155,7 @@ export const useGridRows = (
   const currentPage = useGridVisibleRows(apiRef, props);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
-    (id) => gridRowsLookupSelector(apiRef)[id] ?? null,
+    (id) => (gridRowsLookupSelector(apiRef)[id] as any) ?? null,
     [apiRef],
   );
 
@@ -405,7 +405,7 @@ export const useGridRows = (
   }, [apiRef, groupRows]);
 
   const handlePreProcessorRegister = React.useCallback<
-    GridEventListener<GridEvents.preProcessorRegister>
+    GridEventListener<GridEvents.pipeProcessorRegister>
   >(
     (name) => {
       if (name !== 'hydrateRows') {
@@ -416,7 +416,7 @@ export const useGridRows = (
         ...state,
         rows: {
           ...state.rows,
-          ...apiRef.current.unstable_applyPreProcessors(
+          ...apiRef.current.unstable_applyPipeProcessors(
             'hydrateRows',
             state.rows.groupingResponseBeforeRowHydration,
           ),
@@ -438,7 +438,7 @@ export const useGridRows = (
     GridEvents.strategyAvailabilityChange,
     handleStrategyActivityChange,
   );
-  useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
+  useGridApiEventHandler(apiRef, GridEvents.pipeProcessorRegister, handlePreProcessorRegister);
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 
