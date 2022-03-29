@@ -528,6 +528,7 @@
     "BaseTooltip": "The custom Tooltip component used in the grid.",
     "BasePopper": "The custom Popper component used in the grid.",
     "Cell": "Component rendered for each cell.",
+    "ColumnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
     "Footer": "Footer component rendered at the bottom of the grid viewport.",
