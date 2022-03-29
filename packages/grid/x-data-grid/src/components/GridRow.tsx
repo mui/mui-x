@@ -25,7 +25,7 @@ import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
-import { GridRenderEditCellParams } from '../models';
+import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 
 export interface GridRowProps {
   rowId: GridRowId;
