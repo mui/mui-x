@@ -346,15 +346,14 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
-  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   describe('prop: checkboxSelection = true (multi selection), with keyboard events', () => {
     it('should select row below when pressing "ArrowDown" + shiftKey', () => {
       render(<TestDataGridSelection checkboxSelection />);
       fireClickEvent(getCell(2, 1));
       expect(getSelectedRowIds()).to.deep.equal([2]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown', shiftKey: true });
+      fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      fireEvent.keyDown(getCell(3, 1), { key: 'ArrowDown' });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]); // Already on the last row
     });
 
@@ -364,7 +363,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([3]);
       fireClickEvent(getCell(1, 1), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown', shiftKey: true });
+      fireEvent.keyDown(getCell(1, 1), { key: 'ArrowDown', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
     });
 
@@ -374,9 +373,9 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1]);
       fireClickEvent(getCell(2, 1), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown', shiftKey: true });
+      fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      fireEvent.keyDown(getCell(3, 1), { key: 'ArrowDown' });
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]); // Already on the last row
     });
 
@@ -386,7 +385,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([2]);
       fireClickEvent(getCell(3, 1), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp', shiftKey: true });
+      fireEvent.keyDown(getCell(3, 1), { key: 'ArrowUp', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([2]);
     });
 
