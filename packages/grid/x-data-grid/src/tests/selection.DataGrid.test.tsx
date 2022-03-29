@@ -420,7 +420,7 @@ describe('<DataGrid /> - Selection', () => {
       render(<TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />);
       const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
       fireClickEvent(checkboxes[0]);
-      expect(document.activeElement).to.equal(checkboxes[0]);
+      expect(checkboxes[0]).toHaveFocus();
       fireEvent.keyDown(checkboxes[0], { key: 'ArrowDown' });
       fireEvent.keyDown(checkboxes[1], { key: 'ArrowDown' });
       fireEvent.keyDown(checkboxes[2], { key: 'ArrowDown' });
