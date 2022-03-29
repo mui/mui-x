@@ -61,6 +61,8 @@
   { "name": "GridAggregationCellMeta", "kind": "Interface" },
   { "name": "GridAggregationFunction", "kind": "TypeAlias" },
   { "name": "GridAggregationInitialState", "kind": "Interface" },
+  { "name": "GridAggregationLookup", "kind": "TypeAlias" },
+  { "name": "gridAggregationLookupSelector", "kind": "Variable" },
   { "name": "GridAggregationModel", "kind": "TypeAlias" },
   { "name": "gridAggregationModelSelector", "kind": "Variable" },
   { "name": "GridAggregationPosition", "kind": "TypeAlias" },

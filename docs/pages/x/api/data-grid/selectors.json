@@ -1,5 +1,11 @@
 [
   {
+    "name": "gridAggregationLookupSelector",
+    "returnType": "GridAggregationLookup",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridAggregationModelSelector",
     "returnType": "GridAggregationModel",
     "description": "",
