@@ -589,7 +589,6 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
-
   /**
    * Callback fired when a preferencePanel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
