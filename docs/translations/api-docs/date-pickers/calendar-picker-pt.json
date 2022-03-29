@@ -1,0 +1,39 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "allowSameDateSelection": "If <code>true</code>, <code>onChange</code> is fired on click even if the same date is selected.",
+    "components": "The components used for each slot. Either a string to use a HTML element or a component.",
+    "componentsProps": "The props used for each slot inside.",
+    "defaultCalendarMonth": "Default calendar month displayed when <code>value={null}</code>.",
+    "disabled": "If <code>true</code>, the picker and text field are disabled.",
+    "disableHighlightToday": "If <code>true</code>, todays date is rendering without highlighting with circle.",
+    "getViewSwitchingButtonText": "Get aria-label text for switching between views button.<br><br><strong>Signature:</strong><br><code>function(currentView: CalendarPickerView) =&gt; string</code><br><em>currentView:</em> The view from which we want to get the button text.<br> <em>returns</em> (string): The label of the view.",
+    "leftArrowButtonText": "Left arrow icon aria-label text.",
+    "loading": "If <code>true</code> renders <code>LoadingComponent</code> in calendar instead of calendar view. Can be used to preload information and show it in calendar.",
+    "maxDate": "Max selectable date. @DateIOType",
+    "minDate": "Min selectable date. @DateIOType",
+    "onChange": "Callback fired on date change",
+    "onMonthChange": "Callback firing on month change. @DateIOType<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void</code><br><em>month:</em> The new month.",
+    "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: CalendarPickerView) =&gt; void</code><br><em>view:</em> The new view.",
+    "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
+    "openTo": "Initially open view.",
+    "readOnly": "Make picker read only.",
+    "reduceAnimations": "Disable heavy animations.",
+    "renderDay": "Custom renderer for day. Check the <a href=\"https://mui.com/api/pickers-day/\">PickersDay</a> component.<br><br><strong>Signature:</strong><br><code>function(day: TDate, selectedDates: Array&lt;TDate | null&gt;, pickersDayProps: PickersDayProps&lt;TDate&gt;) =&gt; JSX.Element</code><br><em>day:</em> The day to render.<br><em>selectedDates:</em> The dates currently selected.<br><em>pickersDayProps:</em> The props of the day to render.<br> <em>returns</em> (JSX.Element): The element representing the day.",
+    "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",
+    "rightArrowButtonText": "Right arrow icon aria-label text.",
+    "shouldDisableDate": "Disable specific date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate) =&gt; boolean</code><br><em>day:</em> The date to check.<br> <em>returns</em> (boolean): If <code>true</code> the day will be disabled.",
+    "shouldDisableYear": "Disable specific years dynamically. Works like <code>shouldDisableDate</code> but for year selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): Return <code>true</code> if the year should be disabled.",
+    "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
+    "view": "Controlled open view.",
+    "views": "Views for calendar picker."
+  },
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "viewTransitionContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the transition group element"
+    }
+  },
+  "slotDescriptions": {}
+}
