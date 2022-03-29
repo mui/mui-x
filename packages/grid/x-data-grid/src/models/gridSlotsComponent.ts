@@ -52,6 +52,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Cell: React.JSXElementConstructor<any>;
   /**
+   * Filter icon component rendered in each column header.
+   * @default GridColumnHeaderFilterIconButton
+   */
+  ColumnHeaderFilterIconButton: React.JSXElementConstructor<any>;
+  /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    * @default GridColumnMenu
    */

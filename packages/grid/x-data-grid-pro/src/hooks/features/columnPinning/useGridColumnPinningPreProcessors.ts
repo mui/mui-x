@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '@mui/x-data-grid/internals';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { columnPinningStateInitializer } from './useGridColumnPinning';
@@ -24,7 +24,7 @@ export const useGridColumnPinningPreProcessors = (
     pinnedColumns = gridPinnedColumnsSelector(initializedState);
   }
 
-  const reorderPinnedColumns = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
+  const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       if (columnsState.all.length === 0 || disableColumnPinning) {
         return columnsState;
@@ -51,5 +51,5 @@ export const useGridColumnPinningPreProcessors = (
     [disableColumnPinning, pinnedColumns],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);
+  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);
 };

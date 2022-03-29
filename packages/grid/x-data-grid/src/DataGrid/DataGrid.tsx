@@ -14,10 +14,11 @@ import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
+import { GridValidRowModel } from '../models/gridRows';
 
-const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
-  inProps,
-  ref,
+const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
+  inProps: DataGridProps<R>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
   const apiRef = useDataGridComponent(props);
@@ -38,7 +39,14 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   );
 });
 
-export const DataGrid = React.memo(DataGridRaw);
+interface DataGridComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): JSX.Element;
+  propTypes?: any;
+}
+
+export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -463,6 +471,11 @@ DataGridRaw.propTypes = {
    */
   onPreferencePanelOpen: PropTypes.func,
   /**
+   * Callback called when `processRowUpdate` throws an error or rejects.
+   * @param {any} error The error thrown.
+   */
+  onProcessRowUpdateError: PropTypes.func,
+  /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -568,9 +581,10 @@ DataGridRaw.propTypes = {
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.
-   * @param {GridRowModel} newRow Row object with the new values.
-   * @param {GridRowModel} oldRow Row object with the old values.
-   * @returns {Promise<GridRowModel> | GridRowModel} The final values to update the row.
+   * @template R
+   * @param {R} newRow Row object with the new values.
+   * @param {R} oldRow Row object with the old values.
+   * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
   /**
@@ -591,7 +605,7 @@ DataGridRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.array.isRequired,
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"

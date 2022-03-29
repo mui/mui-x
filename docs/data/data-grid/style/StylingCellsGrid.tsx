@@ -12,11 +12,16 @@ const columns: GridColumns = [
     field: 'score',
     type: 'number',
     width: 140,
-    cellClassName: (params: GridCellParams<number>) =>
-      clsx('super-app', {
+    cellClassName: (params: GridCellParams<number>) => {
+      if (params.value == null) {
+        return '';
+      }
+
+      return clsx('super-app', {
         negative: params.value < 0,
         positive: params.value > 0,
-      }),
+      });
+    },
   },
 ];
 

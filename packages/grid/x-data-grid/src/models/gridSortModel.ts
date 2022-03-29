@@ -1,12 +1,11 @@
-import { GridCellValue } from './gridCell';
 import { GridRowId, GridRowTreeNodeConfig } from './gridRows';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
-export interface GridSortCellParams {
+export interface GridSortCellParams<V = any> {
   id: GridRowId;
   field: string;
-  value: GridCellValue;
+  value: V;
   rowNode: GridRowTreeNodeConfig;
 
   /**
@@ -18,11 +17,11 @@ export interface GridSortCellParams {
 /**
  * The type of the sort comparison function.
  */
-export type GridComparatorFn = (
-  v1: GridCellValue,
-  v2: GridCellValue,
-  cellParams1: GridSortCellParams,
-  cellParams2: GridSortCellParams,
+export type GridComparatorFn<V = any> = (
+  v1: V,
+  v2: V,
+  cellParams1: GridSortCellParams<V>,
+  cellParams2: GridSortCellParams<V>,
 ) => number;
 
 /**

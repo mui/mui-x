@@ -253,6 +253,16 @@ describe('<DataGridPro /> - Cell Editing', () => {
     });
 
     describe('stopCellEditMode', () => {
+      const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
+        const ref = React.useRef<HTMLInputElement>(null);
+        React.useLayoutEffect(() => {
+          if (hasFocus) {
+            ref.current!.focus();
+          }
+        }, [hasFocus]);
+        return <input ref={ref} />;
+      };
+
       it('should throw an error when the cell is not in edit mode', () => {
         render(<TestCase />);
         expect(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })).to.throw(
@@ -341,14 +351,51 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(processRowUpdate.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
       });
 
-      it('should do nothing if processRowUpdate throws an error', async () => {
+      it('should stay in edit mode if processRowUpdate throws an error', async () => {
         const processRowUpdate = () => {
           throw new Error('Something went wrong');
         };
         render(<TestCase processRowUpdate={processRowUpdate} />);
         apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
-        expect(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })).to.throw();
+        expect(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })).toErrorDev(
+          'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+        );
         expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+      });
+
+      it('should call onProcessRowUpdateError if processRowUpdate throws an error', () => {
+        const error = new Error('Something went wrong');
+        const processRowUpdate = () => {
+          throw error;
+        };
+        const onProcessRowUpdateError = spy();
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={onProcessRowUpdateError}
+          />,
+        );
+        apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
+        apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
+      });
+
+      it('should call onProcessRowUpdateError if processRowUpdate rejects', async () => {
+        const error = new Error('Something went wrong');
+        const processRowUpdate = async () => {
+          throw error;
+        };
+        const onProcessRowUpdateError = spy();
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={onProcessRowUpdateError}
+          />,
+        );
+        apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
+        apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' });
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
       });
 
       it('should pass the new value through the value setter before calling processRowUpdate', async () => {
@@ -370,15 +417,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
 
       it('should move focus to the cell below when cellToFocusAfter=below', async () => {
-        const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
-          const ref = React.useRef<HTMLInputElement>(null);
-          React.useLayoutEffect(() => {
-            if (hasFocus) {
-              ref.current!.focus();
-            }
-          }, [hasFocus]);
-          return <input ref={ref} />;
-        };
         columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(<TestCase />);
 
@@ -393,15 +431,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
 
       it('should move focus to the cell on the right when cellToFocusAfter=right', async () => {
-        const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
-          const ref = React.useRef<HTMLInputElement>(null);
-          React.useLayoutEffect(() => {
-            if (hasFocus) {
-              ref.current!.focus();
-            }
-          }, [hasFocus]);
-          return <input ref={ref} />;
-        };
         columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(
           <TestCase
@@ -425,15 +454,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
 
       it('should move focus to the cell on the left when cellToFocusAfter=left', async () => {
-        const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
-          const ref = React.useRef<HTMLInputElement>(null);
-          React.useLayoutEffect(() => {
-            if (hasFocus) {
-              ref.current!.focus();
-            }
-          }, [hasFocus]);
-          return <input ref={ref} />;
-        };
         columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(
           <TestCase
@@ -658,7 +678,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('cellFocusOut');
       });
 
-      it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=none', () => {
+      it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=undefined', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         fireEvent.doubleClick(getCell(0, 1));
@@ -667,7 +687,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          cellToFocusAfter: 'none',
+          cellToFocusAfter: undefined,
           ignoreModifications: false,
         });
       });
@@ -699,7 +719,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('escapeKeyDown');
       });
 
-      it('should call stopCellEditMode with ignoreModifications=true and cellToFocusAfter=none', () => {
+      it('should call stopCellEditMode with ignoreModifications=true and cellToFocusAfter=undefined', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
@@ -711,7 +731,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          cellToFocusAfter: 'none',
+          cellToFocusAfter: undefined,
           ignoreModifications: true,
         });
       });

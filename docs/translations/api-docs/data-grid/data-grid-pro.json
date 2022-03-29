@@ -48,7 +48,7 @@
     "getRowHeight": "Function that sets the row height per row.<br><br><strong>Signature:</strong><br><code>function(params: GridRowHeightParams) =&gt; GridRowHeightReturnValue</code><br><em>params:</em> With all properties from GridRowHeightParams.<br> <em>returns</em> (GridRowHeightReturnValue): The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied.",
     "getRowId": "Return the id of a given GridRowModel.",
     "getRowSpacing": "Function that allows to specify the spacing between rows.<br><br><strong>Signature:</strong><br><code>function(params: GridRowSpacingParams) =&gt; GridRowSpacing</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-spacing-params/\">GridRowSpacingParams</a>.<br> <em>returns</em> (GridRowSpacing): The row spacing values.",
-    "getTreeDataPath": "Determines the path of a row in the tree data. For instance, a row with the path [&quot;A&quot;, &quot;B&quot;] is the child of the row with the path [&quot;A&quot;]. Note that all paths must contain at least one element.<br><br><strong>Signature:</strong><br><code>function(row: GridRowModel) =&gt; Array&lt;string&gt;</code><br><em>row:</em> The row from which we want the path.<br> <em>returns</em> (Array<string>): The path to the row.",
+    "getTreeDataPath": "Determines the path of a row in the tree data. For instance, a row with the path [&quot;A&quot;, &quot;B&quot;] is the child of the row with the path [&quot;A&quot;]. Note that all paths must contain at least one element.<br><br><strong>Signature:</strong><br><code>function(row: R) =&gt; Array&lt;string&gt;</code><br><em>row:</em> The row from which we want the path.<br> <em>returns</em> (Array<string>): The path to the row.",
     "groupingColDef": "The grouping column used by the tree data.",
     "headerHeight": "Set the height in pixel of the column headers in the grid.",
     "hideFooter": "If <code>true</code>, the footer component is hidden.",
@@ -92,6 +92,7 @@
     "onPinnedColumnsChange": "Callback fired when the pinned columns have changed.<br><br><strong>Signature:</strong><br><code>function(pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) =&gt; void</code><br><em>pinnedColumns:</em> The changed pinned columns.<br><em>details:</em> Additional details for this callback.",
     "onPreferencePanelClose": "Callback fired when a preferencePanel is closed.<br><br><strong>Signature:</strong><br><code>function(params: GridPreferencePanelParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridPreferencePanelParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onPreferencePanelOpen": "Callback fired when a preferencePanel is opened.<br><br><strong>Signature:</strong><br><code>function(params: GridPreferencePanelParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridPreferencePanelParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
+    "onProcessRowUpdateError": "Callback called when <code>processRowUpdate</code> throws an error or rejects.<br><br><strong>Signature:</strong><br><code>function(error: any) =&gt; void</code><br><em>error:</em> The error thrown.",
     "onResize": "Callback fired when the grid is resized.<br><br><strong>Signature:</strong><br><code>function(containerSize: ElementSize, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>containerSize:</em> With all properties from ElementSize.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onRowClick": "Callback fired when a row is clicked. Not called if the target clicked is an interactive element added by the built-in columns.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a>.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onRowDoubleClick": "Callback fired when a double click event comes from a row container element.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from RowParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -108,7 +109,7 @@
     "pagination": "If <code>true</code>, pagination is enabled.",
     "paginationMode": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
     "pinnedColumns": "The column fields to display pinned to left or right.",
-    "processRowUpdate": "Callback called before updating a row with new values in the row and cell editing. Only applied if <code>props.experimentalFeatures.newEditingApi: true</code>.<br><br><strong>Signature:</strong><br><code>function(newRow: GridRowModel, oldRow: GridRowModel) =&gt; Promise&lt;GridRowModel&gt; | GridRowModel</code><br><em>newRow:</em> Row object with the new values.<br><em>oldRow:</em> Row object with the old values.<br> <em>returns</em> (Promise<GridRowModel> | GridRowModel): The final values to update the row.",
+    "processRowUpdate": "Callback called before updating a row with new values in the row and cell editing. Only applied if <code>props.experimentalFeatures.newEditingApi: true</code>.<br><br><strong>Signature:</strong><br><code>function(newRow: R, oldRow: R) =&gt; Promise&lt;R&gt; | R</code><br><em>newRow:</em> Row object with the new values.<br><em>oldRow:</em> Row object with the old values.<br> <em>returns</em> (Promise<R> | R): The final values to update the row.",
     "rowBuffer": "Number of extra rows to be rendered before/after the visible slice.",
     "rowCount": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows.",
     "rowGroupingColumnMode": "If <code>single</code>, all column we are grouping by will be represented in the same grouping the same column. If <code>multiple</code>, each column we are grouping by will be represented in its own column.",
@@ -131,6 +132,9 @@
     "treeData": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
   },
   "classDescriptions": {
+    "actionsCell": {
+      "description": "Styles applied to the root element of the cell with type=\"actions\""
+    },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
@@ -504,11 +508,17 @@
     },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root of the grouping column of the tree data"
+      "nodeName": "the root of the grouping cell of the tree data"
     },
     "treeDataGroupingCellToggle": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toggle of the grouping column of the tree data"
+      "nodeName": "the toggle of the grouping cell of the tree data"
+    },
+    "groupingCriteriaCell": {
+      "description": "Styles applied to the root element of the grouping criteria cell"
+    },
+    "groupingCriteriaCellToggle": {
+      "description": "Styles applied to the toggle of the grouping criteria cell"
     }
   },
   "slotDescriptions": {
@@ -521,6 +531,7 @@
     "BaseTooltip": "The custom Tooltip component used in the grid.",
     "BasePopper": "The custom Popper component used in the grid.",
     "Cell": "Component rendered for each cell.",
+    "ColumnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
     "Footer": "Footer component rendered at the bottom of the grid viewport.",

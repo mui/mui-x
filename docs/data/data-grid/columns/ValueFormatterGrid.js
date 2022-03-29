@@ -28,6 +28,10 @@ export default function ValueFormatterGrid() {
             headerName: 'Tax Rate',
             width: 150,
             valueFormatter: (params) => {
+              if (params.value == null) {
+                return '';
+              }
+
               const valueFormatted = Number(params.value * 100).toLocaleString();
               return `${valueFormatted} %`;
             },

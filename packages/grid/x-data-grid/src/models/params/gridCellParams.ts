@@ -1,12 +1,12 @@
-import { GridCellMode, GridCellValue } from '../gridCell';
-import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
+import { GridCellMode } from '../gridCell';
+import { GridRowId, GridRowModel, GridRowTreeNodeConfig, GridValidRowModel } from '../gridRows';
 import type { GridStateColDef } from '../colDef/gridColDef';
 import { GridEditCellProps } from '../gridEditRowModel';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
-export interface GridCellParams<V = any, R = any, F = V> {
+export interface GridCellParams<V = any, R extends GridValidRowModel = any, F = V> {
   /**
    * The grid row id.
    */
@@ -18,7 +18,7 @@ export interface GridCellParams<V = any, R = any, F = V> {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: V;
+  value: V | undefined;
   /**
    * The cell value formatted with the column valueFormatter.
    */
@@ -55,16 +55,17 @@ export interface GridCellParams<V = any, R = any, F = V> {
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
    * @param {string} field The field.
-   * @returns {GridCellValue} The cell value.
+   * @returns {any} The cell value.
    * @deprecated Use `params.row` to directly access the fields you want instead.
    */
-  getValue: (id: GridRowId, field: string) => GridCellValue;
+  getValue: (id: GridRowId, field: string) => any;
 }
 
 /**
  * GridCellParams containing api.
  */
-export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
+export interface GridRenderCellParams<V = any, R extends GridValidRowModel = any, F = V>
+  extends GridCellParams<V, R, F> {
   /**
    * GridApi that let you manipulate the grid.
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
@@ -75,7 +76,7 @@ export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellP
 /**
  * GridEditCellProps containing api.
  */
-export interface GridRenderEditCellParams<V = any, R = any, F = V>
+export interface GridRenderEditCellParams<V = any, R extends GridValidRowModel = any, F = V>
   extends GridCellParams<V, R, F>,
     GridEditCellProps<V> {
   /**
@@ -100,26 +101,29 @@ export interface GridValueGetterParams<V = any, R = any>
 /**
  * @deprecated Use `GridValueGetterParams` instead.
  */
-export type GridValueGetterFullParams<V = any, R = any> = GridValueGetterParams<V, R>;
+export type GridValueGetterFullParams<
+  V = any,
+  R extends GridValidRowModel = any,
+> = GridValueGetterParams<V, R>;
 
 /**
  * Object passed as parameter in the column [[GridColDef]] value setter callback.
  */
-export interface GridValueSetterParams {
+export interface GridValueSetterParams<R extends GridValidRowModel = any, V = any> {
   /**
    * The new cell value.
    */
-  value: GridCellValue;
+  value: V;
   /**
    * The row that is being edited.
    */
-  row: GridRowModel;
+  row: R;
 }
 
 /**
  * Object passed as parameter in the column [[GridColDef]] value formatter callback.
  */
-export interface GridValueFormatterParams {
+export interface GridValueFormatterParams<V = any> {
   /**
    * The grid row id.
    * It is not available when the value formatter is called by the filter panel.
@@ -132,7 +136,7 @@ export interface GridValueFormatterParams {
   /**
    * The cell value, if the column has valueGetter it is the value returned by it.
    */
-  value: GridCellValue;
+  value: V;
   /**
    * GridApi that let you manipulate the grid.
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)

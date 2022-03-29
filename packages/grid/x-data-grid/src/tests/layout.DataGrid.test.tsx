@@ -10,7 +10,6 @@ import {
   DataGridProps,
   ptBR,
   GridColumns,
-  GridValueGetterFullParams,
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -238,8 +237,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id' },
           {
             field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) =>
-              (params as GridValueGetterFullParams).getValue(params.id, 'age'),
+            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
           },
         ];
         expect(() => {
