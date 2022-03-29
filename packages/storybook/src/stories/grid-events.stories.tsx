@@ -114,7 +114,7 @@ export const OnPreferencePanelClose = () => {
     <DataGridPro
       rows={data.rows}
       columns={data.columns}
-      onPreferencePanelClose={(params) => action('PreferencePanel Close')(params)}
+      onPreferencePanelClose={(params) => action('preferences panel Close')(params)}
     />
   );
 };
@@ -126,7 +126,7 @@ export const OnPreferencePanelOpen = () => {
     <DataGridPro
       rows={data.rows}
       columns={data.columns}
-      onPreferencePanelOpen={(params) => action('PreferencePanel Open')(params)}
+      onPreferencePanelOpen={(params) => action('preferences panel Open')(params)}
     />
   );
 };
