@@ -1,5 +1,5 @@
 export interface GridEditCellProps<V = any> {
-  value: V;
+  value: V | undefined;
   isValidating?: boolean;
   isProcessingProps?: boolean;
   [prop: string]: any;
