@@ -374,16 +374,19 @@ describe('<DataGrid /> - Rows', () => {
     it('should be called with the correct params', () => {
       const getRowSpacing = stub().returns({});
       render(<TestCase getRowSpacing={getRowSpacing} pageSize={2} rowsPerPageOptions={[2]} />);
-
       expect(getRowSpacing.args[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,
+        indexRelativeToExpandedRows: 0,
+        indexRelativeToCurrentPage: 0,
         id: 0,
         model: rows[0],
       });
       expect(getRowSpacing.args[1][0]).to.deep.equal({
         isFirstVisible: false,
         isLastVisible: true,
+        indexRelativeToExpandedRows: 1,
+        indexRelativeToCurrentPage: 1,
         id: 1,
         model: rows[1],
       });
@@ -394,12 +397,16 @@ describe('<DataGrid /> - Rows', () => {
       expect(getRowSpacing.args[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,
+        indexRelativeToExpandedRows: 2,
+        indexRelativeToCurrentPage: 0,
         id: 2,
         model: rows[2],
       });
       expect(getRowSpacing.args[1][0]).to.deep.equal({
         isFirstVisible: false,
         isLastVisible: true,
+        indexRelativeToExpandedRows: 3,
+        indexRelativeToCurrentPage: 1,
         id: 3,
         model: rows[3],
       });
