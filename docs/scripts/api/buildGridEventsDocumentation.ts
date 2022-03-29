@@ -1,7 +1,6 @@
 import * as ts from 'typescript';
 import path from 'path';
 import { renderInline as renderMarkdownInline } from '@mui/monorepo/docs/packages/markdown';
-import FEATURE_TOGGLE from 'docs/src/featureToggle';
 
 import {
   DocumentedInterfaces,
