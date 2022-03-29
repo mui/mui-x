@@ -1,10 +1,7 @@
 {
   "props": {
     "columns": { "type": { "name": "custom", "description": "array" }, "required": true },
-    "rows": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
+    "rows": { "type": { "name": "array" }, "required": true },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },
@@ -40,7 +37,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -128,6 +125,7 @@
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
     },
+    "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
@@ -241,6 +239,7 @@
   "name": "DataGrid",
   "styles": {
     "classes": [
+      "actionsCell",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -333,7 +332,9 @@
       "toolbarFilterList",
       "withBorder",
       "treeDataGroupingCell",
-      "treeDataGroupingCellToggle"
+      "treeDataGroupingCellToggle",
+      "groupingCriteriaCell",
+      "groupingCriteriaCellToggle"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"

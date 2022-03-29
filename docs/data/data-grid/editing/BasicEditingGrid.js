@@ -9,7 +9,11 @@ import {
 export default function BasicEditingGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        experimentalFeatures={{ newEditingApi: true }}
+      />
     </div>
   );
 }

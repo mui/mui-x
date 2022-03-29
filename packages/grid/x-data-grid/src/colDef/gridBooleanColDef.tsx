@@ -12,7 +12,7 @@ function gridBooleanFormatter({ value, api }: GridValueFormatterParams) {
     : api.getLocaleText('booleanCellFalseLabel');
 }
 
-export const GRID_BOOLEAN_COL_DEF: GridColTypeDef = {
+export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   ...GRID_STRING_COL_DEF,
   type: 'boolean',
   align: 'center',

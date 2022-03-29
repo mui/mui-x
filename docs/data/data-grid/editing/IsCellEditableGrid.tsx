@@ -23,6 +23,7 @@ export default function IsCellEditableGrid() {
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.age % 2 === 0}
+        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

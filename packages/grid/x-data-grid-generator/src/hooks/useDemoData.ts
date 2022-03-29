@@ -14,7 +14,7 @@ import {
 
 const dataCache = new LRUCache<string, DemoTreeDataValue>({
   max: 10,
-  maxAge: 60 * 5 * 1e3, // 5 minutes
+  ttl: 60 * 5 * 1e3, // 5 minutes
 });
 
 export type DemoDataReturnType = {

@@ -6,8 +6,8 @@ import { useGridLoggerFactory } from './useGridLoggerFactory';
 import { useGridApiInitialization } from './useGridApiInitialization';
 import { useGridErrorHandler } from './useGridErrorHandler';
 import { useGridLocaleText } from './useGridLocaleText';
-import { useGridPreProcessing } from './preProcessing';
-import { useGridRowGroupsPreProcessing } from './rowGroupsPreProcessing';
+import { useGridPipeProcessing } from './pipeProcessing';
+import { useGridStrategyProcessing } from './strategyProcessing';
 import { useGridStateInitialization } from './useGridStateInitialization';
 
 /**
@@ -21,8 +21,8 @@ export const useGridInitialization = <Api extends GridApiCommon>(
   useGridLoggerFactory(apiRef, props);
   useGridErrorHandler(apiRef, props);
   useGridStateInitialization(apiRef, props);
-  useGridPreProcessing(apiRef);
-  useGridRowGroupsPreProcessing(apiRef);
+  useGridPipeProcessing(apiRef);
+  useGridStrategyProcessing(apiRef);
   useGridLocaleText(apiRef, props);
 
   return apiRef;

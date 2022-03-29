@@ -13,6 +13,7 @@
   { "name": "GridColDefGenerator", "kind": "Interface" },
   { "name": "GridDataGeneratorContext", "kind": "Interface" },
   { "name": "GridDemoData", "kind": "Interface" },
+  { "name": "Movie", "kind": "TypeAlias" },
   { "name": "QueryOptions", "kind": "Interface" },
   { "name": "random", "kind": "Variable" },
   { "name": "randomAddress", "kind": "Variable" },

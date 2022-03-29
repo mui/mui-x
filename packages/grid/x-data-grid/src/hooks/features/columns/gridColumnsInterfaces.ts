@@ -31,4 +31,6 @@ export type GridColumnsRawState = Omit<GridColumnsState, 'lookup'> & {
   lookup: GridColumnRawLookup;
 };
 
+export type GridHydrateColumnsValue = Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+
 export type GridColumnVisibilityModel = Record<GridRowId, boolean>;

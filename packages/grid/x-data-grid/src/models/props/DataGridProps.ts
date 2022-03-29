@@ -8,7 +8,7 @@ import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
-import { GridRowIdGetter, GridRowsProp } from '../gridRows';
+import { GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
@@ -36,6 +36,10 @@ export interface GridExperimentalFeatures {
    */
   preventCommitWhileValidating: boolean;
   /**
+   * Enables the new API for cell editing and row editing.
+   */
+  newEditingApi: boolean;
+  /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
    * Only works if NODE_ENV=test.
    */
@@ -45,10 +49,10 @@ export interface GridExperimentalFeatures {
 /**
  * The props users can give to the `DataGrid` component.
  */
-export type DataGridProps = Omit<
+export type DataGridProps<R extends GridValidRowModel = any> = Omit<
   Partial<DataGridPropsWithDefaultValues> &
     DataGridPropsWithComplexDefaultValueBeforeProcessing &
-    DataGridPropsWithoutDefaultValue,
+    DataGridPropsWithoutDefaultValue<R>,
   DataGridForcedPropsKey
 > & {
   pagination?: true;
@@ -57,10 +61,10 @@ export type DataGridProps = Omit<
 /**
  * The props of the `DataGrid` component after the pre-processing phase.
  */
-export interface DataGridProcessedProps
+export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridPropsWithoutDefaultValue {}
+    DataGridPropsWithoutDefaultValue<R> {}
 
 /**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
@@ -322,7 +326,8 @@ export interface DataGridPropsWithDefaultValues {
 /**
  * The `DataGrid` props with no default value.
  */
-export interface DataGridPropsWithoutDefaultValue extends CommonProps {
+export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
+  extends CommonProps {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    * TODO: Remove `@internal` when opening `apiRef` to Community plan
@@ -357,13 +362,13 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
    */
-  getCellClassName?: (params: GridCellParams) => string;
+  getCellClassName?: (params: GridCellParams<any, R>) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
-  getRowClassName?: (params: GridRowClassNameParams) => string;
+  getRowClassName?: (params: GridRowClassNameParams<R>) => string;
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
@@ -381,19 +386,19 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {JSX.Element} The row detail element.
    */
-  getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
+  getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
   /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
-  isCellEditable?: (params: GridCellParams) => boolean;
+  isCellEditable?: (params: GridCellParams<any, R>) => boolean;
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
-  isRowSelectable?: (params: GridRowParams) => boolean;
+  isRowSelectable?: (params: GridRowParams<R>) => boolean;
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
@@ -653,7 +658,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: GridColumns;
+  columns: GridColumns<R>;
   /**
    * An error that will turn the grid into its error state and display the error component.
    */
@@ -661,7 +666,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Return the id of a given [[GridRowModel]].
    */
-  getRowId?: GridRowIdGetter;
+  getRowId?: GridRowIdGetter<R>;
   /**
    * If `true`, a  loading overlay is displayed.
    */
@@ -673,7 +678,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: GridRowsProp;
+  rows: GridRowsProp<R>;
   /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -693,4 +698,13 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalFeatures>;
+  /**
+   * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   * @template R
+   * @param {R} newRow Row object with the new values.
+   * @param {R} oldRow Row object with the old values.
+   * @returns {Promise<R> | R} The final values to update the row.
+   */
+  processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;
 }

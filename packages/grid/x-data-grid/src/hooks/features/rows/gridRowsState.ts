@@ -1,7 +1,29 @@
-import type { GridRowGroupingResult, GridRowGroupParams } from '../../core/rowGroupsPreProcessing';
-import { GridRowsProp } from '../../../models/gridRows';
+import {
+  GridRowId,
+  GridRowsLookup,
+  GridRowsProp,
+  GridRowTreeConfig,
+} from '../../../models/gridRows';
 
-export type GridRowInternalCacheValue = Omit<GridRowGroupParams, 'previousTree'>;
+export interface GridRowTreeCreationParams {
+  ids: GridRowId[];
+  idRowsLookup: GridRowsLookup;
+  previousTree: GridRowTreeConfig | null;
+}
+
+export interface GridRowTreeCreationValue {
+  /**
+   * Name of the algorithm used to group the rows
+   * It is useful to decide which filtering / sorting algorithm to apply, to avoid applying tree-data filtering on a grouping-by-column dataset for instance.
+   */
+  groupingName: string;
+  tree: GridRowTreeConfig;
+  treeDepth: number;
+  ids: GridRowId[];
+  idRowsLookup: GridRowsLookup;
+}
+
+export type GridRowInternalCacheValue = Omit<GridRowTreeCreationParams, 'previousTree'>;
 
 export interface GridRowsInternalCacheState {
   value: GridRowInternalCacheValue;
@@ -18,10 +40,10 @@ export interface GridRowsInternalCache {
   lastUpdateMs: number;
 }
 
-export interface GridRowsState extends GridRowGroupingResult {
+export interface GridRowsState extends GridRowTreeCreationValue {
   /**
    * Amount of rows before applying the filtering.
-   * It also count the expanded and collapsed children rows.
+   * It also counts the expanded and collapsed children rows.
    */
   totalRowCount: number;
   /**

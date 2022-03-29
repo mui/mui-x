@@ -150,6 +150,41 @@ For more details on these options, please visit the [`csvOptions` api page](/api
 
 ## Print export
 
+### Modify the grid style
+
+By default, the printed grid is equivalent to printing a page containing only the grid.
+To modify the styles used for printing, such as colors, you can either use the `@media print` media query or the `pageStyle` property of `printOptions`.
+
+For example, if the grid is in dark mode, the text color will be inappropriate for printing (too light).
+
+With media query, you have to start your `sx` object with `@media print` key, such that all the style inside are only applied when printing.
+
+```jsx
+<DataGrid
+  sx={{
+    "@media print": {
+      ".MuiDataGrid-main": { color: 'rgba(0, 0, 0, 0.87)' }
+    }
+  }}
+  {/* ... */}
+/>
+```
+
+With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity).
+
+```jsx
+<DataGrid
+  componentsProps={{
+    GridToolbar: {
+      printOptions:{
+        pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
+      }
+    }
+  }}
+  {/* ... */}
+/>
+```
+
 ### Customize grid display
 
 By default, the print export display all the DataGrid. It is possible to remove the footer and the toolbar by setting respectively `hideFooter` and `hideToolbar` to `true`.
@@ -185,18 +220,22 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
+> ⚠️ Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
+>
+> In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN`.
+
 ## 🚧 Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #198](https://github.com/mui/material-ui-x/issues/198) if you want to see it land faster.
+> 👍 Upvote [issue #198](https://github.com/mui/mui-x/issues/198) if you want to see it land faster.
 > You will be able to export the displayed data to Excel with an API call, or using the grid UI.
 
 ## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #199](https://github.com/mui/material-ui-x/issues/199) if you want to see it land faster.
+> 👍 Upvote [issue #199](https://github.com/mui/mui-x/issues/199) if you want to see it land faster.
 > You will be able to copy and paste items to and from the grid using the system clipboard.
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)

@@ -9,6 +9,7 @@ import {
   DataGridProProps,
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -64,7 +65,14 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   );
 };
 
-const rows: GridRowsProp = [
+interface Row {
+  hierarchy: string[];
+  jobTitle: string;
+  recruitmentDate: Date;
+  id: number;
+}
+
+const rows: GridRowsProp<Row> = [
   {
     hierarchy: ['Sarah'],
     jobTitle: 'Head of Human Resources',
@@ -162,10 +170,10 @@ const columns: GridColumns = [
     field: 'name',
     headerName: 'Name',
     valueGetter: (params) => {
-      const hierarchy = params.row.hierarchy as string[];
+      const hierarchy = params.row.hierarchy;
       return hierarchy[hierarchy.length - 1];
     },
-  },
+  } as GridColDef<Row, string>,
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
   {
     field: 'recruitmentDate',

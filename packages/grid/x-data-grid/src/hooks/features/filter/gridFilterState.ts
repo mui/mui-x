@@ -47,12 +47,8 @@ export type GridAggregatedFilterItemApplier = (
   shouldApplyItem?: (filterItem: GridFilterItem) => boolean,
 ) => boolean;
 
-export interface GridFilteringParams {
+export interface GridFilteringMethodParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
 }
 
-export type GridFilteringMethod = (
-  params: GridFilteringParams,
-) => Omit<GridFilterState, 'filterModel'>;
-
-export type GridFilteringMethodCollection = { [methodName: string]: GridFilteringMethod };
+export type GridFilteringMethodValue = Omit<GridFilterState, 'filterModel'>;
