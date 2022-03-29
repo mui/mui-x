@@ -1,5 +1,5 @@
 import { GridSortingModelApplier } from './gridSortingState';
-import type { GridCellValue, GridRowId, GridRowTreeNodeConfig } from '../../../models';
+import type { GridRowId, GridRowTreeNodeConfig } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
@@ -151,7 +151,7 @@ export const getNextGridSortDirection = (
   return sortingOrder[currentIdx + 1];
 };
 
-const gridNillComparator = (v1: GridCellValue, v2: GridCellValue): number | null => {
+const gridNillComparator = (v1: any, v2: any): number | null => {
   if (v1 == null && v2 != null) {
     return -1;
   }
@@ -167,10 +167,7 @@ const gridNillComparator = (v1: GridCellValue, v2: GridCellValue): number | null
 
 const collator = new Intl.Collator();
 
-export const gridStringOrNumberComparator: GridComparatorFn = (
-  value1: GridCellValue,
-  value2: GridCellValue,
-) => {
+export const gridStringOrNumberComparator: GridComparatorFn = (value1, value2) => {
   const nillResult = gridNillComparator(value1, value2);
   if (nillResult !== null) {
     return nillResult;
@@ -182,10 +179,7 @@ export const gridStringOrNumberComparator: GridComparatorFn = (
   return (value1 as any) - (value2 as any);
 };
 
-export const gridNumberComparator: GridComparatorFn = (
-  value1: GridCellValue,
-  value2: GridCellValue,
-) => {
+export const gridNumberComparator: GridComparatorFn = (value1, value2) => {
   const nillResult = gridNillComparator(value1, value2);
   if (nillResult !== null) {
     return nillResult;
@@ -194,7 +188,7 @@ export const gridNumberComparator: GridComparatorFn = (
   return Number(value1) - Number(value2);
 };
 
-export const gridDateComparator = (value1: GridCellValue, value2: GridCellValue): number => {
+export const gridDateComparator: GridComparatorFn = (value1, value2) => {
   const nillResult = gridNillComparator(value1, value2);
   if (nillResult !== null) {
     return nillResult;

@@ -202,35 +202,35 @@ export const getTypeScriptProjects = () => {
     }),
   );
 
-  // projects.set(
-  //   'x-date-pickers-pro',
-  //   createProject({
-  //     name: 'x-date-pickers-pro',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
-  //     documentationFolderName: 'date-pickers',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src'],
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       folders: ['src'],
-  //     }),
-  //   }),
-  // );
-  //
-  // projects.set(
-  //   'x-date-pickers',
-  //   createProject({
-  //     name: 'x-date-pickers',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
-  //     documentationFolderName: 'date-pickers',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src'],
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       folders: ['src'],
-  //     }),
-  //   }),
-  // );
+  projects.set(
+    'x-date-pickers',
+    createProject({
+      name: 'x-date-pickers',
+      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
+      documentationFolderName: 'date-pickers',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-date-pickers-pro',
+    createProject({
+      name: 'x-date-pickers-pro',
+      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
+      documentationFolderName: 'date-pickers',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+      }),
+    }),
+  );
 
   return projects;
 };

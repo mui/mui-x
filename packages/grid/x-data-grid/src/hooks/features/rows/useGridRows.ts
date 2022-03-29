@@ -4,7 +4,6 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
 import {
-  checkGridRowIdIsValid,
   GridRowModel,
   GridRowId,
   GridRowsProp,
@@ -30,6 +29,7 @@ import {
   GridRowsInternalCache,
   GridRowsState,
 } from './gridRowsState';
+import { checkGridRowIdIsValid } from './gridRowsUtils';
 
 interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
@@ -149,7 +149,7 @@ export const useGridRows = (
   const currentPage = useGridVisibleRows(apiRef, props);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
-    (id) => gridRowsLookupSelector(apiRef)[id] ?? null,
+    (id) => (gridRowsLookupSelector(apiRef)[id] as any) ?? null,
     [apiRef],
   );
 

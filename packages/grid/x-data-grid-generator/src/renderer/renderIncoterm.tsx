@@ -2,10 +2,10 @@ import * as React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 import InfoIcon from '@mui/icons-material/Info';
-import { GridRenderCellParams, GridCellValue } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 interface IncotermProps {
-  value: GridCellValue;
+  value: string | null | undefined;
 }
 
 const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
@@ -29,6 +29,6 @@ const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
   );
 });
 
-export function renderIncoterm(params: GridRenderCellParams) {
-  return <Incoterm value={params.value!} />;
+export function renderIncoterm(params: GridRenderCellParams<string | null, any, any>) {
+  return <Incoterm value={params.value} />;
 }
