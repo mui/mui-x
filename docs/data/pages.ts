@@ -55,6 +55,73 @@ const pages = [
       },
     ],
   },
+  {
+    pathname: '/x/react-date-pickers',
+    scopePathnames: ['/x/api/date-pickers'],
+    title: 'Date and Time Pickers',
+    icon: 'TableViewIcon',
+    children: [
+      { pathname: '/x/react-date-pickers/getting-started' },
+      { pathname: '/x/react-date-pickers/date-picker' },
+      {
+        pathname: '/x/react-date-pickers/date-range-picker',
+      },
+      { pathname: '/x/react-date-pickers/date-time-picker' },
+      { pathname: '/x/react-date-pickers/time-picker' },
+      {
+        pathname: '/x/api/data-grid',
+        title: 'API Reference',
+        children: [
+          { pathname: '/x/api/date-pickers', title: 'Index' },
+          { pathname: '/x/api/date-pickers/calendar-picker', title: 'CalendarPicker' },
+          {
+            pathname: '/x/api/date-pickers/calendar-picker-skeleton',
+            title: 'CalendarPickerSkeleton',
+          },
+          { pathname: '/x/api/date-pickers/clock-picker', title: 'ClockPicker' },
+          { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
+          { pathname: '/x/api/date-pickers/date-range-picker', title: 'DateRangePicker' },
+          { pathname: '/x/api/date-pickers/date-range-picker-day', title: 'DateRangePickerDay' },
+          { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
+          { pathname: '/x/api/date-pickers/desktop-date-picker', title: 'DesktopDatePicker' },
+          {
+            pathname: '/x/api/date-pickers/desktop-date-range-picker',
+            title: 'DesktopDateRangePicker',
+          },
+          {
+            pathname: '/x/api/date-pickers/desktop-date-time-picker',
+            title: 'DesktopDateTimePicker',
+          },
+          { pathname: '/x/api/date-pickers/desktop-time-picker', title: 'DesktopTimePicker' },
+          { pathname: '/x/api/date-pickers/localization-provider', title: 'LocalizationProvider' },
+          { pathname: '/x/api/date-pickers/mobile-date-picker', title: 'MobileDatePicker' },
+          {
+            pathname: '/x/api/date-pickers/mobile-date-range-picker',
+            title: 'MobileDateRangePicker',
+          },
+          {
+            pathname: '/x/api/date-pickers/mobile-date-time-picker',
+            title: 'MobileDateTimePicker',
+          },
+          { pathname: '/x/api/date-pickers/mobile-time-picker', title: 'MobileTimePicker' },
+          { pathname: '/x/api/date-pickers/month-picker', title: 'MonthPicker' },
+          { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
+          { pathname: '/x/api/date-pickers/static-date-picker', title: 'StaticDatePicker' },
+          {
+            pathname: '/x/api/date-pickers/static-date-range-picker',
+            title: 'StaticDateRangePicker',
+          },
+          {
+            pathname: '/x/api/date-pickers/static-date-time-picker',
+            title: 'StaticDateTimePicker',
+          },
+          { pathname: '/x/api/date-pickers/static-time-picker', title: 'StaticTimePicker' },
+          { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
+          { pathname: '/x/api/date-pickers/year-picker', title: 'YearPicker' },
+        ],
+      },
+    ],
+  },
 ];
 
 export default pages;
