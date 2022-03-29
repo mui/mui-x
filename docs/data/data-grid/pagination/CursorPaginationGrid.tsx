@@ -22,7 +22,7 @@ export default function CursorPaginationGrid() {
     }),
     [page],
   );
-  const { isLoading, data, rowCount, nextCursor } = useQuery(queryOptions);
+  const { isLoading, data, pageInfo } = useQuery(queryOptions);
 
   const handlePageChange = (newPage: number) => {
     // We have the cursor, we can allow the page transition.
@@ -32,20 +32,24 @@ export default function CursorPaginationGrid() {
   };
 
   React.useEffect(() => {
-    if (!isLoading && nextCursor) {
+    if (!isLoading && pageInfo?.nextCursor) {
       // We add nextCursor when available
-      mapPageToNextCursor.current[page] = nextCursor;
+      mapPageToNextCursor.current[page] = pageInfo?.nextCursor;
     }
-  }, [page, nextCursor, isLoading]);
+  }, [page, isLoading, pageInfo?.nextCursor]);
 
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
-  const [rowCountState, setRowCountState] = React.useState(rowCount || 0);
+  const [rowCountState, setRowCountState] = React.useState(
+    pageInfo?.totalRowCount || 0,
+  );
   React.useEffect(() => {
     setRowCountState((prevRowCountState) =>
-      rowCount !== undefined ? rowCount : prevRowCountState,
+      pageInfo?.totalRowCount !== undefined
+        ? pageInfo?.totalRowCount
+        : prevRowCountState,
     );
-  }, [rowCount, setRowCountState]);
+  }, [pageInfo?.totalRowCount, setRowCountState]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>

@@ -16,16 +16,20 @@ export default function ServerPaginationGrid() {
     [page, pageSize],
   );
 
-  const { isLoading, data, rowCount } = useQuery(queryOptions);
+  const { isLoading, data, pageInfo } = useQuery(queryOptions);
 
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
-  const [rowCountState, setRowCountState] = React.useState(rowCount || 0);
+  const [rowCountState, setRowCountState] = React.useState(
+    pageInfo?.totalRowCount || 0,
+  );
   React.useEffect(() => {
     setRowCountState((prevRowCountState) =>
-      rowCount !== undefined ? rowCount : prevRowCountState,
+      pageInfo?.totalRowCount !== undefined
+        ? pageInfo?.totalRowCount
+        : prevRowCountState,
     );
-  }, [rowCount, setRowCountState]);
+  }, [pageInfo?.totalRowCount, setRowCountState]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>

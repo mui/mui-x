@@ -162,6 +162,13 @@ interface FakeServerResponse {
   nextCursor?: string;
   rowNumber: number;
 }
+
+interface PageInfo {
+  totalRowCount?: number;
+  nextCursor?: string;
+  pageSize?: number;
+}
+
 export interface ServerOptions {
   minDelay: number;
   maxDelay: number;
@@ -212,10 +219,11 @@ export const createFakeServer = (
     } = useDemoData(dataSetOptionsWithDefault);
 
     const queryOptionsRef = React.useRef(queryOptions);
-    const [rowCount, setRowCount] = React.useState<number | undefined>(undefined);
-    const [nextCursor, setNextCursor] = React.useState<string | undefined>(undefined);
+    const [response, setResponse] = React.useState<{
+      pageInfo: PageInfo;
+      data: GridRowModel[];
+    }>({ pageInfo: {}, data: [] });
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
-    const [data, setData] = React.useState<GridRowModel[]>([]);
 
     React.useEffect(() => {
       if (dataGenerationIsLoading) {
@@ -227,17 +235,21 @@ export const createFakeServer = (
       let active = true;
 
       setIsLoading(true);
-      setRowCount(undefined);
-      setNextCursor(undefined);
+      setResponse({ pageInfo: {}, data: [] });
       loadServerRows(rows, queryOptions, serverOptionsWithDefault, columnsWithDefaultColDef).then(
         ({ returnedRows, nextCursor: responseNextCursor, rowNumber }) => {
           if (!active) {
             return;
           }
-          setData(returnedRows);
+          setResponse({
+            data: returnedRows,
+            pageInfo: {
+              totalRowCount: rowNumber,
+              nextCursor: responseNextCursor,
+              pageSize: returnedRows.length,
+            },
+          });
           setIsLoading(false);
-          setRowCount(rowNumber);
-          setNextCursor(responseNextCursor);
         },
       );
 
@@ -251,9 +263,7 @@ export const createFakeServer = (
 
     return {
       isLoading: dataGenerationIsLoading || isLoading || effectShouldStart,
-      data,
-      rowCount,
-      nextCursor,
+      ...response,
     };
   };
 
