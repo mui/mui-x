@@ -7,12 +7,8 @@ import {
   GridColumnRawLookup,
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
-import {
-  DEFAULT_GRID_COL_TYPE_KEY,
-  getGridDefaultColumnTypes,
-  GridColType,
-  GridColumnTypesRecord,
-} from '../../../models';
+import { GridColType, GridColumnTypesRecord } from '../../../models';
+import { DEFAULT_GRID_COL_TYPE_KEY, getGridDefaultColumnTypes } from '../../../colDef';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
