@@ -22,19 +22,19 @@ const blacklist = [
   'docs-components-data-grid-filtering/CustomInputComponent.png', // Needs interaction
   // TODO import the Rating from @mui/material, not the lab.
   'docs-components-data-grid-components/CustomFooter.png',
-  'docs-components-date-picker/CustomInput.png', // Redundant
-  'docs-components-date-picker/LocalizedDatePicker.png', // Redundant
-  'docs-components-date-picker/ResponsiveDatePickers.png', // Redundant
-  'docs-components-date-picker/ServerRequestDatePicker.png', // Redundant
-  'docs-components-date-picker/ViewsDatePicker.png', // Redundant
-  'docs-components-date-range-picker/CalendarsDateRangePicker.png', // Redundant
-  'docs-components-date-range-picker/CustomDateRangeInputs.png', // Redundant
-  'docs-components-date-range-picker/MinMaxDateRangePicker.png', // Redundant
-  'docs-components-date-range-picker/ResponsiveDateRangePicker.png', // Redundant
-  'docs-components-date-time-picker/BasicDateTimePicker.png', // Redundant
-  'docs-components-date-time-picker/ResponsiveDateTimePickers.png', // Redundant
-  'docs-components-time-picker/LocalizedTimePicker.png', // Redundant
-  'docs-components-time-picker/ResponsiveTimePickers.png', // Redundant
+  'docs-components-date-pickers-date-picker/CustomInput.png', // Redundant
+  'docs-components-date-pickers-date-picker/LocalizedDatePicker.png', // Redundant
+  'docs-components-date-pickers-date-picker/ResponsiveDatePickers.png', // Redundant
+  'docs-components-date-pickers-date-picker/ServerRequestDatePicker.png', // Redundant
+  'docs-components-date-pickers-date-picker/ViewsDatePicker.png', // Redundant
+  'docs-components-date-pickers-date-range-picker/CalendarsDateRangePicker.png', // Redundant
+  'docs-components-date-pickers-date-range-picker/CustomDateRangeInputs.png', // Redundant
+  'docs-components-date-pickers-date-range-picker/MinMaxDateRangePicker.png', // Redundant
+  'docs-components-date-pickers-date-range-picker/ResponsiveDateRangePicker.png', // Redundant
+  'docs-components-date-pickers-date-time-picker/BasicDateTimePicker.png', // Redundant
+  'docs-components-date-pickers-date-time-picker/ResponsiveDateTimePickers.png', // Redundant
+  'docs-components-date-pickers-time-picker/LocalizedTimePicker.png', // Redundant
+  'docs-components-date-pickers-time-picker/ResponsiveTimePickers.png', // Redundant
   // 'docs-system-typography',
   /^stories(.*)(?<!Snap)\.png$/, // Excludes stories that aren't suffixed with 'Snap'.
 ];
