@@ -12,7 +12,7 @@ renderRating.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number,
 };
 
 function RatingEditInputCell(props) {
@@ -67,7 +67,7 @@ RatingEditInputCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number,
 };
 
 function renderRatingEditInputCell(params) {

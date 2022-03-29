@@ -19,7 +19,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 }));
 
-function EditCurrency(props: GridRenderEditCellParams) {
+function EditCurrency(props: GridRenderEditCellParams<string>) {
   const { id, value, api, field } = props;
 
   const handleChange = React.useCallback(
@@ -35,7 +35,7 @@ function EditCurrency(props: GridRenderEditCellParams) {
 
   return (
     <StyledAutocomplete
-      value={value as string}
+      value={value}
       onChange={handleChange}
       options={CURRENCY_OPTIONS}
       autoHighlight
@@ -79,6 +79,6 @@ function EditCurrency(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditCurrency(params: GridRenderEditCellParams) {
+export function renderEditCurrency(params: GridRenderEditCellParams<string>) {
   return <EditCurrency {...params} />;
 }

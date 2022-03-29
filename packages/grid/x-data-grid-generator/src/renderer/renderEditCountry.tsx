@@ -4,7 +4,7 @@ import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import { COUNTRY_ISO_OPTIONS } from '../services/static-data';
+import { COUNTRY_ISO_OPTIONS, CountryIsoOption } from '../services/static-data';
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   height: '100%',
@@ -19,7 +19,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 }));
 
-function EditCountry(props: GridRenderEditCellParams) {
+function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
   const { id, value, api, field } = props;
 
   const handleChange = React.useCallback(
@@ -35,7 +35,7 @@ function EditCountry(props: GridRenderEditCellParams) {
 
   return (
     <StyledAutocomplete
-      value={value as any}
+      value={value}
       onChange={handleChange}
       options={COUNTRY_ISO_OPTIONS}
       getOptionLabel={(option: any) => option.label}
@@ -80,6 +80,6 @@ function EditCountry(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditCountry(params: GridRenderEditCellParams) {
+export function renderEditCountry(params: GridRenderEditCellParams<CountryIsoOption>) {
   return <EditCountry {...params} />;
 }

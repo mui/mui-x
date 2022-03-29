@@ -3,7 +3,7 @@ import { gridStringOrNumberComparator } from '../hooks/features/sorting/gridSort
 import { GridColTypeDef } from '../models/colDef/gridColDef';
 import { getGridStringOperators } from './gridStringOperators';
 
-export const GRID_STRING_COL_DEF: GridColTypeDef = {
+export const GRID_STRING_COL_DEF: GridColTypeDef<any, any> = {
   width: 100,
   minWidth: 50,
   maxWidth: Infinity,
