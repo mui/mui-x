@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import { DataGrid } from '@mui/x-data-grid';
@@ -7,13 +6,6 @@ import { DataGrid } from '@mui/x-data-grid';
 function renderRating(params) {
   return <Rating readOnly value={params.value} />;
 }
-
-renderRating.propTypes = {
-  /**
-   * The cell value, but if the column has valueGetter, use getValue.
-   */
-  value: PropTypes.number,
-};
 
 function RatingEditInputCell(props) {
   const { id, value, api, field } = props;
@@ -49,26 +41,6 @@ function RatingEditInputCell(props) {
     </Box>
   );
 }
-
-RatingEditInputCell.propTypes = {
-  /**
-   * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
-   */
-  api: PropTypes.any.isRequired,
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value, but if the column has valueGetter, use getValue.
-   */
-  value: PropTypes.number,
-};
 
 function renderRatingEditInputCell(params) {
   return <RatingEditInputCell {...params} />;
