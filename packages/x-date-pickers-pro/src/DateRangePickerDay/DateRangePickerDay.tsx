@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/base';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DAY_MARGIN, useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {

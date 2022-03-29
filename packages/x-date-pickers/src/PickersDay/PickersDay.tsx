@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { CSSInterpolation, SxProps } from '@mui/system';
 import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/base';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useTheme, alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
 import { useForkRef } from '@mui/material/utils';
 import { ExtendMui } from '../internals/models/helpers';

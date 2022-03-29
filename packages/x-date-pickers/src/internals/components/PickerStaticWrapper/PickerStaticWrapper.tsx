@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/base';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { WrapperVariantContext, IsStaticVariantContext } from '../wrappers/WrapperVariantContext';
 
