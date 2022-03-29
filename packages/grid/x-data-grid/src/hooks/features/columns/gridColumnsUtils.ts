@@ -315,14 +315,14 @@ export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
   initialState,
-  columnsTypes,
+  columnTypes,
   currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   shouldRegenColumnVisibilityModelFromColumns,
   keepOnlyColumnsToUpsert = false,
 }: {
   columnsToUpsert: GridColDef[];
   initialState: GridColumnsInitialState | undefined;
-  columnsTypes: GridColumnTypesRecord;
+  columnTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
   keepOnlyColumnsToUpsert: boolean;
@@ -367,7 +367,7 @@ export const createColumnsState = ({
     if (existingState == null) {
       // New Column
       existingState = {
-        ...getGridColDef(columnsTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
+        ...getGridColDef(columnTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
         field,
         hasBeenResized: false,
       };

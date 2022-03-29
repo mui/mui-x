@@ -48,7 +48,7 @@ export const columnsStateInitializer: GridStateInitializer<
 
   const columnsState = createColumnsState({
     apiRef,
-    columnsTypes,
+    columnTypes: columnsTypes,
     columnsToUpsert: props.columns,
     initialState: props.initialState?.columns,
     shouldRegenColumnVisibilityModelFromColumns: !isUsingColumnVisibilityModel,
@@ -171,7 +171,7 @@ export function useGridColumns(
           ...state,
           columns: createColumnsState({
             apiRef,
-            columnsTypes: columnTypes,
+            columnTypes,
             columnsToUpsert: [],
             initialState: undefined,
             shouldRegenColumnVisibilityModelFromColumns: false,
@@ -189,7 +189,7 @@ export function useGridColumns(
     (columns) => {
       const columnsState = createColumnsState({
         apiRef,
-        columnsTypes: columnTypes,
+        columnTypes,
         columnsToUpsert: columns as any,
         initialState: undefined,
         shouldRegenColumnVisibilityModelFromColumns: true,
@@ -354,7 +354,7 @@ export function useGridColumns(
 
       const columnsState = createColumnsState({
         apiRef,
-        columnsTypes: columnTypes,
+        columnTypes,
         columnsToUpsert: [],
         initialState,
         shouldRegenColumnVisibilityModelFromColumns: !isUsingColumnVisibilityModel.current,
@@ -403,7 +403,7 @@ export function useGridColumns(
 
       const columnsState = createColumnsState({
         apiRef,
-        columnsTypes: columnTypes,
+        columnTypes,
         columnsToUpsert: [],
         initialState: undefined,
         shouldRegenColumnVisibilityModelFromColumns: !isUsingColumnVisibilityModel.current,
@@ -458,7 +458,7 @@ export function useGridColumns(
 
     const columnsState = createColumnsState({
       apiRef,
-      columnsTypes: columnTypes,
+      columnTypes,
       initialState: undefined,
       // If the user provides a model, we don't want to set it in the state here because it has it's dedicated `useEffect` which calls `setColumnVisibilityModel`
       shouldRegenColumnVisibilityModelFromColumns: !isUsingColumnVisibilityModel.current,
