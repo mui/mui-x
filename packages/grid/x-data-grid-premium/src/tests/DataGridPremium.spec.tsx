@@ -1,52 +1,48 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
-
-function SxTest() {
-  <DataGridPro rows={[]} columns={[]} sx={{ color: 'primary.main' }} />;
-}
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 function ColumnPropTest() {
   return (
     <div>
       {/* Wrong column with explicit generic on DataGrid */}
-      <DataGridPro<{ firstName: string }>
+      <DataGridPremium<{ firstName: string }>
         rows={[]}
         columns={[
           {
             field: 'firstName',
             // @ts-expect-error
-            valueGetter: (params) => params.row.lastName,
+            groupingValueGetter: (params) => params.row.lastName,
           },
         ]}
       />
       {/* Valid column with explicit generic on DataGrid */}
-      <DataGridPro<{ firstName: string }>
+      <DataGridPremium<{ firstName: string }>
         rows={[]}
         columns={[
           {
             field: 'firstName',
-            valueGetter: (params) => params.row.firstName,
+            groupingValueGetter: (params) => params.row.firstName,
           },
         ]}
       />
       {/* Wrong column without explicit generic on DataGrid */}
-      <DataGridPro
+      <DataGridPremium
         rows={[{ firstName: 'John' }]}
         columns={[
           {
             field: 'firstName',
             // @ts-expect-error
-            valueGetter: (params) => params.row.lastName,
+            groupingValueGetter: (params) => params.row.lastName,
           },
         ]}
       />
       {/* Valid column without explicit generic on DataGrid */}
-      <DataGridPro
+      <DataGridPremium
         rows={[{ firstName: 'John' }]}
         columns={[
           {
             field: 'firstName',
-            valueGetter: (params) => params.row.firstName,
+            groupingValueGetter: (params) => params.row.firstName,
           },
         ]}
       />

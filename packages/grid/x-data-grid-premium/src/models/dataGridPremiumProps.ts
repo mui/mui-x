@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridCallbackDetails } from '@mui/x-data-grid-pro';
+import { GridCallbackDetails, GridValidRowModel } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
   DataGridProPropsWithDefaultValue,
@@ -16,11 +16,11 @@ export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeat
 /**
  * The props users can give to the `DataGridProProps` component.
  */
-export interface DataGridPremiumProps
+export interface DataGridPremiumProps<R extends GridValidRowModel = any>
   extends Omit<
     Partial<DataGridPremiumPropsWithDefaultValue> &
       DataGridPropsWithComplexDefaultValueBeforeProcessing &
-      DataGridPremiumPropsWithoutDefaultValue,
+      DataGridPremiumPropsWithoutDefaultValue<R>,
     DataGridPremiumForcedPropsKey
   > {
   /**
@@ -59,8 +59,8 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
   rowGroupingColumnMode: 'single' | 'multiple';
 }
 
-export interface DataGridPremiumPropsWithoutDefaultValue
-  extends Omit<DataGridProPropsWithoutDefaultValue, 'initialState' | 'apiRef'> {
+export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
+  extends Omit<DataGridProPropsWithoutDefaultValue<R>, 'initialState' | 'apiRef'> {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */

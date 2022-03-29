@@ -9,6 +9,7 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   GridContextProvider,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import {
   DataGridProVirtualScroller,
@@ -21,33 +22,41 @@ import { getReleaseInfo } from '../utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-const DataGridPremiumRaw = React.forwardRef<HTMLDivElement, DataGridPremiumProps>(
-  function DataGridPremium(inProps, ref) {
-    const props = useDataGridPremiumProps(inProps);
-    const apiRef = useDataGridPremiumComponent(props.apiRef, props);
+const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends GridValidRowModel>(
+  inProps: DataGridPremiumProps<R>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useDataGridPremiumProps(inProps);
+  const apiRef = useDataGridPremiumComponent(props.apiRef, props);
 
-    useLicenseVerifier('x-data-grid-premium', releaseInfo);
+  useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-    return (
-      <GridContextProvider apiRef={apiRef} props={props}>
-        <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-          <GridErrorHandler>
-            <GridHeaderPlaceholder />
-            <GridBody
-              ColumnHeadersComponent={DataGridProColumnHeaders}
-              VirtualScrollerComponent={DataGridProVirtualScroller}
-            >
-              <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
-            </GridBody>
-            <GridFooterPlaceholder />
-          </GridErrorHandler>
-        </GridRoot>
-      </GridContextProvider>
-    );
-  },
-);
+  return (
+    <GridContextProvider apiRef={apiRef} props={props}>
+      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+        <GridErrorHandler>
+          <GridHeaderPlaceholder />
+          <GridBody
+            ColumnHeadersComponent={DataGridProColumnHeaders}
+            VirtualScrollerComponent={DataGridProVirtualScroller}
+          >
+            <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
+          </GridBody>
+          <GridFooterPlaceholder />
+        </GridErrorHandler>
+      </GridRoot>
+    </GridContextProvider>
+  );
+});
 
-export const DataGridPremium = React.memo(DataGridPremiumRaw);
+interface DataGridPremiumComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): JSX.Element;
+  propTypes?: any;
+}
+
+export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremiumComponent;
 
 DataGridPremiumRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -322,7 +331,8 @@ DataGridPremiumRaw.propTypes = {
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
    * Note that all paths must contain at least one element.
-   * @param {GridRowModel} row The row from which we want the path.
+   * @template R
+   * @param {R} row The row from which we want the path.
    * @returns {string[]} The path to the row.
    */
   getTreeDataPath: PropTypes.func,
@@ -698,9 +708,10 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.
-   * @param {GridRowModel} newRow Row object with the new values.
-   * @param {GridRowModel} oldRow Row object with the old values.
-   * @returns {Promise<GridRowModel> | GridRowModel} The final values to update the row.
+   * @template R
+   * @param {R} newRow Row object with the new values.
+   * @param {R} oldRow Row object with the old values.
+   * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
   /**
@@ -731,7 +742,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.array.isRequired,
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
