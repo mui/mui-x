@@ -72,10 +72,6 @@ export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
-export type { GridComparatorFn, GridSortCellParams } from '../models/gridSortModel';
-
-export type { GridSortModelParams } from '../models/params/gridSortModelParams';
-
 export type {
   GridExperimentalFeatures,
   DataGridPropsWithoutDefaultValue,

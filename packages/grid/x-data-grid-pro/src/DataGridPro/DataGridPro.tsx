@@ -9,6 +9,7 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   GridContextProvider,
+  GridValidRowModel,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models';
@@ -19,9 +20,9 @@ import { getReleaseInfo } from '../utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(function DataGridPro(
-  inProps,
-  ref,
+const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
+  inProps: DataGridProProps<R>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProProps(inProps);
   const apiRef = useDataGridProComponent(props.apiRef, props);
@@ -45,7 +46,14 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   );
 });
 
-export const DataGridPro = React.memo(DataGridProRaw);
+interface DataGridProComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridProProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): JSX.Element;
+  propTypes?: any;
+}
+
+export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
 DataGridProRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -321,7 +329,8 @@ DataGridProRaw.propTypes = {
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
    * Note that all paths must contain at least one element.
-   * @param {GridRowModel} row The row from which we want the path.
+   * @template R
+   * @param {R} row The row from which we want the path.
    * @returns {string[]} The path to the row.
    */
   getTreeDataPath: PropTypes.func,
@@ -697,9 +706,10 @@ DataGridProRaw.propTypes = {
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.
-   * @param {GridRowModel} newRow Row object with the new values.
-   * @param {GridRowModel} oldRow Row object with the old values.
-   * @returns {Promise<GridRowModel> | GridRowModel} The final values to update the row.
+   * @template R
+   * @param {R} newRow Row object with the new values.
+   * @param {R} oldRow Row object with the old values.
+   * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
   /**
@@ -730,7 +740,7 @@ DataGridProRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.array.isRequired,
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"

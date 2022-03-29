@@ -9,7 +9,7 @@ const columns: GridColDef[] = [
     width: 150,
     renderCell: (params: GridRenderCellParams<Date>) => (
       <strong>
-        {params.value.getFullYear()}
+        {params.value?.getFullYear() ?? ''}
         <Button
           variant="contained"
           color="primary"

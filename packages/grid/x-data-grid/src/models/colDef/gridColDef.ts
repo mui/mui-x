@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridCellValue } from '../gridCell';
 import { GridCellClassNamePropType } from '../gridCellClass';
 import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
@@ -18,8 +17,8 @@ import { GridColType, GridNativeColTypes } from './gridColType';
 import { GridRowParams } from '../params/gridRowParams';
 import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
-import { GridRowModel } from '../gridRows';
 import { GridEditCellProps } from '../gridEditRowModel';
+import type { GridValidRowModel } from '../gridRows';
 
 /**
  * Alignment used in position elements in Cells.
@@ -36,7 +35,7 @@ export type GridKeyValue = string | number | boolean;
 /**
  * Column Definition interface.
  */
-export interface GridColDef {
+export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * The column identifier. It's used to map with [[GridRowModel]] values.
    */
@@ -112,7 +111,7 @@ export interface GridColDef {
   /**
    * A comparator function used to sort rows.
    */
-  sortComparator?: GridComparatorFn;
+  sortComparator?: GridComparatorFn<V>;
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
    * @default 'string'
@@ -121,53 +120,58 @@ export interface GridColDef {
   /**
    * To be used in combination with `type: 'singleSelect'`. This is an array (or a function returning an array) of the possible cell values and labels.
    */
-  valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams) => Array<ValueOptions>);
+  valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams<R>) => Array<ValueOptions>);
   /**
    * Allows to align the column values in cells.
    */
   align?: GridAlignment;
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
-   * @param {GridValueGetterParams} params Object containing parameters for the getter.
-   * @returns {GridCellValue} The cell value.
+   * @template R, V
+   * @param {GridValueGetterParams<any, R>} params Object containing parameters for the getter.
+   * @returns {V} The cell value.
    */
-  valueGetter?: (params: GridValueGetterParams) => GridCellValue;
+  valueGetter?: (params: GridValueGetterParams<any, R>) => V;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
-   * @param {GridValueSetterParams} params Object containing parameters for the setter.
-   * @returns {GridRowModel} The row with the updated field.
+   * @template R, V
+   * @param {GridValueSetterParams<R, V>} params Object containing parameters for the setter.
+   * @returns {R} The row with the updated field.
    */
-  valueSetter?: (params: GridValueSetterParams) => GridRowModel;
+  valueSetter?: (params: GridValueSetterParams<R, V>) => R;
   /**
    * Function that allows to apply a formatter before rendering its value.
-   * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
-   * @returns {GridCellValue} The formatted value.
+   * @template V, F
+   * @param {GridValueFormatterParams<V>} params Object containing parameters for the formatter.
+   * @returns {F} The formatted value.
    */
-  valueFormatter?: (params: GridValueFormatterParams) => GridCellValue;
+  valueFormatter?: (params: GridValueFormatterParams<V>) => F;
   /**
    * Function that takes the user-entered value and converts it to a value used internally.
-   * @param {GridCellValue} value The user-entered value.
-   * @param {GridCellParams} params The params when called before saving the value.
-   * @returns {GridCellValue} The converted value to use internally.
+   * @template R, V, F
+   * @param {F | undefined} value The user-entered value.
+   * @param {GridCellParams<V, R, F>} params The params when called before saving the value.
+   * @returns {V} The converted value to use internally.
    */
-  valueParser?: (value: GridCellValue, params?: GridCellParams) => GridCellValue;
+  valueParser?: (value: F | undefined, params?: GridCellParams<V, R, F>) => V;
   /**
    * Class name that will be added in cells for that column.
    */
   cellClassName?: GridCellClassNamePropType;
   /**
    * Allows to override the component rendered as cell for this column.
-   * @param {GridRenderCellParams} params Object containing parameters for the renderer.
+   * @template R, V, F
+   * @param {GridRenderCellParams<V, R, F>} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderCell?: (params: GridRenderCellParams) => React.ReactNode;
+  renderCell?: (params: GridRenderCellParams<V, R, F>) => React.ReactNode;
   /**
    * Allows to override the component rendered in edit cell mode for this column.
    * @param {GridRenderEditCellParams} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderEditCell?: (params: GridRenderEditCellParams) => React.ReactNode;
+  renderEditCell?: (params: GridRenderEditCellParams<V>) => React.ReactNode;
   /**
    * Callback fired when the edit props of the cell changes.
    * It allows to process the props that saved into the state.
@@ -183,10 +187,11 @@ export interface GridColDef {
   headerClassName?: GridColumnHeaderClassNamePropType;
   /**
    * Allows to render a component in the column header cell.
-   * @param {GridColumnHeaderParams} params Object containing parameters for the renderer.
+   * @template V, R, F
+   * @param {GridColumnHeaderParams<V, R, F>} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderHeader?: (params: GridColumnHeaderParams) => React.ReactNode;
+  renderHeader?: (params: GridColumnHeaderParams<V, R, F>) => React.ReactNode;
   /**
    * Header cell element alignment.
    */
@@ -209,7 +214,7 @@ export interface GridColDef {
   /**
    * Allows setting the filter operators for this column.
    */
-  filterOperators?: GridFilterOperator[];
+  filterOperators?: GridFilterOperator<R, V, F>[];
   /**
    * If `true`, this column cannot be reordered.
    * @default false
@@ -236,13 +241,21 @@ export interface GridActionsColDef extends GridColDef {
   getActions: (params: GridRowParams) => React.ReactElement<GridActionsCellItemProps>[];
 }
 
-export type GridEnrichedColDef = GridColDef | GridActionsColDef;
+export type GridEnrichedColDef<R extends GridValidRowModel = any, V = any, F = V> =
+  | GridColDef<R, V, F>
+  | GridActionsColDef;
 
-export type GridColumns = GridEnrichedColDef[];
+export type GridColumns<R extends GridValidRowModel = any> = GridEnrichedColDef<R>[];
 
-export type GridColTypeDef = Omit<GridColDef, 'field'> & { extendType?: GridNativeColTypes };
+export type GridColTypeDef<V = any, F = V> = Omit<GridColDef<V, any, F>, 'field'> & {
+  extendType?: GridNativeColTypes;
+};
 
-export type GridStateColDef = GridEnrichedColDef & {
+export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridEnrichedColDef<
+  R,
+  V,
+  F
+> & {
   computedWidth: number;
   /**
    * If `true`, it means that at least one of the dimension's property of this column has been modified since the last time the column prop has changed.
