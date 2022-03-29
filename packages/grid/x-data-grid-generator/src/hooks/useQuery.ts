@@ -130,7 +130,7 @@ const loadServerRows = (
   const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
   filteredRows = [...filteredRows].sort(rowComparator);
 
-  const rowNumber = filteredRows.length;
+  const totalRowCount = filteredRows.length;
   if (!pageSize) {
     firstRowIndex = 0;
     lastRowIndex = filteredRows.length;
@@ -147,7 +147,7 @@ const loadServerRows = (
   const response: FakeServerResponse = {
     returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex),
     nextCursor,
-    rowNumber,
+    totalRowCount,
   };
 
   return new Promise<FakeServerResponse>((resolve) => {
@@ -160,7 +160,7 @@ const loadServerRows = (
 interface FakeServerResponse {
   returnedRows: GridRowModel[];
   nextCursor?: string;
-  rowNumber: number;
+  totalRowCount: number;
 }
 
 interface PageInfo {
@@ -236,22 +236,26 @@ export const createFakeServer = (
 
       setIsLoading(true);
       setResponse({ pageInfo: {}, data: [] });
-      loadServerRows(rows, queryOptions, serverOptionsWithDefault, columnsWithDefaultColDef).then(
-        ({ returnedRows, nextCursor: responseNextCursor, rowNumber }) => {
-          if (!active) {
-            return;
-          }
-          setResponse({
-            data: returnedRows,
-            pageInfo: {
-              totalRowCount: rowNumber,
-              nextCursor: responseNextCursor,
-              pageSize: returnedRows.length,
-            },
-          });
-          setIsLoading(false);
-        },
-      );
+      (async function fetchData() {
+        const { returnedRows, nextCursor, totalRowCount } = await loadServerRows(
+          rows,
+          queryOptions,
+          serverOptionsWithDefault,
+          columnsWithDefaultColDef,
+        );
+        if (!active) {
+          return;
+        }
+        setResponse({
+          data: returnedRows,
+          pageInfo: {
+            totalRowCount,
+            nextCursor,
+            pageSize: returnedRows.length,
+          },
+        });
+        setIsLoading(false);
+      })();
 
       return () => {
         active = false;
