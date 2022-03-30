@@ -53,7 +53,7 @@ export function computeFlexColumnsWidth({
   totalFlexUnits: number;
   flexColumns: {
     field: GridColDef['field'];
-    flex?: number;
+    flex?: number | null;
     minWidth?: number;
     maxWidth?: number;
   }[];
@@ -266,11 +266,16 @@ export const applyInitialState = (
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
     const field = columnsWithUpdatedDimensions[i];
 
-    newColumnLookup[field] = {
+    const newColDef: Omit<GridStateColDef, 'computedWidth'> = {
       ...newColumnLookup[field],
-      ...dimensions[field],
       hasBeenResized: true,
     };
+
+    Object.entries(dimensions[field]).forEach(([key, value]) => {
+      newColDef[key as GridColumnDimensionProperties] = value === 'Infinity' ? Infinity : value;
+    });
+
+    newColumnLookup[field] = newColDef;
   }
 
   const newColumnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'> = {
