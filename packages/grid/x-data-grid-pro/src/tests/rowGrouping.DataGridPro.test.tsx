@@ -2323,23 +2323,19 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       );
 
       const groupId = getGroupRowIdFromPath([{ field: 'category1', key: 'Cat A' }]);
+      expect(apiRef.current.getGroupingCriteriaRows({ groupId })).to.deep.equal([0, 1, 2]);
+      expect(apiRef.current.getGroupingCriteriaRows({ groupId, applySorting: true })).to.deep.equal(
+        [2, 1, 0],
+      );
       expect(
-        apiRef.current.getGroupingCriteriaRows({ groupId }).map((row) => row.id),
-      ).to.deep.equal([0, 1, 2]);
-      expect(
-        apiRef.current
-          .getGroupingCriteriaRows({ groupId, applySorting: true })
-          .map((row) => row.id),
-      ).to.deep.equal([2, 1, 0]);
-      expect(
-        apiRef.current
-          .getGroupingCriteriaRows({ groupId, applyFiltering: true })
-          .map((row) => row.id),
+        apiRef.current.getGroupingCriteriaRows({ groupId, applyFiltering: true }),
       ).to.deep.equal([1, 2]);
       expect(
-        apiRef.current
-          .getGroupingCriteriaRows({ groupId, applySorting: true, applyFiltering: true })
-          .map((row) => row.id),
+        apiRef.current.getGroupingCriteriaRows({
+          groupId,
+          applySorting: true,
+          applyFiltering: true,
+        }),
       ).to.deep.equal([2, 1]);
     });
 
@@ -2361,23 +2357,19 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       );
 
       const groupId = getGroupRowIdFromPath([{ field: 'category1', key: 'Cat A' }]);
+      expect(apiRef.current.getGroupingCriteriaRows({ groupId })).to.deep.equal([0, 1, 2]);
+      expect(apiRef.current.getGroupingCriteriaRows({ groupId, applySorting: true })).to.deep.equal(
+        [0, 2, 1],
+      );
       expect(
-        apiRef.current.getGroupingCriteriaRows({ groupId }).map((row) => row.id),
-      ).to.deep.equal([0, 1, 2]);
-      expect(
-        apiRef.current
-          .getGroupingCriteriaRows({ groupId, applySorting: true })
-          .map((row) => row.id),
-      ).to.deep.equal([0, 2, 1]);
-      expect(
-        apiRef.current
-          .getGroupingCriteriaRows({ groupId, applyFiltering: true })
-          .map((row) => row.id),
+        apiRef.current.getGroupingCriteriaRows({ groupId, applyFiltering: true }),
       ).to.deep.equal([1, 2]);
       expect(
-        apiRef.current
-          .getGroupingCriteriaRows({ groupId, applySorting: true, applyFiltering: true })
-          .map((row) => row.id),
+        apiRef.current.getGroupingCriteriaRows({
+          groupId,
+          applySorting: true,
+          applyFiltering: true,
+        }),
       ).to.deep.equal([2, 1]);
     });
 
@@ -2402,18 +2394,12 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         { field: 'category1', key: 'Cat A' },
         { field: 'category2', key: 'Cat 2' },
       ]);
+      expect(apiRef.current.getGroupingCriteriaRows({ groupId })).to.deep.equal([1, 2]);
+      expect(apiRef.current.getGroupingCriteriaRows({ groupId, applySorting: true })).to.deep.equal(
+        [2, 1],
+      );
       expect(
-        apiRef.current.getGroupingCriteriaRows({ groupId }).map((row) => row.id),
-      ).to.deep.equal([1, 2]);
-      expect(
-        apiRef.current
-          .getGroupingCriteriaRows({ groupId, applySorting: true })
-          .map((row) => row.id),
-      ).to.deep.equal([2, 1]);
-      expect(
-        apiRef.current
-          .getGroupingCriteriaRows({ groupId, applyFiltering: true })
-          .map((row) => row.id),
+        apiRef.current.getGroupingCriteriaRows({ groupId, applyFiltering: true }),
       ).to.deep.equal([2]);
     });
   });

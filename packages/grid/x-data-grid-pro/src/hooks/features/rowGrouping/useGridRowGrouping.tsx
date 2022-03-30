@@ -148,7 +148,6 @@ export const useGridRowGrouping = (
   const getGroupingCriteriaRows = React.useCallback<GridRowGroupingApi['getGroupingCriteriaRows']>(
     (params) => {
       const tree = gridRowTreeSelector(apiRef);
-      const rowsLookup = gridRowsLookupSelector(apiRef);
 
       let children: GridRowId[];
       if (params.applySorting) {
@@ -178,7 +177,7 @@ export const useGridRowGrouping = (
         children = children.filter((childId) => filteredRowsLookup[childId] !== false);
       }
 
-      return children.map((childId) => ({ id: childId, model: rowsLookup[childId] }));
+      return children;
     },
     [apiRef],
   );
