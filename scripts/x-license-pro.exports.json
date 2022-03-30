@@ -1,5 +1,5 @@
 [
-  { "name": "generateLicence", "kind": "Function" },
+  { "name": "generateLicense", "kind": "Function" },
   { "name": "generateReleaseInfo", "kind": "Function" },
   { "name": "LicenseDetails", "kind": "Interface" },
   { "name": "LicenseInfo", "kind": "Class" },
