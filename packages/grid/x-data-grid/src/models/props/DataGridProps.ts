@@ -404,7 +404,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/api/data-grid/grid-col-def/)
+   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
    */
   onEditCellPropsChange?: GridEventListener<GridEvents.editCellPropsChange>;
   /**

@@ -134,7 +134,7 @@ DatePicker.propTypes = {
    */
   desktopModeMediaQuery: PropTypes.string,
   /**
-   * Props applied to the [`Dialog`](/api/dialog/) element.
+   * Props applied to the [`Dialog`](/material-ui/api/dialog/) element.
    */
   DialogProps: PropTypes.object,
   /**
