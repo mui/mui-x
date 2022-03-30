@@ -3,6 +3,17 @@ import { escapeRegExp } from '../utils/utils';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
+import { GridCellParams } from '../models';
+
+export const getGridStringQuickFilterFn = (value: any) => {
+  if (!value) {
+    return null;
+  }
+  const filterRegex = new RegExp(escapeRegExp(value), 'i');
+  return ({ value: columnValue }: GridCellParams): boolean => {
+    return columnValue != null ? filterRegex.test(columnValue.toString()) : false;
+  };
+};
 
 export const getGridStringOperators = (): GridFilterOperator<
   any,

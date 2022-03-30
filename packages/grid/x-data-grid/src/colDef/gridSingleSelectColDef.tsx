@@ -8,4 +8,5 @@ export const GRID_SINGLE_SELECT_COL_DEF: GridColTypeDef = {
   type: 'singleSelect',
   renderEditCell: renderEditSingleSelectCell,
   filterOperators: getGridSingleSelectOperators(),
+  getApplyQuickFilterFn: undefined,
 };

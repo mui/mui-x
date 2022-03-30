@@ -15,4 +15,5 @@ export const GRID_ACTIONS_COL_DEF: GridColTypeDef = {
   disableColumnMenu: true,
   disableExport: true,
   renderCell: renderActionsCell,
+  getApplyQuickFilterFn: undefined,
 };
