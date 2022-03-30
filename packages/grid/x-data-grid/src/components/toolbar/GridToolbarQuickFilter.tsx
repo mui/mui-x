@@ -23,31 +23,36 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   },
 }));
 
-const defaultSearchValueParser = (searchText: string) => searchText.split(' ').filter((word) => word !== '')
+const defaultSearchValueParser = (searchText: string) =>
+  searchText.split(' ').filter((word) => word !== '');
 
 export type GridToolbarQuickFilterProps = TextFieldProps & {
-  quickFilterParser?: (input: string) => any[]
-}
+  quickFilterParser?: (input: string) => any[];
+};
 
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
-  const { quickFilterParser = defaultSearchValueParser, ...other } = props
+  const { quickFilterParser = defaultSearchValueParser, ...other } = props;
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
   const [searchValue, setSearchValue] = React.useState('');
 
-  const handleSearchValueChange = React.useCallback((event) => {
-    const newSearchValue = event.target.value;
-    setSearchValue(newSearchValue)
-    apiRef.current.setQuickFilterValues(quickFilterParser(newSearchValue))
-
-  }, [apiRef, quickFilterParser])
+  const handleSearchValueChange = React.useCallback(
+    (event) => {
+      const newSearchValue = event.target.value;
+      setSearchValue(newSearchValue);
+      apiRef.current.setQuickFilterValues(
+        quickFilterParser(newSearchValue).filter((value) => value !== ''),
+      );
+    },
+    [apiRef, quickFilterParser],
+  );
 
   const clearSearchValue = React.useCallback(() => {
-    setSearchValue('')
+    setSearchValue('');
     apiRef.current.setQuickFilterValues([]);
-  }, [apiRef])
+  }, [apiRef]);
 
   return (
     <GridToolbarQuickFilterRoot
@@ -74,4 +79,4 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     />
   );
 }
-export default GridToolbarQuickFilter;
+export { GridToolbarQuickFilter };

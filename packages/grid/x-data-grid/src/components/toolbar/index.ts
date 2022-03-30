@@ -4,3 +4,4 @@ export * from './GridToolbarDensitySelector';
 export * from './GridToolbarExport';
 export * from './GridToolbarFilterButton';
 export * from './GridToolbarExportContainer';
+export * from './GridToolbarQuickFilter';
