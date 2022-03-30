@@ -134,7 +134,7 @@ function TestViewer(props) {
       />
       <MockTime isDataGridTest={isDataGridTest}>
         <LoadFont isDataGridTest={isDataGridTest}>{children}</LoadFont>
-      </MockTime>{' '}
+      </MockTime>
     </React.Fragment>
   );
 }
