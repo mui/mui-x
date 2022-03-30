@@ -32,11 +32,11 @@ type DesktopTimePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Time Picker](https://mui.com/components/x/react-date-pickers/time-picker/)
+ * - [Time Picker](https://mui.com/x/react-date-pickers/time-picker/)
  *
  * API:
  *
- * - [DesktopTimePicker API](https://mui.com/api/desktop-time-picker/)
+ * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
 export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   inProps: DesktopTimePickerProps<TDate>,
@@ -264,11 +264,11 @@ DesktopTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/api/paper/) component.
+   * Paper props passed down to [Paper](https://mui.com/x/api/date-pickers/paper/) component.
    */
   PaperProps: PropTypes.object,
   /**
-   * Popper props passed down to [Popper](https://mui.com/api/popper/) component.
+   * Popper props passed down to [Popper](https://mui.com/x/api/date-pickers/popper/) component.
    */
   PopperProps: PropTypes.object,
   /**
@@ -277,7 +277,7 @@ DesktopTimePicker.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `props` argument of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api) that you need to forward.
+   * The `props` argument of this render prop contains props of [TextField](https://mui.com/x/api/date-pickers/text-field/#textfield-api) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example ```jsx
    * renderInput={props => <TextField {...props} />}

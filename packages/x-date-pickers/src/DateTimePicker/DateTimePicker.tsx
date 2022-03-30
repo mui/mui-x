@@ -24,12 +24,12 @@ type DateTimePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Date Time Picker](https://mui.com/components/x/react-date-pickers/date-time-picker/)
+ * - [Date Time Picker](https://mui.com/x/react-date-pickers/date-time-picker/)
  * - [Pickers](https://mui.com/x/react-date-pickers/)
  *
  * API:
  *
- * - [DateTimePicker API](https://mui.com/api/date-time-picker/)
+ * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
  */
 const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(
   inProps: DateTimePickerProps<TDate>,
@@ -356,11 +356,11 @@ DateTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/api/paper/) component.
+   * Paper props passed down to [Paper](https://mui.com/x/api/date-pickers/paper/) component.
    */
   PaperProps: PropTypes.object,
   /**
-   * Popper props passed down to [Popper](https://mui.com/api/popper/) component.
+   * Popper props passed down to [Popper](https://mui.com/x/api/date-pickers/popper/) component.
    */
   PopperProps: PropTypes.object,
   /**
@@ -374,7 +374,7 @@ DateTimePicker.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/api/pickers-day/) component.
+   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
    * @param {TDate} day The day to render.
    * @param {Array<TDate | null>} selectedDates The dates currently selected.
    * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
@@ -383,7 +383,7 @@ DateTimePicker.propTypes = {
   renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `props` argument of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api) that you need to forward.
+   * The `props` argument of this render prop contains props of [TextField](https://mui.com/x/api/date-pickers/text-field/#textfield-api) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example ```jsx
    * renderInput={props => <TextField {...props} />}

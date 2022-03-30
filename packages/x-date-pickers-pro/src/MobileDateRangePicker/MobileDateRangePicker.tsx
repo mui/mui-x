@@ -98,11 +98,11 @@ type MobileDateRangePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Date Range Picker](https://mui.com/components/x/react-date-pickers/date-range-picker/)
+ * - [Date Range Picker](https://mui.com/x/react-date-pickers/date-range-picker/)
  *
  * API:
  *
- * - [MobileDateRangePicker API](https://mui.com/api/mobile-date-range-picker/)
+ * - [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)
  */
 export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TDate>(
   inProps: MobileDateRangePickerProps<TDate>,
@@ -428,7 +428,7 @@ MobileDateRangePicker.propTypes = {
   renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api),
+   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/x/api/date-pickers/text-field/#textfield-api),
    * that you need to forward to the range start/end inputs respectively.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example

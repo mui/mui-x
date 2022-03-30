@@ -95,11 +95,11 @@ type StaticDateRangePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Date Range Picker](https://mui.com/components/x/react-date-pickers/date-range-picker/)
+ * - [Date Range Picker](https://mui.com/x/react-date-pickers/date-range-picker/)
  *
  * API:
  *
- * - [StaticDateRangePicker API](https://mui.com/api/static-date-range-picker/)
+ * - [StaticDateRangePicker API](https://mui.com/x/api/date-pickers/static-date-range-picker/)
  */
 export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TDate>(
   inProps: StaticDateRangePickerProps<TDate>,
@@ -399,7 +399,7 @@ StaticDateRangePicker.propTypes = {
   renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api),
+   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/x/api/date-pickers/text-field/#textfield-api),
    * that you need to forward to the range start/end inputs respectively.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example

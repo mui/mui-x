@@ -98,11 +98,11 @@ type DesktopDateRangePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Date Range Picker](https://mui.com/components/x/react-date-pickers/date-range-picker/)
+ * - [Date Range Picker](https://mui.com/x/react-date-pickers/date-range-picker/)
  *
  * API:
  *
- * - [DesktopDateRangePicker API](https://mui.com/api/desktop-date-range-picker/)
+ * - [DesktopDateRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-range-picker/)
  */
 export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<TDate>(
   inProps: DesktopDateRangePickerProps<TDate>,
@@ -398,11 +398,11 @@ DesktopDateRangePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/api/paper/) component.
+   * Paper props passed down to [Paper](https://mui.com/x/api/date-pickers/paper/) component.
    */
   PaperProps: PropTypes.object,
   /**
-   * Popper props passed down to [Popper](https://mui.com/api/popper/) component.
+   * Popper props passed down to [Popper](https://mui.com/x/api/date-pickers/popper/) component.
    */
   PopperProps: PropTypes.object,
   /**
@@ -425,7 +425,7 @@ DesktopDateRangePicker.propTypes = {
   renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api),
+   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/x/api/date-pickers/text-field/#textfield-api),
    * that you need to forward to the range start/end inputs respectively.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example
