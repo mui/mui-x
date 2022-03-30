@@ -394,14 +394,51 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(processRowUpdate.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
       });
 
-      it('should do nothing if processRowUpdate throws an error', async () => {
+      it('should stay in edit mode if processRowUpdate throws an error', () => {
         const processRowUpdate = () => {
           throw new Error('Something went wrong');
         };
         render(<TestCase processRowUpdate={processRowUpdate} />);
         apiRef.current.startRowEditMode({ id: 0 });
-        expect(() => apiRef.current.stopRowEditMode({ id: 0 })).to.throw();
+        expect(() => apiRef.current.stopRowEditMode({ id: 0 })).toErrorDev(
+          'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+        );
         expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+      });
+
+      it('should call onProcessRowUpdateError if processRowUpdate throws an error', () => {
+        const error = new Error('Something went wrong');
+        const processRowUpdate = () => {
+          throw error;
+        };
+        const onProcessRowUpdateError = spy();
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={onProcessRowUpdateError}
+          />,
+        );
+        apiRef.current.startRowEditMode({ id: 0 });
+        apiRef.current.stopRowEditMode({ id: 0 });
+        expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
+      });
+
+      it('should call onProcessRowUpdateError if processRowUpdate rejects', async () => {
+        const error = new Error('Something went wrong');
+        const processRowUpdate = () => {
+          throw error;
+        };
+        const onProcessRowUpdateError = spy();
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={onProcessRowUpdateError}
+          />,
+        );
+        apiRef.current.startRowEditMode({ id: 0 });
+        apiRef.current.stopRowEditMode({ id: 0 });
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
       });
 
       it('should pass the new value through all value setters before calling processRowUpdate', async () => {
