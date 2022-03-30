@@ -4,7 +4,6 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const pkg = require('../package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
-const FEATURE_TOGGLE = require('./src/featureToggle');
 
 const workspaceRoot = path.join(__dirname, '../');
 
@@ -152,27 +151,21 @@ module.exports = {
     ];
   },
   // redirects only take effect in the development, not production (because of `next export`).
-  redirects: async () => {
-    const redirects = [];
-    if (process.env.NODE_ENV !== 'production') {
-      redirects.push({
-        source: '/',
-        destination: '/components/data-grid/',
-        permanent: false,
-      });
-    }
-    if (FEATURE_TOGGLE.enable_redirects) {
-      redirects.push({
-        source: '/components/data-grid/:path*',
-        destination: '/x/react-data-grid/:path*',
-        permanent: false,
-      });
-      redirects.push({
-        source: '/api/data-grid/:path*',
-        destination: '/x/api/data-grid/:path*',
-        permanent: false,
-      });
-    }
-    return redirects;
-  },
+  redirects: async () => [
+    {
+      source: '/',
+      destination: '/x/react-data-grid/',
+      permanent: false,
+    },
+    {
+      source: '/components/data-grid/:path*',
+      destination: '/x/react-data-grid/:path*',
+      permanent: false,
+    },
+    {
+      source: '/api/data-grid/:path*',
+      destination: '/x/api/data-grid/:path*',
+      permanent: false,
+    },
+  ],
 };
