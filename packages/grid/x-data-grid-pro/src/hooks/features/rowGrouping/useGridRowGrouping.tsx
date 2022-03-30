@@ -316,7 +316,7 @@ export const useGridRowGrouping = (
 
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, checkGroupingColumnsModelDiff);
-  useGridApiEventHandler(apiRef, GridEvents.rowGroupinOuigModelChange, checkGroupingColumnsModelDiff);
+  useGridApiEventHandler(apiRef, GridEvents.rowGroupingModelChange, checkGroupingColumnsModelDiff);
 
   /**
    * EFFECTS
