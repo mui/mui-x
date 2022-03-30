@@ -1,4 +1,4 @@
-import { GridRowEntry, GridRowId } from '@mui/x-data-grid';
+import { GridRowId } from '@mui/x-data-grid';
 
 export type GridRowGroupingModel = string[];
 

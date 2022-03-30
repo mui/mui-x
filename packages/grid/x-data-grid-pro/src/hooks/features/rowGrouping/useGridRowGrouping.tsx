@@ -8,7 +8,6 @@ import {
   gridFilteredDescendantCountLookupSelector,
   gridRowTreeSelector,
   gridFilteredRowsLookupSelector,
-  gridRowsLookupSelector,
   GridRowId,
   gridSortedRowIdsSelector,
 } from '@mui/x-data-grid';
@@ -317,7 +316,7 @@ export const useGridRowGrouping = (
 
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, checkGroupingColumnsModelDiff);
-  useGridApiEventHandler(apiRef, GridEvents.rowGroupingModelChange, checkGroupingColumnsModelDiff);
+  useGridApiEventHandler(apiRef, GridEvents.rowGroupinOuigModelChange, checkGroupingColumnsModelDiff);
 
   /**
    * EFFECTS
