@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { GridApiPro } from '../models/gridApiPro';
-import { GridInitialStatePro, GridStatePro } from '../models/gridStatePro';
+import type { GridInitialStatePro, GridStatePro } from '../models/gridStatePro';
 
 export { useGridApiContext } from '../hooks/utils/useGridApiContext';
 export { useGridApiRef } from '../hooks/utils/useGridApiRef';

@@ -276,16 +276,14 @@ enum GridEvents {
   pinnedColumnsChange = 'pinnedColumnsChange',
   /**
    * Fired when a pre-processor is registered.
-   * TODO: Rename `pipeProcessorRegister`
    * @ignore - do not document.
    */
-  preProcessorRegister = 'preProcessorRegister',
+  pipeProcessorRegister = 'pipeProcessorRegister',
   /**
    * Fired when a pre-processor is unregistered.
-   * TODO: Rename `pipeProcessorUnregister`
    * @ignore - do not document.
    */
-  preProcessorUnregister = 'preProcessorUnregister',
+  pipeProcessorUnregister = 'pipeProcessorUnregister',
   /**
    * Fired when a processor of the active strategy changes.
    * @ignore - do not document.

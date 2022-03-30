@@ -11,6 +11,8 @@ const defaultAlias = {
   '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-data-grid-generator/src'),
   '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-data-grid-pro/src'),
   '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
+  '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
+  '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
   test: resolveAliasPath('./test'),

@@ -4,10 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "rows": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
+    "rows": { "type": { "name": "array" }, "required": true },
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -146,6 +143,7 @@
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
     "onPinnedColumnsChange": { "type": { "name": "func" } },
+    "onProcessRowUpdateError": { "type": { "name": "func" } },
     "onResize": { "type": { "name": "func" } },
     "onRowClick": { "type": { "name": "func" } },
     "onRowDoubleClick": { "type": { "name": "func" } },
@@ -234,6 +232,10 @@
     "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
     "Cell": { "default": "GridCell", "type": { "name": "elementType" } },
     "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnHeaderFilterIconButton": {
+      "default": "GridColumnHeaderFilterIconButton",
+      "type": { "name": "elementType" }
+    },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",
@@ -292,6 +294,7 @@
   "name": "DataGridPro",
   "styles": {
     "classes": [
+      "actionsCell",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -384,7 +387,9 @@
       "toolbarFilterList",
       "withBorder",
       "treeDataGroupingCell",
-      "treeDataGroupingCellToggle"
+      "treeDataGroupingCellToggle",
+      "groupingCriteriaCell",
+      "groupingCriteriaCellToggle"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"
