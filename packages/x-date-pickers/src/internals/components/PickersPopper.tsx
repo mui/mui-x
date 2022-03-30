@@ -32,7 +32,7 @@ export interface ExportedPickerPopperProps {
    */
   PopperProps?: Partial<MuiPopperProps>;
   /**
-   * Custom component for popper [Transition](https://mui.com/components/transitions/#transitioncomponent-prop).
+   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
   TransitionComponent?: React.JSXElementConstructor<MuiTransitionProps>;
 }

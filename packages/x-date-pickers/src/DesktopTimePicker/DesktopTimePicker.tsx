@@ -324,7 +324,7 @@ DesktopTimePicker.propTypes = {
    */
   toolbarTitle: PropTypes.node,
   /**
-   * Custom component for popper [Transition](https://mui.com/components/transitions/#transitioncomponent-prop).
+   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
   TransitionComponent: PropTypes.elementType,
   /**
