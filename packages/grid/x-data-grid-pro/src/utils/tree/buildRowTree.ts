@@ -33,6 +33,14 @@ interface TempRowTreeNode extends Omit<GridRowTreeNodeConfig, 'children' | 'chil
   children?: Record<GridRowId, GridRowId>;
 }
 
+export const getGroupRowIdFromPath = (path: BuildRowTreeGroupingCriteria[]) => {
+  const pathStr = path
+    .map((groupingCriteria) => `${groupingCriteria.field}/${groupingCriteria.key}`)
+    .join('-');
+
+  return `auto-generated-row-${pathStr}`;
+};
+
 /**
  * Transform a list of rows into a tree structure where each row references its parent and children.
  * If a row have a parent which does not exist in the input rows, creates an auto generated row
@@ -120,10 +128,7 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowTreeCreationVal
         if (depth === row.path.length - 1) {
           nodeId = row.id;
         } else {
-          nodeId = `auto-generated-row-${row.path
-            .map((groupingCriteria) => `${groupingCriteria.field}/${groupingCriteria.key}`)
-            .slice(0, depth + 1)
-            .join('-')}`;
+          nodeId = getGroupRowIdFromPath(row.path.slice(0, depth + 1));
         }
 
         keyConfig = { id: nodeId, children: {} };

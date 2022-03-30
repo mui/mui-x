@@ -20,6 +20,7 @@ import {
   useGridApiRef,
   useGridRootProps,
   GridGroupingColDefOverrideParams,
+  getGroupRowIdFromPath,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 
@@ -2300,6 +2301,120 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1', 'category2'] } }} />);
       apiRef.current.setRowGroupingCriteriaIndex('category1', 1);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category2', 'category1']);
+    });
+  });
+
+  describe('apiRef: getGroupingCriteriaRows', () => {
+    it('should return the rows with path of length 1 in tree of depth 1', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'desc' }],
+            },
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'id', operatorValue: '>=', value: '1' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      const groupId = getGroupRowIdFromPath([{ field: 'category1', key: 'Cat A' }]);
+      expect(
+        apiRef.current.getGroupingCriteriaRows({ groupId }).map((row) => row.id),
+      ).to.deep.equal([0, 1, 2]);
+      expect(
+        apiRef.current
+          .getGroupingCriteriaRows({ groupId, applySorting: true })
+          .map((row) => row.id),
+      ).to.deep.equal([2, 1, 0]);
+      expect(
+        apiRef.current
+          .getGroupingCriteriaRows({ groupId, applyFiltering: true })
+          .map((row) => row.id),
+      ).to.deep.equal([1, 2]);
+      expect(
+        apiRef.current
+          .getGroupingCriteriaRows({ groupId, applySorting: true, applyFiltering: true })
+          .map((row) => row.id),
+      ).to.deep.equal([2, 1]);
+    });
+
+    it('should return the rows with path of length 1 in tree of depth 2', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1', 'category2'] },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'desc' }],
+            },
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'id', operatorValue: '>=', value: '1' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      const groupId = getGroupRowIdFromPath([{ field: 'category1', key: 'Cat A' }]);
+      expect(
+        apiRef.current.getGroupingCriteriaRows({ groupId }).map((row) => row.id),
+      ).to.deep.equal([0, 1, 2]);
+      expect(
+        apiRef.current
+          .getGroupingCriteriaRows({ groupId, applySorting: true })
+          .map((row) => row.id),
+      ).to.deep.equal([0, 2, 1]);
+      expect(
+        apiRef.current
+          .getGroupingCriteriaRows({ groupId, applyFiltering: true })
+          .map((row) => row.id),
+      ).to.deep.equal([1, 2]);
+      expect(
+        apiRef.current
+          .getGroupingCriteriaRows({ groupId, applySorting: true, applyFiltering: true })
+          .map((row) => row.id),
+      ).to.deep.equal([2, 1]);
+    });
+
+    it('should return the rows with path of length 2 in tree of depth 2', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1', 'category2'] },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'desc' }],
+            },
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'id', operatorValue: '>=', value: '2' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      const groupId = getGroupRowIdFromPath([
+        { field: 'category1', key: 'Cat A' },
+        { field: 'category2', key: 'Cat 2' },
+      ]);
+      expect(
+        apiRef.current.getGroupingCriteriaRows({ groupId }).map((row) => row.id),
+      ).to.deep.equal([1, 2]);
+      expect(
+        apiRef.current
+          .getGroupingCriteriaRows({ groupId, applySorting: true })
+          .map((row) => row.id),
+      ).to.deep.equal([2, 1]);
+      expect(
+        apiRef.current
+          .getGroupingCriteriaRows({ groupId, applyFiltering: true })
+          .map((row) => row.id),
+      ).to.deep.equal([2]);
     });
   });
 });
