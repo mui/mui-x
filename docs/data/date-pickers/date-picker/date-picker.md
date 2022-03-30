@@ -84,7 +84,7 @@ You can customize the rendering of the input with the `renderInput` prop. Make s
 ## Customized day rendering
 
 The displayed days are customizable with the `renderDay` function prop.
-You can take advantage of the [PickersDay](/api/pickers-day/) component.
+You can take advantage of the [PickersDay](/material/api/pickers-day/) component.
 
 {{"demo": "CustomDay.js"}}
 
