@@ -87,10 +87,11 @@ export const useGridRowsMeta = (
           initialHeights.spacingBottom = spacing.bottom ?? 0;
         }
 
-        const sizes = apiRef.current.applyPreProcessors('rowHeight', initialHeights, row) as Record<
-          string,
-          number
-        >;
+        const sizes = apiRef.current.applyPipeProcessors(
+          'rowHeight',
+          initialHeights,
+          row,
+        ) as Record<string, number>;
 
         const finalRowHeight = Object.values(sizes).reduce((acc2, value) => acc2 + value, 0);
 
@@ -135,8 +136,8 @@ export const useGridRowsMeta = (
     hydrateRowsMeta();
   }, [rowHeight, filterState, paginationState, sortingState, hydrateRowsMeta]);
 
-  const handlePreProcessorRegister = React.useCallback<
-    GridEventListener<GridEvents.preProcessorRegister>
+  const handlepipeProcessorRegister = React.useCallback<
+    GridEventListener<GridEvents.pipeProcessorRegister>
   >(
     (name) => {
       if (name !== 'rowHeight') {
@@ -147,7 +148,7 @@ export const useGridRowsMeta = (
     [hydrateRowsMeta],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
+  useGridApiEventHandler(apiRef, GridEvents.pipeProcessorRegister, handlepipeProcessorRegister);
 
   const rowsMetaApi: GridRowsMetaApi = {
     unstable_getRowHeight: getTargetRowHeight,

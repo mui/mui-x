@@ -298,6 +298,9 @@ const DataGridProVirtualScroller = React.forwardRef<
             })}
           </VirtualScrollerPinnedColumns>
         )}
+        <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
+          {getRows({ renderContext })}
+        </GridVirtualScrollerRenderZone>
         {rightRenderContext && (
           <VirtualScrollerPinnedColumns
             ref={rightColumns}
@@ -313,9 +316,6 @@ const DataGridProVirtualScroller = React.forwardRef<
             })}
           </VirtualScrollerPinnedColumns>
         )}
-        <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
-          {getRows({ renderContext })}
-        </GridVirtualScrollerRenderZone>
         {detailPanels.length > 0 && (
           <VirtualScrollerDetailPanels className={classes.detailPanels}>
             {detailPanels}

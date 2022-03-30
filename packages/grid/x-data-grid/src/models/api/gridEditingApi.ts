@@ -1,4 +1,4 @@
-import { GridCellMode, GridRowMode, GridCellValue } from '../gridCell';
+import { GridCellMode, GridRowMode } from '../gridCell';
 import { GridEditRowsModel, GridEditCellProps } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
@@ -54,7 +54,7 @@ export interface GridEditingSharedApi {
   /**
    * @ignore - do not document.
    */
-  unstable_parseValue: (id: GridRowId, field: string, value: GridCellValue) => GridCellValue;
+  unstable_parseValue: (id: GridRowId, field: string, value: any) => any;
 }
 
 /**
@@ -143,7 +143,7 @@ interface GridStartCellEditModeParams {
 /**
  * Params passed to `apiRef.current.stopCellEditMode`.
  */
-interface GridStopCellEditModeParams {
+export interface GridStopCellEditModeParams {
   /**
    * The row id.
    */
@@ -181,7 +181,7 @@ interface GridStartRowEditModeParams {
 /**
  * Params passed to `apiRef.current.stopRowEditMode`.
  */
-interface GridStopRowEditModeParams {
+export interface GridStopRowEditModeParams {
   /**
    * The row id.
    */
@@ -192,9 +192,16 @@ interface GridStopRowEditModeParams {
    */
   ignoreModifications?: boolean;
   /**
-   * The field from the row below to move the focus after updating the row.
+   * The field that has focus when the editing is stopped.
+   * Used to calculate which cell to move the focus to after finishing editing.
    */
-  fieldFromRowBelowToFocus?: string;
+  field?: string;
+  /**
+   * To which cell to move focus after finishing editing.
+   * Only works if the field is also specified, otherwise focus stay in the same cell.
+   * @default "none"
+   */
+  cellToFocusAfter?: 'none' | 'below' | 'right' | 'left';
 }
 
 export interface GridNewCellEditingApi
@@ -209,9 +216,8 @@ export interface GridNewCellEditingApi
    * Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
-   * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
    */
-  stopCellEditMode(params: GridStopCellEditModeParams): Promise<boolean>;
+  stopCellEditMode(params: GridStopCellEditModeParams): void;
   /**
    * Updates the value of a cell being edited.
    * Don't call this method directly, prefer `setEditCellValue`.
@@ -234,9 +240,8 @@ export interface GridNewRowEditingApi
    * Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.
    * If `params.ignoreModifications` is `false` it will discard the modifications made.
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
-   * @returns {Promise<boolean>} A promise which resolves with `true` if it succeeds of `false` if props are being processed or `processRowUpdate` fails.
    */
-  stopRowEditMode(params: GridStopRowEditModeParams): Promise<boolean>;
+  stopRowEditMode(params: GridStopRowEditModeParams): void;
   /**
    * Updates the value of a cell being edited.
    * Don't call this method directly, prefer `setEditCellValue`.

@@ -13,6 +13,7 @@ import {
   GridEditModes,
   GridFeatureModeConstant,
   GridSlotsComponent,
+  GridValidRowModel,
 } from '../models';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
@@ -77,7 +78,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableColumnResize: false,
 };
 
-export const useDataGridProps = (inProps: DataGridProps) => {
+export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
   if (inProps.pageSize! > MAX_PAGE_SIZE) {
     throw new Error(`'props.pageSize' cannot exceed 100 in DataGrid.`);
   }
@@ -107,7 +108,7 @@ export const useDataGridProps = (inProps: DataGridProps) => {
     return mergedComponents;
   }, [themedProps.components]);
 
-  return React.useMemo<DataGridProcessedProps>(
+  return React.useMemo<DataGridProcessedProps<R>>(
     () => ({
       ...DATA_GRID_PROPS_DEFAULT_VALUES,
       ...themedProps,

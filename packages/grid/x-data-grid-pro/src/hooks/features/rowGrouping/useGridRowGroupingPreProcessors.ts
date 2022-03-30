@@ -10,9 +10,9 @@ import {
   GridColDef,
 } from '@mui/x-data-grid';
 import {
-  useGridRegisterPreProcessor,
+  useGridRegisterPipeProcessor,
   GridColumnRawLookup,
-  GridPreProcessor,
+  GridPipeProcessor,
   GridHydrateColumnsValue,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
@@ -97,7 +97,7 @@ export const useGridRowGroupingPreProcessors = (
     [apiRef, props.groupingColDef, props.rowGroupingColumnMode, props.disableRowGrouping],
   );
 
-  const updateGroupingColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
+  const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       const groupingColDefs = getGroupingColDefs(columnsState);
       let newColumnFields: string[] = [];
@@ -266,7 +266,7 @@ export const useGridRowGroupingPreProcessors = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
+  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'rowTreeCreation', createRowTree);
   useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'filtering', filterRows);
   useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'sorting', sortRows);

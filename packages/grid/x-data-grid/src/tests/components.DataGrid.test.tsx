@@ -1,7 +1,8 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, ErrorBoundary } from '@mui/monorepo/test/utils';
+import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 
@@ -74,6 +75,28 @@ describe('<DataGrid /> - Components', () => {
         </div>,
       );
       expect(getRow(0)).to.have.attr('data-name', 'foobar');
+    });
+
+    it('should pass the props from componentsProps.columnHeaderFilterIconButton to the column header filter icon', () => {
+      const onClick = spy();
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            hideFooter
+            filterModel={{
+              items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }],
+            }}
+            disableVirtualization
+            componentsProps={{ columnHeaderFilterIconButton: { onClick } }}
+          />
+        </div>,
+      );
+      expect(onClick.callCount).to.equal(0);
+      const button = screen.queryByRole('button', { name: /show filters/i });
+      fireEvent.click(button);
+      expect(onClick.lastCall.args[0]).to.have.property('field', 'brand');
+      expect(onClick.lastCall.args[1]).to.have.property('target', button);
     });
   });
 

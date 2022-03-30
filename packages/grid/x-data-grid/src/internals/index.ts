@@ -6,8 +6,8 @@ export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHe
 
 export { GridInternalApiContext } from '../context/GridInternalApiContext';
 
-export { useGridRegisterPreProcessor } from '../hooks/core/preProcessing';
-export type { GridPreProcessor } from '../hooks/core/preProcessing';
+export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
+export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
 export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
 export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
@@ -30,8 +30,7 @@ export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport'
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
-export { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
-export { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
+export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {
   useGridPagination,
   paginationStateInitializer,
@@ -82,10 +81,6 @@ export type {
 export type { GridCorePrivateApi } from '../models/api/gridCoreApi';
 export type { GridStatePrivateApi } from '../models/api/gridStateApi';
 
-export type { GridComparatorFn, GridSortCellParams } from '../models/gridSortModel';
-
-export type { GridSortModelParams } from '../models/params/gridSortModelParams';
-
 export type {
   GridExperimentalFeatures,
   DataGridPropsWithoutDefaultValue,
@@ -98,3 +93,5 @@ export { createSelector } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual } from '../utils/utils';
+
+export type { GridApiCommunity } from '../models/api/gridApiCommunity';

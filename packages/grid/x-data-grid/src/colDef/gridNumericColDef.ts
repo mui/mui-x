@@ -4,7 +4,7 @@ import { getGridNumericOperators } from './gridNumericOperators';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
 import { GridColTypeDef } from '../models/colDef/gridColDef';
 
-export const GRID_NUMERIC_COL_DEF: GridColTypeDef = {
+export const GRID_NUMERIC_COL_DEF: GridColTypeDef<number | string | null, string> = {
   ...GRID_STRING_COL_DEF,
   type: 'number',
   align: 'right',

@@ -15,8 +15,7 @@ import { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 import { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 import { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 import { focusStateInitializer, useGridFocus } from '../hooks/features/focus/useGridFocus';
-import { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
-import { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
+import { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 import {
   useGridPagination,
   paginationStateInitializer,
@@ -82,6 +81,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(rowsMetaStateInitializer, internalApiRef, props);
   useGridInitializeState(columnMenuStateInitializer, internalApiRef, props);
 
+  useGridKeyboardNavigation(internalApiRef, props);
   useGridSelection(internalApiRef, props);
   useGridColumns(internalApiRef, props);
   useGridRows(internalApiRef, props);
@@ -101,8 +101,6 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridRowsMeta(internalApiRef, props);
   useGridScroll(internalApiRef, props);
   useGridColumnMenu(internalApiRef);
-  useGridKeyboard(internalApiRef);
-  useGridKeyboardNavigation(internalApiRef, props);
   useGridCsvExport(internalApiRef);
   useGridPrintExport(internalApiRef, props);
   useGridClipboard(internalApiRef);

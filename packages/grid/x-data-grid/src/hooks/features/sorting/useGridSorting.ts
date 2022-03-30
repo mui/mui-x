@@ -29,7 +29,7 @@ import {
   getNextGridSortDirection,
   sanitizeSortModel,
 } from './gridSortingUtils';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const sortingStateInitializer: GridStateInitializer<
@@ -218,7 +218,7 @@ export const useGridSorting = (
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
       const sortModelToExport = gridSortModelSelector(apiRef);
       if (sortModelToExport.length === 0) {
@@ -235,7 +235,7 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
       const sortModel = context.stateToRestore.sorting?.sortModel;
       if (sortModel == null) {
@@ -265,8 +265,8 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'sorting', flatSortingMethod);
 
   /**

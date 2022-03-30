@@ -20,7 +20,7 @@ const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
       <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} />,
     ];
 
-    const preProcessedButtons = apiRef.current.applyPreProcessors(
+    const preProcessedButtons = apiRef.current.applyPipeProcessors(
       'columnMenu',
       defaultButtons,
       currentColumn,

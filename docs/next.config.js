@@ -93,7 +93,7 @@ module.exports = {
             use: options.defaultLoaders.babel,
           },
           {
-            test: /\.tsx$/,
+            test: /\.(ts|tsx)$/,
             loader: 'string-replace-loader',
             options: {
               search: '__RELEASE_INFO__',

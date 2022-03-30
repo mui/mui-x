@@ -10,7 +10,7 @@ export const useGridStatePersistence = (
   const exportState = React.useCallback<
     GridStatePersistenceApi<GridInitialStateCommunity>['exportState']
   >(() => {
-    const stateToExport = apiRef.current.applyPreProcessors('exportState', {});
+    const stateToExport = apiRef.current.applyPipeProcessors('exportState', {});
 
     return stateToExport as GridInitialStateCommunity;
   }, [apiRef]);
@@ -19,7 +19,7 @@ export const useGridStatePersistence = (
     GridStatePersistenceApi<GridInitialStateCommunity>['restoreState']
   >(
     (stateToRestore) => {
-      const response = apiRef.current.applyPreProcessors(
+      const response = apiRef.current.applyPipeProcessors(
         'restoreState',
         {
           callbacks: [],

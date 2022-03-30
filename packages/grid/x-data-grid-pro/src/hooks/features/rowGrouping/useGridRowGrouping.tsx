@@ -8,8 +8,8 @@ import {
   gridFilteredDescendantCountLookupSelector,
 } from '@mui/x-data-grid';
 import {
-  useGridRegisterPreProcessor,
-  GridPreProcessor,
+  useGridRegisterPipeProcessor,
+  GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
   isDeepEqual,
@@ -151,7 +151,7 @@ export const useGridRowGrouping = (
   /**
    * PRE-PROCESSING
    */
-  const addColumnMenuButtons = React.useCallback<GridPreProcessor<'columnMenu'>>(
+  const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (initialValue, columns) => {
       if (props.disableRowGrouping) {
         return initialValue;
@@ -175,7 +175,7 @@ export const useGridRowGrouping = (
     [props.disableRowGrouping],
   );
 
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
       if (props.disableRowGrouping) {
         return prevState;
@@ -196,7 +196,7 @@ export const useGridRowGrouping = (
     [apiRef, props.disableRowGrouping],
   );
 
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
       if (props.disableRowGrouping) {
         return params;
@@ -211,9 +211,9 @@ export const useGridRowGrouping = (
     [apiRef, props.disableRowGrouping],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
-  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
    * EVENTS

@@ -20,7 +20,7 @@ import { GridStateApi, GridStatePrivateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
-import type { GridPreProcessingPrivateApi } from '../../hooks/core/preProcessing';
+import type { GridPipeProcessingPrivateApi } from '../../hooks/core/pipeProcessing';
 import type { GridStrategyProcessingApi } from '../../hooks/core/strategyProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
@@ -62,7 +62,7 @@ export interface GridApiCommon
     GridApiCommonUntyped {}
 
 export interface GridPrivateApiCommon
-  extends GridPreProcessingPrivateApi,
+  extends GridPipeProcessingPrivateApi,
     GridPrivateApiCommonUntyped {}
 
 export interface GridInternalApiCommon extends GridApiCommon, GridPrivateApiCommon {}

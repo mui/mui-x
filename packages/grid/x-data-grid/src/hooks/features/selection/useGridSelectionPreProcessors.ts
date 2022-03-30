@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { getDataGridUtilityClass } from '../../../constants';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef';
@@ -29,7 +29,7 @@ export const useGridSelectionPreProcessors = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const updateSelectionColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
+  const updateSelectionColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       const selectionColumn: GridColDef = {
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
@@ -54,5 +54,5 @@ export const useGridSelectionPreProcessors = (
     [apiRef, classes, props.checkboxSelection],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
+  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
 };

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { GridInternalApiContext } from '../../context/GridInternalApiContext';
-import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
+import { GridInternalApiCommon } from '../../models/api/gridApiCommon';
+import { GridInternalApiCommunity } from '../../models/api/gridApiCommunity';
 
 export function useGridInternalApiContext<
-  Api extends GridPrivateApiCommon = GridPrivateApiCommunity,
+  Api extends GridInternalApiCommon = GridInternalApiCommunity,
 >(): React.MutableRefObject<Api> {
   const internalApiRef = React.useContext(GridInternalApiContext);
 

@@ -3,7 +3,7 @@ import { GridInternalApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
 import { GridPreferencesPanelApi } from '../../../models/api/gridPreferencesPanelApi';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -73,7 +73,7 @@ export const useGridPreferencesPanel = (
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
       const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef.current.state);
       if (!preferencePanelToExport.open && !preferencePanelToExport.openedPanelValue) {
@@ -88,7 +88,7 @@ export const useGridPreferencesPanel = (
     [apiRef],
   );
 
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
       const preferencePanel = context.stateToRestore.preferencePanel;
       if (preferencePanel != null) {
@@ -103,8 +103,8 @@ export const useGridPreferencesPanel = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
    * EFFECTS
