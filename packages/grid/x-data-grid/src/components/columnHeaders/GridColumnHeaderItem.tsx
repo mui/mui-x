@@ -14,7 +14,6 @@ import {
   GridColumnHeaderSeparatorProps,
 } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
-import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -186,7 +185,14 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const columnTitleIconButtons = (
     <React.Fragment>
-      {!rootProps.disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
+      {!rootProps.disableColumnFilter && (
+        <rootProps.components.ColumnHeaderFilterIconButton
+          field={column.field}
+          counter={filterItemsCounter}
+          {...rootProps.componentsProps?.columnHeaderFilterIconButton}
+        />
+      )}
+
       {column.sortable && !column.hideSortIcons && (
         <GridColumnHeaderSortIcon
           direction={sortDirection}
@@ -245,7 +251,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
               />
             )}
           </div>
-
           {columnTitleIconButtons}
         </div>
         {columnMenuIconButton}

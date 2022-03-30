@@ -28,7 +28,7 @@ const useFakeMutation = () => {
       new Promise<Partial<User>>((resolve, reject) =>
         setTimeout(() => {
           if (user.name?.trim() === '') {
-            reject();
+            reject(new Error("Error while saving user: name can't be empty."));
           } else {
             resolve({ ...user, name: user.name?.toUpperCase() });
           }
@@ -50,18 +50,17 @@ export default function CellEditServerSidePersistence() {
 
   const processRowUpdate = React.useCallback(
     async (newRow: GridRowModel) => {
-      try {
-        // Make the HTTP request to save in the backend
-        const response = await mutateRow(newRow);
-        setSnackbar({ children: 'User successfully saved', severity: 'success' });
-        return response;
-      } catch (error) {
-        setSnackbar({ children: 'Error while saving user', severity: 'error' });
-        throw error; // Throw again the error to reject the promise and keep the cell in edit mode
-      }
+      // Make the HTTP request to save in the backend
+      const response = await mutateRow(newRow);
+      setSnackbar({ children: 'User successfully saved', severity: 'success' });
+      return response;
     },
     [mutateRow],
   );
+
+  const handleProcessRowUpdateError = React.useCallback((error: Error) => {
+    setSnackbar({ children: error.message, severity: 'error' });
+  }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -69,6 +68,7 @@ export default function CellEditServerSidePersistence() {
         rows={rows}
         columns={columns}
         processRowUpdate={processRowUpdate}
+        onProcessRowUpdateError={handleProcessRowUpdateError}
         experimentalFeatures={{ newEditingApi: true }}
       />
       {!!snackbar && (
