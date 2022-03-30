@@ -1,4 +1,4 @@
-import { GridFilterItem, GridLinkOperator } from './gridFilterItem';
+import { GridFilterItem, GridLinkOperator, GridQuickFilterLogic } from './gridFilterItem';
 
 /**
  * Model describing the filters to apply to the grid.
@@ -15,4 +15,17 @@ export interface GridFilterModel {
    * @default `GridLinkOperator.Or`
    */
   linkOperator?: GridLinkOperator;
+
+  /**
+   * values used to quick filter rows
+   * @default `[]`
+   */
+  quickFilterValues: any[];
+
+  /**
+   * - `GridQuickFilterLogic.And`: the row must pass all the values.
+   * - `GridQuickFilterLogic.Or`: the row must pass at least one value.
+   * @default `GridQuickFilterLogic.Or`
+   */
+  quickFilterLogic: GridQuickFilterLogic;
 }

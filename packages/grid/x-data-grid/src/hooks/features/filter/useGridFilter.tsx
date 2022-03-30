@@ -25,6 +25,7 @@ import {
   buildAggregatedFilterApplier,
   sanitizeFilterModel,
   mergeStateWithFilterModel,
+  buildAggregatedQuickFilterApplier,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
@@ -78,10 +79,24 @@ export const useGridFilter = (
   const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
-      const isRowMatchingFilters =
+      const isRowMatchingStandardFilters =
         props.filterMode === GridFeatureModeConstant.client
           ? buildAggregatedFilterApplier(filterModel, apiRef)
           : null;
+      const isRowMatchingQuickFilter =
+        props.filterMode === GridFeatureModeConstant.client
+          ? buildAggregatedQuickFilterApplier(filterModel, apiRef)
+          : null;
+
+      let isRowMatchingFilters;
+      if (isRowMatchingStandardFilters == null && isRowMatchingQuickFilter == null) {
+        isRowMatchingFilters = null;
+      } else {
+        isRowMatchingFilters = (rowId, shouldApplyFilter) =>
+          (isRowMatchingStandardFilters == null ||
+            isRowMatchingStandardFilters(rowId, shouldApplyFilter)) &&
+          (isRowMatchingQuickFilter == null || isRowMatchingQuickFilter(rowId, shouldApplyFilter));
+      }
 
       const filteringResult = apiRef.current.unstable_applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
@@ -177,6 +192,20 @@ export const useGridFilter = (
     [apiRef],
   );
 
+  const setQuickFilterValues = React.useCallback<GridFilterApi['setQuickFilterValues']>(
+    (values) => {
+      const filterModel = gridFilterModelSelector(apiRef);
+      if (JSON.stringify(filterModel.quickFilterValues) === JSON.stringify(values)) {
+        return;
+      }
+      apiRef.current.setFilterModel({
+        ...filterModel,
+        quickFilterValues: [...values],
+      });
+    },
+    [apiRef],
+  );
+
   const setFilterModel = React.useCallback<GridFilterApi['setFilterModel']>(
     (model) => {
       const currentModel = gridFilterModelSelector(apiRef);
@@ -205,6 +234,7 @@ export const useGridFilter = (
     showFilterPanel,
     hideFilterPanel,
     getVisibleRowModels,
+    setQuickFilterValues,
   };
 
   useGridApiMethod(apiRef, filterApi, 'GridFilterApi');

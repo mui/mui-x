@@ -28,4 +28,9 @@ enum GridLinkOperator {
   Or = 'or',
 }
 
-export { GridLinkOperator };
+enum GridQuickFilterLogic {
+  And = 'and',
+  Or = 'or',
+}
+
+export { GridLinkOperator, GridQuickFilterLogic };

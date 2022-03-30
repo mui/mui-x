@@ -216,6 +216,12 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    */
   filterOperators?: GridFilterOperator<R, V, F>[];
   /**
+   * TODO: document
+   * @param {any} value TODO
+   * @returns {null | ((params: GridCellParams) => boolean)} TODO
+   */
+  getApplyQuickFilterFn?: (value: any) => null | ((params: GridCellParams<V, R, F>) => boolean);
+  /**
    * If `true`, this column cannot be reordered.
    * @default false
    */
