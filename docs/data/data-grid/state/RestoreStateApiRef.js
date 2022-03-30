@@ -8,10 +8,9 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
@@ -115,28 +114,20 @@ const ViewListItem = (props) => {
   const { view, viewId, selected, onDelete, onSelect } = props;
 
   return (
-    <ListItem
-      disablePadding
-      selected={selected}
-      onClick={() => onSelect(viewId)}
-      secondaryAction={
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          size="small"
-          onClick={(event) => {
-            event.stopPropagation();
-            onDelete(viewId);
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      }
-    >
-      <ListItemButton>
-        <ListItemText primary={view.label} />
-      </ListItemButton>
-    </ListItem>
+    <MenuItem selected={selected} onClick={() => onSelect(viewId)}>
+      {view.label}
+      <IconButton
+        edge="end"
+        aria-label="delete"
+        size="small"
+        onClick={(event) => {
+          event.stopPropagation();
+          onDelete(viewId);
+        }}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </MenuItem>
   );
 };
 
@@ -289,12 +280,25 @@ const CustomToolbar = () => {
   const canBeMenuOpened = state.isMenuOpened && Boolean(state.menuAnchorEl);
   const popperId = canBeMenuOpened ? 'transition-popper' : undefined;
 
+  const handleListKeyDown = (event) => {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      dispatch({ type: 'closePopper' });
+    } else if (event.key === 'Escape') {
+      dispatch({ type: 'closePopper' });
+    }
+  };
+
   return (
-    <GridToolbarContainer style={{ height: 48 }}>
+    <GridToolbarContainer>
       <Button
         aria-describedby={popperId}
         type="button"
         size="small"
+        id="custom-view-button"
+        aria-controls={state.isMenuOpened ? 'custom-view-menu' : undefined}
+        aria-expanded={state.isMenuOpened ? 'true' : undefined}
+        aria-haspopup="true"
         onClick={handlePopperAnchorClick}
       >
         Custom view ({Object.keys(state.views).length})
@@ -304,13 +308,20 @@ const CustomToolbar = () => {
           id={popperId}
           open={state.isMenuOpened}
           anchorEl={state.menuAnchorEl}
+          role={undefined}
           transition
+          disablePortal
           placement="bottom-start"
         >
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
               <Paper>
-                <List>
+                <MenuList
+                  autoFocusItem={state.isMenuOpened}
+                  id="custom-view-menu"
+                  aria-labelledby="custom-view-button"
+                  onKeyDown={handleListKeyDown}
+                >
                   {Object.entries(state.views).map(([viewId, view]) => (
                     <ViewListItem
                       key={viewId}
@@ -321,7 +332,7 @@ const CustomToolbar = () => {
                       onSelect={handleSetActiveView}
                     />
                   ))}
-                </List>
+                </MenuList>
               </Paper>
             </Fade>
           )}
