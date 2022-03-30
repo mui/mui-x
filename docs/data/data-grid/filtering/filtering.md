@@ -309,14 +309,68 @@ The example below demonstrates how to achieve server-side filtering.
 
 ## Quick filter
 
-The grid does not natively include quick filtering.
-However, it can be implemented as in the demo below.
+The package also provides a component `<GridToolbarQuickFilter/>` which filters rows without specifying the concerned columns.
+By default, the quick filter considers the input as a list of values separated by space and keeps only rows that contain all the values.
 
 {{"demo": "QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠️ This feature isn't natively implemented in the grid package. It's coming.
->
-> 👍 Upvote [issue #2842](https://github.com/mui/mui-x/issues/2842) if you want to see it land faster.
+### Modifying the logic
+
+The logic quick filter logic can be switched to filter rows that contain _at least_ one value instead for each of them.
+To do so, set `quickFilterLogic` equals to `GridQuickFilterLogic.Or` as follow:
+
+```js
+initialState={{
+  filterModel: {
+    quickFilterLogic: GridQuickFilterLogic.Or
+  }
+}}
+```
+
+The quick filter will only consider columns with types `string` or `number`
+
+- For columns with type `string` the cell must contain the value to pass the filter
+- For columns with type `number` the cell must equal the value to pass the filter
+
+To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.
+This function is quite similar to `getApplyFilterFn`.
+This function takes as an input a value of the quick filter and returns another function that takes the cell value as an input and returns `true` if it satisfies the operator condition.
+
+In the example bellow, we filter a `date` column by checking if it contains the correct year.
+
+```ts
+getApplyFilterFn: (value: string) => {
+  if (!value || value.length !== 4 || /\d{4}/.test(str)) {
+    // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
+    return null;
+  }
+  return (params: GridCellParams): boolean => {
+    return params.value.getFullYear() === Number(value);
+  };
+};
+```
+
+To remove the quick filtering on a given column set `getApplyFilterFn: undefined`.
+
+### Parsing values
+
+The values used by the quick filter are obtained by splitting with space.
+If you want to implement a more advanced logic, the `<GridToolbarQuickFilter/>` component accepts a prop `quickFilterParser`.
+This function takes the string from the search text field and returns an array of values.
+
+For example, the following parser allows to search words containing a space by using the `','` to split values.
+
+```jsx
+<GridToolbarQuickFilter
+  quickFilterParser={(searchInput) =>
+    searchInput.split(',').map((value) => value.trim())
+  }
+/>
+```
+
+In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will return rows with country is Saint Martin or Saint Lucia.
+
+{{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

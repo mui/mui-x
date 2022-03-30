@@ -1,0 +1,13 @@
+<DataGrid
+  {...data}
+  columns={columns}
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [],
+        quickFilterLogic: GridQuickFilterLogic.Or,
+      },
+    },
+  }}
+  components={{ Toolbar: QuickSearchToolbar }}
+/>

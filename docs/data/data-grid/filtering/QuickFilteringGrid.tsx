@@ -1,23 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
+
 import { useDemoData } from '@mui/x-data-grid-generator';
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
 
-function escapeRegExp(value: string): string {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-}
-
-interface QuickSearchToolbarProps {
-  clearSearch: () => void;
-  onChange: () => void;
-  value: string;
-}
-
-function QuickSearchToolbar(props: QuickSearchToolbarProps) {
+function QuickSearchToolbar() {
   return (
     <Box
       sx={{
@@ -25,40 +12,7 @@ function QuickSearchToolbar(props: QuickSearchToolbarProps) {
         pb: 0,
       }}
     >
-      <TextField
-        variant="standard"
-        value={props.value}
-        onChange={props.onChange}
-        placeholder="Search…"
-        InputProps={{
-          startAdornment: <SearchIcon fontSize="small" />,
-          endAdornment: (
-            <IconButton
-              title="Clear"
-              aria-label="Clear"
-              size="small"
-              style={{ visibility: props.value ? 'visible' : 'hidden' }}
-              onClick={props.clearSearch}
-            >
-              <ClearIcon fontSize="small" />
-            </IconButton>
-          ),
-        }}
-        sx={{
-          width: {
-            xs: 1,
-            sm: 'auto',
-          },
-          m: (theme) => theme.spacing(1, 0.5, 1.5),
-          '& .MuiSvgIcon-root': {
-            mr: 0.5,
-          },
-          '& .MuiInput-underline:before': {
-            borderBottom: 1,
-            borderColor: 'divider',
-          },
-        }}
-      />
+      <GridToolbarQuickFilter />
     </Box>
   );
 }
@@ -71,38 +25,19 @@ export default function QuickFilteringGrid() {
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
   });
-  const [searchText, setSearchText] = React.useState('');
-  const [rows, setRows] = React.useState<any[]>(data.rows);
 
-  const requestSearch = (searchValue: string) => {
-    setSearchText(searchValue);
-    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-    const filteredRows = data.rows.filter((row: any) => {
-      return Object.keys(row).some((field: any) => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
-    setRows(filteredRows);
-  };
-
-  React.useEffect(() => {
-    setRows(data.rows);
-  }, [data.rows]);
+  // Otherwise filter will be applied on fields such as the hidden column id
+  const columns = React.useMemo(
+    () => data.columns.filter((column) => VISIBLE_FIELDS.includes(column.field)),
+    [data.columns],
+  );
 
   return (
     <Box sx={{ height: 400, width: 1 }}>
       <DataGrid
+        {...data}
+        columns={columns}
         components={{ Toolbar: QuickSearchToolbar }}
-        rows={rows}
-        columns={data.columns}
-        componentsProps={{
-          toolbar: {
-            value: searchText,
-            onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
-              requestSearch(event.target.value),
-            clearSearch: () => requestSearch(''),
-          },
-        }}
       />
     </Box>
   );

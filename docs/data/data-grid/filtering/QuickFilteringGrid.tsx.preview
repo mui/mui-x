@@ -1,13 +1,5 @@
 <DataGrid
+  {...data}
+  columns={columns}
   components={{ Toolbar: QuickSearchToolbar }}
-  rows={rows}
-  columns={data.columns}
-  componentsProps={{
-    toolbar: {
-      value: searchText,
-      onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
-        requestSearch(event.target.value),
-      clearSearch: () => requestSearch(''),
-    },
-  }}
 />
