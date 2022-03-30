@@ -295,7 +295,7 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
 }
 ```
 
-The following demo implements a custom edit component, based on the [`Rating`](https://mui.com/components/rating) component from `@mui/material`, for the **Rating** column.
+The following demo implements a custom edit component, based on the [`Rating`](https://mui.com/material-ui/react-rating) component from `@mui/material`, for the **Rating** column.
 
 {{"demo": "CustomEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -362,7 +362,7 @@ const handleChange = async (event: SelectChangeEvent) => {
 };
 ```
 
-The following demo implements an edit component with auto-stop, based on a native [`Select`](https://mui.com/components/selects) component for the **Role** column.
+The following demo implements an edit component with auto-stop, based on a native [`Select`](https://mui.com/material-ui/react-selects) component for the **Role** column.
 
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
