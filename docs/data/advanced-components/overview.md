@@ -2,7 +2,7 @@
 title: MUI X - Overview
 ---
 
-# Advanced Components - Overview
+# MUI X - Overview
 
 <p class="description">A collection of fast and powerful components.</p>
 
