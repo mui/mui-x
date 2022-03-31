@@ -31,7 +31,7 @@ Pro Plan packages:
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
 
-The features exclusives to the **Pro** Plan are marked with the <span class="plan-pro"></span> icon across our documentation.
+The features exclusive to the Pro Plan are marked with the <span class="plan-pro"></span> icon across our documentation.
 
 <div class="only-light-mode">
   <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
