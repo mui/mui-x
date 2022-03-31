@@ -244,11 +244,6 @@ DataGridProRaw.propTypes = {
    */
   editRowsModel: PropTypes.object,
   /**
-   * If `true`, the reordering of rows is enabled.
-   * @default false
-   */
-  rowReordering: PropTypes.bool,
-  /**
    * An error that will turn the grid into its error state and display the error component.
    */
   error: PropTypes.any,
@@ -754,6 +749,11 @@ DataGridProRaw.propTypes = {
    * @default 52
    */
   rowHeight: PropTypes.number,
+  /**
+   * If `true`, the reordering of rows is enabled.
+   * @default false
+   */
+  rowReordering: PropTypes.bool,
   /**
    * Set of rows of type [[GridRowsProp]].
    */
