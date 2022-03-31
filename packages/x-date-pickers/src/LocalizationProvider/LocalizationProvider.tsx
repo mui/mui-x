@@ -76,7 +76,35 @@ LocalizationProvider.propTypes = {
   /**
    * Formats that are used for any child pickers
    */
-  dateFormats: PropTypes.any,
+  dateFormats: PropTypes.shape({
+    dayOfMonth: PropTypes.string,
+    fullDate: PropTypes.string,
+    fullDateTime: PropTypes.string,
+    fullDateTime12h: PropTypes.string,
+    fullDateTime24h: PropTypes.string,
+    fullDateWithWeekday: PropTypes.string,
+    fullTime: PropTypes.string,
+    fullTime12h: PropTypes.string,
+    fullTime24h: PropTypes.string,
+    hours12h: PropTypes.string,
+    hours24h: PropTypes.string,
+    keyboardDate: PropTypes.string,
+    keyboardDateTime: PropTypes.string,
+    keyboardDateTime12h: PropTypes.string,
+    keyboardDateTime24h: PropTypes.string,
+    minutes: PropTypes.string,
+    month: PropTypes.string,
+    monthAndDate: PropTypes.string,
+    monthAndYear: PropTypes.string,
+    monthShort: PropTypes.string,
+    normalDate: PropTypes.string,
+    normalDateWithWeekday: PropTypes.string,
+    seconds: PropTypes.string,
+    shortDate: PropTypes.string,
+    weekday: PropTypes.string,
+    weekdayShort: PropTypes.string,
+    year: PropTypes.string,
+  }),
   /**
    * Date library instance you are using, if it has some global overrides
    * ```jsx
