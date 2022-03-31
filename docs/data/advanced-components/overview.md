@@ -115,7 +115,7 @@ If the license key is missing, the component will look something like this:
 
 #### License key expired
 
-The licenses are perpetual, the license key will work forever with the current version of the software.
+Licenses are perpetual: the license key will work forever with the current version of the software.
 
 However, **access to updates/upgrades** is not perpetual.
 Installing a version of the component released after the license key has expired will trigger a watermark and console message.
