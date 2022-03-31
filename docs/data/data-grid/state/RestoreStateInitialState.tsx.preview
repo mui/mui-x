@@ -1,0 +1,16 @@
+<Box sx={{ width: '100%', height: 336, bgcolor: 'background.paper' }}>
+  <DataGridPro
+    {...data}
+    loading={loading}
+    components={{ Toolbar: GridCustomToolbar }}
+    componentsProps={{ toolbar: { syncState } }}
+  />
+</Box>
+<Box sx={{ width: '100%', height: 300, bgcolor: 'background.paper' }}>
+  <DataGridPro
+    {...data}
+    loading={loading}
+    initialState={savedState.initialState}
+    key={savedState.count}
+  />
+</Box>

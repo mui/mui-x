@@ -36,7 +36,7 @@ export default function StylingAllCells() {
         rows={rows}
         columns={columns}
         getCellClassName={(params: GridCellParams<number>) => {
-          if (params.field === 'city') {
+          if (params.field === 'city' || params.value == null) {
             return '';
           }
           return params.value >= 15 ? 'hot' : 'cold';

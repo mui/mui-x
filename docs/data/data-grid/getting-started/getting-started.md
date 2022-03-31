@@ -18,16 +18,32 @@ npm install @mui/x-data-grid
 yarn add @mui/x-data-grid
 ```
 
-The grid has a peer dependency on one MUI component.
-If you are not already using MUI in your project, you can install it with:
+The grid package has a peer dependency on `@mui/material`.
+If you are not already using it in your project, you can install it with:
 
 ```sh
 // with npm
-npm install @mui/material
+npm install @mui/material @emotion/react @emotion/styled
 
 // with yarn
-yarn add @mui/material
+yarn add @mui/material @emotion/react @emotion/styled
 ```
+
+<!-- #react-peer-version -->
+
+Please note that [react](https://www.npmjs.com/package/react) >= 17.0.0 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.0 are peer dependencies.
+
+MUI is using [emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+
+```sh
+// with npm
+npm install @mui/material @mui/styled-engine-sc styled-components
+
+// with yarn
+yarn add @mui/material @mui/styled-engine-sc styled-components
+```
+
+> 💡 Take a look at the [Styled Engine guide](/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
 
 ## Quickstart
 

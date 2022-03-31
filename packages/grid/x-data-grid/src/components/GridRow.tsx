@@ -340,7 +340,7 @@ GridRow.propTypes = {
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   rowHeight: PropTypes.number.isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,
