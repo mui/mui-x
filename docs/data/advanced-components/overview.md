@@ -1,5 +1,5 @@
 ---
-title: Advanced Components - Overview
+title: MUI X - Overview
 ---
 
 # Advanced Components - Overview
