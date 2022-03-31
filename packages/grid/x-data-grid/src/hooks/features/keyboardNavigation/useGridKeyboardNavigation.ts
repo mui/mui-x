@@ -10,14 +10,13 @@ import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelecto
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
+import { GridCellModes } from '../../../models/gridEditRowModel';
+import { isNavigationKey } from '../../../utils/keyboardUtils';
 
 /**
- * @requires useGridPage (state)
- * @requires useGridPageSize (state)
- * @requires useGridFilter (state)
- * @requires useGridColumns (state, method)
- * @requires useGridRows (state, method)
  * @requires useGridSorting (method) - can be after
+ * @requires useGridFilter (state) - can be after
+ * @requires useGridColumns (state, method) - can be after
  * @requires useGridDimensions (method) - can be after
  * @requires useGridFocus (method) - can be after
  * @requires useGridScroll (method) - can be after
@@ -115,8 +114,17 @@ export const useGridKeyboardNavigation = (
           break;
         }
 
-        case 'PageDown':
         case ' ': {
+          if (!event.shiftKey && rowIndexBefore < lastRowIndexInPage) {
+            goToCell(
+              colIndexBefore,
+              Math.min(rowIndexBefore + viewportPageSize, lastRowIndexInPage),
+            );
+          }
+          break;
+        }
+
+        case 'PageDown': {
           if (rowIndexBefore < lastRowIndexInPage) {
             goToCell(
               colIndexBefore,
@@ -262,6 +270,24 @@ export const useGridKeyboardNavigation = (
     [apiRef, currentPage, goToCell, goToHeader],
   );
 
+  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+    (params, event) => {
+      // Ignore portal
+      if (!event.currentTarget.contains(event.target as Element)) {
+        return;
+      }
+
+      // Get the most recent params because the cell mode may have changed by another listener
+      const cellParams = apiRef.current.getCellParams(params.id, params.field);
+
+      if (cellParams.cellMode !== GridCellModes.Edit && isNavigationKey(event.key)) {
+        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, cellParams, event);
+      }
+    },
+    [apiRef],
+  );
+
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, handleCellNavigationKeyDown);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 };
