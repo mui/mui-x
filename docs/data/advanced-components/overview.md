@@ -159,8 +159,7 @@ You can also reach us by email at x@mui.com if you need to share private informa
 
 ## Roadmap
 
-Here is [the public roadmap](https://github.com/mui/mui-x/projects/1).
-It's organized by quarter.
+To learn more about our plans and goals for the MUI X product line, visit our [public roadmap](https://github.com/mui/mui-x/projects/1).
 
 > ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change.
 > The information provided is intended to outline the general framework direction, for informational purposes only.
