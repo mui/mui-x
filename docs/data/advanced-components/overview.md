@@ -13,7 +13,7 @@ Please pay attention to the license.
 
 ### Community Plan
 
-Published under [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd)
+MUI X's Community Plan is published under [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 
 The packages of the **Community** Plan are:
 
