@@ -120,7 +120,8 @@ Licenses are perpetual: the license key will work forever with the current versi
 But **access to updates and upgrades** is not perpetual.
 An expired license key will always work with the version of the component it was licensed to cover.
 But if you try to install a newer version of the component with an expired license, it will display a watermark and a console warning.
-For example, if you purchase a one-year license today, you are not licensed to install a version released two years in the future, but you can optionally update to any version, including major versions, if it's released in the next 12 months.
+For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next 12 months.
+But you will not be able to install a newer version released two years from now, unless you purchase a new license to cover it.
 
 #### Invalid license key
 
