@@ -120,6 +120,11 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default "() => 500"
    */
   getDetailPanelHeight: (params: GridRowParams) => number;
+  /**
+   * If `true`, the reordering of rows is enabled.
+   * @default false
+   */
+  rowReordering: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>

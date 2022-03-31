@@ -26,7 +26,6 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   pagination: true,
   checkboxSelectionVisibleOnly: false,
   disableColumnReorder: true,
-  enableRowReorder: false,
   disableColumnResize: true,
   signature: 'DataGrid',
 };

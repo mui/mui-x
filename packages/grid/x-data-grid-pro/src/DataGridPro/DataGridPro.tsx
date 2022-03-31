@@ -247,7 +247,7 @@ DataGridProRaw.propTypes = {
    * If `true`, the reordering of rows is enabled.
    * @default false
    */
-  enableRowReorder: PropTypes.bool,
+  rowReordering: PropTypes.bool,
   /**
    * An error that will turn the grid into its error state and display the error component.
    */

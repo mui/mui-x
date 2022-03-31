@@ -10,6 +10,7 @@ import {
   useGridRootProps,
   useGridSelector,
 } from '@mui/x-data-grid';
+import { DataGridProProcessedProps } from '../models/dataGridProProps';
 
 const GridRowReorderCell = (params: GridRenderCellParams) => {
   const apiRef = useGridApiContext();
@@ -18,7 +19,10 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
 
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
-  const isDraggable = !!rootProps.enableRowReorder && !sortModel.length && treeDepth === 1;
+  const isDraggable =
+    !!(rootProps as DataGridProProcessedProps).rowReordering &&
+    !sortModel.length &&
+    treeDepth === 1;
 
   const publish = React.useCallback(
     (

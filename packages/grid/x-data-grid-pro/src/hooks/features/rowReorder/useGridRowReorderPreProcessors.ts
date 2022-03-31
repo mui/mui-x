@@ -6,10 +6,10 @@ import {
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
-import { DataGridProcessedProps } from '@mui/x-data-grid/models/props/DataGridProps';
 import { GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro/colDef';
+import { DataGridProProcessedProps } from '@mui/x-data-grid-pro/models/dataGridProProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -26,7 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 export const useGridRowReorderPreProcessors = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: DataGridProcessedProps,
+  props: DataGridProProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
@@ -39,7 +39,7 @@ export const useGridRowReorderPreProcessors = (
         headerClassName: classes.columnHeaderReorder,
       };
 
-      const shouldHaveReorderColumn = props.enableRowReorder;
+      const shouldHaveReorderColumn = props.rowReordering;
       const haveReorderColumn = columnsState.lookup[reorderColumn.field] != null;
 
       if (shouldHaveReorderColumn && !haveReorderColumn) {
@@ -52,7 +52,7 @@ export const useGridRowReorderPreProcessors = (
 
       return columnsState;
     },
-    [classes, props.enableRowReorder],
+    [classes, props.rowReordering],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateReorderColumn);

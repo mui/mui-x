@@ -11,7 +11,7 @@ export default function RowOrderingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} enableRowReorder />
+      <DataGridPro {...data} rowReordering />
     </div>
   );
 }

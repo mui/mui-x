@@ -78,7 +78,6 @@ export type DataGridForcedPropsKey =
   | 'disableMultipleSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
-  | 'enableRowReorder'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
@@ -713,9 +712,4 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;
-  /**
-   * If `true`, the reordering of rows is enabled.
-   * @default false
-   */
-  enableRowReorder?: boolean;
 }

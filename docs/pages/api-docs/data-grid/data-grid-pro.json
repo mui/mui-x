@@ -54,7 +54,6 @@
       "default": "\"cell\""
     },
     "editRowsModel": { "type": { "name": "object" } },
-    "enableRowReorder": { "type": { "name": "bool" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
       "type": {
@@ -179,6 +178,7 @@
     },
     "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
+    "rowReordering": { "type": { "name": "bool" } },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
