@@ -2,6 +2,8 @@ const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const withTM = require('next-transpile-modules')(['@mui/monorepo']);
 const pkg = require('../package.json');
+const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
+const datePickersPkg = require('../packages/x-date-pickers/package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
 
@@ -37,6 +39,8 @@ module.exports = {
     ENABLE_AD: process.env.ENABLE_AD,
     GITHUB_AUTH: process.env.GITHUB_AUTH,
     LIB_VERSION: pkg.version,
+    DATA_GRID_VERSION: dataGridPkg.version,
+    DATE_PICKERS_VERSION: datePickersPkg.version,
     PULL_REQUEST: process.env.PULL_REQUEST === 'true',
     REACT_STRICT_MODE: reactStrictMode,
     // Set by Netlify
