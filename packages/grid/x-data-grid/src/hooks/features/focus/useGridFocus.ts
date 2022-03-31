@@ -102,27 +102,31 @@ export const useGridFocus = (
         rowIndexToFocus += 1;
       }
 
-      if (columnIndexToFocus >= visibleColumns.length) {
-        // Go to next row if we are at the last column
-        rowIndexToFocus += 1;
-        columnIndexToFocus = 0;
-      } else if (columnIndexToFocus < 0) {
-        // Go to previous row if we are at the first column
-        rowIndexToFocus -= 1;
-        columnIndexToFocus = visibleColumns.length - 1;
-      }
-
       const currentPage = getVisibleRows(apiRef, {
         pagination: props.pagination,
         paginationMode: props.paginationMode,
       });
 
-      rowIndexToFocus = clamp(
-        rowIndexToFocus,
-        currentPage.range!.firstRowIndex,
-        currentPage.range!.lastRowIndex,
-      );
+      if (columnIndexToFocus >= visibleColumns.length) {
+        // Go to next row if we are after the last column
+        rowIndexToFocus += 1;
 
+        if (rowIndexToFocus < currentPage.rows.length) {
+          // Go to first column of the next row if there's one more row
+          columnIndexToFocus = 0;
+        }
+      } else if (columnIndexToFocus < 0) {
+        // Go to previous row if we are before the first column
+        rowIndexToFocus -= 1;
+
+        if (rowIndexToFocus >= 0) {
+          // Go to last column of the previous if there's one more row
+          columnIndexToFocus = visibleColumns.length - 1;
+        }
+      }
+
+      rowIndexToFocus = clamp(rowIndexToFocus, 0, currentPage.rows.length - 1);
+      columnIndexToFocus = clamp(columnIndexToFocus, 0, visibleColumns.length - 1);
       const rowToFocus = currentPage.rows[rowIndexToFocus];
       const columnToFocus = visibleColumns[columnIndexToFocus];
       apiRef.current.setCellFocus(rowToFocus.id, columnToFocus.field);
