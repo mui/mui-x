@@ -7,9 +7,6 @@ import {
 } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 
-/**
- * Only available in DataGridPro
- */
 export const useGridTreeData = (apiRef: React.MutableRefObject<GridApiPro>) => {
   /**
    * EVENTS

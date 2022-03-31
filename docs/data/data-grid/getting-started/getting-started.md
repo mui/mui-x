@@ -122,10 +122,11 @@ Internally, it uses module augmentation to extend the default theme structure.
 // When using TypeScript 4.x and above
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+import type {} from '@mui/x-data-grid-premium/themeAugmentation';
 
 const theme = createTheme({
   components: {
-    // Use `MuiDataGrid` on both DataGrid and DataGridPro
+    // Use `MuiDataGrid` on DataGrid, DataGridPro and DataGridPremium
     MuiDataGrid: {
       styleOverrides: {
         root: {
@@ -147,22 +148,26 @@ Please pay attention to the license.
 The component comes [in different plans](/pricing/):
 
 - **Community**: It's [MIT license](https://tldrlegal.com/license/mit-license). It's [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd) and available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid). It currently includes the [DataGrid](/components/data-grid/#mit-version) component.
-- **Pro** and **Premium**: It's a [commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/components/data-grid/#commercial-version) component.
-  Features only available in the commercial version are suffixed in the documentation with the following marks:
-
-  - <span class="plan-pro"></span>: For features exclusive to Pro and Premium plans.
-
-    <div class="only-light-mode">
-      <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
-    </div>
-    <div class="only-dark-mode">
-      <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
-    </div>
-
-  - <span class="plan-premium"></span>: For features exclusive to the Premium plan.
-
-  You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
+- **Pro**: It's a [commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/components/data-grid/#commercial-version) component.
   See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+
+- **Premium**: It's a [commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) and includes the [DataGridPremium](/components/data-grid/#commercial-version) component.
+  See [Pricing](https://mui.com/store/items/material-ui-premium/) for details on purchasing licenses.
+
+You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
+
+Features only available in the pro plan are suffixed in the documentation with the following marks:
+
+- <span class="plan-pro"></span>: For features exclusive to Pro and Premium plans.
+
+  <div class="only-light-mode">
+    <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
+  </div>
+  <div class="only-dark-mode">
+    <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
+  </div>
+
+- <span class="plan-premium"></span>: For features exclusive to the Premium plan.
 
 ### MIT vs. commercial
 

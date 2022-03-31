@@ -5,15 +5,6 @@
       "required": true
     },
     "rows": { "type": { "name": "array" }, "required": true },
-    "aggregationFunctions": {
-      "type": { "name": "object" },
-      "default": "GRID_AGGREGATION_FUNCTIONS"
-    },
-    "aggregationModel": { "type": { "name": "object" } },
-    "aggregationPosition": {
-      "type": { "name": "enum", "description": "'footer'<br>&#124;&nbsp;'inline'" },
-      "default": "\"footer\""
-    },
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -42,7 +33,6 @@
     "detailPanelExpandedRowIds": {
       "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
     },
-    "disableAggregation": { "type": { "name": "bool" } },
     "disableChildrenFiltering": { "type": { "name": "bool" } },
     "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
@@ -56,7 +46,6 @@
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleSelection": { "type": { "name": "bool" } },
-    "disableRowGrouping": { "type": { "name": "bool" } },
     "disableSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
@@ -68,7 +57,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ aggregation?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -119,7 +108,6 @@
       "default": "\"debug\""
     },
     "nonce": { "type": { "name": "string" } },
-    "onAggregationModelChange": { "type": { "name": "func" } },
     "onCellClick": { "type": { "name": "func" } },
     "onCellDoubleClick": { "type": { "name": "func" } },
     "onCellEditCommit": { "type": { "name": "func" } },
@@ -154,14 +142,12 @@
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
     "onPinnedColumnsChange": { "type": { "name": "func" } },
-    "onProcessRowUpdateError": { "type": { "name": "func" } },
     "onResize": { "type": { "name": "func" } },
     "onRowClick": { "type": { "name": "func" } },
     "onRowDoubleClick": { "type": { "name": "func" } },
     "onRowEditCommit": { "type": { "name": "func" } },
     "onRowEditStart": { "type": { "name": "func" } },
     "onRowEditStop": { "type": { "name": "func" } },
-    "onRowGroupingModelChange": { "type": { "name": "func" } },
     "onRowsScrollEnd": { "type": { "name": "func" } },
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
@@ -182,11 +168,6 @@
     "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
-    "rowGroupingColumnMode": {
-      "type": { "name": "enum", "description": "'multiple'<br>&#124;&nbsp;'single'" },
-      "default": "'single'"
-    },
-    "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
@@ -243,10 +224,6 @@
     "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
     "Cell": { "default": "GridCell", "type": { "name": "elementType" } },
     "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
-    "ColumnHeaderFilterIconButton": {
-      "default": "GridColumnHeaderFilterIconButton",
-      "type": { "name": "elementType" }
-    },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",

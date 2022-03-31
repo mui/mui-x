@@ -21,24 +21,9 @@ import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
-import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridInitialStatePro } from './gridStatePro';
-import type {
-  GridAggregationModel,
-  GridAggregationFunction,
-  GridAggregationPosition,
-} from '../hooks/features/aggregation';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
-  /**
-   * Will be part of the premium-plan when fully ready.
-   */
-  rowGrouping: boolean;
-  /**
-   * Will be part of the premium-plan when fully ready.
-   */
-  aggregation: boolean;
-}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -112,39 +97,12 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    */
   disableChildrenSorting: boolean;
   /**
-   * If `true`, the row grouping is disabled.
-   * @default false
-   */
-  disableRowGrouping: boolean;
-  /**
-   * If `true`, the aggregation is disabled.
-   * @default false
-   */
-  disableAggregation: boolean;
-  /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
-   * @default 'single'
-   */
-  rowGroupingColumnMode: 'single' | 'multiple';
-  /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {number} The height in pixels.
    * @default "() => 500"
    */
   getDetailPanelHeight: (params: GridRowParams) => number;
-  /**
-   * TODO: Move to `x-data-grid-premium
-   * @default GRID_AGGREGATION_FUNCTIONS
-   */
-  aggregationFunctions: Record<string, GridAggregationFunction>;
-
-  /**
-   * TODO: Move to `x-data-grid-premium
-   * @default "footer"
-   */
-  aggregationPosition: GridAggregationPosition;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -199,29 +157,6 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange?: (pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void;
-  /**
-   * Set the row grouping model of the grid.
-   */
-  rowGroupingModel?: GridRowGroupingModel;
-  /**
-   * Callback fired when the row grouping model changes.
-   * TODO: Move to `x-data-grid-premium
-   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
-  /**
-   * TODO: Move to `x-data-grid-premium
-   */
-  aggregationModel?: GridAggregationModel;
-  /**
-   * Callback fired when the row grouping model changes.
-   * TODO: Move to `x-data-grid-premium
-   * @param {GridAggregationModel} model The aggregated columns.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
-  isGroupAggregated?: (rowNode: GridRowTreeNodeConfig | null) => boolean;
   /**
    * The grouping column used by the tree data.
    */

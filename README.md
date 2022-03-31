@@ -29,6 +29,7 @@ We provide three options:
 
 - [DataGrid](https://mui.com/components/data-grid/), published under `@mui/x-data-grid`, MIT licensed.
 - [DataGridPro](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.
+- [DataGridPremium](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-premium`, commercially licensed.
 
 ## Questions
 
@@ -41,8 +42,9 @@ There is a StackOverflow tag called "mui" that you can use to tag your questions
 You can create an [issue](https://github.com/mui/mui-x/issues) on this repository.
 Please always provide a reproduction case, the following templates can be a good start:
 
-- [DataGrid free version](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1)
-- [DataGridPro paid version](https://codesandbox.io/s/datagridpro-v5-quick-start-5pjhc)
+- [DataGrid community version](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1)
+- [DataGridPro commercial version](https://codesandbox.io/s/datagridpro-v5-quick-start-5pjhc)
+- [DataGridPremium commercial version](https://codesandbox.io/s/datagridpremium-v5-quick-start-h2ztp2)
 
 ## Contributing
 

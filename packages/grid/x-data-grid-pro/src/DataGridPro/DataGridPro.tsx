@@ -12,7 +12,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { DataGridProProps } from '../models';
+import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
@@ -60,20 +60,6 @@ DataGridProRaw.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * TODO: Move to `x-data-grid-premium
-   * @default GRID_AGGREGATION_FUNCTIONS
-   */
-  aggregationFunctions: PropTypes.object,
-  /**
-   * TODO: Move to `x-data-grid-premium
-   */
-  aggregationModel: PropTypes.object,
-  /**
-   * TODO: Move to `x-data-grid-premium
-   * @default "footer"
-   */
-  aggregationPosition: PropTypes.oneOf(['footer', 'inline']),
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
@@ -169,11 +155,6 @@ DataGridProRaw.propTypes = {
     PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   ),
   /**
-   * If `true`, the aggregation is disabled.
-   * @default false
-   */
-  disableAggregation: PropTypes.bool,
-  /**
    * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
    */
@@ -239,11 +220,6 @@ DataGridProRaw.propTypes = {
    */
   disableMultipleSelection: PropTypes.bool,
   /**
-   * If `true`, the row grouping is disabled.
-   * @default false
-   */
-  disableRowGrouping: PropTypes.bool,
-  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -271,10 +247,8 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    aggregation: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
-    rowGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -403,7 +377,6 @@ DataGridProRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
   isCellEditable: PropTypes.func,
-  isGroupAggregated: PropTypes.func,
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
@@ -445,13 +418,6 @@ DataGridProRaw.propTypes = {
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce: PropTypes.string,
-  /**
-   * Callback fired when the row grouping model changes.
-   * TODO: Move to `x-data-grid-premium
-   * @param {GridAggregationModel} model The aggregated columns.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onAggregationModelChange: PropTypes.func,
   /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -629,11 +595,6 @@ DataGridProRaw.propTypes = {
    */
   onPinnedColumnsChange: PropTypes.func,
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
-   * @param {any} error The error thrown.
-   */
-  onProcessRowUpdateError: PropTypes.func,
-  /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -673,13 +634,6 @@ DataGridProRaw.propTypes = {
    * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
    */
   onRowEditStop: PropTypes.func,
-  /**
-   * Callback fired when the row grouping model changes.
-   * TODO: Move to `x-data-grid-premium
-   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowGroupingModelChange: PropTypes.func,
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
@@ -756,16 +710,6 @@ DataGridProRaw.propTypes = {
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
    */
   rowCount: PropTypes.number,
-  /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
-   * @default 'single'
-   */
-  rowGroupingColumnMode: PropTypes.oneOf(['multiple', 'single']),
-  /**
-   * Set the row grouping model of the grid.
-   */
-  rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
   /**
    * Set the height in pixel of a row in the grid.
    * @default 52
