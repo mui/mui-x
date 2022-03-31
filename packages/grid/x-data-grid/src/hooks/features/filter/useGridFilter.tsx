@@ -11,7 +11,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridFilterableColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { getDefaultGridFilterModel } from './gridFilterState';
+import { getDefaultGridFilterModel, GridAggregatedFilterItemApplier } from './gridFilterState';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector } from '../rows';
@@ -88,7 +88,7 @@ export const useGridFilter = (
           ? buildAggregatedQuickFilterApplier(filterModel, apiRef)
           : null;
 
-      let isRowMatchingFilters;
+      let isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
       if (isRowMatchingStandardFilters == null && isRowMatchingQuickFilter == null) {
         isRowMatchingFilters = null;
       } else {
