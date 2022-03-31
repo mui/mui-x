@@ -65,7 +65,7 @@ For each set of components, you can check out the feature comparison table:
 
 ## Evaluation (trial) licenses
 
-You are [free to install](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses) and try our **Pro** / **Premium** components as long as it is not used for the development of a feature intended for production.
+In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use our Pro and Premium components without a commercial license as long as they are not used for the development of a feature intended for production.
 Please take the component for a test run, no need to contact us.
 
 ## License key
