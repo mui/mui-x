@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const COLUMNS: GridColDef[] = [
@@ -34,7 +34,7 @@ export default function AggregationIsGroupAggregated() {
 
   return (
     <div style={{ height: 318, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         {...data}
         columns={COLUMNS}
         disableSelectionOnClick
@@ -53,10 +53,6 @@ export default function AggregationIsGroupAggregated() {
               director: false,
             },
           },
-        }}
-        experimentalFeatures={{
-          rowGrouping: true,
-          aggregation: true,
         }}
         isGroupAggregated={(groupNode) => groupNode != null}
       />

@@ -1,4 +1,4 @@
-<DataGridPro
+<DataGridPremium
   rows={rows}
   columns={COLUMNS}
   initialState={{
@@ -7,8 +7,5 @@
         imdbRating: 'avg',
       },
     },
-  }}
-  experimentalFeatures={{
-    aggregation: true,
   }}
 />

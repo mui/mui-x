@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const COLUMNS = [
@@ -42,7 +42,7 @@ export default function AggregationCustomFunction() {
 
   return (
     <div style={{ height: 318, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         // The following prop is here to avoid scroll in the demo while we don't have pinned rows
         rows={data.rows.slice(0, 3)}
         columns={COLUMNS}
@@ -56,9 +56,6 @@ export default function AggregationCustomFunction() {
               director: 'firstAlphabetical',
             },
           },
-        }}
-        experimentalFeatures={{
-          aggregation: true,
         }}
       />
     </div>

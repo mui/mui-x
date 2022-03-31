@@ -2,10 +2,14 @@
   // The following prop is here to avoid scroll in the demo while we don't have pinned rows
   rows={data.rows.slice(0, 3)}
   columns={COLUMNS}
+  aggregationFunctions={{
+    firstAlphabetical: firstAlphabeticalAggregation,
+    lastAlphabetical: lastAlphabeticalAggregation,
+  }}
   initialState={{
     aggregation: {
       model: {
-        gross: 'sum',
+        director: 'firstAlphabetical',
       },
     },
   }}

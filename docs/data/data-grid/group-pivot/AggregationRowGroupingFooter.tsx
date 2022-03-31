@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const COLUMNS: GridColDef[] = [
@@ -29,7 +29,7 @@ export default function AggregationRowGroupingFooter() {
 
   return (
     <div style={{ height: 370, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         {...data}
         columns={COLUMNS}
         disableSelectionOnClick
@@ -47,10 +47,6 @@ export default function AggregationRowGroupingFooter() {
               company: false,
             },
           },
-        }}
-        experimentalFeatures={{
-          rowGrouping: true,
-          aggregation: true,
         }}
       />
     </div>

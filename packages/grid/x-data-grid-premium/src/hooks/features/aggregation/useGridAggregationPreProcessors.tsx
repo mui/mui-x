@@ -15,7 +15,10 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationColumnMenuItems } from '../../../components/GridAggregationColumnMenuItems';
 import { GridAggregationPanel } from '../../../components/GridAggregationPanel';
-import { gridAggregationModelSelector } from './gridAggregationSelectors';
+import {
+  gridAggregationModelSelector,
+  gridAggregationSanitizedModelSelector,
+} from './gridAggregationSelectors';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -86,6 +89,11 @@ export const useGridAggregationPreProcessors = (
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       if (props.disableAggregation || props.aggregationPosition === 'inline') {
+        return groupingParams;
+      }
+
+      const model = gridAggregationSanitizedModelSelector(apiRef);
+      if (Object.keys(model).length === 0) {
         return groupingParams;
       }
 

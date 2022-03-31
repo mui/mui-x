@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Rating from '@mui/material/Rating';
 
@@ -41,7 +41,7 @@ export default function AggregationRenderCell() {
 
   return (
     <div style={{ height: 318, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         rows={rows}
         columns={COLUMNS}
         initialState={{
@@ -50,9 +50,6 @@ export default function AggregationRenderCell() {
               imdbRating: 'avg',
             },
           },
-        }}
-        experimentalFeatures={{
-          aggregation: true,
         }}
       />
     </div>
