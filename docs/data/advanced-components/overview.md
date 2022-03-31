@@ -26,7 +26,7 @@ This plan contains the features that are at the limit of what the open-source mo
 
 See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
-The packages of the **Pro** Plan are:
+Pro Plan packages:
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
