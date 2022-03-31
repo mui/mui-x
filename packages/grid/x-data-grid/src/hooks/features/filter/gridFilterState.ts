@@ -1,8 +1,4 @@
-import {
-  GridFilterItem,
-  GridLinkOperator,
-  GridQuickFilterLogic,
-} from '../../../models/gridFilterItem';
+import { GridLinkOperator, GridQuickFilterLogic } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridRowId } from '../../../models/gridRows';
 
@@ -50,7 +46,7 @@ export interface GridFilterInitialState {
  */
 export type GridAggregatedFilterItemApplier = (
   rowId: GridRowId,
-  shouldApplyItem?: (filterItem: GridFilterItem) => boolean,
+  shouldApplyItem?: (columnField: string) => boolean,
 ) => boolean;
 
 export interface GridFilteringMethodParams {

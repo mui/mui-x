@@ -191,7 +191,7 @@ export const buildAggregatedFilterApplier = (
 
   return (rowId, shouldApplyFilter) => {
     const filteredAppliers = shouldApplyFilter
-      ? appliers.filter((applier) => shouldApplyFilter(applier.item))
+      ? appliers.filter((applier) => shouldApplyFilter(applier.item.columnField))
       : appliers;
 
     // Return `false` as soon as we have a failing filter
@@ -245,13 +245,12 @@ export const buildAggregatedQuickFilterApplier = (
   }
 
   return (rowId, shouldApplyFilter) => {
-    // const filteredAppliers = shouldApplyFilter
-    //   ? appliers.filter((applier) => shouldApplyFilter(applier.item))
-    //   : appliers;
     const usedCellParams: { [field: string]: GridCellParams } = {};
 
-    Object.keys(appliersPerColumnField).forEach((field) => {
-      usedCellParams[field] = apiRef.current.getCellParams(rowId, field);
+    Object.keys(appliersPerColumnField).forEach((columnField) => {
+      if (!shouldApplyFilter || shouldApplyFilter(columnField)) {
+        usedCellParams[columnField] = apiRef.current.getCellParams(rowId, columnField);
+      }
     });
 
     // Return `false` as soon as we have a quick filter value that does not match any column
