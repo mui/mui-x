@@ -59,7 +59,7 @@ However, we believe that we have reached the sustainability limits of what the m
 We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
 A solution to a problem should only be commercial if it has no MIT alternatives.
 
-For each set of component, you can check the feature comparison table:
+For each set of components, you can check out the feature comparison table:
 
 - [Data Grid](/x/react-data-grid/getting-started/#feature-comparison)
 
