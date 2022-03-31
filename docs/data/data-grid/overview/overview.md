@@ -64,7 +64,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 - [100% customizable](/components/data-grid/style/)
 - Server-side data
 - [Column hiding](/components/data-grid/columns/#column-visibility)
-- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
+- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="plan-pro"></span>
 - [Accessible](/components/data-grid/accessibility/)
 - [Localization](/components/data-grid/localization/)
 

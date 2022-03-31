@@ -9,8 +9,8 @@ title: MUI X - Overview
 ## Licenses
 
 > While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
-You will need to purchase a license to access features that are only available with the Pro and Premium Plans.
-See [Pricing](https://mui.com/pricing/) for details.
+> You will need to purchase a license to access features that are only available with the Pro and Premium Plans.
+> See [Pricing](https://mui.com/pricing/) for details.
 
 ### Community Plan
 
@@ -23,9 +23,9 @@ Community Plan packages:
 
 ### Pro Plan
 
-This plan contains the features that are at the limit of what the open-source model can sustain. From a price perspective, the plan is designed to be accessible to most professionals.
+The MUI X Pro Plan expands on the limitations of the Community Plan with more advanced features such as multi-filtering, multi-sorting, column resizing and column pinning.
 
-See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+The Pro Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
 
 Pro Plan packages:
 
@@ -43,10 +43,11 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
 
 ### 🚧 Premium Plan
 
-This plan contains the most advanced features.
+The MUI X Premium Plan contains the most advanced features such as row grouping, Excel Export, aggregation (🚧), as well as everything that's included in the Pro Plan.
 
-The features exclusives to the **Premium** Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
-The **Premium** Plan also contains all the features of the **Pro** Plan
+The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
+
+The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
 
 ## MIT vs. commercial
 
@@ -60,9 +61,7 @@ However, we believe that we have reached the sustainability limits of what the m
 We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
 A solution to a problem should only be commercial if it has no MIT alternatives.
 
-For each set of components, you can check out the feature comparison table:
-
-- [Data Grid](/x/react-data-grid/getting-started/#feature-comparison)
+The detailed feature comparison is available on the [Pricing](https://mui.com/pricing/) page.
 
 ## Evaluation (trial) licenses
 
@@ -70,7 +69,6 @@ In accordance with our [End User License Agreement](https://mui.com/store/legal/
 You do not need to contact us to use these components for evaluation purposes.
 
 You will need to purchase a commercial license in order to remove the watermarks and console warnings.
-
 
 ### License key installation
 
@@ -89,10 +87,9 @@ LicenseInfo.setLicenseKey(
 
 ### Security
 
-The check of the license key is done without making any network requests.
-
-The license key is designed to be public, the only thing we ask of licensed users is to not proactively publicize their license key.
-Exposing the license key in a JavaScript bundle is expected.
+The license key is checked without making any network requests—it's designed to be public.
+In fact, it's expected for the license key to be exposed in a JavaScript bundle.
+We just ask our licensed users not to publicize their license keys.
 
 ### Validation errors
 
