@@ -133,7 +133,7 @@ This error indicates that your license key doesn't match what was issued by MUIâ
 
 We use GitHub issues as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 
-[Open an issue](https://github.com/mui/mui-x/issues/new/choose)
+[Open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repo.
 
 ### StackOverflow
 
