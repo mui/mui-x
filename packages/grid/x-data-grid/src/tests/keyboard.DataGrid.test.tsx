@@ -319,6 +319,25 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(virtualScroller.scrollLeft).not.to.equal(0);
     });
 
+    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
+      if (isJSDOM) {
+        // Need layouting for column virtualization
+        this.skip();
+      }
+      render(
+        <div style={{ width: 60, height: 300 }}>
+          <DataGrid autoHeight={isJSDOM} {...getData(10, 10)} rows={[]} />
+        </div>,
+      );
+      getColumnHeaderCell(0).focus();
+      const virtualScroller = document.querySelector(
+        '.MuiDataGrid-virtualScroller',
+      )! as HTMLElement;
+      expect(virtualScroller.scrollLeft).to.equal(0);
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expect(virtualScroller.scrollLeft).not.to.equal(0);
+    });
+
     it('should move to the first row when pressing "ArrowDown" on a column header on the 1st page', () => {
       render(<NavigationTestCaseNoScrollX />);
       getColumnHeaderCell(1).focus();

@@ -2,7 +2,13 @@ import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridLinkOperator, GridRowsProp } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  gridClasses,
+  GridLinkOperator,
+  GridRowsProp,
+} from '@mui/x-data-grid';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy, stub, SinonStub } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -201,6 +207,16 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       expect(onPageChange.lastCall.args[0]).to.equal(0);
       expect(onPageChange.callCount).to.equal(1);
+    });
+
+    it('should scroll to the top of the page when changing page', () => {
+      const { setProps } = render(
+        <BaselineTestCase page={0} pageSize={5} rowsPerPageOptions={[5]} />,
+      );
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      virtualScroller.scrollTop = 100;
+      setProps({ page: 1 });
+      expect(virtualScroller.scrollTop).to.equal(0);
     });
   });
 
