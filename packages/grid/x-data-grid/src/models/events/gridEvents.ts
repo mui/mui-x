@@ -323,11 +323,11 @@ enum GridEvents {
    */
   virtualScrollerContentSizeChange = 'virtualScrollerContentSizeChange',
   /**
-   * Callback fired when the preferences panel is closed.
+   * Fired when the preferences panel is closed.
    */
   preferencePanelClose = 'preferencePanelClose',
   /**
-   * Callback fired when the preferences panel is opened.
+   * Fired when the preferences panel is opened.
    */
   preferencePanelOpen = 'preferencePanelOpen',
 }
