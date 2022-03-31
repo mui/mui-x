@@ -125,7 +125,7 @@ But you will not be able to install a newer version released two years from now,
 
 #### Invalid license key
 
-The license key you have installed is not as issued by MUI.
+This error indicates that your license key doesn't match what was issued by MUI—this is likely a typo.
 
 ## Support
 
