@@ -17,6 +17,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { FocusElement } from '../../models/params/gridCellParams';
 
 export interface GridCellProps<V = any, F = V> {
   align: GridAlignment;
@@ -85,6 +86,7 @@ function GridCell(props: GridCellProps) {
     align,
     children,
     colIndex,
+    colDef,
     cellMode,
     field,
     formattedValue,
@@ -111,6 +113,7 @@ function GridCell(props: GridCellProps) {
 
   const valueToRender = formattedValue == null ? value : formattedValue;
   const cellRef = React.useRef<HTMLDivElement>(null);
+  const focusElementRef = React.useRef<FocusElement>(null);
   const apiRef = useGridApiContext();
 
   const rootProps = useGridRootProps();
@@ -168,7 +171,7 @@ function GridCell(props: GridCellProps) {
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-      const elementToFocus = focusableElement || cellRef.current;
+      const elementToFocus = focusElementRef.current || focusableElement || cellRef.current;
 
       if (doesSupportPreventScroll()) {
         elementToFocus.focus({ preventScroll: true });
@@ -210,6 +213,21 @@ function GridCell(props: GridCellProps) {
     };
   }
 
+  const column = apiRef.current.getColumn(field);
+  const managesOwnFocus = column.type === 'actions';
+
+  const renderChildren = () => {
+    if (children == null) {
+      return <div className={classes.content}>{valueToRender?.toString()}</div>;
+    }
+
+    if (React.isValidElement(children) && managesOwnFocus) {
+      return React.cloneElement(children, { focusElementRef });
+    }
+
+    return children;
+  };
+
   return (
     <div
       ref={cellRef}
@@ -219,7 +237,7 @@ function GridCell(props: GridCellProps) {
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
       style={style}
-      tabIndex={cellMode === 'view' || !isEditable ? tabIndex : -1}
+      tabIndex={(cellMode === 'view' || !isEditable) && !managesOwnFocus ? tabIndex : -1}
       onClick={publish(GridEvents.cellClick, onClick)}
       onDoubleClick={publish(GridEvents.cellDoubleClick, onDoubleClick)}
       onMouseDown={publish(GridEvents.cellMouseDown, onMouseDown)}
@@ -230,11 +248,7 @@ function GridCell(props: GridCellProps) {
       {...other}
       onFocus={handleFocus}
     >
-      {children != null ? (
-        children
-      ) : (
-        <div className={classes.content}>{valueToRender?.toString()}</div>
-      )}
+      {renderChildren()}
     </div>
   );
 }

@@ -61,6 +61,10 @@ export interface GridCellParams<V = any, R extends GridValidRowModel = any, F = 
   getValue: (id: GridRowId, field: string) => any;
 }
 
+export interface FocusElement {
+  focus(): void;
+}
+
 /**
  * GridCellParams containing api.
  */
@@ -71,6 +75,11 @@ export interface GridRenderCellParams<V = any, R extends GridValidRowModel = any
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
+  /**
+   * A ref pointing to the element that should receive focus.
+   * @ignore - do not document.
+   */
+  focusElementRef?: React.Ref<FocusElement>;
 }
 
 /**

@@ -115,6 +115,18 @@ GridTreeDataGroupingCell.propTypes = {
    */
   field: PropTypes.string.isRequired,
   /**
+   * A ref pointing to the element that should receive focus.
+   * @ignore - do not document.
+   */
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        focus: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: PropTypes.any.isRequired,
