@@ -351,6 +351,10 @@ export interface GridClasses {
    */
   rowCount: string;
   /**
+   * Styles applied to the root element of the row reorder cell
+   */
+  reorderCell: string;
+  /**
    * Styles applied to both scroll area elements.
    */
   scrollArea: string;
@@ -484,6 +488,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--dragging',
   'rowDraggableContainer',
   'rowCount',
+  'reorderCell',
   'scrollArea--left',
   'scrollArea--right',
   'scrollArea',

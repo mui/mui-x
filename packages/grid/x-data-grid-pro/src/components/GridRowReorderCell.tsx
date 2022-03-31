@@ -61,7 +61,7 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   };
 
   return (
-    <div className={gridClasses.actionsCell} draggable={isDraggable} {...draggableEventHandlers}>
+    <div className={gridClasses.reorderCell} draggable={isDraggable} {...draggableEventHandlers}>
       <rootProps.components.RowReorderIcon />
 
       <div className={gridClasses.rowDraggableContainer}>{params.row.id}</div>

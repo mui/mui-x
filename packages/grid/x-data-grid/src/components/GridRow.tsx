@@ -126,7 +126,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const publish = React.useCallback(
     (
         eventName: keyof GridRowEventLookup,
-        propHandler?: React.MouseEventHandler<HTMLDivElement> | undefined,
+        propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
       ): React.MouseEventHandler<HTMLDivElement> =>
       (event) => {
         // Ignore portal
@@ -168,6 +168,11 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
         // User opened a detail panel
         if (field === '__detail_panel_toggle__') {
+          return;
+        }
+
+        // User reorders a row
+        if (field === '__reorder__') {
           return;
         }
 

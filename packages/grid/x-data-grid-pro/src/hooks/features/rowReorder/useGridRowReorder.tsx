@@ -87,9 +87,6 @@ export const useGridRowReorder = (
     GridEventListener<GridEvents.cellDragOver | GridEvents.rowDragOver>
   >(
     (params, event) => {
-      if (!dragRowId && dragRowId !== 0) {
-        return;
-      }
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.
@@ -115,7 +112,7 @@ export const useGridRowReorder = (
 
   const handleDragEnd = React.useCallback<GridEventListener<GridEvents.rowDragEnd>>(
     (params, event): void => {
-      if (isRowReorderDisabled || (!dragRowId && dragRowId !== 0)) {
+      if (isRowReorderDisabled) {
         return;
       }
 

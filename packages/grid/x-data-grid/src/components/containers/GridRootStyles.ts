@@ -287,7 +287,7 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.booleanCell}[data-value="false"]`]: {
       color: theme.palette.text.disabled,
     },
-    [`& .${gridClasses.actionsCell}`]: {
+    [`& .${gridClasses.actionsCell}, & .${gridClasses.reorderCell}`]: {
       display: 'inline-flex',
       alignItems: 'center',
       gridGap: theme.spacing(1),

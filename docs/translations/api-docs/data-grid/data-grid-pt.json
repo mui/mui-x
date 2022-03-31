@@ -453,6 +453,7 @@
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
       "nodeName": "the footer row count element to show the total number of rows"
     },
+    "reorderCell": { "description": "Styles applied to the root element of the row reorder cell" },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"

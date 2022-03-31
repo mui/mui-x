@@ -384,6 +384,7 @@
       "row--lastVisible",
       "row",
       "rowCount",
+      "reorderCell",
       "scrollArea",
       "scrollArea--left",
       "scrollArea--right",
