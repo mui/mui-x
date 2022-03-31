@@ -33,6 +33,7 @@
     "detailPanelExpandedRowIds": {
       "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
     },
+    "disableAggregation": { "type": { "name": "bool" } },
     "disableChildrenFiltering": { "type": { "name": "bool" } },
     "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
@@ -109,6 +110,7 @@
       "default": "\"debug\""
     },
     "nonce": { "type": { "name": "string" } },
+    "onAggregationModelChange": { "type": { "name": "func" } },
     "onCellClick": { "type": { "name": "func" } },
     "onCellDoubleClick": { "type": { "name": "func" } },
     "onCellEditCommit": { "type": { "name": "func" } },

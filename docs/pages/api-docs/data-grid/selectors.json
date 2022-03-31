@@ -18,12 +18,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridAggregationStateSelector",
-    "returnType": "GridAggregationState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Columns",

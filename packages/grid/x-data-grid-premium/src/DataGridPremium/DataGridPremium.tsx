@@ -64,6 +64,15 @@ DataGridPremiumRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * @default GRID_AGGREGATION_FUNCTIONS
+   */
+  aggregationFunctions: PropTypes.object,
+  aggregationModel: PropTypes.object,
+  /**
+   * @default "footer"
+   */
+  aggregationPosition: PropTypes.oneOf(['footer', 'inline']),
+  /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
   apiRef: PropTypes.shape({
@@ -157,6 +166,11 @@ DataGridPremiumRaw.propTypes = {
   detailPanelExpandedRowIds: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   ),
+  /**
+   * If `true`, the aggregation is disabled.
+   * @default false
+   */
+  disableAggregation: PropTypes.bool,
   /**
    * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
@@ -385,6 +399,7 @@ DataGridPremiumRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
   isCellEditable: PropTypes.func,
+  isGroupAggregated: PropTypes.func,
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
@@ -426,6 +441,12 @@ DataGridPremiumRaw.propTypes = {
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce: PropTypes.string,
+  /**
+   * Callback fired when the row grouping model changes.
+   * @param {GridAggregationModel} model The aggregated columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onAggregationModelChange: PropTypes.func,
   /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
