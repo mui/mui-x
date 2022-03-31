@@ -7,7 +7,7 @@ export interface GridRowOrderChangeParams {
   /**
    * The row data.
    */
-  row: GridRowModel | null;
+  row: GridRowModel;
   /**
    * The target row index.
    */

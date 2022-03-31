@@ -219,5 +219,5 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowOrderChange?: GridEventListener<GridEvents.rowsScrollEnd>;
+  onRowOrderChange?: GridEventListener<GridEvents.rowOrderChange>;
 }
