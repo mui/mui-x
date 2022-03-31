@@ -1,4 +1,4 @@
-import './typeOverloads/modules';
+import './typeOverloads';
 
 export { LicenseInfo } from '@mui/x-license-pro';
 export * from '@mui/x-data-grid/components';
