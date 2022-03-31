@@ -8,8 +8,9 @@ title: MUI X - Overview
 
 ## Licenses
 
-While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
-Please pay attention to the license.
+> While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
+You will need to purchase a license to access features that are only available with the Pro and Premium Plans.
+See [Pricing](https://mui.com/pricing/) for details.
 
 ### Community Plan
 
