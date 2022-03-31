@@ -9,6 +9,11 @@ export * from '@mui/x-data-grid/models';
 export * from '@mui/x-data-grid/context';
 export * from '@mui/x-data-grid/utils';
 export * from '@mui/x-data-grid/colDef';
+export type {
+  GridExportFormat,
+  GridExportExtension,
+  GridToolbarExportProps,
+} from '@mui/x-data-grid';
 
 export * from './DataGridPro';
 export * from './hooks';
