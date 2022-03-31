@@ -391,7 +391,7 @@ export function useGridColumns(
   /**
    * EVENTS
    */
-  const handlepipeProcessorRegister = React.useCallback<
+  const handlePipeProcessorRegister = React.useCallback<
     GridEventListener<GridEvents.pipeProcessorRegister>
   >(
     (name) => {
@@ -426,7 +426,7 @@ export function useGridColumns(
     }
   };
 
-  useGridApiEventHandler(apiRef, GridEvents.pipeProcessorRegister, handlepipeProcessorRegister);
+  useGridApiEventHandler(apiRef, GridEvents.pipeProcessorRegister, handlePipeProcessorRegister);
   useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleGridSizeChange);
 
   useGridApiOptionHandler(

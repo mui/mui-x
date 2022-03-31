@@ -136,7 +136,7 @@ export const useGridRowsMeta = (
     hydrateRowsMeta();
   }, [rowHeight, filterState, paginationState, sortingState, hydrateRowsMeta]);
 
-  const handlepipeProcessorRegister = React.useCallback<
+  const handlePipeProcessorRegister = React.useCallback<
     GridEventListener<GridEvents.pipeProcessorRegister>
   >(
     (name) => {
@@ -148,7 +148,7 @@ export const useGridRowsMeta = (
     [hydrateRowsMeta],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.pipeProcessorRegister, handlepipeProcessorRegister);
+  useGridApiEventHandler(apiRef, GridEvents.pipeProcessorRegister, handlePipeProcessorRegister);
 
   const rowsMetaApi: GridRowsMetaApi = {
     unstable_getRowHeight: getTargetRowHeight,
