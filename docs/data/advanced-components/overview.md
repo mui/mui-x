@@ -43,7 +43,7 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
 
 ### 🚧 Premium Plan
 
-The MUI X Premium Plan contains the most advanced features such as row grouping, Excel Export, aggregation (🚧), as well as everything that's included in the Pro Plan.
+The MUI X Premium Plan contains the most advanced features such as row grouping, Excel export, aggregation (🚧), as well as everything that's included in the Pro Plan.
 
 The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
 
