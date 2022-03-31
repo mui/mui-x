@@ -6,7 +6,7 @@ import {
   GridValueFormatterParams,
   GridApi,
   ValueOptions,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import { buildWarning } from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput } from '../gridExcelExportInterface';
 

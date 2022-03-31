@@ -5,7 +5,7 @@ import {
   GridExportExtension as GridExportExtensionCommunity,
   GridToolbarExportProps as GridToolbarExportPropsCommunity,
   GridExportDisplayOptions,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 
 export type GridExportFormat = GridExportFormatCommunity | 'excel';
 export type GridExportExtension = GridExportExtensionCommunity | 'xlsx';
