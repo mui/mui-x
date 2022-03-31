@@ -110,10 +110,10 @@ const DEMO_INITIAL_STATE = {
 };
 
 const ViewListItem = (props) => {
-  const { view, viewId, selected, onDelete, onSelect } = props;
+  const { view, viewId, selected, onDelete, onSelect, ...other } = props;
 
   return (
-    <MenuItem selected={selected} onClick={() => onSelect(viewId)}>
+    <MenuItem selected={selected} onClick={() => onSelect(viewId)} {...other}>
       {view.label}
       <IconButton
         edge="end"
@@ -309,7 +309,6 @@ const CustomToolbar = () => {
           anchorEl={state.menuAnchorEl}
           role={undefined}
           transition
-          disablePortal
           placement="bottom-start"
         >
           {({ TransitionProps }) => (
