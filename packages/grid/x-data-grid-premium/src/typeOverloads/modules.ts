@@ -1,5 +1,5 @@
 import { GridKeyValue, GridValidRowModel } from '@mui/x-data-grid-pro';
-import type { GridControlledStateEventLookupPro } from '@mui/x-data-grid-pro/typeOverloads/modules';
+import type { GridControlledStateEventLookupPro } from '@mui/x-data-grid-pro/typeOverloads';
 import type { GridGroupingValueGetterParams } from '../models';
 import type { GridRowGroupingModel, GridAggregationModel, GridAggregationCellMeta } from '../hooks';
 
