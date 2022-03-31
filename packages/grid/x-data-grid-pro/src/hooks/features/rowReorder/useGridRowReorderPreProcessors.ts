@@ -3,8 +3,8 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { getDataGridUtilityClass, GridColDef } from '@mui/x-data-grid';
 import {
   GridApiCommunity,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
+  GridPipeProcessor,
+  useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import { DataGridProcessedProps } from '@mui/x-data-grid/models/props/DataGridProps';
 import { GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro/colDef';
@@ -31,7 +31,7 @@ export const useGridRowReorderPreProcessors = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const updateReorderColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
+  const updateReorderColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       const reorderColumn: GridColDef = {
         ...GRID_REORDER_COL_DEF,
@@ -55,5 +55,5 @@ export const useGridRowReorderPreProcessors = (
     [classes, props.enableRowReorder],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', updateReorderColumn);
+  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateReorderColumn);
 };
