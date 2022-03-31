@@ -73,7 +73,7 @@ You will need to purchase a commercial license in order to remove the watermarks
 
 ### License key installation
 
-Once you purchase a license, you'll receive a license key by email.
+When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
 You must set the license key before rendering the first component.
 You only need to install the key once in your application.
