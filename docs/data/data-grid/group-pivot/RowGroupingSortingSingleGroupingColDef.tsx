@@ -1,14 +1,9 @@
 import * as React from 'react';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import {
-  DataGridPro,
-  GridApi,
-  GridColumns,
-  gridColumnVisibilityModelSelector,
-  GridEvents,
-  GridRowGroupingModel,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
-import { useMovieData } from '@mui/x-data-grid-generator';
+  useMovieData,
+  useKeepGroupingColumnsHidden,
+} from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -16,46 +11,6 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 
 const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
-
-const useKeepGroupingColumnsHidden = (
-  apiRef: React.MutableRefObject<GridApi>,
-  columns: GridColumns,
-  initialModel: GridRowGroupingModel,
-  leafField?: string,
-) => {
-  const prevModel = React.useRef(initialModel);
-
-  React.useEffect(() => {
-    apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
-      const columnVisibilityModel = {
-        ...gridColumnVisibilityModelSelector(apiRef),
-      };
-      newModel.forEach((field) => {
-        if (!prevModel.current.includes(field)) {
-          columnVisibilityModel[field] = false;
-        }
-      });
-      prevModel.current.forEach((field) => {
-        if (!newModel.includes(field)) {
-          columnVisibilityModel[field] = true;
-        }
-      });
-      apiRef.current.setColumnVisibilityModel(columnVisibilityModel);
-      prevModel.current = newModel;
-    });
-  }, [apiRef]);
-
-  return React.useMemo(
-    () =>
-      columns.map((colDef) =>
-        initialModel.includes(colDef.field) ||
-        (leafField && colDef.field === leafField)
-          ? { ...colDef, hide: true }
-          : colDef,
-      ),
-    [columns, initialModel, leafField],
-  );
-};
 
 export default function RowGroupingSortingSingleGroupingColDef() {
   const data = useMovieData();
