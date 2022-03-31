@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 
 import { DataGrid } from '@mui/x-data-grid';
@@ -42,6 +43,17 @@ const RenderDate = (params) => {
       </Button>
     </strong>
   );
+};
+
+RenderDate.propTypes = {
+  /**
+   * If true, the cell is the active element.
+   */
+  hasFocus: PropTypes.bool.isRequired,
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.instanceOf(Date),
 };
 
 const columns = [

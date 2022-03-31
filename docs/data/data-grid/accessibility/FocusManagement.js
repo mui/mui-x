@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -10,6 +11,13 @@ const CorrectRenderLink = (params) => (
     </Link>
   </Box>
 );
+
+CorrectRenderLink.propTypes = {
+  /**
+   * If true, the cell is the active element.
+   */
+  hasFocus: PropTypes.bool.isRequired,
+};
 
 const WrongRenderLink = () => (
   <Box>

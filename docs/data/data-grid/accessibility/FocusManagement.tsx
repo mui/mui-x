@@ -15,6 +15,7 @@ const CorrectRenderLink = (params: GridRenderCellParams) => (
     </Link>
   </Box>
 );
+
 const WrongRenderLink = () => (
   <Box>
     <Link href="/#">more info</Link>
