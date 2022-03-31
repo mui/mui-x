@@ -74,7 +74,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
         : [<GridPrintExportMenuItem options={printOptions} />]),
     ];
 
-    const preProcessedButtons = apiRef.current.unstable_applyPreProcessors(
+    const preProcessedButtons = apiRef.current.unstable_applyPipeProcessors(
       'exportMenu',
       defaultButtons,
       { excelOptions },

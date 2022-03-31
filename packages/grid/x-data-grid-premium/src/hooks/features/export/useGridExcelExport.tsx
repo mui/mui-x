@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useGridApiMethod, useGridLogger, GridExportDisplayOptions } from '@mui/x-data-grid';
 import {
-  useGridRegisterPreProcessor,
+  useGridRegisterPipeProcessor,
   exportAs,
   getColumnsToExport,
   defaultGetRowsToExport,
-  GridPreProcessor,
+  GridPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -78,7 +78,7 @@ export const useGridExcelExport = (apiRef: React.MutableRefObject<GridApiPremium
   /**
    * PRE-PROCESSING
    */
-  const addExportMenuButtons = React.useCallback<GridPreProcessor<'exportMenu'>>(
+  const addExportMenuButtons = React.useCallback<GridPipeProcessor<'exportMenu'>>(
     (
       initialValue,
       options: { excelOptions: GridExcelExportOptions & GridExportDisplayOptions },
@@ -91,5 +91,5 @@ export const useGridExcelExport = (apiRef: React.MutableRefObject<GridApiPremium
     [],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'exportMenu', addExportMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'exportMenu', addExportMenuButtons);
 };
