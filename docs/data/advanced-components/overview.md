@@ -135,7 +135,7 @@ We use GitHub issues as a bug and feature request tracker. If you think you have
 
 [Open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repo.
 
-### StackOverflow
+### Stack Overflow
 
 For crowdsourced answers from expert MUI developers in our community.
 StackOverflow is also visited from time to time by the maintainers of MUI.
