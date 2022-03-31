@@ -12,7 +12,7 @@ import { isEscapeKey } from '../../utils/keyboardUtils';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
-  root: string;
+  panel: string;
   /** Styles applied to the paper element. */
   paper: string;
 }
@@ -27,7 +27,10 @@ export interface GridPanelProps
   open: boolean;
 }
 
-export const gridPanelClasses = generateUtilityClasses('MuiDataGrid', ['panel', 'paper']);
+export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('MuiDataGrid', [
+  'panel',
+  'paper',
+]);
 
 const GridPanelRoot = styled(Popper, {
   name: 'MuiDataGrid',

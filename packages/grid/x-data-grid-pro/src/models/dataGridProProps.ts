@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
-  GridRowModel,
   GridRowTreeNodeConfig,
   GridEventListener,
   GridEvents,
   GridCallbackDetails,
   GridRowParams,
   GridRowId,
+  GridValidRowModel,
 } from '@mui/x-data-grid';
 import {
   GridExperimentalFeatures,
@@ -28,11 +28,11 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 /**
  * The props users can give to the `DataGridProProps` component.
  */
-export interface DataGridProProps
+export interface DataGridProProps<R extends GridValidRowModel = any>
   extends Omit<
     Partial<DataGridProPropsWithDefaultValue> &
       DataGridPropsWithComplexDefaultValueBeforeProcessing &
-      DataGridProPropsWithoutDefaultValue,
+      DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
   > {
   /**
@@ -45,10 +45,10 @@ export interface DataGridProProps
 /**
  * The props of the `DataGridPro` component after the pre-processing phase.
  */
-export interface DataGridProProcessedProps
+export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridProPropsWithoutDefaultValue {}
+    DataGridProPropsWithoutDefaultValue<R> {}
 
 export type DataGridProForcedPropsKey = 'signature';
 
@@ -105,8 +105,8 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   getDetailPanelHeight: (params: GridRowParams) => number;
 }
 
-export interface DataGridProPropsWithoutDefaultValue
-  extends Omit<DataGridPropsWithoutDefaultValue, 'initialState'> {
+export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
+  extends Omit<DataGridPropsWithoutDefaultValue<R>, 'initialState'> {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
@@ -121,10 +121,11 @@ export interface DataGridProPropsWithoutDefaultValue
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
    * Note that all paths must contain at least one element.
-   * @param {GridRowModel} row The row from which we want the path.
+   * @template R
+   * @param {R} row The row from which we want the path.
    * @returns {string[]} The path to the row.
    */
-  getTreeDataPath?: (row: GridRowModel) => string[];
+  getTreeDataPath?: (row: R) => string[];
   /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
@@ -160,8 +161,10 @@ export interface DataGridProPropsWithoutDefaultValue
    * The grouping column used by the tree data.
    */
   groupingColDef?:
-    | GridGroupingColDefOverride
-    | ((params: GridGroupingColDefOverrideParams) => GridGroupingColDefOverride | undefined | null);
+    | GridGroupingColDefOverride<R>
+    | ((
+        params: GridGroupingColDefOverrideParams,
+      ) => GridGroupingColDefOverride<R> | undefined | null);
   /**
    * The row ids to show the detail panel.
    */
@@ -177,5 +180,5 @@ export interface DataGridProPropsWithoutDefaultValue
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {JSX.Element} The row detail element.
    */
-  getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
+  getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
 }

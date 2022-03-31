@@ -5,7 +5,6 @@ export * from './gridEditRowModel';
 export * from './gridFeatureMode';
 export * from './gridFilterItem';
 export * from './gridFilterModel';
-export * from './gridFilterOperator';
 export * from './gridRootContainerRef';
 export * from './gridRenderContextProps';
 export * from './gridRows';
@@ -33,3 +32,4 @@ export type {
   GridCsvExportOptions,
   GridPrintExportOptions,
 } from './gridExport';
+export * from './gridFilterOperator';

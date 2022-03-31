@@ -11,6 +11,7 @@ import { parse as parseDoctrine } from 'doctrine';
 import generatePropTypeDescription, {
   getChained,
 } from '@mui/monorepo/docs/src/modules/utils/generatePropTypeDescription';
+import parseTest from '@mui/monorepo/docs/src/modules/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
 import { LANGUAGES } from 'docs/src/modules/constants';
 import { findPagesMarkdown } from 'docs/src/modules/utils/find';
@@ -83,6 +84,10 @@ function extractSlots(options: {
 }) {
   const { filename, name: componentName, displayName, project } = options;
   const slots: Record<string, { type: string; default?: string; description: string }> = {};
+
+  if (!['x-data-grid', 'x-data-grid-pro'].includes(project.name)) {
+    return slots;
+  }
 
   const proptypes = ttp.parseFromProgram(filename, project.program, {
     shouldResolveObject: ({ name }) => {
@@ -194,6 +199,19 @@ const buildComponentDocumentation = async (options: {
   reactApi.EOL = getLineFeed(src);
   reactApi.slots = {};
 
+  try {
+    const testInfo = await parseTest(reactApi.filename);
+    // no Object.assign to visually check for collisions
+    reactApi.forwardsRefTo = testInfo.forwardsRefTo;
+    reactApi.spread = testInfo.spread;
+    reactApi.inheritance = null; // TODO: Support inheritance
+  } catch (e) {
+    if (project.name.includes('grid')) {
+      // TODO: Use `describeConformance` for the DataGrid components
+      reactApi.forwardsRefTo = 'GridRoot';
+    }
+  }
+
   const demos: ReactApi['demos'] = [];
   if (documentationRoot.includes('/x/')) {
     if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
@@ -202,6 +220,9 @@ const buildComponentDocumentation = async (options: {
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
       demos.push(['/x/react-data-grid#commercial-version', 'DataGridPro']);
     }
+    if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/x/react-data-grid#commercial-version', 'DataGridPremium']);
+    }
   } else {
     if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
       demos.push(['/components/data-grid#mit-version', 'DataGrid']);
@@ -209,11 +230,14 @@ const buildComponentDocumentation = async (options: {
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
       demos.push(['/components/data-grid#commercial-version', 'DataGridPro']);
     }
+    if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/components/data-grid#commercial-version', 'DataGridPremium']);
+    }
   }
   reactApi.demos = demos;
 
   reactApi.styles = await parseStyles(reactApi, project.program as any);
-  reactApi.styles.name = 'MuiDataGrid'; // TODO it should not be hardcoded
+  reactApi.styles.name = `Mui${reactApi.name.replace(/Pro$/, '')}`;
   reactApi.styles.classes.forEach((key) => {
     const globalClass = generateUtilityClass(reactApi.styles.name!, key);
     reactApi.styles.globalClasses[key] = globalClass;
@@ -350,7 +374,7 @@ const buildComponentDocumentation = async (options: {
     'docs',
     'translations',
     'api-docs',
-    'data-grid',
+    project.documentationFolderName,
   );
 
   fse.mkdirSync(apiDocsTranslationDirectory, {
@@ -411,7 +435,7 @@ const buildComponentDocumentation = async (options: {
       name: reactApi.styles.name,
     },
     spread: reactApi.spread,
-    forwardsRefTo: 'GridRoot', // TODO read from tests once we add describeConformanceV5
+    forwardsRefTo: reactApi.forwardsRefTo,
     filename: toGithubPath(reactApi.filename, project.workspaceRoot),
     inheritance: reactApi.inheritance,
     demos: generateDemoList(reactApi.demos),
@@ -447,9 +471,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid', 
+    'docsx/translations/api-docs/${project.documentationFolderName}', 
     false,
-    /${kebabCase(reactApi.name)}.*.json$/,
+    /\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/data-grid',
     false,
-    /data-grid-pro.*.json$/,
+    /\/data-grid-pro(-[a-z]{2})?\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

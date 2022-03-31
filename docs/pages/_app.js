@@ -63,7 +63,16 @@ ponyfillGlobal.muiDocConfig = {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
       newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid']; // TS types are imported from @mui/x-data-grid
-      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid
+      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid-pro
+    }
+
+    if (newDeps['@mui/x-date-pickers']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+    }
+
+    if (newDeps['@mui/x-date-pickers-pro']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
     }
 
     return newDeps;

@@ -22,6 +22,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
+import { buildWarning } from '../../../utils/warning';
 import {
   GridCellEditStartParams,
   GridCellEditStopParams,
@@ -29,14 +30,27 @@ import {
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
 
+const missingOnProcessRowUpdateErrorWarning = buildWarning(
+  [
+    'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+  ],
+  'error',
+);
+
 export const useGridCellEditing = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'editMode' | 'processRowUpdate' | 'onCellEditStart' | 'onCellEditStop'
+    | 'editMode'
+    | 'processRowUpdate'
+    | 'onCellEditStart'
+    | 'onCellEditStop'
+    | 'onProcessRowUpdateError'
   >,
 ) => {
-  const { processRowUpdate } = props;
+  const { processRowUpdate, onProcessRowUpdateError } = props;
 
   const runIfEditModeIsCell =
     <Args extends any[]>(callback: (...args: Args) => void) =>
@@ -285,18 +299,32 @@ export const useGridCellEditing = (
         : { ...row, [field]: value };
 
       if (processRowUpdate) {
-        Promise.resolve(processRowUpdate(rowUpdate, row)).then((finalRowUpdate) => {
-          apiRef.current.updateRows([finalRowUpdate]);
-          updateFocusedCellIfNeeded();
-          updateOrDeleteFieldState(id, field, null);
-        });
+        const handleError = (errorThrown: any) => {
+          if (onProcessRowUpdateError) {
+            onProcessRowUpdateError(errorThrown);
+          } else {
+            missingOnProcessRowUpdateErrorWarning();
+          }
+        };
+
+        try {
+          Promise.resolve(processRowUpdate(rowUpdate, row))
+            .then((finalRowUpdate) => {
+              apiRef.current.updateRows([finalRowUpdate]);
+              updateFocusedCellIfNeeded();
+              updateOrDeleteFieldState(id, field, null);
+            })
+            .catch(handleError);
+        } catch (errorThrown) {
+          handleError(errorThrown);
+        }
       } else {
         apiRef.current.updateRows([rowUpdate]);
         updateFocusedCellIfNeeded();
         updateOrDeleteFieldState(id, field, null);
       }
     },
-    [apiRef, processRowUpdate, throwIfNotInMode, updateOrDeleteFieldState],
+    [apiRef, onProcessRowUpdateError, processRowUpdate, throwIfNotInMode, updateOrDeleteFieldState],
   );
 
   const setCellEditingEditCellValue = React.useCallback<

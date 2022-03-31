@@ -159,7 +159,7 @@ export const useGridColumnReorder = (
               !visibleColumns[targetColIndex + 1].disableReorder;
           }
 
-          const canBeReorderedProcessed = apiRef.current.unstable_applyPreProcessors(
+          const canBeReorderedProcessed = apiRef.current.unstable_applyPipeProcessors(
             'canBeReordered',
             canBeReordered,
             { targetIndex: targetColVisibleIndex },

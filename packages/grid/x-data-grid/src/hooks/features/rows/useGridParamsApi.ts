@@ -112,7 +112,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
     [apiRef, getCellValueWithDeprecationWarning],
   );
 
-  const getCellParams = React.useCallback<GridApiCommunity['getCellParams']>(
+  const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
     (id, field) => {
       const colDef = apiRef.current.getColumn(field);
       const value = apiRef.current.getCellValue(id, field);

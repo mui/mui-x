@@ -29,7 +29,7 @@ We provide three options:
 
 - [DataGrid](https://mui.com/components/data-grid/), published under `@mui/x-data-grid`, MIT licensed.
 - [DataGridPro](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.
-- [DataGridPremium](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.
+- [DataGridPremium](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-premium`, commercially licensed.
 
 ## Questions
 
