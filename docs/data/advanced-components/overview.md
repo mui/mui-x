@@ -145,7 +145,7 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 
 When purchasing an MUI X Pro or Premium license you get access to professional support for a limited duration.
 Support is available on multiple channels, but the recommended channel is GitHub issues.
-If you need to share private information, you can also use email.
+You can also reach us by email at x@mui.com if you need to share private information.
 
 - **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
   - GitHub: [Open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID.
