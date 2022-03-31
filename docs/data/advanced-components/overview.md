@@ -70,11 +70,6 @@ You do not need to contact us to use these components for evaluation purposes.
 
 You will need to purchase a commercial license in order to remove the watermarks and console warnings.
 
-## License key
-
-For commercially licensed software, a license key is provided.
-This removes the watermark and console warning when valid.
-This license key is meant as a reminder for developers and their team to know when they forgot to license the software or renew the license.
 
 ### License key installation
 
