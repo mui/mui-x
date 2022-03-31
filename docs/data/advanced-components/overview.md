@@ -4,7 +4,7 @@ title: MUI X - Overview
 
 # MUI X - Overview
 
-<p class="description">A collection of fast and powerful components.</p>
+<p class="description">MUI X is a collection of advanced UI components for complex use cases.</p>
 
 ## Licenses
 
