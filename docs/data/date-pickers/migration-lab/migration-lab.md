@@ -9,7 +9,7 @@ title: MUI X - Migration from the lab
 ## Introduction
 
 This is a reference for migrating your site's pickers from `@mui/lab` to `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
-This migration should be easy
+This migration only concerns packages and should do not affect the behavior of the components in your app.
 
 We explored the reasons of this migration in a [blog post](https://mui.com/blog/lab-date-pickers-to-mui-x/)
 
@@ -17,7 +17,7 @@ We explored the reasons of this migration in a [blog post](https://mui.com/blog/
 
 Most of our components remains MIT and are accessible for free in `@mui/x-date-pickers`.
 
-The components `DateRangePicker`, `DateRangePickerDay`, `DesktopDateRangePicker`, `MobileDateRangePicker` and `StaticDateRangePicker`
+The range-picker components: `DateRangePicker`, `DateRangePickerDay`, `DesktopDateRangePicker`, `MobileDateRangePicker` and `StaticDateRangePicker`
 were marked as "intended for MUI X Pro" in our documentation and are now part of MUI X Pro.
 
 If you are using one of these components, you will have to take a Pro license in order to migrate to `@mui/x-date-pickers-pro` (see the [Pricing](https://mui.com/pricing/) page for more information).
@@ -48,6 +48,8 @@ npm install @mui/x-date-pickers-pro @mui/x-license-pro
 yarn add @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
+**Note:** `@mui/x-date-pickers-pro` re-exports everything from `@mui/x-date-pickers`. You don't have to install both.
+
 When you purchase a commercial license, you'll receive a license key by email.
 You must set the license key before rendering the first component.
 
@@ -73,10 +75,10 @@ Which will transform the imports like this:
 
 ```diff
 - import DatePicker from '@mui/lab/DatePicker';
-+ import DatePicker from '@mui/x-date-pickers/DatePicker';
++ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 - import DateRangePicker from '@mui/lab/DateRangePicker';
-+ import DateRangePicker from '@mui/x-date-pickers-pro/DateRangePicker';
++ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 - import { DatePicker, DateRangePicker } from '@mui/lab';
 + import { DatePicker } from '@mui/x-date-pickers'; // DatePicker is also available in `@mui/x-date-pickers-pro`
