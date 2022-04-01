@@ -9,24 +9,24 @@ _Apr 4, 2022_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Publicly expose new methods to save and restore the grid state (#4028) @flaviendelangle
+- 🚀 Expose new methods to save and restore the grid state (#4028) @flaviendelangle
 
   The different methods to save and restore the data-grid state are now [documented](mui.com/components/data-grid/state/#save-and-restore-the-state)
 
-- ⌚️  Move date and time picker components from the lab (#3451) @flaviendelangle
+- ⌚️ Move date and time picker components from the lab (#3451) @flaviendelangle
 
-  Date and time picker components has been added to the MUI-X repo.
+  Date and time picker components have been moved to the MUI-X repo.
   They are now accessible in their own packages: `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
-  For more information, you can read the [blog article](mui.com/blog/lab-pickers-to-mui-x) and the [migration guide](mui.com/x/react-date-pickers/migration-lab)
+  For more information, you can read the [blog article](https://mui.com/blog/lab-pickers-to-mui-x) and the [migration guide](https://mui.com/x/react-date-pickers/migration-lab)
 
 - 📝 Add `onProcessRowUpdateError` prop to simplify error management in edit mode (#4267) @m4theushw
-- ✨  Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
+- ✨ Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
 
   You can now strongly type all the objects related to the row and the cell values.
   Here is an example, you can can find out more in the description of #4064.
   
   ```tsx
-  const rows: Movie[] = []
+  const rows: Movie[] = [];
 
   return (
     <DataGrid 
@@ -36,6 +36,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
         valueGetter: params => params.row.year, 
       }]}
     />
+  );
   ```
 
 ### `@mui/x-data-grid@v5.8.0` / `@mui/x-data-grid-pro@v5.8.0`
@@ -48,8 +49,8 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGrid] Add `onPreferencePanelClose`/`onPreferencePanelOpen` props (#4265) @kyeongsoosoo
 - [DataGrid] Add slot for filter icon button (#4276) @m4theushw
 - [DataGrid] Add the documentation of the portable state (#4028) @flaviendelangle
-- [DataGrid] Allows to use keyboard navigation even with no rows (#4302) @alexfauquette
-- [DataGrid] Fix last column border inconsistency (#4224) @alexfauquette
+- [DataGrid] Allow to use keyboard navigation even with no rows (#4302) @alexfauquette
+- [DataGrid] Fix inconsistency in the border of the last column (#4224) @alexfauquette
 - [DataGrid] Fix overlay blocking scrollbar when rows is empty (#4281) @m4theushw
 - [DataGrid] Improve selection with keyboard (#4157) @flaviendelangle
 - [DataGrid] Scroll to the top of the page when changing page (#4272) @flaviendelangle
@@ -59,7 +60,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 #### Changes
 
-- [DatePicker] Import date-piker components from the lab (#3451) @flaviendelangle
+- [DatePicker] Import date-picker components from the lab (#3451) @flaviendelangle
 
 ### Docs
 
