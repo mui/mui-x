@@ -99,7 +99,7 @@ export const useGridAggregationPreProcessors = (
 
       return addFooterRows({ groupingParams, isGroupAggregated: props.isGroupAggregated });
     },
-    [props.aggregationPosition, props.disableAggregation, props.isGroupAggregated],
+    [apiRef, props.aggregationPosition, props.disableAggregation, props.isGroupAggregated],
   );
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
