@@ -8,7 +8,7 @@ const pages = [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/getting-started' },
-      { pathname: '/x/react-data-grid/migration-v4', title: 'Migration From v4' },
+      { pathname: '/x/react-data-grid/migration-v4', title: 'Migration from v4' },
       { pathname: '/x/react-data-grid/layout' },
       { pathname: '/x/react-data-grid/columns' },
       { pathname: '/x/react-data-grid/rows' },
@@ -62,6 +62,7 @@ const pages = [
     icon: 'TableViewIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
+      { pathname: '/x/react-date-pickers/migration-lab', title: 'Migration from the lab' },
       { pathname: '/x/react-date-pickers/date-picker' },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
