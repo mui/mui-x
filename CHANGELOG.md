@@ -22,6 +22,22 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - 📝 Add `onProcessRowUpdateError` prop to simplify error management in edit mode (#4267) @m4theushw
 - ✨  Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
 
+  This allows to strongly type all the objects related to the row and the cell values.
+  Here is an example, you can can find out more in the description of #4064.
+  
+  ```tsx
+  const rows: Movie[] = []
+
+  return (
+    <DataGrid 
+      rows={rows}
+      columns={[{ 
+        // typeof params.row => Movie (R)
+        valueGetter: params => params.row.year, 
+      }]}
+    />
+  ```
+
 ### `@mui/x-data-grid@v5.8.0` / `@mui/x-data-grid-pro@v5.8.0`
 
 #### Changes
