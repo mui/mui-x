@@ -7,7 +7,6 @@ import {
   GridEventListener,
   GridEvents,
   GridRowGroupingModel,
-  GridRowId,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { Movie, useMovieData } from '@mui/x-data-grid-generator';
