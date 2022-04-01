@@ -314,7 +314,7 @@ By default, the quick filter considers the input as a list of values separated b
 
 {{"demo": "QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Modifying the logic
+### Custom filtering logic
 
 The logic quick filter logic can be switched to filter rows that contain _at least_ one value instead for each of them.
 To do so, set `quickFilterLogic` equals to `GridQuickFilterLogic.Or` as follow:

@@ -28,6 +28,7 @@ import {
   buildAggregatedQuickFilterApplier,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { isDeepEqual } from '../../../utils/utils';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
@@ -195,7 +196,7 @@ export const useGridFilter = (
   const setQuickFilterValues = React.useCallback<GridFilterApi['setQuickFilterValues']>(
     (values) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      if (JSON.stringify(filterModel.quickFilterValues) === JSON.stringify(values)) {
+      if (isDeepEqual(filterModel.quickFilterValues, values)) {
         return;
       }
       apiRef.current.setFilterModel({
