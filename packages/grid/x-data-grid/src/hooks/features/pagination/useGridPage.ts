@@ -11,7 +11,7 @@ import { GridEvents, GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
-import { gridPageSelector } from './gridPaginationSelector';
+import { gridPageSelector, gridPageSizeSelector } from './gridPaginationSelector';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { buildWarning } from '../../../utils/warning';
 
@@ -155,7 +155,13 @@ export const useGridPage = (
     apiRef.current.forceUpdate();
   };
 
+  const handlePageChange: GridEventListener<GridEvents.pageChange> = () =>
+    apiRef.current.scrollToIndexes({
+      rowIndex: gridPageSelector(apiRef) * gridPageSizeSelector(apiRef),
+    });
+
   useGridApiEventHandler(apiRef, GridEvents.pageSizeChange, handlePageSizeChange);
+  useGridApiEventHandler(apiRef, GridEvents.pageChange, handlePageChange);
 
   /**
    * EFFECTS

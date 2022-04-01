@@ -38,18 +38,22 @@ function MockTime(props) {
     // eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
     clock = useFakeTimers({
       now: new Date('Mon Aug 18 14:11:54 2014 -0500').getTime(),
-      shouldAdvanceTime: true,
+      // We need to let time advance to use `useDemoData`, but on the pickers test it makes the tests flaky
+      shouldAdvanceTime: props.isDataGridTest,
     });
-
     setReady(true);
 
     return () => {
       clock.restore();
     };
-  }, []);
+  }, [props.isDataGridTest]);
 
   return ready ? props.children : null;
 }
+
+MockTime.prototype = {
+  isDataGridTest: PropTypes.bool,
+};
 
 function LoadFont(props) {
   const { children, ...other } = props;
@@ -58,6 +62,7 @@ function LoadFont(props) {
   // In the end children passive effects should've been flushed.
   // React doesn't have any such guarantee outside of `act()` so we're approximating it.
   const [ready, setReady] = React.useState(false);
+
   // In react-router v6, with multiple routes sharing the same element,
   // this effect will only run once if no dependency is passed.
   React.useEffect(() => {
@@ -127,7 +132,7 @@ function TestViewer(props) {
           },
         }}
       />
-      <MockTime>
+      <MockTime isDataGridTest={isDataGridTest}>
         <LoadFont isDataGridTest={isDataGridTest}>{children}</LoadFont>
       </MockTime>
     </React.Fragment>

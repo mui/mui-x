@@ -601,6 +601,25 @@ DataGridProRaw.propTypes = {
    */
   onPinnedColumnsChange: PropTypes.func,
   /**
+   * Callback fired when the preferences panel is closed.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelClose: PropTypes.func,
+  /**
+   * Callback fired when the preferences panel is opened.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelOpen: PropTypes.func,
+  /**
+   * Callback called when `processRowUpdate` throws an error or rejects.
+   * @param {any} error The error thrown.
+   */
+  onProcessRowUpdateError: PropTypes.func,
+  /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
