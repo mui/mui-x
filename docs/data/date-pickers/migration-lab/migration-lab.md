@@ -28,6 +28,8 @@ If you are using one of these components, you will have to take a Pro license in
 
 ### 1. Install MUI X packages
 
+**Note:** `@mui/x-date-pickers-pro` re-exports everything from `@mui/x-date-pickers`. You don't have to install both when using the Pro Plan.
+
 #### Community Plan
 
 ```sh
@@ -47,8 +49,6 @@ npm install @mui/x-date-pickers-pro @mui/x-license-pro
 // with yarn
 yarn add @mui/x-date-pickers-pro @mui/x-license-pro
 ```
-
-**Note:** `@mui/x-date-pickers-pro` re-exports everything from `@mui/x-date-pickers`. You don't have to install both.
 
 When you purchase a commercial license, you'll receive a license key by email.
 You must set the license key before rendering the first component.
