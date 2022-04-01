@@ -28,6 +28,18 @@ If you are using one of these components, you will have to take a Pro license in
 
 ### 1. Install MUI X packages
 
+#### Community Plan
+
+```sh
+// with npm
+npm install @mui/x-date-pickers
+
+// with yarn
+yarn add @mui/x-data-grid
+```
+
+#### Pro Plan
+
 ```sh
 // with npm
 npm install @mui/x-date-pickers-pro @mui/x-license-pro
@@ -48,16 +60,6 @@ LicenseInfo.setLicenseKey(
 ```
 
 More information [here](/x/advanced-components/#license-key-installation)
-
-#### Community Plan
-
-```sh
-// with npm
-npm install @mui/x-date-pickers
-
-// with yarn
-yarn add @mui/x-data-grid
-```
 
 ### 2. Run the code mod
 
