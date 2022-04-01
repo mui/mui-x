@@ -9,6 +9,7 @@ const COLUMNS: GridColDef[] = [
     headerName: 'Gross',
     type: 'number',
     width: 150,
+    groupable: false,
     valueFormatter: ({ value }) => {
       if (!value || typeof value !== 'number') {
         return value;

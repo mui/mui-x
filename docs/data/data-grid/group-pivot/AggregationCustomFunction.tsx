@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GRID_AGGREGATION_FUNCTIONS,
   GridAggregationFunction,
   GridColDef,
 } from '@mui/x-data-grid-premium';
@@ -12,6 +13,19 @@ const COLUMNS: GridColDef[] = [
     field: 'director',
     headerName: 'Director',
     width: 200,
+  },
+  {
+    field: 'gross',
+    headerName: 'Gross',
+    type: 'number',
+    width: 150,
+    groupable: false,
+    valueFormatter: ({ value }) => {
+      if (!value || typeof value !== 'number') {
+        return value;
+      }
+      return `${value.toLocaleString()}$`;
+    },
   },
 ];
 
@@ -52,6 +66,7 @@ export default function AggregationCustomFunction() {
         rows={data.rows.slice(0, 3)}
         columns={COLUMNS}
         aggregationFunctions={{
+          ...GRID_AGGREGATION_FUNCTIONS,
           firstAlphabetical: firstAlphabeticalAggregation,
           lastAlphabetical: lastAlphabeticalAggregation,
         }}

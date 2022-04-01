@@ -176,7 +176,7 @@ export const wrapColumnWithAggregation = ({
     throw new Error(`MUI: No aggregation registered with the name ${aggregationItem}`);
   }
 
-  if (!aggregationFunction.types.includes(colDef.type!)) {
+  if (aggregationFunction.types && !aggregationFunction.types.includes(colDef.type!)) {
     throw new Error(
       `MUI: The current aggregation function is not application to the type "${colDef.type}"`,
     );

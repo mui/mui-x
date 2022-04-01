@@ -125,7 +125,7 @@ export const createAggregationLookup = ({
         const aggregationFunction = aggregationFunctions[aggregationModel[aggregatedField]];
         const colDef = columnsLookup[aggregatedField];
 
-        if (!aggregationFunction.types.includes(colDef.type!)) {
+        if (aggregationFunction.types && !aggregationFunction.types.includes(colDef.type!)) {
           throw new Error(
             `MUI: The current aggregation function is not application to the type "${colDef.type}"`,
           );

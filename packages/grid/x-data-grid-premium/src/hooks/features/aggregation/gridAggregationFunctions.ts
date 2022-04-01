@@ -11,16 +11,27 @@ const sumAgg: GridAggregationFunction<number> = {
 
     return sum;
   },
+};
+
+const avgAgg: GridAggregationFunction<number> = {
+  apply: (params) => {
+    if (params.values.length === 0) {
+      return null;
+    }
+
+    const sum = sumAgg.apply(params) as number;
+    return sum / params.values.length;
+  },
   types: ['number'],
 };
 
-const minAgg: GridAggregationFunction<number> = {
+const minAgg: GridAggregationFunction<number | Date> = {
   apply: ({ values }) => {
     if (values.length === 0) {
-      return Number.NaN;
+      return null;
     }
 
-    let min: number = +Infinity;
+    let min: number | Date = +Infinity;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
       if (value < min) {
@@ -30,16 +41,16 @@ const minAgg: GridAggregationFunction<number> = {
 
     return min;
   },
-  types: ['number'],
+  types: ['number', 'date', 'dateTime'],
 };
 
-const maxAgg: GridAggregationFunction<number> = {
+const maxAgg: GridAggregationFunction<number | Date> = {
   apply: ({ values }) => {
     if (values.length === 0) {
-      return Number.NaN;
+      return null;
     }
 
-    let max: number = -Infinity;
+    let max: number | Date = -Infinity;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
       if (value > max) {
@@ -49,19 +60,7 @@ const maxAgg: GridAggregationFunction<number> = {
 
     return max;
   },
-  types: ['number'],
-};
-
-const avgAgg: GridAggregationFunction<number> = {
-  apply: (params) => {
-    if (params.values.length === 0) {
-      return Number.NaN;
-    }
-
-    const sum = sumAgg.apply(params);
-    return sum / params.values.length;
-  },
-  types: ['number'],
+  types: ['number', 'date', 'dateTime'],
 };
 
 const sizeAgg: GridAggregationFunction<number> = {
@@ -80,9 +79,9 @@ const sizeAgg: GridAggregationFunction<number> = {
 };
 
 export const GRID_AGGREGATION_FUNCTIONS = {
+  sum: sumAgg,
   avg: avgAgg,
   min: minAgg,
   max: maxAgg,
   size: sizeAgg,
-  sum: sumAgg,
 };

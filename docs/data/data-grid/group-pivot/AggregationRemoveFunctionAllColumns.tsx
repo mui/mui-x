@@ -2,16 +2,12 @@ import * as React from 'react';
 import {
   DataGridPremium,
   GRID_AGGREGATION_FUNCTIONS,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const COLUMNS = [
+const COLUMNS: GridColDef[] = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
-  {
-    field: 'director',
-    headerName: 'Director',
-    width: 200,
-  },
   {
     field: 'gross',
     headerName: 'Gross',
@@ -27,33 +23,7 @@ const COLUMNS = [
   },
 ];
 
-const firstAlphabeticalAggregation = {
-  apply: (params) => {
-    if (params.values.length === 0) {
-      return null;
-    }
-
-    const sortedValue = params.values.sort((a, b) => a.localeCompare(b));
-
-    return sortedValue[0];
-  },
-  types: ['string'],
-};
-
-const lastAlphabeticalAggregation = {
-  apply: (params) => {
-    if (params.values.length === 0) {
-      return null;
-    }
-
-    const sortedValue = params.values.sort((a, b) => a.localeCompare(b));
-
-    return sortedValue[sortedValue.length - 1];
-  },
-  types: ['string'],
-};
-
-export default function AggregationCustomFunction() {
+export default function AggregationRemoveFunctionAllColumns() {
   const data = useMovieData();
 
   return (
@@ -62,15 +32,15 @@ export default function AggregationCustomFunction() {
         // The following prop is here to avoid scroll in the demo while we don't have pinned rows
         rows={data.rows.slice(0, 3)}
         columns={COLUMNS}
-        aggregationFunctions={{
-          ...GRID_AGGREGATION_FUNCTIONS,
-          firstAlphabetical: firstAlphabeticalAggregation,
-          lastAlphabetical: lastAlphabeticalAggregation,
-        }}
+        aggregationFunctions={Object.fromEntries(
+          Object.entries(GRID_AGGREGATION_FUNCTIONS).filter(
+            ([name]) => name !== 'sum',
+          ),
+        )}
         initialState={{
           aggregation: {
             model: {
-              director: 'firstAlphabetical',
+              gross: 'max',
             },
           },
         }}

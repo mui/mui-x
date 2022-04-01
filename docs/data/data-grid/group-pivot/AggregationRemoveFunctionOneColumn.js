@@ -8,11 +8,6 @@ import { useMovieData } from '@mui/x-data-grid-generator';
 const COLUMNS = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
-    field: 'director',
-    headerName: 'Director',
-    width: 200,
-  },
-  {
     field: 'gross',
     headerName: 'Gross',
     type: 'number',
@@ -25,35 +20,15 @@ const COLUMNS = [
       return `${value.toLocaleString()}$`;
     },
   },
+  {
+    field: 'year',
+    headerName: 'Year',
+    type: 'number',
+    availableAggregationFunctions: ['max', 'min'],
+  },
 ];
 
-const firstAlphabeticalAggregation = {
-  apply: (params) => {
-    if (params.values.length === 0) {
-      return null;
-    }
-
-    const sortedValue = params.values.sort((a, b) => a.localeCompare(b));
-
-    return sortedValue[0];
-  },
-  types: ['string'],
-};
-
-const lastAlphabeticalAggregation = {
-  apply: (params) => {
-    if (params.values.length === 0) {
-      return null;
-    }
-
-    const sortedValue = params.values.sort((a, b) => a.localeCompare(b));
-
-    return sortedValue[sortedValue.length - 1];
-  },
-  types: ['string'],
-};
-
-export default function AggregationCustomFunction() {
+export default function AggregationRemoveFunctionOneColumn() {
   const data = useMovieData();
 
   return (
@@ -62,15 +37,15 @@ export default function AggregationCustomFunction() {
         // The following prop is here to avoid scroll in the demo while we don't have pinned rows
         rows={data.rows.slice(0, 3)}
         columns={COLUMNS}
-        aggregationFunctions={{
-          ...GRID_AGGREGATION_FUNCTIONS,
-          firstAlphabetical: firstAlphabeticalAggregation,
-          lastAlphabetical: lastAlphabeticalAggregation,
-        }}
+        aggregationFunctions={Object.fromEntries(
+          Object.entries(GRID_AGGREGATION_FUNCTIONS).filter(
+            ([name]) => name !== 'sum',
+          ),
+        )}
         initialState={{
           aggregation: {
             model: {
-              director: 'firstAlphabetical',
+              gross: 'max',
             },
           },
         }}

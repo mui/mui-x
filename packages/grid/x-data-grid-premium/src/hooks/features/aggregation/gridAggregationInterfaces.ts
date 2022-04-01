@@ -4,12 +4,33 @@ interface GridAggregationParams<V = any> {
   values: V[];
 }
 
-export type GridAggregationFunction<V = any, AV = V> = {
-  apply: (params: GridAggregationParams<V>) => AV;
-  valueFormatter?: (params: GridValueFormatterParams) => any;
-  types: string[];
+export type GridAggregationFunction<V = any, AV = V, F = V> = {
+  /**
+   * Function that takes the current cell values and generates the aggregated value.
+   * @template V, AV
+   * @param {GridAggregationParams<V>} params The params of the current aggregated cell.
+   * @returns {AV} The aggregated value.
+   */
+  apply: (params: GridAggregationParams<V>) => AV | null;
 
   /**
+   * Column types supported by this aggregation function.
+   * If not defined, all types are supported (in most cases this property should be defined).
+   */
+  types?: string[];
+
+  /**
+   * Function that allows to apply a formatter to the aggregated value.
+   * If not defined, the grid will use the formatter of the column.
+   * @template AV, F
+   * @param {GridValueFormatterParams<AV>} params Object containing parameters for the formatter.
+   * @returns {F} The formatted value.
+   */
+  valueFormatter?: (params: GridValueFormatterParams<AV>) => F;
+
+  /**
+   * Indicates if the aggregated value have the same unit as the cells used to generate it.
+   * It can be used to apply a custom cell renderer only if the aggregated value has the same unit.
    * @default `true`
    */
   hasCellUnit?: boolean;

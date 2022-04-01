@@ -477,7 +477,7 @@ isGroupAggregated={(groupNode) => groupNode != null}
 isGroupAggregated={(groupNode) => groupNode?.groupingField === 'company'}
 
 // Will only aggregate the company group "Universal Pictures"
-isGroupAggregated={(groupNode) => groupNode?.groupingKey === 'Universal Pictures'}
+isGroupAggregated={(groupNode) => groupNode?.groupingField === 'company' && groupNode?.groupingKey === 'Universal Pictures'}
 ```
 
 {{"demo": "AggregationIsGroupAggregated.js", "bg": "inline"}}
@@ -485,7 +485,66 @@ isGroupAggregated={(groupNode) => groupNode?.groupingKey === 'Universal Pictures
 > ⚠️ If you are using `aggregationPosition: "inline"`, there is no root footer,
 > so the root will not be aggregated, even is `isGroupAggregated` says otherwise.
 
-### Custom aggregation function
+### Aggregation functions
+
+#### Built-in aggregation functions
+
+| Name   | Behavior                                                   | Column types                 |
+| ------ | ---------------------------------------------------------- | ---------------------------- |
+| `sum`  | Returns the sum of all values in the group                 | `number`                     |
+| `avg`  | Returns the non-rounded average of all values in the group | `number`                     |
+| `min`  | Returns the smallest value of the group                    | `number`, `date`, `dateTime` |
+| `max`  | Returns the largest value of the group                     | `number`, `date`, `dateTime` |
+| `size` | Returns the amount of cells in the group                   | all                          |
+
+#### Remove a built-in aggregation function for all columns
+
+You can remove some aggregations functions for all columns by passing a filtered object to the `aggregationFunctions` prop.
+
+In the example below, the `sum` aggregation function have been removed.
+
+{{"demo": "AggregationRemoveFunctionAllColumns.js", "bg": "inline"}}
+
+#### Remove aggregation functions for one column
+
+You can remove some aggregation function for one column by passing a `availableAggregationFunctions` property to the column definition.
+
+```ts
+const column = {
+  field: 'year',
+  type: 'number',
+  availableAggregationFunctions: ['max', 'min'],
+};
+```
+
+In the example below, the only aggregation function available for the **Year** column is `max` whereas all aggregation functions are available for the **Gross** column
+
+{{"demo": "AggregationRemoveFunctionOneColumn.js", "bg": "inline"}}
+
+#### Create a custom aggregation functions
+
+You can pass custom aggregation functions to the `aggregationFunctions` prop.
+
+An aggregation function is an object with the following shape:
+
+```ts
+const firstAlphabeticalAggregation: GridAggregationFunction<CellValue, AggregatedValue = CellValue> =
+    {
+        apply: (params: GridAggregationParams<CellValue>): AggregatedValue => {
+            if (params.values.length === 0) {
+                return null;
+            }
+
+            const sortedValue = params.values.sort((a, b) => a.localeCompare(b));
+
+            return sortedValue[0];
+        },
+        types: ['string'],
+    };
+
+```
+
+In the example below, the grid have two additional custom aggregation functions for `string` columns: `firstAlphabetical` `lastAlphabetical`.
 
 {{"demo": "AggregationCustomFunction.js", "bg": "inline", "defaultCodeOpen": false}}
 
