@@ -283,6 +283,7 @@
   { "name": "GridParamsApi", "kind": "Interface" },
   { "name": "GridPipeProcessingLookup", "kind": "Interface" },
   { "name": "GridPreferencePanelInitialState", "kind": "TypeAlias" },
+  { "name": "GridPreferencePanelParams", "kind": "Interface" },
   { "name": "GridPreferencePanelState", "kind": "Interface" },
   { "name": "gridPreferencePanelStateSelector", "kind": "Variable" },
   { "name": "GridPreferencePanelsValue", "kind": "Enum" },
