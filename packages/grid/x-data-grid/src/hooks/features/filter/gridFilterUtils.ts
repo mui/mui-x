@@ -126,7 +126,7 @@ export const mergeStateWithFilterModel =
  * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
-export const buildAggregatedFilterApplier = (
+export const buildAggregatedFilterItemsApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridAggregatedFilterItemApplier | null => {
@@ -275,4 +275,28 @@ export const buildAggregatedQuickFilterApplier = (
       }),
     );
   };
+};
+
+export const buildAggregatedFilterApplier = (
+  filterModel: GridFilterModel,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+): GridAggregatedFilterItemApplier | null => {
+  const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(filterModel, apiRef);
+  const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(filterModel, apiRef);
+
+  if (isRowMatchingFilterItems == null && isRowMatchingQuickFilter == null) {
+    return null;
+  }
+
+  if (isRowMatchingFilterItems == null) {
+    return isRowMatchingQuickFilter;
+  }
+
+  if (isRowMatchingQuickFilter == null) {
+    return isRowMatchingFilterItems;
+  }
+
+  return (rowId, shouldApplyFilter) =>
+    isRowMatchingFilterItems(rowId, shouldApplyFilter) &&
+    isRowMatchingQuickFilter(rowId, shouldApplyFilter);
 };

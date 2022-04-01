@@ -25,7 +25,6 @@ import {
   buildAggregatedFilterApplier,
   sanitizeFilterModel,
   mergeStateWithFilterModel,
-  buildAggregatedQuickFilterApplier,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
@@ -80,24 +79,10 @@ export const useGridFilter = (
   const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
-      const isRowMatchingStandardFilters =
+      const isRowMatchingFilters: GridAggregatedFilterItemApplier | null =
         props.filterMode === GridFeatureModeConstant.client
           ? buildAggregatedFilterApplier(filterModel, apiRef)
           : null;
-      const isRowMatchingQuickFilter =
-        props.filterMode === GridFeatureModeConstant.client
-          ? buildAggregatedQuickFilterApplier(filterModel, apiRef)
-          : null;
-
-      let isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
-      if (isRowMatchingStandardFilters == null && isRowMatchingQuickFilter == null) {
-        isRowMatchingFilters = null;
-      } else {
-        isRowMatchingFilters = (rowId, shouldApplyFilter) =>
-          (isRowMatchingStandardFilters == null ||
-            isRowMatchingStandardFilters(rowId, shouldApplyFilter)) &&
-          (isRowMatchingQuickFilter == null || isRowMatchingQuickFilter(rowId, shouldApplyFilter));
-      }
 
       const filteringResult = apiRef.current.unstable_applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
