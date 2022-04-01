@@ -24,11 +24,9 @@ If you are using one of these components, you will have to take a Pro license in
 
 **Note**: If you already have a license for `@mui/x-data-grid-pro`, you can use the same one for `@mui/x-date-pickers-pro` with no additional fee!
 
-## How to migrate ?
+## Migration steps
 
-### Installation
-
-#### Pro Plan
+### 1. Install MUI X packages
 
 ```sh
 // with npm
@@ -61,9 +59,15 @@ npm install @mui/x-date-pickers
 yarn add @mui/x-data-grid
 ```
 
-#### Migrate your imports
+### 2. Run the code mod
 
-To migrate, update the package name and change from a default export to a named export:
+We have prepared a codemod to help you migrate your codebase
+
+```sh
+npx @mui/codemod v5.0.0/date-pickers-moved-to-x <path>
+```
+
+Which will transform the imports like this:
 
 ```ts
 // before
@@ -76,10 +80,4 @@ import DatePicker from '@mui/x-date-pickers/DatePicker';
 import DateRangePicker from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DatePicker } from '@mui/x-date-pickers'; // DatePicker is also available in `@mui/x-date-pickers-pro`
 import { DateRangePicker } from '@mui/x-date-pickers-pro';
-```
-
-We have prepared a codemod to help you migrate your codebase from `@mui/lab` to `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`:
-
-```sh
-npx @mui/codemod v5.0.0/date-pickers-moved-to-x <path>
 ```
