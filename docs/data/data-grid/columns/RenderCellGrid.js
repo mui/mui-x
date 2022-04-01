@@ -4,8 +4,8 @@ import Button from '@mui/material/Button';
 
 import { DataGrid } from '@mui/x-data-grid';
 
-const RenderDate = (params) => {
-  const { hasFocus, value } = params;
+const RenderDate = (props) => {
+  const { hasFocus, value } = props;
   const buttonElement = React.useRef(null);
   const rippleRef = React.useRef(null);
 

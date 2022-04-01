@@ -3,8 +3,8 @@ import Button from '@mui/material/Button';
 import { TouchRippleActions } from '@mui/material/ButtonBase/TouchRipple';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
-const RenderDate = (params: GridRenderCellParams<Date>) => {
-  const { hasFocus, value } = params;
+const RenderDate = (props: GridRenderCellParams<Date>) => {
+  const { hasFocus, value } = props;
   const buttonElement = React.useRef<HTMLButtonElement | null>(null);
   const rippleRef = React.useRef<TouchRippleActions | null>(null);
 

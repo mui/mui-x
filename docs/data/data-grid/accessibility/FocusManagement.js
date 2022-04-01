@@ -4,9 +4,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 
-const CorrectRenderLink = (params) => (
+const CorrectRenderLink = (props) => (
   <Box>
-    <Link tabIndex={params.hasFocus ? 0 : -1} href="/#">
+    <Link tabIndex={props.hasFocus ? 0 : -1} href="/#">
       more info
     </Link>
   </Box>

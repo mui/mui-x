@@ -8,9 +8,9 @@ import {
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 
-const CorrectRenderLink = (params: GridRenderCellParams) => (
+const CorrectRenderLink = (props: GridRenderCellParams) => (
   <Box>
-    <Link tabIndex={params.hasFocus ? 0 : -1} href="/#">
+    <Link tabIndex={props.hasFocus ? 0 : -1} href="/#">
       more info
     </Link>
   </Box>
