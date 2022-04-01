@@ -53,15 +53,15 @@ export const useGridAggregationPreProcessors = (
 
         if (!shouldHaveAggregation && haveAggregationColumn) {
           columnsState.lookup[field] = unwrapColumnFromAggregation({
-            colDef: columnsState.lookup[field],
+            column: columnsState.lookup[field],
           });
         } else if (shouldHaveAggregation) {
-          const colDef = unwrapColumnFromAggregation({
-            colDef: columnsState.lookup[field],
+          const column = unwrapColumnFromAggregation({
+            column: columnsState.lookup[field],
           });
 
           columnsState.lookup[field] = wrapColumnWithAggregation({
-            colDef,
+            column,
             aggregationItem: aggregationModel[field],
             apiRef,
             aggregationFunctions: props.aggregationFunctions,

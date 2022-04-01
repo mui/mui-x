@@ -8,6 +8,7 @@ import {
 } from './gridAggregationInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
+import { canColumnHaveAggregationFunction } from './gridAggregationUtils';
 
 const AGGREGATION_WRAPPABLE_METHODS = [
   'valueGetter',
@@ -157,14 +158,14 @@ const getWrappedFilterOperators = ({
 };
 
 export const wrapColumnWithAggregation = ({
-  colDef,
+  column,
   apiRef,
   aggregationItem,
   aggregationFunctions,
   aggregationPositionRef,
   isGroupAggregated,
 }: {
-  colDef: GridColDef;
+  column: GridColDef;
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationItem: string;
   aggregationFunctions: Record<string, GridAggregationFunction>;
@@ -176,9 +177,15 @@ export const wrapColumnWithAggregation = ({
     throw new Error(`MUI: No aggregation registered with the name ${aggregationItem}`);
   }
 
-  if (aggregationFunction.types && !aggregationFunction.types.includes(colDef.type!)) {
+  if (
+    !canColumnHaveAggregationFunction({
+      column,
+      aggregationFunction,
+      aggregationFunctionName: aggregationItem,
+    })
+  ) {
     throw new Error(
-      `MUI: The current aggregation function is not application to the type "${colDef.type}"`,
+      `MUI: The aggregation function "${aggregationItem}" is not applicable to the column "${column.field}" of type "${column.type}"`,
     );
   }
 
@@ -204,37 +211,37 @@ export const wrapColumnWithAggregation = ({
   };
 
   return {
-    ...colDef,
+    ...column,
     valueGetter: getWrappedValueGetter({
       apiRef,
-      valueGetter: colDef.valueGetter,
+      valueGetter: column.valueGetter,
       getCellAggregationPosition,
     }),
     valueFormatter: getWrappedValueFormatter({
-      valueFormatter: colDef.valueFormatter,
+      valueFormatter: column.valueFormatter,
       aggregationFunction,
       getCellAggregationPosition,
     }),
     renderCell: getWrappedRenderCell({
-      renderCell: colDef.renderCell,
+      renderCell: column.renderCell,
       aggregationFunction,
       aggregationItem,
       getCellAggregationPosition,
     }),
     filterOperators: getWrappedFilterOperators({
-      filterOperators: colDef.filterOperators,
+      filterOperators: column.filterOperators,
       getCellAggregationPosition,
     }),
   };
 };
 
-export const unwrapColumnFromAggregation = ({ colDef }: { colDef: GridColDef }) => {
+export const unwrapColumnFromAggregation = ({ column }: { column: GridColDef }) => {
   let hasUnwrappedSomeProperty = false;
 
-  const unwrappedColDef: GridColDef = { ...colDef };
+  const unwrappedColumn: GridColDef = { ...column };
 
   AGGREGATION_WRAPPABLE_METHODS.forEach((propertyName) => {
-    const propertyValue = unwrappedColDef[propertyName];
+    const propertyValue = unwrappedColumn[propertyName];
     if (propertyValue == null) {
       return;
     }
@@ -253,20 +260,20 @@ export const unwrapColumnFromAggregation = ({ colDef }: { colDef: GridColDef }) 
 
         if (hasUnwrappedSomeSubProperty) {
           hasUnwrappedSomeProperty = true;
-          unwrappedColDef[propertyName] = unwrappedPropertyValue;
+          unwrappedColumn[propertyName] = unwrappedPropertyValue;
         }
       });
     }
 
     if ((propertyValue as any)?.isWrappedWithAggregation) {
       hasUnwrappedSomeProperty = true;
-      unwrappedColDef[propertyName] = (propertyValue as any).originalMethod;
+      unwrappedColumn[propertyName] = (propertyValue as any).originalMethod;
     }
   });
 
   if (!hasUnwrappedSomeProperty) {
-    return colDef;
+    return column;
   }
 
-  return unwrappedColDef;
+  return unwrappedColumn;
 };

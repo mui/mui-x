@@ -450,7 +450,7 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 
 #### Controlled aggregation
 
-TODO
+TODO (not useful to do it before the rest of the PR is stable, the logic of the controlled models is well-defined).
 
 ### Usage with row grouping
 

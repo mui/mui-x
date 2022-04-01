@@ -14,7 +14,7 @@ import {
 } from './gridAggregationSelectors';
 import { GridAggregationApi } from './gridAggregationInterfaces';
 import { mergeStateWithAggregationModel } from './gridAggregationUtils';
-import { createAggregationLookup } from './creatAggregationLookup';
+import { createAggregationLookup } from './createAggregationLookup';
 
 export const aggregationStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'aggregationModel' | 'initialState'>,
