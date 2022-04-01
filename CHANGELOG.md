@@ -38,6 +38,12 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGrid] Scroll to the top of the page when changing page (#4272) @flaviendelangle
 - [l10n] Improve Danish (da-DK) locale (#4271) @simplenotezy
 
+### `@mui/x-date-pickers@v5.0.0-alpha.0` / `@mui/x-date-pickers-pro@v5.0.0-alpha.0`
+
+#### Changes
+
+- [DatePicker] Import date-piker components from the lab (#3451) @flaviendelangle
+
 ### Docs
 
 - [docs] Update installation docs (#4259) @cherniavskii
@@ -49,15 +55,6 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [core] Remove dead code (#4283) @oliviertassinari
 - [core] Rename the "pre-processing" concept "pipe-processing" (#4261) @flaviendelangle
 - [core] Reuse previous state when updating the columns prop (#4229) @m4theushw
-
-### `@mui/x-date-pickers@v5.0.0-alpha.0` / `@mui/x-date-pickers-pro@v5.0.0-alpha.0`
-
-### Changes
-
-- [DatePicker] Import date-piker components from the lab (#3451) @flaviendelangle
-
-### Core
-
 - [core] Fix Argos flakyness for pickers tests (#4312) @flaviendelangle
 
 ## 5.7.0
