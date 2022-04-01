@@ -11,7 +11,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridFilterableColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { getDefaultGridFilterModel, GridAggregatedFilterItemApplier } from './gridFilterState';
+import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector } from '../rows';
@@ -79,7 +79,7 @@ export const useGridFilter = (
   const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
-      const isRowMatchingFilters: GridAggregatedFilterItemApplier | null =
+      const isRowMatchingFilters =
         props.filterMode === GridFeatureModeConstant.client
           ? buildAggregatedFilterApplier(filterModel, apiRef)
           : null;
