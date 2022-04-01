@@ -10,7 +10,7 @@ import {
   GridRowId,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { useMovieData } from '@mui/x-data-grid-generator';
+import { Movie, useMovieData } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
 
 const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
@@ -60,7 +60,7 @@ export default function RowGroupingGetGroupingCriteriaRows() {
   const apiRef = useGridApiRef();
 
   const [lastGroupClickedChildren, setLastGroupClickedChildren] = React.useState<
-    GridRowId[] | null
+    string[] | null
   >(null);
 
   const columns = useKeepGroupingColumnsHidden(
@@ -76,26 +76,21 @@ export default function RowGroupingGetGroupingCriteriaRows() {
         return;
       }
 
-      setLastGroupClickedChildren(
-        apiRef.current.getGroupingCriteriaRows({
-          groupId: params.id,
-        }),
+      const rowIds = apiRef.current.getGroupingCriteriaRows({
+        groupId: params.id,
+      });
+
+      const rowTitles = rowIds.map(
+        (rowId) => apiRef.current.getRow<Movie>(rowId)!.title,
       );
+
+      setLastGroupClickedChildren(rowTitles);
     },
     [apiRef],
   );
 
   return (
     <div style={{ width: '100%' }}>
-      <Alert severity="info" style={{ marginBottom: 8 }}>
-        <code>
-          {lastGroupClickedChildren
-            ? `Rows in last group clicked: ${JSON.stringify(
-                lastGroupClickedChildren,
-              )}`
-            : 'Click on a group row to log its children here'}
-        </code>
-      </Alert>
       <div style={{ height: 400, width: '100%' }}>
         <DataGridPro
           {...data}
@@ -112,6 +107,23 @@ export default function RowGroupingGetGroupingCriteriaRows() {
           }}
         />
       </div>
+      <Alert severity="info" style={{ marginBottom: 8 }}>
+        {lastGroupClickedChildren ? (
+          <code>
+            Movies in the last group clicked
+            <br />
+            <br />
+            {lastGroupClickedChildren.map((movieTitle) => (
+              <React.Fragment>
+                - {movieTitle}
+                <br />
+              </React.Fragment>
+            ))}
+          </code>
+        ) : (
+          <code>Click on a group row to log its children here</code>
+        )}
+      </Alert>
     </div>
   );
 }
