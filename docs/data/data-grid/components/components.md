@@ -125,8 +125,8 @@ The grid exposes props to hide specific elements of the UI:
 
 ### Pagination
 
-By default, pagination uses the [TablePagination](/material/react-pagination/#table-pagination) component that is optimized for handling tabular data.
-This demo replaces it with the [Pagination](/material/react-pagination/) component.
+By default, pagination uses the [TablePagination](/material-ui/react-pagination/#table-pagination) component that is optimized for handling tabular data.
+This demo replaces it with the [Pagination](/material-ui/react-pagination/) component.
 
 {{"demo": "CustomPaginationGrid.js", "bg": "inline"}}
 

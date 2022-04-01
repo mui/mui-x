@@ -24,7 +24,7 @@ The data grid comes in two different versions:
 
 ### MIT version
 
-The first version is meant to simplify the [Table demo](/material/react-table/#sorting-amp-selecting) with a clean abstraction.
+The first version is meant to simplify the [Table demo](/material-ui/react-table/#sorting-amp-selecting) with a clean abstraction.
 This abstraction also set constraints that allow the component to implement new features.
 
 ```js

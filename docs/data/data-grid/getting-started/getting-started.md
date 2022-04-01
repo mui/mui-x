@@ -43,7 +43,7 @@ npm install @mui/material @mui/styled-engine-sc styled-components
 yarn add @mui/material @mui/styled-engine-sc styled-components
 ```
 
-> 💡 Take a look at the [Styled Engine guide](/material/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
+> 💡 Take a look at the [Styled Engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
 
 ## Quickstart
 
@@ -115,7 +115,7 @@ export default function App() {
 
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/material/customization/theme-components/#global-style-overrides) and [default prop customization](/material/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
+In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#global-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx

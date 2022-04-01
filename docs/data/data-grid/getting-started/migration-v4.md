@@ -14,7 +14,7 @@ Most breaking changes are renaming of CSS classes or variables to improve the co
 
 ## Migrating MUI Core from v4
 
-> We strongly recommend you [migrate MUI Core to v5](/material/guides/migration-v4/) when using MUI X v5.
+> We strongly recommend you [migrate MUI Core to v5](/material-ui/guides/migration-v4/) when using MUI X v5.
 > However, this might not be possible, depending on the complexity of the application.
 > The alternative is to install MUI Core v5 and configure it to keep MUI Core v4 running alongside.
 
@@ -22,7 +22,7 @@ Most breaking changes are renaming of CSS classes or variables to improve the co
 
 Using MUI Core v4 with v5 can be achieved with the following steps:
 
-1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/material/getting-started/installation/).
+1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/material-ui/getting-started/installation/).
 1. Add a custom [`createGenerateClassName`](/system/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
 ```jsx
