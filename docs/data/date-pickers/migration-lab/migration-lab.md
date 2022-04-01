@@ -35,7 +35,7 @@ If you are using one of these components, you will have to take a Pro license in
 npm install @mui/x-date-pickers
 
 // with yarn
-yarn add @mui/x-data-grid
+yarn add @mui/x-date-pickers
 ```
 
 #### Pro Plan
