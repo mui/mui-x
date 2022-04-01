@@ -15,14 +15,14 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - ⌚️  Move date and time picker components from the lab (#3451) @flaviendelangle
 
-  date-picker components has been added to the MUI-X repo.
+  Date and time picker components has been added to the MUI-X repo.
   They are now accessible in their own packages: `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
   For more information, you can read the [blog article](mui.com/blog/lab-pickers-to-mui-x) and the [migration guide](mui.com/x/react-date-pickers/migration-lab)
 
 - 📝 Add `onProcessRowUpdateError` prop to simplify error management in edit mode (#4267) @m4theushw
 - ✨  Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
 
-  This allows to strongly type all the objects related to the row and the cell values.
+  You can now strongly type all the objects related to the row and the cell values.
   Here is an example, you can can find out more in the description of #4064.
   
   ```tsx
