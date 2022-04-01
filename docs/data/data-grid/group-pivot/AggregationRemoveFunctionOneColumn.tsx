@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GRID_AGGREGATION_FUNCTIONS,
-  GridColDef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const COLUMNS: GridColDef[] = [

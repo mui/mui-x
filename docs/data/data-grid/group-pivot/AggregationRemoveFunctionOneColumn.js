@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GRID_AGGREGATION_FUNCTIONS,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const COLUMNS = [
@@ -37,14 +34,10 @@ export default function AggregationRemoveFunctionOneColumn() {
         // The following prop is here to avoid scroll in the demo while we don't have pinned rows
         rows={data.rows.slice(0, 3)}
         columns={COLUMNS}
-        aggregationFunctions={Object.fromEntries(
-          Object.entries(GRID_AGGREGATION_FUNCTIONS).filter(
-            ([name]) => name !== 'sum',
-          ),
-        )}
         initialState={{
           aggregation: {
             model: {
+              year: 'max',
               gross: 'max',
             },
           },
