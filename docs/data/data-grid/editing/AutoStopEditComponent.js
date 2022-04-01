@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Select from '@mui/material/Select';
 import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
 
@@ -26,6 +27,21 @@ function SelectEditInputCell(props) {
     </Select>
   );
 }
+
+SelectEditInputCell.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.any.isRequired,
+};
 
 function renderSelectEditInputCell(params) {
   return <SelectEditInputCell {...params} />;
