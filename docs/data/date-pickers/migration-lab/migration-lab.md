@@ -81,3 +81,4 @@ Which will transform the imports like this:
 - import { DatePicker, DateRangePicker } from '@mui/lab';
 + import { DatePicker } from '@mui/x-date-pickers'; // DatePicker is also available in `@mui/x-date-pickers-pro`
 + import { DateRangePicker } from '@mui/x-date-pickers-pro';
+```
