@@ -8,6 +8,8 @@ export const gridRowCountSelector = createSelector(
   (rows) => rows.totalRowCount,
 );
 
+export const gridLoadingSelector = createSelector(gridRowsStateSelector, (rows) => rows.loading);
+
 export const gridTopLevelRowCountSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.totalTopLevelRowCount,
