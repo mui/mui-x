@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
+import { MenuItem } from '@mui/material';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -11,23 +12,33 @@ import { getValueFromValueOptions } from './filterPanelUtils';
 const renderSingleSelectOptions = (
   { valueOptions, valueFormatter, field }: GridColDef,
   api: GridApiCommunity,
+  isSelectNative: boolean,
 ) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
       ? ['', ...valueOptions({ field })]
       : ['', ...(valueOptions || [])];
 
-  return iterableColumnValues.map((option) =>
-    typeof option === 'object' ? (
-      <option key={option.value} value={option.value}>
-        {option.label}
+  return iterableColumnValues.map((option) => {
+    const isOptionTypeObject = typeof option === 'object';
+
+    const key = isOptionTypeObject ? option.value : option;
+    const value = isOptionTypeObject ? option.value : option;
+
+    const contentWhenOptionisNotObject =
+      valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
+    const content = isOptionTypeObject ? option.label : contentWhenOptionisNotObject;
+
+    return isSelectNative ? (
+      <option key={key} value={value}>
+        {content}
       </option>
     ) : (
-      <option key={option} value={option}>
-        {valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option}
-      </option>
-    ),
-  );
+      <MenuItem key={key} value={value}>
+        {content}
+      </MenuItem>
+    );
+  });
 };
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
@@ -38,6 +49,9 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const id = useId();
   const rootProps = useGridRootProps();
+
+  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const isSelectNative = baseSelectProps.native ?? true;
 
   const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
 
@@ -94,12 +108,17 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       inputRef={focusElementRef}
       select
       SelectProps={{
-        native: true,
+        native: isSelectNative,
+        ...rootProps.componentsProps?.baseSelect,
       }}
       {...others}
       {...rootProps.componentsProps?.baseTextField}
     >
-      {renderSingleSelectOptions(apiRef.current.getColumn(item.columnField), apiRef.current)}
+      {renderSingleSelectOptions(
+        apiRef.current.getColumn(item.columnField),
+        apiRef.current,
+        isSelectNative,
+      )}
     </rootProps.components.BaseTextField>
   );
 }

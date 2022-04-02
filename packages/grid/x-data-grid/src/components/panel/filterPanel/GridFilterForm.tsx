@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { MenuItem, unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -151,6 +151,9 @@ function GridFilterForm(props: GridFilterFormProps) {
   const hasLinkOperatorColumn: boolean = hasMultipleFilters && linkOperators.length > 0;
 
   const baseFormControlProps = rootProps.componentsProps?.baseFormControl || {};
+
+  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const isBaseSelectNative = baseSelectProps.native ?? true;
 
   const sortedFilterableColumns = React.useMemo(() => {
     switch (columnsSort) {
@@ -314,14 +317,20 @@ function GridFilterForm(props: GridFilterFormProps) {
           value={multiFilterOperator}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator || linkOperators.length === 1}
-          native
+          native={isBaseSelectNative}
           {...rootProps.componentsProps?.baseSelect}
         >
-          {linkOperators.map((linkOperator) => (
-            <option key={linkOperator.toString()} value={linkOperator.toString()}>
-              {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
-            </option>
-          ))}
+          {linkOperators.map((linkOperator) =>
+            isBaseSelectNative ? (
+              <option key={linkOperator.toString()} value={linkOperator.toString()}>
+                {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
+              </option>
+            ) : (
+              <MenuItem key={linkOperator.toString()} value={linkOperator.toString()}>
+                {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
+              </MenuItem>
+            ),
+          )}
         </rootProps.components.BaseSelect>
       </FilterFormLinkOperatorInput>
       <FilterFormColumnInput
@@ -344,14 +353,20 @@ function GridFilterForm(props: GridFilterFormProps) {
           label={apiRef.current.getLocaleText('filterPanelColumns')}
           value={item.columnField || ''}
           onChange={changeColumn}
-          native
+          native={isBaseSelectNative}
           {...rootProps.componentsProps?.baseSelect}
         >
-          {sortedFilterableColumns.map((col) => (
-            <option key={col.field} value={col.field}>
-              {getColumnLabel(col)}
-            </option>
-          ))}
+          {sortedFilterableColumns.map((col) =>
+            isBaseSelectNative ? (
+              <option key={col.field} value={col.field}>
+                {getColumnLabel(col)}
+              </option>
+            ) : (
+              <MenuItem key={col.field} value={col.field}>
+                {getColumnLabel(col)}
+              </MenuItem>
+            ),
+          )}
         </rootProps.components.BaseSelect>
       </FilterFormColumnInput>
       <FilterFormOperatorInput
@@ -374,18 +389,27 @@ function GridFilterForm(props: GridFilterFormProps) {
           id={operatorSelectId}
           value={item.operatorValue}
           onChange={changeOperator}
-          native
+          native={isBaseSelectNative}
           inputRef={filterSelectorRef}
           {...rootProps.componentsProps?.baseSelect}
         >
-          {currentColumn?.filterOperators?.map((operator) => (
-            <option key={operator.value} value={operator.value}>
-              {operator.label ||
-                apiRef.current.getLocaleText(
-                  `filterOperator${capitalize(operator.value)}` as GridTranslationKeys,
-                )}
-            </option>
-          ))}
+          {currentColumn?.filterOperators?.map((operator) =>
+            isBaseSelectNative ? (
+              <option key={operator.value} value={operator.value}>
+                {operator.label ||
+                  apiRef.current.getLocaleText(
+                    `filterOperator${capitalize(operator.value)}` as GridTranslationKeys,
+                  )}
+              </option>
+            ) : (
+              <MenuItem key={operator.value} value={operator.value}>
+                {operator.label ||
+                  apiRef.current.getLocaleText(
+                    `filterOperator${capitalize(operator.value)}` as GridTranslationKeys,
+                  )}
+              </MenuItem>
+            ),
+          )}
         </rootProps.components.BaseSelect>
       </FilterFormOperatorInput>
       <FilterFormValueInput

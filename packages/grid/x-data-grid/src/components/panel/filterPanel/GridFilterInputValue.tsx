@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
+import { MenuItem } from '@mui/material';
 import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
@@ -24,23 +25,33 @@ function warnDeprecatedTypeSupport(type: string) {
 const renderSingleSelectOptions = (
   { valueOptions, valueFormatter, field }: GridColDef,
   api: GridApiCommunity,
+  isSelectNative: boolean,
 ) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
       ? ['', ...valueOptions({ field })]
       : ['', ...(valueOptions || [])];
 
-  return iterableColumnValues.map((option) =>
-    typeof option === 'object' ? (
-      <option key={option.value} value={option.value}>
-        {option.label}
+  return iterableColumnValues.map((option) => {
+    const isOptionTypeObject = typeof option === 'object';
+
+    const key = isOptionTypeObject ? option.value : option;
+    const value = isOptionTypeObject ? option.value : option;
+
+    const contentWhenOptionisNotObject =
+      valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
+    const content = isOptionTypeObject ? option.label : contentWhenOptionisNotObject;
+
+    return isSelectNative ? (
+      <option key={key} value={value}>
+        {content}
       </option>
     ) : (
-      <option key={option} value={option}>
-        {valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option}
-      </option>
-    ),
-  );
+      <MenuItem key={key} value={value}>
+        {content}
+      </MenuItem>
+    );
+  });
 };
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
@@ -63,16 +74,21 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
+
+  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const isSelectNative = baseSelectProps.native ?? true;
+
   const singleSelectProps: TextFieldProps =
     type === 'singleSelect'
       ? {
           select: true,
           SelectProps: {
-            native: true,
+            ...rootProps.componentsProps?.baseSelect,
           },
           children: renderSingleSelectOptions(
             apiRef.current.getColumn(item.columnField),
             apiRef.current,
+            isSelectNative,
           ),
         }
       : {};
