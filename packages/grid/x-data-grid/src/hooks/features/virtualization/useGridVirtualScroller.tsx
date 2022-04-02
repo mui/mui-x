@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { useForkRef } from '@mui/material/utils';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -197,13 +198,18 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     ],
   );
 
+  React.useLayoutEffect(() => {
+    if (renderContext) {
+      updateRenderZonePosition(renderContext);
+    }
+  }, [renderContext, updateRenderZonePosition]);
+
   const updateRenderContext = React.useCallback(
     (nextRenderContext) => {
       setRenderContext(nextRenderContext);
-      updateRenderZonePosition(nextRenderContext);
       prevRenderContext.current = nextRenderContext;
     },
-    [setRenderContext, prevRenderContext, updateRenderZonePosition],
+    [setRenderContext, prevRenderContext],
   );
 
   React.useEffect(() => {
@@ -212,7 +218,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     const initialRenderContext = computeRenderContext();
-    prevRenderContext.current = initialRenderContext;
     updateRenderContext(initialRenderContext);
 
     const { top, left } = scrollPosition.current!;
@@ -257,14 +262,21 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       prevTotalWidth.current !== columnsTotalWidth;
 
     // TODO v6: rename event to a wider name, it's not only fired for row scrolling
-    apiRef.current.publishEvent(GridEvents.rowsScroll, {
-      top: scrollTop,
-      left: scrollLeft,
-      renderContext: shouldSetState ? nextRenderContext : prevRenderContext.current,
-    });
+    apiRef.current.publishEvent(
+      GridEvents.rowsScroll,
+      {
+        top: scrollTop,
+        left: scrollLeft,
+        renderContext: shouldSetState ? nextRenderContext : prevRenderContext.current,
+      },
+      event,
+    );
 
     if (shouldSetState) {
-      updateRenderContext(nextRenderContext);
+      // Prevents batching render context changes
+      ReactDOM.flushSync(() => {
+        updateRenderContext(nextRenderContext);
+      });
       prevTotalWidth.current = columnsTotalWidth;
     }
   };

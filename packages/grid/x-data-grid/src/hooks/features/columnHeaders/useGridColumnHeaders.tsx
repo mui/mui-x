@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { useForkRef } from '@mui/material/utils';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -24,6 +25,10 @@ import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColu
 interface UseGridColumnHeadersProps {
   innerRef?: React.Ref<HTMLDivElement>;
   minColumnIndex?: number;
+}
+
+function isUIEvent(event: any): event is React.UIEvent {
+  return !!event.target;
 }
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
@@ -70,8 +75,14 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [columnPositions, minColumnIndex, rootProps.columnBuffer],
   );
 
+  React.useLayoutEffect(() => {
+    if (renderContext) {
+      updateInnerPosition(renderContext);
+    }
+  }, [renderContext, updateInnerPosition]);
+
   const handleScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(
-    ({ left, renderContext: nextRenderContext = null }) => {
+    ({ left, renderContext: nextRenderContext = null }, event) => {
       if (!innerRef.current) {
         return;
       }
@@ -87,13 +98,30 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       }
       prevScrollLeft.current = left;
 
+      // We can only update the position when we guarantee that the render context has been
+      // rendered. This is achieved using ReactDOM.flushSync or when the context doesn't change.
+      let canUpdateInnerPosition = false;
+
       if (nextRenderContext !== prevRenderContext.current || !prevRenderContext.current) {
-        setRenderContext(nextRenderContext);
+        // ReactDOM.flushSync cannot be called on `scroll` events fired inside effects
+        if (isUIEvent(event)) {
+          // To prevent flickering, the inner position can only be updated after the new context has
+          // been rendered. ReactDOM.flushSync ensures that the state changes will happen before
+          // updating the position.
+          ReactDOM.flushSync(() => {
+            setRenderContext(nextRenderContext);
+          });
+          canUpdateInnerPosition = true;
+        } else {
+          setRenderContext(nextRenderContext);
+        }
         prevRenderContext.current = nextRenderContext;
+      } else {
+        canUpdateInnerPosition = true;
       }
 
       // Pass directly the render context to avoid waiting for the next render
-      if (nextRenderContext) {
+      if (nextRenderContext && canUpdateInnerPosition) {
         updateInnerPosition(nextRenderContext);
       }
     },
@@ -204,7 +232,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     renderContext,
     getColumns,
     isDragging: !!dragCol,
-    updateInnerPosition,
     getRootProps: (other = {}) => ({ style: rootStyle, ...other }),
     getInnerProps: () => ({ ref: handleInnerRef, 'aria-rowindex': 1, role: 'row' }),
   };
