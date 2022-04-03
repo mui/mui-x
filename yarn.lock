@@ -8125,12 +8125,7 @@ date-fns-jalali@^2.21.3-1:
   resolved "https://registry.yarnpkg.com/date-fns-jalali/-/date-fns-jalali-2.21.3-1.tgz#b87a01c1d7bb2fe827faed34b33478a5fe4aa027"
   integrity sha512-Sgw1IdgCgyWDKCpq6uwAu24vPMOtvmcXXXuETr1jQO/aVj4h23XAltcP7hLbo+osqoiJnPmiydbI/q1W7TYAjA==
 
-date-fns@^2.16.1:
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.17.0.tgz#afa55daea539239db0a64e236ce716ef3d681ba1"
-  integrity sha512-ZEhqxUtEZeGgg9eHNSOAJ8O9xqSgiJdrL0lzSSfMF54x6KXWJiOH/xntSJ9YomJPrYH/p08t6gWjGWq1SDJlSA==
-
-date-fns@^2.27.0:
+date-fns@^2.16.1, date-fns@^2.27.0:
   version "2.28.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
   integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
@@ -15717,10 +15712,17 @@ react-router-dom@^6.0.0, react-router-dom@^6.2.2:
     history "^5.2.0"
     react-router "6.2.2"
 
-react-router@6.2.2, react-router@^6.0.0, react-router@^6.2.2:
+react-router@6.2.2:
   version "6.2.2"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.2.2.tgz#495e683a0c04461eeb3d705fe445d6cf42f0c249"
   integrity sha512-/MbxyLzd7Q7amp4gDOGaYvXwhEojkJD5BtExkuKmj39VEE0m3l/zipf6h2WIB2jyAO0lI6NGETh4RDcktRm4AQ==
+  dependencies:
+    history "^5.2.0"
+
+react-router@^6.0.0, react-router@^6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.3.0.tgz#3970cc64b4cb4eae0c1ea5203a80334fdd175557"
+  integrity sha512-7Wh1DzVQ+tlFjkeo+ujvjSqSJmkt1+8JO+T5xklPlgrh70y7ogx75ODRW0ThWhY7S+6yEDks8TYrtQe/aoboBQ==
   dependencies:
     history "^5.2.0"
 
