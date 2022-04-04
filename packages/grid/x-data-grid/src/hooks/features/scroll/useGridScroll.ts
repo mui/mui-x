@@ -52,7 +52,8 @@ export const useGridScroll = (
     (params: Partial<GridCellIndexCoordinates>) => {
       const totalRowCount = gridRowCountSelector(apiRef);
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
-      if (totalRowCount === 0 || visibleColumns.length === 0) {
+      const scrollToHeader = params.rowIndex == null;
+      if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
         return false;
       }
 
