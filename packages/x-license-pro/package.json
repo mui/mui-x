@@ -4,7 +4,7 @@
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
