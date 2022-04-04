@@ -74,13 +74,13 @@ npx @mui/codemod v5.0.0/date-pickers-moved-to-x <path>
 Which will transform the imports like this:
 
 ```diff
-- import DatePicker from '@mui/lab/DatePicker';
-+ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+-import DatePicker from '@mui/lab/DatePicker';
++import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-- import DateRangePicker from '@mui/lab/DateRangePicker';
-+ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+-import DateRangePicker from '@mui/lab/DateRangePicker';
++import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
-- import { DatePicker, DateRangePicker } from '@mui/lab';
-+ import { DatePicker } from '@mui/x-date-pickers'; // DatePicker is also available in `@mui/x-date-pickers-pro`
-+ import { DateRangePicker } from '@mui/x-date-pickers-pro';
+-import { DatePicker, DateRangePicker } from '@mui/lab';
++import { DatePicker } from '@mui/x-date-pickers'; // DatePicker is also available in `@mui/x-date-pickers-pro`
++import { DateRangePicker } from '@mui/x-date-pickers-pro';
 ```
