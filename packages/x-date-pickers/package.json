@@ -6,7 +6,7 @@
   "main": "./src/index.js",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mui-org/material-ui-x/issues"
+    "url": "https://github.com/mui/mui-x/issues"
   },
   "homepage": "https://mui.com/components/x/react-date-pickers/date-picker/",
   "funding": {
