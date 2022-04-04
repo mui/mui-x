@@ -65,6 +65,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 ### Docs
 
 - [docs] Update installation docs (#4259) @cherniavskii
+- [docs] New page for the migration of date and time pickers from the lab (#4327) @flaviendelangle
 
 ### Core
 
