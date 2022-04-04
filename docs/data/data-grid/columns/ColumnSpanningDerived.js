@@ -17,7 +17,7 @@ const rows = [
   {
     id: 1,
     day: 'Monday',
-    slots: ['Maths', 'English', 'English', 'Lab', 'Break', 'Lab', 'Music', 'Music'],
+    slots: ['Maths', 'English', 'English', 'Lab', '', 'Lab', 'Music', 'Music'],
   },
   {
     id: 2,
@@ -27,7 +27,7 @@ const rows = [
       'Chemistry',
       'Chemistry',
       'Physics',
-      'Break',
+      '',
       'Maths',
       'Lab',
       'Dance',
@@ -36,15 +36,7 @@ const rows = [
   {
     id: 3,
     day: 'Wednesday',
-    slots: [
-      'Physics',
-      'English',
-      'Maths',
-      'Maths',
-      'Break',
-      'Chemistry',
-      'Chemistry',
-    ],
+    slots: ['Physics', 'English', 'Maths', 'Maths', '', 'Chemistry', 'Chemistry'],
   },
   {
     id: 4,
@@ -54,7 +46,7 @@ const rows = [
       'Music',
       'Chemistry',
       'Chemistry',
-      'Break',
+      '',
       'Chemistry',
       'English',
       'English',
@@ -63,7 +55,7 @@ const rows = [
   {
     id: 5,
     day: 'Friday',
-    slots: ['Maths', 'Dance', 'Dance', 'Physics', 'Break', 'English'],
+    slots: ['Maths', 'Dance', 'Dance', 'Physics', '', 'English'],
   },
 ];
 

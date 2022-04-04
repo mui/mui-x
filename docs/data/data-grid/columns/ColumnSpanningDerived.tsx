@@ -22,11 +22,11 @@ type Subject =
   | 'Music'
   | 'Dance';
 
-const rows: Array<{ id: number; day: string; slots: Array<Subject | 'Break'> }> = [
+const rows: Array<{ id: number; day: string; slots: Array<Subject | ''> }> = [
   {
     id: 1,
     day: 'Monday',
-    slots: ['Maths', 'English', 'English', 'Lab', 'Break', 'Lab', 'Music', 'Music'],
+    slots: ['Maths', 'English', 'English', 'Lab', '', 'Lab', 'Music', 'Music'],
   },
   {
     id: 2,
@@ -36,7 +36,7 @@ const rows: Array<{ id: number; day: string; slots: Array<Subject | 'Break'> }> 
       'Chemistry',
       'Chemistry',
       'Physics',
-      'Break',
+      '',
       'Maths',
       'Lab',
       'Dance',
@@ -45,15 +45,7 @@ const rows: Array<{ id: number; day: string; slots: Array<Subject | 'Break'> }> 
   {
     id: 3,
     day: 'Wednesday',
-    slots: [
-      'Physics',
-      'English',
-      'Maths',
-      'Maths',
-      'Break',
-      'Chemistry',
-      'Chemistry',
-    ],
+    slots: ['Physics', 'English', 'Maths', 'Maths', '', 'Chemistry', 'Chemistry'],
   },
   {
     id: 4,
@@ -63,7 +55,7 @@ const rows: Array<{ id: number; day: string; slots: Array<Subject | 'Break'> }> 
       'Music',
       'Chemistry',
       'Chemistry',
-      'Break',
+      '',
       'Chemistry',
       'English',
       'English',
@@ -72,7 +64,7 @@ const rows: Array<{ id: number; day: string; slots: Array<Subject | 'Break'> }> 
   {
     id: 5,
     day: 'Friday',
-    slots: ['Maths', 'Dance', 'Dance', 'Physics', 'Break', 'English'],
+    slots: ['Maths', 'Dance', 'Dance', 'Physics', '', 'English'],
   },
 ];
 
