@@ -266,11 +266,16 @@ export const applyInitialState = (
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
     const field = columnsWithUpdatedDimensions[i];
 
-    newColumnLookup[field] = {
+    const newColDef: Omit<GridStateColDef, 'computedWidth'> = {
       ...newColumnLookup[field],
-      ...dimensions[field],
       hasBeenResized: true,
     };
+
+    Object.entries(dimensions[field]).forEach(([key, value]) => {
+      newColDef[key as GridColumnDimensionProperties] = value === -1 ? Infinity : value;
+    });
+
+    newColumnLookup[field] = newColDef;
   }
 
   const newColumnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'> = {
