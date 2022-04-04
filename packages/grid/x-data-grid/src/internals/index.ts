@@ -4,8 +4,8 @@ export { GridVirtualScrollerRenderZone } from '../components/virtualization/Grid
 export { GridColumnHeaders } from '../components/columnHeaders/GridColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 
-export { useGridRegisterPreProcessor } from '../hooks/core/preProcessing';
-export type { GridPreProcessor } from '../hooks/core/preProcessing';
+export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
+export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
 export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
 export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
@@ -28,8 +28,7 @@ export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport'
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
-export { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
-export { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
+export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {
   useGridPagination,
   paginationStateInitializer,
@@ -71,10 +70,6 @@ export { useGridVirtualScroller } from '../hooks/features/virtualization/useGrid
 export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
-
-export type { GridComparatorFn, GridSortCellParams } from '../models/gridSortModel';
-
-export type { GridSortModelParams } from '../models/params/gridSortModelParams';
 
 export type {
   GridExperimentalFeatures,

@@ -14,6 +14,8 @@ const alias = {
   '@mui/x-data-grid': '../packages/grid/x-data-grid/src',
   '@mui/x-data-grid-generator': '../packages/grid/x-data-grid-generator/src',
   '@mui/x-data-grid-pro': '../packages/grid/x-data-grid-pro/src',
+  '@mui/x-date-pickers': '../packages/x-date-pickers/src',
+  '@mui/x-date-pickers-pro': '../packages/x-date-pickers-pro/src',
   '@mui/x-license-pro': '../packages/x-license-pro/src',
   '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
   '@mui/markdown': '../node_modules/@mui/monorepo/docs/packages/markdown',

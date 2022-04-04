@@ -12,7 +12,7 @@ import {
 } from '../../utils';
 import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 
 export const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
 
@@ -73,7 +73,7 @@ export const useGridPageSize = (
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
       const pageSizeToExport = gridPageSizeSelector(apiRef);
 
@@ -103,7 +103,7 @@ export const useGridPageSize = (
   /**
    * TODO: Add error if `prop.autoHeight = true`
    */
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
       const pageSize = context.stateToRestore.pagination?.pageSize;
       if (pageSize != null) {
@@ -114,8 +114,8 @@ export const useGridPageSize = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   /**
    * EVENTS

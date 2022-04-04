@@ -15,7 +15,7 @@ import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector } from '../rows';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GRID_DEFAULT_STRATEGY,
   GridStrategyProcessor,
@@ -212,7 +212,7 @@ export const useGridFilter = (
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
       const filterModelToExport = gridFilterModelSelector(apiRef);
       if (
@@ -232,7 +232,7 @@ export const useGridFilter = (
     [apiRef],
   );
 
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
       const filterModel = context.stateToRestore.filter?.filterModel;
       if (filterModel == null) {
@@ -250,7 +250,7 @@ export const useGridFilter = (
     [apiRef, props.disableMultipleColumnsFiltering],
   );
 
-  const preferencePanelPreProcessing = React.useCallback<GridPreProcessor<'preferencePanel'>>(
+  const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
       if (value === GridPreferencePanelsValue.filters) {
         const FilterPanel = props.components.FilterPanel;
@@ -288,9 +288,9 @@ export const useGridFilter = (
     [apiRef, props.filterMode],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'filtering', flatFilteringMethod);
 
   /**

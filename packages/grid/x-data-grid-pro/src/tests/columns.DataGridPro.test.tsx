@@ -353,7 +353,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test checkboxSelection />);
       apiRef.current.setColumnWidth('brand', 300);
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
-      apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
+      apiRef.current.publishEvent(GridEvents.pipeProcessorRegister, 'hydrateColumns' as any);
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
 
@@ -362,7 +362,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       apiRef.current.setColumnIndex('brand', 1);
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
-      apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
+      apiRef.current.publishEvent(GridEvents.pipeProcessorRegister, 'hydrateColumns' as any);
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
 
@@ -370,7 +370,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test checkboxSelection />);
       apiRef.current.updateColumn({ field: 'id' });
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
-      apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
+      apiRef.current.publishEvent(GridEvents.pipeProcessorRegister, 'hydrateColumns' as any);
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
   });

@@ -10,3 +10,4 @@ export * from './gridDateOperators';
 export * from './gridNumericOperators';
 export * from './gridSingleSelectOperators';
 export * from './gridStringOperators';
+export * from './gridDefaultColumnTypes';

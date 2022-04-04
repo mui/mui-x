@@ -1,4 +1,4 @@
-import { gridStringOrNumberComparator } from '@mui/x-data-grid-pro';
+import { GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-pro';
 import {
   randomCommodity,
   randomDesk,
@@ -44,6 +44,7 @@ import {
 import {
   CONTRACT_TYPE_OPTIONS,
   COUNTRY_ISO_OPTIONS_SORTED,
+  CountryIsoOption,
   CURRENCY_OPTIONS,
   INCOTERM_OPTIONS,
   RATE_TYPE_OPTIONS,
@@ -244,18 +245,13 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
 
       return value;
     },
-    valueFormatter: ({ value }) => (value as typeof COUNTRY_ISO_OPTIONS_SORTED[number])?.label,
+    valueFormatter: ({ value }) => value?.label,
     groupingValueGetter: (params) => params.value.code,
     sortComparator: (v1, v2, param1, param2) =>
-      gridStringOrNumberComparator(
-        (v1 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
-        (v2 as typeof COUNTRY_ISO_OPTIONS_SORTED[number]).label,
-        param1,
-        param2,
-      ),
+      gridStringOrNumberComparator(v1.label, v2.label, param1, param2),
     editable,
     width: 120,
-  },
+  } as GridColDef<any, CountryIsoOption, string>,
   {
     field: 'counterPartyCurrency',
     headerName: 'Counterparty Currency',

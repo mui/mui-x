@@ -183,6 +183,7 @@ export function useGridDimensions(
     resize,
     getRootDimensions,
     unstable_getViewportPageSize: getViewportPageSize,
+    unstable_updateGridDimensionsRef: updateGridDimensionsRef,
   };
 
   useGridApiMethod(apiRef, dimensionsApi, 'GridDimensionsApi');
