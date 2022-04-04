@@ -485,6 +485,15 @@ isGroupAggregated={(groupNode) => groupNode?.groupingField === 'company' && grou
 > ⚠️ If you are using `aggregationPosition: "inline"`, there is no root footer,
 > so the root will not be aggregated, even is `isGroupAggregated` says otherwise.
 
+### Filtering
+
+By default, the aggregation only uses the filtered rows.
+You can set the `aggregatedRows` to `"all"` to use all rows.
+
+In the example below, the movie _Titanic_ is not passing the filters but is still used for the **sum** aggregation of the `gross` column.
+
+{{"demo": "AggregationFiltering.js", "bg": "inline"}}
+
 ### Aggregation functions
 
 #### Built-in aggregation functions

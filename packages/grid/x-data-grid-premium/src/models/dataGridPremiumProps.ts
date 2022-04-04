@@ -75,11 +75,14 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: Record<string, GridAggregationFunction>;
-
   /**
    * @default "footer"
    */
   aggregationPosition: GridAggregationPosition;
+  /**
+   * @default "filtered"
+   */
+  aggregatedRows: 'filtered' | 'all';
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>

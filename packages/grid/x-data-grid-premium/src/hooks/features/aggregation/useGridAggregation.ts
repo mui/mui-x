@@ -36,6 +36,7 @@ export const useGridAggregation = (
     | 'isGroupAggregated'
     | 'aggregationPosition'
     | 'aggregationFunctions'
+    | 'aggregatedRows'
   >,
 ) => {
   apiRef.current.unstable_updateControlState({
@@ -68,13 +69,14 @@ export const useGridAggregation = (
       aggregationPositionRef,
       isGroupAggregated: props.isGroupAggregated,
       aggregationFunctions: props.aggregationFunctions,
+      aggregatedRows: props.aggregatedRows,
     });
 
     apiRef.current.setState((state) => ({
       ...state,
       aggregation: { ...state.aggregation, lookup: aggregationLookup },
     }));
-  }, [apiRef, props.isGroupAggregated, props.aggregationFunctions]);
+  }, [apiRef, props.isGroupAggregated, props.aggregationFunctions, props.aggregatedRows]);
 
   const aggregationApi: GridAggregationApi = {
     setAggregationModel,
