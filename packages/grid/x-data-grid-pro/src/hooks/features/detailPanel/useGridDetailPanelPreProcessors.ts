@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGridRegisterPreProcessor, GridPreProcessor } from '@mui/x-data-grid/internals';
+import { useGridRegisterPipeProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
@@ -11,7 +11,7 @@ export const useGridDetailPanelPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: DataGridProProcessedProps,
 ) => {
-  const addToggleColumn = React.useCallback<GridPreProcessor<'hydrateColumns'>>(
+  const addToggleColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       if (props.getDetailPanelContent == null) {
         // Remove the toggle column, when it exists
@@ -38,5 +38,5 @@ export const useGridDetailPanelPreProcessors = (
     [props.getDetailPanelContent],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'hydrateColumns', addToggleColumn);
+  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', addToggleColumn);
 };

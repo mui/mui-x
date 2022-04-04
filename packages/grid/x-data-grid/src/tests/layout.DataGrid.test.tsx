@@ -10,7 +10,6 @@ import {
   DataGridProps,
   ptBR,
   GridColumns,
-  GridValueGetterFullParams,
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -238,8 +237,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id' },
           {
             field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) =>
-              (params as GridValueGetterFullParams).getValue(params.id, 'age'),
+            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
           },
         ];
         expect(() => {
@@ -863,6 +861,27 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
       expect(virtualScroller!.scrollWidth - virtualScroller!.clientWidth).not.to.equal(0);
+    });
+
+    it('should not place the overlay on top of the horizontal scrollbar when rows=[]', () => {
+      const headerHeight = 40;
+      const height = 300;
+      const border = 1;
+      render(
+        <div style={{ width: 100 + 2 * border, height: height + 2 * border }}>
+          <DataGrid
+            rows={[]}
+            columns={[{ field: 'brand' }, { field: 'price' }]}
+            headerHeight={headerHeight}
+            hideFooter
+          />
+        </div>,
+      );
+      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
+      const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
+      const overlayWrapper = screen.getByText('No rows').parentElement;
+      const expectedHeight = height - headerHeight - scrollBarSize;
+      expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
     });
 
     // See https://github.com/mui/mui-x/issues/3795#issuecomment-1028001939

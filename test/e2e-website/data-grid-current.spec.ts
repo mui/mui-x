@@ -42,7 +42,9 @@ test.describe('DataGrid docs', () => {
     test('should have correct link for sidebar anchor', async ({ page }) => {
       await page.goto(`/components/data-grid/`);
 
-      const anchor = await page.locator('nav[aria-label="documentation"] ul a:text-is("Overview")');
+      const anchor = await page.locator(
+        'nav[aria-label="documentation"] ul ul a:text-is("Overview")',
+      );
 
       await expect(anchor).toHaveAttribute('href', `/components/data-grid/`);
     });
@@ -52,7 +54,9 @@ test.describe('DataGrid docs', () => {
     test('should have correct link for sidebar anchor', async ({ page }) => {
       await page.goto(`/api/data-grid/data-grid/`);
 
-      const anchor = await page.locator('nav[aria-label="documentation"] ul a:text-is("DataGrid")');
+      const anchor = await page.locator(
+        'nav[aria-label="documentation"] ul ul a:text-is("DataGrid")',
+      );
 
       await expect(anchor).toHaveAttribute('app-drawer-active', '');
       await expect(anchor).toHaveAttribute('href', `/api/data-grid/data-grid/`);

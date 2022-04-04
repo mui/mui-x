@@ -10,7 +10,6 @@ import {
   GridEvents,
   GridCellMode,
   GridCellModes,
-  GridCellValue,
   GridRowId,
 } from '../../models';
 import { GridAlignment } from '../../models/colDef/gridColDef';
@@ -19,18 +18,18 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-export interface GridCellProps {
+export interface GridCellProps<V = any, F = V> {
   align: GridAlignment;
   className?: string;
   colIndex: number;
   field: string;
   rowId: GridRowId;
-  formattedValue?: GridCellValue;
+  formattedValue?: F;
   hasFocus?: boolean;
   height: number;
   isEditable?: boolean;
   showRightBorder?: boolean;
-  value?: GridCellValue;
+  value?: V;
   width: number;
   cellMode?: GridCellMode;
   children: React.ReactNode;
@@ -255,13 +254,7 @@ GridCell.propTypes = {
   colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
   field: PropTypes.string.isRequired,
-  formattedValue: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  formattedValue: PropTypes.any,
   hasFocus: PropTypes.bool,
   height: PropTypes.number.isRequired,
   isEditable: PropTypes.bool,
@@ -275,13 +268,7 @@ GridCell.propTypes = {
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   showRightBorder: PropTypes.bool,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
-  value: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  value: PropTypes.any,
   width: PropTypes.number.isRequired,
 } as any;
 

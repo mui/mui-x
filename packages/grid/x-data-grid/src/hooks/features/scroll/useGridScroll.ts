@@ -14,7 +14,6 @@ import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
@@ -58,7 +57,8 @@ export const useGridScroll = (
     (params: Partial<GridCellIndexCoordinates>) => {
       const totalRowCount = gridRowCountSelector(apiRef);
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
-      if (totalRowCount === 0 || visibleColumns.length === 0) {
+      const scrollToHeader = params.rowIndex == null;
+      if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
         return false;
       }
 
@@ -114,7 +114,7 @@ export const useGridScroll = (
         });
       }
 
-      scrollCoordinates = apiRef.current.unstable_applyPreProcessors(
+      scrollCoordinates = apiRef.current.unstable_applyPipeProcessors(
         'scrollToIndexes',
         scrollCoordinates,
         params,
@@ -162,16 +162,4 @@ export const useGridScroll = (
     getScrollPosition,
   };
   useGridApiMethod(apiRef, scrollApi, 'GridScrollApi');
-
-  const preventScroll = React.useCallback((event: any) => {
-    event.target.scrollLeft = 0;
-    event.target.scrollTop = 0;
-  }, []);
-
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    'scroll',
-    preventScroll,
-  );
 };
