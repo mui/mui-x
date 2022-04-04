@@ -298,7 +298,6 @@ export const useGridColumnResize = (
   });
 
   const handleTouchStart = useEventCallback((event: any) => {
-    ('');
     const cellSeparator = findParentElementFromClassName(
       event.target,
       gridClasses['columnSeparator--resizable'],
