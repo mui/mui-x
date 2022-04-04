@@ -2305,7 +2305,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
   });
 
   describe('apiRef: getGroupingCriteriaRows', () => {
-    it('should return the rows with path of length 1 in tree of depth 1', () => {
+    it('should return the rows in group of depth 0 of length 1 from tree of depth 1', () => {
       render(
         <Test
           initialState={{
@@ -2339,7 +2339,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       ).to.deep.equal([2, 1]);
     });
 
-    it('should return the rows with path of length 1 in tree of depth 2', () => {
+    it('should return the rows in group of depth 0 from tree of depth 2', () => {
       render(
         <Test
           initialState={{
@@ -2373,7 +2373,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       ).to.deep.equal([2, 1]);
     });
 
-    it('should return the rows with path of length 2 in tree of depth 2', () => {
+    it('should return the rows in group of depth 1 from tree of depth 2', () => {
       render(
         <Test
           initialState={{
