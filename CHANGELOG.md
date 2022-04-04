@@ -64,6 +64,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 ### Docs
 
+- [docs] Create an home page for "Advanced Components" (#4298) @flaviendelangle
 - [docs] Update installation docs (#4259) @cherniavskii
 - [docs] New page for the migration of date and time pickers from the lab (#4327) @flaviendelangle
 
