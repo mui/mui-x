@@ -23,7 +23,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - ✨ Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
 
   You can now strongly type all the objects related to the row and the cell values.
-  Here is an example, you can can find out more in the description of #4064.
+  Here is an example, you can find out more in the description of #4064.
   
   ```tsx
   const rows: Movie[] = [];
