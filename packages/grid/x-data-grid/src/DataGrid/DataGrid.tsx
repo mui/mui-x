@@ -14,10 +14,11 @@ import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
+import { GridValidRowModel } from '../models/gridRows';
 
-const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
-  inProps,
-  ref,
+const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
+  inProps: DataGridProps<R>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
   const apiRef = useDataGridComponent(props);
@@ -38,7 +39,14 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   );
 });
 
-export const DataGrid = React.memo(DataGridRaw);
+interface DataGridComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): JSX.Element;
+  propTypes?: any;
+}
+
+export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -174,7 +182,9 @@ DataGridRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
+    warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
    * Filtering can be processed on the server or client-side.
@@ -210,7 +220,7 @@ DataGridRaw.propTypes = {
   getDetailPanelContent: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
@@ -224,6 +234,12 @@ DataGridRaw.propTypes = {
    * Return the id of a given [[GridRowModel]].
    */
   getRowId: PropTypes.func,
+  /**
+   * Function that allows to specify the spacing between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row spacing values.
+   */
+  getRowSpacing: PropTypes.func,
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
@@ -441,6 +457,25 @@ DataGridRaw.propTypes = {
    */
   onPageSizeChange: PropTypes.func,
   /**
+   * Callback fired when the preferences panel is closed.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelClose: PropTypes.func,
+  /**
+   * Callback fired when the preferences panel is opened.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelOpen: PropTypes.func,
+  /**
+   * Callback called when `processRowUpdate` throws an error or rejects.
+   * @param {any} error The error thrown.
+   */
+  onProcessRowUpdateError: PropTypes.func,
+  /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -544,6 +579,15 @@ DataGridRaw.propTypes = {
    */
   paginationMode: PropTypes.oneOf(['client', 'server']),
   /**
+   * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   * @template R
+   * @param {R} newRow Row object with the new values.
+   * @param {R} oldRow Row object with the old values.
+   * @returns {Promise<R> | R} The final values to update the row.
+   */
+  processRowUpdate: PropTypes.func,
+  /**
    * Number of extra rows to be rendered before/after the visible slice.
    * @default 3
    */
@@ -561,7 +605,12 @@ DataGridRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.array.isRequired,
+  /**
+   * Sets the type of space between rows added by `getRowSpacing`.
+   * @default "margin"
+   */
+  rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]

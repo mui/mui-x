@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import {
   DataGridPro,
   GridToolbarContainer,
@@ -11,9 +12,8 @@ import {
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import Alert from '@mui/material/Alert';
 
-const GridCustomToolbar = ({ unMount }) => {
+const GridCustomToolbar = ({ syncState }) => {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
 
@@ -25,71 +25,57 @@ const GridCustomToolbar = ({ unMount }) => {
         size="small"
         color="primary"
         startIcon={<rootProps.components.ColumnSelectorIcon />}
-        onClick={() => unMount(apiRef.current.exportState())}
+        onClick={() => syncState(apiRef.current.exportState())}
         {...rootProps.componentsProps?.baseButton}
       >
-        Save state and unmount
+        Recreate the 2nd grid
       </Button>
     </GridToolbarContainer>
   );
 };
 
 GridCustomToolbar.propTypes = {
-  unMount: PropTypes.func.isRequired,
-};
-
-const WrappedDataGridPro = (props) => {
-  const { unMount, ...other } = props;
-
-  const { data, loading } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 500,
-  });
-
-  if (loading) {
-    return null;
-  }
-
-  return (
-    <DataGridPro
-      components={{ Toolbar: GridCustomToolbar }}
-      componentsProps={{ toolbar: { unMount } }}
-      {...data}
-      {...other}
-    />
-  );
-};
-
-WrappedDataGridPro.propTypes = {
-  unMount: PropTypes.func.isRequired,
+  syncState: PropTypes.func.isRequired,
 };
 
 export default function RestoreStateInitialState() {
-  const [savedState, setSavedState] = React.useState(undefined);
+  const { data, loading } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
 
-  const [isMounted, setIsMounted] = React.useState(true);
+  const [savedState, setSavedState] = React.useState({
+    count: 0,
+    initialState: undefined,
+  });
 
-  const unMountGrid = React.useCallback((stateToState) => {
-    setIsMounted(false);
-    setSavedState(stateToState);
+  const syncState = React.useCallback((newInitialState) => {
+    setSavedState((prev) => ({
+      ...prev,
+      count: prev.count + 1,
+      initialState: newInitialState,
+    }));
   }, []);
 
-  const restoreGrid = () => setIsMounted(true);
-
-  if (isMounted) {
-    return (
-      <React.Fragment>
-        <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
-          <WrappedDataGridPro unMount={unMountGrid} initialState={savedState} />
-        </Box>
-        {!!savedState && (
-          <Alert severity="info" style={{ marginBottom: 8 }}>
-            <code>Initial state: {JSON.stringify(savedState)}</code>
-          </Alert>
-        )}
-      </React.Fragment>
-    );
-  }
-
-  return <Button onClick={restoreGrid}>Remount the grid</Button>;
+  return (
+    <Stack spacing={2} sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%', height: 336, bgcolor: 'background.paper' }}>
+        <DataGridPro
+          {...data}
+          loading={loading}
+          components={{ Toolbar: GridCustomToolbar }}
+          componentsProps={{ toolbar: { syncState } }}
+        />
+      </Box>
+      <Box sx={{ width: '100%', height: 300, bgcolor: 'background.paper' }}>
+        <DataGridPro
+          {...data}
+          loading={loading}
+          initialState={savedState.initialState}
+          key={savedState.count}
+        />
+      </Box>
+    </Stack>
+  );
 }

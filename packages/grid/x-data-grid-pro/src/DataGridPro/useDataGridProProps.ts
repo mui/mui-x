@@ -5,6 +5,7 @@ import {
   GRID_DEFAULT_LOCALE_TEXT,
   GridSlotsComponent,
   DATA_GRID_PROPS_DEFAULT_VALUES,
+  GridValidRowModel,
 } from '@mui/x-data-grid';
 import {
   DataGridProProps,
@@ -28,7 +29,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   getDetailPanelHeight: () => 500,
 };
 
-export const useDataGridProProps = (inProps: DataGridProProps) => {
+export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
 
   const localeText = React.useMemo(
@@ -54,7 +55,7 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
     return mergedComponents;
   }, [themedProps.components]);
 
-  return React.useMemo<DataGridProProcessedProps>(
+  return React.useMemo<DataGridProProcessedProps<R>>(
     () => ({
       ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
       ...themedProps,

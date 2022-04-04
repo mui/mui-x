@@ -278,17 +278,22 @@ enum GridEvents {
    * Fired when a pre-processor is registered.
    * @ignore - do not document.
    */
-  preProcessorRegister = 'preProcessorRegister',
+  pipeProcessorRegister = 'pipeProcessorRegister',
   /**
    * Fired when a pre-processor is unregistered.
    * @ignore - do not document.
    */
-  preProcessorUnregister = 'preProcessorUnregister',
+  pipeProcessorUnregister = 'pipeProcessorUnregister',
   /**
-   * Fired when the row grouping function is changed
+   * Fired when a processor of the active strategy changes.
    * @ignore - do not document.
    */
-  rowGroupsPreProcessingChange = 'rowGroupsPreProcessingChange',
+  activeStrategyProcessorChange = 'activeStrategyProcessorChange',
+  /**
+   * Fired when the callback to decide if a strategy is available or not changes.
+   * @ignore - do not document.
+   */
+  strategyAvailabilityChange = 'strategyAvailabilityChange',
   /**
    * Fired when the sort model changes.
    */
@@ -317,6 +322,14 @@ enum GridEvents {
    * @ignore - do not document.
    */
   virtualScrollerContentSizeChange = 'virtualScrollerContentSizeChange',
+  /**
+   * Fired when the preferences panel is closed.
+   */
+  preferencePanelClose = 'preferencePanelClose',
+  /**
+   * Fired when the preferences panel is opened.
+   */
+  preferencePanelOpen = 'preferencePanelOpen',
 }
 
 export type GridEventsStr = keyof GridEventLookup;

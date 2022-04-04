@@ -10,7 +10,6 @@ import {
   GridEvents,
   GridCellMode,
   GridCellModes,
-  GridCellValue,
   GridRowId,
 } from '../../models';
 import { GridAlignment } from '../../models/colDef/gridColDef';
@@ -19,18 +18,18 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-export interface GridCellProps {
+export interface GridCellProps<V = any, F = V> {
   align: GridAlignment;
   className?: string;
   colIndex: number;
   field: string;
   rowId: GridRowId;
-  formattedValue?: GridCellValue;
+  formattedValue?: F;
   hasFocus?: boolean;
   height: number;
   isEditable?: boolean;
   showRightBorder?: boolean;
-  value?: GridCellValue;
+  value?: V;
   width: number;
   cellMode?: GridCellMode;
   children: React.ReactNode;
@@ -183,7 +182,10 @@ function GridCell(props: GridCellProps) {
 
   let handleFocus: any = other.onFocus;
 
-  if (process.env.NODE_ENV === 'test') {
+  if (
+    process.env.NODE_ENV === 'test' &&
+    rootProps.experimentalFeatures?.warnIfFocusStateIsNotSynced
+  ) {
     handleFocus = (event: React.FocusEvent) => {
       const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === rowId && focusedCell.field === field) {
@@ -194,12 +196,12 @@ function GridCell(props: GridCellProps) {
       }
 
       if (!warnedOnce) {
-        console.error(
+        console.warn(
           [
             `MUI: The cell with id=${rowId} and field=${field} received focus.`,
             `According to the state, the focus should be at id=${focusedCell?.id}, field=${focusedCell?.field}.`,
-            'In the next render, the focus will be changed to match the state.',
-            'Call `fireEvent.mouseUp` and `fireEvent.click` before to sync the focus with the state.',
+            "Not syncing the state may cause unwanted behaviors since the `cellFocusIn` event won't be fired.",
+            'Call `fireEvent.mouseUp` before the `fireEvent.click` to sync the focus with the state.',
           ].join('\n'),
         );
 
@@ -248,13 +250,7 @@ GridCell.propTypes = {
   className: PropTypes.string,
   colIndex: PropTypes.number.isRequired,
   field: PropTypes.string.isRequired,
-  formattedValue: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  formattedValue: PropTypes.any,
   hasFocus: PropTypes.bool,
   height: PropTypes.number.isRequired,
   isEditable: PropTypes.bool,
@@ -268,13 +264,7 @@ GridCell.propTypes = {
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   showRightBorder: PropTypes.bool,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
-  value: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  value: PropTypes.any,
   width: PropTypes.number.isRequired,
 } as any;
 

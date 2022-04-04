@@ -60,8 +60,9 @@ GridDetailPanelToggleCell.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.object.isRequired,
+  api: PropTypes.any.isRequired,
   /**
    * The mode of the cell.
    */
@@ -82,7 +83,7 @@ GridDetailPanelToggleCell.propTypes = {
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
    * @param {string} field The field.
-   * @returns {GridCellValue} The cell value.
+   * @returns {any} The cell value.
    * @deprecated Use `params.row` to directly access the fields you want instead.
    */
   getValue: PropTypes.func.isRequired,
@@ -101,7 +102,7 @@ GridDetailPanelToggleCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.any.isRequired,
+  row: PropTypes.object.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */

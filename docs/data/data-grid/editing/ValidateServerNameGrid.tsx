@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
 import {
   GridColumns,
   GridRowsProp,
-  useGridApiRef,
   DataGridPro,
-  GridEditCellProps,
   GridPreProcessEditCellProps,
+  GridEditInputCell,
+  GridRenderEditCellParams,
 } from '@mui/x-data-grid-pro';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -31,27 +32,40 @@ function validateName(username: string): Promise<boolean> {
 
   return new Promise<any>((resolve) => {
     promiseTimeout = setTimeout(() => {
-      resolve(existingUsers.indexOf(username.toLowerCase()) === -1);
+      const exists = existingUsers.includes(username.toLowerCase());
+      resolve(exists ? `${username} is already taken.` : null);
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
 
+const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.error.main,
+    color: theme.palette.error.contrastText,
+  },
+}));
+
+function NameEditInputCell(props: GridRenderEditCellParams) {
+  const { error } = props;
+
+  return (
+    <StyledTooltip open={!!error} title={error}>
+      <GridEditInputCell {...props} />
+    </StyledTooltip>
+  );
+}
+
+function renderEditName(params: GridRenderEditCellParams) {
+  return <NameEditInputCell {...params} />;
+}
+
 export default function ValidateServerNameGrid() {
-  const apiRef = useGridApiRef();
-
-  const keyStrokeTimeoutRef = React.useRef<any>();
-
-  const preProcessEditCellProps = (params: GridPreProcessEditCellProps) =>
-    new Promise<GridEditCellProps>((resolve) => {
-      clearTimeout(promiseTimeout);
-      clearTimeout(keyStrokeTimeoutRef.current);
-
-      // basic debouncing here
-      keyStrokeTimeoutRef.current = setTimeout(async () => {
-        const isValid = await validateName(params.props.value!.toString());
-        resolve({ ...params.props, error: !isValid });
-      }, 100);
-    });
+  const preProcessEditCellProps = async (params: GridPreProcessEditCellProps) => {
+    const errorMessage = await validateName(params.props.value!.toString());
+    return { ...params.props, error: errorMessage };
+  };
 
   const columns: GridColumns = [
     {
@@ -60,24 +74,23 @@ export default function ValidateServerNameGrid() {
       width: 180,
       editable: true,
       preProcessEditCellProps,
+      renderEditCell: renderEditName,
     },
   ];
 
   React.useEffect(() => {
     return () => {
       clearTimeout(promiseTimeout);
-      clearTimeout(keyStrokeTimeoutRef.current);
     };
   }, []);
 
   return (
     <StyledBox>
       <DataGridPro
-        apiRef={apiRef}
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.id === 5}
-        experimentalFeatures={{ preventCommitWhileValidating: true }} // Prevents a 2nd call to preProcessEditCellProps while waiting for the 1st
+        experimentalFeatures={{ newEditingApi: true }}
       />
     </StyledBox>
   );

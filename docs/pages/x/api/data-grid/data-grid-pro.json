@@ -4,10 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "rows": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
+    "rows": { "type": { "name": "array" }, "required": true },
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -61,7 +58,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ preventCommitWhileValidating?: bool, rowGrouping?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -80,6 +77,7 @@
     "getRowClassName": { "type": { "name": "func" } },
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
+    "getRowSpacing": { "type": { "name": "func" } },
     "getTreeDataPath": { "type": { "name": "func" } },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
@@ -145,6 +143,9 @@
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
     "onPinnedColumnsChange": { "type": { "name": "func" } },
+    "onPreferencePanelClose": { "type": { "name": "func" } },
+    "onPreferencePanelOpen": { "type": { "name": "func" } },
+    "onProcessRowUpdateError": { "type": { "name": "func" } },
     "onResize": { "type": { "name": "func" } },
     "onRowClick": { "type": { "name": "func" } },
     "onRowDoubleClick": { "type": { "name": "func" } },
@@ -169,6 +170,7 @@
         "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
       }
     },
+    "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
     "rowGroupingColumnMode": {
@@ -177,6 +179,10 @@
     },
     "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
+    "rowSpacingType": {
+      "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
+      "default": "\"margin\""
+    },
     "rowsPerPageOptions": {
       "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
       "default": "[25, 50, 100]"
@@ -228,6 +234,10 @@
     "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
     "Cell": { "default": "GridCell", "type": { "name": "elementType" } },
     "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnHeaderFilterIconButton": {
+      "default": "GridColumnHeaderFilterIconButton",
+      "type": { "name": "elementType" }
+    },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",
@@ -286,6 +296,7 @@
   "name": "DataGridPro",
   "styles": {
     "classes": [
+      "actionsCell",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -306,6 +317,7 @@
       "columnHeader--numeric",
       "columnHeader--sortable",
       "columnHeader--sorted",
+      "columnHeader--filtered",
       "columnHeader",
       "columnHeaderCheckbox",
       "columnHeaderDraggableContainer",
@@ -377,7 +389,9 @@
       "toolbarFilterList",
       "withBorder",
       "treeDataGroupingCell",
-      "treeDataGroupingCellToggle"
+      "treeDataGroupingCellToggle",
+      "groupingCriteriaCell",
+      "groupingCriteriaCellToggle"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"

@@ -45,7 +45,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 ### MIT vs. commercial
 
-> Please check the [Licenses section](/components/data-grid/getting-started/#licenses) for more details between the different versions.
+> Please check the [Licenses section](/x/advanced-components/#licenses) for more details between the different versions.
 
 ## Features
 
@@ -60,11 +60,11 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 - [Row grouping](/components/data-grid/group-pivot/#row-grouping) <span class="plan-premium"></span>
 - [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="plan-pro"></span>
 - [Master detail](/components/data-grid/group-pivot/#master-detail) <span class="plan-pro"></span>
-- [Resizable columns](/components/data-grid/columns/#column-resizing) <span class="plan-pro"></span>
+- [Resizable columns](/components/data-grid/columns/#resizing) <span class="plan-pro"></span>
 - [100% customizable](/components/data-grid/style/)
 - Server-side data
-- [Column hiding](/components/data-grid/columns/#hiding)
-- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
+- [Column hiding](/components/data-grid/columns/#column-visibility)
+- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="plan-pro"></span>
 - [Accessible](/components/data-grid/accessibility/)
 - [Localization](/components/data-grid/localization/)
 

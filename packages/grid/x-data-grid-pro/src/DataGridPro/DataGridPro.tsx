@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { LicenseInfo } from '@mui/x-license-pro';
-import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
+import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
+import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
   GridErrorHandler,
@@ -9,32 +9,24 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   GridContextProvider,
+  GridValidRowModel,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { Watermark } from '../components/Watermark';
 import { DataGridProProps } from '../models';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
+import { getReleaseInfo } from '../utils/releaseInfo';
 
-// This is the package release date. Each package version should update this const
-// automatically when a new version is published on npm.
-let RELEASE_INFO = '__RELEASE_INFO__';
+const releaseInfo = getReleaseInfo();
 
-// eslint-disable-next-line no-useless-concat
-if (process.env.NODE_ENV !== 'production' && RELEASE_INFO === '__RELEASE' + '_INFO__') {
-  // eslint-disable-next-line no-underscore-dangle
-  RELEASE_INFO = ponyfillGlobal.__MUI_RELEASE_INFO__;
-}
-
-LicenseInfo.setReleaseInfo(RELEASE_INFO);
-
-const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(function DataGridPro(
-  inProps,
-  ref,
+const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
+  inProps: DataGridProProps<R>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProProps(inProps);
   const apiRef = useDataGridProComponent(props.apiRef, props);
+  useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
@@ -45,7 +37,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
           >
-            <Watermark />
+            <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
           </GridBody>
           <GridFooterPlaceholder />
         </GridErrorHandler>
@@ -54,7 +46,14 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   );
 });
 
-export const DataGridPro = React.memo(DataGridProRaw);
+interface DataGridProComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridProProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): JSX.Element;
+  propTypes?: any;
+}
+
+export const DataGridPro = React.memo(DataGridProRaw) as DataGridProComponent;
 
 DataGridProRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -253,8 +252,10 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     rowGrouping: PropTypes.bool,
+    warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
    * Filtering can be processed on the server or client-side.
@@ -304,7 +305,7 @@ DataGridProRaw.propTypes = {
   getDetailPanelHeight: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
@@ -319,10 +320,17 @@ DataGridProRaw.propTypes = {
    */
   getRowId: PropTypes.func,
   /**
+   * Function that allows to specify the spacing between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row spacing values.
+   */
+  getRowSpacing: PropTypes.func,
+  /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
    * Note that all paths must contain at least one element.
-   * @param {GridRowModel} row The row from which we want the path.
+   * @template R
+   * @param {R} row The row from which we want the path.
    * @returns {string[]} The path to the row.
    */
   getTreeDataPath: PropTypes.func,
@@ -593,6 +601,25 @@ DataGridProRaw.propTypes = {
    */
   onPinnedColumnsChange: PropTypes.func,
   /**
+   * Callback fired when the preferences panel is closed.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelClose: PropTypes.func,
+  /**
+   * Callback fired when the preferences panel is opened.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelOpen: PropTypes.func,
+  /**
+   * Callback called when `processRowUpdate` throws an error or rejects.
+   * @param {any} error The error thrown.
+   */
+  onProcessRowUpdateError: PropTypes.func,
+  /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -696,6 +723,15 @@ DataGridProRaw.propTypes = {
     right: PropTypes.arrayOf(PropTypes.string),
   }),
   /**
+   * Callback called before updating a row with new values in the row and cell editing.
+   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
+   * @template R
+   * @param {R} newRow Row object with the new values.
+   * @param {R} oldRow Row object with the old values.
+   * @returns {Promise<R> | R} The final values to update the row.
+   */
+  processRowUpdate: PropTypes.func,
+  /**
    * Number of extra rows to be rendered before/after the visible slice.
    * @default 3
    */
@@ -723,7 +759,12 @@ DataGridProRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.array.isRequired,
+  /**
+   * Sets the type of space between rows added by `getRowSpacing`.
+   * @default "margin"
+   */
+  rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]

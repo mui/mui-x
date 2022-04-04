@@ -8,7 +8,6 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import {
-  GridCellValue,
   GridCellParams,
   GridEditRowsModel,
   GridLoadIcon,
@@ -21,6 +20,8 @@ import {
   GridEventListener,
   GridRenderCellParams,
   GridSelectionModel,
+  GridCellEditStartParams,
+  GridCellEditStopParams,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
@@ -456,9 +457,7 @@ const StyledDataGridPro = styled(DataGridPro)({
 export function EditRowsControl() {
   const apiRef = useGridApiRef();
 
-  const [selectedCell, setSelectedCell] = React.useState<[string, string, GridCellValue] | null>(
-    null,
-  );
+  const [selectedCell, setSelectedCell] = React.useState<[string, string, any] | null>(null);
   const [isEditable, setIsEditable] = React.useState<boolean>(false);
   const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
 
@@ -513,7 +512,7 @@ export function EditRowsControl() {
         apiRef.current.updateRows([cellUpdate]);
         apiRef.current.publishEvent(
           GridEvents.cellEditStop,
-          apiRef.current.getCellParams(id, field),
+          apiRef.current.getCellParams(id, field) as GridCellEditStopParams,
           event,
         );
       }, randomInt(300, 2000));
@@ -909,7 +908,11 @@ export function EditCellWithCellClickGrid() {
     (params, event) => {
       // Or you can use the editRowModel prop, but I find it easier
       // apiRef.current.setCellMode(params.id, params.field, 'edit');
-      apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
+      apiRef.current.publishEvent(
+        GridEvents.cellEditStart,
+        params as GridCellEditStartParams,
+        event,
+      );
 
       // if I want to prevent selection I can do
       event.defaultMuiPrevented = true;

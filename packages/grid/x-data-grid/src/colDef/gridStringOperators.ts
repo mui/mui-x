@@ -4,7 +4,11 @@ import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 
-export const getGridStringOperators = (): GridFilterOperator[] => [
+export const getGridStringOperators = (): GridFilterOperator<
+  any,
+  number | string | null,
+  any
+>[] => [
   {
     value: 'contains',
     getApplyFilterFn: (filterItem: GridFilterItem) => {

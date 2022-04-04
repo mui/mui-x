@@ -54,6 +54,7 @@ describe('<DataGrid /> - Keyboard', () => {
           headerHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ columnField: 'id', operatorValue: '>', value: 10 }] }}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
           {...props}
         />
       </div>
@@ -307,6 +308,25 @@ describe('<DataGrid /> - Keyboard', () => {
       render(
         <div style={{ width: 60, height: 300 }}>
           <DataGrid autoHeight={isJSDOM} {...getData(10, 10)} />
+        </div>,
+      );
+      getColumnHeaderCell(0).focus();
+      const virtualScroller = document.querySelector(
+        '.MuiDataGrid-virtualScroller',
+      )! as HTMLElement;
+      expect(virtualScroller.scrollLeft).to.equal(0);
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expect(virtualScroller.scrollLeft).not.to.equal(0);
+    });
+
+    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
+      if (isJSDOM) {
+        // Need layouting for column virtualization
+        this.skip();
+      }
+      render(
+        <div style={{ width: 60, height: 300 }}>
+          <DataGrid autoHeight={isJSDOM} {...getData(10, 10)} rows={[]} />
         </div>,
       );
       getColumnHeaderCell(0).focus();

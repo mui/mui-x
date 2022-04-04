@@ -7,10 +7,12 @@ import type {
   GridColumnVisibilityChangeParams,
   GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
+  GridPreferencePanelParams,
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
 } from '../params';
+import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
@@ -19,8 +21,10 @@ import type { GridSelectionModel } from '../gridSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
-import type { GridPreProcessingGroup } from '../../hooks/core/preProcessing';
+import type { GridPipeProcessorGroup } from '../../hooks/core/pipeProcessing';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
+import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
+import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -141,9 +145,12 @@ export interface GridEventLookup
   resize: { params: ElementSize };
   viewportInnerSizeChange: { params: ElementSize };
   debouncedResize: { params: ElementSize };
-  rowGroupsPreProcessingChange: {};
-  preProcessorRegister: { params: GridPreProcessingGroup };
-  preProcessorUnregister: { params: GridPreProcessingGroup };
+  pipeProcessorRegister: { params: GridPipeProcessorGroup };
+  pipeProcessorUnregister: { params: GridPipeProcessorGroup };
+  activeStrategyProcessorChange: {
+    params: GridStrategyProcessorName;
+  };
+  strategyAvailabilityChange: {};
 
   // Columns
   columnsChange: { params: string[] };
@@ -165,20 +172,26 @@ export interface GridEventLookup
   // Edit
   cellModeChange: { params: GridCellParams };
   cellEditStart: {
-    params: GridCellParams;
+    params: GridCellEditStartParams;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  cellEditStop: { params: GridCellParams; event: MuiBaseEvent };
+  cellEditStop: {
+    params: GridCellEditStopParams;
+    event: MuiBaseEvent;
+  };
   cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
   editCellPropsChange: {
     params: GridEditCellPropsParams;
     event: React.SyntheticEvent<HTMLElement> | {};
   };
   rowEditStart: {
-    params: GridRowParams;
+    params: GridRowEditStartParams;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  rowEditStop: { params: GridRowParams; event: MuiBaseEvent };
+  rowEditStop: {
+    params: GridRowEditStopParams;
+    event: MuiBaseEvent;
+  };
   rowEditCommit: { params: GridRowId; event: MuiBaseEvent };
 
   // Focus
@@ -205,4 +218,8 @@ export interface GridEventLookup
     params: GridRowSelectionCheckboxParams;
     event: React.ChangeEvent<HTMLElement>;
   };
+
+  // PreferencePanel
+  preferencePanelClose: { params: GridPreferencePanelParams };
+  preferencePanelOpen: { params: GridPreferencePanelParams };
 }

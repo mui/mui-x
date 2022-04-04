@@ -1,6 +1,6 @@
-import { GridColumns, GridRowModel } from '@mui/x-data-grid-pro';
+import { GridColDef, GridColumns, GridRowModel } from '@mui/x-data-grid-pro';
 
-type Movie = {
+export type Movie = {
   id: number;
   title: string;
   gross: number;
@@ -20,12 +20,12 @@ const COLUMNS: GridColumns = [
     width: 150,
     groupable: false,
     valueFormatter: ({ value }) => {
-      if (!value || typeof value !== 'number') {
-        return value;
+      if (!value) {
+        return '';
       }
       return `${value.toLocaleString()}$`;
     },
-  },
+  } as GridColDef<any, number, string>,
   {
     field: 'company',
     headerName: 'Company',

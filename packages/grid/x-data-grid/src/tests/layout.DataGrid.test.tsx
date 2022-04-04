@@ -10,7 +10,6 @@ import {
   DataGridProps,
   ptBR,
   GridColumns,
-  GridValueGetterFullParams,
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -238,8 +237,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id' },
           {
             field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) =>
-              (params as GridValueGetterFullParams).getValue(params.id, 'age'),
+            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
           },
         ];
         expect(() => {
@@ -809,9 +807,29 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             <DataGrid {...baselineProps} rows={[]} rowHeight={rowHeight} autoHeight />
           </div>,
         );
-        expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].clientHeight).to.equal(
-          rowHeight * 2,
+        expect(
+          (document.querySelector('.MuiDataGrid-overlay') as HTMLElement).clientHeight,
+        ).to.equal(rowHeight * 2);
+      });
+
+      it('should expand content height to one row height when there is an error', () => {
+        const error = { message: 'ERROR' };
+        const rowHeight = 50;
+
+        render(
+          <div style={{ width: 150 }}>
+            <DataGrid
+              columns={[{ field: 'brand' }]}
+              rows={[]}
+              autoHeight
+              error={error}
+              rowHeight={rowHeight}
+            />
+          </div>,
         );
+        const errorOverlayElement = document.querySelector('.MuiDataGrid-overlay') as HTMLElement;
+        expect(errorOverlayElement.textContent).to.equal(error.message);
+        expect(errorOverlayElement.offsetHeight).to.equal(2 * rowHeight);
       });
     });
 
@@ -843,6 +861,27 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
       expect(virtualScroller!.scrollWidth - virtualScroller!.clientWidth).not.to.equal(0);
+    });
+
+    it('should not place the overlay on top of the horizontal scrollbar when rows=[]', () => {
+      const headerHeight = 40;
+      const height = 300;
+      const border = 1;
+      render(
+        <div style={{ width: 100 + 2 * border, height: height + 2 * border }}>
+          <DataGrid
+            rows={[]}
+            columns={[{ field: 'brand' }, { field: 'price' }]}
+            headerHeight={headerHeight}
+            hideFooter
+          />
+        </div>,
+      );
+      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
+      const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
+      const overlayWrapper = screen.getByText('No rows').parentElement;
+      const expectedHeight = height - headerHeight - scrollBarSize;
+      expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
     });
 
     // See https://github.com/mui/mui-x/issues/3795#issuecomment-1028001939
@@ -984,11 +1023,17 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           <DataGrid {...baselineProps} error={{ message }} />
         </div>,
       );
-      expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].textContent).to.equal(message);
+      expect((document.querySelector('.MuiDataGrid-overlay') as HTMLElement).textContent).to.equal(
+        message,
+      );
     });
   });
 
-  it('should allow style customization using the theme', () => {
+  it('should allow style customization using the theme', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const theme = createTheme({
       components: {
         MuiDataGrid: {
@@ -1028,7 +1073,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(window.getComputedStyle(getCell(0, 0)).backgroundColor).to.equal('rgb(0, 128, 0)');
   });
 
-  it('should support the sx prop', () => {
+  it('should support the sx prop', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
     const theme = createTheme({
       palette: {
         primary: {

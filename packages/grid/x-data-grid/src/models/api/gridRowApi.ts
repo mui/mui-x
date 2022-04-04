@@ -1,4 +1,10 @@
-import { GridRowModel, GridRowId, GridRowModelUpdate, GridRowTreeNodeConfig } from '../gridRows';
+import {
+  GridRowModel,
+  GridRowId,
+  GridRowModelUpdate,
+  GridRowTreeNodeConfig,
+  GridValidRowModel,
+} from '../gridRows';
 
 /**
  * The Row API interface that is available in the grid `apiRef`.
@@ -34,7 +40,7 @@ export interface GridRowApi {
    * @param {GridRowId} id The id of the row.
    * @returns {GridRowModel} The row data.
    */
-  getRow: (id: GridRowId) => GridRowModel | null;
+  getRow: <R extends GridValidRowModel = any>(id: GridRowId) => R | null;
   /**
    * Gets the row node from the internal tree structure.
    * @param {GridRowId} id The id of the row.
@@ -47,4 +53,10 @@ export interface GridRowApi {
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
    */
   setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
+  /**
+   * Gets the index of a row relative to the rows that are reachable by scroll.
+   * @param {GridRowId} id The row id.
+   * @returns {number} The index of the row.
+   */
+  getRowIndexRelativeToVisibleRows: (id: GridRowId) => number;
 }

@@ -1,4 +1,4 @@
-import { GridCellMode, GridRowMode, GridCellValue } from '../gridCell';
+import { GridCellMode, GridRowMode } from '../gridCell';
 import { GridEditRowsModel, GridEditCellProps } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
@@ -46,7 +46,7 @@ export interface GridEditingSharedApi {
    * @param {string} field The field to update. If not passed, updates all fields in the given row id.
    * @ignore - do not document.
    */
-  unstable_runPendingEditCellValueChangeDebounce: (id: GridRowId, field?: string) => void;
+  unstable_runPendingEditCellValueMutation: (id: GridRowId, field?: string) => void;
   /**
    * @ignore - do not document.
    */
@@ -54,7 +54,7 @@ export interface GridEditingSharedApi {
   /**
    * @ignore - do not document.
    */
-  unstable_parseValue: (id: GridRowId, field: string, value: GridCellValue) => GridCellValue;
+  unstable_parseValue: (id: GridRowId, field: string, value: any) => any;
 }
 
 /**
@@ -74,7 +74,7 @@ export interface GridRowEditingApi extends GridEditingSharedApi {
    */
   getRowMode: (id: GridRowId) => GridRowMode;
   /**
-   * Updates the row at the given id with the values stored in the edit row model.
+   * Updates the row corresponding to the given id with the values stored in the edit row model.
    * @param {GridRowId} id The id to commit to.
    * @param {React.SyntheticEvent} event The event to pass forward.
    * @returns {boolean} A boolean indicating if there is an error.
@@ -94,7 +94,7 @@ export interface GridRowEditingApi extends GridEditingSharedApi {
  */
 export interface GridCellEditingApi extends GridEditingSharedApi {
   /**
-   * Updates the field at the given id with the value stored in the edit row model.
+   * Updates the field corresponding to the given id with the value stored in the edit row model.
    * @param {GridCommitCellChangeParams} params The id and field to commit to.
    * @param {React.SyntheticEvent} event The event to pass forward.
    * @returns {boolean} A boolean indicating if there is an error.
@@ -127,6 +127,140 @@ export interface GridCellEditingApi extends GridEditingSharedApi {
 }
 
 /**
+ * Params passed to `apiRef.current.startCellEditMode`.
+ */
+interface GridStartCellEditModeParams {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * The field.
+   */
+  field: string;
+}
+
+/**
+ * Params passed to `apiRef.current.stopCellEditMode`.
+ */
+export interface GridStopCellEditModeParams {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * The field.
+   */
+  field: string;
+  /**
+   * Whether or not to ignore the modifications made on this cell.
+   * @default false
+   */
+  ignoreModifications?: boolean;
+  /**
+   * To which cell to move focus after finishing editing.
+   * @default "none"
+   */
+  cellToFocusAfter?: 'none' | 'below' | 'right' | 'left';
+}
+
+/**
+ * Params passed to `apiRef.current.startRowEditMode`.
+ */
+interface GridStartRowEditModeParams {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * The field to put focus.
+   */
+  fieldToFocus?: string;
+}
+
+/**
+ * Params passed to `apiRef.current.stopRowEditMode`.
+ */
+export interface GridStopRowEditModeParams {
+  /**
+   * The row id.
+   */
+  id: GridRowId;
+  /**
+   * Whether or not to ignore the modifications made on this cell.
+   * @default false
+   */
+  ignoreModifications?: boolean;
+  /**
+   * The field that has focus when the editing is stopped.
+   * Used to calculate which cell to move the focus to after finishing editing.
+   */
+  field?: string;
+  /**
+   * To which cell to move focus after finishing editing.
+   * Only works if the field is also specified, otherwise focus stay in the same cell.
+   * @default "none"
+   */
+  cellToFocusAfter?: 'none' | 'below' | 'right' | 'left';
+}
+
+export interface GridNewCellEditingApi
+  extends Omit<GridEditingSharedApi, 'getEditRowsModel' | 'setEditRowsModel'>,
+    Pick<GridCellEditingApi, 'getCellMode'> {
+  /**
+   * Puts the cell corresponding to the given row id and field into edit mode.
+   * @param {GridStartCellEditModeParams} params The row id and field of the cell to edit.
+   */
+  startCellEditMode(params: GridStartCellEditModeParams): void;
+  /**
+   * Puts the cell corresponding to the given row id and field into view mode and updates the original row with the new value stored.
+   * If `params.ignoreModifications` is `false` it will discard the modifications made.
+   * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
+   */
+  stopCellEditMode(params: GridStopCellEditModeParams): void;
+  /**
+   * Updates the value of a cell being edited.
+   * Don't call this method directly, prefer `setEditCellValue`.
+   * @param {GridCommitCellChangeParams} params Object with the new value and id and field to update.
+   * @returns {Promise<boolean>} Resolves with `true` when the new value is valid.
+   * @ignore - do not document.
+   */
+  unstable_setCellEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
+}
+
+export interface GridNewRowEditingApi
+  extends Omit<GridEditingSharedApi, 'getEditRowsModel' | 'setEditRowsModel'>,
+    Pick<GridRowEditingApi, 'getRowMode'> {
+  /**
+   * Puts the row corresponding to the given id into edit mode.
+   * @param {GridStartCellEditModeParams} params The row id edit.
+   */
+  startRowEditMode(params: GridStartRowEditModeParams): void;
+  /**
+   * Puts the row corresponding to the given id and into view mode and updates the original row with the new values stored.
+   * If `params.ignoreModifications` is `false` it will discard the modifications made.
+   * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
+   */
+  stopRowEditMode(params: GridStopRowEditModeParams): void;
+  /**
+   * Updates the value of a cell being edited.
+   * Don't call this method directly, prefer `setEditCellValue`.
+   * @param {GridCommitCellChangeParams} params Object with the new value and id and field to update.
+   * @returns {Promise<boolean>} Resolves with `true` when all values in the row are valid.
+   * @ignore - do not document.
+   */
+  unstable_setRowEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
+}
+
+/**
  * The editing API interface that is available in the grid `apiRef`.
  */
-export interface GridEditingApi extends GridCellEditingApi, GridRowEditingApi {}
+export interface GridEditingApi
+  extends GridCellEditingApi,
+    GridRowEditingApi,
+    GridNewCellEditingApi,
+    GridNewRowEditingApi {}
+
+export interface GridOldEditingApi extends GridCellEditingApi, GridRowEditingApi {}
+
+export interface GridNewEditingApi extends GridNewCellEditingApi, GridNewRowEditingApi {}
