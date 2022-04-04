@@ -475,14 +475,15 @@
       "nodeName": "both the cell and the column header",
       "conditions": "<code>showColumnRightBorder={true}</code>"
     },
-    "withRightBorder": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "both the cell and the column header",
-      "conditions": "<code>showColumnRightBorder={true}</code>"
+    "cell--withRightBorder": {
+      "description": "Styles applied the cell if `showColumnRightBorder={true}`."
+    },
+    "columnHeader--withRightBorder": {
+      "description": "Styles applied the column header if `showColumnRightBorder={true}`."
     },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root of the grouping cell of the tree data"
+      "nodeName": "the root of the grouping column of the tree data"
     },
     "treeDataGroupingCellToggle": {
       "description": "Styles applied to {{nodeName}}.",
