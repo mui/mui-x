@@ -85,6 +85,7 @@ export default function RowGroupingGetGroupingCriteriaRows() {
           apiRef={apiRef}
           columns={columns}
           onRowClick={handleRowClick}
+          hideFooter
           initialState={{
             rowGrouping: {
               model: INITIAL_GROUPING_COLUMN_MODEL,
