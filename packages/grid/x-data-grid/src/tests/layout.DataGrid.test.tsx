@@ -1,7 +1,7 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
-import { SinonStub, stub } from 'sinon';
+import { SinonStub, stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -1097,5 +1097,18 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(screen.getByRole('grid')).toHaveComputedStyle({
       color: 'rgb(0, 0, 255)',
     });
+  });
+
+  it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
+    const NoRowsOverlay = spy(() => null);
+    const TestCase = (props: Partial<DataGridProps>) => (
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+      </div>
+    );
+    const { setProps } = render(<TestCase rows={[]} loading />);
+    expect(NoRowsOverlay.callCount).to.equal(0);
+    setProps({ loading: false, rows: [{ id: 1 }] });
+    expect(NoRowsOverlay.callCount).to.equal(0);
   });
 });

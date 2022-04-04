@@ -9,7 +9,7 @@ const GridNoRowsOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(
     const noRowsLabel = apiRef.current.getLocaleText('noRowsLabel');
 
     return (
-      <GridOverlay ref={ref} {...props} sx={{ bgcolor: 'yellow' }}>
+      <GridOverlay ref={ref} {...props}>
         {noRowsLabel}
       </GridOverlay>
     );
