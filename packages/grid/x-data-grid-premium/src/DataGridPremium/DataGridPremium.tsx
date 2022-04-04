@@ -64,6 +64,10 @@ DataGridPremiumRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * @default "filtered"
+   */
+  aggregatedRows: PropTypes.oneOf(['all', 'filtered']),
+  /**
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: PropTypes.object,
