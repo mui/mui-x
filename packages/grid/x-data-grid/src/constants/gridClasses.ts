@@ -372,9 +372,13 @@ export interface GridClasses {
    */
   withBorder: string;
   /**
-   * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
+   * Styles applied the cell if `showColumnRightBorder={true}`.
    */
-  withRightBorder: string;
+  'cell--withRightBorder': string;
+  /**
+   * Styles applied the column header if `showColumnRightBorder={true}`.
+   */
+  'columnHeader--withRightBorder': string;
   /**
    * Styles applied to the root of the grouping column of the tree data.
    */
@@ -492,7 +496,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedColumnHeaders--left',
   'pinnedColumnHeaders--right',
   'withBorder',
-  'withRightBorder',
+  'cell--withRightBorder',
+  'columnHeader--withRightBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
   'groupingCriteriaCell',

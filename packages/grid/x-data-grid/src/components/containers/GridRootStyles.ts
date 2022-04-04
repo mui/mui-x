@@ -288,7 +288,11 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.withBorder}`]: {
       borderColor,
     },
-    [`& .${gridClasses.withRightBorder}`]: {
+    [`& .${gridClasses['cell--withRightBorder']}`]: {
+      borderRightWidth: '1px',
+      borderRightStyle: 'solid',
+    },
+    [`& .${gridClasses['columnHeader--withRightBorder']}`]: {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
     },

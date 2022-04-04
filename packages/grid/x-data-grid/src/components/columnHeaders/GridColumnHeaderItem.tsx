@@ -63,7 +63,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isColumnFiltered && 'columnHeader--filtered',
       isColumnNumeric && 'columnHeader--numeric',
       showRightBorder && 'withBorder',
-      showRightBorder && 'withRightBorder',
+      showRightBorder && 'columnHeader--withRightBorder',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],

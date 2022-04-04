@@ -71,7 +71,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       `cell--text${capitalize(align)}`,
       isEditable && 'cell--editable',
       showRightBorder && 'withBorder',
-      showRightBorder && 'withRightBorder',
+      showRightBorder && 'cell--withRightBorder',
     ],
     content: ['cellContent'],
   };
