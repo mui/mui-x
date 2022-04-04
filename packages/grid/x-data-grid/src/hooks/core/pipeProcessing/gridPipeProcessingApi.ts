@@ -59,7 +59,7 @@ export interface GridPipeProcessingApi {
    * @ignore - do not document.
    */
   unstable_registerPipeProcessor: <G extends GridPipeProcessorGroup>(
-    processorName: GridPipeProcessorGroup,
+    group: GridPipeProcessorGroup,
     id: string,
     callback: GridPipeProcessor<G>,
   ) => () => void;
@@ -73,4 +73,10 @@ export interface GridPipeProcessingApi {
    * @ignore - do not document.
    */
   unstable_applyPipeProcessors: GridPipeProcessorsApplier;
+  unstable_registerPipeApplier: (
+    group: GridPipeProcessorGroup,
+    id: string,
+    applier: () => void,
+  ) => () => void;
+  unstable_requestPipeProcessorsApplication: (group: GridPipeProcessorGroup) => void;
 }

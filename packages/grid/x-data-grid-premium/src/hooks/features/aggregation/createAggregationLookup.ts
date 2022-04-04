@@ -133,6 +133,12 @@ export const createAggregationLookup = ({
         const aggregationFunction = aggregationFunctions[aggregationItem];
         const column = columnsLookup[aggregatedField];
 
+        if (!column) {
+          throw new Error(
+            `MUI: The aggregation model contains an invalid field "${aggregatedField}"`,
+          );
+        }
+
         if (
           !canColumnHaveAggregationFunction({
             column,

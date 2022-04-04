@@ -168,6 +168,8 @@ export const useGridRows = (
     [currentPage.rows],
   );
 
+  const applyRows = React.useCallback();
+
   const throttledRowsChange = React.useCallback(
     (newState: GridRowsInternalCacheState, throttle: boolean) => {
       const run = () => {
@@ -404,30 +406,6 @@ export const useGridRows = (
     }
   }, [apiRef, groupRows]);
 
-  const handlePreProcessorRegister = React.useCallback<
-    GridEventListener<GridEvents.pipeProcessorRegister>
-  >(
-    (name) => {
-      if (name !== 'hydrateRows') {
-        return;
-      }
-
-      apiRef.current.setState((state) => ({
-        ...state,
-        rows: {
-          ...state.rows,
-          ...apiRef.current.unstable_applyPipeProcessors(
-            'hydrateRows',
-            state.rows.groupingResponseBeforeRowHydration,
-          ),
-        },
-      }));
-      apiRef.current.publishEvent(GridEvents.rowsSet);
-      apiRef.current.forceUpdate();
-    },
-    [apiRef],
-  );
-
   useGridApiEventHandler(
     apiRef,
     GridEvents.activeStrategyProcessorChange,
@@ -438,7 +416,6 @@ export const useGridRows = (
     GridEvents.strategyAvailabilityChange,
     handleStrategyActivityChange,
   );
-  useGridApiEventHandler(apiRef, GridEvents.pipeProcessorRegister, handlePreProcessorRegister);
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 

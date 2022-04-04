@@ -96,6 +96,7 @@ export const useGridAggregation = (
 
     if (!isDeepEqual(lastAggregationModelApplied, aggregationModel)) {
       applyAggregation();
+
       // Refresh the column pre-processing
       // TODO: Add a clean way to re-run a pipe processing without faking a change
       apiRef.current.updateColumns([]);
