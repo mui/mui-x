@@ -184,6 +184,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         apiRef,
         firstRowToRender,
         lastRowToRender,
+        visibleRows: currentPage.rows,
       });
 
       const top = gridRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
@@ -196,7 +197,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     },
     [
       apiRef,
-      currentPage.rows.length,
+      currentPage.rows,
       onRenderZonePositioning,
       renderZoneMinColumnIndex,
       renderZoneMaxColumnIndex,
@@ -329,6 +330,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       apiRef,
       firstRowToRender,
       lastRowToRender,
+      visibleRows: currentPage.rows,
     });
 
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);

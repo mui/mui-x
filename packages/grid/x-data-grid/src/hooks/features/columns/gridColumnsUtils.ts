@@ -15,7 +15,7 @@ import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
-import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
+import { GridRowEntry } from '../../../models/gridRows';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
@@ -501,18 +501,19 @@ export function getFirstNonSpannedColumnToRender({
   apiRef,
   firstRowToRender,
   lastRowToRender,
+  visibleRows,
 }: {
   firstColumnToRender: number;
   apiRef: React.MutableRefObject<GridApiCommon>;
   firstRowToRender: number;
   lastRowToRender: number;
+  visibleRows: GridRowEntry[];
 }) {
   let firstNonSpannedColumnToRender = firstColumnToRender;
-  const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
   for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
-    const row = visibleSortedRows[i];
+    const row = visibleRows[i];
     if (row) {
-      const rowId = visibleSortedRows[i].id;
+      const rowId = visibleRows[i].id;
       const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
         rowId,
         firstColumnToRender,
@@ -533,6 +534,7 @@ export function getFirstColumnIndexToRender({
   firstRowToRender,
   lastRowToRender,
   apiRef,
+  visibleRows,
 }: {
   firstColumnIndex: number;
   minColumnIndex: number;
@@ -540,6 +542,7 @@ export function getFirstColumnIndexToRender({
   apiRef: React.MutableRefObject<GridApiCommon>;
   firstRowToRender: number;
   lastRowToRender: number;
+  visibleRows: GridRowEntry[];
 }) {
   const initialFirstColumnToRender = Math.max(firstColumnIndex - columnBuffer, minColumnIndex);
 
@@ -548,6 +551,7 @@ export function getFirstColumnIndexToRender({
     apiRef,
     firstRowToRender,
     lastRowToRender,
+    visibleRows,
   });
 
   return firstColumnToRender;

@@ -83,6 +83,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         firstRowToRender,
         lastRowToRender,
         apiRef,
+        visibleRows: currentPage.rows,
       });
 
       const offset =
@@ -97,7 +98,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       minColumnIndex,
       rootProps.columnBuffer,
       apiRef,
-      currentPage.rows.length,
+      currentPage.rows,
       rootProps.rowBuffer,
     ],
   );
@@ -190,6 +191,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       apiRef,
       firstRowToRender,
       lastRowToRender,
+      visibleRows: currentPage.rows,
     });
 
     const lastColumnToRender = Math.min(
