@@ -78,7 +78,6 @@ const slotColumnCommonFields: Partial<GridColDef> = {
     let colSpan = 1;
     for (let i = index + 1; i < row.slots.length; i += 1) {
       const nextValue = row.slots[i];
-      console.log('value', value, 'nextValue', nextValue);
       if (nextValue === value) {
         colSpan += 1;
       } else {
@@ -143,8 +142,6 @@ const columns: GridColDef[] = [
     ...slotColumnCommonFields,
   },
 ];
-
-console.log('columns', columns);
 
 const rootStyles = {
   width: '100%',
