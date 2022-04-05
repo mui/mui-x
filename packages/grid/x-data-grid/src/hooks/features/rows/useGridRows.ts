@@ -168,8 +168,6 @@ export const useGridRows = (
     [currentPage.rows],
   );
 
-  const applyRows = React.useCallback();
-
   const throttledRowsChange = React.useCallback(
     (newState: GridRowsInternalCacheState, throttle: boolean) => {
       const run = () => {
