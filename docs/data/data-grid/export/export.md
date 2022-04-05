@@ -243,7 +243,7 @@ To install it:
  yarn add exceljs
 ```
 
-### Customizing the exported file
+### Customizing the export
 
 You can customize the document using two callback functions:
 

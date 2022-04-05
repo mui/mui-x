@@ -50,13 +50,13 @@ ponyfillGlobal.muiDocConfig = {
     if (newDeps['@mui/x-data-grid-pro']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
-      newDeps.exceljs = versions.exceljs;
     }
 
     if (newDeps['@mui/x-data-grid-premium']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
+      newDeps.exceljs = versions.exceljs;
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
