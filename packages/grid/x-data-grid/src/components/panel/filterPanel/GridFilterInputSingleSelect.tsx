@@ -9,6 +9,23 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getValueFromValueOptions } from './filterPanelUtils';
 
+interface SelectOptionProps {
+  isNative: boolean;
+  children: React.ReactNode;
+  value: any;
+}
+
+const SelectOption = ({ isNative, children, value, ...props }: SelectOptionProps) =>
+  isNative ? (
+    <option value={value} {...props}>
+      {children}
+    </option>
+  ) : (
+    <MenuItem value={value} {...props}>
+      {children}
+    </MenuItem>
+  );
+
 const renderSingleSelectOptions = (
   { valueOptions, valueFormatter, field }: GridColDef,
   api: GridApiCommunity,
@@ -25,18 +42,14 @@ const renderSingleSelectOptions = (
     const key = isOptionTypeObject ? option.value : option;
     const value = isOptionTypeObject ? option.value : option;
 
-    const contentWhenOptionisNotObject =
+    const formattedValue =
       valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
-    const content = isOptionTypeObject ? option.label : contentWhenOptionisNotObject;
+    const content = isOptionTypeObject ? option.label : formattedValue;
 
-    return isSelectNative ? (
-      <option key={key} value={value}>
+    return (
+      <SelectOption isNative={isSelectNative} key={key} value={value}>
         {content}
-      </option>
-    ) : (
-      <MenuItem key={key} value={value}>
-        {content}
-      </MenuItem>
+      </SelectOption>
     );
   });
 };
