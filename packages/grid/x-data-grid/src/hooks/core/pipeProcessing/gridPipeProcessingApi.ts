@@ -20,7 +20,7 @@ export interface GridPipeProcessingLookup {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
   };
-  exportMenu: { value: React.ReactNode[]; context: any };
+  exportMenu: { value: { component: React.ReactElement; componentName: string }[]; context: any };
   columnMenu: { value: React.ReactNode[]; context: GridColDef };
   exportState: { value: GridInitialStateCommunity };
   restoreState: {

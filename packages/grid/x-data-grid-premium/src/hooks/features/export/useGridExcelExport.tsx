@@ -86,7 +86,13 @@ export const useGridExcelExport = (apiRef: React.MutableRefObject<GridApiPremium
       if (options.excelOptions?.disableToolbarButton) {
         return initialValue;
       }
-      return [...initialValue, <GridExcelExportMenuItem options={options.excelOptions} />];
+      return [
+        ...initialValue,
+        {
+          component: <GridExcelExportMenuItem options={options.excelOptions} />,
+          componentName: 'excelExport',
+        },
+      ];
     },
     [],
   );

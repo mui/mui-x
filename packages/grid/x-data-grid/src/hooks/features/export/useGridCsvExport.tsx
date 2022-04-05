@@ -7,6 +7,11 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { getColumnsToExport, defaultGetRowsToExport } from './utils';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import {
+  GridExportDisplayOptions,
+  GridCsvExportMenuItem,
+} from '../../../components/toolbar/GridToolbarExport';
 
 /**
  * @requires useGridColumns (state)
@@ -61,4 +66,25 @@ export const useGridCsvExport = (apiRef: React.MutableRefObject<GridApiCommunity
   };
 
   useGridApiMethod(apiRef, csvExportApi, 'GridCsvExportApi');
+
+  /**
+   * PRE-PROCESSING
+   */
+  const addExportMenuButtons = React.useCallback<GridPipeProcessor<'exportMenu'>>(
+    (initialValue, options: { csvOptions: GridCsvExportOptions & GridExportDisplayOptions }) => {
+      if (options.csvOptions?.disableToolbarButton) {
+        return initialValue;
+      }
+      return [
+        ...initialValue,
+        {
+          component: <GridCsvExportMenuItem options={options.csvOptions} />,
+          componentName: 'csvExport',
+        },
+      ];
+    },
+    [],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'exportMenu', addExportMenuButtons);
 };

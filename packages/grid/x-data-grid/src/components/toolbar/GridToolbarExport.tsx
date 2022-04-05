@@ -67,18 +67,9 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
 
     const apiRef = useGridApiContext();
 
-    const defaultButtons = [
-      ...(csvOptions.disableToolbarButton ? [] : [<GridCsvExportMenuItem options={csvOptions} />]),
-      ...(printOptions.disableToolbarButton
-        ? []
-        : [<GridPrintExportMenuItem options={printOptions} />]),
-    ];
-
-    const preProcessedButtons = apiRef.current.unstable_applyPipeProcessors(
-      'exportMenu',
-      defaultButtons,
-      { excelOptions },
-    );
+    const preProcessedButtons = apiRef.current
+      .unstable_applyPipeProcessors('exportMenu', [], { excelOptions, csvOptions, printOptions })
+      .sort((a, b) => (a.componentName > b.componentName ? 1 : -1));
 
     if (preProcessedButtons.length === 0) {
       return null;
@@ -86,8 +77,8 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
 
     return (
       <GridToolbarExportContainer {...other} ref={ref}>
-        {preProcessedButtons.map((button: any, index: number) =>
-          React.cloneElement(button, { key: index }),
+        {preProcessedButtons.map((button, index) =>
+          React.cloneElement(button.component, { key: index }),
         )}
       </GridToolbarExportContainer>
     );

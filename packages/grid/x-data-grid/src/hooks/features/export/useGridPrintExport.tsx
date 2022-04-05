@@ -17,6 +17,11 @@ import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getColumnsToExport } from './utils';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import {
+  GridExportDisplayOptions,
+  GridPrintExportMenuItem,
+} from '../../../components/toolbar/GridToolbarExport';
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
@@ -285,4 +290,28 @@ export const useGridPrintExport = (
   };
 
   useGridApiMethod(apiRef, printExportApi, 'GridPrintExportApi');
+
+  /**
+   * PRE-PROCESSING
+   */
+  const addExportMenuButtons = React.useCallback<GridPipeProcessor<'exportMenu'>>(
+    (
+      initialValue,
+      options: { printOptions: GridPrintExportOptions & GridExportDisplayOptions },
+    ) => {
+      if (options.printOptions?.disableToolbarButton) {
+        return initialValue;
+      }
+      return [
+        ...initialValue,
+        {
+          component: <GridPrintExportMenuItem options={options.printOptions} />,
+          componentName: 'printExport',
+        },
+      ];
+    },
+    [],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'exportMenu', addExportMenuButtons);
 };
