@@ -133,32 +133,24 @@ export const createAggregationLookup = ({
         const aggregationFunction = aggregationFunctions[aggregationItem];
         const column = columnsLookup[aggregatedField];
 
-        if (!column) {
-          throw new Error(
-            `MUI: The aggregation model contains an invalid field "${aggregatedField}"`,
-          );
-        }
-
-        if (
-          !canColumnHaveAggregationFunction({
+        const shouldAggregate =
+          column &&
+          canColumnHaveAggregationFunction({
             column,
             aggregationFunction,
             aggregationFunctionName: aggregationItem,
-          })
-        ) {
-          throw new Error(
-            `MUI: The aggregation function "${aggregationItem}" is not applicable to the column "${column.field}" of type "${column.type}"`,
-          );
-        }
+          });
 
-        rowAggregationLookup[aggregatedField] = getAggregationCellValue({
-          apiRef,
-          id: rowId,
-          field: aggregatedField,
-          aggregationFunction,
-          aggregatedRows,
-          cellAggregationPosition,
-        });
+        if (shouldAggregate) {
+          rowAggregationLookup[aggregatedField] = getAggregationCellValue({
+            apiRef,
+            id: rowId,
+            field: aggregatedField,
+            aggregationFunction,
+            aggregatedRows,
+            cellAggregationPosition,
+          });
+        }
       }
 
       aggregationLookup[rowId] = rowAggregationLookup;

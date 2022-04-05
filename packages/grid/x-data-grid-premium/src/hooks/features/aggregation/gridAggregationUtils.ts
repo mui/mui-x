@@ -37,7 +37,7 @@ export const canColumnHaveAggregationFunction = ({
   aggregationFunctionName: string;
   aggregationFunction: GridAggregationFunction;
 }): boolean => {
-  if (column.aggregable) {
+  if (!column.aggregable) {
     return false;
   }
 

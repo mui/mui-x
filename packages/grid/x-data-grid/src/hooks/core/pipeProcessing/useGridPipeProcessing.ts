@@ -8,6 +8,15 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../models/events';
 
+interface GridPipeGroupCache {
+  processors: {
+    [processorId: string]: GridPipeProcessor<any>;
+  };
+  appliers: {
+    [applierId: string]: () => void;
+  };
+}
+
 /**
  * Implement the Pipeline Pattern
  *
@@ -34,15 +43,18 @@ import { GridEvents } from '../../../models/events';
  */
 export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
   const processorsCache = React.useRef<{
-    [G in GridPipeProcessorGroup]?: {
-      processors: {
-        [processorId: string]: GridPipeProcessor<any>;
-      };
-      appliers: {
-        [applierId: string]: () => void;
-      };
-    };
+    [G in GridPipeProcessorGroup]?: GridPipeGroupCache;
   }>({});
+
+  const runAppliers = React.useCallback((groupCache: GridPipeGroupCache | undefined) => {
+    if (!groupCache) {
+      return;
+    }
+
+    Object.values(groupCache.appliers).forEach((callback) => {
+      callback();
+    });
+  }, []);
 
   const registerPipeProcessor = React.useCallback<
     GridPipeProcessingApi['unstable_registerPipeProcessor']
@@ -60,9 +72,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
       if (oldProcessor !== processor) {
         groupCache.processors[id] = processor;
 
-        Object.values(groupCache.appliers).forEach((callback) => {
-          callback();
-        });
+        runAppliers(groupCache);
 
         apiRef.current.publishEvent(GridEvents.pipeProcessorRegister, group);
       }
@@ -74,7 +84,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
         apiRef.current.publishEvent(GridEvents.pipeProcessorUnregister, group);
       };
     },
-    [apiRef],
+    [apiRef, runAppliers],
   );
 
   const registerPipeApplier = React.useCallback<
@@ -98,7 +108,13 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
 
   const requestPipeProcessorsApplication = React.useCallback<
     GridPipeProcessingApi['unstable_requestPipeProcessorsApplication']
-  >((group) => {}, []);
+  >(
+    (group) => {
+      const groupCache = processorsCache.current[group];
+      runAppliers(groupCache);
+    },
+    [runAppliers],
+  );
 
   const applyPipeProcessors = React.useCallback<
     GridPipeProcessingApi['unstable_applyPipeProcessors']

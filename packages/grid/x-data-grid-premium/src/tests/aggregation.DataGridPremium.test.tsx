@@ -34,7 +34,7 @@ const baselineProps: DataGridPremiumProps = {
   ],
 };
 
-describe.only('<DataGridPremium /> - Aggregation', () => {
+describe('<DataGridPremium /> - Aggregation', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -90,7 +90,34 @@ describe.only('<DataGridPremium /> - Aggregation', () => {
         setProps({ aggregationModel: { id: 'min' } });
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', /* Agg */ '0']);
         setProps({ aggregationModel: {} });
-        // expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
+        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
+      });
+
+      it('should ignore aggregation rule that do not match any column', () => {
+        render(<Test initialState={{ aggregation: { model: { id: 'max', idBis: 'max' } } }} />);
+        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', /* Agg */ '3']);
+      });
+
+      it('should ignore aggregation rule with colDef.aggregable = false', () => {
+        render(
+          <Test
+            columns={[
+              {
+                field: 'id',
+                type: 'number',
+              },
+              {
+                field: 'idBis',
+                type: 'number',
+                valueGetter: (params) => params.row.id,
+                aggregable: false,
+              },
+            ]}
+            initialState={{ aggregation: { model: { id: 'max', idBis: 'max' } } }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', /* Agg */ '3']);
+        expect(getColumnValues(1)).to.deep.equal(['0', '1', '2', '3', '']);
       });
     });
   });

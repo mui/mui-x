@@ -95,6 +95,8 @@ export const useGridAggregation = (
       apiRef.current.unstable_getCache('aggregation')?.sanitizedModelOnLastHydration;
 
     if (!isDeepEqual(lastAggregationModelApplied, aggregationModel)) {
+      // Re-apply the row hydration to add / remove the aggregation footers
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
       applyAggregation();
 
       // Refresh the column pre-processing

@@ -177,16 +177,13 @@ export const wrapColumnWithAggregation = ({
     throw new Error(`MUI: No aggregation registered with the name ${aggregationItem}`);
   }
 
-  if (
-    !canColumnHaveAggregationFunction({
-      column,
-      aggregationFunction,
-      aggregationFunctionName: aggregationItem,
-    })
-  ) {
-    throw new Error(
-      `MUI: The aggregation function "${aggregationItem}" is not applicable to the column "${column.field}" of type "${column.type}"`,
-    );
+  const shouldAggregate = canColumnHaveAggregationFunction({
+    column,
+    aggregationFunction,
+    aggregationFunctionName: aggregationItem,
+  });
+  if (!shouldAggregate) {
+    return column;
   }
 
   const getCellAggregationPosition = (id: GridRowId): GridAggregationPosition | null => {
