@@ -404,7 +404,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
   });
 
-  describe('props: PopperProps', () => {
+  describe('prop: PopperProps', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();

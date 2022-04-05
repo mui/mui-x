@@ -348,7 +348,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  describe('props: initialState.sorting', () => {
+  describe('prop: initialState.sorting', () => {
     const Test = (props: Partial<DataGridProps>) => (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} {...props} />

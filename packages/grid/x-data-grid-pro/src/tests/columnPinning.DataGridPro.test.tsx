@@ -220,7 +220,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
   });
 
-  describe('props: onPinnedColumnsChange', () => {
+  describe('prop: onPinnedColumnsChange', () => {
     it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
@@ -258,7 +258,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     });
   });
 
-  describe('props: pinnedColumns', () => {
+  describe('prop: pinnedColumns', () => {
     it('should pin the columns specified', () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'] }} />);
       const leftColumns = document.querySelector<HTMLDivElement>(
@@ -292,7 +292,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     });
   });
 
-  describe('props: disableColumnPinning', () => {
+  describe('prop: disableColumnPinning', () => {
     it('should not add any button to the column menu', () => {
       render(<TestCase disableColumnPinning />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;

@@ -32,7 +32,7 @@ describe('<DataGrid /> - Pagination', () => {
     );
   };
 
-  describe('props: page and onPageChange', () => {
+  describe('prop: page and onPageChange', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting
@@ -220,7 +220,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
-  describe('props: pageSize and onPageSizeChange', () => {
+  describe('prop: pageSize and onPageSizeChange', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting
@@ -394,7 +394,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
-  describe('props: autoPageSize', () => {
+  describe('prop: autoPageSize', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting
@@ -590,7 +590,7 @@ describe('<DataGrid /> - Pagination', () => {
     expect(getColumnValues(0)).to.deep.equal(['1']);
   });
 
-  describe('props: initialState.pagination', () => {
+  describe('prop: initialState.pagination', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting

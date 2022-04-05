@@ -104,7 +104,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: rowGroupingModel', () => {
+    describe('prop: rowGroupingModel', () => {
       it('should not call onRowGroupingModelChange on initialisation or on rowGroupingModel prop change', () => {
         const onRowGroupingModelChange = spy();
 
@@ -200,7 +200,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: rowGroupingColumnMode', () => {
+  describe('prop: rowGroupingColumnMode', () => {
     it('should gather all the grouping criteria into a single column when rowGroupingColumnMode is not defined', () => {
       render(
         <Test
@@ -479,7 +479,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: disableRowGrouping', () => {
+  describe('prop: disableRowGrouping', () => {
     // TODO: Remove once the feature is stable
     it('should set `disableRowGrouping` to `true` if `experimentalFeatures.rowGrouping = false', () => {
       const disableRowGroupingSpy = spy();
@@ -541,7 +541,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: defaultGroupingExpansionDepth', () => {
+  describe('prop: defaultGroupingExpansionDepth', () => {
     it('should not expand any row if defaultGroupingExpansionDepth = 0', () => {
       render(
         <Test
@@ -637,7 +637,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: isGroupExpandedByDefault', () => {
+  describe('prop: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
       const isGroupExpandedByDefault = spy(
         (node: GridRowTreeNodeConfig) =>
@@ -687,7 +687,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: groupingColDef when groupingColumMode = "single"', () => {
+  describe('prop: groupingColDef when groupingColumMode = "single"', () => {
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -755,7 +755,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
 
-    describe('props: groupColDef.leafField', () => {
+    describe('prop: groupColDef.leafField', () => {
       it('should render the leafField `value` on leaves', () => {
         render(
           <Test
@@ -850,7 +850,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: groupColDef.headerName', () => {
+    describe('prop: groupColDef.headerName', () => {
       it('should allow to override the headerName in object mode', () => {
         render(
           <Test
@@ -894,7 +894,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: groupColDef.valueFormatter', () => {
+    describe('prop: groupColDef.valueFormatter', () => {
       it('should allow to format the value in object mode', () => {
         render(
           <Test
@@ -946,7 +946,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: groupingColDef.hideDescendantCount', () => {
+    describe('prop: groupingColDef.hideDescendantCount', () => {
       it('should render descendant count when hideDescendantCount = false', () => {
         render(
           <Test
@@ -999,7 +999,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: groupingColDef when groupingColumMode = "multiple"', () => {
+  describe('prop: groupingColDef when groupingColumMode = "multiple"', () => {
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -1085,7 +1085,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
     });
 
-    describe('props: groupColDef.leafField', () => {
+    describe('prop: groupColDef.leafField', () => {
       it('should render the leafField `value` on leaves', () => {
         render(
           <Test
@@ -1254,7 +1254,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: groupColDef.headerName', () => {
+    describe('prop: groupColDef.headerName', () => {
       it('should allow to override the headerName in object mode', () => {
         render(
           <Test
@@ -1300,7 +1300,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: groupColDef.valueFormatter', () => {
+    describe('prop: groupColDef.valueFormatter', () => {
       it('should allow to format the value in object mode', () => {
         render(
           <Test
@@ -1374,7 +1374,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: groupingColDef.hideDescendantCount', () => {
+    describe('prop: groupingColDef.hideDescendantCount', () => {
       it('should render descendant count when hideDescendantCount = false', () => {
         render(
           <Test
@@ -1738,7 +1738,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
   });
 
   describe('sorting', () => {
-    describe('props: rowGroupingColumnMode = "single"', () => {
+    describe('prop: rowGroupingColumnMode = "single"', () => {
       it('should use the top level grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test
@@ -1898,7 +1898,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: rowGroupingColumnMode = "multiple"', () => {
+    describe('prop: rowGroupingColumnMode = "multiple"', () => {
       it('should use the column grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test
@@ -1991,7 +1991,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
   describe('filtering', () => {
     clock.withFakeTimers();
 
-    describe('props: rowGroupingColumnMode = "single"', () => {
+    describe('prop: rowGroupingColumnMode = "single"', () => {
       it('should use the top level grouping criteria for filtering if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test
@@ -2124,7 +2124,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: rowGroupingColumnMode = "multiple"', () => {
+    describe('prop: rowGroupingColumnMode = "multiple"', () => {
       it('should use the column grouping criteria for filtering if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test

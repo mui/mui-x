@@ -270,7 +270,7 @@ describe('<DesktopTimePicker />', () => {
     });
   });
 
-  describe('props: PopperProps', () => {
+  describe('prop: PopperProps', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();

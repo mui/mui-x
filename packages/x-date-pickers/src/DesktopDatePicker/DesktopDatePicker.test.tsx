@@ -325,7 +325,7 @@ describe('<DesktopDatePicker />', () => {
     expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
-  describe('props: PopperProps', () => {
+  describe('prop: PopperProps', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
@@ -353,7 +353,7 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe('props: PaperProps', () => {
+  describe('prop: PaperProps', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();

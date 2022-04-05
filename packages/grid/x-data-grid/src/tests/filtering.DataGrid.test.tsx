@@ -45,7 +45,7 @@ describe('<DataGrid /> - Filter', () => {
     );
   };
 
-  describe('props: filterModel', () => {
+  describe('prop: filterModel', () => {
     it('should throw for more than one filter item', () => {
       expect(() => {
         render(
@@ -143,7 +143,7 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  describe('props: initialState.filter', () => {
+  describe('prop: initialState.filter', () => {
     it('should allow to initialize the filterModel', () => {
       render(
         <TestCase

@@ -43,7 +43,7 @@ describe('<DataGrid /> - Rows', () => {
     columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
 
-  describe('props: getRowId', () => {
+  describe('prop: getRowId', () => {
     it('should allow to select a field as id', () => {
       const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
       render(
@@ -55,7 +55,7 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
-  describe('props: rows', () => {
+  describe('prop: rows', () => {
     it('should support new dataset', () => {
       const { rows, columns } = getData(5, 2);
 
@@ -105,7 +105,7 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(1);
   });
 
-  describe('props: getRowClassName', () => {
+  describe('prop: getRowClassName', () => {
     it('should apply the CSS class returned by getRowClassName', () => {
       const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
       const handleRowClassName: DataGridProps['getRowClassName'] = (params) =>
@@ -287,7 +287,7 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
-  describe('props: getRowHeight', () => {
+  describe('prop: getRowHeight', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting
@@ -360,7 +360,7 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
-  describe('props: getRowSpacing', () => {
+  describe('prop: getRowSpacing', () => {
     const { rows, columns } = getData(4, 2);
 
     const TestCase = (props: Partial<DataGridProps>) => {

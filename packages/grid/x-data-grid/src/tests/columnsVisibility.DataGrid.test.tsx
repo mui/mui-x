@@ -27,7 +27,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     </div>
   );
 
-  describe('props: columnVisibilityModel and onColumnVisibilityModelChange', () => {
+  describe('prop: columnVisibilityModel and onColumnVisibilityModelChange', () => {
     it('should allow to set the columnVisibilityModel prop', () => {
       render(<TestDataGrid columnVisibilityModel={{ idBis: false }} />);
 
@@ -133,7 +133,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     });
   });
 
-  describe('props: initialState.columns.columnVisibilityModel', () => {
+  describe('prop: initialState.columns.columnVisibilityModel', () => {
     it('should allow to initialize the columnVisibilityModel', () => {
       render(
         <TestDataGrid
