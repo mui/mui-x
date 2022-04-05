@@ -267,6 +267,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
               aggregation: { model: { id: 'max' } },
             }}
             defaultGroupingExpansionDepth={-1}
+            // Only group "Cat A" aggregated
             isGroupAggregated={(group) => group?.groupingKey === 'Cat A'}
           />,
         );
@@ -282,6 +283,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
           '5',
         ]);
 
+        // All groups aggregated except the root
         setProps({ isGroupAggregated: (group: GridRowTreeNodeConfig | null) => group != null });
         expect(getColumnValues(1)).to.deep.equal([
           '',
@@ -296,6 +298,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
           '5' /* Agg "Cat B" */,
         ]);
 
+        // All groups aggregated
         setProps({ isGroupAggregated: undefined });
         expect(getColumnValues(1)).to.deep.equal([
           '',
@@ -311,9 +314,56 @@ describe('<DataGridPremium /> - Aggregation', () => {
           '5' /* Agg root */,
         ]);
 
+        // 0 group aggregated
         setProps({ isGroupAggregated: () => false });
         expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '3', '4', '', '5']);
       });
+    });
+  });
+
+  describe('props: aggregatedRows', () => {
+    it('should aggregate based on the filtered rows if aggregatedRows is not defined', () => {
+      render(
+        <Test
+          initialState={{
+            filter: {
+              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+            },
+            aggregation: { model: { id: 'max' } },
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '3' /* Agg */]);
+    });
+
+    it('should aggregate based on the filtered rows if aggregatedRows = "filtered"', () => {
+      render(
+        <Test
+          initialState={{
+            filter: {
+              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+            },
+            aggregation: { model: { id: 'max' } },
+          }}
+          aggregatedRows="filtered"
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '3' /* Agg */]);
+    });
+
+    it('should aggregate based on all the rows if aggregatedRows = "all"', () => {
+      render(
+        <Test
+          initialState={{
+            filter: {
+              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+            },
+            aggregation: { model: { id: 'max' } },
+          }}
+          aggregatedRows="all"
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '5' /* Agg */]);
     });
   });
 });
