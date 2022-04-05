@@ -51,7 +51,7 @@ describe('<DataGrid /> - Rows', () => {
           <DataGrid {...baselineProps} getRowId={getRowId} />
         </div>,
       );
-      expect(getColumnValues()).to.deep.equal(['c1', 'c2', 'c3']);
+      expect(getColumnValues(0)).to.deep.equal(['c1', 'c2', 'c3']);
     });
   });
 
@@ -105,7 +105,7 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(1);
   });
 
-  describe('prop: getRowClassName', () => {
+  describe('props: getRowClassName', () => {
     it('should apply the CSS class returned by getRowClassName', () => {
       const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
       const handleRowClassName: DataGridProps['getRowClassName'] = (params) =>
@@ -287,7 +287,7 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
-  describe('prop: getRowHeight', () => {
+  describe('props: getRowHeight', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting
@@ -360,7 +360,7 @@ describe('<DataGrid /> - Rows', () => {
     });
   });
 
-  describe('prop: getRowSpacing', () => {
+  describe('props: getRowSpacing', () => {
     const { rows, columns } = getData(4, 2);
 
     const TestCase = (props: Partial<DataGridProps>) => {

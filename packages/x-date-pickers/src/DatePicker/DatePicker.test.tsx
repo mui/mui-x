@@ -7,7 +7,7 @@ import { createPickerRenderer } from '../../../../test/utils/pickers-utils';
 describe('<DatePicker />', () => {
   const { render } = createPickerRenderer();
 
-  describe('prop: inputRef', () => {
+  describe('props: inputRef', () => {
     it('should forward ref to the text box', () => {
       const inputRef = React.createRef<HTMLInputElement>();
       render(

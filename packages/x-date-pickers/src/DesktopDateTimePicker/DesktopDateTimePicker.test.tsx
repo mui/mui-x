@@ -201,7 +201,7 @@ describe('<DesktopDateTimePicker />', () => {
     expect(screen.getByLabelText('open next view')).to.have.attribute('disabled');
   });
 
-  describe('prop: PopperProps', () => {
+  describe('props: PopperProps', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();

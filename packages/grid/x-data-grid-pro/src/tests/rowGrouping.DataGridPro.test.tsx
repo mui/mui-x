@@ -104,7 +104,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('prop: rowGroupingModel', () => {
+    describe('props: rowGroupingModel', () => {
       it('should not call onRowGroupingModelChange on initialisation or on rowGroupingModel prop change', () => {
         const onRowGroupingModelChange = spy();
 
@@ -129,7 +129,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         setProps({ rowGroupingModel: ['category2'] });
         expect(getColumnValues(0)).to.deep.equal(['Cat 1 (2)', '', '', 'Cat 2 (3)', '', '', '']);
         setProps({ rowGroupingModel: ['category1', 'category2'] });
-        expect(getColumnValues()).to.deep.equal([
+        expect(getColumnValues(0)).to.deep.equal([
           'Cat A (3)',
           'Cat 1 (1)',
           '',
@@ -541,7 +541,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('prop: defaultGroupingExpansionDepth', () => {
+  describe('props: defaultGroupingExpansionDepth', () => {
     it('should not expand any row if defaultGroupingExpansionDepth = 0', () => {
       render(
         <Test
@@ -637,7 +637,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('prop: isGroupExpandedByDefault', () => {
+  describe('props: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
       const isGroupExpandedByDefault = spy(
         (node: GridRowTreeNodeConfig) =>
@@ -755,7 +755,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
 
-    describe('prop: groupColDef.leafField', () => {
+    describe('props: groupColDef.leafField', () => {
       it('should render the leafField `value` on leaves', () => {
         render(
           <Test
@@ -850,7 +850,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('prop: groupColDef.headerName', () => {
+    describe('props: groupColDef.headerName', () => {
       it('should allow to override the headerName in object mode', () => {
         render(
           <Test
@@ -894,7 +894,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('prop: groupColDef.valueFormatter', () => {
+    describe('props: groupColDef.valueFormatter', () => {
       it('should allow to format the value in object mode', () => {
         render(
           <Test
@@ -946,7 +946,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('prop: groupingColDef.hideDescendantCount', () => {
+    describe('props: groupingColDef.hideDescendantCount', () => {
       it('should render descendant count when hideDescendantCount = false', () => {
         render(
           <Test
@@ -1085,7 +1085,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
     });
 
-    describe('prop: groupColDef.leafField', () => {
+    describe('props: groupColDef.leafField', () => {
       it('should render the leafField `value` on leaves', () => {
         render(
           <Test
@@ -1254,7 +1254,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('prop: groupColDef.headerName', () => {
+    describe('props: groupColDef.headerName', () => {
       it('should allow to override the headerName in object mode', () => {
         render(
           <Test
@@ -1300,7 +1300,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('prop: groupColDef.valueFormatter', () => {
+    describe('props: groupColDef.valueFormatter', () => {
       it('should allow to format the value in object mode', () => {
         render(
           <Test
@@ -1374,7 +1374,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('prop: groupingColDef.hideDescendantCount', () => {
+    describe('props: groupingColDef.hideDescendantCount', () => {
       it('should render descendant count when hideDescendantCount = false', () => {
         render(
           <Test

@@ -58,7 +58,7 @@ export function sleep(duration: number) {
   });
 }
 
-export function getColumnValues(colIndex: number = 0) {
+export function getColumnValues(colIndex: number) {
   return Array.from(document.querySelectorAll(`[role="cell"][data-colindex="${colIndex}"]`)).map(
     (node) => node!.textContent,
   );

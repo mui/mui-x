@@ -52,7 +52,7 @@ describe('<DataGrid /> - Cells', () => {
     });
   });
 
-  describe('prop: showCellRightBorder', () => {
+  describe('props: showCellRightBorder', () => {
     function expectRightBorder(element: HTMLElement) {
       expect(element).to.have.class(gridClasses.withBorder);
 

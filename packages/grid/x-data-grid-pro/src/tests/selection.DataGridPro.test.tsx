@@ -46,7 +46,7 @@ describe('<DataGridPro /> - Selection', () => {
     );
   };
 
-  describe('prop: checkboxSelectionVisibleOnly = false', () => {
+  describe('props: checkboxSelectionVisibleOnly = false', () => {
     it('should select all rows of all pages if no row is selected', () => {
       render(
         <TestDataGridSelection
@@ -125,7 +125,7 @@ describe('<DataGridPro /> - Selection', () => {
     });
   });
 
-  describe('prop: checkboxSelectionVisibleOnly = true', () => {
+  describe('props: checkboxSelectionVisibleOnly = true', () => {
     it('should throw a console error if used without pagination', () => {
       expect(() => {
         render(

@@ -71,7 +71,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     );
   };
 
-  describe('prop: treeData', () => {
+  describe('props: treeData', () => {
     it('should support tree data toggling', () => {
       const { setProps } = render(<Test treeData={false} />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
@@ -181,7 +181,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
   });
 
-  describe('prop: getTreeDataPath', () => {
+  describe('props: getTreeDataPath', () => {
     it('should allow to transform path', () => {
       render(
         <Test
@@ -234,7 +234,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
   });
 
-  describe('prop: defaultGroupingExpansionDepth', () => {
+  describe('props: defaultGroupingExpansionDepth', () => {
     it('should not expand any row if defaultGroupingExpansionDepth = 0', () => {
       render(<Test defaultGroupingExpansionDepth={0} />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
@@ -285,7 +285,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
   });
 
-  describe('prop: isGroupExpandedByDefault', () => {
+  describe('props: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
       const isGroupExpandedByDefault = spy((node: GridRowTreeNodeConfig) => node.id === 'A');
 
@@ -312,7 +312,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
   });
 
-  describe('prop: groupingColDef', () => {
+  describe('props: groupingColDef', () => {
     it('should set the custom headerName', () => {
       render(<Test groupingColDef={{ headerName: 'Custom header name' }} />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['Custom header name', 'name']);

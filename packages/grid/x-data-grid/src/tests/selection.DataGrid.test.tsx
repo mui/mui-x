@@ -175,7 +175,7 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
-  describe('prop: checkboxSelection = true (multi selection)', () => {
+  describe('props: checkboxSelection = true (multi selection)', () => {
     it('should allow to toggle prop.checkboxSelection', () => {
       const { setProps } = render(<TestDataGridSelection />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
@@ -346,7 +346,7 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
-  describe('prop: checkboxSelection = true (multi selection), with keyboard events', () => {
+  describe('props: checkboxSelection = true (multi selection), with keyboard events', () => {
     it('should select row below when pressing "ArrowDown" + shiftKey', () => {
       render(<TestDataGridSelection checkboxSelection />);
       fireClickEvent(getCell(2, 1));
