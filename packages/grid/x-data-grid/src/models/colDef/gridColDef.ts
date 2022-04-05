@@ -217,14 +217,18 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    */
   filterOperators?: GridFilterOperator<R, V, F>[];
   /**
-  * The callback that generates a filtering function for a given quick filter value.
-  * This function can return `null` to skip filtering for this value and column.
-  * @param {any} value The value with which we want to filter the column.
-  * @param {GridStateColDef} colDef The column from which we want to filter the rows.
-  * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
-  * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row pass this filter value or not.
-  */
-  getApplyQuickFilterFn?: (value: any, colDef: GridStateColDef, apiRef: React.MutableRefObject<GridApiCommunity>) => null | ((params: GridCellParams<V, R, F>) => boolean);
+   * The callback that generates a filtering function for a given quick filter value.
+   * This function can return `null` to skip filtering for this value and column.
+   * @param {any} value The value with which we want to filter the column.
+   * @param {GridStateColDef} colDef The column from which we want to filter the rows.
+   * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
+   * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row pass this filter value or not.
+   */
+  getApplyQuickFilterFn?: (
+    value: any,
+    colDef: GridStateColDef,
+    apiRef: React.MutableRefObject<GridApiCommunity>,
+  ) => null | ((params: GridCellParams<V, R, F>) => boolean);
   /**
    * If `true`, this column cannot be reordered.
    * @default false

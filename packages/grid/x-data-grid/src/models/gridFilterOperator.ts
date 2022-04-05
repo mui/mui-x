@@ -35,9 +35,9 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
    * The input component to render in the filter panel for this filter operator.
    */
   InputComponent?:
-  | React.JSXElementConstructor<GridFilterInputValueProps>
-  | React.JSXElementConstructor<GridFilterInputMultipleValueProps>
-  | React.JSXElementConstructor<GridFilterInputMultipleSingleSelectProps>;
+    | React.JSXElementConstructor<GridFilterInputValueProps>
+    | React.JSXElementConstructor<GridFilterInputMultipleValueProps>
+    | React.JSXElementConstructor<GridFilterInputMultipleSingleSelectProps>;
   /**
    * The props to pass to the input component in the filter panel for this filter operator.
    */

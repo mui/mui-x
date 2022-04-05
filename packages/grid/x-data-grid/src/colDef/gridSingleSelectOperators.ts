@@ -13,44 +13,44 @@ const parseObjectValue = (value: GridFilterItem) => {
   return value.value;
 };
 
-export const getGridSingleSelectQuickFilterFn = (value: any,
+export const getGridSingleSelectQuickFilterFn = (
+  value: any,
   column: GridColDef,
-  apiRef: React.MutableRefObject<GridApiCommunity>) => {
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => {
   if (!value) {
     return null;
   }
-  const { valueOptions, valueFormatter, field } = column
+  const { valueOptions, valueFormatter, field } = column;
 
   const potentialValues = [parseObjectValue(value)];
 
   const iterableColumnValues =
-    typeof valueOptions === 'function'
-      ? valueOptions({ field })
-      : (valueOptions || []);
+    typeof valueOptions === 'function' ? valueOptions({ field }) : valueOptions || [];
 
   if (iterableColumnValues) {
     iterableColumnValues.forEach((option) => {
-      // for each valueOption, check if the formatted value 
-      let optionValue
-      let optionLabel
+      // for each valueOption, check if the formatted value
+      let optionValue;
+      let optionLabel;
       if (typeof option === 'object') {
-        optionValue = option.value
-        optionLabel = option.label
+        optionValue = option.value;
+        optionLabel = option.label;
       } else {
-        optionValue = option
+        optionValue = option;
         if (valueFormatter) {
-          optionLabel = valueFormatter({ value: option, field, api: apiRef.current })
+          optionLabel = valueFormatter({ value: option, field, api: apiRef.current });
         } else {
-          optionLabel = option
+          optionLabel = option;
         }
       }
 
       if (optionLabel.slice(0, value.length).lowerCase() === value.lowerCase()) {
         if (!potentialValues.includes(optionValue)) {
-          potentialValues.push(optionValue)
+          potentialValues.push(optionValue);
         }
       }
-    })
+    });
   }
 
   return ({ value: columnValue }: GridCellParams): boolean => {
