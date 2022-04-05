@@ -27,6 +27,9 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} aktive Filter` : `${count} aktiver Filter`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilter: 'search',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',

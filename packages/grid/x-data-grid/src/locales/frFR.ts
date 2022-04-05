@@ -27,6 +27,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} filtres actifs` : `${count} filtre actif`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilter: 'recherche',
+
   // Export selector toolbar button text
   toolbarExport: 'Exporter',
   toolbarExportLabel: 'Exporter',

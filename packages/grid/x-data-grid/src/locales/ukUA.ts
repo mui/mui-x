@@ -50,6 +50,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
       many: 'активних фільтрів',
     }),
 
+  // Quick filter toolbar field
+  // toolbarQuickFilter: 'search',
+
   // Export selector toolbar button text
   toolbarExport: 'Експорт',
   toolbarExportLabel: 'Експорт',

@@ -27,6 +27,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} actieve filters` : `${count} filter actief`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilter: 'search',
+
   // Export selector toolbar button text
   toolbarExport: 'Exporteren',
   toolbarExportLabel: 'Exporteren',

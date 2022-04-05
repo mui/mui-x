@@ -26,6 +26,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: '필터 표시',
   toolbarFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilter: 'search',
+
   // Export selector toolbar button text
   toolbarExport: '내보내기',
   toolbarExportLabel: '내보내기',

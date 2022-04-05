@@ -27,6 +27,9 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} filtri attivi` : `${count} filtro attivo`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilter: 'search',
+
   // Export selector toolbar button text
   toolbarExport: 'Esporta',
   toolbarExportLabel: 'Esporta',

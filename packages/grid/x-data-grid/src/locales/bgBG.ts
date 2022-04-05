@@ -26,6 +26,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Покажи Филтрите',
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilter: 'search',
+
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',

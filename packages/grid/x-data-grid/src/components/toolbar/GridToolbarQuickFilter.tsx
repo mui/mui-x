@@ -14,7 +14,7 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
 })(({ theme }) => ({
   width: 'auto',
-  m: theme.spacing(1, 0.5, 1.5),
+  margin: theme.spacing(1, 0.5, 1.5, 0.5),
   '& .MuiSvgIcon-root': {
     marginRight: theme.spacing(0.5),
   },
@@ -62,6 +62,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       value={searchValue}
       onChange={handleSearchValueChange}
       placeholder="Search…"
+      label={apiRef.current.getLocaleText('toolbarQuickFilter')}
       InputProps={{
         startAdornment: <SearchIcon fontSize="small" />,
         endAdornment: (
@@ -76,6 +77,9 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           </IconButton>
         ),
       }}
+      // for more details, see: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/search_role
+      role="search"
+      aria-label="Grid"
       {...other}
     />
   );

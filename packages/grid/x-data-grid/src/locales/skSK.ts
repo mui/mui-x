@@ -36,6 +36,9 @@ const skSKGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
 
+  // Quick filter toolbar field
+  // toolbarQuickFilter: 'search',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
