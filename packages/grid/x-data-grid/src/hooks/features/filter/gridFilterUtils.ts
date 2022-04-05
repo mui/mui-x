@@ -112,13 +112,13 @@ export const mergeStateWithFilterModel =
     disableMultipleColumnsFiltering: boolean,
     apiRef: React.MutableRefObject<GridApiCommunity>,
   ) =>
-  (state: GridStateCommunity): GridStateCommunity => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
-    },
-  });
+    (state: GridStateCommunity): GridStateCommunity => ({
+      ...state,
+      filter: {
+        ...state.filter,
+        filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
+      },
+    });
 
 /**
  * Generates a method to easily check if a row is matching the current filter model.
@@ -225,11 +225,12 @@ export const buildAggregatedQuickFilterApplier = (
     [field: string]: (null | ((params: GridCellParams) => boolean))[];
   } = {};
   columnsFields.forEach((field) => {
-    const getApplyQuickFilterFn = apiRef.current.getColumn(field)?.getApplyQuickFilterFn;
+    const column = apiRef.current.getColumn(field)
+    const getApplyQuickFilterFn = column?.getApplyQuickFilterFn;
     if (!getApplyQuickFilterFn) {
       return;
     }
-    appliersPerColumnField[field] = quickFilterValues.map((value) => getApplyQuickFilterFn(value));
+    appliersPerColumnField[field] = quickFilterValues.map((value) => getApplyQuickFilterFn(value, column, apiRef));
   });
 
   if (quickFilterLogic === GridQuickFilterLogic.And) {
