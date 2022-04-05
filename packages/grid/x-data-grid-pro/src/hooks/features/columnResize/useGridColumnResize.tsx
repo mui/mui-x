@@ -222,15 +222,15 @@ export const useGridColumnResize = (
 
       colDefRef.current = colDef as GridStateColDef;
       colElementRef.current =
-        apiRef.current.columnHeadersContainerElementRef?.current!.querySelector(
+        apiRef.current.columnHeadersContainerElementRef?.current!.querySelector<HTMLDivElement>(
           `[data-field="${colDef.field}"]`,
-        ) as HTMLDivElement;
+        )!;
 
       colCellElementsRef.current = findGridCellElementsFromCol(
         colElementRef.current,
       ) as NodeListOf<Element>;
 
-      const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+      const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
 
       separatorSide.current = getSeparatorSide(event.currentTarget);
@@ -350,7 +350,7 @@ export const useGridColumnResize = (
   });
 
   const stopListening = React.useCallback(() => {
-    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current);
     doc.body.style.removeProperty('cursor');
     doc.removeEventListener('mousemove', handleResizeMouseMove);
     doc.removeEventListener('mouseup', handleResizeMouseUp);

@@ -263,7 +263,7 @@ export const useGridFocus = (
   }, [apiRef, props.rows]);
 
   React.useEffect(() => {
-    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current);
     doc.addEventListener('click', handleDocumentClick);
 
     return () => {

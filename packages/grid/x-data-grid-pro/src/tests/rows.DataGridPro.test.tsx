@@ -389,9 +389,9 @@ describe('<DataGridPro /> - Rows', () => {
       );
 
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      const renderingZone = document.querySelector(
+      const renderingZone = document.querySelector<HTMLElement>(
         '.MuiDataGrid-virtualScrollerRenderZone',
-      )! as HTMLElement;
+      )!;
       virtualScroller.scrollTop = 10e6; // scroll to the bottom
       virtualScroller.dispatchEvent(new Event('scroll'));
 
