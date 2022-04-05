@@ -4,7 +4,7 @@ import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
   gridRowCountSelector,
-  gridLoadingSelector,
+  gridRowsLoadingSelector,
 } from '../../hooks/features/rows/gridRowsSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -60,7 +60,7 @@ export function GridOverlays() {
 
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
-  const loading = useGridSelector(apiRef, gridLoadingSelector);
+  const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
 
   const showNoRowsOverlay = !loading && totalRowCount === 0;
   const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;

@@ -180,12 +180,6 @@
     "supportsApiRef": false
   },
   {
-    "name": "gridLoadingSelector",
-    "returnType": "boolean | undefined",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridPageCountSelector",
     "returnType": "number",
     "category": "Pagination",
@@ -290,6 +284,12 @@
   {
     "name": "gridRowTreeSelector",
     "returnType": "GridRowTreeConfig",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowsLoadingSelector",
+    "returnType": "boolean | undefined",
     "description": "",
     "supportsApiRef": true
   },
