@@ -15,7 +15,7 @@ test.describe('DataGrid docs', () => {
 
     const anchors = page.locator('[aria-label="Page table of contents"] ul a');
 
-    const firstAnchor = await anchors.first();
+    const firstAnchor = anchors.first();
     const textContent = await firstAnchor.textContent();
 
     await expect(firstAnchor).toHaveAttribute(
@@ -28,9 +28,9 @@ test.describe('DataGrid docs', () => {
     test('should have correct link for API section', async ({ page }) => {
       await page.goto(`/x/react-data-grid/`);
 
-      const anchors = await page.locator('div > h2#heading-api ~ ul a');
+      const anchors = page.locator('div > h2#heading-api ~ ul a');
 
-      const firstAnchor = await anchors.first();
+      const firstAnchor = anchors.first();
       const textContent = await firstAnchor.textContent();
 
       await expect(firstAnchor).toHaveAttribute(
@@ -42,9 +42,8 @@ test.describe('DataGrid docs', () => {
     test('should have correct link for sidebar anchor', async ({ page }) => {
       await page.goto(`/x/react-data-grid/`);
 
-      const anchor = await page.locator(
-        'nav[aria-label="documentation"] ul ul a:text-is("Overview")',
-      );
+      const anchor = page.locator('nav[aria-label="documentation"] ul ul a:text-is("Overview")');
+      await anchor.waitFor();
 
       await expect(anchor).toHaveAttribute('href', `/x/react-data-grid/`);
     });
@@ -54,9 +53,8 @@ test.describe('DataGrid docs', () => {
     test('should have correct link for sidebar anchor', async ({ page }) => {
       await page.goto(`/x/api/data-grid/data-grid/`);
 
-      const anchor = await page.locator(
-        'nav[aria-label="documentation"] ul ul a:text-is("DataGrid")',
-      );
+      const anchor = page.locator('nav[aria-label="documentation"] ul ul a:text-is("DataGrid")');
+      await anchor.waitFor();
 
       await expect(anchor).toHaveAttribute('app-drawer-active', '');
       await expect(anchor).toHaveAttribute('href', `/x/api/data-grid/data-grid/`);
@@ -65,7 +63,7 @@ test.describe('DataGrid docs', () => {
     test('all the links in the main content should have correct prefix', async ({ page }) => {
       await page.goto(`/x/api/data-grid/`);
 
-      const anchors = await page.locator('div#main-content a');
+      const anchors = page.locator('div#main-content a');
 
       const handles = await anchors.elementHandles();
 
@@ -102,9 +100,10 @@ test.describe('DataGrid docs', () => {
 
   //     await page.type('input#docsearch-input', 'datagrid', { delay: 50 });
 
-  //     const anchor = await page.locator('.DocSearch-Hits a:has-text("Data Grid - Components")');
+  //     const anchor = page.locator('.DocSearch-Hits a:has-text("Data Grid - Components")').first();
+  //     await anchor.waitFor();
 
-  //     await expect(anchor.first()).toHaveAttribute(
+  //     await expect(anchor).toHaveAttribute(
   //       'href',
   //       `/x/react-data-grid/components/#main-content`,
   //     );
@@ -117,9 +116,10 @@ test.describe('DataGrid docs', () => {
 
   //     await page.type('input#docsearch-input', 'datagrid api', { delay: 50 });
 
-  //     const anchor = await page.locator('.DocSearch-Hits a:has-text("DataGrid API")');
+  //     const anchor = page.locator('.DocSearch-Hits a:has-text("DataGrid API")').first();
+  //     await anchor.waitFor();
 
-  //     await expect(anchor.first()).toHaveAttribute(
+  //     await expect(anchor).toHaveAttribute(
   //       'href',
   //       `/x/api/data-grid/data-grid/#main-content`,
   //     );
@@ -132,9 +132,10 @@ test.describe('DataGrid docs', () => {
 
   //     await page.type('input#docsearch-input', 'datagridpro api', { delay: 50 });
 
-  //     const anchor = await page.locator('.DocSearch-Hits a:has-text("DataGridPro API")');
+  //     const anchor = page.locator('.DocSearch-Hits a:has-text("DataGridPro API")').first();
+  //     await anchor.waitFor();
 
-  //     await expect(anchor.first()).toHaveAttribute(
+  //     await expect(anchor).toHaveAttribute(
   //       'href',
   //       `/x/api/data-grid/data-grid-pro/#main-content`,
   //     );
