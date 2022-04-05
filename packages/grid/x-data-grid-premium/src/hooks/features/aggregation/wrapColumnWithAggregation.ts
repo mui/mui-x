@@ -173,9 +173,6 @@ export const wrapColumnWithAggregation = ({
   isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
 }): GridColDef => {
   const aggregationFunction = aggregationFunctions?.[aggregationItem];
-  if (!aggregationFunction) {
-    throw new Error(`MUI: No aggregation registered with the name ${aggregationItem}`);
-  }
 
   const shouldAggregate = canColumnHaveAggregationFunction({
     column,

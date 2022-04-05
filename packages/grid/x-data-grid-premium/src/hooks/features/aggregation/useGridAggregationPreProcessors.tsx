@@ -15,10 +15,7 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationColumnMenuItems } from '../../../components/GridAggregationColumnMenuItems';
 import { GridAggregationPanel } from '../../../components/GridAggregationPanel';
-import {
-  gridAggregationModelSelector,
-  gridAggregationSanitizedModelSelector,
-} from './gridAggregationSelectors';
+import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -92,14 +89,20 @@ export const useGridAggregationPreProcessors = (
         return groupingParams;
       }
 
-      const model = gridAggregationSanitizedModelSelector(apiRef);
-      if (Object.keys(model).length === 0) {
-        return groupingParams;
-      }
-
-      return addFooterRows({ groupingParams, isGroupAggregated: props.isGroupAggregated });
+      return addFooterRows({
+        apiRef,
+        groupingParams,
+        aggregationFunctions: props.aggregationFunctions,
+        isGroupAggregated: props.isGroupAggregated,
+      });
     },
-    [apiRef, props.aggregationPosition, props.disableAggregation, props.isGroupAggregated],
+    [
+      apiRef,
+      props.aggregationPosition,
+      props.disableAggregation,
+      props.isGroupAggregated,
+      props.aggregationFunctions,
+    ],
   );
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
