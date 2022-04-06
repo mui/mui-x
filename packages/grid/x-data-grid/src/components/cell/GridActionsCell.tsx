@@ -126,7 +126,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     };
 
   const handleRootKeyDown = (event: React.KeyboardEvent) => {
-    if (iconButtons.length + menuButtons.length === 1) {
+    if (numberOfButtons <= 1) {
       return;
     }
 
@@ -138,7 +138,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     }
 
     if (newIndex < 0 || newIndex >= numberOfButtons) {
-      return; // We're already in the first or last item = do nothing
+      return; // We're already in the first or last item = do nothing and let the grid listen the event
     }
 
     if (newIndex !== focusedButtonIndex) {
