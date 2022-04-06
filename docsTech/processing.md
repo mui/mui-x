@@ -4,105 +4,15 @@
 
 ## Pipe-processing
 
-### List of pipe-processing
+A pipe processing is a pattern allowing plugins or components to enrich data used by another plugin.
 
-#### `canBeReordered` (pro only)
+We can classify the pipe-processing into several categories:
 
-**Publisher**: `useGridColumnReorder` when dragging a column over another.
+### Plugin state enrichment
 
-**Why register to this processing**:
+**Goal**: Allow plugins to enrich another plugin state before saving it.
 
-**Example**:
-
-```ts
-// Column Pinning plugin
-const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(
-  (initialValue, { targetIndex }) => {
-    const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
-      pinnedColumns,
-      gridVisibleColumnFieldsSelector(apiRef),
-    );
-
-    if (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0) {
-      return initialValue;
-    }
-
-    if (leftPinnedColumns.length > 0 && targetIndex < leftPinnedColumns.length) {
-      return false;
-    }
-
-    if (rightPinnedColumns.length > 0) {
-      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
-      const firstRightPinnedColumnIndex = visibleColumns.length - rightPinnedColumns.length;
-      return targetIndex >= firstRightPinnedColumnIndex ? false : initialValue;
-    }
-
-    return initialValue;
-  },
-  [apiRef, pinnedColumns],
-);
-
-useGridRegisterPipeProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
-```
-
-#### `columnMenu`
-
-**Publisher**: `GridColumnMenu` component on render.
-
-**Why register to this processing**: Add one or multiple menu items to `GridColumnMenu`.
-
-**Example**:
-
-```tsx
-// Column pinning plugin
-const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-  (initialValue, column) => {
-    if (props.disableColumnPinning) {
-      return initialValue;
-    }
-
-    if (column.pinnable === false) {
-      return initialValue;
-    }
-
-    return [...initialValue, <Divider />, <GridColumnPinningMenuItems />];
-  },
-  [props.disableColumnPinning],
-);
-
-useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
-```
-
-#### `exportState`
-
-**Publisher**: `useGridStatePersistence` plugin when calling `apiRef.current.exportState`.
-
-**Why register to this processing**: Add a portable state to the returned value of `apiRef.current.exportState`.
-
-**Example**:
-
-```ts
-// Sorting plugin
-const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-  (prevState) => {
-    const sortModelToExport = gridSortModelSelector(apiRef);
-    // Avoids adding a value equals to the default value
-    if (sortModelToExport.length === 0) {
-      return prevState;
-    }
-
-    return {
-      ...prevState,
-      sorting: {
-        sortModel: sortModelToExport,
-      },
-    };
-  },
-  [apiRef],
-);
-
-useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
-```
+#### Processing list
 
 #### `hydrateColumns`
 
@@ -113,19 +23,18 @@ useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
 **Example**:
 
 ```ts
-// Selection plugin
-const updateSelectionColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
+const addCustomFeatureColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
   (columnsState) => {
-    const selectionColumn = getSelectionColumn();
-    const shouldHaveSelectionColumn = props.checkboxSelection;
-    const haveSelectionColumn = columnsState.lookup[selectionColumn.field] != null;
+    const customFeatureColumn = getCustomFeatureColumn();
+    const shouldHaveCustomFeatureColumn = !props.disableCustomFeature;
+    const haveCustomFeatureColumn = columnsState.lookup[customFeatureColumn.field] != null;
 
-    if (shouldHaveSelectionColumn && !haveSelectionColumn) {
-      columnsState.lookup[selectionColumn.field] = selectionColumn;
-      columnsState.all = [selectionColumn.field, ...columnsState.all];
-    } else if (!shouldHaveSelectionColumn && haveSelectionColumn) {
-      delete columnsState.lookup[selectionColumn.field];
-      columnsState.all = columnsState.all.filter((field) => field !== selectionColumn.field);
+    if (shouldHaveCustomFeatureColumn && !haveCustomFeatureColumn) {
+      columnsState.lookup[customFeatureColumn.field] = customFeatureColumn;
+      columnsState.all = [customFeatureColumn.field, ...columnsState.all];
+    } else if (!shouldHaveCustomFeatureColumn && haveCustomFeatureColumn) {
+      delete columnsState.lookup[customFeatureColumn.field];
+      columnsState.all = columnsState.all.filter((field) => field !== customFeatureColumn.field);
     }
 
     return columnsState;
@@ -139,65 +48,6 @@ useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
 > ⚠ The `columnsState` passed to the processors can contain the columns returned by the previous processing.
 > If the plugin is not enabled during the current processing, it must check if its columns are present, and if so remove them.
 
-#### `preferencePanel`
-
-**Publisher**: `GridPreferencePanel` component on render.
-
-**Why register to this processing**: Modify the rendered panel in `GridPreferencePanel` based on the current value.
-
-**Example**:
-
-```tsx
-// Columns plugin
-const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
-  (initialValue, value) => {
-    if (value === GridPreferencePanelsValue.columns) {
-      const ColumnsPanel = props.components.ColumnsPanel;
-      return <ColumnsPanel {...props.componentsProps?.columnsPanel} />;
-    }
-
-    return initialValue;
-  },
-  [props.components.ColumnsPanel, props.componentsProps?.columnsPanel],
-);
-
-useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
-```
-
-> ⚠ This behavior should probably be improved to be a strategy processing to avoid having each processor check the value
-
-#### `restoreState`
-
-**Publisher**: `useGridStatePersistence` plugin when calling `apiRef.current.restoreState`.
-
-**Why register to this processing**: Update the state based on the value passed to `apiRef.current.restoreState`.
-
-**Example**:
-
-```ts
-// Sorting plugin
-const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
-  (params, context) => {
-    const sortModel = context.stateToRestore.sorting?.sortModel;
-    if (sortModel == null) {
-      return params;
-    }
-    apiRef.current.setState(
-      mergeStateWithSortModel(sortModel, props.disableMultipleColumnsSorting),
-    );
-
-    return {
-      ...params,
-      // Add a callback that will be run after all the processors are applied
-      callbacks: [...params.callbacks, apiRef.current.applySorting],
-    };
-  },
-  [apiRef, props.disableMultipleColumnsSorting],
-);
-
-useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-```
-
 #### `rowHeight`
 
 **Publisher**: `useGridRowsMeta` plugin before updating `state.rowsMeta` (it is called for each row).
@@ -207,22 +57,92 @@ useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 **Example**:
 
 ```ts
-// Master Detail plugin
-const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
+const addCustomFeatureHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
   (initialValue, row) => {
-    if (expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
-      return { ...initialValue, detail: 0 };
+    if (props.disableCustomFeature) {
+      return {
+        ...initialValue,
+        customFeature: 0,
+      };
     }
-    const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef.current.state);
+
     return {
       ...initialValue,
-      detail: heightCache[row.id] ?? 0,
+      customFeature: customFeatureHeightLookup[row.id],
     };
   },
-  [apiRef, expandedRowIds],
+  [apiRef, customFeatureHeightLookup],
 );
 
 useGridRegisterPipeProcessor(apiRef, 'rowHeight', addDetailHeight);
+```
+
+### Add custom behavior to an api method
+
+**Goal**: To add some data on the value returned by an api method (eg: `exportState`) or to apply some custom behavior based on the input value of an api method (eg: `restoreState`)
+
+#### List
+
+##### `exportState`
+
+**Publisher**: `useGridStatePersistence` plugin when calling `apiRef.current.exportState`.
+
+**Why register to this processing**: Add a portable state to the returned value of `apiRef.current.exportState`.
+
+**Example**:
+
+```ts
+const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
+  (prevState) => {
+    const customFeatureModel = gridCustomFeatureModel(apiRef);
+
+    // Avoids adding a value equals to the default value
+    if (customFeatureModel.length === 0) {
+      return prevState;
+    }
+
+    return {
+      ...prevState,
+      customFeature: {
+        model: customFeatureModel,
+      },
+    };
+  },
+  [apiRef],
+);
+
+useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+```
+
+##### `restoreState`
+
+**Publisher**: `useGridStatePersistence` plugin when calling `apiRef.current.restoreState`.
+
+**Why register to this processing**: Update the state based on the value passed to `apiRef.current.restoreState`.
+
+**Example**:
+
+```ts
+const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
+  (params, context) => {
+    const customFeatureModel = context.stateToRestore.customFeature?.model;
+    if (customFeatureModel == null) {
+      return params;
+    }
+    // This part should not cause any re-render (no call to `apiRef.current.forceUpdate`)
+    // Be carefull when calling methods like `apiRef.current.setCustomFeature` which often automatically triggers a re-render.
+    apiRef.current.setState(mergeStateWithCustomFeatureModel(customFeatureModel));
+
+    return {
+      ...params,
+      // Add a callback that will be run after all the processors are applied
+      callbacks: [...params.callbacks, apiRef.current.applyCustomFeatureDerivedStates],
+    };
+  },
+  [apiRef],
+);
+
+useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 ```
 
 ##### `scrollToIndexes`
@@ -234,30 +154,119 @@ useGridRegisterPipeProcessor(apiRef, 'rowHeight', addDetailHeight);
 **Examples**:
 
 ```ts
-// Column Pinning plugin
 const calculateScrollLeft = React.useCallback<GridPipeProcessor<'scrollToIndexes'>>(
   (initialValue, params) => {
-    if (props.disableColumnPinning) {
-      return initialValue;
-    }
-
-    const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
-    const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
-      pinnedColumns,
-      visibleColumnFields,
-    );
-
-    if (!params.colIndex || (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0)) {
+    if (props.disableCustomFeature) {
       return initialValue;
     }
 
     return {
       ...initialValue,
-      left: getColumnPinningCompatibleScrollLeft(initialValue),
+      left: getCustomFeatureCompatibleScrollLeft(initialValue),
     };
   },
-  [apiRef, pinnedColumns, props.disableColumnPinning],
+  [apiRef, props.disableCustomFeature],
 );
 
 useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
 ```
+
+### Feature limitation
+
+**Goal**: To block the application of another plugin (eg: `canBeReorder`)
+
+#### List
+
+##### `canBeReordered` (pro only)
+
+**Publisher**: `useGridColumnReorder` when dragging a column over another.
+
+**Why register to this processing**:
+
+**Example**:
+
+```ts
+const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(
+  (initialValue, context) => {
+    if (context.targetIndex === 0) {
+      return false;
+    }
+
+    return initialValue;
+  },
+  [apiRef, pinnedColumns],
+);
+
+useGridRegisterPipeProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
+```
+
+### Component children processing
+
+**Goal**: Allow plugins to enrich the children of a component.
+
+#### List
+
+##### `columnMenu`
+
+**Publisher**: `GridColumnMenu` component on render.
+
+**Why register to this processing**: Add one or multiple menu items to `GridColumnMenu`.
+
+**Example**:
+
+```tsx
+const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+  (initialValue, column) => {
+    if (props.disableCustomFeature) {
+      return initialValue;
+    }
+
+    if (column.hasCustomFeature === false) {
+      return initialValue;
+    }
+
+    return [...initialValue, <Divider />, <GridCustoMFeatureMenuItems />];
+  },
+  [props.disableCustomFeature],
+);
+
+useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
+```
+
+##### `preferencePanel`
+
+**Publisher**: `GridPreferencePanel` component on render.
+
+**Why register to this processing**: Modify the rendered panel in `GridPreferencePanel` based on the current value.
+
+**Example**:
+
+```tsx
+const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
+  (initialValue, value) => {
+    if (value === GridPreferencePanelsValue.customFeature) {
+      const CustomFeaturePanel = props.components.CustomFeaturePanel;
+      return <CustomFeaturePanel {...props.componentsProps?.customFeaturePanel} />;
+    }
+
+    return initialValue;
+  },
+  [props.components.CustomFeaturePanel, props.componentsProps?.customFeaturePanel],
+);
+
+useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
+```
+
+> ⚠ This behavior should probably be improved to be a strategy processing to avoid having each processor check the value
+
+## Strategy-processing
+
+A strategy processing is a pattern allowing plugins or component to register processors that will be applied only when the correct strategy is active.
+
+### Example
+
+If we are using the Tree Data, we want the Tree Data plugin to be responsible for the following behaviors:
+
+- Create the row tree
+- Sort the rows
+- Decide if a row matches the filters or not and if it should be expanded or not
