@@ -51,6 +51,7 @@ describe('<DataGrid /> - Filter', () => {
       fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
         target: { value: 'a' },
       });
+      clock.runToLast();
 
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
     });
@@ -74,6 +75,7 @@ describe('<DataGrid /> - Filter', () => {
       fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
         target: { value: 'adid, nik' },
       });
+      clock.runToLast();
       expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
         items: [],
         linkOperator: 'and',
@@ -90,11 +92,13 @@ describe('<DataGrid /> - Filter', () => {
       fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
         target: { value: 'adid' },
       });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
       fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
         target: { value: 'adid nik' },
       });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
@@ -110,11 +114,13 @@ describe('<DataGrid /> - Filter', () => {
       fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
         target: { value: 'adid' },
       });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
       fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
         target: { value: 'adid nik' },
       });
+      clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
     });
   });

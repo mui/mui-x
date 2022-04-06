@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
+import { debounce } from '@mui/material/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -29,25 +30,38 @@ const defaultSearchValueParser = (searchText: string) =>
 
 export type GridToolbarQuickFilterProps = TextFieldProps & {
   quickFilterParser?: (input: string) => any[];
+  debounceMs?: number;
 };
 
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
-  const { quickFilterParser = defaultSearchValueParser, ...other } = props;
+  const { quickFilterParser = defaultSearchValueParser, debounceMs = 500, ...other } = props;
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
   const [searchValue, setSearchValue] = React.useState('');
 
-  const handleSearchValueChange = React.useCallback(
-    (event) => {
-      const newSearchValue = event.target.value;
-      setSearchValue(newSearchValue);
+  const updateSearchValue = React.useCallback(
+    (newSearchValue) => {
       apiRef.current.setQuickFilterValues(
         quickFilterParser(newSearchValue).filter((value) => value !== ''),
       );
     },
     [apiRef, quickFilterParser],
+  );
+
+  const debouncedUpdateSearchValue = React.useMemo(
+    () => debounce(updateSearchValue, debounceMs),
+    [updateSearchValue, debounceMs],
+  );
+
+  const handleSearchValueChange = React.useCallback(
+    (event) => {
+      const newSearchValue = event.target.value;
+      setSearchValue(newSearchValue);
+      debouncedUpdateSearchValue(newSearchValue);
+    },
+    [debouncedUpdateSearchValue],
   );
 
   const clearSearchValue = React.useCallback(() => {
@@ -90,6 +104,7 @@ GridToolbarQuickFilter.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  debounceMs: PropTypes.number,
   quickFilterParser: PropTypes.func,
 } as any;
 
