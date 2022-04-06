@@ -35,7 +35,7 @@ type DesktopDateTimePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Date Time Picker](https://mui.com/components/x/react-date-pickers/date-time-picker/)
+ * - [Date Time Picker](https://mui.com/x/react-date-pickers/date-time-picker/)
  *
  * API:
  *
