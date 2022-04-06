@@ -21,14 +21,14 @@ export interface ExportedPickerPaperProps {
    */
   clearText?: React.ReactNode;
   /**
-   * Paper props passed down to [Paper](https://mui.com/x/api/date-pickers/paper/) component.
+   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
   PaperProps?: Partial<MuiPaperProps>;
 }
 
 export interface ExportedPickerPopperProps {
   /**
-   * Popper props passed down to [Popper](https://mui.com/x/api/date-pickers/popper/) component.
+   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
   PopperProps?: Partial<MuiPopperProps>;
   /**

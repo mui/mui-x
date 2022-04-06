@@ -243,7 +243,7 @@ MobileDateRangePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * Props applied to the [`Dialog`](/material-ui/api/dialog/) element.
+   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
    */
   DialogProps: PropTypes.object,
   /**
@@ -428,7 +428,7 @@ MobileDateRangePicker.propTypes = {
   renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/x/api/date-pickers/text-field/#textfield-api),
+   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props),
    * that you need to forward to the range start/end inputs respectively.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example

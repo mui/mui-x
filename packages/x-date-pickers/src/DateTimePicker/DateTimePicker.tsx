@@ -146,7 +146,7 @@ DateTimePicker.propTypes = {
    */
   desktopModeMediaQuery: PropTypes.string,
   /**
-   * Props applied to the [`Dialog`](/material-ui/api/dialog/) element.
+   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
    */
   DialogProps: PropTypes.object,
   /**
@@ -356,11 +356,11 @@ DateTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/x/api/date-pickers/paper/) component.
+   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
   PaperProps: PropTypes.object,
   /**
-   * Popper props passed down to [Popper](https://mui.com/x/api/date-pickers/popper/) component.
+   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
   PopperProps: PropTypes.object,
   /**
@@ -383,7 +383,7 @@ DateTimePicker.propTypes = {
   renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `props` argument of this render prop contains props of [TextField](https://mui.com/x/api/date-pickers/text-field/#textfield-api) that you need to forward.
+   * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example ```jsx
    * renderInput={props => <TextField {...props} />}
