@@ -259,7 +259,16 @@ enum GridEvents {
    * Fired when the visible rows are updated
    * @ignore - do not document.
    */
-  visibleRowsSet = 'visibleRowsSet',
+  /**
+   * Fired when the sorted rows are updated
+   * @ignore - do not document
+   */
+  sortedRowsSet = 'sortedRowsSet',
+  /**
+   * Fired when the filtered rows are updated
+   * @ignore - do not document.
+   */
+  filteredRowsSet = 'filteredRowsSet',
   /**
    * Fired when the columns state is changed.
    */
