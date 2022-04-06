@@ -395,6 +395,29 @@ export function useGridColumns(
   /**
    * EVENTS
    */
+  const prevInnerWidth = React.useRef<number | null>(null);
+  const handleGridSizeChange: GridEventListener<GridEvents.viewportInnerSizeChange> = (
+    viewportInnerSize,
+  ) => {
+    if (prevInnerWidth.current !== viewportInnerSize.width) {
+      prevInnerWidth.current = viewportInnerSize.width;
+      setGridColumnsState(
+        hydrateColumnsWidth(gridColumnsSelector(apiRef.current.state), viewportInnerSize.width),
+      );
+    }
+  };
+
+  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleGridSizeChange);
+
+  useGridApiOptionHandler(
+    apiRef,
+    GridEvents.columnVisibilityChange,
+    props.onColumnVisibilityChange,
+  );
+
+  /**
+   * APPLIERS
+   */
   const hydrateColumns = React.useCallback(() => {
     logger.info(`Columns pipe processing have changed, regenerating the columns`);
 
@@ -409,26 +432,7 @@ export function useGridColumns(
     setGridColumnsState(columnsState);
   }, [apiRef, logger, setGridColumnsState, columnTypes]);
 
-  const prevInnerWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange: GridEventListener<GridEvents.viewportInnerSizeChange> = (
-    viewportInnerSize,
-  ) => {
-    if (prevInnerWidth.current !== viewportInnerSize.width) {
-      prevInnerWidth.current = viewportInnerSize.width;
-      setGridColumnsState(
-        hydrateColumnsWidth(gridColumnsSelector(apiRef.current.state), viewportInnerSize.width),
-      );
-    }
-  };
-
   useGridRegisterPipeApplier(apiRef, 'hydrateColumns', hydrateColumns);
-  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleGridSizeChange);
-
-  useGridApiOptionHandler(
-    apiRef,
-    GridEvents.columnVisibilityChange,
-    props.onColumnVisibilityChange,
-  );
 
   /**
    * EFFECTS
