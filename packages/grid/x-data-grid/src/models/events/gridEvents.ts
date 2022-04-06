@@ -256,10 +256,6 @@ enum GridEvents {
    */
   rowExpansionChange = 'rowExpansionChange',
   /**
-   * Fired when the visible rows are updated
-   * @ignore - do not document.
-   */
-  /**
    * Fired when the sorted rows are updated
    * @ignore - do not document
    */
