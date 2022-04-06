@@ -4,7 +4,6 @@ import {
   GridFilterItem,
   GridFilterModel,
   GridLinkOperator,
-  GridLinkOperator,
   GridRowId,
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -112,13 +111,13 @@ export const mergeStateWithFilterModel =
     disableMultipleColumnsFiltering: boolean,
     apiRef: React.MutableRefObject<GridApiCommunity>,
   ) =>
-    (state: GridStateCommunity): GridStateCommunity => ({
-      ...state,
-      filter: {
-        ...state.filter,
-        filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
-      },
-    });
+  (state: GridStateCommunity): GridStateCommunity => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
+    },
+  });
 
 /**
  * Generates a method to easily check if a row is matching the current filter model.

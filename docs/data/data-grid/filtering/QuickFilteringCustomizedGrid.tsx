@@ -54,7 +54,7 @@ export default function QuickFilteringCustomizedGrid() {
                 return (
                   params.value.label &&
                   params.value.label.slice(0, value.length).toLowerCase() ===
-                  value.toLowerCase()
+                    value.toLowerCase()
                 );
               };
             },
