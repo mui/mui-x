@@ -7,6 +7,7 @@ import type {
   GridColumnVisibilityChangeParams,
   GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
+  GridPreferencePanelParams,
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
@@ -229,4 +230,8 @@ export interface GridEventLookup
     params: GridRowSelectionCheckboxParams;
     event: React.ChangeEvent<HTMLElement>;
   };
+
+  // PreferencePanel
+  preferencePanelClose: { params: GridPreferencePanelParams };
+  preferencePanelOpen: { params: GridPreferencePanelParams };
 }
