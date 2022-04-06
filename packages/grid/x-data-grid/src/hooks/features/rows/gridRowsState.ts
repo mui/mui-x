@@ -8,6 +8,7 @@ import {
 export interface GridRowTreeCreationParams {
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
+  idToIdLookup: Record<string, GridRowId>;
   previousTree: GridRowTreeConfig | null;
 }
 
@@ -21,6 +22,7 @@ export interface GridRowTreeCreationValue {
   treeDepth: number;
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
+  idToIdLookup: Record<string, GridRowId>;
 }
 
 export type GridRowInternalCacheValue = Omit<GridRowTreeCreationParams, 'previousTree'>;

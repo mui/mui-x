@@ -25,6 +25,7 @@ import type { GridPipeProcessorGroup } from '../../hooks/core/pipeProcessing';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
+import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -171,6 +172,8 @@ export interface GridEventLookup
 
   // Edit
   cellModeChange: { params: GridCellParams };
+  cellModesModelChange: { params: GridCellModesModel };
+  rowModesModelChange: { params: GridRowModesModel };
   cellEditStart: {
     params: GridCellEditStartParams;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;

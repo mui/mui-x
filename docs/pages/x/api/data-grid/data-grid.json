@@ -6,6 +6,7 @@
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },
     "autoPageSize": { "type": { "name": "bool" } },
+    "cellModesModel": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
@@ -87,6 +88,7 @@
     "onCellEditStop": { "type": { "name": "func" } },
     "onCellFocusOut": { "type": { "name": "func" } },
     "onCellKeyDown": { "type": { "name": "func" } },
+    "onCellModesModelChange": { "type": { "name": "func" } },
     "onColumnHeaderClick": { "type": { "name": "func" } },
     "onColumnHeaderDoubleClick": { "type": { "name": "func" } },
     "onColumnHeaderEnter": { "type": { "name": "func" } },
@@ -119,6 +121,7 @@
     "onRowEditCommit": { "type": { "name": "func" } },
     "onRowEditStart": { "type": { "name": "func" } },
     "onRowEditStop": { "type": { "name": "func" } },
+    "onRowModesModelChange": { "type": { "name": "func" } },
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "onStateChange": { "type": { "name": "func" } },
@@ -132,6 +135,7 @@
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
+    "rowModesModel": { "type": { "name": "object" } },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""

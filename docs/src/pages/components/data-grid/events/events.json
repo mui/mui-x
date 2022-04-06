@@ -48,6 +48,12 @@
     "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
+    "name": "cellModesModelChange",
+    "description": "Fired when the model that controls the cell modes changes.",
+    "params": "GridCellModesModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "cellMouseDown",
     "description": "Fired when a <code>mousedown</code> event happens in a cell.",
     "params": "GridCellParams",
@@ -225,6 +231,12 @@
     "name": "rowGroupingModelChange",
     "description": "Fired when the row grouping model changes.",
     "params": "GridRowGroupingModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "rowModesModelChange",
+    "description": "Fired when the model that controls the row modes changes.",
+    "params": "GridRowModesModel",
     "event": "MuiEvent<{}>"
   },
   {

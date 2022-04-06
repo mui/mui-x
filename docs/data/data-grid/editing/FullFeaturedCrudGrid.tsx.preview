@@ -1,8 +1,8 @@
 <DataGridPro
   rows={rows}
   columns={columns}
-  apiRef={apiRef}
   editMode="row"
+  rowModesModel={rowModesModel}
   onRowEditStart={handleRowEditStart}
   onRowEditStop={handleRowEditStop}
   processRowUpdate={processRowUpdate}
@@ -10,7 +10,7 @@
     Toolbar: EditToolbar,
   }}
   componentsProps={{
-    toolbar: { apiRef },
+    toolbar: { setRows, setRowModesModel },
   }}
   experimentalFeatures={{ newEditingApi: true }}
 />

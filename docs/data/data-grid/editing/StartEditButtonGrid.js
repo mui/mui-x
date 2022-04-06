@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
+import { DataGrid, GridCellModes } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -10,21 +10,47 @@ import {
 } from '@mui/x-data-grid-generator';
 
 function EditToolbar(props) {
-  const apiRef = useGridApiContext();
-  const { selectedCellParams, setSelectedCellParams } = props;
+  const {
+    selectedCellParams,
+    setSelectedCellParams,
+    cellModesModel,
+    setCellModesModel,
+  } = props;
 
-  const handleClick = async () => {
+  const handleSaveOrEdit = () => {
     if (!selectedCellParams) {
       return;
     }
     const { id, field, cellMode } = selectedCellParams;
     if (cellMode === 'edit') {
-      apiRef.current.stopCellEditMode({ id, field });
+      setCellModesModel({
+        ...cellModesModel,
+        [id]: { ...cellModesModel[field], [field]: { mode: GridCellModes.View } },
+      });
+
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
     } else {
-      apiRef.current.startCellEditMode({ id, field });
+      setCellModesModel({
+        ...cellModesModel,
+        [id]: { ...cellModesModel[field], [field]: { mode: GridCellModes.Edit } },
+      });
+
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
     }
+  };
+
+  const handleCancel = () => {
+    if (!selectedCellParams) {
+      return;
+    }
+    const { id, field } = selectedCellParams;
+    setCellModesModel({
+      ...cellModesModel,
+      [id]: {
+        ...cellModesModel[field],
+        [field]: { mode: GridCellModes.View, ignoreModifications: true },
+      },
+    });
   };
 
   const handleMouseDown = (event) => {
@@ -32,55 +58,67 @@ function EditToolbar(props) {
     event.preventDefault();
   };
 
+  const cellMode = React.useMemo(() => {
+    if (!selectedCellParams) {
+      return 'view';
+    }
+    const { id, field } = selectedCellParams;
+    return cellModesModel[id]?.[field]?.mode || 'view';
+  }, [cellModesModel, selectedCellParams]);
+
   return (
     <Box
       sx={{
-        justifyContent: 'center',
-        display: 'flex',
         borderBottom: 1,
         borderColor: 'divider',
+        p: 1,
       }}
     >
       <Button
-        onClick={handleClick}
+        onClick={handleSaveOrEdit}
         onMouseDown={handleMouseDown}
         disabled={!selectedCellParams}
         color="primary"
+        variant="outlined"
       >
         {selectedCellParams?.cellMode === 'edit' ? 'Save' : 'Edit'}
+      </Button>
+      <Button
+        onClick={handleCancel}
+        onMouseDown={handleMouseDown}
+        disabled={cellMode === 'view'}
+        color="primary"
+        variant="outlined"
+        sx={{ ml: 1 }}
+      >
+        Cancel
       </Button>
     </Box>
   );
 }
 
 EditToolbar.propTypes = {
+  cellModesModel: PropTypes.any.isRequired,
   selectedCellParams: PropTypes.any,
+  setCellModesModel: PropTypes.func.isRequired,
   setSelectedCellParams: PropTypes.func.isRequired,
 };
 
 export default function StartEditButtonGrid() {
   const [selectedCellParams, setSelectedCellParams] = React.useState(null);
+  const [cellModesModel, setCellModesModel] = React.useState({});
 
   const handleCellClick = React.useCallback((params) => {
     setSelectedCellParams(params);
   }, []);
-
-  const handleCellEditStart = (params, event) => {
-    event.defaultMuiPrevented = true;
-  };
-
-  const handleCellEditStop = (params, event) => {
-    event.defaultMuiPrevented = true;
-  };
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
+        cellModesModel={cellModesModel}
         onCellClick={handleCellClick}
-        onCellEditStart={handleCellEditStart}
-        onCellEditStop={handleCellEditStop}
         components={{
           Toolbar: EditToolbar,
         }}
@@ -88,6 +126,8 @@ export default function StartEditButtonGrid() {
           toolbar: {
             selectedCellParams,
             setSelectedCellParams,
+            cellModesModel,
+            setCellModesModel,
           },
         }}
         experimentalFeatures={{ newEditingApi: true }}
