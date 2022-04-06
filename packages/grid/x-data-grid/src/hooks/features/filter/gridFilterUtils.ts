@@ -235,17 +235,12 @@ export const buildAggregatedQuickFilterApplier = (
     );
   });
 
-  if (quickFilterLogic === GridQuickFilterLogic.And) {
-    const everyValueAsAnApplier = quickFilterValues.every((value, index) =>
-      Object.keys(appliersPerColumnField).some(
-        (field) => appliersPerColumnField[field][index] != null,
-      ),
-    );
-    if (!everyValueAsAnApplier) {
-      // If one of the value does not have an applier we can remove all the rows
-      return () => false;
-    }
-  }
+  // If some value does not have an applier we ignore them
+  const sanitizedQuickFilterValues = quickFilterValues.filter((value, index) =>
+    Object.keys(appliersPerColumnField).some(
+      (field) => appliersPerColumnField[field][index] != null,
+    ),
+  );
 
   return (rowId, shouldApplyFilter) => {
     const usedCellParams: { [field: string]: GridCellParams } = {};
@@ -258,7 +253,7 @@ export const buildAggregatedQuickFilterApplier = (
 
     // Return `false` as soon as we have a quick filter value that does not match any column
     if (quickFilterLogic === GridQuickFilterLogic.And) {
-      return quickFilterValues.every((value, index) =>
+      return sanitizedQuickFilterValues.every((value, index) =>
         Object.keys(appliersPerColumnField).some((field) => {
           if (appliersPerColumnField[field][index] == null) {
             return false;
@@ -269,7 +264,7 @@ export const buildAggregatedQuickFilterApplier = (
     }
 
     // Return `true` as soon as we have have a quick filter value that match any column
-    return quickFilterValues.some((value, index) =>
+    return sanitizedQuickFilterValues.some((value, index) =>
       Object.keys(appliersPerColumnField).some((field) => {
         if (appliersPerColumnField[field][index] == null) {
           return false;

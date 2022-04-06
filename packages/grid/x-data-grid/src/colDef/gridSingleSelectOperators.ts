@@ -23,7 +23,7 @@ export const getGridSingleSelectQuickFilterFn = (
   }
   const { valueOptions, valueFormatter, field } = column;
 
-  const potentialValues = [parseObjectValue(value)];
+  const potentialValues = [parseObjectValue(value).toString()];
 
   const iterableColumnValues =
     typeof valueOptions === 'function' ? valueOptions({ field }) : valueOptions || [];
@@ -45,16 +45,16 @@ export const getGridSingleSelectQuickFilterFn = (
         }
       }
 
-      if (optionLabel.slice(0, value.length).lowerCase() === value.lowerCase()) {
+      if (optionLabel.slice(0, value.length).toLowerCase() === value.toLowerCase()) {
         if (!potentialValues.includes(optionValue)) {
-          potentialValues.push(optionValue);
+          potentialValues.push(optionValue.toString());
         }
       }
     });
   }
 
   return ({ value: columnValue }: GridCellParams): boolean => {
-    return columnValue != null ? potentialValues.includes(columnValue) : false;
+    return columnValue != null ? potentialValues.includes(columnValue.toString()) : false;
   };
 };
 

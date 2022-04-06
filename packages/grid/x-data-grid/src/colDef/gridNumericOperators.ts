@@ -13,7 +13,7 @@ const parseNumericValue = (value: string | number | null | undefined) => {
 };
 
 export const getGridNumericQuickFilterFn = (value: any) => {
-  if (value == null || Number.isNaN(value)) {
+  if (value == null || Number.isNaN(value) || value === '') {
     return null;
   }
 
