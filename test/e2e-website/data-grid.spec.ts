@@ -42,9 +42,10 @@ test.describe('DataGrid docs', () => {
     test('should have correct link for sidebar anchor', async ({ page }) => {
       await page.goto(`/x/react-data-grid/`);
 
-      const anchor = page.locator('nav[aria-label="documentation"] ul ul a:text-is("Overview")');
+      const anchor = page.locator('nav[aria-label="documentation"] ul ul a:text-is("Data Grid")');
       await anchor.waitFor();
 
+      await expect(anchor).toHaveAttribute('app-drawer-active', '');
       await expect(anchor).toHaveAttribute('href', `/x/react-data-grid/`);
     });
   });
