@@ -3,13 +3,11 @@ import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
-  GridAggregationFunction,
   GridAggregationPosition,
   GridAggregationRule,
 } from './gridAggregationInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
-import { canColumnHaveAggregationFunction } from './gridAggregationUtils';
 
 const AGGREGATION_WRAPPABLE_METHODS = [
   'valueGetter',
