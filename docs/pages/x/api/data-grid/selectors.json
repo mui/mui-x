@@ -12,12 +12,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridAggregationSanitizedModelSelector",
-    "returnType": "GridAggregationModel",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Columns",

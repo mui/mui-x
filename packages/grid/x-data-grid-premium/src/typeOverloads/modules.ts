@@ -37,8 +37,8 @@ export interface GridRenderCellParamsPremium<V = any, R = any, F = V> {
 
 export interface GridCachesPremium {
   aggregation: {
-    aggregationRulesOnLastColumnHydration: GridAggregationRules | undefined;
-    aggregationRulesOnLastRowHydration: GridAggregationRules | undefined;
+    aggregationRulesOnLastColumnHydration?: GridAggregationRules;
+    aggregationRulesOnLastRowHydration?: GridAggregationRules;
   };
 }
 
