@@ -12,7 +12,7 @@
     "componentsProps": "The props used for each slot inside.",
     "defaultCalendarMonth": "Default calendar month displayed when <code>value={null}</code>.",
     "desktopModeMediaQuery": "CSS media query when <code>Mobile</code> mode will be changed to <code>Desktop</code>.",
-    "DialogProps": "Props applied to the <a href=\"/material-ui/api/dialog/\"><code>Dialog</code></a> element.",
+    "DialogProps": "Props applied to the <a href=\"https://mui.com/material-ui/api/dialog/\"><code>Dialog</code></a> element.",
     "disableAutoMonthSwitching": "If <code>true</code>, after selecting <code>start</code> date calendar will not automatically switch to the month of <code>end</code> date.",
     "disableCloseOnSelect": "If <code>true</code> the popup or dialog will immediately close after submitting full date.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
