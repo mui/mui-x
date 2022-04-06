@@ -345,7 +345,7 @@ export const useGridCellEditing = (
       }
 
       let editingState = gridEditRowsStateSelector(apiRef.current.state);
-      let newProps = { ...editingState[id][field], value: parsedValue };
+      let newProps: GridEditCellProps = { ...editingState[id][field], value: parsedValue };
 
       if (column.preProcessEditCellProps) {
         const hasChanged = value !== editingState[id][field].value;
