@@ -17,11 +17,19 @@ function EditToolbar(props) {
     setCellModesModel,
   } = props;
 
+  const cellMode = React.useMemo(() => {
+    if (!selectedCellParams) {
+      return 'view';
+    }
+    const { id, field } = selectedCellParams;
+    return cellModesModel[id]?.[field]?.mode || 'view';
+  }, [cellModesModel, selectedCellParams]);
+
   const handleSaveOrEdit = () => {
     if (!selectedCellParams) {
       return;
     }
-    const { id, field, cellMode } = selectedCellParams;
+    const { id, field } = selectedCellParams;
     if (cellMode === 'edit') {
       setCellModesModel({
         ...cellModesModel,
@@ -58,14 +66,6 @@ function EditToolbar(props) {
     event.preventDefault();
   };
 
-  const cellMode = React.useMemo(() => {
-    if (!selectedCellParams) {
-      return 'view';
-    }
-    const { id, field } = selectedCellParams;
-    return cellModesModel[id]?.[field]?.mode || 'view';
-  }, [cellModesModel, selectedCellParams]);
-
   return (
     <Box
       sx={{
@@ -81,7 +81,7 @@ function EditToolbar(props) {
         color="primary"
         variant="outlined"
       >
-        {selectedCellParams?.cellMode === 'edit' ? 'Save' : 'Edit'}
+        {cellMode === 'edit' ? 'Save' : 'Edit'}
       </Button>
       <Button
         onClick={handleCancel}
