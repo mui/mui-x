@@ -321,7 +321,6 @@
   { "name": "GridPrintExportMenuItem", "kind": "Variable" },
   { "name": "GridPrintExportMenuItemProps", "kind": "TypeAlias" },
   { "name": "GridPrintExportOptions", "kind": "Interface" },
-  { "name": "GridQuickFilterLogic", "kind": "Enum" },
   { "name": "GridRemoveIcon", "kind": "Variable" },
   { "name": "GridRenderCellParams", "kind": "Interface" },
   { "name": "GridRenderColumnsProps", "kind": "Interface" },
