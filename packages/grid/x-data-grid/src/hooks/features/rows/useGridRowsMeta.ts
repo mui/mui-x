@@ -113,7 +113,7 @@ export const useGridRowsMeta = (
       };
     });
     apiRef.current.forceUpdate();
-  }, [apiRef, currentPage.rows, currentPage.range?.firstRowIndex, getRowSpacing, getRowHeight]);
+  }, [apiRef, currentPage.rows, getRowSpacing, getRowHeight]);
 
   const getTargetRowHeight = (rowId: GridRowId): number =>
     rowsHeightLookup.current[rowId]?.value || rowHeight;
