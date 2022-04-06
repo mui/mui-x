@@ -3,6 +3,80 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.8.0
+<!-- generated comparing v5.7.0..master -->
+_Apr 4, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Expose new methods to save and restore the grid state (#4028) @flaviendelangle
+
+  The different methods to save and restore the data-grid state are now [documented](mui.com/components/data-grid/state/#save-and-restore-the-state)
+
+- ⌚️ Move date and time picker components from the lab (#3451) @flaviendelangle
+
+  Date and time picker components have been moved to the MUI-X repo.
+  They are now accessible in their own packages: `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
+  For more information, you can read the [blog article](https://mui.com/blog/lab-pickers-to-mui-x) and the [migration guide](https://mui.com/x/react-date-pickers/migration-lab)
+
+- 📝 Add `onProcessRowUpdateError` prop to simplify error management in edit mode (#4267) @m4theushw
+- ✨ Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
+
+  You can now strongly type all the objects related to the row and the cell values.
+  Here is an example, you can find out more in the description of #4064.
+  
+  ```tsx
+  const rows: Movie[] = [];
+
+  return (
+    <DataGrid 
+      rows={rows}
+      columns={[{ 
+        // typeof params.row => Movie (R)
+        valueGetter: params => params.row.year, 
+      }]}
+    />
+  );
+  ```
+
+### `@mui/x-data-grid@v5.8.0` / `@mui/x-data-grid-pro@v5.8.0`
+
+#### Changes
+
+- [DataGrid] Add `onProcessRowUpdateError` prop (#4267) @m4theushw
+- [DataGrid] Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
+- [DataGrid] Add missing classes on `gridClasses` and `gridPanelClasses` (#4273) @flaviendelangle
+- [DataGrid] Add `onPreferencePanelClose`/`onPreferencePanelOpen` props (#4265) @kyeongsoosoo
+- [DataGrid] Add slot for filter icon button (#4276) @m4theushw
+- [DataGrid] Add the documentation of the portable state (#4028) @flaviendelangle
+- [DataGrid] Allow to use keyboard navigation even with no rows (#4302) @alexfauquette
+- [DataGrid] Fix inconsistency in the border of the last column (#4224) @alexfauquette
+- [DataGrid] Fix overlay blocking scrollbar when rows is empty (#4281) @m4theushw
+- [DataGrid] Improve selection with keyboard (#4157) @flaviendelangle
+- [DataGrid] Scroll to the top of the page when changing page (#4272) @flaviendelangle
+- [l10n] Improve Danish (da-DK) locale (#4271) @simplenotezy
+
+### `@mui/x-date-pickers@v5.0.0-alpha.0` / `@mui/x-date-pickers-pro@v5.0.0-alpha.0`
+
+#### Changes
+
+- [DatePicker] Import date-picker components from the lab (#3451) @flaviendelangle
+
+### Docs
+
+- [docs] Create an home page for "Advanced Components" (#4298) @flaviendelangle
+- [docs] Update installation docs (#4259) @cherniavskii
+- [docs] New page for the migration of date and time pickers from the lab (#4327) @flaviendelangle
+
+### Core
+
+- [core] Fix typo in issue template @oliviertassinari
+- [core] Move last variables outside of the models folder (#4303) @flaviendelangle
+- [core] Remove dead code (#4283) @oliviertassinari
+- [core] Rename the "pre-processing" concept "pipe-processing" (#4261) @flaviendelangle
+- [core] Reuse previous state when updating the columns prop (#4229) @m4theushw
+- [core] Fix Argos flakyness for pickers tests (#4312) @flaviendelangle
+
 ## 5.7.0
 
 _Mar 24, 2022_

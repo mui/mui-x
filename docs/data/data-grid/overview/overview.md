@@ -45,7 +45,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 ### MIT vs. commercial
 
-> Please check the [Licenses section](/x/react-data-grid/getting-started/#licenses) for more details between the different versions.
+> Please check the [Licenses section](/x/advanced-components/#licenses) for more details between the different versions.
 
 ## Features
 
@@ -63,10 +63,10 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 - [Resizable columns](/x/react-data-grid/columns/#resizing) <span class="plan-pro"></span>
 - [100% customizable](/x/react-data-grid/style/)
 - Server-side data
-- [Column hiding](/x/react-data-grid/columns/#column-visibility)
-- [Column pinning](/x/react-data-grid/columns/#column-pinning) <span class="pro"></span>
-- [Accessible](/x/react-data-grid/accessibility/)
-- [Localization](/x/react-data-grid/localization/)
+- [Column hiding](/components/data-grid/columns/#column-visibility)
+- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="plan-pro"></span>
+- [Accessible](/components/data-grid/accessibility/)
+- [Localization](/components/data-grid/localization/)
 
 ### 🚧 Upcoming features
 

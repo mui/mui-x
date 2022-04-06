@@ -66,40 +66,56 @@ Some selectors are yet to be documented.
 
 ## Save and restore the state
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #820](https://github.com/mui/mui-x/issues/820) if you want to see it land faster.
+The current state of the grid can be exported using `apiRef.current.exportState()`.
+It can then be restored by either passing the returned value to the `initialState` prop or to the `apiRef.current.restoreState()` method.
 
-[//]: # 'The current state of the grid can be exported using `apiRef.current.exportState()`.'
-[//]: # 'It can then be restored by either passing it to the `initialState` prop or to the `apiRef.current.restoreState()` method.'
-[//]: #
-[//]: # 'Watch out for controlled models and their callbacks (`onFilterModelChange` if you use `filterModel` for instance), the grid will call those callbacks when restoring the state.'
-[//]: # 'But if the callback is not defined or if calling it does not update the prop value, then the restored value will not be applied.'
-[//]: #
-[//]: # '### Restore the state with `initialState`'
-[//]: #
-[//]: # '> ⚠️ If you restore the page using `initialState` before the data is fetched, the grid will automatically move to the 1st page.'
-[//]: #
-[//]: # '{{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}'
-[//]: #
-[//]: # '### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)'
-[//]: #
-[//]: # '{{"demo": "RestoreStateApiRef.js", "bg": "inline", "defaultCodeOpen": false}}'
-[//]: #
-[//]: # '#### Restore part of the state'
-[//]: #
-[//]: # 'It is possible to restore specific properties of the state using the `apiRef.current.restoreState()` method.'
-[//]: # 'For instance, to only restore the pinned columns:'
-[//]: #
-[//]: # '```ts'
-[//]: # 'apiRef.current.restoreState({'
-[//]: # "  pinnedColumns: ['brand'],"
-[//]: # '});'
-[//]: # '```'
-[//]: #
-[//]: # '> ⚠️ Most of the state keys are not fully independent.'
-[//]: # '>'
-[//]: # '> Restoring the pagination without restoring the filters or the sorting will work, but the rows displayed after the re-import will not be the same as before the export.'
+Watch out for controlled models and their callbacks (`onFilterModelChange` if you use `filterModel`, for instance), as the grid will call those callbacks when restoring the state.
+But if the callback is not defined or if calling it does not update the prop value, then the restored value will not be applied.
+
+> ⚠️ To avoid breaking changes, the grid only saves the column visibility if you are using the [new api](/components/data-grid/columns/#initialize-the-visible-columns)
+> Make sure to initialize `props.initialState.columns.columnVisibilityModel` or to control `props.columnVisibilityModel`.
+>
+> The easier way is to initialize the model with an empty object:
+>
+> ```tsx
+> <DataGrid
+>   initialState={{
+>     columns: { columnVisibilityModel: {} },
+>   }}
+> />
+> ```
+
+### Restore the state with `initialState`
+
+You can pass the state returned by `apiRef.current.exportState()` to the `initialState` prop.
+In the demo below, clicking on **Recreate the 2nd grid** will re-mount the 2nd grid with the current state of the 1st grid.
+
+> ⚠️ If you restore the page using `initialState` before the data is fetched, the grid will automatically move to the 1st page.
+
+{{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+You can pass the state returned by `apiRef.current.exportState()` to the `apiRef.current.restoreState` method.
+In the demo below, clicking on **Save current view** will create a snapshot of the changes made in the state, considering the initial state.
+You can apply these changes on the grid later selecting a saved view in the **Custom view** menu.
+
+{{"demo": "RestoreStateApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Restore part of the state
+
+It is possible to restore specific properties of the state using the `apiRef.current.restoreState()` method.
+For instance, to only restore the pinned columns:
+
+```ts
+apiRef.current.restoreState({
+  pinnedColumns: ['brand'],
+});
+```
+
+> ⚠️ Most of the state keys are not fully independent.
+>
+> Restoring the pagination without restoring the filters or the sorting will work, but the rows displayed after the re-import will not be the same as before the export.
 
 ## API
 
