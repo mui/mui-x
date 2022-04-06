@@ -484,7 +484,7 @@ describe('<DataGridPro /> - Reorder', () => {
       expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
-    it('should call onRowOrderChange after the row has been reordered', () => {
+    it('should call onRowOrderChange after the row stops being dragged', () => {
       const handleOnRowOrderChange = spy();
       let apiRef: React.MutableRefObject<GridApi>;
       const Test = () => {
@@ -519,6 +519,7 @@ describe('<DataGridPro /> - Reorder', () => {
       fireEvent.dragEnter(targetCell);
       const dragOverEvent = createDragOverEvent(targetCell);
       fireEvent(targetCell, dragOverEvent);
+      expect(handleOnRowOrderChange.callCount).to.equal(0);
       const dragEndEvent = createDragEndEvent(rowReorderCell);
       fireEvent(rowReorderCell, dragEndEvent);
 

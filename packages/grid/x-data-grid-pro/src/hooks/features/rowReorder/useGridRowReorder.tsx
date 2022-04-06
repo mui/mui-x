@@ -95,16 +95,7 @@ export const useGridRowReorder = (
 
       if (params.id !== dragRowId) {
         const targetRowIndex = apiRef.current.getRowIndex(params.id);
-        const dragRowIndex = apiRef.current.getRowIndex(dragRowId);
-
         apiRef.current.setRowIndex(dragRowId, targetRowIndex);
-
-        const rowOrderChangeParams: GridRowOrderChangeParams = {
-          row: apiRef.current.getRow(dragRowId),
-          targetIndex: targetRowIndex,
-          oldIndex: dragRowIndex,
-        };
-        apiRef.current.publishEvent(GridEvents.rowOrderChange, rowOrderChangeParams);
       }
     },
     [apiRef, logger, dragRowId],
@@ -129,15 +120,16 @@ export const useGridRowReorder = (
       if (event.dataTransfer.dropEffect === 'none') {
         // Accessing params.field may contain the wrong field as header elements are reused
         apiRef.current.setRowIndex(dragRowId, originRowIndex.current!);
-
+        originRowIndex.current = null;
+      } else {
+        // Emit the rowOrderChange event only once when the reordering stops.
         const rowOrderChangeParams: GridRowOrderChangeParams = {
           row: apiRef.current.getRow(dragRowId),
-          targetIndex: originRowIndex.current!,
+          targetIndex: apiRef.current.getRowIndex(params.id),
           oldIndex: originRowIndex.current!,
         };
-        apiRef.current.publishEvent(GridEvents.rowOrderChange, rowOrderChangeParams);
 
-        originRowIndex.current = null;
+        apiRef.current.publishEvent(GridEvents.rowOrderChange, rowOrderChangeParams);
       }
 
       setDragRowId('');
