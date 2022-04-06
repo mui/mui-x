@@ -17,7 +17,8 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.cell}`]: styles.cell },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
-    { [`& .${gridClasses.cellReorder}`]: styles.cellReorder },
+    { [`& .${gridClasses.rowReorderCellContainer}`]: styles.rowReorderCellContainer },
+    { [`& .${gridClasses.rowReorderCell}`]: styles.rowReorderCell },
     { [`& .${gridClasses.checkboxInput}`]: styles.checkboxInput },
     { [`& .${gridClasses['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
     { [`& .${gridClasses['columnHeader--alignLeft']}`]: styles['columnHeader--alignLeft'] },
@@ -254,9 +255,6 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
     },
-    [`& .${gridClasses.cellReorder}`]: {
-      cursor: 'move',
-    },
     [`& .${gridClasses.cell}.${gridClasses['cell--editing']}`]: {
       padding: 1,
       display: 'flex',
@@ -287,10 +285,13 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.booleanCell}[data-value="false"]`]: {
       color: theme.palette.text.disabled,
     },
-    [`& .${gridClasses.actionsCell}, & .${gridClasses.reorderCell}`]: {
+    [`& .${gridClasses.actionsCell}, & .${gridClasses.rowReorderCell}`]: {
       display: 'inline-flex',
       alignItems: 'center',
       gridGap: theme.spacing(1),
+    },
+    [`& .${gridClasses.rowReorderCell}`]: {
+      cursor: 'move',
     },
     [`& .${gridClasses.withBorder}`]: {
       borderRight: `1px solid ${borderColor}`,

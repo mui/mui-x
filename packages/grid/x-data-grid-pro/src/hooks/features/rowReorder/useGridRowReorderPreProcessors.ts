@@ -16,7 +16,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return React.useMemo(() => {
     const slots = {
-      cellReorder: ['cellReorder'],
+      rowReorderCellContainer: ['rowReorderCellContainer'],
       columnHeaderReorder: ['columnHeaderReorder'],
     };
 
@@ -35,7 +35,7 @@ export const useGridRowReorderPreProcessors = (
     (columnsState) => {
       const reorderColumn: GridColDef = {
         ...GRID_REORDER_COL_DEF,
-        cellClassName: classes.cellReorder,
+        cellClassName: classes.rowReorderCellContainer,
         headerClassName: classes.columnHeaderReorder,
       };
 

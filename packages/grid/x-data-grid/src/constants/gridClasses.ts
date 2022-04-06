@@ -50,10 +50,6 @@ export interface GridClasses {
    */
   cellCheckbox: string;
   /**
-   * Styles applied to the cell reorder element.
-   */
-  cellReorder: string;
-  /**
    * Styles applied to the selection checkbox element.
    */
   checkboxInput: string;
@@ -351,9 +347,13 @@ export interface GridClasses {
    */
   rowCount: string;
   /**
+   * Styles applied to the row reorder cell container element.
+   */
+  rowReorderCellContainer: string;
+  /**
    * Styles applied to the root element of the row reorder cell
    */
-  reorderCell: string;
+  rowReorderCell: string;
   /**
    * Styles applied to both scroll area elements.
    */
@@ -423,7 +423,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell',
   'cellContent',
   'cellCheckbox',
-  'cellReorder',
   'checkboxInput',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',
@@ -488,7 +487,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--dragging',
   'rowDraggableContainer',
   'rowCount',
-  'reorderCell',
+  'rowReorderCellContainer',
+  'rowReorderCell',
   'scrollArea--left',
   'scrollArea--right',
   'scrollArea',

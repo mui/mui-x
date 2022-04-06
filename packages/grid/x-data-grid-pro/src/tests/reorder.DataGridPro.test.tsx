@@ -571,12 +571,12 @@ describe('<DataGridPro /> - Reorder', () => {
 
     // Row dragging
     const rowReorderCell = getCell(0, 0).firstChild!;
-    const targetRowReorderCell = getCell(1, 0)!;
+    const targetrowReorderCell = getCell(1, 0)!;
 
     fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetRowReorderCell);
-    const dragOverRowEvent = createDragOverEvent(targetRowReorderCell);
-    fireEvent(targetRowReorderCell, dragOverRowEvent);
+    fireEvent.dragEnter(targetrowReorderCell);
+    const dragOverRowEvent = createDragOverEvent(targetrowReorderCell);
+    fireEvent(targetrowReorderCell, dragOverRowEvent);
     const dragEndRowEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndRowEvent);
 

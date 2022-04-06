@@ -17,6 +17,8 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  // eslint-disable-next-line no-underscore-dangle
+  const cellValue = params.row.__reorder__ || params.row.id;
 
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
   const isDraggable =
@@ -61,10 +63,9 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   };
 
   return (
-    <div className={gridClasses.reorderCell} draggable={isDraggable} {...draggableEventHandlers}>
+    <div className={gridClasses.rowReorderCell} draggable={isDraggable} {...draggableEventHandlers}>
       <rootProps.components.RowReorderIcon />
-
-      <div className={gridClasses.rowDraggableContainer}>{params.row.id}</div>
+      <div className={gridClasses.rowDraggableContainer}>{cellValue}</div>
     </div>
   );
 };
