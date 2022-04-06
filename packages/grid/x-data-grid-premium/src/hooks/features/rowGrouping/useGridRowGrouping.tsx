@@ -258,9 +258,7 @@ export const useGridRowGrouping = (
         },
       }));
 
-      // Refresh the column pre-processing
-      // TODO: Add a clean way to re-run a pipe processing without faking a change
-      apiRef.current.updateColumns([]);
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);
 
       // Refresh the row tree creation strategy processing

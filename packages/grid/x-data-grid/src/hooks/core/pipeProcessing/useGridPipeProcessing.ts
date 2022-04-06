@@ -6,7 +6,6 @@ import {
   GridPipeProcessorGroup,
 } from './gridPipeProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridEvents } from '../../../models/events';
 
 interface GridPipeGroupCache {
   processors: {
@@ -76,22 +75,16 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
       const oldProcessor = groupCache.processors[id];
       if (oldProcessor !== processor) {
         groupCache.processors[id] = processor;
-
         runAppliers(groupCache);
-
-        // TODO: Remove once every applier uses `useGridRegisterPipeApplier`
-        apiRef.current.publishEvent(GridEvents.pipeProcessorRegister, group);
       }
 
       return () => {
         const { [id]: removedGroupProcessor, ...otherProcessors } =
           processorsCache.current[group]!.processors;
         processorsCache.current[group]!.processors = otherProcessors;
-        // TODO: Remove once every applier uses `useGridRegisterPipeApplier`
-        apiRef.current.publishEvent(GridEvents.pipeProcessorUnregister, group);
       };
     },
-    [apiRef, runAppliers],
+    [runAppliers],
   );
 
   const registerPipeApplier = React.useCallback<

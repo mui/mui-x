@@ -7,7 +7,6 @@ import {
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '../../core/strategyProcessing';
-import { useGridRegisterPipeApplier } from '../../core/pipeProcessing/useGridRegisterPipeApplier';
 
 const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = ({
   ids,
@@ -35,23 +34,6 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = ({
 };
 
 export const useGridRowsPreProcessors = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
-  const applyHydrateRowsProcessor = React.useCallback(() => {
-    apiRef.current.setState((state) => ({
-      ...state,
-      rows: {
-        ...state.rows,
-        ...apiRef.current.unstable_applyPipeProcessors(
-          'hydrateRows',
-          state.rows.groupingResponseBeforeRowHydration,
-        ),
-      },
-    }));
-    apiRef.current.publishEvent(GridEvents.rowsSet);
-    apiRef.current.forceUpdate();
-  }, [apiRef]);
-
-  useGridRegisterPipeApplier(apiRef, 'hydrateRows', applyHydrateRowsProcessor);
-
   useGridRegisterStrategyProcessor(
     apiRef,
     GRID_DEFAULT_STRATEGY,

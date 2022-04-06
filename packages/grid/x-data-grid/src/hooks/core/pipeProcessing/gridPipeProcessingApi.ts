@@ -79,6 +79,7 @@ export interface GridPipeProcessingApi {
    * @param {string} id An unique and static identifier of the applier.
    * @param {() => void} applier The applier to register.
    * @returns {() => void} A function to unregister the applier.
+   * @ignore - do not document.
    */
   unstable_registerPipeApplier: (
     group: GridPipeProcessorGroup,
@@ -91,6 +92,7 @@ export interface GridPipeProcessingApi {
    * but sometimes we want to re-apply the processing even if the processor deps have not changed.
    * This may occur when the change requires a `isDeepEqual` check.
    * @param {GridPipeProcessorGroup} group The group to apply.
+   * @ignore - do not document.
    */
   unstable_requestPipeProcessorsApplication: (group: GridPipeProcessorGroup) => void;
 }

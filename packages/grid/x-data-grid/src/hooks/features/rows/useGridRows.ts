@@ -30,6 +30,7 @@ import {
   GridRowsState,
 } from './gridRowsState';
 import { checkGridRowIdIsValid } from './gridRowsUtils';
+import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 
 interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
@@ -414,6 +415,26 @@ export const useGridRows = (
     GridEvents.strategyAvailabilityChange,
     handleStrategyActivityChange,
   );
+
+  /**
+   * APPLIERS
+   */
+  const applyHydrateRowsProcessor = React.useCallback(() => {
+    apiRef.current.setState((state) => ({
+      ...state,
+      rows: {
+        ...state.rows,
+        ...apiRef.current.unstable_applyPipeProcessors(
+          'hydrateRows',
+          state.rows.groupingResponseBeforeRowHydration,
+        ),
+      },
+    }));
+    apiRef.current.publishEvent(GridEvents.rowsSet);
+    apiRef.current.forceUpdate();
+  }, [apiRef]);
+
+  useGridRegisterPipeApplier(apiRef, 'hydrateRows', applyHydrateRowsProcessor);
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 
