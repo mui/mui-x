@@ -110,6 +110,9 @@
     "onFilterModelChange": { "type": { "name": "func" } },
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
+    "onPreferencePanelClose": { "type": { "name": "func" } },
+    "onPreferencePanelOpen": { "type": { "name": "func" } },
+    "onProcessRowUpdateError": { "type": { "name": "func" } },
     "onResize": { "type": { "name": "func" } },
     "onRowClick": { "type": { "name": "func" } },
     "onRowDoubleClick": { "type": { "name": "func" } },
@@ -181,6 +184,10 @@
     "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
     "Cell": { "default": "GridCell", "type": { "name": "elementType" } },
     "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnHeaderFilterIconButton": {
+      "default": "GridColumnHeaderFilterIconButton",
+      "type": { "name": "elementType" }
+    },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",

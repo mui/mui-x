@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
@@ -9,12 +10,15 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
+import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 
-export interface ColumnHeaderFilterIconProps {
+export interface ColumnHeaderFilterIconButtonProps {
+  field: string;
   counter?: number;
+  onClick?: (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-type OwnerState = ColumnHeaderFilterIconProps & {
+type OwnerState = ColumnHeaderFilterIconButtonProps & {
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -28,8 +32,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
-  const { counter } = props;
+function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonProps) {
+  const { counter, field, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -47,8 +51,12 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       } else {
         apiRef.current.showFilterPanel();
       }
+
+      if (onClick) {
+        onClick(apiRef.current.getColumnHeaderParams(field), event);
+      }
     },
-    [apiRef],
+    [apiRef, field, onClick],
   );
 
   if (!counter) {
@@ -83,8 +91,21 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
             {iconButton}
           </Badge>
         )}
+
         {counter === 1 && iconButton}
       </GridIconButtonContainer>
     </rootProps.components.BaseTooltip>
   );
 }
+
+GridColumnHeaderFilterIconButton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  counter: PropTypes.number,
+  field: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
+} as any;
+
+export { GridColumnHeaderFilterIconButton };
