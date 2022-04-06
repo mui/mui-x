@@ -85,7 +85,7 @@ DataGridProRaw.propTypes = {
    */
   autoPageSize: PropTypes.bool,
   /**
-   * Controls which cells are in "edit" mode.
+   * Controls the modes of the cells.
    */
   cellModesModel: PropTypes.object,
   /**
@@ -476,7 +476,7 @@ DataGridProRaw.propTypes = {
    */
   onCellKeyDown: PropTypes.func,
   /**
-   * Callback fired when the `cellModesModel` changes.
+   * Callback fired when the `cellModesModel` prop changes.
    * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
@@ -676,7 +676,7 @@ DataGridProRaw.propTypes = {
    */
   onRowGroupingModelChange: PropTypes.func,
   /**
-   * Callback fired when the `rowModesModel` changes.
+   * Callback fired when the `rowModesModel` prop changes.
    * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
@@ -773,7 +773,7 @@ DataGridProRaw.propTypes = {
    */
   rowHeight: PropTypes.number,
   /**
-   * Controls which rows are in "edit" mode.
+   * Controls the modes of the rows.
    */
   rowModesModel: PropTypes.object,
   /**

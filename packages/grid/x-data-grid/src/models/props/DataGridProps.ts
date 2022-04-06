@@ -616,11 +616,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onEditRowsModelChange?: (editRowsModel: GridEditRowsModel, details: GridCallbackDetails) => void;
   /**
-   * Controls which cells are in "edit" mode.
+   * Controls the modes of the cells.
    */
   cellModesModel?: GridCellModesModel;
   /**
-   * Callback fired when the `cellModesModel` changes.
+   * Callback fired when the `cellModesModel` prop changes.
    * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
@@ -629,11 +629,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
     details: GridCallbackDetails,
   ) => void;
   /**
-   * Controls which rows are in "edit" mode.
+   * Controls the modes of the rows.
    */
   rowModesModel?: GridRowModesModel;
   /**
-   * Callback fired when the `rowModesModel` changes.
+   * Callback fired when the `rowModesModel` prop changes.
    * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
