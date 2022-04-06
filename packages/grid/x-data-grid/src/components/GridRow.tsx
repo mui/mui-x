@@ -219,7 +219,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       ...apiRef.current.getRowParams(rowId),
       isFirstVisible: indexRelativeToCurrentPage === 0,
       isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
-      indexRelativeToExpandedRows: index,
       indexRelativeToCurrentPage,
     };
 

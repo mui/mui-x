@@ -83,8 +83,6 @@ export const useGridRowsMeta = (
             ...row,
             isFirstVisible: indexRelativeToCurrentPage === 0,
             isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
-            indexRelativeToExpandedRows:
-              indexRelativeToCurrentPage + currentPage.range?.firstRowIndex!,
             indexRelativeToCurrentPage,
           });
 
