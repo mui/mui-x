@@ -83,7 +83,7 @@ export const usePickerState = <TInput, TDateValue>(
 
       if (needClosePicker) {
         setIsOpen(false);
-        setInitialDate(acceptedDate);
+
         if (onAccept) {
           onAccept(acceptedDate);
         }
@@ -146,9 +146,12 @@ export const usePickerState = <TInput, TDateValue>(
       onChange,
       open: isOpen,
       rawValue: value,
-      openPicker: () => setIsOpen(true),
+      openPicker: () => {
+        setInitialDate(parsedDateValue);
+        setIsOpen(true);
+      },
     }),
-    [onChange, isOpen, value, setIsOpen],
+    [onChange, isOpen, value, parsedDateValue, setIsOpen],
   );
 
   const pickerState = { pickerProps, inputProps, wrapperProps };
