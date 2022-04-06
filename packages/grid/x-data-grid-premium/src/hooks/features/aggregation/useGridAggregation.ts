@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GridEventListener,
+  gridColumnLookupSelector,
   GridEvents,
   useGridApiEventHandler,
   useGridApiMethod,
@@ -8,12 +8,9 @@ import {
 import { GridStateInitializer, isDeepEqual } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridApiPremium } from '../../../models/gridApiPremium';
-import {
-  gridAggregationModelSelector,
-  gridAggregationSanitizedModelSelector,
-} from './gridAggregationSelectors';
+import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridAggregationApi } from './gridAggregationInterfaces';
-import { mergeStateWithAggregationModel } from './gridAggregationUtils';
+import { getAggregationRules, mergeStateWithAggregationModel } from './gridAggregationUtils';
 import { createAggregationLookup } from './createAggregationLookup';
 
 export const aggregationStateInitializer: GridStateInitializer<
@@ -87,25 +84,33 @@ export const useGridAggregation = (
   /**
    * EVENTS
    */
-  const checkAggregationModelDiff = React.useCallback<
-    GridEventListener<GridEvents.columnsChange>
-  >(() => {
-    const aggregationModel = gridAggregationSanitizedModelSelector(apiRef);
-    const lastAggregationModelApplied =
-      apiRef.current.unstable_getCache('aggregation')?.sanitizedModelOnLastHydration;
+  const checkAggregationRulesDiff = React.useCallback(() => {
+    const aggregationRulesOnLastRowHydration =
+      apiRef.current.unstable_getCache('aggregation')?.aggregationRulesOnLastRowHydration;
+    const aggregationRulesOnLastColumnHydration =
+      apiRef.current.unstable_getCache('aggregation')?.aggregationRulesOnLastColumnHydration;
 
-    if (!isDeepEqual(lastAggregationModelApplied, aggregationModel)) {
-      // Re-apply the row hydration to add / remove the aggregation footers
+    const aggregationRules = getAggregationRules({
+      columnsLookup: gridColumnLookupSelector(apiRef),
+      aggregationModel: gridAggregationModelSelector(apiRef),
+      aggregationFunctions: props.aggregationFunctions,
+    });
+
+    // Re-apply the row hydration to add / remove the aggregation footers
+    if (!isDeepEqual(aggregationRulesOnLastRowHydration, aggregationRules)) {
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
       applyAggregation();
+    }
 
-      // Refresh the column pre-processing
+    // Re-apply the column hydration to wrap / unwrap the aggregated columns
+    if (!isDeepEqual(aggregationRulesOnLastColumnHydration, aggregationRules)) {
       // TODO: Add a clean way to re-run a pipe processing without faking a change
       apiRef.current.updateColumns([]);
     }
-  }, [apiRef, applyAggregation]);
+  }, [apiRef, applyAggregation, props.aggregationFunctions]);
 
-  useGridApiEventHandler(apiRef, GridEvents.aggregationModelChange, checkAggregationModelDiff);
+  useGridApiEventHandler(apiRef, GridEvents.aggregationModelChange, checkAggregationRulesDiff);
+  useGridApiEventHandler(apiRef, GridEvents.columnsChange, checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, GridEvents.filteredRowsSet, applyAggregation);
 
   /**

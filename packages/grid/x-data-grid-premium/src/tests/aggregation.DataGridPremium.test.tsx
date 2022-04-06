@@ -10,26 +10,23 @@ import {
   GRID_AGGREGATION_FUNCTIONS,
   GridAggregationFunction,
   GridApi,
-  GridRowsProp,
   GridRowTreeNodeConfig,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-const rows: GridRowsProp = [
-  { id: 0, category1: 'Cat A', category2: 'Cat 1' },
-  { id: 1, category1: 'Cat A', category2: 'Cat 2' },
-  { id: 2, category1: 'Cat A', category2: 'Cat 2' },
-  { id: 3, category1: 'Cat A', category2: 'Cat 2' },
-  { id: 4, category1: 'Cat A', category2: 'Cat 1' },
-  { id: 5, category1: 'Cat B', category2: 'Cat 1' },
-];
-
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
   disableVirtualization: true,
-  rows,
+  rows: [
+    { id: 0, category1: 'Cat A', category2: 'Cat 1' },
+    { id: 1, category1: 'Cat A', category2: 'Cat 2' },
+    { id: 2, category1: 'Cat A', category2: 'Cat 2' },
+    { id: 3, category1: 'Cat A', category2: 'Cat 2' },
+    { id: 4, category1: 'Cat A', category2: 'Cat 1' },
+    { id: 5, category1: 'Cat B', category2: 'Cat 1' },
+  ],
   columns: [
     {
       field: 'id',
@@ -100,7 +97,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         setProps({ aggregationModel: { id: 'min' } });
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '0' /* Agg */]);
         setProps({ aggregationModel: {} });
-        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
       });
 
       it('should ignore aggregation rule that do not match any column', () => {
@@ -163,7 +160,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       ]);
     });
 
-    describe('props: aggregationPosition', () => {
+    describe('prop: aggregationPosition', () => {
       it('should not create footer rows and add aggregated values on group row when props.aggregationPosition = "inline"', () => {
         render(
           <Test
@@ -241,7 +238,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       });
     });
 
-    describe('props: isGroupAggregated', () => {
+    describe('prop: isGroupAggregated', () => {
       it('should not aggregate groups if props.isGroupAggregated returns false', () => {
         render(
           <Test
@@ -328,7 +325,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe('props: aggregatedRows', () => {
+  describe('prop: aggregatedRows', () => {
     it('should aggregate based on the filtered rows if props.aggregatedRows is not defined', () => {
       render(
         <Test
@@ -374,7 +371,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe('props: aggregationFunctions', () => {
+  describe('prop: aggregationFunctions', () => {
     it('should ignore aggregation rules not present in props.aggregationFunctions', () => {
       render(
         <Test
@@ -407,15 +404,54 @@ describe('<DataGridPremium /> - Aggregation', () => {
         },
       });
       // 'max' is in props.aggregationFunctions
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
 
       const customMax: GridAggregationFunction = {
         ...GRID_AGGREGATION_FUNCTIONS.max,
-        apply: (params) => (GRID_AGGREGATION_FUNCTIONS.max.apply(params) as number) + 1,
+        apply: (params) => `Agg: ${GRID_AGGREGATION_FUNCTIONS.max.apply(params) as number}`,
       };
       setProps({ aggregationFunctions: { min: GRID_AGGREGATION_FUNCTIONS.min, max: customMax } });
       // 'max' is in props.aggregationFunctions but has changed
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '6']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', 'Agg: 5' /* Agg */]);
+    });
+  });
+
+  describe('colDef: availableAggregationFunctions', () => {
+    it('should ignore aggregation rules not present in props.aggregationFunctions', () => {
+      render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'max' } } }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              availableAggregationFunctions: ['min'],
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+    });
+
+    it('should react to colDef.availableAggregationFunctions update', () => {
+      render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'max' } } }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              availableAggregationFunctions: ['min'],
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+
+      apiRef.current.updateColumns([
+        { field: 'id', availableAggregationFunctions: ['min', 'max'] },
+      ]);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
     });
   });
 });

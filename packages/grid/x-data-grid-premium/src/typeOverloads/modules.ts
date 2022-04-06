@@ -1,7 +1,12 @@
 import { GridKeyValue, GridValidRowModel } from '@mui/x-data-grid-pro';
 import type { GridControlledStateEventLookupPro } from '@mui/x-data-grid-pro/typeOverloads';
 import type { GridGroupingValueGetterParams } from '../models';
-import type { GridRowGroupingModel, GridAggregationModel, GridAggregationCellMeta } from '../hooks';
+import type {
+  GridRowGroupingModel,
+  GridAggregationModel,
+  GridAggregationCellMeta,
+  GridAggregationRules,
+} from '../hooks';
 
 export interface GridControlledStateEventLookupPremium {
   aggregationModelChange: { params: GridAggregationModel };
@@ -32,7 +37,8 @@ export interface GridRenderCellParamsPremium<V = any, R = any, F = V> {
 
 export interface GridCachesPremium {
   aggregation: {
-    sanitizedModelOnLastHydration: GridAggregationModel;
+    aggregationRulesOnLastColumnHydration: GridAggregationRules | undefined;
+    aggregationRulesOnLastRowHydration: GridAggregationRules | undefined;
   };
 }
 

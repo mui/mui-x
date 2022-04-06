@@ -1,12 +1,12 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
-import { GridPreferencePanelsValue } from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, GridPreferencePanelsValue } from '@mui/x-data-grid-pro';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   getAvailableAggregationFunctions,
-  sanitizeAggregationModel,
   addFooterRows,
+  getAggregationRules,
 } from './gridAggregationUtils';
 import {
   wrapColumnWithAggregation,
@@ -35,18 +35,20 @@ export const useGridAggregationPreProcessors = (
         return columnsState;
       }
 
-      // We can't use `gridAggregationSanitizedModelSelector` here because the new columns are not in the state yet
-      const aggregationModel = sanitizeAggregationModel(
-        gridAggregationModelSelector(apiRef),
-        columnsState.lookup,
-      );
+      const lastAppliedAggregationRules =
+        apiRef.current.unstable_getCache('aggregation')?.aggregationRulesOnLastColumnHydration ??
+        {};
 
-      const lastAggregationModelApplied =
-        apiRef.current.unstable_getCache('aggregation')?.sanitizedModelOnLastHydration ?? {};
+      // We can't use `gridAggregationSanitizedModelSelector` here because the new columns are not in the state yet
+      const aggregationRules = getAggregationRules({
+        columnsLookup: columnsState.lookup,
+        aggregationModel: gridAggregationModelSelector(apiRef),
+        aggregationFunctions: props.aggregationFunctions,
+      });
 
       columnsState.all.forEach((field) => {
-        const shouldHaveAggregation = !props.disableAggregation && !!aggregationModel[field];
-        const haveAggregationColumn = !!lastAggregationModelApplied[field];
+        const shouldHaveAggregation = !props.disableAggregation && !!aggregationRules[field];
+        const haveAggregationColumn = !!lastAppliedAggregationRules[field];
 
         if (!shouldHaveAggregation && haveAggregationColumn) {
           columnsState.lookup[field] = unwrapColumnFromAggregation({
@@ -59,18 +61,18 @@ export const useGridAggregationPreProcessors = (
 
           columnsState.lookup[field] = wrapColumnWithAggregation({
             column,
-            aggregationItem: aggregationModel[field],
+            aggregationRule: aggregationRules[field],
             apiRef,
-            aggregationFunctions: props.aggregationFunctions,
             aggregationPositionRef,
             isGroupAggregated: props.isGroupAggregated,
           });
         }
       });
 
-      apiRef.current.unstable_setCache('aggregation', {
-        sanitizedModelOnLastHydration: aggregationModel,
-      });
+      apiRef.current.unstable_setCache('aggregation', (prev) => ({
+        ...prev,
+        aggregationRulesOnLastColumnHydration: aggregationRules,
+      }));
 
       return columnsState;
     },
@@ -89,12 +91,24 @@ export const useGridAggregationPreProcessors = (
         return groupingParams;
       }
 
-      return addFooterRows({
-        apiRef,
-        groupingParams,
+      const aggregationRules = getAggregationRules({
+        columnsLookup: gridColumnLookupSelector(apiRef),
+        aggregationModel: gridAggregationModelSelector(apiRef),
         aggregationFunctions: props.aggregationFunctions,
+      });
+
+      const groupingParamsWithFooterRows = addFooterRows({
+        groupingParams,
+        aggregationRules,
         isGroupAggregated: props.isGroupAggregated,
       });
+
+      apiRef.current.unstable_setCache('aggregation', (prev) => ({
+        ...prev,
+        aggregationRulesOnLastRowHydration: aggregationRules,
+      }));
+
+      return groupingParamsWithFooterRows;
     },
     [
       apiRef,

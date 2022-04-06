@@ -70,5 +70,12 @@ export interface GridAggregationCellMeta {
    * For instance, "size" aggregation has no unit.
    */
   hasCellUnit: boolean;
-  item: string;
+  aggregationFunctionName: string;
 }
+
+export interface GridAggregationRule {
+  aggregationFunctionName: string;
+  aggregationFunction: GridAggregationFunction;
+}
+
+export type GridAggregationRules = { [field: string]: GridAggregationRule };

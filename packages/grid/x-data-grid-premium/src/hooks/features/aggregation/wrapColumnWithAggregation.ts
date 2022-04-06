@@ -5,6 +5,7 @@ import {
   GridAggregationCellMeta,
   GridAggregationFunction,
   GridAggregationPosition,
+  GridAggregationRule,
 } from './gridAggregationInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
@@ -63,14 +64,14 @@ const getWrappedValueGetter = ({
 
 const getWrappedValueFormatter = ({
   valueFormatter,
-  aggregationFunction,
+  aggregationRule,
   getCellAggregationPosition,
 }: {
   valueFormatter: GridColDef['valueFormatter'];
-  aggregationFunction: GridAggregationFunction;
+  aggregationRule: GridAggregationRule;
   getCellAggregationPosition: (id: GridRowId) => GridAggregationPosition | null;
 }): AggregationWrappedColDefProperty<'valueFormatter'> | undefined => {
-  if (!aggregationFunction.valueFormatter) {
+  if (!aggregationRule.aggregationFunction.valueFormatter) {
     return valueFormatter;
   }
 
@@ -78,7 +79,7 @@ const getWrappedValueFormatter = ({
     if (params.id != null) {
       const cellAggregationPosition = getCellAggregationPosition(params.id);
       if (cellAggregationPosition) {
-        return aggregationFunction.valueFormatter!(params);
+        return aggregationRule.aggregationFunction.valueFormatter!(params);
       }
     }
 
@@ -97,13 +98,11 @@ const getWrappedValueFormatter = ({
 
 const getWrappedRenderCell = ({
   renderCell,
-  aggregationFunction,
-  aggregationItem,
+  aggregationRule,
   getCellAggregationPosition,
 }: {
   renderCell: GridColDef['renderCell'];
-  aggregationFunction: GridAggregationFunction;
-  aggregationItem: string;
+  aggregationRule: GridAggregationRule;
   getCellAggregationPosition: (id: GridRowId) => GridAggregationPosition | null;
 }): AggregationWrappedColDefProperty<'renderCell'> | undefined => {
   if (!renderCell) {
@@ -111,8 +110,8 @@ const getWrappedRenderCell = ({
   }
 
   const aggregationMeta: GridAggregationCellMeta = {
-    hasCellUnit: aggregationFunction.hasCellUnit ?? true,
-    item: aggregationItem,
+    hasCellUnit: aggregationRule.aggregationFunction.hasCellUnit ?? true,
+    aggregationFunctionName: aggregationRule.aggregationFunctionName,
   };
 
   const wrappedRenderCell: AggregationWrappedColDefProperty<'renderCell'> = (params) => {
@@ -160,29 +159,16 @@ const getWrappedFilterOperators = ({
 export const wrapColumnWithAggregation = ({
   column,
   apiRef,
-  aggregationItem,
-  aggregationFunctions,
+  aggregationRule,
   aggregationPositionRef,
   isGroupAggregated,
 }: {
   column: GridColDef;
   apiRef: React.MutableRefObject<GridApiPremium>;
-  aggregationItem: string;
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  aggregationRule: GridAggregationRule;
   aggregationPositionRef: React.MutableRefObject<GridAggregationPosition>;
   isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
 }): GridColDef => {
-  const aggregationFunction = aggregationFunctions?.[aggregationItem];
-
-  const shouldAggregate = canColumnHaveAggregationFunction({
-    column,
-    aggregationFunction,
-    aggregationFunctionName: aggregationItem,
-  });
-  if (!shouldAggregate) {
-    return column;
-  }
-
   const getCellAggregationPosition = (id: GridRowId): GridAggregationPosition | null => {
     const aggregationPosition = aggregationPositionRef.current;
     const isGroup = id.toString().startsWith('auto-generated-row-');
@@ -213,13 +199,12 @@ export const wrapColumnWithAggregation = ({
     }),
     valueFormatter: getWrappedValueFormatter({
       valueFormatter: column.valueFormatter,
-      aggregationFunction,
+      aggregationRule,
       getCellAggregationPosition,
     }),
     renderCell: getWrappedRenderCell({
       renderCell: column.renderCell,
-      aggregationFunction,
-      aggregationItem,
+      aggregationRule,
       getCellAggregationPosition,
     }),
     filterOperators: getWrappedFilterOperators({

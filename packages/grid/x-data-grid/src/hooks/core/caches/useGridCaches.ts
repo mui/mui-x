@@ -7,7 +7,7 @@ export const useGridCaches = (apiRef: React.MutableRefObject<GridApiCommon>) => 
   const caches = React.useRef<Partial<GridCaches>>({});
 
   const setCache = React.useCallback<GridCachesApi['unstable_setCache']>((cacheKey, value) => {
-    caches.current[cacheKey] = value;
+    caches.current[cacheKey] = value(caches.current[cacheKey]);
   }, []);
 
   const getCache = React.useCallback<GridCachesApi['unstable_getCache']>(
