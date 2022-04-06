@@ -98,7 +98,7 @@ function EditToolbar(props) {
 }
 
 EditToolbar.propTypes = {
-  cellModesModel: PropTypes.any.isRequired,
+  cellModesModel: PropTypes.object.isRequired,
   selectedCellParams: PropTypes.any,
   setCellModesModel: PropTypes.func.isRequired,
   setSelectedCellParams: PropTypes.func.isRequired,

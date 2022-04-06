@@ -135,8 +135,8 @@ export default function FullFeaturedCrudGrid() {
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
-    const row = rows.find((row) => row.id === id);
-    if (row!.isNew) {
+    const editedRow = rows.find((row) => row.id === id);
+    if (editedRow!.isNew) {
       setRows(rows.filter((row) => row.id !== id));
     }
   };
