@@ -4,7 +4,7 @@ import {
   DataGrid,
   GridCellParams,
   GridToolbarQuickFilter,
-  GridQuickFilterLogic,
+  GridLinkOperator,
 } from '@mui/x-data-grid';
 
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -54,7 +54,7 @@ export default function QuickFilteringCustomizedGrid() {
                 return (
                   params.value.label &&
                   params.value.label.slice(0, value.length).toLowerCase() ===
-                    value.toLowerCase()
+                  value.toLowerCase()
                 );
               };
             },
@@ -72,7 +72,7 @@ export default function QuickFilteringCustomizedGrid() {
           filter: {
             filterModel: {
               items: [],
-              quickFilterLogic: GridQuickFilterLogic.Or,
+              quickFilterLinkOperator: GridLinkOperator.Or,
             },
           },
         }}

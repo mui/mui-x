@@ -28,7 +28,9 @@ const daDKGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive filtre` : `${count} aktivt filter`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilter: 'search',
+  // toolbarQuickFilterPlaceholder: "Search...",
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
   // Export selector toolbar button text
   // toolbarExport: 'Export',

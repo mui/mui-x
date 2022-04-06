@@ -27,7 +27,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count} aktif filtre`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilter: 'search',
+  // toolbarQuickFilterPlaceholder: "Search...",
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',

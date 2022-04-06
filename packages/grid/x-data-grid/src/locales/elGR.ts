@@ -27,7 +27,9 @@ const elGRGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} ενεργά φίλτρα` : `${count} ενεργό φίλτρο`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilter: 'search',
+  // toolbarQuickFilterPlaceholder: "Search...",
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
   // Export selector toolbar button text
   toolbarExport: 'Εξαγωγή',

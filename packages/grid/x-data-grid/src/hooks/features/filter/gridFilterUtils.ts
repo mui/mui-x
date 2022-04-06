@@ -4,7 +4,7 @@ import {
   GridFilterItem,
   GridFilterModel,
   GridLinkOperator,
-  GridQuickFilterLogic,
+  GridLinkOperator,
   GridRowId,
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -112,13 +112,13 @@ export const mergeStateWithFilterModel =
     disableMultipleColumnsFiltering: boolean,
     apiRef: React.MutableRefObject<GridApiCommunity>,
   ) =>
-  (state: GridStateCommunity): GridStateCommunity => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
-    },
-  });
+    (state: GridStateCommunity): GridStateCommunity => ({
+      ...state,
+      filter: {
+        ...state.filter,
+        filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
+      },
+    });
 
 /**
  * Generates a method to easily check if a row is matching the current filter model.
@@ -214,7 +214,7 @@ export const buildAggregatedQuickFilterApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridAggregatedFilterItemApplier | null => {
-  const { quickFilterValues = [], quickFilterLogic = GridQuickFilterLogic.And } = filterModel;
+  const { quickFilterValues = [], quickFilterLinkOperator = GridLinkOperator.And } = filterModel;
   if (quickFilterValues.length === 0) {
     return null;
   }
@@ -252,7 +252,7 @@ export const buildAggregatedQuickFilterApplier = (
     });
 
     // Return `false` as soon as we have a quick filter value that does not match any column
-    if (quickFilterLogic === GridQuickFilterLogic.And) {
+    if (quickFilterLinkOperator === GridLinkOperator.And) {
       return sanitizedQuickFilterValues.every((value, index) =>
         Object.keys(appliersPerColumnField).some((field) => {
           if (appliersPerColumnField[field][index] == null) {

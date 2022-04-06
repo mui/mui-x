@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import {
   DataGrid,
   GridToolbarQuickFilter,
-  GridQuickFilterLogic,
+  GridLinkOperator,
 } from '@mui/x-data-grid';
 
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -71,7 +71,7 @@ export default function QuickFilteringCustomizedGrid() {
           filter: {
             filterModel: {
               items: [],
-              quickFilterLogic: GridQuickFilterLogic.Or,
+              quickFilterLinkOperator: GridLinkOperator.Or,
             },
           },
         }}

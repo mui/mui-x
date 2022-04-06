@@ -27,7 +27,9 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilter: 'search',
+  // toolbarQuickFilterPlaceholder: "Search...",
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
   // Export selector toolbar button text
   toolbarExport: 'Eksportuj',

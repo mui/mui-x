@@ -317,20 +317,21 @@ By default, the quick filter considers the input as a list of values separated b
 ### Custom filtering logic
 
 The logic quick filter logic can be switched to filter rows that contain _at least_ one value instead for each of them.
-To do so, set `quickFilterLogic` equals to `GridQuickFilterLogic.Or` as follow:
+To do so, set `quickFilterLinkOperator` equals to `GridLinkOperator.Or` as follow:
 
 ```js
 initialState={{
   filterModel: {
-    quickFilterLogic: GridQuickFilterLogic.Or
+    quickFilterLinkOperator: GridLinkOperator.Or
   }
 }}
 ```
 
-The quick filter will only consider columns with types `string` or `number`
+With default settings, the quick filter will only consider columns with types `string`,`number` and `singleSelect`
 
 - For columns with type `string` the cell must contain the value to pass the filter
 - For columns with type `number` the cell must equal the value to pass the filter
+- For columns with type `singleSelect` the cell must start like the value to pass the filter
 
 To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.
 This function is quite similar to `getApplyFilterFn`.
@@ -365,6 +366,7 @@ For example, the following parser allows to search words containing a space by u
   quickFilterParser={(searchInput) =>
     searchInput.split(',').map((value) => value.trim())
   }
+  debounceMs={200} // time before applying the new quick filter value
 />
 ```
 

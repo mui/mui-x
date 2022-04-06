@@ -221,7 +221,7 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    * This function can return `null` to skip filtering for this value and column.
    * @param {any} value The value with which we want to filter the column.
    * @param {GridStateColDef} colDef The column from which we want to filter the rows.
-   * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
+   * @param {React.MutableRefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
    * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row pass this filter value or not.
    */
   getApplyQuickFilterFn?: (

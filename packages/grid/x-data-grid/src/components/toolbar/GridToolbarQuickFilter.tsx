@@ -43,9 +43,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
 
   const updateSearchValue = React.useCallback(
     (newSearchValue) => {
-      apiRef.current.setQuickFilterValues(
-        quickFilterParser(newSearchValue).filter((value) => value !== ''),
-      );
+      apiRef.current.setQuickFilterValues(quickFilterParser(newSearchValue));
     },
     [apiRef, quickFilterParser],
   );
@@ -75,14 +73,15 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       variant="standard"
       value={searchValue}
       onChange={handleSearchValueChange}
-      placeholder="Search…"
-      label={apiRef.current.getLocaleText('toolbarQuickFilter')}
+      placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
+      label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
+      role="search"
       InputProps={{
         startAdornment: <SearchIcon fontSize="small" />,
         endAdornment: (
           <IconButton
-            title="Clear"
-            aria-label="Clear"
+            aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
+            title={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             size="small"
             style={{ visibility: searchValue ? 'visible' : 'hidden' }}
             onClick={clearSearchValue}
@@ -91,9 +90,6 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           </IconButton>
         ),
       }}
-      // for more details, see: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/search_role
-      role="search"
-      aria-label="Grid"
       {...other}
     />
   );

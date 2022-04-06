@@ -205,7 +205,7 @@ DataGridRaw.propTypes = {
       }),
     ).isRequired,
     linkOperator: PropTypes.oneOf(['and', 'or']),
-    quickFilterLogic: PropTypes.oneOf(['and', 'or']),
+    quickFilterLinkOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
   /**

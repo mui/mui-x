@@ -26,7 +26,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
     count !== 1 ? `${count} active filters` : `${count} active filter`,
 
   // Quick filter toolbar field
-  toolbarQuickFilter: 'search',
+  toolbarQuickFilterPlaceholder: "Search...",
+  toolbarQuickFilterLabel: 'Search',
+  toolbarQuickFilterDeleteIconLabel: 'Clear',
 
   // Export selector toolbar button text
   toolbarExport: 'Export',

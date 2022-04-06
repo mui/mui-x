@@ -28,7 +28,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktiivista suodatinta` : `${count} aktiivinen suodatin`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilter: 'search',
+  // toolbarQuickFilterPlaceholder: "Search...",
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
   // Export selector toolbar button text
   toolbarExport: 'Export',

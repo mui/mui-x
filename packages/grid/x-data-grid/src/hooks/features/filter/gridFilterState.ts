@@ -1,4 +1,4 @@
-import { GridLinkOperator, GridQuickFilterLogic } from '../../../models/gridFilterItem';
+import { GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridRowId } from '../../../models/gridRows';
 
@@ -6,7 +6,7 @@ export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
   items: [],
   linkOperator: GridLinkOperator.And,
   quickFilterValues: [],
-  quickFilterLogic: GridQuickFilterLogic.And,
+  quickFilterLinkOperator: GridLinkOperator.And,
 });
 
 export interface GridFilterState {

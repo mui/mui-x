@@ -7,14 +7,14 @@ import {
   DataGrid,
   DataGridProps,
   GridFilterModel,
-  GridQuickFilterLogic,
+  GridLinkOperator,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Filter', () => {
+describe('<DataGrid /> - Quick Filter', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
@@ -44,11 +44,12 @@ describe('<DataGrid /> - Filter', () => {
       </div>
     );
   };
+
   describe('component', () => {
     it('should apply filter', () => {
       render(<TestCase />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
         target: { value: 'a' },
       });
       clock.runToLast();
@@ -72,7 +73,7 @@ describe('<DataGrid /> - Filter', () => {
 
       expect(onFilterModelChange.callCount).to.equal(0);
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
         target: { value: 'adid, nik' },
       });
       clock.runToLast();
@@ -80,7 +81,7 @@ describe('<DataGrid /> - Filter', () => {
         items: [],
         linkOperator: 'and',
         quickFilterValues: ['adid', 'nik'],
-        quickFilterLogic: 'and',
+        quickFilterLinkOperator: 'and',
       });
     });
   });
@@ -89,13 +90,13 @@ describe('<DataGrid /> - Filter', () => {
     it('quick filter return rows that match all values by default', () => {
       render(<TestCase />);
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
         target: { value: 'adid' },
       });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
         target: { value: 'adid nik' },
       });
       clock.runToLast();
@@ -106,18 +107,18 @@ describe('<DataGrid /> - Filter', () => {
       render(
         <TestCase
           initialState={{
-            filter: { filterModel: { items: [], quickFilterLogic: GridQuickFilterLogic.Or } },
+            filter: { filterModel: { items: [], quickFilterLinkOperator: GridLinkOperator.Or } },
           }}
         />,
       );
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
         target: { value: 'adid' },
       });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'search' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
         target: { value: 'adid nik' },
       });
       clock.runToLast();
