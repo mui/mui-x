@@ -30,7 +30,10 @@ interface GridPipeGroupCache {
  * The plugin containing the custom logic must use:
  *
  * - `useGridRegisterPipeProcessor` to register their processor.
- *   When the processor changes, it will fire `GridEvents.pipeProcessorRegister` to re-apply the whole pipe.
+ *
+ * - `apiRef.current.unstable_requestPipeProcessorsApplication` to imperatively re-apply a group.
+ *   This method should be used in last resort.
+ *   Most of the time, the application should be triggered by an update on the deps of the processor.
  *
  * =====================================================================================================================
  *
@@ -38,8 +41,10 @@ interface GridPipeGroupCache {
  *
  * - `apiRef.current.unstable_applyPipeProcessors` to run in chain all the processors of a given group.
  *
- * - `GridEvents.pipeProcessorRegister` to re-apply the whole pipe when a processor of this pipe changes.
- *
+ * - `useGridRegisterPipeApplier` to re-apply the whole pipe when requested.
+ *   The applier will be called when:
+ *   * a processor is registered.
+ *   * `apiRef.current.unstable_requestPipeProcessorsApplication` is called for the given group.
  */
 export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
   const processorsCache = React.useRef<{
@@ -74,6 +79,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
 
         runAppliers(groupCache);
 
+        // TODO: Remove once every applier uses `useGridRegisterPipeApplier`
         apiRef.current.publishEvent(GridEvents.pipeProcessorRegister, group);
       }
 
@@ -81,6 +87,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
         const { [id]: removedGroupProcessor, ...otherProcessors } =
           processorsCache.current[group]!.processors;
         processorsCache.current[group]!.processors = otherProcessors;
+        // TODO: Remove once every applier uses `useGridRegisterPipeApplier`
         apiRef.current.publishEvent(GridEvents.pipeProcessorUnregister, group);
       };
     },

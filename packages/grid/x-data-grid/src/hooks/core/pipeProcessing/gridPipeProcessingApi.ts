@@ -51,9 +51,9 @@ type GridPipeProcessorsApplier = <P extends GridPipeProcessorGroup>(
 
 export interface GridPipeProcessingApi {
   /**
-   * Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.
+   * Register a processor and run all the appliers of the group.
    * @param {GridPipeProcessorGroup} group The group on which this processor should be applied.
-   * @param {number} id An unique and static identifier of the processor.
+   * @param {string} id An unique and static identifier of the processor.
    * @param {GridPipeProcessor} processor The processor to register.
    * @returns {() => void} A function to unregister the processor.
    * @ignore - do not document.
@@ -73,10 +73,24 @@ export interface GridPipeProcessingApi {
    * @ignore - do not document.
    */
   unstable_applyPipeProcessors: GridPipeProcessorsApplier;
+  /**
+   * Register an applier.
+   * @param {GridPipeProcessorGroup} group The group of this applier
+   * @param {string} id An unique and static identifier of the applier.
+   * @param {() => void} applier The applier to register.
+   * @returns {() => void} A function to unregister the applier.
+   */
   unstable_registerPipeApplier: (
     group: GridPipeProcessorGroup,
     id: string,
     applier: () => void,
   ) => () => void;
+  /**
+   * Imperatively run all the appliers of a group.
+   * Most of the time, the applier should run because a processor is re-registered,
+   * but sometimes we want to re-apply the processing even if the processor deps have not changed.
+   * This may occur when the change requires a `isDeepEqual` check.
+   * @param {GridPipeProcessorGroup} group The group to apply.
+   */
   unstable_requestPipeProcessorsApplication: (group: GridPipeProcessorGroup) => void;
 }
