@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import * as yargs from 'yargs';
-import { generateLicense, LicenseType } from '../generateLicense/generateLicense';
+import { generateLicense, LicenseScope } from '../generateLicense/generateLicense';
 import { base64Decode } from '../encoding/base64';
 
 const oneDayInMs = 1000 * 60 * 60 * 24;
@@ -76,7 +76,7 @@ export function licenseGenCli() {
         const licenseDetails = {
           expiryDate: new Date(new Date().getTime() + parseInt(argv.expiry, 10) * oneDayInMs),
           orderNumber: argv.order,
-          type: argv.type as LicenseType,
+          type: argv.type as LicenseScope,
         };
 
         console.log(
@@ -84,7 +84,7 @@ export function licenseGenCli() {
             licenseDetails.orderNumber
           } with expiry date ${licenseDetails.expiryDate.toLocaleDateString()} and type "${
             licenseDetails.type
-          }`,
+          }"`,
         );
         const license = generateLicense(licenseDetails);
         console.log(`New license: \n${license}`);
