@@ -517,7 +517,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe.only('colDef: renderCell', () => {
+  describe('colDef: renderCell', () => {
     it('should use the column renderCell', () => {
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
