@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { MenuItem } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
 import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
@@ -22,27 +22,10 @@ function warnDeprecatedTypeSupport(type: string) {
   warnedOnce[type] = true;
 }
 
-interface SelectOptionProps {
-  isNative: boolean;
-  children: React.ReactNode;
-  value: any;
-}
-
-const SelectOption = ({ isNative, children, value, ...props }: SelectOptionProps) =>
-  isNative ? (
-    <option value={value} {...props}>
-      {children}
-    </option>
-  ) : (
-    <MenuItem value={value} {...props}>
-      {children}
-    </MenuItem>
-  );
-
 const renderSingleSelectOptions = (
   { valueOptions, valueFormatter, field }: GridColDef,
   api: GridApiCommunity,
-  isSelectNative: boolean,
+  OptionComponent: React.ElementType,
 ) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
@@ -60,9 +43,9 @@ const renderSingleSelectOptions = (
     const content = isOptionTypeObject ? option.label : formattedValue;
 
     return (
-      <SelectOption isNative={isSelectNative} key={key} value={value}>
+      <OptionComponent key={key} value={value}>
         {content}
-      </SelectOption>
+      </OptionComponent>
     );
   });
 };
@@ -101,7 +84,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
           children: renderSingleSelectOptions(
             apiRef.current.getColumn(item.columnField),
             apiRef.current,
-            isSelectNative,
+            isSelectNative ? 'option' : MenuItem,
           ),
         }
       : {};

@@ -14,24 +14,7 @@ import { GridEvents } from '../../models/events/gridEvents';
 import { GridColDef, ValueOptions } from '../../models/colDef/gridColDef';
 import { getValueFromValueOptions } from './editCellUtils';
 
-interface SelectOptionProps {
-  isNative: boolean;
-  children: React.ReactNode;
-  value: any;
-}
-
-const SelectOption = ({ isNative, children, value, ...props }: SelectOptionProps) =>
-  isNative ? (
-    <option value={value} {...props}>
-      {children}
-    </option>
-  ) : (
-    <MenuItem value={value} {...props}>
-      {children}
-    </MenuItem>
-  );
-
-const renderSingleSelectOptions = (option: ValueOptions, isSelectNative: boolean) => {
+const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.ElementType) => {
   const isOptionTypeObject = typeof option === 'object';
 
   const key = isOptionTypeObject ? option.value : option;
@@ -39,9 +22,9 @@ const renderSingleSelectOptions = (option: ValueOptions, isSelectNative: boolean
   const content = isOptionTypeObject ? option.label : option;
 
   return (
-    <SelectOption isNative={isSelectNative} key={key} value={value}>
+    <OptionComponent key={key} value={value}>
       {content}
-    </SelectOption>
+    </OptionComponent>
   );
 };
 
@@ -166,7 +149,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
       {...rootProps.componentsProps?.baseSelect}
     >
       {valueOptionsFormatted.map((valueOptions) =>
-        renderSingleSelectOptions(valueOptions, isSelectNative),
+        renderSingleSelectOptions(valueOptions, isSelectNative ? 'option' : MenuItem),
       )}
     </rootProps.components.BaseSelect>
   );
