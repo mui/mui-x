@@ -28,8 +28,6 @@ If you are using one of these components, you will have to take a Pro license in
 
 ### 1. Install MUI X packages
 
-**Note:** `@mui/x-date-pickers-pro` re-exports everything from `@mui/x-date-pickers`. You don't have to install both when using the Pro Plan.
-
 #### Community Plan
 
 ```sh
@@ -84,3 +82,6 @@ Which will transform the imports like this:
 +import { DatePicker } from '@mui/x-date-pickers'; // DatePicker is also available in `@mui/x-date-pickers-pro`
 +import { DateRangePicker } from '@mui/x-date-pickers-pro';
 ```
+
+Components of the Community Plan such as `<DatePicker />` can be imported from both `@mui/x-date-pickers-pro` and `@mui/x-date-pickers`.
+Only [date adapters](/x/react-date-pickers/getting-started/#setup) such as `AdapterDayjs` can only be imported from `@mui/x-date-pickers/[adapterName]`.
