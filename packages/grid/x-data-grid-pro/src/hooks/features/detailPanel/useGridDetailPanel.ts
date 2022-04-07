@@ -74,10 +74,15 @@ export const useGridDetailPanel = (
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
     (params, event) => {
-      if (!event.ctrlKey || event.key !== 'Enter' || props.getDetailPanelContent == null) {
-        return;
+      if (event.ctrlKey && event.key === 'Enter' && props.getDetailPanelContent != null) {
+        apiRef.current.toggleDetailPanel(params.id);
       }
-      apiRef.current.toggleDetailPanel(params.id);
+
+      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD && event.key === ' ') {
+        apiRef.current.toggleDetailPanel(params.id);
+        event.stopPropagation();
+        event.preventDefault();
+      }
     },
     [apiRef, props.getDetailPanelContent],
   );

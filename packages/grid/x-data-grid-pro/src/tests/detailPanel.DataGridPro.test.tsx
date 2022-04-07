@@ -167,6 +167,18 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.queryByText('Detail')).to.equal(null);
   });
 
+  it('should toggle the detail panel when pressing Space on detail toggle cell', () => {
+    render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
+    expect(screen.queryByText('Detail')).to.equal(null);
+    const cell = getCell(0, 0);
+    fireEvent.mouseUp(cell);
+    fireEvent.click(cell);
+    fireEvent.keyDown(cell, { key: ' ' });
+    expect(screen.queryByText('Detail')).not.to.equal(null);
+    fireEvent.keyDown(cell, { key: ' ' });
+    expect(screen.queryByText('Detail')).to.equal(null);
+  });
+
   it('should allow to pass a custom toggle by adding a column with field=GRID_DETAIL_PANEL_TOGGLE_FIELD', () => {
     render(
       <TestCase

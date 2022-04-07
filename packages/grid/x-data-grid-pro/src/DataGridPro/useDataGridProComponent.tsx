@@ -120,9 +120,9 @@ export const useDataGridProComponent = (
 
   useGridRowGrouping(apiRef, props);
   useGridTreeData(apiRef);
+  useGridDetailPanel(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
-  useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
