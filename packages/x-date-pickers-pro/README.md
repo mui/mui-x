@@ -26,4 +26,4 @@ This component has three peer dependencies that you will need to install as well
 
 ## Documentation
 
-[The documentation](https://mui.com/components/x/react-date-pickers/date-picker/)
+[The documentation](https://mui.com/x/react-date-pickers/date-picker/)
