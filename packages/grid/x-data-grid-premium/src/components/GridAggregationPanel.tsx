@@ -41,7 +41,7 @@ export const GridAggregationPanel = () => {
             column,
           }),
         }))
-        .filter((column) => column.availableAggregationFunctions.length > 1),
+        .filter((column) => column.availableAggregationFunctions.length > 0),
     [visibleColumns, rootProps.aggregationFunctions],
   );
 

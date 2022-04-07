@@ -4,12 +4,11 @@ import { GridRenderCellParams, GridRowId } from '@mui/x-data-grid-premium';
 import Rating from '@mui/material/Rating';
 
 interface RatingValueProps {
-  name: string;
   value: number;
 }
 
 const RatingValue = React.memo(function RatingValue(props: RatingValueProps) {
-  const { name, value } = props;
+  const { value } = props;
   return (
     <Box
       sx={{
@@ -19,8 +18,7 @@ const RatingValue = React.memo(function RatingValue(props: RatingValueProps) {
         color: 'text.secondary',
       }}
     >
-      <Rating name={name} value={value} sx={{ mr: 1 }} readOnly />{' '}
-      {Math.round(Number(value) * 10) / 10}
+      <Rating value={value} sx={{ mr: 1 }} readOnly /> {Math.round(Number(value) * 10) / 10}
     </Box>
   );
 });
@@ -30,5 +28,11 @@ export function renderRating(params: GridRenderCellParams<number, { id: GridRowI
     return '';
   }
 
-  return <RatingValue value={params.value} name={params.row.id.toString()} />;
+  // If the aggregated value don't have the same unit as the other cell
+  // Then we fall back to the default rendering based on `valueGetter` instead of rendering the total price UI.
+  if (params.aggregation && !params.aggregation.hasCellUnit) {
+    return null;
+  }
+
+  return <RatingValue value={params.value} />;
 }

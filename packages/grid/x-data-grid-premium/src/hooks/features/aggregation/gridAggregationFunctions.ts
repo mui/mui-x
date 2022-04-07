@@ -11,6 +11,7 @@ const sumAgg: GridAggregationFunction<number> = {
 
     return sum;
   },
+  types: ['number'],
 };
 
 const avgAgg: GridAggregationFunction<number> = {
@@ -75,7 +76,6 @@ const sizeAgg: GridAggregationFunction<number> = {
     return params.value.toLocaleString();
   },
   hasCellUnit: false,
-  types: ['number'],
 };
 
 export const GRID_AGGREGATION_FUNCTIONS = {
