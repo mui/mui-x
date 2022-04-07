@@ -75,7 +75,7 @@ const pages = [
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
       {
-        pathname: '/x/api/data-grid',
+        pathname: '/x/api/date-pickers',
         title: 'API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
