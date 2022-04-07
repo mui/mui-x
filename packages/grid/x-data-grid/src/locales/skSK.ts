@@ -37,7 +37,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   },
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: "Search...",
+  // toolbarQuickFilterPlaceholder: 'Search...',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 

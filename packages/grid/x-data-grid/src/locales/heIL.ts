@@ -28,7 +28,7 @@ const heILGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} מסננים פעילים` : `מסנן אחד פעיל`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: "Search...",
+  // toolbarQuickFilterPlaceholder: 'Search...',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 

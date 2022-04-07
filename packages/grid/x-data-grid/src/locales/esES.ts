@@ -28,7 +28,7 @@ const esESGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtros activos` : `${count} filtro activo`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: "Search...",
+  // toolbarQuickFilterPlaceholder: 'Search...',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
