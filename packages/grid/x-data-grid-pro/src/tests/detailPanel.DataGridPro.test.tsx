@@ -155,7 +155,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(virtualScroller.scrollTop).to.equal(50);
   });
 
-  it('should toggle the detail panel when pressing Ctrl+Enter', () => {
+  it('should toggle the detail panel when pressing Ctrl/Cmd+Enter', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 1);
@@ -163,7 +163,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     fireEvent.click(cell);
     fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
     expect(screen.queryByText('Detail')).not.to.equal(null);
-    fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
+    fireEvent.keyDown(cell, { metaKey: true, key: 'Enter' });
     expect(screen.queryByText('Detail')).to.equal(null);
   });
 
