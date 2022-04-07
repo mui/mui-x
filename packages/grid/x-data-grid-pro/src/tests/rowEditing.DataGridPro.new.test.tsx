@@ -6,6 +6,7 @@ import {
   GridEvents,
   DataGridPro,
   GridRenderEditCellParams,
+  GridValueSetterParams,
   GridPreProcessEditCellProps,
   GridCellProps,
 } from '@mui/x-data-grid-pro';
@@ -132,6 +133,23 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(renderEditCell1.lastCall.args[0].value).to.equal('USDGBP');
         await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'usdgbp' });
         expect(renderEditCell1.lastCall.args[0].value).to.equal('usdgbp');
+      });
+
+      it('should pass to renderEditCell the row with the values updated', async () => {
+        column1Props.valueSetter = ({ value, row }: GridValueSetterParams) => ({
+          ...row,
+          currencyPair: value.trim(),
+        });
+        render(<TestCase />);
+        apiRef.current.startRowEditMode({ id: 0 });
+        expect(renderEditCell1.lastCall.args[0].row).to.deep.equal(defaultData.rows[0]);
+        await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: ' usdgbp ' });
+        await apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 100 });
+        expect(renderEditCell1.lastCall.args[0].row).to.deep.equal({
+          ...defaultData.rows[0],
+          currencyPair: 'usdgbp',
+          price1M: 100,
+        });
       });
 
       it('should pass the new value through the value parser if defined', async () => {

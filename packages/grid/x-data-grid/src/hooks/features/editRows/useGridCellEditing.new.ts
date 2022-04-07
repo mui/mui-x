@@ -15,8 +15,8 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridNewCellEditingApi,
-  GridEditingSharedApi,
   GridStopCellEditModeParams,
+  GridNewEditingSharedApi,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
@@ -286,17 +286,13 @@ export const useGridCellEditing = (
       }
 
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      const row = apiRef.current.getRow(id)!;
-      const column = apiRef.current.getColumn(field);
-      const { value, error, isProcessingProps } = editingState[id][field];
+      const { error, isProcessingProps } = editingState[id][field];
 
       if (error || isProcessingProps) {
         return;
       }
 
-      const rowUpdate = column.valueSetter
-        ? column.valueSetter({ value, row })
-        : { ...row, [field]: value };
+      const rowUpdate = apiRef.current.unstable_getRowWithUpdatedValuesFromCellEditing(id, field);
 
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
@@ -308,6 +304,7 @@ export const useGridCellEditing = (
         };
 
         try {
+          const row = apiRef.current.getRow(id)!;
           Promise.resolve(processRowUpdate(rowUpdate, row))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
@@ -378,11 +375,25 @@ export const useGridCellEditing = (
     [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
   );
 
-  const editingApi: Omit<GridNewCellEditingApi, keyof GridEditingSharedApi> = {
+  const getRowWithUpdatedValuesFromCellEditing = React.useCallback<
+    GridNewCellEditingApi['unstable_getRowWithUpdatedValuesFromCellEditing']
+  >(
+    (id, field) => {
+      const column = apiRef.current.getColumn(field);
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const { value } = editingState[id][field];
+      const row = apiRef.current.getRow(id)!;
+      return column.valueSetter ? column.valueSetter({ value, row }) : { ...row, [field]: value };
+    },
+    [apiRef],
+  );
+
+  const editingApi: Omit<GridNewCellEditingApi, keyof GridNewEditingSharedApi> = {
     getCellMode,
     startCellEditMode,
     stopCellEditMode,
     unstable_setCellEditingEditCellValue: setCellEditingEditCellValue,
+    unstable_getRowWithUpdatedValuesFromCellEditing: getRowWithUpdatedValuesFromCellEditing,
   };
 
   useGridApiMethod(apiRef, editingApi, 'EditingApi');
