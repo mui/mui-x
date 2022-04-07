@@ -34,7 +34,7 @@ const pages = [
       { pathname: '/x/react-data-grid/group-pivot', title: 'Group & Pivot' },
       {
         pathname: '/x/api/data-grid',
-        title: 'API Reference',
+        title: ' • API Reference',
         children: [
           { pathname: '/x/api/data-grid', title: 'Index' },
           { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
@@ -76,7 +76,7 @@ const pages = [
       { pathname: '/x/react-date-pickers/time-picker' },
       {
         pathname: '/x/api/date-pickers',
-        title: 'API Reference',
+        title: ' • API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
           { pathname: '/x/api/date-pickers/calendar-picker', title: 'CalendarPicker' },
