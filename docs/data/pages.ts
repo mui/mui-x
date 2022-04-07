@@ -1,5 +1,10 @@
 const pages = [
   {
+    pathname: '/x/advanced-components',
+    title: 'Overview',
+    icon: 'DescriptionIcon',
+  },
+  {
     pathname: '/x/react-data-grid',
     scopePathnames: ['/x/api/data-grid'],
     title: 'Data Grid',

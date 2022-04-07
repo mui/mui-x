@@ -35,7 +35,7 @@ type StaticDatePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Date Picker](https://mui.com/components/x/react-date-pickers/date-picker/)
+ * - [Date Picker](https://mui.com/x/react-date-pickers/date-picker/)
  *
  * API:
  *

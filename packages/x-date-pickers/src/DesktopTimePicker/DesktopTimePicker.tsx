@@ -32,7 +32,7 @@ type DesktopTimePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Time Picker](https://mui.com/components/x/react-date-pickers/time-picker/)
+ * - [Time Picker](https://mui.com/x/react-date-pickers/time-picker/)
  *
  * API:
  *

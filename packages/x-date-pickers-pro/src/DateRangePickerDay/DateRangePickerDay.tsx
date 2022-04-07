@@ -375,7 +375,7 @@ const propsAreEqual = (
  *
  * Demos:
  *
- * - [Date Range Picker](https://mui.com/components/x/react-date-pickers/date-range-picker/)
+ * - [Date Range Picker](https://mui.com/x/react-date-pickers/date-range-picker/)
  *
  * API:
  *
