@@ -84,4 +84,4 @@ Which will transform the imports like this:
 ```
 
 Components of the Community Plan such as `<DatePicker />` can be imported from both `@mui/x-date-pickers-pro` and `@mui/x-date-pickers`.
-Only [date adapters](/x/react-date-pickers/getting-started/#setup) such as `AdapterDayjs` should be imported from `@mui/x-date-pickers/[adapterName]`.
+Only [date adapters](/x/react-date-pickers/getting-started/#setup) such as `AdapterDayjs` can only be imported from `@mui/x-date-pickers/[adapterName]`.
