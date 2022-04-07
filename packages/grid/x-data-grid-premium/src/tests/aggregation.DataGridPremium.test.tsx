@@ -3,13 +3,14 @@ import * as React from 'react';
 import { createRenderer } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
-import { spy } from 'sinon';
+import { SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
   DataGridPremiumProps,
   GRID_AGGREGATION_FUNCTIONS,
   GridAggregationFunction,
   GridApi,
+  GridRenderCellParams,
   GridRowTreeNodeConfig,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
@@ -452,6 +453,153 @@ describe('<DataGridPremium /> - Aggregation', () => {
         { field: 'id', availableAggregationFunctions: ['min', 'max'] },
       ]);
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+    });
+  });
+
+  describe('colDef: valueFormatter', () => {
+    it('should use the column valueFormatter for aggregation function without custom valueFormatter', () => {
+      const customAggregationFunction: GridAggregationFunction = {
+        apply: () => 'Agg value',
+      };
+
+      render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              valueFormatter: (params) => `- ${params.value}`,
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal([
+        '- 0',
+        '- 1',
+        '- 2',
+        '- 3',
+        '- 4',
+        '- 5',
+        '- Agg value' /* Agg */,
+      ]);
+    });
+
+    it('should use the aggregation function valueFormatter if defined', () => {
+      const customAggregationFunction: GridAggregationFunction = {
+        apply: () => 'Agg value',
+        valueFormatter: (params) => `+ ${params.value}`,
+      };
+
+      render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              valueFormatter: (params) => `- ${params.value}`,
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal([
+        '- 0',
+        '- 1',
+        '- 2',
+        '- 3',
+        '- 4',
+        '- 5',
+        '+ Agg value' /* Agg */,
+      ]);
+    });
+  });
+
+  describe.only('colDef: renderCell', () => {
+    it('should use the column renderCell', () => {
+      const customAggregationFunction: GridAggregationFunction = {
+        apply: () => 'Agg value',
+      };
+
+      render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              renderCell: (params) => `- ${params.value}`,
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal([
+        '- 0',
+        '- 1',
+        '- 2',
+        '- 3',
+        '- 4',
+        '- 5',
+        '- Agg value' /* Agg */,
+      ]);
+    });
+
+    it('should pass aggregation meta with `hasCellUnit: true` if the aggregation function have no hasCellUnit property ', () => {
+      const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
+
+      const customAggregationFunction: GridAggregationFunction = {
+        apply: () => 'Agg value',
+      };
+
+      render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              renderCell,
+            },
+          ]}
+        />,
+      );
+
+      const callForAggCell = renderCell
+        .getCalls()
+        .find((call) => call.firstArg.rowNode.position === 'footer');
+      expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
+    });
+
+    it('should pass aggregation meta with `hasCellUnit: false` if the aggregation function have `hasCellUnit: false` ', () => {
+      const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
+
+      const customAggregationFunction: GridAggregationFunction = {
+        apply: () => 'Agg value',
+        hasCellUnit: false,
+      };
+
+      render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              renderCell,
+            },
+          ]}
+        />,
+      );
+
+      const callForAggCell = renderCell
+        .getCalls()
+        .find((call) => call.firstArg.rowNode.position === 'footer');
+      expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
     });
   });
 });
