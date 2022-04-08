@@ -20,11 +20,11 @@ const valueManager: PickerStateValueManager<unknown, unknown> = {
     utils.isEqual(a, b),
   updateValue: (utils, prevValue, newValue) => {
     if (prevValue == null) {
-      return newValue
+      return newValue;
     }
 
-    return utils.mergeDateAndTime(prevValue, newValue)
-  }
+    return utils.mergeDateAndTime(prevValue, newValue);
+  },
 };
 
 export interface DesktopTimePickerProps<TDate = unknown>
