@@ -64,6 +64,8 @@ export const PickersMonth: React.FC<MonthProps> = (props) => {
     <PickersMonthRoot
       data-mui-test="month"
       component="button"
+      // @ts-ignore Typography do not support props specific to the "button" component*/
+      type="button"
       className={clsx(classes.root, {
         [classes.selected]: selected,
       })}
