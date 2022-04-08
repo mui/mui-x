@@ -9,6 +9,7 @@ import {
   GridFilterOperator,
   GridColDef,
 } from '@mui/x-data-grid-pro';
+import { isDeepEqual } from '@mui/x-data-grid/internals';
 import {
   useDemoData,
   UseDemoDataOptions,
@@ -235,7 +236,10 @@ export const createFakeServer = (
       let active = true;
 
       setIsLoading(true);
-      setResponse({ pageInfo: {}, data: [] });
+      setResponse((prev) =>
+        Object.keys(prev.pageInfo).length === 0 ? prev : { ...prev, pageInfo: {} },
+      );
+
       (async function fetchData() {
         const { returnedRows, nextCursor, totalRowCount } = await loadServerRows(
           rows,
@@ -246,14 +250,15 @@ export const createFakeServer = (
         if (!active) {
           return;
         }
-        setResponse({
+        const newRep = {
           data: returnedRows,
           pageInfo: {
             totalRowCount,
             nextCursor,
             pageSize: returnedRows.length,
           },
-        });
+        };
+        setResponse((prev) => (isDeepEqual(prev, newRep) ? prev : newRep));
         setIsLoading(false);
       })();
 
