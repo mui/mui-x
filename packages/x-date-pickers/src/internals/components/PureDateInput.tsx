@@ -20,7 +20,7 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   acceptRegex?: RegExp;
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    */
   components?: {
     // Icon displaying for open picker button.
@@ -39,10 +39,11 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   disableOpenPicker?: boolean;
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @template TDateValue
    * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
+   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
    */
   getOpenDialogAriaText?: (
     value: ParseableDate<TDateValue>,
