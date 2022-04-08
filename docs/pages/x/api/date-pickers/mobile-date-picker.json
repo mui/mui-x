@@ -17,7 +17,7 @@
     "DialogProps": { "type": { "name": "object" } },
     "disableCloseOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+      "default": "`false` for Desktop, `true` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
     "disabled": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
