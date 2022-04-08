@@ -387,6 +387,7 @@
       "rowCount",
       "rowReorderCellContainer",
       "rowReorderCell",
+      "rowReorderCell--draggable",
       "scrollArea",
       "scrollArea--left",
       "scrollArea--right",

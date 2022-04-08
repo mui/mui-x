@@ -458,6 +458,9 @@
     "rowReorderCell": {
       "description": "Styles applied to the root element of the row reorder cell"
     },
+    "rowReorderCell--draggable": {
+      "description": "Styles applied to the root element of the row reorder cell when dragging is allowed"
+    },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"

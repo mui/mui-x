@@ -1,16 +1,33 @@
 import * as React from 'react';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
-  gridClasses,
   GridEvents,
   GridRenderCellParams,
   GridRowEventLookup,
   gridRowTreeDepthSelector,
   gridSortModelSelector,
   useGridApiContext,
-  useGridRootProps,
   useGridSelector,
+  getDataGridUtilityClass,
 } from '@mui/x-data-grid';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+
+type OwnerState = {
+  classes?: DataGridProProcessedProps['classes'];
+  isDraggable: boolean;
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { isDraggable, classes } = ownerState;
+
+  const slots = {
+    root: ['rowReorderCell', isDraggable && 'rowReorderCell--draggable'],
+    container: ['rowDraggableContainer'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 const GridRowReorderCell = (params: GridRenderCellParams) => {
   const apiRef = useGridApiContext();
@@ -25,6 +42,9 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
     !!(rootProps as DataGridProProcessedProps).rowReordering &&
     !sortModel.length &&
     treeDepth === 1;
+
+  const ownerState = { isDraggable, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(
     (
@@ -63,9 +83,9 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   };
 
   return (
-    <div className={gridClasses.rowReorderCell} draggable={isDraggable} {...draggableEventHandlers}>
+    <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
       <rootProps.components.RowReorderIcon />
-      <div className={gridClasses.rowDraggableContainer}>{cellValue}</div>
+      <div className={classes.container}>{cellValue}</div>
     </div>
   );
 };

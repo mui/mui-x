@@ -12,7 +12,7 @@ import {
   useGridApiOptionHandler,
   GridRowId,
 } from '@mui/x-data-grid';
-import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro/models';
+import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 

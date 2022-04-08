@@ -135,17 +135,6 @@ To add a border instead, set `rowSpacingType` to `"border"` and customize the co
 
 You can check the [styling rows](/components/data-grid/style/#styling-rows) section for more information.
 
-## 🚧 Row spanning
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
-
-Each cell takes up the width of one row.
-Row spanning allows to change this default behavior.
-It allows cells to span multiple rows.
-This is very close to the "row spanning" in an HTML `<table>`.
-
 ## Row reorder [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 Row reorder is used to rearrange rows by dragging the row with the mouse.
@@ -156,15 +145,26 @@ By default, `DataGridPro` does not allow row reordering. To enable reordering on
 
 To capture changes in the order of the dragged row use the `onRowOrderChange` callback.
 
-In addition, row reordering emits the following events that can be imported:
+In addition, you can import the following events to customize the row reordering experience:
 
 - `rowDragStart`: emitted when dragging of a row starts.
 - `rowDragOver`: emitted when dragging a row over another row.
 - `rowDragEnd`: emitted when dragging of a row stops.
 
-> ⚠️ For now, row reordering is disabled if working is applied to the grid.
+> ⚠️ For now, row reordering is disabled if sorting is applied to the grid.
 >
-> In addition, if row grouping or Tree Data is used the row reordering is also disabled.
+> In addition, if row grouping or tree data is being used, the row reordering is also disabled.
+
+## 🚧 Row spanning
+
+> ⚠️ This feature isn't implemented yet. It's coming.
+>
+> 👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
+
+Each cell takes up the width of one row.
+Row spanning allows to change this default behavior.
+It allows cells to span multiple rows.
+This is very close to the "row spanning" in an HTML `<table>`.
 
 ## 🚧 Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

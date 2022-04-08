@@ -17,8 +17,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.cell}`]: styles.cell },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
-    { [`& .${gridClasses.rowReorderCellContainer}`]: styles.rowReorderCellContainer },
-    { [`& .${gridClasses.rowReorderCell}`]: styles.rowReorderCell },
     { [`& .${gridClasses.checkboxInput}`]: styles.checkboxInput },
     { [`& .${gridClasses['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
     { [`& .${gridClasses['columnHeader--alignLeft']}`]: styles['columnHeader--alignLeft'] },
@@ -285,13 +283,25 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.booleanCell}[data-value="false"]`]: {
       color: theme.palette.text.disabled,
     },
-    [`& .${gridClasses.actionsCell}, & .${gridClasses.rowReorderCell}`]: {
+    [`& .${gridClasses.actionsCell}`]: {
       display: 'inline-flex',
       alignItems: 'center',
       gridGap: theme.spacing(1),
     },
     [`& .${gridClasses.rowReorderCell}`]: {
+      display: 'inline-flex',
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      opacity: theme.palette.action.disabledOpacity,
+    },
+    [`& .${gridClasses['rowReorderCell--draggable']}`]: {
       cursor: 'move',
+      opacity: 1,
+    },
+    [`& .${gridClasses.rowReorderCellContainer}`]: {
+      padding: 0,
+      alignItems: 'stretch',
     },
     [`& .${gridClasses.withBorder}`]: {
       borderRight: `1px solid ${borderColor}`,
