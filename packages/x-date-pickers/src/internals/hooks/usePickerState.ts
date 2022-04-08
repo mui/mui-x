@@ -78,12 +78,15 @@ export const usePickerState = <TInput, TDateValue>(
   const [isMobileKeyboardViewOpen, setMobileKeyboardViewOpen] = React.useState(false);
 
   const acceptDate = React.useCallback(
-    (acceptedDate: TDateValue, needClosePicker: boolean) => {
+    (acceptedDate: TDateValue, options: { closePicker: boolean; setInitialDate: boolean }) => {
       onChange(acceptedDate);
 
-      if (needClosePicker) {
-        setIsOpen(false);
+      if (options.setInitialDate) {
         setInitialDate(acceptedDate);
+      }
+
+      if (options.closePicker) {
+        setIsOpen(false);
         if (onAccept) {
           onAccept(acceptedDate);
         }
@@ -95,13 +98,14 @@ export const usePickerState = <TInput, TDateValue>(
   const wrapperProps = React.useMemo(
     () => ({
       open: isOpen,
-      onClear: () => acceptDate(valueManager.emptyValue, true),
-      onAccept: () => acceptDate(draftState.draft, true),
-      onDismiss: () => acceptDate(initialDate, true),
+      onClear: () =>
+        acceptDate(valueManager.emptyValue, { closePicker: true, setInitialDate: true }),
+      onAccept: () => acceptDate(draftState.draft, { closePicker: true, setInitialDate: true }),
+      onDismiss: () => acceptDate(initialDate, { closePicker: true, setInitialDate: false }),
       onSetToday: () => {
         const now = utils.date() as TDateValue;
         dispatch({ type: 'update', payload: now });
-        acceptDate(now, !disableCloseOnSelect);
+        acceptDate(now, { closePicker: !disableCloseOnSelect, setInitialDate: true });
       },
     }),
     [
@@ -127,12 +131,12 @@ export const usePickerState = <TInput, TDateValue>(
       ) => {
         dispatch({ type: 'update', payload: newDate });
         if (selectionState === 'partial') {
-          acceptDate(newDate, false);
+          acceptDate(newDate, { closePicker: false, setInitialDate: false });
         }
 
         if (selectionState === 'finish') {
           const shouldCloseOnSelect = !(disableCloseOnSelect ?? wrapperVariant === 'mobile');
-          acceptDate(newDate, shouldCloseOnSelect);
+          acceptDate(newDate, { closePicker: shouldCloseOnSelect, setInitialDate: true });
         }
 
         // if selectionState === "shallow" do nothing (we already update the draft state)

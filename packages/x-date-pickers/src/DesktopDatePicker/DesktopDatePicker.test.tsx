@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { TransitionProps } from '@mui/material/transitions';
-import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
+import { act, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import {
@@ -105,7 +105,7 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  it('closes on clickaway', () => {
+  it('should close on click-away', () => {
     const handleClose = spy();
     render(
       <DesktopDatePicker
@@ -193,7 +193,7 @@ describe('<DesktopDatePicker />', () => {
     expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
-  it("prop `disableCloseOnSelect` – if `true` doesn't close picker", () => {
+  it('should not close picker when selecting a value if props.disableCloseOnSelect = true', () => {
     render(
       <UncontrolledOpenDesktopDatePicker
         // @ts-expect-error internal prop
@@ -209,6 +209,38 @@ describe('<DesktopDatePicker />', () => {
     fireEvent.click(screen.getByLabelText('Jan 2, 2018'));
 
     expect(screen.queryByRole('dialog')).toBeVisible();
+  });
+
+  it('should not reset the value when dismissing the picker', () => {
+    function TestCase() {
+      const [value, setValue] = React.useState<Date | null>(
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+      );
+      const [open, setOpen] = React.useState(true);
+
+      return (
+        <DesktopDatePicker
+          open={open}
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
+          disableCloseOnSelect
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          renderInput={(props) => <TextField {...props} />}
+        />
+      );
+    }
+
+    render(<TestCase />);
+
+    userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
+    expect(screen.getByRole('textbox')).to.have.value('01/02/2018');
+
+    // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+
+    expect(screen.queryByRole('dialog')).not.toBeVisible();
+    expect(screen.getByRole('textbox')).to.have.value('01/02/2018');
   });
 
   it('does not call onChange if same date selected', () => {
