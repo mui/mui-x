@@ -223,7 +223,7 @@ export const createFakeServer = (
       pageInfo: PageInfo;
       data: GridRowModel[];
     }>({ pageInfo: {}, data: [] });
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [isLoading, setIsLoading] = React.useState<boolean>(dataGenerationIsLoading);
 
     React.useEffect(() => {
       if (dataGenerationIsLoading) {
@@ -266,7 +266,7 @@ export const createFakeServer = (
     const effectShouldStart = queryOptionsRef.current !== queryOptions;
 
     return {
-      isLoading: dataGenerationIsLoading || isLoading || effectShouldStart,
+      isLoading: isLoading || effectShouldStart,
       ...response,
     };
   };
