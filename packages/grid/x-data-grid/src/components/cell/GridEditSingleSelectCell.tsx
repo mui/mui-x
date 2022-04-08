@@ -12,7 +12,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
 import { GridEvents } from '../../models/events/gridEvents';
 import { GridColDef, ValueOptions } from '../../models/colDef/gridColDef';
-import { getValueFromValueOptions } from './editCellUtils';
+import { getValueFromValueOptions } from '../panel/filterPanel/filterPanelUtils';
 
 const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.ElementType) => {
   const isOptionTypeObject = typeof option === 'object';
