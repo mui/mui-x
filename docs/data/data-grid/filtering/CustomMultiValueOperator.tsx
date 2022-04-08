@@ -1,11 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
   GridFilterInputValueProps,
   DataGrid,
   GridFilterItem,
   GridFilterModel,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import SyncIcon from '@mui/icons-material/Sync';
@@ -16,7 +17,9 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
   const { item, applyValue, focusElementRef = null } = props;
 
   const filterTimeout = React.useRef<any>();
-  const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
+  const [filterValueState, setFilterValueState] = React.useState<[string, string]>(
+    item.value ?? '',
+  );
   const [applying, setIsApplying] = React.useState(false);
 
   React.useEffect(() => {
@@ -30,7 +33,7 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
     setFilterValueState(itemValue);
   }, [item.value]);
 
-  const updateFilterValue = (lowerBound, upperBound) => {
+  const updateFilterValue = (lowerBound: string, upperBound: string) => {
     clearTimeout(filterTimeout.current);
     setFilterValueState([lowerBound, upperBound]);
 
@@ -41,11 +44,11 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
     }, SUBMIT_FILTER_STROKE_TIME);
   };
 
-  const handleUpperFilterChange = (event) => {
+  const handleUpperFilterChange: TextFieldProps['onChange'] = (event) => {
     const newUpperBound = event.target.value;
     updateFilterValue(filterValueState[0], newUpperBound);
   };
-  const handleLowerFilterChange = (event) => {
+  const handleLowerFilterChange: TextFieldProps['onChange'] = (event) => {
     const newLowerBound = event.target.value;
     updateFilterValue(newLowerBound, filterValueState[1]);
   };
@@ -85,7 +88,7 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
   );
 }
 
-const quantityOnlyOperators = [
+const quantityOnlyOperators: GridFilterOperator[] = [
   {
     label: 'Between',
     value: 'between',
@@ -97,7 +100,7 @@ const quantityOnlyOperators = [
         return null;
       }
 
-      return ({ value }): boolean => {
+      return ({ value }) => {
         return (
           value !== null &&
           filterItem.value[0] <= value &&
