@@ -26,6 +26,8 @@ const VirtualScrollerRenderZoneRoot = styled('div', {
   position: 'absolute',
   display: 'flex', // Prevents margin collapsing when using `getRowSpacing`
   flexDirection: 'column',
+  // See https://github.com/mui/mui-x/issues/4360
+  zIndex: -1,
 });
 
 const GridVirtualScrollerRenderZone = React.forwardRef<
