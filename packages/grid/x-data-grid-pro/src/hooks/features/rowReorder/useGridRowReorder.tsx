@@ -11,7 +11,9 @@ import {
   gridRowTreeDepthSelector,
   useGridApiOptionHandler,
   GridRowId,
+  gridEditRowsStateSelector,
 } from '@mui/x-data-grid';
+import { isObjectEmpty } from '@mui/x-data-grid/utils/utils';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -60,7 +62,9 @@ export const useGridRowReorder = (
 
   const handleDragStart = React.useCallback<GridEventListener<GridEvents.rowDragStart>>(
     (params, event) => {
-      if (isRowReorderDisabled) {
+      // Call the gridEditRowsStateSelector directly to avoid infnite loop
+      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      if (isRowReorderDisabled || !isObjectEmpty(editRowsState)) {
         return;
       }
 
@@ -103,7 +107,9 @@ export const useGridRowReorder = (
 
   const handleDragEnd = React.useCallback<GridEventListener<GridEvents.rowDragEnd>>(
     (params, event): void => {
-      if (isRowReorderDisabled) {
+      // Call the gridEditRowsStateSelector directly to avoid infnite loop
+      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      if (isRowReorderDisabled || !isObjectEmpty(editRowsState)) {
         return;
       }
 

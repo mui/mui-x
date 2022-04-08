@@ -9,7 +9,9 @@ import {
   useGridApiContext,
   useGridSelector,
   getDataGridUtilityClass,
+  gridEditRowsStateSelector,
 } from '@mui/x-data-grid';
+import { isObjectEmpty } from '@mui/x-data-grid/utils/utils';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -34,6 +36,7 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   // eslint-disable-next-line no-underscore-dangle
   const cellValue = params.row.__reorder__ || params.row.id;
 
@@ -41,7 +44,8 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   const isDraggable =
     !!(rootProps as DataGridProProcessedProps).rowReordering &&
     !sortModel.length &&
-    treeDepth === 1;
+    treeDepth === 1 &&
+    isObjectEmpty(editRowsState);
 
   const ownerState = { isDraggable, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
