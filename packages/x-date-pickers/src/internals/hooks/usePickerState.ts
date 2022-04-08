@@ -12,6 +12,7 @@ export interface PickerStateValueManager<TInputValue, TDateValue> {
   ) => boolean;
   emptyValue: TDateValue;
   parseInput: (utils: MuiPickersAdapter<TDateValue>, value: TInputValue) => TDateValue;
+  updateValue?: (utils: MuiPickersAdapter<TDateValue>, prevValue: TDateValue | null, value: TDateValue) => TDateValue
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
@@ -141,9 +142,15 @@ export const usePickerState = <TInput, TDateValue>(
     [acceptDate, disableCloseOnSelect, isMobileKeyboardViewOpen, draftState.draft],
   );
 
+  const handleInputChange = (date: TDateValue, keyboardInputValue?: string) => {
+      console.log(parsedDateValue, date)
+      const cleanDate = valueManager.updateValue ? valueManager.updateValue(utils, parsedDateValue, date) : date
+      onChange(cleanDate, keyboardInputValue)
+  }
+
   const inputProps = React.useMemo(
     () => ({
-      onChange,
+      onChange: handleInputChange,
       open: isOpen,
       rawValue: value,
       openPicker: () => setIsOpen(true),

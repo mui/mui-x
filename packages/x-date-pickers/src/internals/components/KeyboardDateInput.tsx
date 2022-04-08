@@ -28,7 +28,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput(
   const textFieldProps = useMaskedInput(other);
   const adornmentPosition = InputAdornmentProps?.position || 'end';
   const OpenPickerIcon = components.OpenPickerIcon || Calendar;
-
+  
   return renderInput({
     ref,
     inputRef,
