@@ -269,7 +269,7 @@ export default function FullFeaturedDemo() {
     return isAntDesign ? 'ant' : 'default';
   };
 
-  const handleApplyClick = (settings) => {
+  const handleApplyClick = (settings: GridConfigOptions) => {
     if (size !== settings.size) {
       setSize(settings.size);
     }

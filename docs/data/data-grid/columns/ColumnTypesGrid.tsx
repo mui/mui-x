@@ -4,6 +4,7 @@ import {
   GridActionsCellItem,
   GridRowId,
   GridValueOptionsParams,
+  GridRowParams,
 } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -119,7 +120,7 @@ export default function ColumnTypesGrid() {
         field: 'actions',
         type: 'actions',
         width: 80,
-        getActions: (params) => [
+        getActions: (params: GridRowParams) => [
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"

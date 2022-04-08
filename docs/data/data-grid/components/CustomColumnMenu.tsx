@@ -16,8 +16,8 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)<{
   ownerState: { color: string };
 }>(({ theme, ownerState }) => ({
-  background: theme.palette[ownerState.color].main,
-  color: theme.palette[ownerState.color].contrastText,
+  background: theme.palette[ownerState.color]?.main,
+  color: theme.palette[ownerState.color]?.contrastText,
 }));
 
 const StyledGridColumnMenu = styled(GridColumnMenu)<{
