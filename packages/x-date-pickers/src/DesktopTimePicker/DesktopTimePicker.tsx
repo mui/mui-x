@@ -18,7 +18,7 @@ const valueManager: PickerStateValueManager<unknown, unknown> = {
   parseInput: parsePickerInputValue,
   areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
     utils.isEqual(a, b),
-  updateValue: (utils, prevValue, newValue) => {
+  mergeOldAndNewValues: (utils, prevValue, newValue) => {
     if (prevValue == null) {
       return newValue;
     }
