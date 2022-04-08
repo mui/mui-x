@@ -14,7 +14,6 @@ import {
   wrapPickerMount,
   createPickerRenderer,
 } from '../../../../test/utils/pickers-utils';
-import { TimePickerProps } from '@mui/x-date-pickers';
 
 describe('<ClockPicker />', () => {
   const { render } = createPickerRenderer();
