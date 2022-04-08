@@ -59,6 +59,16 @@ export const usePickerState = <TInput, TDateValue>(
     [valueManager, utils, value],
   );
 
+  const [lastValidDateValue, setLastValidDateValue] = React.useState<TDateValue | null>(
+    parsedDateValue,
+  );
+
+  React.useEffect(() => {
+    if (parsedDateValue != null) {
+      setLastValidDateValue(parsedDateValue);
+    }
+  }, [parsedDateValue]);
+
   const [draftState, dispatch] = React.useReducer(
     (state: Draftable<TDateValue>, action: DraftAction<TDateValue>): Draftable<TDateValue> => {
       switch (action.type) {
@@ -153,11 +163,11 @@ export const usePickerState = <TInput, TDateValue>(
   const handleInputChange = React.useCallback(
     (date: TDateValue, keyboardInputValue?: string) => {
       const cleanDate = valueManager.updateValue
-        ? valueManager.updateValue(utils, parsedDateValue, date)
+        ? valueManager.updateValue(utils, lastValidDateValue, date)
         : date;
       onChange(cleanDate, keyboardInputValue);
     },
-    [onChange, valueManager, parsedDateValue, utils],
+    [onChange, valueManager, lastValidDateValue, utils],
   );
 
   const inputProps = React.useMemo(
