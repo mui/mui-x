@@ -79,6 +79,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       ? {
           select: true,
           SelectProps: {
+            native: isSelectNative,
             ...rootProps.componentsProps?.baseSelect,
           },
           children: renderSingleSelectOptions(
