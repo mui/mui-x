@@ -73,7 +73,30 @@ function DetailPanelContent({ row: rowProp }) {
 }
 
 DetailPanelContent.propTypes = {
-  row: PropTypes.any.isRequired,
+  row: PropTypes.shape({
+    address: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    country: PropTypes.shape({
+      code: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      phone: PropTypes.string.isRequired,
+      suggested: PropTypes.bool,
+      value: PropTypes.string.isRequired,
+    }).isRequired,
+    currency: PropTypes.string.isRequired,
+    customer: PropTypes.string.isRequired,
+    date: PropTypes.instanceOf(Date).isRequired,
+    email: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    products: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        quantity: PropTypes.number.isRequired,
+        unitPrice: PropTypes.number.isRequired,
+      }),
+    ).isRequired,
+  }).isRequired,
 };
 
 const columns = [
