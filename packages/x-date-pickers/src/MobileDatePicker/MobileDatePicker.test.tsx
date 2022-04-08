@@ -315,7 +315,7 @@ describe('<MobileDatePicker />', () => {
   it('should retain the values on clicking Cancel button', () => {
     const onChangeCallback = spy();
 
-    const initialDateValue = new Date('Jan 26, 2022');
+    const initialDateValue = adapterToUse.date('2018-01-01T00:00:00.000');
 
     render(
       <MobileDatePicker
@@ -326,7 +326,7 @@ describe('<MobileDatePicker />', () => {
     );
 
     fireEvent.click(screen.getByRole('textbox'));
-    fireEvent.click(screen.getByLabelText('Jan 31, 2022')); // changing date followed by clicking cancel button
+    fireEvent.click(screen.getByLabelText('Jan 8, 2018')); // changing date followed by clicking cancel button
 
     fireEvent.click(screen.getByText(/cancel/i));
 
@@ -335,8 +335,6 @@ describe('<MobileDatePicker />', () => {
      * First, while selecting temporary date (Jan 31, 2022 in this case)
      * Second, while clicking cancel (which is setting date back to initial value)
      */
-    const finalDateValue = new Date(onChangeCallback.args[1][0]);
-
-    expect(finalDateValue.getTime()).to.equal(initialDateValue.getTime());
+    expect(adapterToUse.date(onChangeCallback.args[1][0])).toEqualDateTime(initialDateValue);
   });
 });

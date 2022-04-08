@@ -151,7 +151,7 @@ DateTimePicker.propTypes = {
   DialogProps: PropTypes.object,
   /**
    * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * @default `false` for Desktop, `true` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   disableCloseOnSelect: PropTypes.bool,
   /**
