@@ -606,7 +606,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Add language to markdown code block (#3651) @m4theushw
 - [core] Add typing to the pre-processors methods (#3595) @flaviendelangle
 - [core] Don't bump peer dependency ranges on dependency updates (#3646) @oliviertassinari
-- [core] Rename more instances of Material-UI to MUI (#3525) @oliviertassinari
+- [core] Rename more instances of Material UI to MUI (#3525) @oliviertassinari
 - [core] Renovate should not try to update node (#3645) @oliviertassinari
 - [core] Report performance test results on each PR (#3551) @m4theushw
 - [core] Update monorepo (#3653) @m4theushw
@@ -1804,7 +1804,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 
 - ✨ Rename the `@material-ui` npm scope to `@mui` (#2341) @oliviertassinari
 
-  This is part of the ongoing rebranding of the project and company. Material-UI is our current official name, however, we are going to change it. It's too long to write, read, and pronounce; and it is too closely associated with Material Design. In the near future, the whole project/company is moving to MUI and https://mui.com/.
+  This is part of the ongoing rebranding of the project and company. Material UI is our current official name, however, we are going to change it. It's too long to write, read, and pronounce; and it is too closely associated with Material Design. In the near future, the whole project/company is moving to MUI and https://mui.com/.
 
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
@@ -2380,7 +2380,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - ⚡️ Components that use portals, like `Select` and `Autocomplete`, can now be used in the cell editing (#1772) @m4theushw
 - 📃 Apply the `valueFormatter` to the CSV exporting (#1922) @DanailH
 - 💅 Rename CSS classes to match the convention of the core components (#1872) @DanailH
-- 🌎 Isolate translations from Material-UI Core and Material-UI X (#1913) @DanailH
+- 🌎 Isolate translations from MUI Core and MUI X (#1913) @DanailH
 - 🚀 Improve performance when finding column indexes and updating rows (#1903, #1923) @Janpot @N2D4
 - 🐞 Bugfixes
 
@@ -2389,7 +2389,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 #### Breaking changes
 
 - [DataGrid] The `onEditCellChangeCommitted` prop won't be called with an event when committing changes by clicking outside the cell (#1910) @m4theushw
-- [DataGrid] Translation for Material-UI Core components are no longer included in the Material-UI X translation (#1913) @DanailH
+- [DataGrid] Translation for MUI Core components are no longer included in the MUI X translation (#1913) @DanailH
 
   ```diff
    import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -2464,7 +2464,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - [DataGrid] Improve Brazilian Portuguese (pt-BR) locale (#1861) @aline-matos
 - [DataGrid] Improve type of the blur event (#1918) @oliviertassinari
 - [DataGrid] Improve updateRows performance (#1923) @N2D4
-- [DataGrid] Include Material-UI core component localizations in `localeText` (#1913) @DanailH
+- [DataGrid] Include MUI Core component localizations in `localeText` (#1913) @DanailH
 - [DataGrid] Make the CSV export respect the `valueFormatter` (#1922) @DanailH
 - [DataGrid] Remove `disableClickEventBubbling` (#1910) @m4theushw
 - [DataGrid] Rename CSS classes according to new convention (#1872) @DanailH
@@ -2650,7 +2650,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [core] Batch updates of storybook (#1751) @oliviertassinari
 - [core] Help support different documents (#1754) @oliviertassinari
-- [core] Upgrade Material-UI core v5 to latest version (#1763) @ZeeshanTamboli
+- [core] Upgrade MUI Core v5 to latest version (#1763) @ZeeshanTamboli
 - [test] Reduce flakiness (#1753) @oliviertassinari
 - [test] Remove skip on Edge (#1708) @m4theushw
 
@@ -2736,7 +2736,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [DataGrid] Add `isRowSelectable` prop (#1659) @m4theushw
 - [DataGrid] Add sort icon for when column is unsorted (#1415) @m4theushw
 - [DataGrid] Fix `id` and `aria-labelledby` attributes on the column menu (#1460) @m4theushw
-- [DataGrid] Fix broken checkbox in Material-UI v5 (#1587) @ZeeshanTamboli
+- [DataGrid] Fix broken checkbox in Material UI v5 (#1587) @ZeeshanTamboli
 - [DataGrid] Fix CSS classes prefix (#1693) @m4theushw
 - [DataGrid] Fix German (de-DE) locale (#1624) @klinge27
 - [DataGrid] Fix filter with object as value and value getter (#1665) @dtassone
@@ -3146,8 +3146,8 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [DataGrid] Prefix all public API to fit into the global Material-UI namespace (#1069) @DanailH
-  This change gets the data grid one step closer to a stable release. It allows the data grid to fit into the global namespace of Material-UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
+- [DataGrid] Prefix all public API to fit into the global Material UI namespace (#1069) @DanailH
+  This change gets the data grid one step closer to a stable release. It allows the data grid to fit into the global namespace of Material UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
 
   For the mirgration, prefixing a broken import with "grid" is often enough. In the case it's not working, head to the pull request's description. It [details all the changes](https://github.com/mui/mui-x/pull/1069).
 
@@ -3188,7 +3188,7 @@ _Feb 17, 2021_
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 📍 Add support for default locales (#983) @DanailH
-  We have built the infrastructure to support around 100 [default locales](https://mui.com/components/data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material-UI by opening a pull request.
+  We have built the infrastructure to support around 100 [default locales](https://mui.com/components/data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material UI by opening a pull request.
 - 🎁 Add new `selectionModel` prop (#986) @dtassone
   The prop can be used to control the selected rows in the data grid. [See the docs](https://mui.com/components/data-grid/selection/#controlled-selection).
 - 💅 Add support for default props from theme (#1019) @DanailH
@@ -3229,7 +3229,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   ```
 
 - [DataGrid] Change page index base, from 1 to 0. (#1021) @dtassone
-  This change is done for consistency with `TablePagination` and JavaScript arrays that are 0-based. Material-UI still uses a 1-base page for the `Pagination` component that matches the URL's query.
+  This change is done for consistency with `TablePagination` and JavaScript arrays that are 0-based. Material UI still uses a 1-base page for the `Pagination` component that matches the URL's query.
 
   ```diff
   -const [page, setPage] = React.useState(1);
@@ -3319,9 +3319,9 @@ _Jan 26, 2021_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Add support for Material-UI v5-alpha (#855) @DanailH.
-  The data grid supports Material-UI v4 and v5. We aim to retain the support for v4 as long as v5 hasn't reached the beta phase.
-- 💅 Update the customization API to be closer to Material-UI v5.
+- 🎁 Add support for Material UI v5-alpha (#855) @DanailH.
+  The data grid supports Material UI v4 and v5. We aim to retain the support for v4 as long as v5 hasn't reached the beta phase.
+- 💅 Update the customization API to be closer to Material UI v5.
   The data grid accepts two props: `components` and `componentsProps`.
   The first prop allows to swapping specific components used in slots the grid, like the checkboxes.
   The second one allows providing extra props to each slot. It avoids the need for using the React context to access information from outside the data grid.
@@ -3334,9 +3334,9 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [DataGrid] Implement customization pattern of Material-UI v5 (#851, #879) @dtassone
+- [DataGrid] Implement customization pattern of Material UI v5 (#851, #879) @dtassone
 
-  - Capitalize the keys of the `components` prop. This change aims to bring consistency with the customization pattern of Material-UI v5:
+  - Capitalize the keys of the `components` prop. This change aims to bring consistency with the customization pattern of Material UI v5:
 
   ```diff
   <DataGrid
@@ -3347,7 +3347,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
   />
   ```
 
-  - Move all the icon components overrides in the `components` prop. And added the suffix 'Icon' on each icon component. This change aims to bring consistency with the customization pattern of Material-UI v5:
+  - Move all the icon components overrides in the `components` prop. And added the suffix 'Icon' on each icon component. This change aims to bring consistency with the customization pattern of Material UI v5:
 
   ```diff
   <DataGrid
@@ -3383,7 +3383,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 #### Changes
 
 - [DataGrid] Add customisation on panels (#890) @dtassone
-- [DataGrid] Add support for Material-UI v5-alpha (#855) @DanailH
+- [DataGrid] Add support for Material UI v5-alpha (#855) @DanailH
 - [DataGrid] Fix footer count not shown on small screen (#899) @mnajdova
 - [DataGrid] Fix column selector crash when hiding columns (#875) @DanailH
 - [DataGrid] Fix <kbd>Shift</kbd> + <kbd>Space</kbd> keyboard regression to select row (#897) @dtassone
@@ -3609,7 +3609,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Remove gitHead (#669) @oliviertassinari
 - [core] Remove react-select (#658) @dependabot-preview
 - [core] Replace Storybook knobs for args (#601) @tooppaaa
-- [core] Update to Material-UI v4.11.1 (#636) @oliviertassinari
+- [core] Update to Material UI v4.11.1 (#636) @oliviertassinari
 
 ## [4.0.0-alpha.10](https://github.com/mui/mui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10)
 
