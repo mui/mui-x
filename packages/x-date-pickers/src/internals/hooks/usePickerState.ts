@@ -54,7 +54,11 @@ export const usePickerState = <TInput, TDateValue>(
     return { committed: date, draft: date };
   }
 
-  const parsedDateValue = valueManager.parseInput(utils, value);
+  const parsedDateValue = React.useMemo(
+    () => valueManager.parseInput(utils, value),
+    [valueManager, utils, value],
+  );
+
   const [draftState, dispatch] = React.useReducer(
     (state: Draftable<TDateValue>, action: DraftAction<TDateValue>): Draftable<TDateValue> => {
       switch (action.type) {
@@ -146,13 +150,15 @@ export const usePickerState = <TInput, TDateValue>(
     [acceptDate, disableCloseOnSelect, isMobileKeyboardViewOpen, draftState.draft],
   );
 
-  const handleInputChange = (date: TDateValue, keyboardInputValue?: string) => {
-    console.log(parsedDateValue, date);
-    const cleanDate = valueManager.updateValue
-      ? valueManager.updateValue(utils, parsedDateValue, date)
-      : date;
-    onChange(cleanDate, keyboardInputValue);
-  };
+  const handleInputChange = React.useCallback(
+    (date: TDateValue, keyboardInputValue?: string) => {
+      const cleanDate = valueManager.updateValue
+        ? valueManager.updateValue(utils, parsedDateValue, date)
+        : date;
+      onChange(cleanDate, keyboardInputValue);
+    },
+    [onChange, valueManager, parsedDateValue, utils],
+  );
 
   const inputProps = React.useMemo(
     () => ({
@@ -161,7 +167,7 @@ export const usePickerState = <TInput, TDateValue>(
       rawValue: value,
       openPicker: () => setIsOpen(true),
     }),
-    [onChange, isOpen, value, setIsOpen],
+    [handleInputChange, isOpen, value, setIsOpen],
   );
 
   const pickerState = { pickerProps, inputProps, wrapperProps };
