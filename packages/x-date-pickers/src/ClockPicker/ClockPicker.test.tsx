@@ -14,6 +14,7 @@ import {
   wrapPickerMount,
   createPickerRenderer,
 } from '../../../../test/utils/pickers-utils';
+import { TimePickerProps } from '@mui/x-date-pickers';
 
 describe('<ClockPicker />', () => {
   const { render } = createPickerRenderer();
@@ -168,6 +169,28 @@ describe('<ClockPicker />', () => {
     expect(adapterToUse.getHours(newDate)).to.equal(3);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
+  });
+
+  it('should call `shouldDisableTime` with the hours with meridiem', () => {
+    const shouldDisableTime = spy(() => false);
+
+    render(
+      <ClockPicker
+        autoFocus
+        date={adapterToUse.date('2019-01-01T18:20:00.000')}
+        onChange={() => {}}
+        shouldDisableTime={shouldDisableTime}
+        ampm
+      />,
+    );
+
+    const hours = shouldDisableTime
+      .getCalls()
+      .filter((el) => el.lastArg === 'hours')
+      .map((el) => el.firstArg);
+
+    // Should be called with every hour from 0PM to 11PM (12 - 23) + with the current date hour
+    expect(Math.max(...hours)).to.equal(23);
   });
 
   describe('Time validation on touch ', () => {

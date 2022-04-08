@@ -263,7 +263,10 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return false;
       }
 
-      const validateTimeValue = (getRequestedTimePoint: (when: 'start' | 'end') => TDate) => {
+      const validateTimeValue = (
+        value: number,
+        getRequestedTimePoint: (when: 'start' | 'end') => TDate,
+      ) => {
         const isAfterComparingFn = createIsAfterIgnoreDatePart(
           disableIgnoringDatePartForTimeValidation,
           utils,
@@ -272,14 +275,14 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return Boolean(
           (minTime && isAfterComparingFn(minTime, getRequestedTimePoint('end'))) ||
             (maxTime && isAfterComparingFn(getRequestedTimePoint('start'), maxTime)) ||
-            (shouldDisableTime && shouldDisableTime(rawValue, viewType)),
+            (shouldDisableTime && shouldDisableTime(value, viewType)),
         );
       };
 
       switch (viewType) {
         case 'hours': {
           const hoursWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-          return validateTimeValue((when: 'start' | 'end') =>
+          return validateTimeValue(hoursWithMeridiem, (when: 'start' | 'end') =>
             pipe(
               (currentDate) => utils.setHours(currentDate, hoursWithMeridiem),
               (dateWithHours) => utils.setMinutes(dateWithHours, when === 'start' ? 0 : 59),
@@ -289,7 +292,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         }
 
         case 'minutes':
-          return validateTimeValue((when: 'start' | 'end') =>
+          return validateTimeValue(rawValue, (when: 'start' | 'end') =>
             pipe(
               (currentDate) => utils.setMinutes(currentDate, rawValue),
               (dateWithMinutes) => utils.setSeconds(dateWithMinutes, when === 'start' ? 0 : 59),
@@ -297,7 +300,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
           );
 
         case 'seconds':
-          return validateTimeValue(() => utils.setSeconds(date, rawValue));
+          return validateTimeValue(rawValue, () => utils.setSeconds(date, rawValue));
 
         default:
           throw new Error('not supported');
