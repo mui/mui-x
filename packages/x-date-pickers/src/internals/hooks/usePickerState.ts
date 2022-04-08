@@ -97,7 +97,7 @@ export const usePickerState = <TInput, TDateValue>(
       open: isOpen,
       onClear: () => acceptDate(valueManager.emptyValue, true),
       onAccept: () => acceptDate(draftState.draft, true),
-      onDismiss: () => acceptDate(disableCloseOnSelect ? draftState.draft : initialDate, true),
+      onDismiss: () => acceptDate(initialDate, true),
       onSetToday: () => {
         const now = utils.date() as TDateValue;
         dispatch({ type: 'update', payload: now });
