@@ -16,13 +16,13 @@ title: Data Grid - Editing
 > This additional step is required because the default editing API has a couple of issues that can only be fixed with breaking changes, that will only be possible in v6.
 > To avoid having to wait for the next major release window, all breaking changes needed were included inside this flag.
 >
-> If you are looking for the documentation for the default editing API, visit [this page](/components/data-grid/editing-legacy/).
+> If you are looking for the documentation for the default editing API, visit [this page](/x/react-data-grid/editing-legacy/).
 > Note that it is encouraged to migrate to the new editing API since it will be enabled by default in v6.
 > Although it says "experimental," you can consider it stable.
 
 ## Making a column editable
 
-You can make a column editable by enabling the `editable` property in its [column definition](/api/data-grid/grid-col-def/):
+You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/):
 
 ```tsx
 <DataGrid columns={[{ field: 'name', editable: true }]} />
@@ -96,7 +96,7 @@ When a cell is in edit mode, the user can stop editing with any of the following
 
 The `editable` property controls which cells are editable at the column level.
 You can use the `isCellEditable` callback prop to define which individual cells the user can edit in a given row.
-It is called with a [`GridCellParams`](/api/data-grid/grid-cell-params/) object and must return `true` if the cell is editable, or `false` if not.
+It is called with a [`GridCellParams`](/x/api/data-grid/grid-cell-params/) object and must return `true` if the cell is editable, or `false` if not.
 
 In the following demo, only the rows with an even `Age` value are editable.
 The editable cells have a green background for better visibility.
@@ -140,7 +140,7 @@ The `valueParser` capitalizes the value entered, and the `valueSetter` splits th
 
 ## Events
 
-The mouse and keyboard interactions that [start](#start-editing) and [stop](#stop-editing) cell editing do so by triggering the `'cellEditStart'` and `'cellEditStop'` [events](/components/data-grid/events/), respectively.
+The mouse and keyboard interactions that [start](#start-editing) and [stop](#stop-editing) cell editing do so by triggering the `'cellEditStart'` and `'cellEditStop'` [events](/x/react-data-grid/events/), respectively.
 For row editing, the events are `'rowEditStart'` and `'rowEditStop'`.
 You can control how these events are handled to customize editing behavior.
 
@@ -156,7 +156,7 @@ The object also contains a `reason` param that specifies which type of interacti
 
 The following demo shows how to prevent the user from exiting edit mode when clicking outside of a cell.
 To do this, the `onCellEditStop` prop is used to check if the `reason` is `'cellFocusOut'`.
-If that condition is true, it [disables](/components/data-grid/events/#disabling-the-default-behavior) the default event behavior.
+If that condition is true, it [disables](/x/react-data-grid/events/#disabling-the-default-behavior) the default event behavior.
 In this scenario, the user can only stop editing a cell by pressing <kbd class="key">Enter</kbd>, <kbd class="key">Escape</kbd> or <kbd class="key">Tab</kbd>.
 
 {{"demo": "DisableStopEditModeOnFocusOut.js", "bg": "inline"}}
@@ -295,7 +295,7 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
 }
 ```
 
-The following demo implements a custom edit component, based on the [`Rating`](https://mui.com/components/rating) component from `@mui/material`, for the **Rating** column.
+The following demo implements a custom edit component, based on the [`Rating`](https://mui.com/material-ui/react-rating) component from `@mui/material`, for the **Rating** column.
 
 {{"demo": "CustomEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -362,7 +362,7 @@ const handleChange = async (event: SelectChangeEvent) => {
 };
 ```
 
-The following demo implements an edit component with auto-stop, based on a native [`Select`](https://mui.com/components/selects) component for the **Role** column.
+The following demo implements an edit component with auto-stop, based on a native [`Select`](https://mui.com/material-ui/react-selects) component for the **Role** column.
 
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -415,5 +415,5 @@ Instead, use the buttons available in each row or in the toolbar.
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

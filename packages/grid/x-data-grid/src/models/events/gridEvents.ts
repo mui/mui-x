@@ -94,7 +94,7 @@ enum GridEvents {
    */
   rowEditCommit = 'rowEditCommit',
   /**
-   * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a cell.
+   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a cell.
    * @ignore - do not document.
    */
   cellNavigationKeyDown = 'cellNavigationKeyDown',
@@ -130,7 +130,7 @@ enum GridEvents {
    */
   columnHeaderFocus = 'columnHeaderFocus',
   /**
-   * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a column header.
+   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a column header.
    * @ignore - do not document.
    */
   columnHeaderNavigationKeyDown = 'columnHeaderNavigationKeyDown',

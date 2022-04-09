@@ -200,7 +200,7 @@ type ClockPickerComponent = (<TDate>(
  *
  * API:
  *
- * - [ClockPicker API](https://mui.com/api/clock-picker/)
+ * - [ClockPicker API](https://mui.com/x/api/date-pickers/clock-picker/)
  */
 export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends unknown>(
   inProps: ClockPickerProps<TDate>,
