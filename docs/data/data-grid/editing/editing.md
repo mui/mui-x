@@ -362,7 +362,7 @@ const handleChange = async (event: SelectChangeEvent) => {
 };
 ```
 
-The following demo implements an edit component with auto-stop, based on a native [`Select`](https://mui.com/material-ui/react-selects) component for the **Role** column.
+The following demo implements an edit component with auto-stop, based on a native [`Select`](/material-ui/react-select/) component for the **Role** column.
 
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
