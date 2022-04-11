@@ -45,6 +45,7 @@ test.describe('DataGrid docs', () => {
       const anchor = page.locator('nav[aria-label="documentation"] ul ul a:text-is("Overview")');
       await anchor.waitFor();
 
+      await expect(anchor).toHaveAttribute('app-drawer-active', '');
       await expect(anchor).toHaveAttribute('href', `/x/react-data-grid/`);
     });
   });

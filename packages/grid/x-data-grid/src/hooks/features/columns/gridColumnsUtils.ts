@@ -53,7 +53,7 @@ export function computeFlexColumnsWidth({
   totalFlexUnits: number;
   flexColumns: {
     field: GridColDef['field'];
-    flex?: number;
+    flex?: number | null;
     minWidth?: number;
     maxWidth?: number;
   }[];
@@ -266,11 +266,16 @@ export const applyInitialState = (
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
     const field = columnsWithUpdatedDimensions[i];
 
-    newColumnLookup[field] = {
+    const newColDef: Omit<GridStateColDef, 'computedWidth'> = {
       ...newColumnLookup[field],
-      ...dimensions[field],
       hasBeenResized: true,
     };
+
+    Object.entries(dimensions[field]).forEach(([key, value]) => {
+      newColDef[key as GridColumnDimensionProperties] = value === -1 ? Infinity : value;
+    });
+
+    newColumnLookup[field] = newColDef;
   }
 
   const newColumnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'> = {
@@ -376,16 +381,22 @@ export const createColumnsState = ({
       columnsStateWithoutColumnVisibilityModel.all.push(field);
     }
 
-    let hasValidDimension = false;
-    if (!existingState.hasBeenResized) {
-      hasValidDimension = COLUMNS_DIMENSION_PROPERTIES.some((key) => newColumn[key] !== undefined);
-    }
+    let hasBeenResized = existingState.hasBeenResized;
+    COLUMNS_DIMENSION_PROPERTIES.forEach((key) => {
+      if (newColumn[key] !== undefined) {
+        hasBeenResized = true;
+
+        if (newColumn[key] === -1) {
+          newColumn[key] = Infinity;
+        }
+      }
+    });
 
     columnsStateWithoutColumnVisibilityModel.lookup[field] = {
       ...existingState,
       hide: newColumn.hide == null ? false : newColumn.hide,
       ...newColumn,
-      hasBeenResized: existingState.hasBeenResized || hasValidDimension,
+      hasBeenResized,
     };
   });
 

@@ -440,6 +440,6 @@ PickersDayRaw.propTypes = {
  *
  * API:
  *
- * - [PickersDay API](https://mui.com/api/pickers-day/)
+ * - [PickersDay API](https://mui.com/x/api/date-pickers/pickers-day/)
  */
 export const PickersDay = React.memo(PickersDayRaw, areDayPropsEqual) as PickersDayComponent;

@@ -78,7 +78,7 @@ GridDetailPanelToggleCell.propTypes = {
   /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: PropTypes.any.isRequired,
+  formattedValue: PropTypes.any,
   /**
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
@@ -114,7 +114,7 @@ GridDetailPanelToggleCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.any.isRequired,
+  value: PropTypes.any,
 } as any;
 
 export { GridDetailPanelToggleCell };

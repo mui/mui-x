@@ -6,6 +6,7 @@ import {
   DataGrid,
   GridFilterItem,
   GridFilterModel,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import SyncIcon from '@mui/icons-material/Sync';
@@ -85,7 +86,7 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
   );
 }
 
-const quantityOnlyOperators = [
+const quantityOnlyOperators: GridFilterOperator[] = [
   {
     label: 'Between',
     value: 'between',
