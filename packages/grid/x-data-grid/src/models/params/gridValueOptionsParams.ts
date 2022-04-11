@@ -1,9 +1,9 @@
-import { GridRowModel, GridRowId } from '../gridRows';
+import { GridRowId, GridValidRowModel } from '../gridRows';
 
 /**
  * Object passed as parameter of the valueOptions function for singleSelect column.
  */
-export interface GridValueOptionsParams {
+export interface GridValueOptionsParams<R extends GridValidRowModel = any> {
   /**
    * The field of the column to which options will be provided
    */
@@ -15,5 +15,5 @@ export interface GridValueOptionsParams {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row?: GridRowModel;
+  row?: R;
 }

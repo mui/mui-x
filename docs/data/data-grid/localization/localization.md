@@ -42,7 +42,7 @@ const theme = createTheme(
 ```
 
 Note that `createTheme` accepts any number of arguments.
-If you are already using the [translations of the core components](/guides/localization/#locale-text), you can add `bgBG` as a new argument.
+If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text), you can add `bgBG` as a new argument.
 The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 
 ```jsx
@@ -104,9 +104,9 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-data-grid/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
-Note that these translations of the Data grid component depend on the [Localization strategy](/guides/localization/) of the whole library.
+Note that these translations of the Data grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

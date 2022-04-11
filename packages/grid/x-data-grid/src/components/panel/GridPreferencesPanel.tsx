@@ -15,7 +15,7 @@ export const GridPreferencesPanel = React.forwardRef<
   const rootProps = useGridRootProps();
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
-  const panelContent = apiRef.current.unstable_applyPreProcessors(
+  const panelContent = apiRef.current.unstable_applyPipeProcessors(
     'preferencePanel',
     null,
     preferencePanelState.openedPanelValue ?? GridPreferencePanelsValue.filters,

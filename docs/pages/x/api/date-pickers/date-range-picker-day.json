@@ -1,0 +1,51 @@
+{
+  "props": {
+    "day": { "type": { "name": "any" }, "required": true },
+    "isEndOfHighlighting": { "type": { "name": "bool" }, "required": true },
+    "isEndOfPreviewing": { "type": { "name": "bool" }, "required": true },
+    "isHighlighting": { "type": { "name": "bool" }, "required": true },
+    "isPreviewing": { "type": { "name": "bool" }, "required": true },
+    "isStartOfHighlighting": { "type": { "name": "bool" }, "required": true },
+    "isStartOfPreviewing": { "type": { "name": "bool" }, "required": true },
+    "outsideCurrentMonth": { "type": { "name": "bool" }, "required": true },
+    "allowSameDateSelection": { "type": { "name": "bool" } },
+    "classes": { "type": { "name": "object" } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableHighlightToday": { "type": { "name": "bool" } },
+    "disableMargin": { "type": { "name": "bool" } },
+    "selected": { "type": { "name": "bool" } },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
+    "today": { "type": { "name": "bool" } }
+  },
+  "slots": {},
+  "name": "DateRangePickerDay",
+  "styles": {
+    "classes": [
+      "root",
+      "rangeIntervalDayHighlight",
+      "rangeIntervalDayHighlightStart",
+      "rangeIntervalDayHighlightEnd",
+      "rangeIntervalPreview",
+      "rangeIntervalDayPreview",
+      "rangeIntervalDayPreviewStart",
+      "rangeIntervalDayPreviewEnd",
+      "day",
+      "dayOutsideRangeInterval",
+      "dayInsideRangeInterval",
+      "notSelectedDate"
+    ],
+    "globalClasses": {},
+    "name": "MuiDateRangePickerDay"
+  },
+  "spread": false,
+  "forwardsRefTo": "HTMLButtonElement",
+  "filename": "/packages/x-date-pickers-pro/src/DateRangePickerDay/DateRangePickerDay.tsx",
+  "inheritance": null,
+  "demos": "<ul></ul>"
+}

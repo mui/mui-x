@@ -2,7 +2,7 @@ import { GridFilterInputBoolean } from '../components/panel/filterPanel/GridFilt
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 
-export const getGridBooleanOperators = (): GridFilterOperator[] => [
+export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | null, any>[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem: GridFilterItem) => {

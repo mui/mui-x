@@ -1,4 +1,3 @@
-import { GridCellValue } from '../gridCell';
 import { GridEditCellProps } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from './gridCellParams';
@@ -25,7 +24,7 @@ export interface GridEditCellValueParams {
   /**
    * The new value for the cell.
    */
-  value: GridCellValue;
+  value: any;
   /**
    * The debounce time in milliseconds.
    */
@@ -42,7 +41,7 @@ export interface GridCommitCellChangeParams {
 export interface GridCellEditCommitParams {
   id: GridRowId;
   field: string;
-  value: GridCellValue;
+  value: any;
 }
 
 enum GridCellEditStartReasons {

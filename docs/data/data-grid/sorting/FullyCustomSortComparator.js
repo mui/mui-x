@@ -4,9 +4,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'isAdmin'];
 
-const dayInMonthComparator = (v1, v2) => {
-  return v1.getDate() - v2.getDate();
-};
+const dayInMonthComparator = (v1, v2) => v1.getDate() - v2.getDate();
 
 export default function FullyCustomSortComparator() {
   const { data } = useDemoData({

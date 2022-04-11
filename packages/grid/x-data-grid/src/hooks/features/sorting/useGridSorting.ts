@@ -29,7 +29,7 @@ import {
   getNextGridSortDirection,
   sanitizeSortModel,
 } from './gridSortingUtils';
-import { GridPreProcessor, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const sortingStateInitializer: GridStateInitializer<
@@ -119,19 +119,18 @@ export const useGridSorting = (
    * API METHODS
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-    if (props.sortingMode === GridFeatureModeConstant.server) {
-      logger.debug('Skipping sorting rows as sortingMode = server');
-      apiRef.current.setState((state) => ({
-        ...state,
-        sorting: {
-          ...state.sorting,
-          sortedRows: gridRowIdsSelector(state, apiRef.current.instanceId),
-        },
-      }));
-      return;
-    }
-
     apiRef.current.setState((state) => {
+      if (props.sortingMode === GridFeatureModeConstant.server) {
+        logger.debug('Skipping sorting rows as sortingMode = server');
+        return {
+          ...state,
+          sorting: {
+            ...state.sorting,
+            sortedRows: gridRowIdsSelector(state, apiRef.current.instanceId),
+          },
+        };
+      }
+
       const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
       const sortedRows = apiRef.current.unstable_applyStrategyProcessor('sorting', {
@@ -143,6 +142,8 @@ export const useGridSorting = (
         sorting: { ...state.sorting, sortedRows },
       };
     });
+
+    apiRef.current.publishEvent(GridEvents.sortedRowsSet);
     apiRef.current.forceUpdate();
   }, [apiRef, logger, props.sortingMode]);
 
@@ -218,7 +219,7 @@ export const useGridSorting = (
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<GridPreProcessor<'exportState'>>(
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
       const sortModelToExport = gridSortModelSelector(apiRef);
       if (sortModelToExport.length === 0) {
@@ -235,7 +236,7 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const stateRestorePreProcessing = React.useCallback<GridPreProcessor<'restoreState'>>(
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
       const sortModel = context.stateToRestore.sorting?.sortModel;
       if (sortModel == null) {
@@ -265,8 +266,8 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, 'exportState', stateExportPreProcessing);
-  useGridRegisterPreProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'sorting', flatSortingMethod);
 
   /**

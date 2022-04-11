@@ -1,11 +1,10 @@
-import { GridCellValue } from '../gridCell';
-import { GridRowEntry, GridRowId, GridRowModel } from '../gridRows';
+import { GridValidRowModel, GridRowEntry, GridRowId } from '../gridRows';
 import type { GridColumns } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter in the row callbacks.
  */
-export interface GridRowParams<R extends GridRowModel = GridRowModel> {
+export interface GridRowParams<R extends GridValidRowModel = any> {
   /**
    * The grid row id.
    */
@@ -22,10 +21,10 @@ export interface GridRowParams<R extends GridRowModel = GridRowModel> {
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
    * @param {string} field The field.
-   * @returns {GridCellValue} The cell value.
+   * @returns {any} The cell value.
    * @deprecated Use `params.row` to directly access the fields you want instead.
    */
-  getValue: (id: GridRowId, field: string) => GridCellValue;
+  getValue: (id: GridRowId, field: string) => any;
 }
 
 interface GridRowVisibilityParams {
@@ -37,12 +36,19 @@ interface GridRowVisibilityParams {
    * Whether this row is the last visible or not.
    */
   isLastVisible: boolean;
+  /**
+   * Index of the row in the current page.
+   * If the pagination is disabled, it will be the index relative to all filtered rows.
+   */
+  indexRelativeToCurrentPage: number;
 }
 
 /**
  * Object passed as parameter in the row `getRowClassName` callback prop.
  */
-export interface GridRowClassNameParams extends GridRowParams, GridRowVisibilityParams {}
+export interface GridRowClassNameParams<R extends GridValidRowModel = any>
+  extends GridRowParams<R>,
+    GridRowVisibilityParams {}
 
 /**
  * Object passed as parameter in the row `getRowHeight` callback prop.
@@ -69,7 +75,7 @@ enum GridRowEditStartReasons {
 /**
  * Params passed to the `rowEditStart` event.
  */
-export interface GridRowEditStartParams<R extends GridRowModel = GridRowModel>
+export interface GridRowEditStartParams<R extends GridValidRowModel = any>
   extends GridRowParams<R> {
   /**
    * Which field triggered this event.
@@ -91,8 +97,7 @@ enum GridRowEditStopReasons {
   shiftTabKeyDown = 'shiftTabKeyDown',
 }
 
-export interface GridRowEditStopParams<R extends GridRowModel = GridRowModel>
-  extends GridRowParams<R> {
+export interface GridRowEditStopParams<R extends GridValidRowModel = any> extends GridRowParams<R> {
   /**
    * Which field triggered this event.
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.
