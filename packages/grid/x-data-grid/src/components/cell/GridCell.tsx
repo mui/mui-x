@@ -164,7 +164,7 @@ function GridCell(props: GridCellProps) {
       return;
     }
 
-    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement)!;
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current)!;
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
