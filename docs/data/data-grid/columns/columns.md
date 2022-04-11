@@ -524,7 +524,7 @@ interface GridColDef {
    * Number of columns a grid cell should span.
    * @default 1
    */
-  colSpan?: number | ((params: GridCellParams) => number | undefined);
+  colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
   …
 }
 ```
@@ -538,7 +538,7 @@ interface GridColDef {
 
 ### Number signature
 
-The `colSpan` number signature allows to span all the cells in the column:
+The number signature sets **all cells in the column** to span a given number of columns.
 
 ```ts
 interface GridColDef {
@@ -550,11 +550,11 @@ interface GridColDef {
 
 ### Function signature
 
-The `colSpan` function signature is useful for spanning only specific cells in the column. The function receives [`GridCellParams`](/api/data-grid/grid-cell-params/) as the first argument:
+The function signature allows spanning only **specific cells** in the column. The function receives [`GridCellParams`](/api/data-grid/grid-cell-params/) as an argument:
 
 ```ts
 interface GridColDef {
-  colSpan?: (params: GridCellParams) => number | undefined;
+  colSpan?: (params: GridCellParams<V, R, F>) => number | undefined;
 }
 ```
 
