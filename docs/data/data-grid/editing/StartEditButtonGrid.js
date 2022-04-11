@@ -25,6 +25,8 @@ function EditToolbar(props) {
     return cellModesModel[id]?.[field]?.mode || 'view';
   }, [cellModesModel, selectedCellParams]);
 
+  console.log(cellModesModel, selectedCellParams);
+
   const handleSaveOrEdit = () => {
     if (!selectedCellParams) {
       return;
@@ -33,14 +35,14 @@ function EditToolbar(props) {
     if (cellMode === 'edit') {
       setCellModesModel({
         ...cellModesModel,
-        [id]: { ...cellModesModel[field], [field]: { mode: GridCellModes.View } },
+        [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.View } },
       });
 
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
     } else {
       setCellModesModel({
         ...cellModesModel,
-        [id]: { ...cellModesModel[field], [field]: { mode: GridCellModes.Edit } },
+        [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.Edit } },
       });
 
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
@@ -55,7 +57,7 @@ function EditToolbar(props) {
     setCellModesModel({
       ...cellModesModel,
       [id]: {
-        ...cellModesModel[field],
+        ...cellModesModel[id],
         [field]: { mode: GridCellModes.View, ignoreModifications: true },
       },
     });

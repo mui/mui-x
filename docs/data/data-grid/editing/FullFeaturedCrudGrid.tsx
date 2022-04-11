@@ -124,7 +124,6 @@ export default function FullFeaturedCrudGrid() {
 
   const handleDeleteClick = (id: GridRowId) => (event: React.MouseEvent) => {
     event.stopPropagation();
-    console.log(rows, id);
     setRows(rows.filter((row) => row.id !== id));
   };
 

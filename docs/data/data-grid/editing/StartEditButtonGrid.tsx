@@ -46,13 +46,13 @@ function EditToolbar(props: EditToolbarProps) {
     if (cellMode === 'edit') {
       setCellModesModel({
         ...cellModesModel,
-        [id]: { ...cellModesModel[field], [field]: { mode: GridCellModes.View } },
+        [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.View } },
       });
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
     } else {
       setCellModesModel({
         ...cellModesModel,
-        [id]: { ...cellModesModel[field], [field]: { mode: GridCellModes.Edit } },
+        [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.Edit } },
       });
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
     }
@@ -66,7 +66,7 @@ function EditToolbar(props: EditToolbarProps) {
     setCellModesModel({
       ...cellModesModel,
       [id]: {
-        ...cellModesModel[field],
+        ...cellModesModel[id],
         [field]: { mode: GridCellModes.View, ignoreModifications: true },
       },
     });
