@@ -269,7 +269,7 @@ export default function FullFeaturedDemo() {
     return isAntDesign ? 'ant' : 'default';
   };
 
-  const handleApplyClick = (settings: GridConfigOptions) => {
+  const handleApplyClick: GridToolbarContainerProps['onApply'] = (settings) => {
     if (size !== settings.size) {
       setSize(settings.size);
     }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating, { RatingProps } from '@mui/material/Rating';
-import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridRenderCellParams, GridColDef } from '@mui/x-data-grid';
 
 function renderRating(params: GridRenderCellParams<number>) {
   return <Rating readOnly value={params.value} />;
@@ -46,9 +46,9 @@ function RatingEditInputCell(props: GridRenderCellParams<number>) {
   );
 }
 
-function renderRatingEditInputCell(params: GridRenderCellParams<number>) {
+const renderRatingEditInputCell: GridColDef['renderEditCell'] = (params) => {
   return <RatingEditInputCell {...params} />;
-}
+};
 
 export default function RenderRatingEditCellGrid() {
   return (

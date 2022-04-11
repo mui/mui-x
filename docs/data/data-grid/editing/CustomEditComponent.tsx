@@ -4,7 +4,7 @@ import Rating from '@mui/material/Rating';
 import {
   DataGrid,
   GridRenderCellParams,
-  GridRenderEditCellParams,
+  GridColDef,
   useGridApiContext,
 } from '@mui/x-data-grid';
 
@@ -42,9 +42,9 @@ function RatingEditInputCell(props: GridRenderCellParams<number>) {
   );
 }
 
-function renderRatingEditInputCell(params: GridRenderEditCellParams) {
+const renderRatingEditInputCell: GridColDef['renderCell'] = (params) => {
   return <RatingEditInputCell {...params} />;
-}
+};
 
 export default function CustomEditComponent() {
   return (

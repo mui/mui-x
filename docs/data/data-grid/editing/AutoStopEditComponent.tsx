@@ -3,7 +3,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
   DataGrid,
   GridRenderCellParams,
-  GridRenderEditCellParams,
+  GridColDef,
   useGridApiContext,
 } from '@mui/x-data-grid';
 
@@ -32,9 +32,9 @@ function SelectEditInputCell(props: GridRenderCellParams) {
   );
 }
 
-function renderSelectEditInputCell(params: GridRenderEditCellParams) {
+const renderSelectEditInputCell: GridColDef['renderCell'] = (params) => {
   return <SelectEditInputCell {...params} />;
-}
+};
 
 export default function AutoStopEditComponent() {
   return (
