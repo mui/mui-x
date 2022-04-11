@@ -25,8 +25,6 @@ function EditToolbar(props) {
     return cellModesModel[id]?.[field]?.mode || 'view';
   }, [cellModesModel, selectedCellParams]);
 
-  console.log(cellModesModel, selectedCellParams);
-
   const handleSaveOrEdit = () => {
     if (!selectedCellParams) {
       return;
