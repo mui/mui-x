@@ -25,10 +25,15 @@ import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
+import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 
 export interface GridRowProps {
   rowId: GridRowId;
   selected: boolean;
+  /**
+   * Index of the row in the whole sorted and filtered dataset.
+   * If some rows above have expanded children, this index also take those children into account.
+   */
   index: number;
   rowHeight: number;
   containerWidth: number;
@@ -214,6 +219,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       ...apiRef.current.getRowParams(rowId),
       isFirstVisible: indexRelativeToCurrentPage === 0,
       isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+      indexRelativeToCurrentPage,
     };
 
     rowClassName = rootProps.getRowClassName(rowParams);
@@ -257,7 +263,12 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     }
 
     if (editCellState != null && column.renderEditCell) {
-      const params = { ...cellParams, ...editCellState, api: apiRef.current };
+      const params: GridRenderEditCellParams = {
+        ...cellParams,
+        ...editCellState,
+        api: apiRef.current,
+      };
+
       content = column.renderEditCell(params);
       // TODO move to GridCell
       classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));
@@ -336,6 +347,10 @@ GridRow.propTypes = {
   containerWidth: PropTypes.number.isRequired,
   editRowsState: PropTypes.object.isRequired,
   firstColumnToRender: PropTypes.number.isRequired,
+  /**
+   * Index of the row in the whole sorted and filtered dataset.
+   * If some rows above have expanded children, this index also take those children into account.
+   */
   index: PropTypes.number.isRequired,
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,

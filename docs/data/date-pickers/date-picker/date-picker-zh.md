@@ -82,7 +82,7 @@ You can customize the rendering of the input with the `renderInput` prop. 请确
 
 ## 自定义日期渲染
 
-你可以通过 `renderDay` 函数属性来自定义所显示的日期。 You can take advantage of the [PickersDay](/api/pickers-day/) component.
+你可以通过 `renderDay` 函数属性来自定义所显示的日期。 You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
 
 {{"demo": "CustomDay.js"}}
 
