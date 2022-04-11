@@ -2,6 +2,23 @@
 
 ## Introduction
 
+Each feature is contained in a single hook, but features are not independent.
+
+For example, the detail panel has an impact on the row height.
+
+To allows hooks to interact and produce a coherent state, various patterns are presented on this page.
+
+For each pattern, you will find a list of where such pattern is used, why it is necessary, and an overview of its behavior.
+
+## Summary
+
+- Pipe-processing
+  - Plugin state enrichment
+  - Add custom behavior to an api method
+  - Feature limitation
+  - Component children processing
+- Family-processing
+
 ## Pipe-processing
 
 A pipe processing is a pattern allowing plugins or components to enrich data used by another plugin.
@@ -14,7 +31,7 @@ We can classify the pipe-processing into several categories:
 
 #### Processing list
 
-#### `hydrateColumns`
+##### `'hydrateColumns'`
 
 **Publisher**: `useGridColumns` plugin before updating `state.columns`.
 
@@ -32,7 +49,10 @@ const addCustomFeatureColumn = React.useCallback<GridPipeProcessor<'hydrateColum
     if (shouldHaveCustomFeatureColumn && !haveCustomFeatureColumn) {
       columnsState.lookup[customFeatureColumn.field] = customFeatureColumn;
       columnsState.all = [customFeatureColumn.field, ...columnsState.all];
-    } else if (!shouldHaveCustomFeatureColumn && haveCustomFeatureColumn) {
+    }
+    // ⚠ The `columnsState` passed to the processors can contain the columns returned by the previous processing.
+    // If the plugin is not enabled during the current processing, it must check if its columns are present, and if so remove them.
+    else if (!shouldHaveCustomFeatureColumn && haveCustomFeatureColumn) {
       delete columnsState.lookup[customFeatureColumn.field];
       columnsState.all = columnsState.all.filter((field) => field !== customFeatureColumn.field);
     }
@@ -45,14 +65,11 @@ const addCustomFeatureColumn = React.useCallback<GridPipeProcessor<'hydrateColum
 useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
 ```
 
-> ⚠ The `columnsState` passed to the processors can contain the columns returned by the previous processing.
-> If the plugin is not enabled during the current processing, it must check if its columns are present, and if so remove them.
-
-#### `rowHeight`
+##### `'rowHeight'`
 
 **Publisher**: `useGridRowsMeta` plugin before updating `state.rowsMeta` (it is called for each row).
 
-**Why register to this processing**: Modify the base height of a row of add the height of some custom elements (eg: processor of the Detail Panel plugin).
+**Why register to this processing**: Modify the base height of a row of add the height of some custom elements (eg: processor of the Detail Panel plugin increase the row height when the detail panel is open).
 
 **Example**:
 
@@ -83,7 +100,7 @@ useGridRegisterPipeProcessor(apiRef, 'rowHeight', addDetailHeight);
 
 #### List
 
-##### `exportState`
+##### `'exportState'`
 
 **Publisher**: `useGridStatePersistence` plugin when calling `apiRef.current.exportState`.
 
@@ -114,7 +131,7 @@ const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportStat
 useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
 ```
 
-##### `restoreState`
+##### `'restoreState'`
 
 **Publisher**: `useGridStatePersistence` plugin when calling `apiRef.current.restoreState`.
 
@@ -145,7 +162,7 @@ const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreSt
 useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 ```
 
-##### `scrollToIndexes`
+##### `'scrollToIndexes'`
 
 **Publisher**: `UseGridScroll` when calling `apiRef.current.scrollToIndexes`.
 
@@ -177,7 +194,7 @@ useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
 
 #### List
 
-##### `canBeReordered` (pro only)
+##### `'canBeReordered'` (pro only)
 
 **Publisher**: `useGridColumnReorder` when dragging a column over another.
 
@@ -206,7 +223,7 @@ useGridRegisterPipeProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
 
 #### List
 
-##### `columnMenu`
+##### `'columnMenu'`
 
 **Publisher**: `GridColumnMenu` component on render.
 
@@ -233,7 +250,7 @@ const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
 useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
 ```
 
-##### `preferencePanel`
+##### `'preferencePanel'`
 
 **Publisher**: `GridPreferencePanel` component on render.
 
