@@ -158,7 +158,7 @@ type CalendarPickerComponent = (<TDate>(
  *
  * API:
  *
- * - [CalendarPicker API](https://mui.com/api/calendar-picker/)
+ * - [CalendarPicker API](https://mui.com/x/api/date-pickers/calendar-picker/)
  */
 const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends unknown>(
   inProps: CalendarPickerProps<TDate>,
@@ -434,7 +434,7 @@ CalendarPicker.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/api/pickers-day/) component.
+   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
    * @template TDate
    * @param {TDate} day The day to render.
    * @param {Array<TDate | null>} selectedDates The dates currently selected.
