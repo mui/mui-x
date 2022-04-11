@@ -2,10 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 
-const rows = [
+const items = [
   { id: 1, item: 'Paperclip', quantity: 100, price: 1.99 },
   { id: 2, item: 'Paper', quantity: 10, price: 30 },
   { id: 3, item: 'Pencil', quantity: 100, price: 1.25 },
+];
+
+const rows = [
+  ...items,
   { id: 'SUBTOTAL', label: 'Subtotal', subtotal: 624 },
   { id: 'TAX', label: 'Tax', taxRate: 10, taxTotal: 62.4 },
   { id: 'TOTAL', label: 'Total', total: 686.4 },
@@ -66,14 +70,14 @@ const columns = [
   },
 ];
 
-function getCellClassName({ row, field }) {
+const getCellClassName = ({ row, field }) => {
   if (row.id === 'SUBTOTAL' || row.id === 'TOTAL' || row.id === 'TAX') {
     if (field === 'item') {
       return 'bold';
     }
   }
   return '';
-}
+};
 
 export default function ColumnSpanningFunction() {
   return (
