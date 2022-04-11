@@ -135,7 +135,7 @@
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
+      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/x/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
     },
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
@@ -143,6 +143,8 @@
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
     "onPinnedColumnsChange": { "type": { "name": "func" } },
+    "onPreferencePanelClose": { "type": { "name": "func" } },
+    "onPreferencePanelOpen": { "type": { "name": "func" } },
     "onProcessRowUpdateError": { "type": { "name": "func" } },
     "onResize": { "type": { "name": "func" } },
     "onRowClick": { "type": { "name": "func" } },

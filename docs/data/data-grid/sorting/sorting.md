@@ -146,9 +146,9 @@ Sorting can be run server-side by setting the `sortingMode` prop to `server`, an
 
 {{"demo": "SortingSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state/#access-the-state)
+More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

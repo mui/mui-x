@@ -7,6 +7,7 @@ import type {
   GridColumnVisibilityChangeParams,
   GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
+  GridPreferencePanelParams,
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
@@ -165,7 +166,8 @@ export interface GridEventLookup
 
   // Rows
   rowsSet: {};
-  visibleRowsSet: {};
+  filteredRowsSet: {};
+  sortedRowsSet: {};
   rowExpansionChange: { params: GridRowTreeNodeConfig };
 
   // Edit
@@ -217,4 +219,8 @@ export interface GridEventLookup
     params: GridRowSelectionCheckboxParams;
     event: React.ChangeEvent<HTMLElement>;
   };
+
+  // PreferencePanel
+  preferencePanelClose: { params: GridPreferencePanelParams };
+  preferencePanelOpen: { params: GridPreferencePanelParams };
 }
