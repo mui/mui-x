@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { adapterToUse } from '../../../../../test/utils/pickers-utils';
 import {
   maskedDateFormatter,
-  pick12hOr24hFormat,
   checkMaskIsValidForCurrentFormat,
 } from './text-field-helper';
 
