@@ -12,6 +12,11 @@ export interface PickerStateValueManager<TInputValue, TDateValue> {
   ) => boolean;
   emptyValue: TDateValue;
   parseInput: (utils: MuiPickersAdapter<TDateValue>, value: TInputValue) => TDateValue;
+  valueReducer?: (
+    utils: MuiPickersAdapter<TDateValue>,
+    prevValue: TDateValue | null,
+    value: TDateValue,
+  ) => TDateValue;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
@@ -49,7 +54,21 @@ export const usePickerState = <TInput, TDateValue>(
     return { committed: date, draft: date };
   }
 
-  const parsedDateValue = valueManager.parseInput(utils, value);
+  const parsedDateValue = React.useMemo(
+    () => valueManager.parseInput(utils, value),
+    [valueManager, utils, value],
+  );
+
+  const [lastValidDateValue, setLastValidDateValue] = React.useState<TDateValue | null>(
+    parsedDateValue,
+  );
+
+  React.useEffect(() => {
+    if (parsedDateValue != null) {
+      setLastValidDateValue(parsedDateValue);
+    }
+  }, [parsedDateValue]);
+
   const [draftState, dispatch] = React.useReducer(
     (state: Draftable<TDateValue>, action: DraftAction<TDateValue>): Draftable<TDateValue> => {
       switch (action.type) {
@@ -141,14 +160,24 @@ export const usePickerState = <TInput, TDateValue>(
     [acceptDate, disableCloseOnSelect, isMobileKeyboardViewOpen, draftState.draft],
   );
 
+  const handleInputChange = React.useCallback(
+    (date: TDateValue, keyboardInputValue?: string) => {
+      const cleanDate = valueManager.valueReducer
+        ? valueManager.valueReducer(utils, lastValidDateValue, date)
+        : date;
+      onChange(cleanDate, keyboardInputValue);
+    },
+    [onChange, valueManager, lastValidDateValue, utils],
+  );
+
   const inputProps = React.useMemo(
     () => ({
-      onChange,
+      onChange: handleInputChange,
       open: isOpen,
       rawValue: value,
       openPicker: () => setIsOpen(true),
     }),
-    [onChange, isOpen, value, setIsOpen],
+    [handleInputChange, isOpen, value, setIsOpen],
   );
 
   const pickerState = { pickerProps, inputProps, wrapperProps };
