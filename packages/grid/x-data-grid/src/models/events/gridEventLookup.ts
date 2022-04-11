@@ -163,7 +163,8 @@ export interface GridEventLookup
 
   // Rows
   rowsSet: {};
-  visibleRowsSet: {};
+  filteredRowsSet: {};
+  sortedRowsSet: {};
   rowExpansionChange: { params: GridRowTreeNodeConfig };
 
   // Edit
