@@ -22,8 +22,21 @@ export interface PickerStateValueManager<TInputValue, TDateValue> {
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
 interface DateState<T> {
+  /**
+   * Date internally used on the picker and displayed in the input.
+   * It is updates whenever the user validates a step.
+   */
   draft: T;
+
+  /**
+   * Last full date provided by the user
+   * Is not updated when validating a step of a multistep picker (e.g. validating the date of a date time picker)
+   */
   committed: T;
+
+  /**
+   * Date that will be used if the pickers tries to reset its value
+   */
   accepted: T;
 }
 
@@ -129,24 +142,15 @@ export const usePickerState = <TInput, TDateValue>(
     () => ({
       open: isOpen,
       onClear: () =>
-        updateDate({
-          value: valueManager.emptyValue,
-          type: 'accept',
-          closePicker: true,
-        }),
-      onAccept: () =>
-        updateDate({
-          value: dateState.draft,
-          type: 'accept',
-          closePicker: true,
-        }),
+        updateDate({ value: valueManager.emptyValue, type: 'accept', closePicker: true }),
+      onAccept: () => updateDate({ value: dateState.draft, type: 'accept', closePicker: true }),
       onDismiss: () => {
         const shouldCloseOnSelect = !disableCloseOnSelect; // ?? wrapperVariant === 'mobile');
         if (shouldCloseOnSelect) {
-          // Reset to the last accepted date
+          // Set all the dates to equal the last accepted date
           updateDate({ value: dateState.accepted, type: 'accept', closePicker: true });
         } else {
-          // Accept the last committed date
+          // Set all the dates to equal the last committed date
           updateDate({ value: dateState.committed, type: 'accept', closePicker: true });
         }
       },
