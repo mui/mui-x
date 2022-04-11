@@ -12,7 +12,7 @@ export interface PickerStateValueManager<TInputValue, TDateValue> {
   ) => boolean;
   emptyValue: TDateValue;
   parseInput: (utils: MuiPickersAdapter<TDateValue>, value: TInputValue) => TDateValue;
-  mergeOldAndNewValues?: (
+  valueReducer?: (
     utils: MuiPickersAdapter<TDateValue>,
     prevValue: TDateValue | null,
     value: TDateValue,
@@ -162,8 +162,8 @@ export const usePickerState = <TInput, TDateValue>(
 
   const handleInputChange = React.useCallback(
     (date: TDateValue, keyboardInputValue?: string) => {
-      const cleanDate = valueManager.mergeOldAndNewValues
-        ? valueManager.mergeOldAndNewValues(utils, lastValidDateValue, date)
+      const cleanDate = valueManager.valueReducer
+        ? valueManager.valueReducer(utils, lastValidDateValue, date)
         : date;
       onChange(cleanDate, keyboardInputValue);
     },
