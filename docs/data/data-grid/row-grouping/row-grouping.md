@@ -1,5 +1,5 @@
 ---
-title: Data Grid - Group & Pivot
+title: Data Grid - Row Grouping
 ---
 
 # Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
