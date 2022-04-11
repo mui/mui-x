@@ -1,9 +1,6 @@
 import { expect } from 'chai';
 import { adapterToUse } from '../../../../../test/utils/pickers-utils';
-import {
-  maskedDateFormatter,
-  checkMaskIsValidForCurrentFormat,
-} from './text-field-helper';
+import { maskedDateFormatter, checkMaskIsValidForCurrentFormat } from './text-field-helper';
 
 describe('text-field-helper', () => {
   it('maskedDateFormatter for date', () => {
