@@ -229,13 +229,13 @@
   },
   {
     "name": "rowMouseEnter",
-    "description": "Fired when the mouse enters the row. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
+    "description": "Fired when the mouse enters the row. Called with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "name": "rowMouseLeave",
-    "description": "Fired when the mouse leaves the row. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
+    "description": "Fired when the mouse leaves the row. Called with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },

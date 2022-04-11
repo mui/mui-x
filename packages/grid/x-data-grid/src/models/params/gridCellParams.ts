@@ -18,11 +18,11 @@ export interface GridCellParams<V = any, R extends GridValidRowModel = any, F = 
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: V | undefined;
+  value?: V | undefined;
   /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: F;
+  formattedValue?: F | undefined;
   /**
    * The row model of the row that the current cell belongs to.
    */

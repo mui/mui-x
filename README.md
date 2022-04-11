@@ -27,8 +27,8 @@ We provide three options:
 
 ## Components
 
-- [DataGrid](https://mui.com/components/data-grid/), published under `@mui/x-data-grid`, MIT licensed.
-- [DataGridPro](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.
+- [DataGrid](https://mui.com/x/react-data-grid/), published under `@mui/x-data-grid`, MIT licensed.
+- [DataGridPro](https://mui.com/x/react-data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.
 
 ## Questions
 
