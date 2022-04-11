@@ -76,7 +76,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef<HTMLDivElement>(ref, rootRef);
+  const handleRef = useForkRef(ref, rootRef);
   const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const scrollPosition = React.useRef({ top: 0, left: 0 });

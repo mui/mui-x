@@ -34,7 +34,7 @@
     "directory": "packages/x-license-pro"
   },
   "dependencies": {
-    "@mui/utils": "^5.4.4",
+    "@mui/utils": "^5.6.0",
     "esm": "^3.2.25",
     "yargs": "^17.4.1"
   },
