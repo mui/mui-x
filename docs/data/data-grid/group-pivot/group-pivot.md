@@ -332,7 +332,7 @@ Any valid React element can be used as the row detail, even another grid.
 
 The height of the detail panel content needs to be provided upfront.
 The grid assumes the value of 500px by default however this can be configured by passing a function to the `getDetailPanelHeight` prop that returns the required height.
-Both props are called with a [`GridRowParams`](/api/data-grid/grid-row-params/) object, allowing you to return a different value for each row.
+Both props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/) object, allowing you to return a different value for each row.
 
 ```tsx
 <DataGridPro
@@ -379,7 +379,7 @@ On the other hand, if you only want to initialize the grid with some rows alread
 
 ### Using a detail panel as a form
 
-As an alternative to the built-in [row editing](/components/data-grid/editing/#row-editing), a form component can be rendered inside the detail panel, allowing the user to edit the current row values.
+As an alternative to the built-in [row editing](/x/react-data-grid/editing/#row-editing), a form component can be rendered inside the detail panel, allowing the user to edit the current row values.
 
 The following demo shows integration with [react-hook-form](https://react-hook-form.com/), but other form libraries are also supported.
 
@@ -387,7 +387,7 @@ The following demo shows integration with [react-hook-form](https://react-hook-f
 
 ### Customizing the detail panel toggle
 
-To change the icon used for the toggle, you can provide a different component for the [icon slot](/components/data-grid/components/#icons) as follow:
+To change the icon used for the toggle, you can provide a different component for the [icon slot](/x/react-data-grid/components/#icons) as follow:
 
 ```tsx
 <DataGridPro
@@ -401,7 +401,7 @@ To change the icon used for the toggle, you can provide a different component fo
 If this is not sufficient, the entire toggle component can be overridden.
 To fully customize it, add another column with `field: GRID_DETAIL_PANEL_TOGGLE_FIELD` to your set of columns.
 The grid will detect that there is already a toggle column defined and it will not add another toggle in the default position.
-The new toggle component can be provided via [`renderCell`](/components/data-grid/columns/#render-cell) in the same as any other column.
+The new toggle component can be provided via [`renderCell`](/x/react-data-grid/columns/#render-cell) in the same as any other column.
 By only setting the `field`, is up to you to configure the remaining options (e.g. disable the column menu, filtering, sorting).
 To already start with a few suggested options configured, spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column.
 
@@ -468,5 +468,5 @@ Pivoting will allow you to take a columns values and turn them into columns.
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
