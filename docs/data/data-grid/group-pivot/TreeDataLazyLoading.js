@@ -225,7 +225,7 @@ GroupingCellWithLazyLoading.propTypes = {
   /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: PropTypes.any.isRequired,
+  formattedValue: PropTypes.any,
   hideDescendantCount: PropTypes.bool,
   /**
    * The grid row id.

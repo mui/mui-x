@@ -91,7 +91,7 @@ const monthMap = [
  *
  * API:
  *
- * - [CalendarPickerSkeleton API](https://mui.com/api/calendar-picker-skeleton/)
+ * - [CalendarPickerSkeleton API](https://mui.com/x/api/date-pickers/calendar-picker-skeleton/)
  */
 function CalendarPickerSkeleton(props: CalendarPickerSkeletonProps) {
   const { className, ...other } = useThemeProps<

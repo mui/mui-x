@@ -30,7 +30,7 @@ interface BaseDateRangePickerProps<TDate>
     ExportedDateRangePickerInputProps {
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    * @default {}
    */
   components?: ExportedDateRangePickerViewProps<TDate>['components'] &
@@ -57,6 +57,7 @@ interface BaseDateRangePickerProps<TDate>
   maxDate?: TDate;
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
+   * @template TDate
    * @param {DateRange<TDate>} date The new parsed date range.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
@@ -97,7 +98,7 @@ type DateRangePickerComponent = (<TDate>(
  *
  * API:
  *
- * - [DateRangePicker API](https://mui.com/api/date-range-picker/)
+ * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
 export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   inProps: DateRangePickerProps<TDate>,
@@ -225,7 +226,7 @@ DateRangePicker.propTypes = {
   clearText: PropTypes.node,
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    * @default {}
    */
   components: PropTypes.object,
@@ -245,7 +246,7 @@ DateRangePicker.propTypes = {
    */
   desktopModeMediaQuery: PropTypes.string,
   /**
-   * Props applied to the [`Dialog`](/api/dialog/) element.
+   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
    */
   DialogProps: PropTypes.object,
   /**
@@ -293,10 +294,11 @@ DateRangePicker.propTypes = {
   endText: PropTypes.node,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @template TDateValue
    * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
+   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
@@ -357,11 +359,13 @@ DateRangePicker.propTypes = {
   okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
+   * @template TDateValue
    * @param {TDateValue} date The date that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
+   * @template TDate
    * @param {DateRange<TDate>} date The new parsed date range.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
@@ -379,12 +383,14 @@ DateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
+   * @template TError, TDateValue
    * @param {TError} reason The reason why the current value is not valid.
    * @param {TDateValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
    * Callback firing on month change. @DateIOType
+   * @template TDate
    * @param {TDate} month The new month.
    */
   onMonthChange: PropTypes.func,
@@ -411,11 +417,11 @@ DateRangePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/api/paper/) component.
+   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
   PaperProps: PropTypes.object,
   /**
-   * Popper props passed down to [Popper](https://mui.com/api/popper/) component.
+   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
   PopperProps: PropTypes.object,
   /**
@@ -431,6 +437,7 @@ DateRangePicker.propTypes = {
   /**
    * Custom renderer for `<DateRangePicker />` days. @DateIOType
    * @example (date, dateRangePickerDayProps) => <DateRangePickerDay {...dateRangePickerDayProps} />
+   * @template TDate
    * @param {TDate} day The day to render.
    * @param {DateRangePickerDayProps<TDate>} dateRangePickerDayProps The props of the day to render.
    * @returns {JSX.Element} The element representing the day.
@@ -438,7 +445,7 @@ DateRangePicker.propTypes = {
   renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api),
+   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props),
    * that you need to forward to the range start/end inputs respectively.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example
@@ -476,6 +483,7 @@ DateRangePicker.propTypes = {
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
+   * @template TDate
    * @param {TDate} day The date to check.
    * @returns {boolean} If `true` the day will be disabled.
    */
@@ -483,6 +491,7 @@ DateRangePicker.propTypes = {
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @template TDate
    * @param {TDate} year The year to test.
    * @returns {boolean} Return `true` if the year should be disabled.
    */
@@ -530,7 +539,7 @@ DateRangePicker.propTypes = {
    */
   toolbarTitle: PropTypes.node,
   /**
-   * Custom component for popper [Transition](https://mui.com/components/transitions/#transitioncomponent-prop).
+   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
   TransitionComponent: PropTypes.elementType,
   /**

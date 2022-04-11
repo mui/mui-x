@@ -41,7 +41,7 @@ describe('<DataGrid /> - Sorting', () => {
         <DataGrid autoHeight={isJSDOM} columns={cols} rows={rows} />
       </div>,
     );
-    expect(getColumnValues()).to.deep.equal(['10', '0', '5']);
+    expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 
   it('should update the order server side', () => {
@@ -57,9 +57,9 @@ describe('<DataGrid /> - Sorting', () => {
     }
 
     const { setProps } = render(<Demo rows={rows} />);
-    expect(getColumnValues()).to.deep.equal(['10', '0', '5']);
+    expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
     setProps({ rows: [{ id: 5 }, { id: 0 }, { id: 10 }] });
-    expect(getColumnValues()).to.deep.equal(['5', '0', '10']);
+    expect(getColumnValues(0)).to.deep.equal(['5', '0', '10']);
   });
 
   it('should sort string column when clicking the header cell', () => {
@@ -69,11 +69,11 @@ describe('<DataGrid /> - Sorting', () => {
       </div>,
     );
     const header = getColumnHeaderCell(0);
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
   });
 
   it('should sort boolean column when clicking the header cell', () => {
@@ -85,11 +85,11 @@ describe('<DataGrid /> - Sorting', () => {
     const header = screen
       .getByRole('columnheader', { name: 'isPublished' })
       .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma', 'Nike']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma', 'Nike']);
   });
 
   it('should only allow ascending sorting using sortingOrder', () => {
@@ -99,11 +99,11 @@ describe('<DataGrid /> - Sorting', () => {
       </div>,
     );
     const header = getColumnHeaderCell(0);
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 
   it('should only allow ascending and initial sorting using sortingOrder', () => {
@@ -113,11 +113,11 @@ describe('<DataGrid /> - Sorting', () => {
       </div>,
     );
     const header = getColumnHeaderCell(0);
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
   it('should only allow ascending and descending sorting using sortingOrder', () => {
@@ -127,13 +127,13 @@ describe('<DataGrid /> - Sorting', () => {
       </div>,
     );
     const header = getColumnHeaderCell(0);
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
   });
 
   it('should allow per-column sortingOrder override', () => {
@@ -147,13 +147,13 @@ describe('<DataGrid /> - Sorting', () => {
       </div>,
     );
     const header = getColumnHeaderCell(0);
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
   });
 
   it('should keep rows sorted when rows prop change', () => {
@@ -180,7 +180,7 @@ describe('<DataGrid /> - Sorting', () => {
     };
 
     const { setProps } = render(<TestCase rows={baselineProps.rows} />);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
     setProps({
       rows: [
@@ -198,7 +198,7 @@ describe('<DataGrid /> - Sorting', () => {
         },
       ],
     });
-    expect(getColumnValues()).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
+    expect(getColumnValues(0)).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
   });
 
   it('should support server-side sorting', () => {
@@ -241,9 +241,9 @@ describe('<DataGrid /> - Sorting', () => {
     ];
 
     const { setProps } = render(<TestCase rows={[rows[0], rows[1]]} />);
-    expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull']);
+    expect(getColumnValues(0)).to.deep.equal(['Asics', 'RedBull']);
     setProps({ rows });
-    expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull', 'Hugo']);
+    expect(getColumnValues(0)).to.deep.equal(['Asics', 'RedBull', 'Hugo']);
   });
 
   it('should support new dataset', () => {
@@ -261,9 +261,9 @@ describe('<DataGrid /> - Sorting', () => {
     const header = screen
       .getByRole('columnheader', { name: 'brand' })
       .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     const newData = {
       rows: [
         {
@@ -282,7 +282,7 @@ describe('<DataGrid /> - Sorting', () => {
       columns: [{ field: 'country' }],
     };
     setProps(newData);
-    expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+    expect(getColumnValues(0)).to.deep.equal(['France', 'UK', 'US']);
   });
 
   it('should support new dataset in control mode', () => {
@@ -308,9 +308,9 @@ describe('<DataGrid /> - Sorting', () => {
     const header = screen
       .getByRole('columnheader', { name: 'brand' })
       .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     const newData = {
       rows: [
         {
@@ -329,7 +329,7 @@ describe('<DataGrid /> - Sorting', () => {
       columns: [{ field: 'country' }],
     };
     setProps(newData);
-    expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+    expect(getColumnValues(0)).to.deep.equal(['France', 'UK', 'US']);
   });
 
   it('should clear the sorting col when passing an empty sortModel', () => {
@@ -343,9 +343,9 @@ describe('<DataGrid /> - Sorting', () => {
 
     const { setProps } = render(<TestCase sortModel={[{ field: 'brand', sort: 'asc' }]} />);
 
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     setProps({ sortModel: [] });
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
   describe('prop: initialState.sorting', () => {

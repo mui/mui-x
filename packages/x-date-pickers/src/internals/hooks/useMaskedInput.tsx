@@ -79,6 +79,7 @@ export const useMaskedInput = ({
     setInnerInputValue(finalString);
 
     const date = finalString === null ? null : utils.parse(finalString, inputFormat);
+
     if (ignoreInvalidInputs && !utils.isValid(date)) {
       return;
     }

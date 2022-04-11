@@ -379,7 +379,7 @@ const propsAreEqual = (
  *
  * API:
  *
- * - [DateRangePickerDay API](https://mui.com/api/date-range-picker-day/)
+ * - [DateRangePickerDay API](https://mui.com/x/api/date-pickers/date-range-picker-day/)
  */
 export const DateRangePickerDay = React.memo(
   DateRangePickerDayRaw,
