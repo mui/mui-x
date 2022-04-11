@@ -295,7 +295,7 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
 }
 ```
 
-The following demo implements a custom edit component, based on the [`Rating`](https://mui.com/material-ui/react-rating) component from `@mui/material`, for the **Rating** column.
+The following demo implements a custom edit component, based on the [`Rating`](https://mui.com/material-ui/react-rating/) component from `@mui/material`, for the **Rating** column.
 
 {{"demo": "CustomEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
