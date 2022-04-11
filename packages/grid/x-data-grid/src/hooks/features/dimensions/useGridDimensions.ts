@@ -247,7 +247,7 @@ export function useGridDimensions(
 
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
-  useGridApiOptionHandler(apiRef, GridEvents.visibleRowsSet, updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, GridEvents.sortedRowsSet, updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, GridEvents.pageChange, updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, GridEvents.pageSizeChange, updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, GridEvents.columnsChange, updateGridDimensionsRef);

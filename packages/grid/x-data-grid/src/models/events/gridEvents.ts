@@ -256,10 +256,15 @@ enum GridEvents {
    */
   rowExpansionChange = 'rowExpansionChange',
   /**
-   * Fired when the visible rows are updated
+   * Fired when the sorted rows are updated
+   * @ignore - do not document
+   */
+  sortedRowsSet = 'sortedRowsSet',
+  /**
+   * Fired when the filtered rows are updated
    * @ignore - do not document.
    */
-  visibleRowsSet = 'visibleRowsSet',
+  filteredRowsSet = 'filteredRowsSet',
   /**
    * Fired when the columns state is changed.
    */
