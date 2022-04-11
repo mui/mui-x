@@ -16,7 +16,7 @@ The rows can be defined with the `rows` prop, which expects an array of objects.
 {{"demo": "RowsGrid.js", "bg": "inline"}}
 
 > ⚠️ Each row object should have a field that uniquely identifies the row.
-> By default, the grid will use the `id` property of the row. Note that [column definition](/components/data-grid/columns/#column-definitions) for `id` field is not required.
+> By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/columns/#column-definitions) for `id` field is not required.
 >
 > When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
 >
@@ -76,7 +76,7 @@ The following demo updates the rows every 10ms, but they are only applied every 
 By default, the rows have a height of 52 pixels.
 This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
 
-If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/components/data-grid/accessibility/#density-selector)
+If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/x/react-data-grid/accessibility/#density-selector)
 
 To change the row height for the whole grid, set the `rowHeight` prop:
 
@@ -103,7 +103,7 @@ If you need some rows to have different row heights this can be achieved using t
 ## Row spacing
 
 You can use the `getRowSpacing` prop to increase the spacing between rows.
-This prop is called with a [`GridRowSpacingParams`](/api/data-grid/grid-row-spacing-params/) object.
+This prop is called with a [`GridRowSpacingParams`](/x/api/data-grid/grid-row-spacing-params/) object.
 
 ```tsx
 const getRowSpacing = React.useCallback((params: GridRowSpacingParams) => {
@@ -127,13 +127,13 @@ To add a border instead, set `rowSpacingType` to `"border"` and customize the co
 />
 ```
 
-> ⚠ Adding a bottom margin or border to rows that also have a [detail panel](/components/data-grid/group-pivot/#master-detail) is not recommended because the detail panel relays on the bottom margin to work.
+> ⚠ Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/group-pivot/#master-detail) is not recommended because the detail panel relays on the bottom margin to work.
 > As an alternative, only use the top spacing to define the space between rows.
 > It will be easier to always increase the next row spacing not matter if the detail panel is expanded or not, but you can use `gridDetailPanelExpandedRowIdsSelector` to only do when open.
 
 ## Styling rows
 
-You can check the [styling rows](/components/data-grid/style/#styling-rows) section for more information.
+You can check the [styling rows](/x/react-data-grid/style/#styling-rows) section for more information.
 
 ## 🚧 Row spanning
 
@@ -164,5 +164,5 @@ Pinned (or frozen, locked, or sticky) rows are rows that are visible at all time
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

@@ -74,7 +74,7 @@ export const usePickerState = <TInput, TDateValue>(
   const [initialDate, setInitialDate] = React.useState<TDateValue>(draftState.committed);
 
   // Mobile keyboard view is a special case.
-  // When it's open picker should work like closed, cause we are just showing text field
+  // When it's open picker should work like closed, because we are just showing text field
   const [isMobileKeyboardViewOpen, setMobileKeyboardViewOpen] = React.useState(false);
 
   const acceptDate = React.useCallback(

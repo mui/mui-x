@@ -6,7 +6,7 @@
 
 <h1 align="center">MUI X DataGrid overview</h1>
 
-Welcome in the documentation for contributors. If you want to use DataGrid components for your project, the [documention for developpers](https://mui.com/components/data-grid/getting-started/) is more appropriate.
+Welcome in the documentation for contributors. If you want to use DataGrid components for your project, the [documention for developpers](https://mui.com/x/react-data-grid/getting-started/) is more appropriate.
 Here we will discuss how the code is structured, to simplify codebase navigation, and onboard new contributors.
 
 ## Where is the code?
@@ -23,7 +23,7 @@ In each package, the most used folders are:
   - `hooks/utils` defines logics for contributors: manipulating the state, managing events, ...
   - `hooks/features` defines logics for end-users: selection, filtering, editing, ...
 - `DataGrid[Pro]/useDataGrid[Pro]Component.tsx` is the file in which all the hooks are added to the grid
-- `colDef` contains the default values for each [column type](https://mui.com/components/data-grid/columns/#column-types): rendering cell, filter operators, sorting method, ...
+- `colDef` contains the default values for each [column type](https://mui.com/x/react-data-grid/columns/#column-types): rendering cell, filter operators, sorting method, ...
 - `models` define the typescript interfaces of the gird
 
 ## How does it work?
@@ -33,7 +33,7 @@ In each package, the most used folders are:
 
 ### Accessing state
 
-The react components can [access the state](https://mui.com/components/data-grid/state/#access-the-state) with either selectors or getter methods.
+The react components can [access the state](https://mui.com/x/react-data-grid/state/#access-the-state) with either selectors or getter methods.
 Here is an example.
 
 ```js
@@ -61,7 +61,7 @@ Each of them defines an event handler responsible for modifying their sub-state.
 useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 ```
 
-The other interest of events is that developers can listen to them by [subscribing to the event](https://mui.com/components/data-grid/events/#subscribing-to-events) or by providing a `on<Event>` prop such as `onEditCellPropsChange`.
+The other interest of events is that developers can listen to them by [subscribing to the event](https://mui.com/x/react-data-grid/events/#subscribing-to-events) or by providing a `on<Event>` prop such as `onEditCellPropsChange`.
 Notice that all the events do not have an associated prop `on<Event>`
 
 ## Specific features
