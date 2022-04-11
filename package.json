@@ -77,7 +77,7 @@
     "@babel/traverse": "^7.17.9",
     "@babel/types": "^7.17.0",
     "@emotion/cache": "^11.7.1",
-    "@emotion/react": "^11.8.2",
+    "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@eps1lon/enzyme-adapter-react-17": "^0.1.0",
     "@mui/icons-material": "^5.5.1",
