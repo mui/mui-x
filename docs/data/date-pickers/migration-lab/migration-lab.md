@@ -11,7 +11,7 @@ title: MUI X - Migration from the lab
 This is a reference for migrating your site's pickers from `@mui/lab` to `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
 This migration only concerns packages and should do not affect the behavior of the components in your app.
 
-We explored the reasons of this migration in a [blog post](https://mui.com/blog/lab-date-pickers-to-mui-x/)
+We explored the reasons of this migration in a [blog post](/blog/lab-date-pickers-to-mui-x/)
 
 ## License
 
@@ -20,7 +20,7 @@ Most of our components remains MIT and are accessible for free in `@mui/x-date-p
 The range-picker components: `DateRangePicker`, `DateRangePickerDay`, `DesktopDateRangePicker`, `MobileDateRangePicker` and `StaticDateRangePicker`
 were marked as "intended for MUI X Pro" in our documentation and are now part of MUI X Pro.
 
-If you are using one of these components, you will have to take a Pro license in order to migrate to `@mui/x-date-pickers-pro` (see the [Pricing](https://mui.com/pricing/) page for more information).
+If you are using one of these components, you will have to take a Pro license in order to migrate to `@mui/x-date-pickers-pro` (see the [Pricing](/pricing/) page for more information).
 
 **Note**: If you already have a license for `@mui/x-data-grid-pro`, you can use the same one for `@mui/x-date-pickers-pro` with no additional fee!
 

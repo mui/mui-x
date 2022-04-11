@@ -7,7 +7,6 @@ import {
   GridFilterInputValue,
   GridFilterInputValueProps,
   GridPreferencePanelsValue,
-  GridFilterItem,
 } from '@mui/x-data-grid';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
@@ -52,7 +51,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGrid /> - Filter panel', () => {
   const { render } = createRenderer();
 
-  const baselineProps = {
+  const baselineProps: DataGridProps = {
     autoHeight: isJSDOM,
     disableVirtualization: true,
     rows: [
@@ -96,7 +95,7 @@ describe('<DataGrid /> - Filter panel', () => {
           },
           {
             value: 'equals',
-            getApplyFilterFn: (filterItem: GridFilterItem) => {
+            getApplyFilterFn: (filterItem) => {
               if (!filterItem.value) {
                 return null;
               }
@@ -104,7 +103,7 @@ describe('<DataGrid /> - Filter panel', () => {
                 sensitivity: 'base',
                 usage: 'search',
               });
-              return ({ value }: { value: any }): boolean => {
+              return ({ value }): boolean => {
                 return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
               };
             },

@@ -7,7 +7,7 @@ waiAria: https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepick
 packageName: '@mui/x-date-pickers'
 ---
 
-# Date/Time pickers日期/时间选择器
+# Date/Time pickers 日期/时间选择器
 
 <p class="description">日期选择器和时间选择器提供了一个从事先设定好的日期集合中选择单个值的简单方法。</p>
 
