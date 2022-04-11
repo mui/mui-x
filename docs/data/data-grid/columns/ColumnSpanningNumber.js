@@ -12,9 +12,14 @@ export default function ColumnSpanningNumber() {
     <div style={{ width: '100%' }}>
       <DataGrid
         columns={[
-          { field: 'username', colSpan: 2 },
-          { field: 'organization', sortable: false, filterable: false },
-          { field: 'age' },
+          { field: 'username', colSpan: 2, hideable: false },
+          {
+            field: 'organization',
+            sortable: false,
+            filterable: false,
+            hideable: false,
+          },
+          { field: 'age', hideable: false },
         ]}
         rows={[
           { id: 1, username: '@MUI', age: 20 },

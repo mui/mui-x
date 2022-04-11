@@ -12,4 +12,5 @@
   hideFooter
   showCellRightBorder
   showColumnRightBorder
+  disableColumnReorder
 />

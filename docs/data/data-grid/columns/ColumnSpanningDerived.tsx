@@ -71,6 +71,8 @@ const rows: Array<{ id: number; day: string; slots: Array<Subject | ''> }> = [
 const slotColumnCommonFields: Partial<GridColDef> = {
   sortable: false,
   filterable: false,
+  pinnable: false,
+  hideable: false,
   minWidth: 140,
   cellClassName: (params: GridCellParams) => params.value,
   colSpan: ({ row, field, value }: GridCellParams) => {
@@ -185,6 +187,7 @@ export default function ColumnSpanningDerived() {
         hideFooter
         showCellRightBorder
         showColumnRightBorder
+        disableColumnReorder
       />
     </Box>
   );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGridPro, DataGridProProps, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 
 const items = [
   { id: 1, item: 'Paperclip', quantity: 100, price: 1.99 },
@@ -38,12 +38,18 @@ const rows: Row[] = [
   { id: 'TOTAL', label: 'Total', total: 686.4 },
 ];
 
+const baseColumnOptions = {
+  sortable: false,
+  pinnable: false,
+  hideable: false,
+};
+
 const columns: GridColDef<Row>[] = [
   {
     field: 'item',
     headerName: 'Item/Description',
+    ...baseColumnOptions,
     flex: 3,
-    sortable: false,
     colSpan: ({ row }) => {
       if (row.id === 'SUBTOTAL' || row.id === 'TOTAL') {
         return 3;
@@ -60,12 +66,18 @@ const columns: GridColDef<Row>[] = [
       return value;
     },
   },
-  { field: 'quantity', headerName: 'Quantity', flex: 1, sortable: false },
+  {
+    field: 'quantity',
+    headerName: 'Quantity',
+    ...baseColumnOptions,
+    flex: 1,
+    sortable: false,
+  },
   {
     field: 'price',
     headerName: 'Price',
     flex: 1,
-    sortable: false,
+    ...baseColumnOptions,
     valueGetter: ({ row, value }) => {
       if (row.id === 'TAX') {
         return `${row.taxRate}%`;
@@ -77,7 +89,7 @@ const columns: GridColDef<Row>[] = [
     field: 'total',
     headerName: 'Total',
     flex: 1,
-    sortable: false,
+    ...baseColumnOptions,
     valueGetter: ({ row }) => {
       if (row.id === 'SUBTOTAL') {
         return row.subtotal;
@@ -93,7 +105,7 @@ const columns: GridColDef<Row>[] = [
   },
 ];
 
-const getCellClassName: DataGridProProps['getCellClassName'] = ({ row, field }) => {
+const getCellClassName: DataGridProps['getCellClassName'] = ({ row, field }) => {
   if (row.id === 'SUBTOTAL' || row.id === 'TOTAL' || row.id === 'TAX') {
     if (field === 'item') {
       return 'bold';
@@ -112,7 +124,7 @@ export default function ColumnSpanningFunction() {
         },
       }}
     >
-      <DataGridPro
+      <DataGrid
         autoHeight
         disableExtendRowFullWidth
         disableColumnFilter

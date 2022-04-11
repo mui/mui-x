@@ -62,6 +62,8 @@ const rows = [
 const slotColumnCommonFields = {
   sortable: false,
   filterable: false,
+  pinnable: false,
+  hideable: false,
   minWidth: 140,
   cellClassName: (params) => params.value,
   colSpan: ({ row, field, value }) => {
@@ -176,6 +178,7 @@ export default function ColumnSpanningDerived() {
         hideFooter
         showCellRightBorder
         showColumnRightBorder
+        disableColumnReorder
       />
     </Box>
   );
