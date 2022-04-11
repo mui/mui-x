@@ -1,5 +1,10 @@
 const pages = [
   {
+    pathname: '/x/advanced-components',
+    title: 'Overview',
+    icon: 'DescriptionIcon',
+  },
+  {
     pathname: '/x/react-data-grid',
     scopePathnames: ['/x/api/data-grid'],
     title: 'Data Grid',
@@ -8,7 +13,7 @@ const pages = [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/getting-started' },
-      { pathname: '/x/react-data-grid/migration-v4', title: 'Migration From v4' },
+      { pathname: '/x/react-data-grid/migration-v4', title: 'Migration from v4' },
       { pathname: '/x/react-data-grid/layout' },
       { pathname: '/x/react-data-grid/columns' },
       { pathname: '/x/react-data-grid/rows' },
@@ -29,7 +34,7 @@ const pages = [
       { pathname: '/x/react-data-grid/group-pivot', title: 'Group & Pivot' },
       {
         pathname: '/x/api/data-grid',
-        title: 'API Reference',
+        title: ' • API Reference',
         children: [
           { pathname: '/x/api/data-grid', title: 'Index' },
           { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
@@ -59,9 +64,10 @@ const pages = [
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
     title: 'Date and Time Pickers',
-    icon: 'TableViewIcon',
+    icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
+      { pathname: '/x/react-date-pickers/migration-lab', title: 'Migration from the lab' },
       { pathname: '/x/react-date-pickers/date-picker' },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
@@ -69,8 +75,8 @@ const pages = [
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
       {
-        pathname: '/x/api/data-grid',
-        title: 'API Reference',
+        pathname: '/x/api/date-pickers',
+        title: ' • API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
           { pathname: '/x/api/date-pickers/calendar-picker', title: 'CalendarPicker' },

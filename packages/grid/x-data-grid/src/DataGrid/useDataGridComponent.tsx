@@ -90,9 +90,9 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridEditing(apiRef, props);
 
   useGridFocus(apiRef, props);
-  useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
+  useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
