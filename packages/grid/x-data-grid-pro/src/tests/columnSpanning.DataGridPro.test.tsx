@@ -83,7 +83,6 @@ describe('<DataGridPro /> - Column Spanning', () => {
     expect(() => getCell(0, 2)).to.not.throw();
   });
 
-  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   describe('key navigation', () => {
     const columns: GridColDef[] = [
       { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
@@ -110,7 +109,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
       apiRef!.current.setColumnIndex('price', 1);
 
       fireClickEvent(getCell(1, 1));
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      fireEvent.keyDown(getCell(1, 1), { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('1-2');
     });
   });

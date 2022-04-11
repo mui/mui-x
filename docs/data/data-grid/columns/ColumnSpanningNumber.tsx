@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
-const otherProps = {
+const other = {
   autoHeight: true,
   showCellRightBorder: true,
   showColumnRightBorder: true,
@@ -25,7 +25,7 @@ export default function ColumnSpanningNumber() {
           { id: 1, username: '@MUI', age: 20 },
           { id: 2, username: '@MUI-X', age: 25 },
         ]}
-        {...otherProps}
+        {...other}
       />
     </div>
   );

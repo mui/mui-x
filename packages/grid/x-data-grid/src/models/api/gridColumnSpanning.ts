@@ -4,7 +4,6 @@ import { GridRowId } from '../gridRows';
 /**
  * The Column Spanning API interface that is available in the grid `apiRef`.
  */
-
 export interface GridColumnSpanningApi {
   /**
    * Returns cell colSpan info.

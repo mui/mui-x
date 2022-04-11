@@ -521,7 +521,7 @@ To change the number of columns a cell should span, use the `colSpan` property a
 ```ts
 interface GridColDef {
   /**
-   * Number of columns a grid cell should span.
+   * Number of columns a cell should span.
    * @default 1
    */
   colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
@@ -551,7 +551,8 @@ interface GridColDef {
 
 ### Function signature
 
-The function signature allows spanning only **specific cells** in the column. The function receives [`GridCellParams`](/api/data-grid/grid-cell-params/) as an argument:
+The function signature allows spanning only **specific cells** in the column.
+The function receives [`GridCellParams`](/api/data-grid/grid-cell-params/) as argument.
 
 ```ts
 interface GridColDef {
