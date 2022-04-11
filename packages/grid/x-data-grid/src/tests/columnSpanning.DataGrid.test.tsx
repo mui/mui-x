@@ -116,7 +116,6 @@ describe('<DataGrid /> - Column Spanning', () => {
     expect(() => getCell(0, 2)).to.not.throw();
   });
 
-  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   describe('key navigation', () => {
     const columns: GridColDef[] = [
       { field: 'brand', colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1) },
@@ -135,7 +134,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireClickEvent(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('0-2');
     });
 
@@ -149,7 +148,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireClickEvent(getCell(0, 2));
       expect(getActiveCell()).to.equal('0-2');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      fireEvent.keyDown(getCell(0, 2), { key: 'ArrowLeft' });
       expect(getActiveCell()).to.equal('0-0');
     });
 
@@ -163,7 +162,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireClickEvent(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+      fireEvent.keyDown(getCell(1, 1), { key: 'ArrowUp' });
       expect(getActiveCell()).to.equal('0-0');
     });
 
@@ -177,7 +176,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireClickEvent(getCell(1, 3));
       expect(getActiveCell()).to.equal('1-3');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      fireEvent.keyDown(getCell(1, 3), { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('2-2');
     });
 
@@ -196,7 +195,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireClickEvent(getCell(0, 3));
       expect(getActiveCell()).to.equal('0-3');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+      fireEvent.keyDown(getCell(0, 3), { key: 'PageDown' });
       expect(getActiveCell()).to.equal('2-2');
     });
 
@@ -210,7 +209,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireClickEvent(getCell(2, 1));
       expect(getActiveCell()).to.equal('2-1');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      fireEvent.keyDown(getCell(2, 1), { key: 'PageUp' });
       expect(getActiveCell()).to.equal('0-0');
     });
 
@@ -231,10 +230,10 @@ describe('<DataGrid /> - Column Spanning', () => {
       expect(getActiveCell()).to.equal('1-3');
 
       // start editing
-      fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+      fireEvent.keyDown(getCell(1, 3), { key: 'Enter' });
 
       // commit
-      fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+      fireEvent.keyDown(getCell(1, 3).querySelector('input'), { key: 'Enter' });
       await waitFor(() => {
         expect(getActiveCell()).to.equal('2-2');
       });
@@ -252,9 +251,9 @@ describe('<DataGrid /> - Column Spanning', () => {
       expect(getActiveCell()).to.equal('1-1');
 
       // start editing
-      fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+      fireEvent.keyDown(getCell(1, 1), { key: 'Enter' });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'Tab' });
+      fireEvent.keyDown(getCell(1, 1).querySelector('input'), { key: 'Tab' });
       await waitFor(() => {
         expect(getActiveCell()).to.equal('1-3');
       });
@@ -272,9 +271,9 @@ describe('<DataGrid /> - Column Spanning', () => {
       expect(getActiveCell()).to.equal('0-2');
 
       // start editing
-      fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+      fireEvent.keyDown(getCell(0, 2), { key: 'Enter' });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'Tab', shiftKey: true });
+      fireEvent.keyDown(getCell(0, 2).querySelector('input'), { key: 'Tab', shiftKey: true });
       await waitFor(() => {
         expect(getActiveCell()).to.equal('0-0');
       });
@@ -335,13 +334,13 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireClickEvent(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      fireEvent.keyDown(getCell(1, 1), { key: 'ArrowDown' });
 
       const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
       // trigger virtualization
       virtualScroller.dispatchEvent(new Event('scroll'));
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown' });
       const activeCell = getActiveCell();
       expect(activeCell).to.equal('3-0');
     });
@@ -369,7 +368,7 @@ describe('<DataGrid /> - Column Spanning', () => {
 
       fireClickEvent(getCell(0, 0));
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
       document.querySelector(`.${gridClasses.virtualScroller}`)!.dispatchEvent(new Event('scroll'));
 
       expect(() => getCell(0, 3)).to.not.throw();
@@ -446,10 +445,10 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireClickEvent(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('1-0');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      fireEvent.keyDown(getCell(1, 0), { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('1-2');
     });
 
@@ -481,17 +480,17 @@ describe('<DataGrid /> - Column Spanning', () => {
         `.${gridClasses.virtualScroller}`,
       )! as HTMLElement;
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
       virtualScroller.dispatchEvent(new Event('scroll'));
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      fireEvent.keyDown(getCell(0, 2), { key: 'ArrowRight' });
       virtualScroller.dispatchEvent(new Event('scroll'));
       expect(getActiveCell()).to.equal('0-3');
       // should be scrolled to the end of the cell
       expect(virtualScroller.scrollLeft).to.equal(5 * 100 - virtualScroller.offsetWidth);
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      fireEvent.keyDown(getCell(0, 3), { key: 'ArrowLeft' });
       virtualScroller.dispatchEvent(new Event('scroll'));
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      fireEvent.keyDown(getCell(0, 2), { key: 'ArrowLeft' });
       virtualScroller.dispatchEvent(new Event('scroll'));
 
       expect(getActiveCell()).to.equal('0-0');
