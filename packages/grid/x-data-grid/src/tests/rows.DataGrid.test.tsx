@@ -43,7 +43,7 @@ describe('<DataGrid /> - Rows', () => {
     columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
 
-  describe('props: getRowId', () => {
+  describe('prop: getRowId', () => {
     it('should allow to select a field as id', () => {
       const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
       render(
@@ -51,11 +51,11 @@ describe('<DataGrid /> - Rows', () => {
           <DataGrid {...baselineProps} getRowId={getRowId} />
         </div>,
       );
-      expect(getColumnValues()).to.deep.equal(['c1', 'c2', 'c3']);
+      expect(getColumnValues(0)).to.deep.equal(['c1', 'c2', 'c3']);
     });
   });
 
-  describe('props: rows', () => {
+  describe('prop: rows', () => {
     it('should support new dataset', () => {
       const { rows, columns } = getData(5, 2);
 

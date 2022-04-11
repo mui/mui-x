@@ -291,7 +291,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(handleSelectionModelChange.callCount).to.equal(0);
   });
 
-  describe('props: onDetailPanelsExpandedRowIds', () => {
+  describe('prop: onDetailPanelsExpandedRowIds', () => {
     it('shoull call when a row is expanded or closed', () => {
       const handleDetailPanelsExpandedRowIdsChange = spy();
       render(
@@ -326,7 +326,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     });
   });
 
-  describe('props: detailPanelExpandedRowIds', () => {
+  describe('prop: detailPanelExpandedRowIds', () => {
     it('should open the detail panel of the specified rows', () => {
       render(
         <TestCase
