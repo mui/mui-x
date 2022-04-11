@@ -107,7 +107,7 @@ export function useDateTimePickerDefaultizedProps<
     minTime: themeProps.minDateTime,
     maxTime: themeProps.maxDateTime,
     ampmInClock: true,
-    showToolbar: true,
+    showToolbar: false,
     allowSameDateSelection: true,
     mask: '__/__/____ __:__',
     acceptRegex: ampm ? /[\dap]/gi : /\d/gi,
