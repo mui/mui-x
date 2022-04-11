@@ -117,9 +117,17 @@ Choose between one of the following values: 'left' | 'right' | 'center'.
 
 **Note**: You must use `headerAlign` to align the content of the header.
 
+## Striped rows
+
+The following demo illustrates how the rows of the grid can be stripped.
+
+{{"demo": "StripedGrid.js", "bg": "inline"}}
+
 ## Custom theme
 
-The following demo leverages the CSS customization API to match the Ant Design specification.
+You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` to apply alternating styles to the rows.
+
+The following demo illustrates how this can be achieved.
 
 {{"demo": "AntDesignGrid.js", "defaultCodeOpen": false}}
 
