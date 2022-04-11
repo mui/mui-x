@@ -60,6 +60,7 @@ export interface CalendarPickerProps<TDate>
   onChange: PickerOnChangeFn<TDate>;
   /**
    * Callback firing on month change. @DateIOType
+   * @template TDate
    * @param {TDate} month The new month.
    */
   onMonthChange?: (month: TDate) => void;
@@ -86,6 +87,7 @@ export interface CalendarPickerProps<TDate>
   renderLoading?: () => React.ReactNode;
   /**
    * Disable specific date. @DateIOType
+   * @template TDate
    * @param {TDate} day The date to check.
    * @returns {boolean} If `true` the day will be disabled.
    */
@@ -339,7 +341,7 @@ CalendarPicker.propTypes = {
   className: PropTypes.string,
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    * @default {}
    */
   components: PropTypes.object,
@@ -401,6 +403,7 @@ CalendarPicker.propTypes = {
   onChange: PropTypes.func.isRequired,
   /**
    * Callback firing on month change. @DateIOType
+   * @template TDate
    * @param {TDate} month The new month.
    */
   onMonthChange: PropTypes.func,
@@ -411,6 +414,7 @@ CalendarPicker.propTypes = {
   onViewChange: PropTypes.func,
   /**
    * Callback firing on year change @DateIOType.
+   * @template TDate
    * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
@@ -431,6 +435,7 @@ CalendarPicker.propTypes = {
   reduceAnimations: PropTypes.bool,
   /**
    * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
+   * @template TDate
    * @param {TDate} day The day to render.
    * @param {Array<TDate | null>} selectedDates The dates currently selected.
    * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
@@ -449,6 +454,7 @@ CalendarPicker.propTypes = {
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
+   * @template TDate
    * @param {TDate} day The date to check.
    * @returns {boolean} If `true` the day will be disabled.
    */
@@ -456,6 +462,7 @@ CalendarPicker.propTypes = {
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @template TDate
    * @param {TDate} year The year to test.
    * @returns {boolean} Return `true` if the year should be disabled.
    */
