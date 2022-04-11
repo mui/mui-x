@@ -533,8 +533,9 @@ interface GridColDef {
 >
 > - [sorting](/components/data-grid/sorting/#disable-the-sorting)
 > - [filtering](/components/data-grid/filtering/#disable-the-filters)
-> - [column reorder](/components/data-grid/columns/#column-reorder)
-> - [hiding columns](/components/data-grid/columns/#column-visibility)
+> - [column reorder](#column-reorder)
+> - [hiding columns](#column-visibility)
+> - [column pinning](#blocking-column-unpinning)
 
 ### Number signature
 
