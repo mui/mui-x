@@ -10,7 +10,7 @@ title: Data Grid - Export
 
 ### Default Toolbar
 
-To enable the export menu, pass the `GridToolbar` component in the `Toolbar` [component slot](/components/data-grid/components/#toolbar).
+To enable the export menu, pass the `GridToolbar` component in the `Toolbar` [component slot](/x/react-data-grid/components/#toolbar).
 
 {{"demo": "ExportDefaultToolbar.js", "bg": "inline"}}
 
@@ -49,8 +49,8 @@ You can customize their respective behavior by passing an options object either 
 
 Each export option has its own API page:
 
-- [`csvOptions`](/api/data-grid/grid-csv-export-options/)
-- [`printOptions`](/api/data-grid/grid-print-export-options/)
+- [`csvOptions`](/x/api/data-grid/grid-csv-export-options/)
+- [`printOptions`](/x/api/data-grid/grid-print-export-options/)
 
 ## Disabled format
 
@@ -99,7 +99,7 @@ By default, the grid exports the selected rows if there are any.
 If not, it exports all rows (filtered and sorted rows, according to active rules), including the collapsed ones.
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
-The grid exports a few [selectors](/components/data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
+The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
 
 | Selector                                       | Behavior                                                                                                                                                                                                                   |
 | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -110,7 +110,7 @@ The grid exports a few [selectors](/components/data-grid/state/#access-the-state
 | `gridPaginatedVisibleSortedGridRowIdsSelector` | The rows after applying the sorting rules, the filtering rules, without the collapsed rows and only for the current page (**Note**: If the pagination is disabled, it will still take the value of `page` and `pageSize`). |
 
 {{"demo": "CsvGetRowsToExport.js", "bg": "inline", "defaultCodeOpen": false}}
-When using [Row grouping](/components/data-grid/group-pivot/#row-grouping), it can be useful to remove the groups from the CSV export
+When using [Row grouping](/x/react-data-grid/group-pivot/#row-grouping), it can be useful to remove the groups from the CSV export
 
 {{"demo": "CsvGetRowsToExportRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -119,7 +119,7 @@ When using [Row grouping](/components/data-grid/group-pivot/#row-grouping), it c
 ### Exported cells
 
 When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.
-You can provide a [`valueFormatter`](/components/data-grid/columns/#value-formatter) with a string representation to be used.
+You can provide a [`valueFormatter`](/x/react-data-grid/columns/#value-formatter) with a string representation to be used.
 
 ```jsx
 <DataGrid
@@ -136,7 +136,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 ### File encoding
 
 You can use `csvOptions` to specify the format of the export, such as the `delimiter` character used to separate fields, the `fileName`, or `utf8WithBom` to prefix the exported file with UTF-8 Byte Order Mark (BOM).
-For more details on these options, please visit the [`csvOptions` api page](/api/data-grid/grid-csv-export-options/).
+For more details on these options, please visit the [`csvOptions` api page](/x/api/data-grid/grid-csv-export-options/).
 
 ```jsx
 <GridToolbarExport
@@ -198,7 +198,7 @@ By default, the print export display all the DataGrid. It is possible to remove 
 />
 ```
 
-For more option to customize the print export, please visit the [`printOptions` api page](/api/data-grid/grid-print-export-options/).
+For more option to customize the print export, please visit the [`printOptions` api page](/x/api/data-grid/grid-print-export-options/).
 
 ## Custom export format
 
@@ -252,7 +252,7 @@ The demo below shows how to add a JSON export.
 
 ## API
 
-- [csvOptions](/api/data-grid/grid-csv-export-options/)
-- [printOptions](/api/data-grid/grid-print-export-options/)
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [csvOptions](/x/api/data-grid/grid-csv-export-options/)
+- [printOptions](/x/api/data-grid/grid-print-export-options/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
