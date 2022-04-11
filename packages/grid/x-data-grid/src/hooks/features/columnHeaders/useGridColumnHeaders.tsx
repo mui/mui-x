@@ -171,7 +171,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       columns.push(
         <GridColumnHeaderItem
-          key={i}
+          key={column.field}
           {...sortColumnLookup[column.field]}
           columnMenuOpen={open}
           filterItemsCounter={
