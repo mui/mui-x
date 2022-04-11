@@ -49,8 +49,7 @@ export const useGridKeyboardNavigation = (
       logger.debug(`Navigating to cell row ${rowIndex}, col ${colIndex}`);
       apiRef.current.scrollToIndexes({ colIndex, rowIndex });
       const field = apiRef.current.getVisibleColumns()[colIndex].field;
-      const node = visibleSortedRows[rowIndex];
-      apiRef.current.setCellFocus(node.id, field);
+      apiRef.current.setCellFocus(rowId, field);
     },
     [apiRef, logger],
   );
