@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ValidationProps } from '@mui/x-date-pickers/internals';
+import { useDefaultDates, useUtils, ValidationProps } from '@mui/x-date-pickers/internals';
+import { useThemeProps } from '@mui/material/styles';
 import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange, RangeInput } from '../internal/models';
@@ -52,4 +53,38 @@ export interface BaseDateRangePickerProps<TDate>
    * The value of the date range picker.
    */
   value: RangeInput<TDate>;
+}
+
+export type DefaultizedProps<Props> = Props & { inputFormat: string };
+
+export function useDateRangePickerDefaultizedProps<
+  TDate,
+  Props extends BaseDateRangePickerProps<TDate>,
+>(
+  props: Props,
+  name: string,
+): DefaultizedProps<Props> &
+  Required<
+    Pick<BaseDateRangePickerProps<unknown>, 'calendars' | 'mask' | 'startText' | 'endText'>
+  > {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates();
+
+  // This is technically unsound if the type parameters appear in optional props.
+  // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
+  const themeProps = useThemeProps({
+    props,
+    name,
+  });
+
+  return {
+    calendars: 2,
+    mask: '__/__/____',
+    startText: 'Start',
+    endText: 'End',
+    inputFormat: utils.formats.keyboardDate,
+    minDate: defaultDates.minDate,
+    maxDate: defaultDates.maxDate,
+    ...themeProps,
+  };
 }

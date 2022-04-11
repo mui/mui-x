@@ -28,22 +28,6 @@ describe('text-field-helper', () => {
     expect(formatterFn('10:00 A')).to.equal('10:00 AM');
   });
 
-  it('pick12hOr24hFormat', () => {
-    expect(
-      pick12hOr24hFormat(undefined, true, { localized: 'T', '12h': 'hh:mm a', '24h': 'HH:mm' }),
-    ).to.equal('hh:mm a');
-    expect(
-      pick12hOr24hFormat(undefined, undefined, {
-        localized: 'T',
-        '12h': 'hh:mm a',
-        '24h': 'HH:mm',
-      }),
-    ).to.equal('T');
-    expect(
-      pick12hOr24hFormat(undefined, false, { localized: 'T', '12h': 'hh:mm a', '24h': 'HH:mm' }),
-    ).to.equal('HH:mm');
-  });
-
   [
     { mask: '__.__.____', format: adapterToUse.formats.keyboardDate, isValid: false },
     { mask: '__/__/____', format: adapterToUse.formats.keyboardDate, isValid: true },
