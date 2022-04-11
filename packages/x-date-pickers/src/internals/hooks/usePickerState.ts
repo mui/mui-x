@@ -69,11 +69,29 @@ interface PickerStateProps<TInput, TDateValue> {
   value: TInput;
 }
 
+const reducer: React.Reducer<DateState<any>, DateStateAction<any>> = (state, action) => {
+  switch (action.type) {
+    case 'accept': {
+      return { draft: action.value, committed: action.value, accepted: action.value };
+    }
+    case 'commit': {
+      return { ...state, draft: action.value, committed: action.value };
+    }
+    case 'draft': {
+      return { ...state, draft: action.value };
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
 export const usePickerState = <TInput, TDateValue>(
   props: PickerStateProps<TInput, TDateValue>,
   valueManager: PickerStateValueManager<TInput, TDateValue>,
+  wrapperVariant: WrapperVariant,
 ) => {
-  const { disableCloseOnSelect, onAccept, onChange, value } = props;
+  const { disableCloseOnSelect = wrapperVariant === 'mobile', onAccept, onChange, value } = props;
 
   const utils = useUtils<TDateValue>();
   const { isOpen, setIsOpen } = useOpenState(props);
@@ -93,40 +111,18 @@ export const usePickerState = <TInput, TDateValue>(
     }
   }, [parsedDateValue]);
 
-  const [dateState, dispatch] = React.useReducer<
-    React.Reducer<DateState<TDateValue>, DateStateAction<TDateValue>>
-  >(
-    (state, action) => {
-      switch (action.type) {
-        case 'accept': {
-          return { draft: action.value, committed: action.value, accepted: action.value };
-        }
-        case 'commit': {
-          return { ...state, draft: action.value, committed: action.value };
-        }
-        case 'draft': {
-          return { ...state, draft: action.value };
-        }
-        default: {
-          return state;
-        }
-      }
-    },
+  const [dateState, dispatch] = React.useReducer(
+    reducer as React.Reducer<DateState<TDateValue>, DateStateAction<TDateValue>>,
     { committed: parsedDateValue, draft: parsedDateValue, accepted: parsedDateValue },
   );
 
-  if (!valueManager.areValuesEqual(utils, dateState.committed, parsedDateValue)) {
-    dispatch({ type: 'commit', value: parsedDateValue });
-  }
-
-  // Mobile keyboard view is a special case.
-  // When it's open picker should work like closed, because we are just showing text field
-  const [isMobileKeyboardViewOpen, setMobileKeyboardViewOpen] = React.useState(false);
-
-  const updateDate = React.useCallback(
-    (params: DateStateAction<TDateValue> & { closePicker: boolean }) => {
+  const setDate = React.useCallback(
+    (params: DateStateAction<TDateValue> & { closePicker?: boolean; internal?: boolean }) => {
       dispatch({ type: params.type, value: params.value });
-      onChange(params.value);
+
+      if (!params.internal) {
+        onChange(params.value);
+      }
 
       if (params.closePicker) {
         setIsOpen(false);
@@ -138,33 +134,48 @@ export const usePickerState = <TInput, TDateValue>(
     [onAccept, onChange, setIsOpen],
   );
 
+  // Set the draft and committed date to equal the new prop value.
+  if (!valueManager.areValuesEqual(utils, dateState.committed, parsedDateValue)) {
+    setDate({ type: 'commit', value: parsedDateValue, internal: true });
+  }
+
+  // Mobile keyboard view is a special case.
+  // When it's open picker should work like closed, because we are just showing text field
+  const [isMobileKeyboardViewOpen, setMobileKeyboardViewOpen] = React.useState(false);
+
+  const shouldCloseOnSelect = !(disableCloseOnSelect ?? wrapperVariant === 'mobile');
+
   const wrapperProps = React.useMemo(
     () => ({
       open: isOpen,
-      onClear: () =>
-        updateDate({ value: valueManager.emptyValue, type: 'accept', closePicker: true }),
-      onAccept: () => updateDate({ value: dateState.draft, type: 'accept', closePicker: true }),
+      onClear: () => {
+        // Reset all date in state to the empty value and close picker
+        setDate({ value: valueManager.emptyValue, type: 'accept', closePicker: true });
+      },
+      onAccept: () => {
+        // Set all date in state to equal the current draft value and close picker
+        setDate({ value: dateState.draft, type: 'accept', closePicker: true });
+      },
       onDismiss: () => {
-        const shouldCloseOnSelect = !disableCloseOnSelect; // ?? wrapperVariant === 'mobile');
         if (shouldCloseOnSelect) {
-          // Set all the dates to equal the last accepted date
-          updateDate({ value: dateState.accepted, type: 'accept', closePicker: true });
+          // Set all dates in state to equal the last accepted date
+          // e.g. Reset the state to the last accepted value
+          setDate({ value: dateState.accepted, type: 'accept', closePicker: true });
         } else {
-          // Set all the dates to equal the last committed date
-          updateDate({ value: dateState.committed, type: 'accept', closePicker: true });
+          // Set all dates in state to equal the last committed date
+          // e.g. Reset the state to the last committed value
+          setDate({ value: dateState.committed, type: 'accept', closePicker: true });
         }
       },
       onSetToday: () => {
-        // TODO: Fix the default value
-        const shouldCloseOnSelect = !disableCloseOnSelect; // ?? wrapperVariant === 'mobile');
         if (shouldCloseOnSelect) {
-          updateDate({ value: utils.date()!, type: 'accept', closePicker: true });
+          setDate({ value: utils.date()!, type: 'accept', closePicker: true });
         } else {
-          updateDate({ value: utils.date()!, type: 'commit', closePicker: false });
+          setDate({ value: utils.date()!, type: 'commit' });
         }
       },
     }),
-    [updateDate, disableCloseOnSelect, isOpen, utils, dateState, valueManager.emptyValue],
+    [setDate, shouldCloseOnSelect, isOpen, utils, dateState, valueManager.emptyValue],
   );
 
   const pickerProps = React.useMemo(
@@ -174,26 +185,35 @@ export const usePickerState = <TInput, TDateValue>(
       toggleMobileKeyboardView: () => setMobileKeyboardViewOpen(!isMobileKeyboardViewOpen),
       onDateChange: (
         newDate: TDateValue,
-        wrapperVariant: WrapperVariant,
+        _: WrapperVariant,
         selectionState: PickerSelectionState = 'partial',
       ) => {
-        if (selectionState === 'partial') {
-          updateDate({ type: 'draft', value: newDate, closePicker: false });
-        } else if (selectionState === 'finish') {
-          const shouldCloseOnSelect = !(disableCloseOnSelect ?? wrapperVariant === 'mobile');
-          if (shouldCloseOnSelect) {
-            updateDate({ value: newDate, type: 'accept', closePicker: true });
-          } else {
-            updateDate({ value: newDate, type: 'commit', closePicker: false });
+        switch (selectionState) {
+          case 'shallow': {
+            // Update the `draft` state but do not fire `onChange`
+            return setDate({ type: 'draft', value: newDate, internal: true });
           }
-        } else if (selectionState === 'shallow') {
-          dispatch({ type: 'draft', value: newDate });
-        }
 
-        // if selectionState === "shallow" do nothing (we already update the draft state)
+          case 'partial': {
+            // Update the `draft` state and fire `onChange`
+            return setDate({ type: 'draft', value: newDate });
+          }
+
+          case 'finish': {
+            if (shouldCloseOnSelect) {
+              return setDate({ value: newDate, type: 'accept', closePicker: true });
+            }
+
+            return setDate({ value: newDate, type: 'commit' });
+          }
+
+          default: {
+            throw new Error('MUI: Invalid selectionState passed to `onDateChange`');
+          }
+        }
       },
     }),
-    [updateDate, disableCloseOnSelect, isMobileKeyboardViewOpen, dateState.draft],
+    [shouldCloseOnSelect, setDate, isMobileKeyboardViewOpen, dateState.draft],
   );
 
   const handleInputChange = React.useCallback(
@@ -212,11 +232,12 @@ export const usePickerState = <TInput, TDateValue>(
       open: isOpen,
       rawValue: value,
       openPicker: () => {
-        dispatch({ type: 'accept', value: parsedDateValue });
+        // Update all dates in state to equal the current prop value
+        setDate({ type: 'accept', value: parsedDateValue, internal: true });
         setIsOpen(true);
       },
     }),
-    [handleInputChange, isOpen, value, setIsOpen, parsedDateValue],
+    [setDate, handleInputChange, isOpen, value, setIsOpen, parsedDateValue],
   );
 
   const pickerState = { pickerProps, inputProps, wrapperProps };

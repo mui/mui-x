@@ -52,7 +52,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
   );
 
   const validationError = useDateTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager, 'desktop');
 
   const {
     onChange,
