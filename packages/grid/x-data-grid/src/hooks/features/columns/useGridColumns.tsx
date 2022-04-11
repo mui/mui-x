@@ -323,7 +323,11 @@ export function useGridColumns(
         if (colDef.hasBeenResized) {
           const colDefDimensions: GridColumnDimensions = {};
           COLUMNS_DIMENSION_PROPERTIES.forEach((propertyName) => {
-            colDefDimensions[propertyName] = colDef[propertyName];
+            let propertyValue: number | undefined = colDef[propertyName];
+            if (propertyValue === Infinity) {
+              propertyValue = -1;
+            }
+            colDefDimensions[propertyName] = propertyValue;
           });
           dimensions[colDef.field] = colDefDimensions;
         }
