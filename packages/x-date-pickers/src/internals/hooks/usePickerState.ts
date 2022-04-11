@@ -12,6 +12,11 @@ export interface PickerStateValueManager<TInputValue, TDateValue> {
   ) => boolean;
   emptyValue: TDateValue;
   parseInput: (utils: MuiPickersAdapter<TDateValue>, value: TInputValue) => TDateValue;
+  valueReducer?: (
+    utils: MuiPickersAdapter<TDateValue>,
+    prevValue: TDateValue | null,
+    value: TDateValue,
+  ) => TDateValue;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
@@ -60,7 +65,21 @@ export const usePickerState = <TInput, TDateValue>(
   const utils = useUtils<TDateValue>();
   const { isOpen, setIsOpen } = useOpenState(props);
 
-  const parsedDateValue = valueManager.parseInput(utils, value);
+  const parsedDateValue = React.useMemo(
+    () => valueManager.parseInput(utils, value),
+    [valueManager, utils, value],
+  );
+
+  const [lastValidDateValue, setLastValidDateValue] = React.useState<TDateValue | null>(
+    parsedDateValue,
+  );
+
+  React.useEffect(() => {
+    if (parsedDateValue != null) {
+      setLastValidDateValue(parsedDateValue);
+    }
+  }, [parsedDateValue]);
+
   const [dateState, dispatch] = React.useReducer<
     React.Reducer<DateState<TDateValue>, DateStateAction<TDateValue>>
   >(
@@ -173,9 +192,19 @@ export const usePickerState = <TInput, TDateValue>(
     [updateDate, disableCloseOnSelect, isMobileKeyboardViewOpen, dateState.draft],
   );
 
+  const handleInputChange = React.useCallback(
+    (date: TDateValue, keyboardInputValue?: string) => {
+      const cleanDate = valueManager.valueReducer
+        ? valueManager.valueReducer(utils, lastValidDateValue, date)
+        : date;
+      onChange(cleanDate, keyboardInputValue);
+    },
+    [onChange, valueManager, lastValidDateValue, utils],
+  );
+
   const inputProps = React.useMemo(
     () => ({
-      onChange,
+      onChange: handleInputChange,
       open: isOpen,
       rawValue: value,
       openPicker: () => {
@@ -183,7 +212,7 @@ export const usePickerState = <TInput, TDateValue>(
         setIsOpen(true);
       },
     }),
-    [onChange, isOpen, value, setIsOpen, parsedDateValue],
+    [handleInputChange, isOpen, value, setIsOpen, parsedDateValue],
   );
 
   const pickerState = { pickerProps, inputProps, wrapperProps };

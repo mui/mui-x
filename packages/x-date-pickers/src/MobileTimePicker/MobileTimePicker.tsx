@@ -15,6 +15,13 @@ const valueManager: PickerStateValueManager<unknown, unknown> = {
   parseInput: parsePickerInputValue,
   areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
     utils.isEqual(a, b),
+  valueReducer: (utils, prevValue, newValue) => {
+    if (prevValue == null) {
+      return newValue;
+    }
+
+    return utils.mergeDateAndTime(prevValue, newValue);
+  },
 };
 
 export interface MobileTimePickerProps<TDate = unknown>

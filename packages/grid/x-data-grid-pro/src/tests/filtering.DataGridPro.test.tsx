@@ -72,7 +72,7 @@ describe('<DataGridPro /> - Filter', () => {
   it('should apply the filterModel prop correctly', () => {
     render(<TestCase filterModel={filterModel} />);
 
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
   });
 
   it('should apply the filterModel prop correctly on GridApiRef setRows', () => {
@@ -93,14 +93,14 @@ describe('<DataGridPro /> - Filter', () => {
       },
     ];
     apiRef.current.setRows(newRows);
-    expect(getColumnValues()).to.deep.equal(['Asics']);
+    expect(getColumnValues(0)).to.deep.equal(['Asics']);
   });
 
   it('should apply the filterModel prop correctly on GridApiRef update row data', () => {
     render(<TestCase filterModel={filterModel} />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
-    expect(getColumnValues()).to.deep.equal(['Patagonia', 'Fila', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Patagonia', 'Fila', 'Puma']);
   });
 
   it('should allow apiRef to setFilterModel', () => {
@@ -114,7 +114,7 @@ describe('<DataGridPro /> - Filter', () => {
         },
       ],
     });
-    expect(getColumnValues()).to.deep.equal(['Adidas']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
   it('should allow multiple filter and default to AND', () => {
@@ -135,7 +135,7 @@ describe('<DataGridPro /> - Filter', () => {
       ],
     };
     render(<TestCase filterModel={newModel} />);
-    expect(getColumnValues()).to.deep.equal(['Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Puma']);
   });
 
   it('should allow multiple filter via apiRef', () => {
@@ -157,7 +157,7 @@ describe('<DataGridPro /> - Filter', () => {
       ],
     };
     apiRef.current.setFilterModel(newModel);
-    expect(getColumnValues()).to.deep.equal(['Adidas']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
   it('should allow multiple filter and changing the linkOperator', () => {
@@ -179,7 +179,7 @@ describe('<DataGridPro /> - Filter', () => {
       linkOperator: GridLinkOperator.Or,
     };
     render(<TestCase filterModel={newModel} />);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
   });
 
   it('should trigger onFilterModelChange when the link operator changes but not change the state', () => {
@@ -210,7 +210,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(onFilterModelChange.callCount).to.equal(0);
-    expect(getColumnValues()).to.deep.equal([]);
+    expect(getColumnValues(0)).to.deep.equal([]);
 
     // The first combo is hidden and we include hidden elements to make the query faster
     // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
@@ -219,7 +219,7 @@ describe('<DataGridPro /> - Filter', () => {
     ];
     fireEvent.change(select, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
-    expect(getColumnValues()).to.deep.equal([]);
+    expect(getColumnValues(0)).to.deep.equal([]);
   });
 
   it('should call onFilterModelChange when the value is emptied', () => {
@@ -276,9 +276,9 @@ describe('<DataGridPro /> - Filter', () => {
       ],
     };
     const { setProps } = render(<TestCase filterModel={newModel} />);
-    expect(getColumnValues()).to.deep.equal(['Adidas']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     setProps({ filterModel: { items: [] } });
-    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
   it('should show the latest visibleRows', () => {
@@ -296,7 +296,7 @@ describe('<DataGridPro /> - Filter', () => {
     const input = screen.getByPlaceholderText('Filter value');
     fireEvent.change(input, { target: { value: 'ad' } });
     clock.tick(SUBMIT_FILTER_STROKE_TIME);
-    expect(getColumnValues()).to.deep.equal(['Adidas']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
     expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
     expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
