@@ -39,7 +39,7 @@ const pages = [
           { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data' },
           { pathname: '/x/react-data-grid/master-detail', title: 'Master Detail' },
           { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧' },
-          { pathname: '/x/react-data-grid/aggregation', title: 'Pivoting 🚧' },
+          { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧' },
         ],
       },
       {
