@@ -207,7 +207,7 @@ export function useGridDimensions(
             'The grid displays with a height of 0px.',
             '',
             'You can find a solution in the docs:',
-            'https://mui.com/components/data-grid/layout/',
+            'https://mui.com/x/react-data-grid/layout/',
           ].join('\n'),
         );
         warningShown.current = true;
@@ -220,7 +220,7 @@ export function useGridDimensions(
             'The grid displays with a width of 0px.',
             '',
             'You can find a solution in the docs:',
-            'https://mui.com/components/data-grid/layout/',
+            'https://mui.com/x/react-data-grid/layout/',
           ].join('\n'),
         );
         warningShown.current = true;
