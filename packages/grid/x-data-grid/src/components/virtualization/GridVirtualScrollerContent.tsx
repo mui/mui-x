@@ -22,9 +22,7 @@ const VirtualScrollerContentRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScrollerContent',
   overridesResolver: (props, styles) => styles.virtualScrollerContent,
-})({
-  position: 'relative',
-});
+})({});
 
 const GridVirtualScrollerContent = React.forwardRef<
   HTMLDivElement,

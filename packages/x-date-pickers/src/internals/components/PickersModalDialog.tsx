@@ -38,7 +38,7 @@ export interface ExportedPickerModalProps {
    */
   showTodayButton?: boolean;
   /**
-   * Props applied to the [`Dialog`](/api/dialog/) element.
+   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
    */
   DialogProps?: Partial<MuiDialogProps>;
 }

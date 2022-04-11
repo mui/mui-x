@@ -18,7 +18,7 @@ export interface BaseDatePickerProps<TDate>
     ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    * @default {}
    */
   components?: OverrideParseableDateProps<
