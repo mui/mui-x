@@ -51,7 +51,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
     dimensions: {
       idBis: {
         width: 75,
-        maxWidth: Infinity,
+        maxWidth: -1,
         minWidth: 50,
         flex: undefined,
       },

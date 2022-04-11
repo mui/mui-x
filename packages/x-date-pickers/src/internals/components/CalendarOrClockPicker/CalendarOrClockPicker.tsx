@@ -23,6 +23,7 @@ export interface ExportedCalendarOrClockPickerProps<View extends CalendarOrClock
   dateRangeIcon?: React.ReactNode;
   /**
    * Callback fired on view change.
+   * @template View
    * @param {View} view The new view.
    */
   onViewChange?: (view: View) => void;
