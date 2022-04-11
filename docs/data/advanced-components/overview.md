@@ -8,9 +8,28 @@ title: MUI X - Overview
 
 ## Licenses
 
-> While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
+> While [MUI Core](/core/) is entirely licensed under MIT, [MUI X](/x/) serves a part of its components under a commercial license.
 > You will need to purchase a license to access features that are only available with the Pro and Premium Plans.
-> See [Pricing](https://mui.com/pricing/) for details.
+> See [Pricing](/pricing/) for details.
+
+### MIT vs. commercial
+
+_How do we decide if a feature is MIT or commercial?_
+
+We have been building MIT React components since 2014,
+and have learned much about the strengths and weaknesses of the MIT license model.
+The health of this model is improving every day.
+As the community grows, it increases the probability that developers contribute improvements to the project.
+You can find our pledge to nurture the MIT licensed content on [this Stewardship page](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+
+However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward.
+We have seen too many MIT licensed components moving slowly or getting abandoned.
+The community isn't contributing improvements as fast as the problems deserved to be solved.
+
+We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
+A solution to a problem should only be commercial if it has no MIT alternatives.
+
+The detailed feature comparison is available on the [Pricing](https://mui.com/pricing/) page.
 
 ### Community Plan
 
@@ -21,7 +40,7 @@ Community Plan packages:
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 
-### Pro Plan
+### Pro Plan <span class="plan-pro"></span>
 
 The MUI X Pro Plan expands on the limitations of the Community Plan with more advanced features such as multi-filtering, multi-sorting, column resizing and column pinning.
 
@@ -41,27 +60,13 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
   <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
 </div>
 
-### 🚧 Premium Plan
+### Premium Plan <span class="plan-premium"></span>
 
-The MUI X Premium Plan contains the most advanced features such as row grouping, Excel export, aggregation (🚧), as well as everything that's included in the Pro Plan.
+The MUI X Premium Plan contains the most advanced features such as row grouping, Excel export, aggregation, as well as everything that's included in the Pro Plan.
 
 The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
 
-The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
-
-## MIT vs. commercial
-
-_How do we decide if a feature is MIT or commercial?_
-
-We have been building MIT React components since 2014,
-and have learned much about the strengths and weaknesses of the MIT license model.
-The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
-However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT licensed components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
-
-We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
-A solution to a problem should only be commercial if it has no MIT alternatives.
-
-The detailed feature comparison is available on the [Pricing](https://mui.com/pricing/) page.
+The Premium Plan is not available yet (🚧) but will soon be available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
 
 ## Evaluation (trial) licenses
 
@@ -70,12 +75,10 @@ You do not need to contact us to use these components for evaluation purposes.
 
 You will need to purchase a commercial license in order to remove the watermarks and console warnings.
 
-### License key installation
+## License key installation
 
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
-You must set the license key before rendering the first component.
-You only need to install the key once in your application.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -84,6 +87,11 @@ LicenseInfo.setLicenseKey(
   'x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e',
 );
 ```
+
+### Where to install the key?
+
+You must call `setLicenseKey` before React renders the first component.
+You only need to install the key once in your application.
 
 ### Security
 
