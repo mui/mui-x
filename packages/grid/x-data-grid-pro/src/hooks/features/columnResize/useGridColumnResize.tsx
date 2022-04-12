@@ -120,7 +120,7 @@ export const useGridColumnResize = (
 
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
-  const colCellElementsRef = React.useRef<NodeListOf<Element>>();
+  const colCellElementsRef = React.useRef<Element[]>();
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
@@ -134,6 +134,9 @@ export const useGridColumnResize = (
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
 
+    const prevWidth = colElementRef.current!.offsetWidth;
+    const widthDiff = newWidth - prevWidth;
+
     colDefRef.current!.computedWidth = newWidth;
     colDefRef.current!.width = newWidth;
     colDefRef.current!.flex = 0;
@@ -144,9 +147,19 @@ export const useGridColumnResize = (
 
     colCellElementsRef.current!.forEach((element) => {
       const div = element as HTMLDivElement;
-      div.style.width = `${newWidth}px`;
-      div.style.minWidth = `${newWidth}px`;
-      div.style.maxWidth = `${newWidth}px`;
+      let finalWidth: `${number}px`;
+
+      if (div.getAttribute('aria-colspan') === '1') {
+        finalWidth = `${newWidth}px`;
+      } else {
+        // Cell with colspan > 1 cannot be just updated width new width.
+        // Instead, we add width diff to the current width.
+        finalWidth = `${div.offsetWidth + widthDiff}px`;
+      }
+
+      div.style.width = finalWidth;
+      div.style.minWidth = finalWidth;
+      div.style.maxWidth = finalWidth;
     });
   };
 
@@ -228,7 +241,8 @@ export const useGridColumnResize = (
 
       colCellElementsRef.current = findGridCellElementsFromCol(
         colElementRef.current,
-      ) as NodeListOf<Element>;
+        apiRef.current,
+      );
 
       const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
@@ -332,9 +346,7 @@ export const useGridColumnResize = (
       apiRef.current.columnHeadersElementRef?.current!,
       colDef.field,
     ) as HTMLDivElement;
-    colCellElementsRef.current = findGridCellElementsFromCol(
-      colElementRef.current,
-    ) as NodeListOf<Element>;
+    colCellElementsRef.current = findGridCellElementsFromCol(colElementRef.current, apiRef.current);
 
     separatorSide.current = getSeparatorSide(event.target);
 

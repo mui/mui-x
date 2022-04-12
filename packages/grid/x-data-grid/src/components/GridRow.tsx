@@ -290,28 +290,38 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         ? 0
         : -1;
 
-    cells.push(
-      <rootProps.components.Cell
-        key={column.field}
-        value={cellParams.value}
-        field={column.field}
-        width={column.computedWidth}
-        rowId={rowId}
-        height={rowHeight}
-        showRightBorder={showRightBorder}
-        formattedValue={cellParams.formattedValue}
-        align={column.align || 'left'}
-        cellMode={cellParams.cellMode}
-        colIndex={indexRelativeToAllColumns}
-        isEditable={cellParams.isEditable}
-        hasFocus={hasFocus}
-        tabIndex={tabIndex}
-        className={clsx(classNames)}
-        {...rootProps.componentsProps?.cell}
-      >
-        {content}
-      </rootProps.components.Cell>,
+    const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+      rowId,
+      indexRelativeToAllColumns,
     );
+
+    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+      const { colSpan, width } = cellColSpanInfo.cellProps;
+
+      cells.push(
+        <rootProps.components.Cell
+          key={column.field}
+          value={cellParams.value}
+          field={column.field}
+          width={width}
+          rowId={rowId}
+          height={rowHeight}
+          showRightBorder={showRightBorder}
+          formattedValue={cellParams.formattedValue}
+          align={column.align || 'left'}
+          cellMode={cellParams.cellMode}
+          colIndex={indexRelativeToAllColumns}
+          isEditable={cellParams.isEditable}
+          hasFocus={hasFocus}
+          tabIndex={tabIndex}
+          className={clsx(classNames)}
+          colSpan={colSpan}
+          {...rootProps.componentsProps?.cell}
+        >
+          {content}
+        </rootProps.components.Cell>,
+      );
+    }
   }
 
   const emptyCellWidth = containerWidth - columnsTotalWidth;
