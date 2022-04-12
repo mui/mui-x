@@ -170,7 +170,7 @@ describe('<ClockPicker />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('should call `shouldDisableTime` with the hours with meridiem', () => {
+  it.only('should call `shouldDisableTime` with the hours with meridiem', () => {
     const shouldDisableTime = spy(() => false);
 
     render(
@@ -188,7 +188,8 @@ describe('<ClockPicker />', () => {
       .filter((el) => el.lastArg === 'hours')
       .map((el) => el.firstArg);
 
-    // Should be called with every hour from 0PM to 11PM (12 - 23) + with the current date hour
+    // Should be called with every hour post meridiem (from 12 to 23) since current date hour is 6PM
+    expect(Math.min(...hours)).to.equal(12);
     expect(Math.max(...hours)).to.equal(23);
   });
 
