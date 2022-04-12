@@ -56,7 +56,14 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   const isDesktop = useMediaQuery(desktopModeMediaQuery);
 
   if (isDesktop) {
-    return <DesktopDateRangePicker ref={ref} PopperProps={PopperProps} {...other} />;
+    return (
+      <DesktopDateRangePicker
+        ref={ref}
+        PopperProps={PopperProps}
+        TransitionComponent={TransitionComponent}
+        {...other}
+      />
+    );
   }
 
   return (
