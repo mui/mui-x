@@ -40,7 +40,7 @@ export function usePreviousMonthDisabled<TDate>(
 }
 
 export function useMeridiemMode<TDate>(
-  date: TDate,
+  date: TDate | null,
   ampm: boolean | undefined,
   onChange: PickerOnChangeFn<TDate>,
 ) {
@@ -49,7 +49,8 @@ export function useMeridiemMode<TDate>(
 
   const handleMeridiemChange = React.useCallback(
     (mode: 'am' | 'pm') => {
-      const timeWithMeridiem = convertToMeridiem<TDate>(date, mode, Boolean(ampm), utils);
+      const timeWithMeridiem =
+        date == null ? null : convertToMeridiem<TDate>(date, mode, Boolean(ampm), utils);
       onChange(timeWithMeridiem, 'partial');
     },
     [ampm, date, onChange, utils],
