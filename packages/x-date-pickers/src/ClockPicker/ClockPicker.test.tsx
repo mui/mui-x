@@ -170,7 +170,7 @@ describe('<ClockPicker />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it.only('should call `shouldDisableTime` with the hours with meridiem', () => {
+  it('should call `shouldDisableTime` with the hours with meridiem', () => {
     const shouldDisableTime = spy(() => false);
 
     render(
