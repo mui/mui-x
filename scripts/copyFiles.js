@@ -152,7 +152,6 @@ async function addLicense(packageData) {
 async function run() {
   try {
     const packageData = await createPackageFile();
-    const hasLicenseFileInPackage = await fse.pathExists(path.resolve(packagePath, './LICENSE'));
 
     // TODO: Remove `grid` folder to flatten the structure
     const packageDepth = packageData.name.includes('grid') ? '../../../' : '../../';
@@ -162,7 +161,7 @@ async function run() {
       // use enhanced readme from workspace root for `@mui/material`
       './README.md',
       path.join(packageDepth, 'CHANGELOG.md'),
-      hasLicenseFileInPackage ? './LICENSE' : path.join(packageDepth, 'LICENSE'),
+      path.join(packagePath, 'LICENSE'),
     ];
 
     // Be sure to replicate this behavior if unifying with the core
