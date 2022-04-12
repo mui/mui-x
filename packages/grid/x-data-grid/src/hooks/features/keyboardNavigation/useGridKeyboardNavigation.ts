@@ -12,6 +12,7 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSel
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 
 /**
  * @requires useGridSorting (method) - can be after
@@ -130,7 +131,7 @@ export const useGridKeyboardNavigation = (
 
         case ' ': {
           const field = (params as GridCellParams).field;
-          if (field === '__detail_panel_toggle__') {
+          if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
             break;
           }
           if (!event.shiftKey && rowIndexBefore < lastRowIndexInPage) {
