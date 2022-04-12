@@ -122,26 +122,14 @@ export const DataGridProColumnHeaders = React.forwardRef<
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
 
-  const {
-    isDragging,
-    renderContext,
-    updateInnerPosition,
-    getRootProps,
-    getInnerProps,
-    getColumns,
-  } = useGridColumnHeaders({
-    innerRef,
-    minColumnIndex: leftPinnedColumns.length,
-  });
+  const { isDragging, renderContext, getRootProps, getInnerProps, getColumns } =
+    useGridColumnHeaders({
+      innerRef,
+      minColumnIndex: leftPinnedColumns.length,
+    });
 
   const ownerState = { leftPinnedColumns, rightPinnedColumns, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-
-  React.useEffect(() => {
-    if (renderContext) {
-      updateInnerPosition(renderContext);
-    }
-  }, [renderContext, updateInnerPosition]);
 
   const leftRenderContext =
     renderContext && leftPinnedColumns.length
