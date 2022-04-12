@@ -96,10 +96,18 @@ const serializeRow = (
       }
       case 'boolean':
       case 'number':
-      case 'date':
-      case 'dateTime':
         row[column.field] = api.getCellParams(id, column.field).value;
         break;
+      case 'date':
+      case 'dateTime': {
+        // Excel does not do any timezone conversion, so we create a date using UTC instead of local timezone
+        // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
+        // About Date.UTC(): https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
+        const date = api.getCellParams(id, column.field).value
+        const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()))
+        row[column.field] = utcDate;
+        break;
+      }
       case 'actions':
         break;
       default:
@@ -198,8 +206,7 @@ export async function buildExcel(
       const columnLetter = valueOptionsWorksheet.getColumn(column.field).letter;
       defaultValueOptionsFormulae[
         column.field
-      ] = `${valueOptionsSheetName}!$${columnLetter}$2:$${columnLetter}$${
-        1 + formattedValueOptions.length
+      ] = `${valueOptionsSheetName}!$${columnLetter}$2:$${columnLetter}$${1 + formattedValueOptions.length
       }`;
     });
   }
