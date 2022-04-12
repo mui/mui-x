@@ -10,7 +10,7 @@ import Link from '@mui/material/Link';
 
 const CorrectRenderLink = (props: GridRenderCellParams) => (
   <Box>
-    <Link tabIndex={props.hasFocus ? 0 : -1} href="/#">
+    <Link tabIndex={props.tabIndex} href="/#">
       more info
     </Link>
   </Box>
@@ -34,16 +34,16 @@ const rows: GridRowsProp = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 
 export default function FocusManagement() {
   return (
     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-      <div>
+      <div style={{ flexGrow: 1, flexShrink: 0 }}>
         <p>Correct focus management</p>
-        <div style={{ height: 300 }}>
-          <DataGrid rows={rows} columns={correctColumns} />
+        <div style={{ height: 300, width: '100%' }}>
+          <DataGrid rows={rows} columns={correctColumns} hideFooterSelectedRowCount />
         </div>
       </div>
-      <div>
+      <div style={{ flexGrow: 1, flexShrink: 0 }}>
         <p>Without focus management</p>
-        <div style={{ height: 300 }}>
-          <DataGrid rows={rows} columns={wrongColumns} />
+        <div style={{ height: 300, width: '100%' }}>
+          <DataGrid rows={rows} columns={wrongColumns} hideFooterSelectedRowCount />
         </div>
       </div>
     </div>

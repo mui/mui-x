@@ -6,7 +6,7 @@ import Link from '@mui/material/Link';
 
 const CorrectRenderLink = (props) => (
   <Box>
-    <Link tabIndex={props.hasFocus ? 0 : -1} href="/#">
+    <Link tabIndex={props.tabIndex} href="/#">
       more info
     </Link>
   </Box>
@@ -14,9 +14,9 @@ const CorrectRenderLink = (props) => (
 
 CorrectRenderLink.propTypes = {
   /**
-   * If true, the cell is the active element.
+   * the tabIndex value.
    */
-  hasFocus: PropTypes.bool.isRequired,
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
 };
 
 const WrongRenderLink = () => (
@@ -36,16 +36,20 @@ const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
 export default function FocusManagement() {
   return (
     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-      <div>
+      <div style={{ flexGrow: 1, flexShrink: 0 }}>
         <p>Correct focus management</p>
-        <div style={{ height: 300 }}>
-          <DataGrid rows={rows} columns={correctColumns} />
+        <div style={{ height: 300, width: '100%' }}>
+          <DataGrid
+            rows={rows}
+            columns={correctColumns}
+            hideFooterSelectedRowCount
+          />
         </div>
       </div>
-      <div>
+      <div style={{ flexGrow: 1, flexShrink: 0 }}>
         <p>Without focus management</p>
-        <div style={{ height: 300 }}>
-          <DataGrid rows={rows} columns={wrongColumns} />
+        <div style={{ height: 300, width: '100%' }}>
+          <DataGrid rows={rows} columns={wrongColumns} hideFooterSelectedRowCount />
         </div>
       </div>
     </div>

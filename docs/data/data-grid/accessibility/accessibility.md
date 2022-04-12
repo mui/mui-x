@@ -48,19 +48,23 @@ The grid responds to keyboard interactions from the user and emits events when k
 ### Tab sequence
 
 According to [WCAG](https://www.w3.org/TR/wai-aria-practices-1.1/#grid), only one of the focusable elements contained by the grid should be included in the page tab sequence.
+For an element to be included in the tab sequence it needs to have a `tabindex` value of zero or greater.
 
-In the example bellow the second grid does not remove links from the tab sequence, which implies having the pass throw all the rows before accessing the elements after the grid.
-Which can be a pain for large rows.
+When a cell of the data grid is focused, the first element with the attribute `tab-index=0` will receive the focus.
+If there is no element with `tab-index=0` the focus is set on the cell itself.
 
-{{"demo": "FocusManagement.js", "bg": "inline"}}
+In the example below, the second grid does not remove links from the tab sequence, which implies having to pass through all the links before accessing the pagination controls.
+This behavior makes it complicated to navigate between elements when using large datasets.
 
-If you are customizing cell rendering with [`renderCell`](/components/data-grid/columns/#render-cell) method, you become responsible of removing focusable elements from the page tab sequence.
-To do so, use the `hasFocus` property from the `renderCell` input, to know if the rendered cell has the focus, and so if the elements should be removed from the tab sequence.
+{{"demo": "FocusManagement.js", "bg": "inline", "defaultCodeOpen": false}}
+
+If you are customizing cell rendering with [`renderCell`](/x/react-data-grid/columns/#render-cell) method, you become responsible for removing focusable elements from the page tab sequence.
+To do so, use the `tabIndex` prop passed to the `renderCell` params, to know if the rendered cell has the focus, and so if the elements should be removed from the tab sequence.
 
 ```jsx
 renderCell: (params) => (
   <Box>
-    <Link tabIndex={params.hasFocus ? 0 : -1} href="/#">
+    <Link tabIndex={params.tabIndex ? 0 : -1} href="/#">
       more info
     </Link>
   </Box>
