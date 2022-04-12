@@ -161,7 +161,7 @@ export function DayPicker<TDate>(props: PickersCalendarProps<TDate>) {
     <React.Fragment>
       <PickersCalendarDayHeader>
         {utils.getWeekdays().map((day, i) => (
-          <PickersCalendarWeekDayLabel aria-hidden key={day + i.toString()} variant="caption">
+          <PickersCalendarWeekDayLabel key={day + i.toString()} variant="caption">
             {day.charAt(0).toUpperCase()}
           </PickersCalendarWeekDayLabel>
         ))}
