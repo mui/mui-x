@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { useUtils } from './useUtils';
-import { ParseableDate } from '../models/parseableDate';
 import { PickerOnChangeFn } from './useViews';
 import { getMeridiem, convertToMeridiem } from '../utils/time-utils';
-
-export type OverrideParseableDateProps<TDate, TProps, TKey extends keyof TProps> = Omit<
-  TProps,
-  TKey
-> &
-  Partial<Record<TKey, ParseableDate<TDate>>>;
 
 interface MonthValidationOptions<TDate> {
   disablePast?: boolean;
