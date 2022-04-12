@@ -79,6 +79,7 @@ export const useGridDetailPanel = (
         event.key === 'Enter' &&
         props.getDetailPanelContent != null
       ) {
+        // TODO v6: only support Space on the detail toggle
         apiRef.current.toggleDetailPanel(params.id);
         return;
       }
