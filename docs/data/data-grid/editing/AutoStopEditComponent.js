@@ -40,7 +40,7 @@ SelectEditInputCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.any.isRequired,
+  value: PropTypes.any,
 };
 
 function renderSelectEditInputCell(params) {

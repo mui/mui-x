@@ -210,10 +210,6 @@ const DataGridProVirtualScroller = React.forwardRef<
   useGridApiEventHandler(apiRef, GridEvents.columnWidthChange, refreshRenderZonePosition);
   useGridApiEventHandler(apiRef, GridEvents.columnOrderChange, refreshRenderZonePosition);
 
-  React.useEffect(() => {
-    refreshRenderZonePosition();
-  }, [refreshRenderZonePosition]);
-
   const leftRenderContext =
     renderContext && leftPinnedColumns.length > 0
       ? {

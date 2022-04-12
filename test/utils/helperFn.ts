@@ -58,20 +58,20 @@ export function sleep(duration: number) {
   });
 }
 
-export function getColumnValues(colIndex: number = 0) {
+export function getColumnValues(colIndex: number) {
   return Array.from(document.querySelectorAll(`[role="cell"][data-colindex="${colIndex}"]`)).map(
     (node) => node!.textContent,
   );
 }
 
 export function getColumnHeaderCell(colIndex: number): HTMLElement {
-  const columnHeader = document.querySelector(
+  const columnHeader = document.querySelector<HTMLElement>(
     `[role="columnheader"][aria-colindex="${colIndex + 1}"]`,
   );
   if (columnHeader == null) {
     throw new Error(`columnheader ${colIndex} not found`);
   }
-  return columnHeader as HTMLElement;
+  return columnHeader;
 }
 
 export function getColumnHeadersTextContent() {
@@ -81,13 +81,13 @@ export function getColumnHeadersTextContent() {
 }
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
-  const cell = document.querySelector(
+  const cell = document.querySelector<HTMLElement>(
     `[role="row"][data-rowindex="${rowIndex}"] [role="cell"][data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);
   }
-  return cell as HTMLElement;
+  return cell;
 }
 
 export function getRows() {
@@ -95,9 +95,9 @@ export function getRows() {
 }
 
 export function getRow(rowIndex: number): HTMLElement {
-  const row = document.querySelector(`[role="row"][data-rowindex="${rowIndex}"]`);
+  const row = document.querySelector<HTMLElement>(`[role="row"][data-rowindex="${rowIndex}"]`);
   if (row == null) {
     throw new Error(`Row ${rowIndex} not found`);
   }
-  return row as HTMLElement;
+  return row;
 }

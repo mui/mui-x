@@ -14,7 +14,6 @@ import {
   GridColumnHeaderSeparatorProps,
 } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
-import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -186,7 +185,14 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const columnTitleIconButtons = (
     <React.Fragment>
-      {!rootProps.disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
+      {!rootProps.disableColumnFilter && (
+        <rootProps.components.ColumnHeaderFilterIconButton
+          field={column.field}
+          counter={filterItemsCounter}
+          {...rootProps.componentsProps?.columnHeaderFilterIconButton}
+        />
+      )}
+
       {column.sortable && !column.hideSortIcons && (
         <GridColumnHeaderSortIcon
           direction={sortDirection}
@@ -201,13 +207,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     const columnMenuState = apiRef.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-      if (focusableElement) {
-        focusableElement!.focus();
-      } else {
-        headerCellRef.current!.focus();
-      }
+      const elementToFocus = focusableElement || headerCellRef.current;
+      elementToFocus?.focus();
+      apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
     }
-  });
+  }, [apiRef, hasFocus]);
 
   const headerClassName =
     typeof column.headerClassName === 'function'
@@ -245,7 +249,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
               />
             )}
           </div>
-
           {columnTitleIconButtons}
         </div>
         {columnMenuIconButton}
