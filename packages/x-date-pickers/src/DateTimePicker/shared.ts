@@ -102,10 +102,6 @@ export function useDateTimePickerDefaultizedProps<
     orientation: 'portrait',
     openTo: 'day',
     views: ['year', 'day', 'hours', 'minutes'],
-    minDate: themeProps.minDateTime ?? themeProps.minDate ?? defaultDates.minDate,
-    maxDate: themeProps.maxDateTime ?? themeProps.maxDate ?? defaultDates.maxDate,
-    minTime: themeProps.minDateTime ?? themeProps.minTime,
-    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
     ampmInClock: true,
     showToolbar: false,
     allowSameDateSelection: true,
@@ -117,5 +113,9 @@ export function useDateTimePickerDefaultizedProps<
       themeProps.minDateTime || themeProps.maxDateTime,
     ),
     ...themeProps,
+    minDate: themeProps.minDateTime ?? themeProps.minDate ?? defaultDates.minDate,
+    maxDate: themeProps.maxDateTime ?? themeProps.maxDate ?? defaultDates.maxDate,
+    minTime: themeProps.minDateTime ?? themeProps.minTime,
+    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
   };
 }
