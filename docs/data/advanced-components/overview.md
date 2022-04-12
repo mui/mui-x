@@ -8,7 +8,7 @@ title: MUI X - Overview
 
 ## Licenses
 
-> While [MUI Core](/core/) is entirely licensed under MIT, [MUI X](/x/) serves a part of its components under a commercial license.
+> While [MUI Core](/core/) is entirely licensed under MIT, [MUI X](/x/) serves a part of its components as MIT and the rest under a commercial license.
 > You will need to purchase a license to access features that are only available with the Pro and Premium Plans.
 > See [Pricing](/pricing/) for details.
 
