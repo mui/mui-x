@@ -79,6 +79,7 @@ export const useDataGridProComponent = (
   props: DataGridProProcessedProps,
 ) => {
   const apiRef = useGridInitialization(inputApiRef, props);
+  const orderedFieldsBeforePinningColumns = React.useRef<string[] | null>(null);
 
   /**
    * Register all pre-processors called during state initialization here.
@@ -89,7 +90,7 @@ export const useDataGridProComponent = (
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
   // Because it changes the order of the columns.
-  useGridColumnPinningPreProcessors(apiRef, props);
+  useGridColumnPinningPreProcessors(apiRef, props, { orderedFieldsBeforePinningColumns });
   useGridRowsPreProcessors(apiRef);
 
   /**
@@ -124,7 +125,7 @@ export const useDataGridProComponent = (
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
   useGridDetailPanel(apiRef, props);
-  useGridColumnPinning(apiRef, props);
+  useGridColumnPinning(apiRef, props, { orderedFieldsBeforePinningColumns });
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);

@@ -9,8 +9,10 @@ import { filterColumns } from '../../../components/DataGridProVirtualScroller';
 export const useGridColumnPinningPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: DataGridProProcessedProps,
+  internalState: { orderedFieldsBeforePinningColumns: React.MutableRefObject<string[] | null> },
 ) => {
   const { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState } = props;
+  const { orderedFieldsBeforePinningColumns } = internalState;
 
   let pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
   if (pinnedColumns == null) {
@@ -24,6 +26,8 @@ export const useGridColumnPinningPreProcessors = (
     pinnedColumns = gridPinnedColumnsSelector(initializedState);
   }
 
+  const prevAllPinnedColumns = React.useRef<string[]>();
+
   const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       if (columnsState.all.length === 0 || disableColumnPinning) {
@@ -35,11 +39,70 @@ export const useGridColumnPinningPreProcessors = (
         columnsState.all,
       );
 
-      if (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0) {
-        return columnsState;
+      let newOrderedFields: string[];
+      const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];
+
+      if (orderedFieldsBeforePinningColumns.current) {
+        newOrderedFields = [
+          ...leftPinnedColumns,
+          ...new Array(columnsState.all.length - allPinnedColumns.length).fill(null),
+          ...rightPinnedColumns,
+        ];
+        const newOrderedFieldsBeforePinningColumns = new Array(columnsState.all.length).fill(null);
+
+        // Contains the fields not added to the orderedFields array yet
+        const remainingFields = [...columnsState.all];
+
+        // First, we check if a column was unpinned since the last processing
+        // If there's one, we need to move it back to the same position it was before pinning
+        prevAllPinnedColumns.current!.forEach((field) => {
+          if (!allPinnedColumns.includes(field)) {
+            // Get the position before pinning
+            const index = orderedFieldsBeforePinningColumns.current!.indexOf(field);
+            newOrderedFields[index] = field;
+            newOrderedFieldsBeforePinningColumns[index] = field;
+            // This field was already consumed so we prevent from being added again
+            remainingFields.splice(remainingFields.indexOf(field), 1);
+          }
+        });
+
+        // For columns still pinned, we keep stored their original positions
+        allPinnedColumns.forEach((field) => {
+          let index = orderedFieldsBeforePinningColumns.current!.indexOf(field);
+          if (index === -1) {
+            // The pinned field didn't exist in the last processing, it's possibly being added now
+            index = columnsState.all.indexOf(field);
+          }
+          newOrderedFieldsBeforePinningColumns[index] = field;
+          // This field was already consumed so we prevent from being added again
+          remainingFields.splice(remainingFields.indexOf(field), 1);
+        });
+
+        // The fields remaining are those that're neither pinnned nor were unpinned
+        // For these, we spread them across both arrays making sure to not override existing values
+        let i = 0;
+        let j = leftPinnedColumns.length; // No need to start at 0 if there're left pinned columns
+        remainingFields.forEach((field) => {
+          while (newOrderedFieldsBeforePinningColumns[i] !== null) {
+            i += 1;
+          }
+          newOrderedFieldsBeforePinningColumns[i] = field;
+
+          while (newOrderedFields[j] !== null) {
+            j += 1;
+          }
+          newOrderedFields[j] = field;
+        });
+
+        orderedFieldsBeforePinningColumns.current = newOrderedFieldsBeforePinningColumns;
+      } else {
+        newOrderedFields = [...columnsState.all];
+        orderedFieldsBeforePinningColumns.current = [...columnsState.all];
       }
 
-      const centerColumns = columnsState.all.filter((field) => {
+      prevAllPinnedColumns.current = allPinnedColumns;
+
+      const centerColumns = newOrderedFields.filter((field) => {
         return !leftPinnedColumns.includes(field) && !rightPinnedColumns.includes(field);
       });
 
@@ -48,7 +111,7 @@ export const useGridColumnPinningPreProcessors = (
         all: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       };
     },
-    [disableColumnPinning, pinnedColumns],
+    [disableColumnPinning, orderedFieldsBeforePinningColumns, pinnedColumns],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);

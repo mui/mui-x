@@ -11,6 +11,7 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
   GridEventListener,
+  gridColumnFieldsSelector,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
@@ -62,6 +63,7 @@ export const useGridColumnPinning = (
     DataGridProProcessedProps,
     'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
   >,
+  internalState: { orderedFieldsBeforePinningColumns: React.MutableRefObject<string[] | null> },
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
 
@@ -271,35 +273,28 @@ export const useGridColumnPinning = (
         return;
       }
 
-      apiRef.current.setState((state) => {
-        const otherSide =
-          side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
-        const newPinnedColumns = {
-          ...state.pinnedColumns,
-          [side]: [...(state.pinnedColumns[side] || []), field],
-          [otherSide]: (state.pinnedColumns[otherSide] || []).filter((column) => column !== field),
-        };
-        return { ...state, pinnedColumns: newPinnedColumns };
-      });
-      apiRef.current.forceUpdate();
+      const otherSide =
+        side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
+
+      const newPinnedColumns = {
+        [side]: [...(pinnedColumns[side] || []), field],
+        [otherSide]: (pinnedColumns[otherSide] || []).filter((column) => column !== field),
+      };
+
+      apiRef.current.setPinnedColumns(newPinnedColumns);
     },
-    [apiRef, checkIfEnabled],
+    [apiRef, checkIfEnabled, pinnedColumns],
   );
 
   const unpinColumn = React.useCallback<GridColumnPinningApi['unpinColumn']>(
     (field: string) => {
       checkIfEnabled('unpinColumn');
-      apiRef.current.setState((state) => {
-        const newPinnedColumns = {
-          ...state.pinnedColumns,
-          left: (state.pinnedColumns.left || []).filter((column) => column !== field),
-          right: (state.pinnedColumns.right || []).filter((column) => column !== field),
-        };
-        return { ...state, pinnedColumns: newPinnedColumns };
+      apiRef.current.setPinnedColumns({
+        left: (pinnedColumns.left || []).filter((column) => column !== field),
+        right: (pinnedColumns.right || []).filter((column) => column !== field),
       });
-      apiRef.current.forceUpdate();
     },
-    [apiRef, checkIfEnabled],
+    [apiRef, checkIfEnabled, pinnedColumns.left, pinnedColumns.right],
   );
 
   const getPinnedColumns = React.useCallback<GridColumnPinningApi['getPinnedColumns']>(() => {
@@ -340,6 +335,71 @@ export const useGridColumnPinning = (
     isColumnPinned,
   };
   useGridApiMethod(apiRef, columnPinningApi, 'columnPinningApi');
+
+  const handleColumnOrderChange = React.useCallback<
+    GridEventListener<GridEvents.columnOrderChange>
+  >(
+    (params) => {
+      if (!internalState.orderedFieldsBeforePinningColumns.current) {
+        return;
+      }
+
+      const { field, targetIndex, oldIndex } = params;
+      const delta = targetIndex > oldIndex ? 1 : -1;
+
+      const latestColumnFields = gridColumnFieldsSelector(
+        apiRef.current.state,
+        apiRef.current.instanceId,
+      );
+
+      /**
+       * Represents the field at `targetIndex` before swapping
+       *
+       * | A | B | C | D | -> | B | C | D | A | (e.g. A swapped with D, so delta=1)
+       *              ^^^              ^^^
+       *
+       * | A | B | C | D | -> | D | A | B | C | (e.g. D swapped with A, so delta=-1)
+       *  ^^^                      ^^^
+       */
+      const siblingField = latestColumnFields[targetIndex - delta];
+
+      const newOrderedFieldsBeforePinningColumns = [
+        ...internalState.orderedFieldsBeforePinningColumns.current,
+      ];
+
+      // The index to start swapping fields
+      let i = newOrderedFieldsBeforePinningColumns.findIndex((column) => column === field);
+      // The index of the field to swap with
+      let j = i + delta;
+
+      // When to stop swapping fields.
+      // We stop one field before because the swap is done with i + 1 (if delta=1)
+      const stop = newOrderedFieldsBeforePinningColumns.findIndex(
+        (column) => column === siblingField,
+      );
+
+      while (delta > 0 ? i < stop : i > stop) {
+        // If the field to swap with is a pinned column, jump to the next
+        while (apiRef.current.isColumnPinned(newOrderedFieldsBeforePinningColumns[j])) {
+          j += delta;
+        }
+
+        const temp = newOrderedFieldsBeforePinningColumns[i];
+        newOrderedFieldsBeforePinningColumns[i] = newOrderedFieldsBeforePinningColumns[j];
+        newOrderedFieldsBeforePinningColumns[j] = temp;
+
+        i = j;
+        j = i + delta;
+      }
+
+      internalState.orderedFieldsBeforePinningColumns.current =
+        newOrderedFieldsBeforePinningColumns;
+    },
+
+    [apiRef, internalState.orderedFieldsBeforePinningColumns],
+  );
+
+  useGridApiEventHandler(apiRef, GridEvents.columnOrderChange, handleColumnOrderChange);
 
   React.useEffect(() => {
     if (props.pinnedColumns) {
