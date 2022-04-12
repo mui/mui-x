@@ -74,11 +74,11 @@ export const useGridDetailPanel = (
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
     (params, event) => {
-      if (
-        (event.ctrlKey || event.metaKey) &&
-        event.key === 'Enter' &&
-        props.getDetailPanelContent != null
-      ) {
+      if (props.getDetailPanelContent == null) {
+        return;
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
         // TODO v6: only support Space on the detail toggle
         apiRef.current.toggleDetailPanel(params.id);
         return;
