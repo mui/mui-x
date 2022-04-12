@@ -80,12 +80,11 @@ export const useGridDetailPanel = (
         props.getDetailPanelContent != null
       ) {
         apiRef.current.toggleDetailPanel(params.id);
+        return;
       }
 
       if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD && event.key === ' ') {
         apiRef.current.toggleDetailPanel(params.id);
-        event.stopPropagation();
-        event.preventDefault();
       }
     },
     [apiRef, props.getDetailPanelContent],

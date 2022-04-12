@@ -129,6 +129,10 @@ export const useGridKeyboardNavigation = (
         }
 
         case ' ': {
+          const field = (params as GridCellParams).field;
+          if (field === '__detail_panel_toggle__') {
+            break;
+          }
           if (!event.shiftKey && rowIndexBefore < lastRowIndexInPage) {
             goToCell(
               colIndexBefore,
