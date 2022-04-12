@@ -134,6 +134,10 @@ export const useGridKeyboardNavigation = (
           if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
             break;
           }
+          const colDef = (params as GridCellParams).colDef;
+          if (colDef && colDef.type === 'treeDataGroup') {
+            break;
+          }
           if (!event.shiftKey && rowIndexBefore < lastRowIndexInPage) {
             goToCell(
               colIndexBefore,
