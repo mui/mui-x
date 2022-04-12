@@ -30,14 +30,9 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-type BaseCalendarPropsToReuse<TDate> = Omit<
-  ExportedCalendarPickerProps<TDate>,
-  'onYearChange' | 'renderDay'
->;
-
 export interface ExportedDateRangePickerViewProps<TDate>
-  extends BaseCalendarPropsToReuse<TDate>,
-    ExportedDesktopDateRangeCalendarProps<TDate>,
+  extends ExportedDesktopDateRangeCalendarProps<TDate>,
+    Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'>,
     Omit<BasePickerProps<RangeInput<TDate>, DateRange<TDate>>, 'value' | 'onChange'> {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.

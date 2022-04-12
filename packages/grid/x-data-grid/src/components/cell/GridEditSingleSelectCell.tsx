@@ -12,17 +12,21 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
 import { GridEvents } from '../../models/events/gridEvents';
 import { GridColDef, ValueOptions } from '../../models/colDef/gridColDef';
+import { getValueFromValueOptions } from '../panel/filterPanel/filterPanelUtils';
 
-const renderSingleSelectOptions = (option: ValueOptions) =>
-  typeof option === 'object' ? (
-    <MenuItem key={option.value} value={option.value}>
-      {option.label}
-    </MenuItem>
-  ) : (
-    <MenuItem key={option} value={option}>
-      {option}
-    </MenuItem>
+const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.ElementType) => {
+  const isOptionTypeObject = typeof option === 'object';
+
+  const key = isOptionTypeObject ? option.value : option;
+  const value = isOptionTypeObject ? option.value : option;
+  const content = isOptionTypeObject ? option.label : option;
+
+  return (
+    <OptionComponent key={key} value={value}>
+      {content}
+    </OptionComponent>
   );
+};
 
 function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectProps, 'id'>) {
   const {
@@ -51,6 +55,9 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(rootProps.editMode === 'cell');
 
+  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const isSelectNative = baseSelectProps.native ?? false;
+
   let valueOptionsFormatted: Array<ValueOptions>;
   if (typeof colDef.valueOptions === 'function') {
     valueOptionsFormatted = colDef.valueOptions!({ id, row, field });
@@ -75,7 +82,9 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
   const handleChange = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     setOpen(false);
     const target = event.target as HTMLInputElement;
-    const isValid = await api.setEditCellValue({ id, field, value: target.value }, event);
+    // NativeSelect casts the value to a string.
+    const formattedTargetValue = getValueFromValueOptions(target.value, valueOptionsFormatted);
+    const isValid = await api.setEditCellValue({ id, field, value: formattedTargetValue }, event);
 
     if (rootProps.experimentalFeatures?.newEditingApi) {
       return;
@@ -134,11 +143,14 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
         onClose: handleClose,
       }}
       error={error}
+      native={isSelectNative}
       fullWidth
       {...other}
       {...rootProps.componentsProps?.baseSelect}
     >
-      {valueOptionsFormatted.map(renderSingleSelectOptions)}
+      {valueOptionsFormatted.map((valueOptions) =>
+        renderSingleSelectOptions(valueOptions, isSelectNative ? 'option' : MenuItem),
+      )}
     </rootProps.components.BaseSelect>
   );
 }

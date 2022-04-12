@@ -249,7 +249,7 @@
     "name": "rowsScroll",
     "description": "Fired during the scroll of the grid viewport.",
     "params": "GridScrollParams",
-    "event": "MuiEvent<{}>"
+    "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
   },
   {
     "name": "rowsScrollEnd",
