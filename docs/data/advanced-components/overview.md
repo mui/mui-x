@@ -70,7 +70,7 @@ The Premium Plan is not available yet (🚧) but will soon be available under a 
 
 ## Evaluation (trial) licenses
 
-In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use our Pro and Premium components without a commercial license as long as they are not used for the development of a feature intended for production.
+In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use our Pro and Premium components without a commercial license as long as they are not used for the **development** of a feature intended for production.
 You do not need to contact us to use these components for evaluation purposes.
 
 You will need to purchase a commercial license in order to remove the watermarks and console warnings.
@@ -92,6 +92,11 @@ LicenseInfo.setLicenseKey(
 
 You must call `setLicenseKey` before React renders the first component.
 You only need to install the key once in your application.
+
+### Does each developer need its own key?
+
+No. The license key is meant to help you get compliant with the [EULA](https://mui.com/store/legal/mui-x-eula/) of the commercial licenses.
+While each developer needs to be licensed, the license key is set once, where the components are used.
 
 ### Security
 
