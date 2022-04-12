@@ -213,8 +213,8 @@ describe('<DataGridPro /> - Detail panel', () => {
 
     //   2x during state initialization
     // + 2x during state initialization (StrictMode)
-    // + 2x when visibleRowsSet is fired
-    // + 2x when visibleRowsSet is fired (StrictMode)
+    // + 2x when sortedRowsSet is fired
+    // + 2x when sortedRowsSet is fired (StrictMode)
     // + 2x when the effect runs for the first time = 10x
     expect(getDetailPanelContent.callCount).to.equal(10);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
@@ -248,8 +248,8 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     //   2x during state initialization
     // + 2x during state initialization (StrictMode)
-    // + 2x when visibleRowsSet is fired
-    // + 2x when visibleRowsSet is fired (StrictMode)
+    // + 2x when sortedRowsSet is fired
+    // + 2x when sortedRowsSet is fired (StrictMode)
     // + 2x when the effect runs for the first time = 10x
     expect(getDetailPanelHeight.callCount).to.equal(10);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
@@ -280,8 +280,8 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     //   1x during state initialization
     // + 1x during state initialization (StrictMode)
-    // + 1x when visibleRowsSet is fired
-    // + 1x when visibleRowsSet is fired (StrictMode)
+    // + 1x when sortedRowsSet is fired
+    // + 1x when sortedRowsSet is fired (StrictMode)
     // + 1x when the effect runs for the first time = 5x
     expect(getDetailPanelHeight.callCount).to.equal(5);
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
@@ -303,7 +303,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(handleSelectionModelChange.callCount).to.equal(0);
   });
 
-  describe('props: onDetailPanelsExpandedRowIds', () => {
+  describe('prop: onDetailPanelsExpandedRowIds', () => {
     it('shoull call when a row is expanded or closed', () => {
       const handleDetailPanelsExpandedRowIdsChange = spy();
       render(
@@ -338,7 +338,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     });
   });
 
-  describe('props: detailPanelExpandedRowIds', () => {
+  describe('prop: detailPanelExpandedRowIds', () => {
     it('should open the detail panel of the specified rows', () => {
       render(
         <TestCase

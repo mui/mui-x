@@ -14,6 +14,8 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
+import { GridApiCommon } from '../../../models/api/gridApiCommon';
+import { GridRowEntry } from '../../../models/gridRows';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
@@ -53,7 +55,7 @@ export function computeFlexColumnsWidth({
   totalFlexUnits: number;
   flexColumns: {
     field: GridColDef['field'];
-    flex?: number;
+    flex?: number | null;
     minWidth?: number;
     maxWidth?: number;
   }[];
@@ -266,11 +268,16 @@ export const applyInitialState = (
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
     const field = columnsWithUpdatedDimensions[i];
 
-    newColumnLookup[field] = {
+    const newColDef: Omit<GridStateColDef, 'computedWidth'> = {
       ...newColumnLookup[field],
-      ...dimensions[field],
       hasBeenResized: true,
     };
+
+    Object.entries(dimensions[field]).forEach(([key, value]) => {
+      newColDef[key as GridColumnDimensionProperties] = value === -1 ? Infinity : value;
+    });
+
+    newColumnLookup[field] = newColDef;
   }
 
   const newColumnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'> = {
@@ -376,16 +383,22 @@ export const createColumnsState = ({
       columnsStateWithoutColumnVisibilityModel.all.push(field);
     }
 
-    let hasValidDimension = false;
-    if (!existingState.hasBeenResized) {
-      hasValidDimension = COLUMNS_DIMENSION_PROPERTIES.some((key) => newColumn[key] !== undefined);
-    }
+    let hasBeenResized = existingState.hasBeenResized;
+    COLUMNS_DIMENSION_PROPERTIES.forEach((key) => {
+      if (newColumn[key] !== undefined) {
+        hasBeenResized = true;
+
+        if (newColumn[key] === -1) {
+          newColumn[key] = Infinity;
+        }
+      }
+    });
 
     columnsStateWithoutColumnVisibilityModel.lookup[field] = {
       ...existingState,
       hide: newColumn.hide == null ? false : newColumn.hide,
       ...newColumn,
-      hasBeenResized: existingState.hasBeenResized || hasValidDimension,
+      hasBeenResized,
     };
   });
 
@@ -493,3 +506,64 @@ export const mergeColumnsState =
     ...state,
     columns: columnsState,
   });
+
+export function getFirstNonSpannedColumnToRender({
+  firstColumnToRender,
+  apiRef,
+  firstRowToRender,
+  lastRowToRender,
+  visibleRows,
+}: {
+  firstColumnToRender: number;
+  apiRef: React.MutableRefObject<GridApiCommon>;
+  firstRowToRender: number;
+  lastRowToRender: number;
+  visibleRows: GridRowEntry[];
+}) {
+  let firstNonSpannedColumnToRender = firstColumnToRender;
+  for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
+    const row = visibleRows[i];
+    if (row) {
+      const rowId = visibleRows[i].id;
+      const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+        rowId,
+        firstColumnToRender,
+      );
+      if (cellColSpanInfo && cellColSpanInfo.spannedByColSpan) {
+        firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
+      }
+    }
+  }
+
+  return firstNonSpannedColumnToRender;
+}
+
+export function getFirstColumnIndexToRender({
+  firstColumnIndex,
+  minColumnIndex,
+  columnBuffer,
+  firstRowToRender,
+  lastRowToRender,
+  apiRef,
+  visibleRows,
+}: {
+  firstColumnIndex: number;
+  minColumnIndex: number;
+  columnBuffer: number;
+  apiRef: React.MutableRefObject<GridApiCommon>;
+  firstRowToRender: number;
+  lastRowToRender: number;
+  visibleRows: GridRowEntry[];
+}) {
+  const initialFirstColumnToRender = Math.max(firstColumnIndex - columnBuffer, minColumnIndex);
+
+  const firstColumnToRender = getFirstNonSpannedColumnToRender({
+    firstColumnToRender: initialFirstColumnToRender,
+    apiRef,
+    firstRowToRender,
+    lastRowToRender,
+    visibleRows,
+  });
+
+  return firstColumnToRender;
+}

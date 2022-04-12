@@ -330,6 +330,7 @@
   { "name": "GridRowParams", "kind": "Interface" },
   { "name": "GridRowProps", "kind": "Interface" },
   { "name": "GridRowSelectionCheckboxParams", "kind": "Interface" },
+  { "name": "gridRowsLoadingSelector", "kind": "Variable" },
   { "name": "GridRowsLookup", "kind": "TypeAlias" },
   { "name": "gridRowsLookupSelector", "kind": "Variable" },
   { "name": "GridRowsMeta", "kind": "Interface" },

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { ParseableDate } from '../internals/models/parseableDate';
-import { OverrideParseableDateProps } from '../internals/hooks/date-helpers-hooks';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
@@ -18,14 +17,10 @@ export interface BaseDatePickerProps<TDate>
     ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: OverrideParseableDateProps<
-    TDate,
-    ExportedCalendarPickerProps<TDate>,
-    'minDate' | 'maxDate'
-  >['components'] &
+  components?: ExportedCalendarPickerProps<TDate>['components'] &
     ExportedDateInputProps<ParseableDate<TDate>, TDate | null>['components'];
   /**
    * Callback fired on view change.

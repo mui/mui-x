@@ -34,7 +34,7 @@ const pages = [
       { pathname: '/x/react-data-grid/group-pivot', title: 'Group & Pivot' },
       {
         pathname: '/x/api/data-grid',
-        title: 'API Reference',
+        title: ' • API Reference',
         children: [
           { pathname: '/x/api/data-grid', title: 'Index' },
           { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
@@ -64,7 +64,7 @@ const pages = [
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
     title: 'Date and Time Pickers',
-    icon: 'TableViewIcon',
+    icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/migration-lab', title: 'Migration from the lab' },
@@ -75,8 +75,8 @@ const pages = [
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
       {
-        pathname: '/x/api/data-grid',
-        title: 'API Reference',
+        pathname: '/x/api/date-pickers',
+        title: ' • API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
           { pathname: '/x/api/date-pickers/calendar-picker', title: 'CalendarPicker' },
