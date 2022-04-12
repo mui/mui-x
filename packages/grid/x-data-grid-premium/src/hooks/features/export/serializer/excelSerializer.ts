@@ -6,9 +6,11 @@ import {
   GridValueFormatterParams,
   GridApi,
   ValueOptions,
+  GRID_DATE_COL_DEF,
+  GRID_DATETIME_COL_DEF,
 } from '@mui/x-data-grid-pro';
 import { buildWarning } from '@mui/x-data-grid/internals';
-import { GridExceljsProcessInput } from '../gridExcelExportInterface';
+import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
 
 const getExcelJs = () => import('exceljs');
 
@@ -103,8 +105,17 @@ const serializeRow = (
         // Excel does not do any timezone conversion, so we create a date using UTC instead of local timezone
         // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
         // About Date.UTC(): https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
-        const date = api.getCellParams(id, column.field).value
-        const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()))
+        const date = api.getCellParams(id, column.field).value;
+        const utcDate = new Date(
+          Date.UTC(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            date.getHours(),
+            date.getMinutes(),
+            date.getSeconds(),
+          ),
+        );
         row[column.field] = utcDate;
         break;
       }
@@ -127,8 +138,13 @@ const serializeRow = (
   };
 };
 
-const serializeColumn = (column: GridStateColDef) => {
-  const { field } = column;
+const defaultColumnsStyles = {
+  [GRID_DATE_COL_DEF.type as string]: { numFmt: 'dd.mm.yyyy' },
+  [GRID_DATETIME_COL_DEF.type as string]: { numFmt: 'dd.mm.yyyy hh:mm' },
+};
+
+const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesInterface) => {
+  const { field, type } = column;
 
   return {
     key: field,
@@ -136,6 +152,7 @@ const serializeColumn = (column: GridStateColDef) => {
     // From the example of column width behavior (https://docs.microsoft.com/en-US/office/troubleshoot/excel/determine-column-widths#example-of-column-width-behavior)
     // a value of 10 corresponds to 75px. This is an approximation, because column width depends on the the font-size
     width: Math.min(255, column.width ? column.width / 7.5 : 8.43),
+    style: { ...(type && defaultColumnsStyles?.[type]), ...columnsStyles?.[field] },
   };
 };
 
@@ -146,6 +163,7 @@ interface BuildExcelOptions {
   valueOptionsSheetName: string;
   exceljsPreProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
   exceljsPostProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
+  columnsStyles?: ColumnsStylesInterface;
 }
 
 export async function buildExcel(
@@ -159,13 +177,14 @@ export async function buildExcel(
     valueOptionsSheetName,
     exceljsPreProcess,
     exceljsPostProcess,
+    columnsStyles = {},
   } = options;
 
   const excelJS = await getExcelJs();
   const workbook: Excel.Workbook = new excelJS.Workbook();
   const worksheet = workbook.addWorksheet('Sheet1');
 
-  worksheet.columns = columns.map((column) => serializeColumn(column));
+  worksheet.columns = columns.map((column) => serializeColumn(column, columnsStyles));
 
   if (exceljsPreProcess) {
     await exceljsPreProcess({
@@ -206,7 +225,8 @@ export async function buildExcel(
       const columnLetter = valueOptionsWorksheet.getColumn(column.field).letter;
       defaultValueOptionsFormulae[
         column.field
-      ] = `${valueOptionsSheetName}!$${columnLetter}$2:$${columnLetter}$${1 + formattedValueOptions.length
+      ] = `${valueOptionsSheetName}!$${columnLetter}$2:$${columnLetter}$${
+        1 + formattedValueOptions.length
       }`;
     });
   }

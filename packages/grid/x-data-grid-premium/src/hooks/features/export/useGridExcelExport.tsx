@@ -41,6 +41,7 @@ export const useGridExcelExport = (apiRef: React.MutableRefObject<GridApiPremium
           rowIds: exportedRowIds,
           includeHeaders: options.includeHeaders ?? true,
           valueOptionsSheetName: options?.valueOptionsSheetName || 'Options',
+          columnsStyles: options?.columnsStyles,
           exceljsPreProcess: options?.exceljsPreProcess,
           exceljsPostProcess: options?.exceljsPostProcess,
         },

@@ -15,6 +15,10 @@ export interface GridExceljsProcessInput {
   worksheet: Excel.Worksheet;
 }
 
+export interface ColumnsStylesInterface {
+  [field: string]: Excel.Style;
+}
+
 /**
  * The options to apply on the Excel export.
  */
@@ -36,6 +40,10 @@ export interface GridExcelExportOptions extends GridFileExportOptions {
    * @returns {Promise<void>} A promise which resolves after processing the input.
    * */
   exceljsPostProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
+  /**
+   * Object mapping column field to Exceljs style
+   * */
+  columnsStyles?: ColumnsStylesInterface;
 }
 
 export interface GridToolbarExportProps extends GridToolbarExportPropsCommunity {

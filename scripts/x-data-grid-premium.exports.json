@@ -7,6 +7,7 @@
   { "name": "bgBG", "kind": "Variable" },
   { "name": "checkGridRowIdIsValid", "kind": "Function" },
   { "name": "ColumnHeaderFilterIconButtonProps", "kind": "Interface" },
+  { "name": "ColumnsStylesInterface", "kind": "Interface" },
   { "name": "createUseGridApiEventHandler", "kind": "Function" },
   { "name": "csCZ", "kind": "Variable" },
   { "name": "CursorCoordinates", "kind": "Interface" },
