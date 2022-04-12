@@ -65,7 +65,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'ekkori vagy ezelőtti:',
   filterOperatorIsEmpty: 'üres',
   filterOperatorIsNotEmpty: 'nem üres',
-  // filterOperatorIsAnyOf: 'a következők egyike:',
+  filterOperatorIsAnyOf: 'a következők egyike:',
 
   // Filter values text
   filterValueAny: 'bármilyen',
