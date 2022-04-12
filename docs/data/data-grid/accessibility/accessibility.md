@@ -64,7 +64,7 @@ To do so, use the `tabIndex` prop passed to the `renderCell` params, to know if 
 ```jsx
 renderCell: (params) => (
   <Box>
-    <Link tabIndex={params.tabIndex ? 0 : -1} href="/#">
+    <Link tabIndex={params.tabIndex} href="/#">
       more info
     </Link>
   </Box>
