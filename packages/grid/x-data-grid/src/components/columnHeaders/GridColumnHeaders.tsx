@@ -44,13 +44,11 @@ const GridColumnHeadersRoot = styled('div', {
   };
 });
 
-interface GridColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
-  innerRef?: React.Ref<HTMLDivElement>;
-}
+interface GridColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
-    const { innerRef, className, ...other } = props;
+    const { className, ...other } = props;
     const rootProps = useGridRootProps();
 
     const ownerState = { classes: rootProps.classes };

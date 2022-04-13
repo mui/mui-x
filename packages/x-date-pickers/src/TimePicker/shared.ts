@@ -3,7 +3,6 @@ import { useThemeProps } from '@mui/material/styles';
 import { Clock } from '../internals/components/icons';
 import { ParseableDate } from '../internals/models/parseableDate';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { pick12hOr24hFormat } from '../internals/utils/text-field-helper';
 import { useUtils } from '../internals/hooks/useUtils';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
@@ -50,39 +49,29 @@ function getTextFieldAriaText<TDate>(value: ParseableDate<TDate>, utils: MuiPick
 
 type DefaultizedProps<Props> = Props & { inputFormat: string };
 export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(
-  {
-    ampm,
-    components,
-    inputFormat,
-    openTo = 'hours',
-    views = ['hours', 'minutes'],
-    ...other
-  }: Props,
+  props: Props,
   name: string,
 ): DefaultizedProps<Props> & Required<Pick<BaseTimePickerProps<TDate>, 'openTo' | 'views'>> {
-  const utils = useUtils<TDate>();
-  const willUseAmPm = ampm ?? utils.is12HourCycleInCurrentLocale();
+  // This is technically unsound if the type parameters appear in optional props.
+  // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
+  const themeProps = useThemeProps({ props, name });
 
-  return useThemeProps({
-    props: {
-      views,
-      openTo,
-      ampm: willUseAmPm,
-      acceptRegex: willUseAmPm ? /[\dapAP]/gi : /\d/gi,
-      mask: '__:__',
-      disableMaskedInput: willUseAmPm,
-      getOpenDialogAriaText: getTextFieldAriaText,
-      components: {
-        OpenPickerIcon: Clock,
-        ...components,
-      },
-      inputFormat: pick12hOr24hFormat(inputFormat, willUseAmPm, {
-        localized: utils.formats.fullTime,
-        '12h': utils.formats.fullTime12h,
-        '24h': utils.formats.fullTime24h,
-      }),
-      ...(other as Props),
+  const utils = useUtils<TDate>();
+  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+
+  return {
+    ampm,
+    openTo: 'hours',
+    views: ['hours', 'minutes'],
+    acceptRegex: ampm ? /[\dapAP]/gi : /\d/gi,
+    mask: '__:__',
+    disableMaskedInput: ampm,
+    getOpenDialogAriaText: getTextFieldAriaText,
+    inputFormat: ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h,
+    ...themeProps,
+    components: {
+      OpenPickerIcon: Clock,
+      ...themeProps.components,
     },
-    name,
-  });
+  };
 }

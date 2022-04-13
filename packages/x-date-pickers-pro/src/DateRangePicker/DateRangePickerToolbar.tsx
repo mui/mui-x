@@ -21,8 +21,6 @@ interface DateRangePickerToolbarProps<TDate>
   date: DateRange<TDate>;
   startText: React.ReactNode;
   endText: React.ReactNode;
-  currentlySelectingRangeEnd: 'start' | 'end';
-  setCurrentlySelectingRangeEnd: (newSelectingEnd: 'start' | 'end') => void;
 }
 
 const DateRangePickerToolbarRoot = styled(PickersToolbar)({

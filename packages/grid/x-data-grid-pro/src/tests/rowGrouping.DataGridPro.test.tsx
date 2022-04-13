@@ -129,7 +129,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         setProps({ rowGroupingModel: ['category2'] });
         expect(getColumnValues(0)).to.deep.equal(['Cat 1 (2)', '', '', 'Cat 2 (3)', '', '', '']);
         setProps({ rowGroupingModel: ['category1', 'category2'] });
-        expect(getColumnValues()).to.deep.equal([
+        expect(getColumnValues(0)).to.deep.equal([
           'Cat A (3)',
           'Cat 1 (1)',
           '',
@@ -200,7 +200,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: rowGroupingColumnMode', () => {
+  describe('prop: rowGroupingColumnMode', () => {
     it('should gather all the grouping criteria into a single column when rowGroupingColumnMode is not defined', () => {
       render(
         <Test
@@ -479,7 +479,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: disableRowGrouping', () => {
+  describe('prop: disableRowGrouping', () => {
     // TODO: Remove once the feature is stable
     it('should set `disableRowGrouping` to `true` if `experimentalFeatures.rowGrouping = false', () => {
       const disableRowGroupingSpy = spy();
@@ -687,7 +687,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: groupingColDef when groupingColumMode = "single"', () => {
+  describe('prop: groupingColDef when groupingColumMode = "single"', () => {
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -999,7 +999,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('props: groupingColDef when groupingColumMode = "multiple"', () => {
+  describe('prop: groupingColDef when groupingColumMode = "multiple"', () => {
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -1738,7 +1738,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
   });
 
   describe('sorting', () => {
-    describe('props: rowGroupingColumnMode = "single"', () => {
+    describe('prop: rowGroupingColumnMode = "single"', () => {
       it('should use the top level grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test
@@ -1898,7 +1898,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: rowGroupingColumnMode = "multiple"', () => {
+    describe('prop: rowGroupingColumnMode = "multiple"', () => {
       it('should use the column grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test
@@ -1991,7 +1991,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
   describe('filtering', () => {
     clock.withFakeTimers();
 
-    describe('props: rowGroupingColumnMode = "single"', () => {
+    describe('prop: rowGroupingColumnMode = "single"', () => {
       it('should use the top level grouping criteria for filtering if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test
@@ -2124,7 +2124,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       });
     });
 
-    describe('props: rowGroupingColumnMode = "multiple"', () => {
+    describe('prop: rowGroupingColumnMode = "multiple"', () => {
       it('should use the column grouping criteria for filtering if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test
