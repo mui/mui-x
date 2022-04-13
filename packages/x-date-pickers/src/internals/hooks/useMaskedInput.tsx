@@ -65,10 +65,9 @@ export const useMaskedInput = ({
   React.useEffect(() => {
     previousInputValueRef.current = currentInputValue;
   }, [currentInputValue]);
-  const notTyping = !isFocused;
   const valueChanged = previousInputValueRef.current !== currentInputValue;
   // Update the input value only if the value changed outside of typing
-  if (notTyping && valueChanged && (rawValue === null || utils.isValid(rawValue))) {
+  if (valueChanged && (rawValue === null || utils.isValid(rawValue))) {
     if (currentInputValue !== innerInputValue) {
       setInnerInputValue(currentInputValue);
     }
