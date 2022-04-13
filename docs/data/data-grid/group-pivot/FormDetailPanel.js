@@ -83,11 +83,7 @@ function DetailPanelContent({ row }) {
 }
 
 DetailPanelContent.propTypes = {
-  row: PropTypes.shape({
-    customer: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired,
-  }).isRequired,
+  row: PropTypes.object.isRequired,
 };
 
 const columns = [
