@@ -25,6 +25,7 @@ export function DesktopWrapper(props: InternalDesktopWrapperProps) {
     DateInputProps,
     KeyboardDateInputComponent,
     onDismiss,
+    onReset,
     open,
     PopperProps,
     PaperProps,
@@ -47,6 +48,7 @@ export function DesktopWrapper(props: InternalDesktopWrapperProps) {
         PopperProps={PopperProps}
         PaperProps={PaperProps}
         onClose={onDismiss}
+        onReset={onReset}
         onClear={onClear}
         clearText={clearText}
         clearable={clearable}
