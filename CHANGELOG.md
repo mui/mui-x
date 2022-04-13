@@ -34,7 +34,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGridPro] Fix toggling detail panel using keyboard (#4409) @cherniavskii
 - [l10n] Add Hungarian (hu-HU) locale (#4458) @x22tri
 
-### `@mui/x-date-pickers@5.0.0-alpha.1` / `@mui/x-date-pickers-pro@5.0.0-alpha.1
+### `@mui/x-date-pickers@5.0.0-alpha.1` / `@mui/x-date-pickers-pro@5.0.0-alpha.1`
 
 ##### Changes
 
