@@ -46,7 +46,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 #### Changes
 
-- [ClockPicker] Should call shouldDisableTime with the hours with meridiem (#4404) @flaviendelangle
+- [ClockPicker] Should call `shouldDisableTime` with the hours with meridiem (#4404) @flaviendelangle
 - [MonthPicker] Clicking on a PickersMonth button should not trigger the form submit (#4402) @flaviendelangle
 - [TimePicker] Only update time when updating input in TimePicker (#4398) @flaviendelangle
 - [pickers] Add react-dom to pickers peer deps to satisfy react-transition-group (#4411) @CarsonF
