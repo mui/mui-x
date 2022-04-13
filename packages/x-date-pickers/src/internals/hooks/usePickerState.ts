@@ -175,6 +175,11 @@ export const usePickerState = <TInput, TDate>(
           setDate({ value: dateState.committed, action: 'acceptAndClose' });
         }
       },
+      onReset: () => {
+        // Set all dates in state to equal the last accepted date
+        // e.g. Reset the state to the last accepted value
+        setDate({ value: dateState.resetTarget, action: 'acceptAndClose' });
+      },
       onSetToday: () => {
         if (shouldCloseOnSelect) {
           setDate({ value: utils.date()!, action: 'acceptAndClose' });
