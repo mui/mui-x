@@ -1,3 +1,4 @@
+import { GridRowsInternalCache } from '../../hooks/features/rows/gridRowsState';
 import {
   GridRowModel,
   GridRowId,
@@ -10,6 +11,10 @@ import {
  * The Row API interface that is available in the grid `apiRef`.
  */
 export interface GridRowApi {
+  /**
+   * @ignore - do not document
+   */
+  rowsCache: GridRowsInternalCache;
   /**
    * Gets the full set of rows as [[Map<GridRowId, GridRowModel>]].
    * @returns {Map<GridRowId, GridRowModel>} The full set of rows.
