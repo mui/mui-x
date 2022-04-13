@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## TODO RELEASE NAME
+## v5.9.0
 _Apr 14, 2022_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
