@@ -1,83 +1,24 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier } from '@mui/x-license-pro';
-import { useThemeProps } from '@mui/material/styles';
 import {
   MobileWrapper,
   MobileWrapperProps,
-  ValidationProps,
-  useDefaultDates,
-  useUtils,
   usePickerState,
   PickerStateValueManager,
   DateInputPropsLike,
 } from '@mui/x-date-pickers/internals';
-import { RangeInput, DateRange } from '../internal/models/dateRange';
-import {
-  DateRangeValidationError,
-  useDateRangeValidation,
-} from '../internal/hooks/validation/useDateRangeValidation';
-import {
-  DateRangePickerView,
-  ExportedDateRangePickerViewProps,
-} from '../DateRangePicker/DateRangePickerView';
-import {
-  DateRangePickerInput,
-  ExportedDateRangePickerInputProps,
-} from '../DateRangePicker/DateRangePickerInput';
+import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
+import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
+import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
 import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import {
+  BaseDateRangePickerProps,
+  useDateRangePickerDefaultizedProps,
+} from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
-
-interface BaseDateRangePickerProps<TDate>
-  extends ExportedDateRangePickerViewProps<TDate>,
-    ValidationProps<DateRangeValidationError, RangeInput<TDate>>,
-    ExportedDateRangePickerInputProps {
-  /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
-   * @default {}
-   */
-  components?: ExportedDateRangePickerViewProps<TDate>['components'] &
-    ExportedDateRangePickerInputProps['components'];
-  /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   */
-  endText?: React.ReactNode;
-  /**
-   * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
-   * @default '__/__/____'
-   */
-  mask?: ExportedDateRangePickerInputProps['mask'];
-  /**
-   * Min selectable date. @DateIOType
-   * @default defaultMinDate
-   */
-  minDate?: TDate;
-  /**
-   * Max selectable date. @DateIOType
-   * @default defaultMaxDate
-   */
-  maxDate?: TDate;
-  /**
-   * Callback fired when the value (the selected date range) changes @DateIOType.
-   * @template TDate
-   * @param {DateRange<TDate>} date The new parsed date range.
-   * @param {string} keyboardInputValue The current value of the keyboard input.
-   */
-  onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   */
-  startText?: React.ReactNode;
-  /**
-   * The value of the date range picker.
-   */
-  value: RangeInput<TDate>;
-}
 
 const PureDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
 
@@ -109,26 +50,16 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
   inProps: MobileDateRangePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiMobileDateRangePicker' });
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const {
-    calendars = 2,
-    value,
-    onChange,
-    mask = '__/__/____',
-    startText = 'Start',
-    endText = 'End',
-    inputFormat: passedInputFormat,
-    minDate: minDateProp,
-    maxDate: maxDateProp,
-    ...other
-  } = props;
+  // TODO: TDate needs to be instantiated at every usage.
+  const props = useDateRangePickerDefaultizedProps(
+    inProps as MobileDateRangePickerProps<unknown>,
+    'MuiMobileDateRangePicker',
+  );
 
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-  const minDate = minDateProp ?? defaultDates.minDate;
-  const maxDate = maxDateProp ?? defaultDates.maxDate;
+  const { value, onChange, ...other } = props;
+
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
     'start' | 'end'
   >('start');
@@ -139,35 +70,25 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     onChange,
   };
 
-  const restProps = {
-    ...other,
-    minDate,
-    maxDate,
-  };
-
-  const { pickerProps, inputProps, wrapperProps } = usePickerState<
-    RangeInput<TDate>,
-    DateRange<TDate>
-  >(pickerStateProps, rangePickerValueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(
+    pickerStateProps,
+    rangePickerValueManager,
+  );
 
   const validationError = useDateRangeValidation(props);
 
   const DateInputProps = {
     ...inputProps,
-    ...restProps,
+    ...other,
     currentlySelectingRangeEnd,
-    inputFormat: passedInputFormat || utils.formats.keyboardDate,
     setCurrentlySelectingRangeEnd,
-    startText,
-    endText,
-    mask,
     validationError,
     ref,
   };
 
   return (
     <MobileWrapper
-      {...restProps}
+      {...other}
       {...wrapperProps}
       DateInputProps={DateInputProps}
       PureDateInputComponent={PureDateInputComponent}
@@ -175,13 +96,10 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
       <DateRangePickerView<any>
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        calendars={calendars}
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}
         setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-        startText={startText}
-        endText={endText}
         {...pickerProps}
-        {...restProps}
+        {...other}
       />
     </MobileWrapper>
   );

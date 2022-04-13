@@ -106,7 +106,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       modifiers={modifiers}
       {...other}
     >
-      <ClickAwayListener onClickAway={handleClickAway}>
+      <ClickAwayListener mouseEvent="onMouseUp" onClickAway={handleClickAway}>
         <GridPaperRoot className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
           {isPlaced && children}
         </GridPaperRoot>

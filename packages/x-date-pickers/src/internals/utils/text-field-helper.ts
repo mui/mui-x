@@ -36,22 +36,6 @@ export const getDisplayDate = <TDate>(
     : '';
 };
 
-export function pick12hOr24hFormat(
-  userFormat: string | undefined,
-  ampm: boolean | undefined,
-  formats: { localized: string; '12h': string; '24h': string },
-) {
-  if (userFormat) {
-    return userFormat;
-  }
-
-  if (typeof ampm === 'undefined') {
-    return formats.localized;
-  }
-
-  return ampm ? formats['12h'] : formats['24h'];
-}
-
 const MASK_USER_INPUT_SYMBOL = '_';
 const staticDateWith2DigitTokens = '2019-11-21T22:30:00.000';
 const staticDateWith1DigitTokens = '2019-01-01T09:00:00.000';
