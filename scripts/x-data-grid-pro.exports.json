@@ -455,6 +455,7 @@
   { "name": "gridVisibleTopLevelRowCountSelector", "kind": "Variable" },
   { "name": "heIL", "kind": "Variable" },
   { "name": "HideGridColMenuItem", "kind": "Variable" },
+  { "name": "huHU", "kind": "Variable" },
   { "name": "itIT", "kind": "Variable" },
   { "name": "jaJP", "kind": "Variable" },
   { "name": "koKR", "kind": "Variable" },
