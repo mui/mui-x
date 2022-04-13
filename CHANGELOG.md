@@ -44,7 +44,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 ### `@mui/x-date-pickers@5.0.0-alpha.1` / `@mui/x-date-pickers-pro@5.0.0-alpha.1`
 
-##### Changes
+#### Changes
 
 - [ClockPicker] Should call shouldDisableTime with the hours with meridiem (#4404) @flaviendelangle
 - [MonthPicker] Clicking on a PickersMonth button should not trigger the form submit (#4402) @flaviendelangle
