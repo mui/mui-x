@@ -83,7 +83,7 @@ function DetailPanelContent({ row }) {
 }
 
 DetailPanelContent.propTypes = {
-  row: PropTypes.any.isRequired,
+  row: PropTypes.object.isRequired,
 };
 
 const columns = [

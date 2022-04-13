@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import {
   useDemoData,
   getRealGridData,
@@ -27,7 +27,7 @@ export default function InfiniteLoadingGrid() {
     maxColumns: 6,
   });
 
-  const loadServerRows = async (newRowLength) => {
+  const loadServerRows = async (newRowLength: number) => {
     setLoading(true);
     const newData = await getRealGridData(newRowLength, getCommodityColumns());
     // Simulate network throttle
@@ -39,7 +39,7 @@ export default function InfiniteLoadingGrid() {
     }
   };
 
-  const handleOnRowsScrollEnd = (params) => {
+  const handleOnRowsScrollEnd: DataGridProProps['onRowsScrollEnd'] = (params) => {
     if (loadedRows.length <= MAX_ROW_LENGTH) {
       loadServerRows(params.viewportPageSize);
     }

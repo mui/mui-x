@@ -4,6 +4,7 @@ import {
   GridColumns,
   GridRowsProp,
   GridSortModel,
+  DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import Stack from '@mui/material/Stack';
 import Checkbox from '@mui/material/Checkbox';
@@ -114,7 +115,7 @@ const columns: GridColumns = [
   },
 ];
 
-const getTreeDataPath = (row) => row.hierarchy;
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
 
 export default function TreeDataDisableChildrenSorting() {
   const [disableChildrenSorting, setDisableChildrenSorting] = React.useState(true);

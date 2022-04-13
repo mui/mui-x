@@ -35,6 +35,7 @@ export interface GridCellProps<V = any, F = V> {
   cellMode?: GridCellMode;
   children: React.ReactNode;
   tabIndex: 0 | -1;
+  colSpan?: number;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -101,6 +102,7 @@ function GridCell(props: GridCellProps) {
     showRightBorder,
     extendRowFullWidth,
     row,
+    colSpan,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -167,7 +169,7 @@ function GridCell(props: GridCellProps) {
       return;
     }
 
-    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement)!;
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current)!;
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
@@ -236,6 +238,7 @@ function GridCell(props: GridCellProps) {
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
+      aria-colspan={colSpan}
       style={style}
       tabIndex={(cellMode === 'view' || !isEditable) && !managesOwnFocus ? tabIndex : -1}
       onClick={publish(GridEvents.cellClick, onClick)}
@@ -263,6 +266,7 @@ GridCell.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   colIndex: PropTypes.number.isRequired,
+  colSpan: PropTypes.number,
   field: PropTypes.string.isRequired,
   formattedValue: PropTypes.any,
   hasFocus: PropTypes.bool,
