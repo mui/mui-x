@@ -75,6 +75,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     rangePickerValueManager,
     'desktop',
   );
+
   const validationError = useDateRangeValidation(props);
 
   const DateInputProps = {

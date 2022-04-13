@@ -148,6 +148,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     rangePickerValueManager,
     displayStaticWrapperAs,
   );
+
   const validationError = useDateRangeValidation(props);
 
   const DateInputProps = {
