@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { ParseableDate } from '../internals/models/parseableDate';
-import { OverrideParseableDateProps } from '../internals/hooks/date-helpers-hooks';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
@@ -18,14 +17,10 @@ export interface BaseDatePickerProps<TDate>
     ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: OverrideParseableDateProps<
-    TDate,
-    ExportedCalendarPickerProps<TDate>,
-    'minDate' | 'maxDate'
-  >['components'] &
+  components?: ExportedCalendarPickerProps<TDate>['components'] &
     ExportedDateInputProps<ParseableDate<TDate>, TDate | null>['components'];
   /**
    * Callback fired on view change.
@@ -88,31 +83,27 @@ const getFormatAndMaskByViews = <TDate>(
 export type DefaultizedProps<Props> = Props & { inputFormat: string };
 
 export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePickerProps<TDate>>(
-  {
-    openTo = 'day',
-    views = ['year', 'day'],
-    minDate: minDateProp,
-    maxDate: maxDateProp,
-    ...other
-  }: Props,
+  props: Props,
   name: string,
 ): DefaultizedProps<Props> & Required<Pick<BaseDatePickerProps<unknown>, 'openTo' | 'views'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates();
-  const minDate = minDateProp ?? defaultDates.minDate;
-  const maxDate = maxDateProp ?? defaultDates.maxDate;
 
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
-  return useThemeProps({
-    props: {
-      views,
-      openTo,
-      minDate,
-      maxDate,
-      ...getFormatAndMaskByViews(views, utils),
-      ...(other as Props),
-    },
+  const themeProps = useThemeProps({
+    props,
     name,
   });
+
+  const views = themeProps.views ?? ['year', 'day'];
+
+  return {
+    openTo: 'day',
+    minDate: defaultDates.minDate,
+    maxDate: defaultDates.maxDate,
+    ...getFormatAndMaskByViews(views, utils),
+    ...themeProps,
+    views,
+  };
 }

@@ -48,6 +48,7 @@ export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationP
   ampmInClock?: boolean;
   /**
    * Accessible text that helps user to understand which time and view is selected.
+   * @template TDate
    * @param {ClockPickerView} view The current view rendered.
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
@@ -80,7 +81,7 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   classes?: Partial<ClockPickerClasses>;
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    */
   components?: {
     LeftArrowButton?: React.ElementType;
@@ -200,7 +201,7 @@ type ClockPickerComponent = (<TDate>(
  *
  * API:
  *
- * - [ClockPicker API](https://mui.com/api/clock-picker/)
+ * - [ClockPicker API](https://mui.com/x/api/date-pickers/clock-picker/)
  */
 export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends unknown>(
   inProps: ClockPickerProps<TDate>,
@@ -465,7 +466,7 @@ ClockPicker.propTypes = {
   className: PropTypes.string,
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    */
   components: PropTypes.object,
   /**
@@ -483,6 +484,7 @@ ClockPicker.propTypes = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * Accessible text that helps user to understand which time and view is selected.
+   * @template TDate
    * @param {ClockPickerView} view The current view rendered.
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.

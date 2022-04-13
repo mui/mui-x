@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { SelectChangeEvent } from '@mui/material/Select';
@@ -151,6 +152,10 @@ function GridFilterForm(props: GridFilterFormProps) {
   const hasLinkOperatorColumn: boolean = hasMultipleFilters && linkOperators.length > 0;
 
   const baseFormControlProps = rootProps.componentsProps?.baseFormControl || {};
+
+  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const isBaseSelectNative = baseSelectProps.native ?? true;
+  const OptionComponent = isBaseSelectNative ? 'option' : MenuItem;
 
   const sortedFilterableColumns = React.useMemo(() => {
     switch (columnsSort) {
@@ -314,13 +319,13 @@ function GridFilterForm(props: GridFilterFormProps) {
           value={multiFilterOperator}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator || linkOperators.length === 1}
-          native
+          native={isBaseSelectNative}
           {...rootProps.componentsProps?.baseSelect}
         >
           {linkOperators.map((linkOperator) => (
-            <option key={linkOperator.toString()} value={linkOperator.toString()}>
+            <OptionComponent key={linkOperator.toString()} value={linkOperator.toString()}>
               {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
-            </option>
+            </OptionComponent>
           ))}
         </rootProps.components.BaseSelect>
       </FilterFormLinkOperatorInput>
@@ -344,13 +349,13 @@ function GridFilterForm(props: GridFilterFormProps) {
           label={apiRef.current.getLocaleText('filterPanelColumns')}
           value={item.columnField || ''}
           onChange={changeColumn}
-          native
+          native={isBaseSelectNative}
           {...rootProps.componentsProps?.baseSelect}
         >
           {sortedFilterableColumns.map((col) => (
-            <option key={col.field} value={col.field}>
+            <OptionComponent key={col.field} value={col.field}>
               {getColumnLabel(col)}
-            </option>
+            </OptionComponent>
           ))}
         </rootProps.components.BaseSelect>
       </FilterFormColumnInput>
@@ -374,17 +379,17 @@ function GridFilterForm(props: GridFilterFormProps) {
           id={operatorSelectId}
           value={item.operatorValue}
           onChange={changeOperator}
-          native
+          native={isBaseSelectNative}
           inputRef={filterSelectorRef}
           {...rootProps.componentsProps?.baseSelect}
         >
           {currentColumn?.filterOperators?.map((operator) => (
-            <option key={operator.value} value={operator.value}>
+            <OptionComponent key={operator.value} value={operator.value}>
               {operator.label ||
                 apiRef.current.getLocaleText(
                   `filterOperator${capitalize(operator.value)}` as GridTranslationKeys,
                 )}
-            </option>
+            </OptionComponent>
           ))}
         </rootProps.components.BaseSelect>
       </FilterFormOperatorInput>

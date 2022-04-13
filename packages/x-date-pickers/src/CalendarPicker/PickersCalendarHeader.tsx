@@ -33,7 +33,7 @@ export interface PickersCalendarHeaderProps<TDate>
     Omit<ExportedDateValidationProps<TDate>, 'shouldDisableDate'> {
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    * @default {}
    */
   components?: ExportedArrowSwitcherProps['components'] & {
