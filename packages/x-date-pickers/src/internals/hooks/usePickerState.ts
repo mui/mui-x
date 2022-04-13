@@ -89,6 +89,10 @@ const reducer: React.Reducer<DateState<any>, DateStateAction<any>> = (state, act
 export const usePickerState = <TInput, TDateValue>(
   props: PickerStateProps<TInput, TDateValue>,
   valueManager: PickerStateValueManager<TInput, TDateValue>,
+  /**
+   * Wrapper variant currently used
+   * It impacts the default "close on select" behavior
+   */
   wrapperVariant: WrapperVariant,
 ) => {
   const { disableCloseOnSelect = wrapperVariant === 'mobile', onAccept, onChange, value } = props;
