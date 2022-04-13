@@ -43,6 +43,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [TimePicker] Only update time when updating input in TimePicker (#4398) @flaviendelangle
 - [pickers] Add react-dom to pickers peer deps to satisfy react-transition-group (#4411) @CarsonF
 - [pickers] Add TDate generic to CalendarOrClockPicker component (#4465) @flaviendelangle
+- [pickers] Fix default props behavior on all pickers (#4451) @flaviendelangle
 - [pickers] Export MuiPickersAdapterContext (#4367) @flaviendelangle
 
 ### Docs
@@ -59,7 +60,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [core] Add technical doc for pipe processing and family processing (#4322) @flaviendelangle
 - [core] Don't upgrade CircleCI node (#4457) @m4theushw
-- [core] Fix default props behavior on all pickers (#4451) @flaviendelangle
 - [core] Fix flaky e2e-website tests in CI (#4136) @cherniavskii
 - [core] Fix license file copying during build (#4462) @flaviendelangle
 - [core] Fix links on v5.8.0 (#4464) @oliviertassinari
