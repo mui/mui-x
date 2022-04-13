@@ -8,7 +8,6 @@ import {
   GridRenderEditCellParams,
   GridValueSetterParams,
   GridPreProcessEditCellProps,
-  GridCellProps,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
@@ -26,13 +25,23 @@ describe('<DataGridPro /> - Row Editing', () => {
 
   const defaultData = getData(4, 4);
 
-  const renderEditCell1 = spy((() => <input />) as (
-    props: GridRenderEditCellParams,
-  ) => React.ReactNode);
+  const CustomEditComponent = ({ hasFocus }: GridRenderEditCellParams) => {
+    const ref = React.useRef<HTMLInputElement>(null);
+    React.useLayoutEffect(() => {
+      if (hasFocus) {
+        ref.current!.focus();
+      }
+    }, [hasFocus]);
+    return <input ref={ref} />;
+  };
 
-  const renderEditCell2 = spy((() => <input />) as (
-    props: GridRenderEditCellParams,
-  ) => React.ReactNode);
+  const renderEditCell1 = spy((props: GridRenderEditCellParams) => (
+    <CustomEditComponent {...props} />
+  ));
+
+  const renderEditCell2 = spy((props: GridRenderEditCellParams) => (
+    <CustomEditComponent {...props} />
+  ));
 
   let column1Props: any = {};
   let column2Props: any = {};
@@ -321,16 +330,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     });
 
     describe('stopRowEditMode', () => {
-      const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
-        const ref = React.useRef<HTMLInputElement>(null);
-        React.useLayoutEffect(() => {
-          if (hasFocus) {
-            ref.current!.focus();
-          }
-        }, [hasFocus]);
-        return <input ref={ref} />;
-      };
-
       it('should reject when the cell is not in edit mode', async () => {
         render(<TestCase />);
         expect(() => apiRef.current.stopRowEditMode({ id: 0 })).to.throw(
@@ -485,7 +484,6 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should move focus to the cell below when cellToFocusAfter=below', () => {
-        column1Props.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0, fieldToFocus: 'currencyPair' });
         expect(getCell(0, 1).querySelector('input')).toHaveFocus();
@@ -494,7 +492,6 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should move focus to the cell below when cellToFocusAfter=right', () => {
-        column1Props.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0, fieldToFocus: 'currencyPair' });
         expect(getCell(0, 1).querySelector('input')).toHaveFocus();
@@ -503,7 +500,6 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
 
       it('should move focus to the cell below when cellToFocusAfter=left', () => {
-        column2Props.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(<TestCase />);
         apiRef.current.startRowEditMode({ id: 0, fieldToFocus: 'price1M' });
         expect(getCell(0, 2).querySelector('input')).toHaveFocus();
@@ -771,7 +767,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell, { key: 'Escape' });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Escape' });
         expect(listener.lastCall.args[0].reason).to.equal('escapeKeyDown');
       });
 
@@ -782,7 +778,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell, { key: 'Escape' });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Escape' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -803,18 +799,18 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell, { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Enter' });
         expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
       });
 
-      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter', () => {
+      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=below', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell, { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Enter' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -834,7 +830,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
         apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
-        fireEvent.keyDown(cell, { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Enter' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
       });
@@ -850,7 +846,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell, { key: 'Tab' });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
         expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
       });
 
@@ -863,7 +859,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell, { key: 'Tab', shiftKey: true });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab', shiftKey: true });
         expect(listener.lastCall.args[0].reason).to.equal('shiftTabKeyDown');
       });
 
@@ -874,7 +870,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell, { key: 'Tab' });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -891,7 +887,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell, { key: 'Tab', shiftKey: true });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab', shiftKey: true });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -911,9 +907,43 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.click(cell);
         fireEvent.doubleClick(cell);
         apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 'USD GBP' });
-        fireEvent.keyDown(cell, { key: 'Tab' });
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
+      });
+
+      it('should keep focus on the first column when editing the first column of the first row of the 2nd page', () => {
+        render(
+          <TestCase
+            rowsPerPageOptions={[2]}
+            pageSize={2}
+            page={1}
+            columnVisibilityModel={{ id: false }}
+            pagination
+          />,
+        );
+        const cell = getCell(2, 0);
+        fireEvent.doubleClick(cell);
+        expect(cell.querySelector('input')).toHaveFocus();
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab', shiftKey: true });
+        expect(getCell(2, 0)).toHaveFocus();
+      });
+
+      it('should keep focus on the last column when editing the last column of the last row of the 2nd page', () => {
+        render(
+          <TestCase
+            rowsPerPageOptions={[2]}
+            pageSize={2}
+            page={1}
+            columnVisibilityModel={{ price2M: false, price3M: false }}
+            pagination
+          />,
+        );
+        const cell = getCell(3, 2);
+        fireEvent.doubleClick(cell);
+        expect(cell.querySelector('input')).toHaveFocus();
+        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
+        expect(getCell(3, 2)).toHaveFocus();
       });
     });
   });
