@@ -33,6 +33,7 @@ import {
   useGridDimensions,
   useGridStatePersistence,
   useGridSelectionPreProcessors,
+  useGridColumnSpanning,
   columnMenuStateInitializer,
   densityStateInitializer,
   focusStateInitializer,
@@ -119,6 +120,7 @@ export const useDataGridProComponent = (
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridColumnSpanning(apiRef);
   useGridDetailPanelCache(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi

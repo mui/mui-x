@@ -2,89 +2,23 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier } from '@mui/x-license-pro';
-import {
-  ResponsiveTooltipWrapper,
-  ResponsiveWrapperProps,
-  useDefaultDates,
-  useUtils,
-  ValidationProps,
-  usePickerState,
-  PickerStateValueManager,
-  DateInputPropsLike,
-} from '@mui/x-date-pickers/internals';
-import { DateRangePickerView, ExportedDateRangePickerViewProps } from './DateRangePickerView';
-import { DateRangePickerInput, ExportedDateRangePickerInputProps } from './DateRangePickerInput';
-import { RangeInput, DateRange } from '../internal/models/dateRange';
-import {
-  useDateRangeValidation,
-  DateRangeValidationError,
-} from '../internal/hooks/validation/useDateRangeValidation';
-import { parseRangeInputValue } from '../internal/utils/date-utils';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { DesktopDateRangePicker, DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
+import { MobileDateRangePicker, MobileDateRangePickerProps } from '../MobileDateRangePicker';
 
 const releaseInfo = getReleaseInfo();
 
-interface BaseDateRangePickerProps<TDate>
-  extends ExportedDateRangePickerViewProps<TDate>,
-    ValidationProps<DateRangeValidationError, RangeInput<TDate>>,
-    ExportedDateRangePickerInputProps {
-  /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
-   * @default {}
-   */
-  components?: ExportedDateRangePickerViewProps<TDate>['components'] &
-    ExportedDateRangePickerInputProps['components'];
-  /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   */
-  endText?: React.ReactNode;
-  /**
-   * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
-   * @default '__/__/____'
-   */
-  mask?: ExportedDateRangePickerInputProps['mask'];
-  /**
-   * Min selectable date. @DateIOType
-   * @default defaultMinDate
-   */
-  minDate?: TDate;
-  /**
-   * Max selectable date. @DateIOType
-   * @default defaultMaxDate
-   */
-  maxDate?: TDate;
-  /**
-   * Callback fired when the value (the selected date range) changes @DateIOType.
-   * @template TDate
-   * @param {DateRange<TDate>} date The new parsed date range.
-   * @param {string} keyboardInputValue The current value of the keyboard input.
-   */
-  onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   */
-  startText?: React.ReactNode;
-  /**
-   * The value of the date range picker.
-   */
-  value: RangeInput<TDate>;
-}
-
-const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
-const PureDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
-
-const rangePickerValueManager: PickerStateValueManager<any, any> = {
-  emptyValue: [null, null],
-  parseInput: parseRangeInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
-};
-
 export interface DateRangePickerProps<TDate>
-  extends BaseDateRangePickerProps<TDate>,
-    ResponsiveWrapperProps {}
+  extends DesktopDateRangePickerProps<TDate>,
+    MobileDateRangePickerProps<TDate> {
+  /**
+   * CSS media query when `Mobile` mode will be changed to `Desktop`.
+   * @default '@media (pointer: fine)'
+   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
+   */
+  desktopModeMediaQuery?: string;
+}
 
 type DateRangePickerComponent = (<TDate>(
   props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -108,78 +42,40 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
-    calendars = 2,
-    value,
-    onChange,
-    mask = '__/__/____',
-    startText = 'Start',
-    endText = 'End',
-    inputFormat: passedInputFormat,
-    minDate: minDateProp,
-    maxDate: maxDateProp,
+    cancelText,
+    desktopModeMediaQuery = '@media (pointer: fine)',
+    DialogProps,
+    okText,
+    PopperProps,
+    showTodayButton,
+    todayText,
+    TransitionComponent,
     ...other
   } = props;
 
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-  const minDate = minDateProp ?? defaultDates.minDate;
-  const maxDate = maxDateProp ?? defaultDates.maxDate;
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const isDesktop = useMediaQuery(desktopModeMediaQuery);
 
-  const pickerStateProps = {
-    ...other,
-    value,
-    onChange,
-  };
-
-  const restProps = {
-    ...other,
-    minDate,
-    maxDate,
-  };
-
-  const { pickerProps, inputProps, wrapperProps } = usePickerState<
-    RangeInput<TDate>,
-    DateRange<TDate>
-  >(pickerStateProps, rangePickerValueManager);
-
-  const validationError = useDateRangeValidation(props);
-
-  const DateInputProps = {
-    ...inputProps,
-    ...restProps,
-    currentlySelectingRangeEnd,
-    inputFormat: passedInputFormat || utils.formats.keyboardDate,
-    setCurrentlySelectingRangeEnd,
-    startText,
-    endText,
-    mask,
-    validationError,
-    ref,
-  };
+  if (isDesktop) {
+    return (
+      <DesktopDateRangePicker
+        ref={ref}
+        PopperProps={PopperProps}
+        TransitionComponent={TransitionComponent}
+        {...other}
+      />
+    );
+  }
 
   return (
-    <ResponsiveTooltipWrapper
-      {...restProps}
-      {...wrapperProps}
-      DateInputProps={DateInputProps}
-      KeyboardDateInputComponent={KeyboardDateInputComponent}
-      PureDateInputComponent={PureDateInputComponent}
-    >
-      <DateRangePickerView<any>
-        open={wrapperProps.open}
-        DateInputProps={DateInputProps}
-        calendars={calendars}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-        startText={startText}
-        endText={endText}
-        {...pickerProps}
-        {...restProps}
-      />
-    </ResponsiveTooltipWrapper>
+    <MobileDateRangePicker
+      ref={ref}
+      cancelText={cancelText}
+      DialogProps={DialogProps}
+      okText={okText}
+      showTodayButton={showTodayButton}
+      todayText={todayText}
+      {...other}
+    />
   );
 }) as DateRangePickerComponent;
 
@@ -242,7 +138,7 @@ DateRangePicker.propTypes = {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
-   * @example '@media (min-width: 720px)' or theme.breakpoints.up('sm')
+   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery: PropTypes.string,
   /**
