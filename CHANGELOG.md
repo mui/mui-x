@@ -31,7 +31,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Add indexes relative to the filtered rows and the current page to the `getRowClassName` and `getRowSpacing` props (#3882) @flaviendelangle
 - [DataGrid] Add React 18 to peer dependencies (#4332) @m4theushw
 - [DataGrid] Apply filtering before sorting (#4359) @flaviendelangle
-- [DataGrid] Column spanning (#4020) @cherniavskii
+- [DataGrid] Add support for column spanning (#4020) @cherniavskii
 - [DataGrid] Enable using non-native Select in filter panel (#4361) @kyeongsoosoo
 - [DataGrid] Fix `api` prop leaking to DOM (#4384) @m4theushw
 - [DataGrid] Fix column dimensions import/export with flex and resizing (#4311) @flaviendelangle
