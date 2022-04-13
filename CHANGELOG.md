@@ -39,6 +39,9 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Fix scrollbar grabbing issue in Safari (#4405) @cherniavskii
 - [DataGrid] `GridCellParams.formattedValue` should be nullable (#4376) @flaviendelangle
 - [DataGrid] Prevent column header scroll (#4280) @m4theushw
+- [DataGrid] Fix focus after stopping row edit mode with pagination enabled (#4326) @m4theushw
+- [DataGrid] Pass updated row to edit components (#4392) @m4theushw
+- [DataGrid] Improve accessibility of the `actions` column (#4325) @m4theushw
 - [DataGridPro] Fix toggling detail panel using keyboard (#4409) @cherniavskii
 - [l10n] Add Hungarian (hu-HU) locale (#4458) @x22tri
 
