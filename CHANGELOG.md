@@ -61,7 +61,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Fix small external links issue (#4436) @oliviertassinari
 - [docs] Fix some links to date picker docs (#4362) @oliviertassinari
 - [docs] Fix wrong url (#4415) @siriwatknp
-- [docs] Go live with the new urls! (#4313) @siriwatknp
+- [docs] Go live with the new URLs (#4313) @siriwatknp
 - [docs] Update the product names to be in sync @oliviertassinari
 
 ### Core
