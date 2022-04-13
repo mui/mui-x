@@ -37,7 +37,7 @@ interface DateState<T> {
   /**
    * Date that will be used if the pickers tries to reset its value
    */
-  accepted: T;
+  resetTarget: T;
 }
 
 type DateStateActionType =
@@ -72,7 +72,7 @@ interface PickerStateProps<TInput, TDateValue> {
 const reducer: React.Reducer<DateState<any>, DateStateAction<any>> = (state, action) => {
   switch (action.type) {
     case 'accept': {
-      return { draft: action.value, committed: action.value, accepted: action.value };
+      return { draft: action.value, committed: action.value, resetTarget: action.value };
     }
     case 'commit': {
       return { ...state, draft: action.value, committed: action.value };
@@ -113,7 +113,7 @@ export const usePickerState = <TInput, TDateValue>(
 
   const [dateState, dispatch] = React.useReducer(
     reducer as React.Reducer<DateState<TDateValue>, DateStateAction<TDateValue>>,
-    { committed: parsedDateValue, draft: parsedDateValue, accepted: parsedDateValue },
+    { committed: parsedDateValue, draft: parsedDateValue, resetTarget: parsedDateValue },
   );
 
   const setDate = React.useCallback(
@@ -160,7 +160,7 @@ export const usePickerState = <TInput, TDateValue>(
         if (shouldCloseOnSelect) {
           // Set all dates in state to equal the last accepted date
           // e.g. Reset the state to the last accepted value
-          setDate({ value: dateState.accepted, type: 'accept', closePicker: true });
+          setDate({ value: dateState.resetTarget, type: 'accept', closePicker: true });
         } else {
           // Set all dates in state to equal the last committed date
           // e.g. Reset the state to the last committed value

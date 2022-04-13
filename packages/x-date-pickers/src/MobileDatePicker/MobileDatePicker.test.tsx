@@ -312,7 +312,7 @@ describe('<MobileDatePicker />', () => {
     });
   });
 
-  it('should retain the values on clicking Cancel button', () => {
+  it('should reset the values on clicking Cancel button', () => {
     const onChangeCallback = spy();
 
     const initialDateValue = adapterToUse.date('2018-01-01T00:00:00.000');
