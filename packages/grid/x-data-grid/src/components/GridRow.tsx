@@ -264,8 +264,15 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     }
 
     if (editCellState != null && column.renderEditCell) {
+      let updatedRow = row;
+      if (apiRef.current.unstable_getRowWithUpdatedValues) {
+        // Only the new editing API has this method
+        updatedRow = apiRef.current.unstable_getRowWithUpdatedValues(rowId, column.field);
+      }
+
       const params: GridRenderEditCellParams = {
         ...cellParams,
+        row: updatedRow,
         ...editCellState,
         api: apiRef.current,
       };
