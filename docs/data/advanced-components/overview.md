@@ -33,7 +33,8 @@ The detailed feature comparison is available on the [Pricing](https://mui.com/pr
 
 ### Community Plan
 
-MUI X's Community Plan is published under [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+MUI X's Community Plan is published under [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
+This plan contains features we believe are sustainable by the contributions of the open-source community. Free forever.
 
 Community Plan packages:
 
@@ -45,6 +46,8 @@ Community Plan packages:
 The MUI X Pro Plan expands on the limitations of the Community Plan with more advanced features such as multi-filtering, multi-sorting, column resizing and column pinning.
 
 The Pro Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components.
+The price of the plan is designed to be accessible to most professionals.
 
 Pro Plan packages:
 
@@ -65,6 +68,7 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
 The MUI X Premium Plan contains the most advanced features such as row grouping, Excel export, aggregation, as well as everything that's included in the Pro Plan.
 
 The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
+This plan contains the most advanced features, ones that we haven't seen any open-source libraries able to deliver well.
 
 The Premium Plan is not available yet (🚧) but will soon be available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
 
