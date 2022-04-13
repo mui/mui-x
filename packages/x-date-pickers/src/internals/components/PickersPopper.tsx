@@ -280,6 +280,14 @@ export const PickersPopper = (props: PickerPopperProps) => {
     ...otherPaperProps
   } = PaperProps;
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      // stop the propagation to avoid closing parent modal
+      event.stopPropagation();
+      onClose();
+    }
+  };
+
   return (
     <PickersPopperRoot
       transition
@@ -287,6 +295,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
       open={open}
       anchorEl={anchorEl}
       ownerState={ownerState}
+      onKeyDown={handleKeyDown}
       {...PopperProps}
     >
       {({ TransitionProps, placement }) => (
