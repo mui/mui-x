@@ -287,7 +287,7 @@ describe('<MobileDatePicker />', () => {
     clock.tick(10);
     fireEvent.click(screen.getByText(/today/i));
 
-    expect(onCloseMock.callCount).to.equal(1);
+    expect(onCloseMock.callCount).to.equal(0);
     expect(handleChange.callCount).to.equal(1);
     expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
   });
