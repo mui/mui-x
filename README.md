@@ -28,7 +28,7 @@ We have seen too many MIT licensed components moving slowly or getting abandoned
 The community isn't contributing improvements as fast as the problems deserved to be solved.
 
 We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
-A solution to a problem should only be commercial if it has no MIT alternatives.
+A feature should only be commercial if it has no great MIT alternatives.
 
 Find more details [on the docs](https://mui.com/x/advanced-components/#licenses).
 
