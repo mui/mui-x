@@ -3,8 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## TODO RELEASE NAME
+_Apr 14, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Add support for React 18 (#4332) @m4theushw
+
+- 🎁 Add support for [Column spanning](https://mui.com/x/react-data-grid/columns/#column-spanning) (#4020) @cherniavskii
+
+  <img src="https://user-images.githubusercontent.com/13808724/162926746-93bcb180-3c9d-4eb9-afc7-c3908a5c6406.png" width="788">
+
+- 🌍 Add Hungarian (hu-HU) locale (#4458) @x22tri
+
+### `@mui/x-data-grid@v5.9.0` / `@mui/x-data-grid-pro@v5.9.0`
+
+#### Changes
+
+- [DataGrid] Add indexes relative to the filtered rows and the current page to the `getRowClassName` and `getRowSpacing` props (#3882) @flaviendelangle
+- [DataGrid] Add React 18 to peer dependencies (#4332) @m4theushw
+- [DataGrid] Apply filtering before sorting (#4359) @flaviendelangle
+- [DataGrid] Column spanning (#4020) @cherniavskii
+- [DataGrid] Enable using non-native Select in filter panel (#4361) @kyeongsoosoo
+- [DataGrid] Fix `api` prop leaking to DOM (#4384) @m4theushw
+- [DataGrid] Fix column dimensions import/export with flex and resizing (#4311) @flaviendelangle
+- [DataGrid] Fix inconsistent overlay when changing the `loading` prop (#4334) @m4theushw
+- [DataGrid] Fix scrollbar grabbing issue in Safari (#4405) @cherniavskii
+- [DataGrid] `GridCellParams.formattedValue` should be nullable (#4376) @flaviendelangle
+- [DataGrid] Prevent column header scroll (#4280) @m4theushw
+- [DataGridPro] Fix toggling detail panel using keyboard (#4409) @cherniavskii
+- [l10n] Add Hungarian (hu-HU) locale (#4458) @x22tri
+
+### `@mui/x-date-pickers@5.0.0-alpha.1` / `@mui/x-date-pickers-pro@5.0.0-alpha.1
+
+##### Changes
+
+- [ClockPicker] Should call shouldDisableTime with the hours with meridiem (#4404) @flaviendelangle
+- [MonthPicker] Clicking on a PickersMonth button should not trigger the form submit (#4402) @flaviendelangle
+- [TimePicker] Only update time when updating input in TimePicker (#4398) @flaviendelangle
+- [pickers] Add react-dom to pickers peer deps to satisfy react-transition-group (#4411) @CarsonF
+- [pickers] Add TDate generic to CalendarOrClockPicker component (#4465) @flaviendelangle
+- [pickers] Export MuiPickersAdapterContext (#4367) @flaviendelangle
+
+### Docs
+
+- [docs] Avoid redirections (#4365) @oliviertassinari
+- [docs] Fix doc about date adapter (#4386) @alexfauquette
+- [docs] Fix small external links issue (#4436) @oliviertassinari
+- [docs] Fix some links to date picker docs (#4362) @oliviertassinari
+- [docs] Fix wrong url (#4415) @siriwatknp
+- [docs] Go live with the new urls! (#4313) @siriwatknp
+- [docs] Update the product names to be in sync @oliviertassinari
+
+### Core
+
+- [core] Add technical doc for pipe processing and family processing (#4322) @flaviendelangle
+- [core] Don't upgrade CircleCI node (#4457) @m4theushw
+- [core] Fix default props behavior on all pickers (#4451) @flaviendelangle
+- [core] Fix flaky e2e-website tests in CI (#4136) @cherniavskii
+- [core] Fix license file copying during build (#4462) @flaviendelangle
+- [core] Fix links on v5.8.0 (#4464) @oliviertassinari
+- [core] Fix npm page description mistake (#4364) @oliviertassinari
+- [core] Fix typos and JSDoc (#4406) @flaviendelangle
+- [core] Move away for the event system to trigger pipe processings (#4378) @flaviendelangle
+- [core] Small fixes TS on pickers (#4461) @flaviendelangle
+- [core] Unify tests (#4368) @flaviendelangle
+
 ## 5.8.0
-<!-- generated comparing v5.7.0..master -->
 _Apr 4, 2022_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
