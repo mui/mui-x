@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - 📚 New standalone documentation for MUI X (#4313) @siriwatknp
 
-  Each MUI product now have its own documentation.
+  Each MUI product now has its own documentation.
   More information on our [blog post](https://mui.com/blog/docs-restructure-2022/).
 
 - 🌍 Add Hungarian (hu-HU) locale (#4458) @x22tri
