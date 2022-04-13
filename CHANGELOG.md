@@ -14,7 +14,14 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
   <img src="https://user-images.githubusercontent.com/13808724/162926746-93bcb180-3c9d-4eb9-afc7-c3908a5c6406.png" width="788">
 
+- 📚 New standalone documentation for MUI X (#4313) @siriwatknp
+
+  Each MUI product now have its own documentation.
+  More information on our [blog post](https://mui.com/blog/docs-restructure-2022/).
+
 - 🌍 Add Hungarian (hu-HU) locale (#4458) @x22tri
+
+- 🐞 Bug fixes
 
 ### `@mui/x-data-grid@v5.9.0` / `@mui/x-data-grid-pro@v5.9.0`
 
