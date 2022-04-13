@@ -76,7 +76,8 @@ export interface GridRenderCellParams<V = any, R extends GridValidRowModel = any
    */
   api: any;
   /**
-   * A ref pointing to the element that should receive focus.
+   * A ref allowing to set imperative focus.
+   * It can be passed to the element that should receive focus.
    * @ignore - do not document.
    */
   focusElementRef?: React.Ref<FocusElement>;

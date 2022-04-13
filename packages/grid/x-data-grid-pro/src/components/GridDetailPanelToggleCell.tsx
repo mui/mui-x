@@ -76,7 +76,8 @@ GridDetailPanelToggleCell.propTypes = {
    */
   field: PropTypes.string.isRequired,
   /**
-   * A ref pointing to the element that should receive focus.
+   * A ref allowing to set imperative focus.
+   * It can be passed to the element that should receive focus.
    * @ignore - do not document.
    */
   focusElementRef: PropTypes.oneOfType([
