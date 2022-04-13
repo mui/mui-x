@@ -52,7 +52,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [pickers] Add react-dom to pickers peer deps to satisfy react-transition-group (#4411) @CarsonF
 - [pickers] Add `TDate` generic to `CalendarOrClockPicker` component (#4465) @flaviendelangle
 - [pickers] Fix default props behavior on all pickers (#4451) @flaviendelangle
-- [pickers] Export MuiPickersAdapterContext (#4367) @flaviendelangle
+- [pickers] Export `MuiPickersAdapterContext` (#4367) @flaviendelangle
 
 ### Docs
 
