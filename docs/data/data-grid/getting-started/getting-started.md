@@ -161,7 +161,7 @@ The enterprise components come in two plans: Pro and Premium.
 | :------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
 | **Column**                                                                             |           |                                    |
 | [Column groups](/x/react-data-grid/columns/#column-groups)                             |    🚧     |                 🚧                 |                     🚧                     |
-| [Column spanning](/x/react-data-grid/columns/#column-spanning)                         |    🚧     |                 🚧                 |                     🚧                     |
+| [Column spanning](/x/react-data-grid/columns/#column-spanning)                         |    ✅     |                 ✅                 |                     ✅                     |
 | [Column resizing](/x/react-data-grid/columns/#resizing)                                |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/x/react-data-grid/columns/#column-reorder)                           |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/x/react-data-grid/columns/#column-pinning)                           |    ❌     |                 ✅                 |                     ✅                     |

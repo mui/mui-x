@@ -11,13 +11,13 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - 🚀 Expose new methods to save and restore the grid state (#4028) @flaviendelangle
 
-  The different methods to save and restore the data-grid state are now [documented](mui.com/components/data-grid/state/#save-and-restore-the-state)
+  The different methods to save and restore the data-grid state are now [documented](https://mui.com/x/react-data-grid/state/#save-and-restore-the-state).
 
 - ⌚️ Move date and time picker components from the lab (#3451) @flaviendelangle
 
-  Date and time picker components have been moved to the MUI-X repo.
+  Date and time picker components have been moved to the MUI X repository.
   They are now accessible in their own packages: `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
-  For more information, you can read the [blog article](https://mui.com/blog/lab-pickers-to-mui-x) and the [migration guide](https://mui.com/x/react-date-pickers/migration-lab)
+  For more information, you can read the [blog article](https://mui.com/blog/lab-date-pickers-to-mui-x/) and the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
 
 - 📝 Add `onProcessRowUpdateError` prop to simplify error management in edit mode (#4267) @m4theushw
 - ✨ Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle

@@ -341,7 +341,7 @@ Both props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/
 />
 ```
 
-To expand a row click on the "i" icon, or press <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> inside one of the cells of the row.
+To expand a row, click on the `+` icon or press <kbd class="key">Space</kbd> inside the detail toggle column.
 Returning `null` or `undefined` as the value of `getDetailPanelContent` will prevent the respective row from being expanded.
 
 {{"demo": "BasicDetailPanels.js", "bg": "inline", "defaultCodeOpen": false}}

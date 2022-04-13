@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { pick12hOr24hFormat } from '../internals/utils/text-field-helper';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
@@ -80,56 +79,43 @@ export function useDateTimePickerDefaultizedProps<
   TDate,
   Props extends BaseDateTimePickerProps<TDate>,
 >(
-  {
-    ampm,
-    inputFormat,
-    maxDate: maxDateProp,
-    maxDateTime,
-    maxTime,
-    minDate: minDateProp,
-    minDateTime,
-    minTime,
-    openTo = 'day',
-    orientation = 'portrait',
-    views = ['year', 'day', 'hours', 'minutes'],
-    ...other
-  }: Props,
+  props: Props,
   name: string,
 ): DefaultizedProps<Props> & Required<Pick<BaseDateTimePickerProps<TDate>, 'openTo' | 'views'>> {
+  // This is technically unsound if the type parameters appear in optional props.
+  // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
+  const themeProps = useThemeProps({
+    props,
+    name,
+  });
+
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const minDate = minDateProp ?? defaultDates.minDate;
-  const maxDate = maxDateProp ?? defaultDates.maxDate;
-  const willUseAmPm = ampm ?? utils.is12HourCycleInCurrentLocale();
+  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  if (orientation !== 'portrait') {
+  if (themeProps.orientation != null && themeProps.orientation !== 'portrait') {
     throw new Error('We are not supporting custom orientation for DateTimePicker yet :(');
   }
 
-  return useThemeProps({
-    props: {
-      openTo,
-      views,
-      ampm: willUseAmPm,
-      ampmInClock: true,
-      orientation,
-      showToolbar: true,
-      allowSameDateSelection: true,
-      minDate: minDateTime ?? minDate,
-      minTime: minDateTime ?? minTime,
-      maxDate: maxDateTime ?? maxDate,
-      maxTime: maxDateTime ?? maxTime,
-      disableIgnoringDatePartForTimeValidation: Boolean(minDateTime || maxDateTime),
-      acceptRegex: willUseAmPm ? /[\dap]/gi : /\d/gi,
-      mask: '__/__/____ __:__',
-      disableMaskedInput: willUseAmPm,
-      inputFormat: pick12hOr24hFormat(inputFormat, willUseAmPm, {
-        localized: utils.formats.keyboardDateTime,
-        '12h': utils.formats.keyboardDateTime12h,
-        '24h': utils.formats.keyboardDateTime24h,
-      }),
-      ...(other as Props),
-    },
-    name,
-  });
+  return {
+    ampm,
+    orientation: 'portrait',
+    openTo: 'day',
+    views: ['year', 'day', 'hours', 'minutes'],
+    ampmInClock: true,
+    showToolbar: false,
+    allowSameDateSelection: true,
+    mask: '__/__/____ __:__',
+    acceptRegex: ampm ? /[\dap]/gi : /\d/gi,
+    disableMaskedInput: ampm,
+    inputFormat: ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h,
+    disableIgnoringDatePartForTimeValidation: Boolean(
+      themeProps.minDateTime || themeProps.maxDateTime,
+    ),
+    ...themeProps,
+    minDate: themeProps.minDateTime ?? themeProps.minDate ?? defaultDates.minDate,
+    maxDate: themeProps.maxDateTime ?? themeProps.maxDate ?? defaultDates.maxDate,
+    minTime: themeProps.minDateTime ?? themeProps.minTime,
+    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+  };
 }

@@ -225,6 +225,11 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    * @default false
    */
   disableExport?: boolean;
+  /**
+   * Number of columns a cell should span.
+   * @default 1
+   */
+  colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
 }
 
 export interface GridActionsColDef extends GridColDef {
