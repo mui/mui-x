@@ -143,11 +143,11 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     maxDate,
   };
 
-  const { pickerProps, inputProps, wrapperProps } = usePickerState<
-    RangeInput<TDate>,
-    DateRange<TDate>
-  >(pickerStateProps, rangePickerValueManager);
-
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(
+    pickerStateProps,
+    rangePickerValueManager,
+    displayStaticWrapperAs,
+  );
   const validationError = useDateRangeValidation(props);
 
   const DateInputProps = {

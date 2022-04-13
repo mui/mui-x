@@ -51,9 +51,6 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate
     'MuiStaticTimePicker',
   );
 
-  const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps } = usePickerState(props, valueManager, null);
-
   const {
     displayStaticWrapperAs = 'mobile',
     onChange,
@@ -61,6 +58,10 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate
     value,
     ...other
   } = props;
+
+  const validationError = useTimeValidation(props) !== null;
+  const { pickerProps, inputProps } = usePickerState(props, valueManager, displayStaticWrapperAs);
+
   const DateInputProps = { ...inputProps, ...other, ref, validationError };
 
   return (
