@@ -26,6 +26,7 @@ import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GridRenderEditCellParams } from '../models/params/gridCellParams';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -172,7 +173,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         }
 
         // User opened a detail panel
-        if (field === '__detail_panel_toggle__') {
+        if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
           return;
         }
 
