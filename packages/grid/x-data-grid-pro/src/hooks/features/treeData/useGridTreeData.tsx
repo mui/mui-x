@@ -18,9 +18,6 @@ export const useGridTreeData = (apiRef: React.MutableRefObject<GridApiPro>) => {
     (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
       if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ' && !event.shiftKey) {
-        event.stopPropagation();
-        event.preventDefault();
-
         const filteredDescendantCount =
           gridFilteredDescendantCountLookupSelector(apiRef)[params.id] ?? 0;
 

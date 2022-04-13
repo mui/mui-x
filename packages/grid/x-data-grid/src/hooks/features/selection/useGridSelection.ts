@@ -22,6 +22,7 @@ import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
 import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridSelectionModel } from '../../../models';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['selectionModel'],
@@ -318,7 +319,7 @@ export const useGridSelection = (
         return;
       }
 
-      if (params.field === '__detail_panel_toggle__') {
+      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
         // click to open the detail panel should not select the row
         return;
       }
