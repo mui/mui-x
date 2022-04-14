@@ -126,18 +126,21 @@ export const usePickerState = <TInput, TDate>(
         }
       });
 
-      if (!params.internal) {
+      if (
+        !params.internal &&
+        !valueManager.areValuesEqual(utils, dateState.committed, params.value)
+      ) {
         onChange(params.value);
       }
 
       if (params.action === 'acceptAndClose') {
         setIsOpen(false);
-        if (onAccept) {
+        if (onAccept && !valueManager.areValuesEqual(utils, dateState.resetTarget, params.value)) {
           onAccept(params.value);
         }
       }
     },
-    [onAccept, onChange, setIsOpen],
+    [onAccept, onChange, setIsOpen, dateState, utils, valueManager],
   );
 
   React.useEffect(() => {
