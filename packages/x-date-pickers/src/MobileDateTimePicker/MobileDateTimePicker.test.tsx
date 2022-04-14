@@ -25,7 +25,7 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByRole('dialog')).toBeVisible();
   });
 
-  it('allows to select full date end-to-end', function test() {
+  it('should allow to select full date end-to-end', function test() {
     if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
       this.skip();
     }
@@ -90,8 +90,10 @@ describe('<MobileDateTimePicker />', () => {
 
     fireEvent.click(screen.getByText(/ok/i));
 
-    expect(onChangeMock.callCount).to.equal(5);
-    expect(onChangeMock.args[4][0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:53:00.000'));
+    expect(onChangeMock.callCount).to.equal(4);
+    expect(onChangeMock.lastCall.args[0]).toEqualDateTime(
+      adapterToUse.date('2010-01-15T11:53:00.000'),
+    );
   });
 
   it('prop: open – overrides open state', () => {

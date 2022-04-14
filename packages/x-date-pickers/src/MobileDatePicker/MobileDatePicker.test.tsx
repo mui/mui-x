@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
+import { SinonSpy, spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
@@ -16,7 +16,7 @@ import {
 describe('<MobileDatePicker />', () => {
   const { clock, render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
 
-  it('Accepts date on `OK` button click', () => {
+  it('should accept date on `OK` button click', () => {
     const onChangeMock = spy();
     render(
       <MobileDatePicker
@@ -34,8 +34,7 @@ describe('<MobileDatePicker />', () => {
     expect(screen.queryByRole('dialog')).not.to.equal(null);
 
     fireEvent.click(screen.getByText(/ok/i));
-    // TODO revisit calling onChange twice. Now it is expected for mobile mode.
-    expect(onChangeMock.callCount).to.equal(2);
+    expect(onChangeMock.callCount).to.equal(1);
     expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
@@ -313,28 +312,34 @@ describe('<MobileDatePicker />', () => {
   });
 
   it('should reset the values on clicking Cancel button', () => {
-    const onChangeCallback = spy();
-
+    const onChangeSpy = spy();
     const initialDateValue = adapterToUse.date('2018-01-01T00:00:00.000');
 
-    render(
-      <MobileDatePicker
-        value={initialDateValue}
-        onChange={onChangeCallback}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
+    const TestCase = () => {
+      const [value, setValue] = React.useState<Date | null>(initialDateValue);
+
+      const handleChange = (newValue: Date | null) => {
+        setValue(newValue);
+        onChangeSpy(newValue);
+      };
+
+      return (
+        <MobileDatePicker
+          value={value}
+          onChange={handleChange}
+          renderInput={(params) => <TextField {...params} />}
+        />
+      );
+    };
+
+    render(<TestCase />);
 
     fireEvent.click(screen.getByRole('textbox'));
     fireEvent.click(screen.getByLabelText('Jan 8, 2018')); // changing date followed by clicking cancel button
 
     fireEvent.click(screen.getByText(/cancel/i));
 
-    /**
-     * picking second arg, as callback is being called twice.
-     * First, while selecting temporary date (Jan 31, 2022 in this case)
-     * Second, while clicking cancel (which is setting date back to initial value)
-     */
-    expect(adapterToUse.date(onChangeCallback.args[1][0])).toEqualDateTime(initialDateValue);
+    expect(onChangeSpy!.callCount).to.equal(2);
+    expect(adapterToUse.date(onChangeSpy!.lastCall.args[0])).toEqualDateTime(initialDateValue);
   });
 });
