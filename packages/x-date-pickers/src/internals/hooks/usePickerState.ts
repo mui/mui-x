@@ -193,11 +193,7 @@ export const usePickerState = <TInput, TDate>(
         setDate({ value: dateState.resetTarget, action: 'acceptAndClose' });
       },
       onSetToday: () => {
-        if (shouldCloseOnSelect) {
-          setDate({ value: utils.date()!, action: 'acceptAndClose' });
-        } else {
-          setDate({ value: utils.date()!, action: 'setCommitted' });
-        }
+        setDate({ value: utils.date()!, action: 'acceptAndClose' });
       },
     }),
     [setDate, shouldCloseOnSelect, isOpen, utils, dateState, valueManager.emptyValue],
