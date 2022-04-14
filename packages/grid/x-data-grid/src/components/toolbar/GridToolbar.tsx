@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import {
   GridToolbarContainer,
   GridToolbarContainerProps,
@@ -9,10 +10,19 @@ import { GridToolbarDensitySelector } from './GridToolbarDensitySelector';
 import { GridToolbarFilterButton } from './GridToolbarFilterButton';
 import { GridToolbarExport, GridToolbarExportProps } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolbarQuickFilter';
+
+const GridToolbarButtonsWrapper = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ToolbarButtonsWrapper',
+  overridesResolver: (props, styles) => styles.toolbarButtonsWrapper,
+})(() => ({
+  marginRight: 'auto',
+}));
 
 export interface GridToolbarProps
   extends GridToolbarContainerProps,
-  Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {
+    Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {
   /**
    * Show the quick filter component
    */
@@ -27,23 +37,34 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function 
   props,
   ref,
 ) {
-  const { className, csvOptions, printOptions, ...other } = props;
+  const {
+    className,
+    csvOptions,
+    printOptions,
+    showQuickFilter = false,
+    quickFilterOptions = {},
+    ...other
+  } = props;
   const rootProps = useGridRootProps();
 
   if (
     rootProps.disableColumnFilter &&
     rootProps.disableColumnSelector &&
-    rootProps.disableDensitySelector
+    rootProps.disableDensitySelector &&
+    !showQuickFilter
   ) {
     return null;
   }
 
   return (
     <GridToolbarContainer ref={ref} {...other}>
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarExport csvOptions={csvOptions} printOptions={printOptions} />
+      <GridToolbarButtonsWrapper>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+        <GridToolbarExport csvOptions={csvOptions} printOptions={printOptions} />
+      </GridToolbarButtonsWrapper>
+      {showQuickFilter && <GridToolbarQuickFilter {...quickFilterOptions} />}
     </GridToolbarContainer>
   );
 });

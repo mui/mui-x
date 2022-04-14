@@ -1,21 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 import { useDemoData } from '@mui/x-data-grid-generator';
-
-function QuickSearchToolbar() {
-  return (
-    <Box
-      sx={{
-        p: 0.5,
-        pb: 0,
-      }}
-    >
-      <GridToolbarQuickFilter />
-    </Box>
-  );
-}
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
@@ -37,7 +24,7 @@ export default function QuickFilteringGrid() {
       <DataGrid
         {...data}
         columns={columns}
-        components={{ Toolbar: QuickSearchToolbar }}
+        componentsProps={{ toolbar: { showQuickFilter: true } }}
       />
     </Box>
   );

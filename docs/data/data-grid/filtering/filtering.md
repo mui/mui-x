@@ -309,7 +309,9 @@ The example below demonstrates how to achieve server-side filtering.
 
 ## Quick filter
 
-The package also provides a component `<GridToolbarQuickFilter/>` which filters rows without specifying the concerned columns.
+Quick filter allows filtering rows using free text.
+To enable it, you can add the `<GridToolbarQuickFilter />` component to your custom toolbar or pass `showQuickFilter` to the default `<GridToolbar />`.
+
 By default, the quick filter considers the input as a list of values separated by space and keeps only rows that contain all the values.
 
 {{"demo": "QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
