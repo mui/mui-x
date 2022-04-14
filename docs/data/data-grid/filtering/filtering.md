@@ -318,8 +318,8 @@ By default, the quick filter considers the input as a list of values separated b
 
 ### Custom filtering logic
 
-The logic quick filter logic can be switched to filter rows that contain _at least_ one value instead for each of them.
-To do so, set `quickFilterLogicOperator` equals to `GridLinkOperator.Or` as follow:
+The logic used for quick filter can be switched to filter rows that contain _at least_ one of the value specified instead of testing if it contains all of them.
+To do so, set `quickFilterLogicOperator` to `GridLinkOperator.Or` as follow:
 
 ```js
 initialState={{
@@ -329,17 +329,17 @@ initialState={{
 }}
 ```
 
-With default settings, the quick filter will only consider columns with types `string`,`number`, and `singleSelect`
+With the default settings, quick filter will only consider columns with types `string`,`number`, and `singleSelect`.
 
-- For columns with type `string` the cell must contain the value to pass the filter
-- For columns with type `number` the cell must equal the value to pass the filter
-- For columns with type `singleSelect` the cell must start like the value to pass the filter
+- For columns with type `string`, the cell must contain the value to pass the filter
+- For columns with type `number`, the cell must be equal to the value to pass the filter
+- For columns with type `singleSelect`, the cell must start like the value to pass the filter
 
 To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.
 This function is quite similar to `getApplyFilterFn`.
 This function takes as an input a value of the quick filter and returns another function that takes the cell value as an input and returns `true` if it satisfies the operator condition.
 
-In the example bellow, we filter a `date` column by checking if it contains the correct year.
+In the example below, a custom filter is created for the `date` column to check if it contains the correct year.
 
 ```ts
 getApplyFilterFn: (value: string) => {
