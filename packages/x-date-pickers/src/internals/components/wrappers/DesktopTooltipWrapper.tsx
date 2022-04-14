@@ -14,9 +14,6 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
     open,
     PopperProps,
     TransitionComponent,
-    onClear,
-    clearText,
-    clearable,
   } = props;
   const inputContainerRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
@@ -48,9 +45,6 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
         PopperProps={PopperProps}
         onBlur={handleBlur}
         onClose={onDismiss}
-        onClear={onClear}
-        clearText={clearText}
-        clearable={clearable}
       >
         {children}
       </PickersPopper>

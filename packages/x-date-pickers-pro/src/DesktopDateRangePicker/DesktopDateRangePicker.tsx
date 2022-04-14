@@ -58,8 +58,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     'MuiDesktopDateRangePicker',
   );
 
-  const { value, onChange, PopperProps, TransitionComponent, clearText,
-    clearable, ...other } = props;
+  const { value, onChange, PopperProps, TransitionComponent, ...other } = props;
 
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
     'start' | 'end'
@@ -94,8 +93,6 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       KeyboardDateInputComponent={KeyboardDateInputComponent}
       PopperProps={PopperProps}
       TransitionComponent={TransitionComponent}
-      clearable={clearable}
-      clearText={clearText}
     >
       <DateRangePickerView<any>
         open={wrapperProps.open}

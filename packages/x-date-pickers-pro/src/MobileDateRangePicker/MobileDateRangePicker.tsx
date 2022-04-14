@@ -58,8 +58,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     'MuiMobileDateRangePicker',
   );
 
-  const { value, onChange, clearText,
-    clearable, ...other } = props;
+  const { value, onChange, ...other } = props;
 
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
     'start' | 'end'
@@ -91,8 +90,6 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     <MobileWrapper
       {...other}
       {...wrapperProps}
-      clearText={clearText}
-      clearable={clearable}
       DateInputProps={DateInputProps}
       PureDateInputComponent={PureDateInputComponent}
     >
