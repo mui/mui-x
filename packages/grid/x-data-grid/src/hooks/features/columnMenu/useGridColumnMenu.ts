@@ -3,7 +3,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEvents } from '../../../models/events';
 import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
-import { GridColumnMenuApi } from '../../../models';
+import { GridColumnMenuApi, GridEventListener } from '../../../models';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
@@ -17,6 +17,7 @@ export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
  */
 export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
+  const scrollTop = React.useRef(apiRef.current.getScrollPosition().top);
 
   /**
    * API METHODS
@@ -29,6 +30,8 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
         }
 
         logger.debug('Opening Column Menu');
+        scrollTop.current = apiRef.current.getScrollPosition().top;
+
         return {
           ...state,
           columnMenu: { open: true, field },
@@ -85,6 +88,15 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
   /**
    * EVENTS
    */
+  const handleRowsScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(
+    (params) => {
+      if (params.top !== scrollTop.current) {
+        apiRef.current.hideColumnMenu();
+      }
+    },
+    [apiRef],
+  );
+
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
-  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, hideColumnMenu);
+  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleRowsScroll);
 };
