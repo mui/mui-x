@@ -25,6 +25,7 @@
   { "name": "fiFI", "kind": "Variable" },
   { "name": "filterableGridColumnsIdsSelector", "kind": "Variable" },
   { "name": "filterableGridColumnsSelector", "kind": "Variable" },
+  { "name": "FocusElement", "kind": "Interface" },
   { "name": "frFR", "kind": "Variable" },
   { "name": "getDataGridUtilityClass", "kind": "Function" },
   { "name": "getDefaultGridFilterModel", "kind": "Variable" },
