@@ -77,6 +77,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [core] Move away for the event system to trigger pipe processings (#4378) @flaviendelangle
 - [core] Small fixes TS on pickers (#4461) @flaviendelangle
 - [core] Unify tests (#4368) @flaviendelangle
+- [core] Enforce `noImplicitAny` in `docs` folder (#4412) @cherniavskii
 
 ## 5.8.0
 
@@ -99,17 +100,19 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
   You can now strongly type all the objects related to the row and the cell values.
   Here is an example, you can find out more in the description of #4064.
-  
+
   ```tsx
   const rows: Movie[] = [];
 
   return (
-    <DataGrid 
+    <DataGrid
       rows={rows}
-      columns={[{ 
-        // typeof params.row => Movie (R)
-        valueGetter: params => params.row.year, 
-      }]}
+      columns={[
+        {
+          // typeof params.row => Movie (R)
+          valueGetter: (params) => params.row.year,
+        },
+      ]}
     />
   );
   ```
@@ -301,7 +304,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   -const filterableFields = filterableGridColumnsIdsSelector(apiRef);
   +const lookup = gridFilterableColumnLookupSelector(apiRef);
   +const filterableFields = gridColumnFieldsSelector(apiRef).filter(field => lookup[field]);
-  
+
   -const visibleColumnsNumber = visibleGridColumnsLengthSelector(apiRef);
   +const visibleColumnsNumber = gridVisibleColumnDefinitionsSelector(apiRef).length;
 
