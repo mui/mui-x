@@ -1,8 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
 import { debounce } from '@mui/material/utils';
@@ -15,7 +13,6 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
 })(({ theme }) => ({
   width: 'auto',
-  margin: theme.spacing(1, 0.5, 1.5, 0.5),
   '& .MuiSvgIcon-root': {
     marginRight: theme.spacing(0.5),
   },
@@ -70,11 +67,6 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     [debouncedUpdateSearchValue],
   );
 
-  const clearSearchValue = React.useCallback(() => {
-    setSearchValue('');
-    apiRef.current.setQuickFilterValues([]);
-  }, [apiRef]);
-
   return (
     <GridToolbarQuickFilterRoot
       as={rootProps.components.BaseTextField}
@@ -86,17 +78,6 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       type="search"
       InputProps={{
         startAdornment: <SearchIcon fontSize="small" />,
-        endAdornment: (
-          <IconButton
-            title={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
-            size="small"
-            disabled={!searchValue}
-            style={{ visibility: searchValue ? 'visible' : 'hidden' }}
-            onClick={clearSearchValue}
-          >
-            <ClearIcon fontSize="small" />
-          </IconButton>
-        ),
       }}
       {...other}
       {...rootProps.componentsProps?.baseTextField}
