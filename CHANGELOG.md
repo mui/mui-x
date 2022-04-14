@@ -9,7 +9,9 @@ _Apr 14, 2022_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- ⚡ Add support for React 18 (#4332) @m4theushw
+- ⚡ Update peer dependencies to support React 18 (#4332) @m4theushw
+
+  Now the data grid and pickers components support the concurrent mode.
 
 - 🎁 Add support for [Column spanning](https://mui.com/x/react-data-grid/columns/#column-spanning) (#4020) @cherniavskii
 
@@ -26,8 +28,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 ### `@mui/x-data-grid@v5.9.0` / `@mui/x-data-grid-pro@v5.9.0`
 
-#### Changes
-
 - [DataGrid] Add indexes relative to the filtered rows and the current page to the `getRowClassName` and `getRowSpacing` props (#3882) @flaviendelangle
 - [DataGrid] Add React 18 to peer dependencies (#4332) @m4theushw
 - [DataGrid] Apply filtering before sorting (#4359) @flaviendelangle
@@ -43,8 +43,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [l10n] Add Hungarian (hu-HU) locale (#4458) @x22tri
 
 ### `@mui/x-date-pickers@5.0.0-alpha.1` / `@mui/x-date-pickers-pro@5.0.0-alpha.1`
-
-#### Changes
 
 - [ClockPicker] Should call shouldDisableTime with the hours with meridiem (#4404) @flaviendelangle
 - [MonthPicker] Clicking on a PickersMonth button should not trigger the form submit (#4402) @flaviendelangle
