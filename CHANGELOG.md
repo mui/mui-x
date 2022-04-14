@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - 📚 New standalone documentation for MUI X (#4313) @siriwatknp
 
-  Each MUI product now have its own documentation.
+  Each MUI product now has its own documentation.
   More information on our [blog post](https://mui.com/blog/docs-restructure-2022/).
 
 - 🌍 Add Hungarian (hu-HU) locale (#4458) @x22tri
@@ -30,27 +30,30 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [DataGrid] Add indexes relative to the filtered rows and the current page to the `getRowClassName` and `getRowSpacing` props (#3882) @flaviendelangle
 - [DataGrid] Add React 18 to peer dependencies (#4332) @m4theushw
+- [DataGrid] Add support for column spanning (#4020) @cherniavskii
 - [DataGrid] Apply filtering before sorting (#4359) @flaviendelangle
-- [DataGrid] Column spanning (#4020) @cherniavskii
 - [DataGrid] Enable using non-native Select in filter panel (#4361) @kyeongsoosoo
 - [DataGrid] Fix `api` prop leaking to DOM (#4384) @m4theushw
 - [DataGrid] Fix column dimensions import/export with flex and resizing (#4311) @flaviendelangle
+- [DataGrid] Fix focus after stopping row edit mode with pagination enabled (#4326) @m4theushw
 - [DataGrid] Fix inconsistent overlay when changing the `loading` prop (#4334) @m4theushw
 - [DataGrid] Fix scrollbar grabbing issue in Safari (#4405) @cherniavskii
 - [DataGrid] `GridCellParams.formattedValue` should be nullable (#4376) @flaviendelangle
+- [DataGrid] Improve accessibility of the `actions` column (#4325) @m4theushw
+- [DataGrid] Pass updated row to edit components (#4392) @m4theushw
 - [DataGrid] Prevent column header scroll (#4280) @m4theushw
 - [DataGridPro] Fix toggling detail panel using keyboard (#4409) @cherniavskii
 - [l10n] Add Hungarian (hu-HU) locale (#4458) @x22tri
 
 ### `@mui/x-date-pickers@5.0.0-alpha.1` / `@mui/x-date-pickers-pro@5.0.0-alpha.1`
 
-- [ClockPicker] Should call shouldDisableTime with the hours with meridiem (#4404) @flaviendelangle
-- [MonthPicker] Clicking on a PickersMonth button should not trigger the form submit (#4402) @flaviendelangle
-- [TimePicker] Only update time when updating input in TimePicker (#4398) @flaviendelangle
+- [ClockPicker] Should call `shouldDisableTime` with the hours with meridiem (#4404) @flaviendelangle
+- [MonthPicker] Clicking on a `PickersMonth` button should not trigger the form submit (#4402) @flaviendelangle
+- [TimePicker] Do not update date when updating input in `TimePicker` (#4398) @flaviendelangle
 - [pickers] Add react-dom to pickers peer deps to satisfy react-transition-group (#4411) @CarsonF
-- [pickers] Add TDate generic to CalendarOrClockPicker component (#4465) @flaviendelangle
+- [pickers] Add `TDate` generic to `CalendarOrClockPicker` component (#4465) @flaviendelangle
 - [pickers] Fix default props behavior on all pickers (#4451) @flaviendelangle
-- [pickers] Export MuiPickersAdapterContext (#4367) @flaviendelangle
+- [pickers] Export `MuiPickersAdapterContext` (#4367) @flaviendelangle
 
 ### Docs
 
@@ -58,8 +61,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Fix doc about date adapter (#4386) @alexfauquette
 - [docs] Fix small external links issue (#4436) @oliviertassinari
 - [docs] Fix some links to date picker docs (#4362) @oliviertassinari
-- [docs] Fix wrong url (#4415) @siriwatknp
-- [docs] Go live with the new urls! (#4313) @siriwatknp
+- [docs] Fix wrong URL (#4415) @siriwatknp
+- [docs] Go live with the new URLs (#4313) @siriwatknp
 - [docs] Update the product names to be in sync @oliviertassinari
 
 ### Core
