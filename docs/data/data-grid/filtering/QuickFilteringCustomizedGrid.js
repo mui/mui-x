@@ -71,7 +71,7 @@ export default function QuickFilteringCustomizedGrid() {
           filter: {
             filterModel: {
               items: [],
-              quickFilterLinkOperator: GridLinkOperator.Or,
+              quickFilterLogicOperator: GridLinkOperator.Or,
             },
           },
         }}

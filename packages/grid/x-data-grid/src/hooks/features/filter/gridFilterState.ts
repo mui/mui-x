@@ -6,7 +6,7 @@ export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
   items: [],
   linkOperator: GridLinkOperator.And,
   quickFilterValues: [],
-  quickFilterLinkOperator: GridLinkOperator.And,
+  quickFilterLogicOperator: GridLinkOperator.And,
 });
 
 export interface GridFilterState {

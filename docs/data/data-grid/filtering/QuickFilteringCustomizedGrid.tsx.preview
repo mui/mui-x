@@ -5,7 +5,7 @@
     filter: {
       filterModel: {
         items: [],
-        quickFilterLinkOperator: GridLinkOperator.Or,
+        quickFilterLogicOperator: GridLinkOperator.Or,
       },
     },
   }}

@@ -213,7 +213,7 @@ export const buildAggregatedQuickFilterApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridAggregatedFilterItemApplier | null => {
-  const { quickFilterValues = [], quickFilterLinkOperator = GridLinkOperator.And } = filterModel;
+  const { quickFilterValues = [], quickFilterLogicOperator = GridLinkOperator.And } = filterModel;
   if (quickFilterValues.length === 0) {
     return null;
   }
@@ -251,7 +251,7 @@ export const buildAggregatedQuickFilterApplier = (
     });
 
     // Return `false` as soon as we have a quick filter value that does not match any column
-    if (quickFilterLinkOperator === GridLinkOperator.And) {
+    if (quickFilterLogicOperator === GridLinkOperator.And) {
       return sanitizedQuickFilterValues.every((value, index) =>
         Object.keys(appliersPerColumnField).some((field) => {
           if (appliersPerColumnField[field][index] == null) {

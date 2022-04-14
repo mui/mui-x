@@ -83,14 +83,14 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       onChange={handleSearchValueChange}
       placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
-      role="search"
+      type="search"
       InputProps={{
         startAdornment: <SearchIcon fontSize="small" />,
         endAdornment: (
           <IconButton
-            aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             title={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             size="small"
+            disabled={!searchValue}
             style={{ visibility: searchValue ? 'visible' : 'hidden' }}
             onClick={clearSearchValue}
           >
@@ -99,6 +99,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
         ),
       }}
       {...other}
+      {...rootProps.componentsProps?.baseTextField}
     />
   );
 }

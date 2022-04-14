@@ -317,17 +317,17 @@ By default, the quick filter considers the input as a list of values separated b
 ### Custom filtering logic
 
 The logic quick filter logic can be switched to filter rows that contain _at least_ one value instead for each of them.
-To do so, set `quickFilterLinkOperator` equals to `GridLinkOperator.Or` as follow:
+To do so, set `quickFilterLogicOperator` equals to `GridLinkOperator.Or` as follow:
 
 ```js
 initialState={{
   filterModel: {
-    quickFilterLinkOperator: GridLinkOperator.Or
+    quickFilterLogicOperator: GridLinkOperator.Or
   }
 }}
 ```
 
-With default settings, the quick filter will only consider columns with types `string`,`number` and `singleSelect`
+With default settings, the quick filter will only consider columns with types `string`,`number`, and `singleSelect`
 
 - For columns with type `string` the cell must contain the value to pass the filter
 - For columns with type `number` the cell must equal the value to pass the filter

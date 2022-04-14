@@ -24,5 +24,5 @@ export interface GridFilterModel {
    * - `GridLinkOperator.Or`: the row must pass at least one value.
    * @default `GridLinkOperator.Or`
    */
-  quickFilterLinkOperator?: GridLinkOperator;
+  quickFilterLogicOperator?: GridLinkOperator;
 }
