@@ -30,7 +30,6 @@ function QuickSearchToolbar(props) {
           endAdornment: (
             <IconButton
               title="Clear"
-              aria-label="Clear"
               size="small"
               style={{ visibility: props.value ? 'visible' : 'hidden' }}
               onClick={props.clearSearch}

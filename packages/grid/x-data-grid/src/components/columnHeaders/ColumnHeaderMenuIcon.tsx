@@ -52,7 +52,6 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
         ref={iconButtonRef}
         tabIndex={-1}
         className={classes.button}
-        aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
         title={apiRef.current.getLocaleText('columnMenuLabel')}
         size="small"
         onClick={handleMenuIconClick}

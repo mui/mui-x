@@ -282,7 +282,6 @@ function GridFilterForm(props: GridFilterFormProps) {
         )}
       >
         <IconButton
-          aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
           title={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
           onClick={handleDeleteFilter}
           size="small"
