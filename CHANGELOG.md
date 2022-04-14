@@ -58,7 +58,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 ### Docs
 
 - [docs] Avoid redirections (#4365) @oliviertassinari
-- [docs] Fix doc about date adapter (#4386) @alexfauquette
+- [docs] Fix docs about date adapter (#4386) @alexfauquette
 - [docs] Fix small external links issue (#4436) @oliviertassinari
 - [docs] Fix some links to date picker docs (#4362) @oliviertassinari
 - [docs] Fix wrong URL (#4415) @siriwatknp
