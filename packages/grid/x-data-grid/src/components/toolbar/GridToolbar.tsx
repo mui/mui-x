@@ -12,7 +12,16 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface GridToolbarProps
   extends GridToolbarContainerProps,
-    Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {}
+  Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {
+  /**
+   * Show the quick filter component
+   */
+  showQuickFilter: boolean;
+  /**
+   * props passed to the quick filter component
+   */
+  quickFilterOptions: GridToolbarQuickFilterProps;
+}
 
 const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function GridToolbar(
   props,
