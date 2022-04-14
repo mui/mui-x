@@ -3,6 +3,8 @@ import { WrapperVariant } from '../components/wrappers/WrapperVariantContext';
 import { useOpenState } from './useOpenState';
 import { useUtils } from './useUtils';
 import { MuiPickersAdapter } from '../models';
+import { PrivateWrapperProps } from '../components/wrappers/WrapperProps';
+import { DateInputProps } from '../components/PureDateInput';
 
 export interface PickerStateValueManager<TInputValue, TDateValue> {
   areValuesEqual: (
@@ -149,6 +151,13 @@ export const usePickerState = <TInput, TDate>(
     }
   }, [parsedDateValue]);
 
+  React.useEffect(() => {
+    if (isOpen) {
+      // Update all dates in state to equal the current prop value
+      setDate({ action: 'setAll', value: parsedDateValue, internal: true });
+    }
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Set the draft and committed date to equal the new prop value.
   if (!valueManager.areValuesEqual(utils, dateState.committed, parsedDateValue)) {
     setDate({ action: 'setCommitted', value: parsedDateValue, internal: true });
@@ -156,7 +165,7 @@ export const usePickerState = <TInput, TDate>(
 
   const shouldCloseOnSelect = !(disableCloseOnSelect ?? wrapperVariant === 'mobile');
 
-  const wrapperProps = React.useMemo(
+  const wrapperProps = React.useMemo<PrivateWrapperProps>(
     () => ({
       open: isOpen,
       onClear: () => {
@@ -246,18 +255,16 @@ export const usePickerState = <TInput, TDate>(
     [onChange, valueManager, lastValidDateValue, utils],
   );
 
-  const inputProps = React.useMemo(
+  const inputProps = React.useMemo<
+    Pick<DateInputProps<TInput, TDate>, 'onChange' | 'open' | 'rawValue' | 'openPicker'>
+  >(
     () => ({
       onChange: handleInputChange,
       open: isOpen,
       rawValue: value,
-      openPicker: () => {
-        // Update all dates in state to equal the current prop value
-        setDate({ action: 'setAll', value: parsedDateValue, internal: true });
-        setIsOpen(true);
-      },
+      openPicker: () => setIsOpen(true),
     }),
-    [setDate, handleInputChange, isOpen, value, setIsOpen, parsedDateValue],
+    [handleInputChange, isOpen, value, setIsOpen],
   );
 
   const pickerState = { pickerProps, inputProps, wrapperProps };
