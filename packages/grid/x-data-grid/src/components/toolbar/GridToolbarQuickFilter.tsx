@@ -29,7 +29,15 @@ const defaultSearchValueParser = (searchText: string) =>
   searchText.split(' ').filter((word) => word !== '');
 
 export type GridToolbarQuickFilterProps = TextFieldProps & {
+  /**
+   * Function responsible for parsing text input in an array of independent values for quick filtering.
+   * @param {string} input The value entered by the user
+   * @returns {any[]} The array of value on which quick filter is applied
+   */
   quickFilterParser?: (input: string) => any[];
+  /**
+   * The debounce time in milliseconds.
+   */
   debounceMs?: number;
 };
 
@@ -74,7 +82,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       value={searchValue}
       onChange={handleSearchValueChange}
       placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
-      label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
+      aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       role="search"
       InputProps={{
         startAdornment: <SearchIcon fontSize="small" />,
