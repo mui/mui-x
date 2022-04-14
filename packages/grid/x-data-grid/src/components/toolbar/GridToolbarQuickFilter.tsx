@@ -90,7 +90,15 @@ GridToolbarQuickFilter.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The debounce time in milliseconds.
+   */
   debounceMs: PropTypes.number,
+  /**
+   * Function responsible for parsing text input in an array of independent values for quick filtering.
+   * @param {string} input The value entered by the user
+   * @returns {any[]} The array of value on which quick filter is applied
+   */
   quickFilterParser: PropTypes.func,
 } as any;
 

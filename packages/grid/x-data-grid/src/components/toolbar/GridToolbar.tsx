@@ -76,6 +76,14 @@ GridToolbar.propTypes = {
   // ----------------------------------------------------------------------
   csvOptions: PropTypes.object,
   printOptions: PropTypes.object,
+  /**
+   * props passed to the quick filter component
+   */
+  quickFilterOptions: PropTypes.object.isRequired,
+  /**
+   * Show the quick filter component
+   */
+  showQuickFilter: PropTypes.bool.isRequired,
 } as any;
 
 export { GridToolbar };
