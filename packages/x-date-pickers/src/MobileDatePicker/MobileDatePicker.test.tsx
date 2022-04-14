@@ -267,7 +267,7 @@ describe('<MobileDatePicker />', () => {
     expect(screen.getByText('July')).toBeVisible();
   });
 
-  it('prop `showTodayButton` – accept current date when "today" button is clicked', () => {
+  it('prop `showTodayButton` – should accept current date when "today" button is clicked', () => {
     const onCloseMock = spy();
     const handleChange = spy();
     render(
@@ -286,7 +286,7 @@ describe('<MobileDatePicker />', () => {
     clock.tick(10);
     fireEvent.click(screen.getByText(/today/i));
 
-    expect(onCloseMock.callCount).to.equal(0);
+    expect(onCloseMock.callCount).to.equal(1);
     expect(handleChange.callCount).to.equal(1);
     expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
   });
