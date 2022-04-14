@@ -177,7 +177,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
   });
 
-  it('selects the range from the next month', function test() {
+  it('should select the range from the next month', function test() {
     const onChangeMock = spy();
     render(
       <DesktopDateRangePicker
@@ -197,7 +197,7 @@ describe('<DesktopDateRangePicker />', () => {
     fireEvent.click(visibleButton);
     fireEvent.click(screen.getByLabelText('Mar 19, 2019'));
 
-    expect(onChangeMock.callCount).to.equal(2);
+    expect(onChangeMock.callCount).to.equal(1);
     const [changedRange] = onChangeMock.lastCall.args;
     expect(changedRange[0]).to.toEqualDateTime(adapterToUse.date('2019-01-01T00:00:00.000'));
     expect(changedRange[1]).to.toEqualDateTime(adapterToUse.date('2019-03-19T00:00:00.000'));
