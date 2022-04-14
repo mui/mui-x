@@ -16,7 +16,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridNewRowEditingApi,
-  GridEditingSharedApi,
+  GridNewEditingSharedApi,
   GridStopRowEditModeParams,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -25,6 +25,7 @@ import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
 import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
+import { buildWarning } from '../../../utils/warning';
 import {
   GridRowEditStopParams,
   GridRowEditStartParams,
@@ -32,17 +33,26 @@ import {
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
 
+const missingOnProcessRowUpdateErrorWarning = buildWarning(
+  [
+    'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+  ],
+  'error',
+);
+
 export const useGridRowEditing = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'editMode' | 'processRowUpdate' | 'onRowEditStart' | 'onRowEditStop'
+    'editMode' | 'processRowUpdate' | 'onRowEditStart' | 'onRowEditStop' | 'onProcessRowUpdateError'
   >,
 ) => {
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
 
-  const { processRowUpdate } = props;
+  const { processRowUpdate, onProcessRowUpdateError } = props;
 
   const runIfEditModeIsRow =
     <Args extends any[]>(callback: (...args: Args) => void) =>
@@ -381,33 +391,35 @@ export const useGridRowEditing = (
         return;
       }
 
-      let rowUpdate = { ...row };
-
-      Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
-        const column = apiRef.current.getColumn(field);
-        if (column.valueSetter) {
-          rowUpdate = column.valueSetter({
-            value: fieldProps.value,
-            row: rowUpdate,
-          });
-        } else {
-          rowUpdate[field] = fieldProps.value;
-        }
-      });
+      const rowUpdate = apiRef.current.unstable_getRowWithUpdatedValuesFromRowEditing(id);
 
       if (processRowUpdate) {
-        Promise.resolve(processRowUpdate(rowUpdate, row)).then((finalRowUpdate) => {
-          apiRef.current.updateRows([finalRowUpdate]);
-          updateFocusedCellIfNeeded();
-          updateOrDeleteRowState(id, null);
-        });
+        const handleError = (errorThrown: any) => {
+          if (onProcessRowUpdateError) {
+            onProcessRowUpdateError(errorThrown);
+          } else {
+            missingOnProcessRowUpdateErrorWarning();
+          }
+        };
+
+        try {
+          Promise.resolve(processRowUpdate(rowUpdate, row))
+            .then((finalRowUpdate) => {
+              apiRef.current.updateRows([finalRowUpdate]);
+              updateFocusedCellIfNeeded();
+              updateOrDeleteRowState(id, null);
+            })
+            .catch(handleError);
+        } catch (errorThrown) {
+          handleError(errorThrown);
+        }
       } else {
         apiRef.current.updateRows([rowUpdate]);
         updateFocusedCellIfNeeded();
         updateOrDeleteRowState(id, null);
       }
     },
-    [apiRef, processRowUpdate, throwIfNotInMode, updateOrDeleteRowState],
+    [apiRef, onProcessRowUpdateError, processRowUpdate, throwIfNotInMode, updateOrDeleteRowState],
   );
 
   const setRowEditingEditCellValue = React.useCallback<
@@ -526,11 +538,37 @@ export const useGridRowEditing = (
     [apiRef, throwIfNotEditable, updateOrDeleteFieldState],
   );
 
-  const editingApi: Omit<GridNewRowEditingApi, keyof GridEditingSharedApi> = {
+  const getRowWithUpdatedValuesFromRowEditing = React.useCallback<
+    GridNewRowEditingApi['unstable_getRowWithUpdatedValuesFromRowEditing']
+  >(
+    (id) => {
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const row = apiRef.current.getRow(id);
+      let rowUpdate = { ...row };
+
+      Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
+        const column = apiRef.current.getColumn(field);
+        if (column.valueSetter) {
+          rowUpdate = column.valueSetter({
+            value: fieldProps.value,
+            row: rowUpdate,
+          });
+        } else {
+          rowUpdate[field] = fieldProps.value;
+        }
+      });
+
+      return rowUpdate;
+    },
+    [apiRef],
+  );
+
+  const editingApi: Omit<GridNewRowEditingApi, keyof GridNewEditingSharedApi> = {
     getRowMode,
     startRowEditMode,
     stopRowEditMode,
     unstable_setRowEditingEditCellValue: setRowEditingEditCellValue,
+    unstable_getRowWithUpdatedValuesFromRowEditing: getRowWithUpdatedValuesFromRowEditing,
   };
 
   useGridApiMethod(apiRef, editingApi, 'EditingApi');

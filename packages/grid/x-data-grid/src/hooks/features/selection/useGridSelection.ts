@@ -8,20 +8,21 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
+import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
-import { isKeyboardEvent } from '../../../utils/keyboardUtils';
-import { getVisibleRows } from '../../utils/useGridVisibleRows';
+import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
+import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridSelectionModel } from '../../../models';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['selectionModel'],
@@ -50,8 +51,10 @@ export const selectionStateInitializer: GridStateInitializer<
 });
 
 /**
- * @requires useGridRows (state, method)
- * @requires useGridParamsApi (method)
+ * @requires useGridRows (state, method) - can be after
+ * @requires useGridParamsApi (method) - can be after
+ * @requires useGridFocus (state) - can be after
+ * @requires useGridKeyboardNavigation (`cellKeyDown` event must first be consumed by it)
  */
 export const useGridSelection = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -98,8 +101,9 @@ export const useGridSelection = (
   } = props;
 
   const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection;
+  const visibleRows = useGridVisibleRows(apiRef, props);
 
-  const expandRowRangeSelection = React.useCallback(
+  const expandMouseRowRangeSelection = React.useCallback(
     (id: GridRowId) => {
       let endId = id;
       const startId = lastRowToggled.current ?? id;
@@ -235,12 +239,12 @@ export const useGridSelection = (
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
-      const startIndex = visibleRowIds.indexOf(startId);
-      const endIndex = visibleRowIds.indexOf(endId);
+      // Using rows from all pages allow to select a range across several pages
+      const allPagesRowIds = gridVisibleSortedRowIdsSelector(apiRef);
+      const startIndex = allPagesRowIds.indexOf(startId);
+      const endIndex = allPagesRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
-      const rowsBetweenStartAndEnd = visibleRowIds.slice(start, end + 1);
-
+      const rowsBetweenStartAndEnd = allPagesRowIds.slice(start, end + 1);
       apiRef.current.selectRows(rowsBetweenStartAndEnd, isSelected, resetSelection);
     },
     [apiRef, logger],
@@ -315,7 +319,7 @@ export const useGridSelection = (
         return;
       }
 
-      if (params.field === '__detail_panel_toggle__') {
+      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
         // click to open the detail panel should not select the row
         return;
       }
@@ -329,7 +333,7 @@ export const useGridSelection = (
       }
 
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
-        expandRowRangeSelection(params.id);
+        expandMouseRowRangeSelection(params.id);
       } else {
         handleSingleRowSelection(params.id, event);
       }
@@ -339,7 +343,7 @@ export const useGridSelection = (
       canHaveMultipleSelection,
       checkboxSelection,
       apiRef,
-      expandRowRangeSelection,
+      expandMouseRowRangeSelection,
       handleSingleRowSelection,
     ],
   );
@@ -358,12 +362,12 @@ export const useGridSelection = (
   >(
     (params, event) => {
       if ((event.nativeEvent as any).shiftKey) {
-        expandRowRangeSelection(params.id);
+        expandMouseRowRangeSelection(params.id);
       } else {
         apiRef.current.selectRow(params.id, params.value);
       }
     },
-    [apiRef, expandRowRangeSelection],
+    [apiRef, expandMouseRowRangeSelection],
   );
 
   const handleHeaderSelectionCheckboxChange = React.useCallback<
@@ -384,23 +388,69 @@ export const useGridSelection = (
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
     (params, event) => {
-      // Ignore portal
-      // Do not apply shortcuts if the focus is not on the cell root component
-      // TODO replace with !event.currentTarget.contains(event.target as Element)
-      if (!isGridCellRoot(event.target as Element)) {
+      // Get the most recent cell mode because it may have been changed by another listener
+      if (apiRef.current.getCellMode(params.id, params.field) === GridCellModes.Edit) {
         return;
       }
 
-      // Get the most recent params because the cell mode may have changed by another listener
-      const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      const isEditMode = cellParams.cellMode === GridCellModes.Edit;
-      if (isEditMode) {
+      // Ignore portal
+      // Do not apply shortcuts if the focus is not on the cell root component
+      if (!event.currentTarget.contains(event.target as Element)) {
         return;
+      }
+
+      if (isNavigationKey(event.key) && event.shiftKey) {
+        // The cell that has focus after the keyboard navigation
+        const focusCell = gridFocusCellSelector(apiRef);
+        if (focusCell && focusCell.id !== params.id) {
+          event.preventDefault();
+
+          const isNextRowSelected = apiRef.current.isRowSelected(focusCell.id);
+          if (!canHaveMultipleSelection) {
+            apiRef.current.selectRow(focusCell.id, !isNextRowSelected, true);
+            return;
+          }
+
+          const newRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(focusCell.id);
+          const previousRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
+
+          let start: number;
+          let end: number;
+
+          if (newRowIndex > previousRowIndex) {
+            if (isNextRowSelected) {
+              // We are navigating to the bottom of the page and adding selected rows
+              start = previousRowIndex;
+              end = newRowIndex - 1;
+            } else {
+              // We are navigating to the bottom of the page and removing selected rows
+              start = previousRowIndex;
+              end = newRowIndex;
+            }
+          } else {
+            // eslint-disable-next-line no-lonely-if
+            if (isNextRowSelected) {
+              // We are navigating to the top of the page and removing selected rows
+              start = newRowIndex + 1;
+              end = previousRowIndex;
+            } else {
+              // We are navigating to the top of the page and adding selected rows
+              start = newRowIndex;
+              end = previousRowIndex;
+            }
+          }
+
+          const rowsBetweenStartAndEnd = visibleRows.rows
+            .slice(start, end + 1)
+            .map((row) => row.id);
+          apiRef.current.selectRows(rowsBetweenStartAndEnd, !isNextRowSelected);
+          return;
+        }
       }
 
       if (event.key === ' ' && event.shiftKey) {
         event.preventDefault();
-        handleSingleRowSelection(cellParams.id, event);
+        handleSingleRowSelection(params.id, event);
         return;
       }
 
@@ -409,10 +459,10 @@ export const useGridSelection = (
         selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
-    [apiRef, handleSingleRowSelection, selectRows],
+    [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows, canHaveMultipleSelection],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, removeOutdatedSelection);
+  useGridApiEventHandler(apiRef, GridEvents.sortedRowsSet, removeOutdatedSelection);
   useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
   useGridApiEventHandler(
     apiRef,

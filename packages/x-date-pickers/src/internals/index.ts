@@ -14,8 +14,6 @@ export type {
   ExportedDateInputProps,
   MuiTextFieldProps,
 } from './components/PureDateInput';
-export { ResponsiveTooltipWrapper } from './components/wrappers/ResponsiveWrapper';
-export type { ResponsiveWrapperProps } from './components/wrappers/ResponsiveWrapper';
 export type { DateInputPropsLike } from './components/wrappers/WrapperProps';
 export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
 export type { WrapperVariant } from './components/wrappers/WrapperVariantContext';

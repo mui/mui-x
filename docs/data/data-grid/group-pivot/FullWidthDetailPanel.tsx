@@ -6,7 +6,6 @@ import Stack from '@mui/material/Stack';
 import {
   DataGridPro,
   GridColumns,
-  GridRowsProp,
   useGridApiContext,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GridEvents,
@@ -23,7 +22,7 @@ import {
   randomCommodity,
 } from '@mui/x-data-grid-generator';
 
-function DetailPanelContent({ row: rowProp }) {
+function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   const apiRef = useGridApiContext();
   const [width, setWidth] = React.useState(() => {
     const dimensions = apiRef.current.getRootDimensions();
@@ -122,7 +121,7 @@ function generateProducts() {
   }));
 }
 
-const rows: GridRowsProp = [
+const rows = [
   {
     id: 1,
     customer: 'Matheus',
@@ -190,6 +189,8 @@ const rows: GridRowsProp = [
     products: generateProducts(),
   },
 ];
+
+type Customer = typeof rows[number];
 
 export default function FullWidthDetailPanel() {
   const getDetailPanelContent = React.useCallback(

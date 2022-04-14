@@ -311,9 +311,24 @@ describe('<DataGrid /> - Keyboard', () => {
         </div>,
       );
       getColumnHeaderCell(0).focus();
-      const virtualScroller = document.querySelector(
-        '.MuiDataGrid-virtualScroller',
-      )! as HTMLElement;
+      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+      expect(virtualScroller.scrollLeft).to.equal(0);
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expect(virtualScroller.scrollLeft).not.to.equal(0);
+    });
+
+    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
+      if (isJSDOM) {
+        // Need layouting for column virtualization
+        this.skip();
+      }
+      render(
+        <div style={{ width: 60, height: 300 }}>
+          <DataGrid autoHeight={isJSDOM} {...getData(10, 10)} rows={[]} />
+        </div>,
+      );
+      getColumnHeaderCell(0).focus();
+      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
       expect(virtualScroller.scrollLeft).to.equal(0);
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
       expect(virtualScroller.scrollLeft).not.to.equal(0);
@@ -377,9 +392,8 @@ describe('<DataGrid /> - Keyboard', () => {
       render(<NavigationTestCaseNoScrollX />);
 
       // get the sort button in column header 1
-      const columnMenuButton = getColumnHeaderCell(1).querySelector(
-        `button[title="Sort"]`,
-      ) as HTMLElement;
+      const columnMenuButton =
+        getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
 
       // Simulate click on this button
       fireEvent.mouseUp(columnMenuButton);
@@ -450,7 +464,7 @@ describe('<DataGrid /> - Keyboard', () => {
     fireEvent.mouseUp(getCell(0, 1));
     fireEvent.click(getCell(0, 1));
     expect(handleCellKeyDown.callCount).to.equal(0);
-    const input = document.querySelector('input[name="custom-input"]') as HTMLInputElement;
+    const input = document.querySelector<HTMLInputElement>('input[name="custom-input"]')!;
     input.focus();
     fireEvent.keyDown(input, { key: 'ArrowLeft' });
     expect(handleCellKeyDown.callCount).to.equal(0);

@@ -2,88 +2,23 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier } from '@mui/x-license-pro';
-import {
-  ResponsiveTooltipWrapper,
-  ResponsiveWrapperProps,
-  useDefaultDates,
-  useUtils,
-  ValidationProps,
-  usePickerState,
-  PickerStateValueManager,
-  DateInputPropsLike,
-} from '@mui/x-date-pickers/internals';
-import { DateRangePickerView, ExportedDateRangePickerViewProps } from './DateRangePickerView';
-import { DateRangePickerInput, ExportedDateRangePickerInputProps } from './DateRangePickerInput';
-import { RangeInput, DateRange } from '../internal/models/dateRange';
-import {
-  useDateRangeValidation,
-  DateRangeValidationError,
-} from '../internal/hooks/validation/useDateRangeValidation';
-import { parseRangeInputValue } from '../internal/utils/date-utils';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { DesktopDateRangePicker, DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
+import { MobileDateRangePicker, MobileDateRangePickerProps } from '../MobileDateRangePicker';
 
 const releaseInfo = getReleaseInfo();
 
-interface BaseDateRangePickerProps<TDate>
-  extends ExportedDateRangePickerViewProps<TDate>,
-    ValidationProps<DateRangeValidationError, RangeInput<TDate>>,
-    ExportedDateRangePickerInputProps {
-  /**
-   * The components used for each slot.
-   * Either a string to use a HTML element or a component.
-   * @default {}
-   */
-  components?: ExportedDateRangePickerViewProps<TDate>['components'] &
-    ExportedDateRangePickerInputProps['components'];
-  /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   */
-  endText?: React.ReactNode;
-  /**
-   * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
-   * @default '__/__/____'
-   */
-  mask?: ExportedDateRangePickerInputProps['mask'];
-  /**
-   * Min selectable date. @DateIOType
-   * @default defaultMinDate
-   */
-  minDate?: TDate;
-  /**
-   * Max selectable date. @DateIOType
-   * @default defaultMaxDate
-   */
-  maxDate?: TDate;
-  /**
-   * Callback fired when the value (the selected date range) changes @DateIOType.
-   * @param {DateRange<TDate>} date The new parsed date range.
-   * @param {string} keyboardInputValue The current value of the keyboard input.
-   */
-  onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   */
-  startText?: React.ReactNode;
-  /**
-   * The value of the date range picker.
-   */
-  value: RangeInput<TDate>;
-}
-
-const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
-const PureDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
-
-const rangePickerValueManager: PickerStateValueManager<any, any> = {
-  emptyValue: [null, null],
-  parseInput: parseRangeInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
-};
-
 export interface DateRangePickerProps<TDate>
-  extends BaseDateRangePickerProps<TDate>,
-    ResponsiveWrapperProps {}
+  extends DesktopDateRangePickerProps<TDate>,
+    MobileDateRangePickerProps<TDate> {
+  /**
+   * CSS media query when `Mobile` mode will be changed to `Desktop`.
+   * @default '@media (pointer: fine)'
+   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
+   */
+  desktopModeMediaQuery?: string;
+}
 
 type DateRangePickerComponent = (<TDate>(
   props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -93,11 +28,11 @@ type DateRangePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Date Range Picker](https://mui.com/components/x/react-date-pickers/date-range-picker/)
+ * - [Date Range Picker](https://mui.com/x/react-date-pickers/date-range-picker/)
  *
  * API:
  *
- * - [DateRangePicker API](https://mui.com/api/date-range-picker/)
+ * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
 export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   inProps: DateRangePickerProps<TDate>,
@@ -107,78 +42,40 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
-    calendars = 2,
-    value,
-    onChange,
-    mask = '__/__/____',
-    startText = 'Start',
-    endText = 'End',
-    inputFormat: passedInputFormat,
-    minDate: minDateProp,
-    maxDate: maxDateProp,
+    cancelText,
+    desktopModeMediaQuery = '@media (pointer: fine)',
+    DialogProps,
+    okText,
+    PopperProps,
+    showTodayButton,
+    todayText,
+    TransitionComponent,
     ...other
   } = props;
 
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-  const minDate = minDateProp ?? defaultDates.minDate;
-  const maxDate = maxDateProp ?? defaultDates.maxDate;
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const isDesktop = useMediaQuery(desktopModeMediaQuery);
 
-  const pickerStateProps = {
-    ...other,
-    value,
-    onChange,
-  };
-
-  const restProps = {
-    ...other,
-    minDate,
-    maxDate,
-  };
-
-  const { pickerProps, inputProps, wrapperProps } = usePickerState<
-    RangeInput<TDate>,
-    DateRange<TDate>
-  >(pickerStateProps, rangePickerValueManager);
-
-  const validationError = useDateRangeValidation(props);
-
-  const DateInputProps = {
-    ...inputProps,
-    ...restProps,
-    currentlySelectingRangeEnd,
-    inputFormat: passedInputFormat || utils.formats.keyboardDate,
-    setCurrentlySelectingRangeEnd,
-    startText,
-    endText,
-    mask,
-    validationError,
-    ref,
-  };
+  if (isDesktop) {
+    return (
+      <DesktopDateRangePicker
+        ref={ref}
+        PopperProps={PopperProps}
+        TransitionComponent={TransitionComponent}
+        {...other}
+      />
+    );
+  }
 
   return (
-    <ResponsiveTooltipWrapper
-      {...restProps}
-      {...wrapperProps}
-      DateInputProps={DateInputProps}
-      KeyboardDateInputComponent={KeyboardDateInputComponent}
-      PureDateInputComponent={PureDateInputComponent}
-    >
-      <DateRangePickerView<any>
-        open={wrapperProps.open}
-        DateInputProps={DateInputProps}
-        calendars={calendars}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-        startText={startText}
-        endText={endText}
-        {...pickerProps}
-        {...restProps}
-      />
-    </ResponsiveTooltipWrapper>
+    <MobileDateRangePicker
+      ref={ref}
+      cancelText={cancelText}
+      DialogProps={DialogProps}
+      okText={okText}
+      showTodayButton={showTodayButton}
+      todayText={todayText}
+      {...other}
+    />
   );
 }) as DateRangePickerComponent;
 
@@ -225,7 +122,7 @@ DateRangePicker.propTypes = {
   clearText: PropTypes.node,
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    * @default {}
    */
   components: PropTypes.object,
@@ -241,11 +138,11 @@ DateRangePicker.propTypes = {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
-   * @example '@media (min-width: 720px)' or theme.breakpoints.up('sm')
+   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery: PropTypes.string,
   /**
-   * Props applied to the [`Dialog`](/api/dialog/) element.
+   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
    */
   DialogProps: PropTypes.object,
   /**
@@ -293,10 +190,11 @@ DateRangePicker.propTypes = {
   endText: PropTypes.node,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @template TDateValue
    * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
+   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
@@ -357,11 +255,13 @@ DateRangePicker.propTypes = {
   okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
+   * @template TDateValue
    * @param {TDateValue} date The date that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
+   * @template TDate
    * @param {DateRange<TDate>} date The new parsed date range.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
@@ -379,12 +279,14 @@ DateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
+   * @template TError, TDateValue
    * @param {TError} reason The reason why the current value is not valid.
    * @param {TDateValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
    * Callback firing on month change. @DateIOType
+   * @template TDate
    * @param {TDate} month The new month.
    */
   onMonthChange: PropTypes.func,
@@ -411,11 +313,11 @@ DateRangePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/api/paper/) component.
+   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
   PaperProps: PropTypes.object,
   /**
-   * Popper props passed down to [Popper](https://mui.com/api/popper/) component.
+   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
   PopperProps: PropTypes.object,
   /**
@@ -431,6 +333,7 @@ DateRangePicker.propTypes = {
   /**
    * Custom renderer for `<DateRangePicker />` days. @DateIOType
    * @example (date, dateRangePickerDayProps) => <DateRangePickerDay {...dateRangePickerDayProps} />
+   * @template TDate
    * @param {TDate} day The day to render.
    * @param {DateRangePickerDayProps<TDate>} dateRangePickerDayProps The props of the day to render.
    * @returns {JSX.Element} The element representing the day.
@@ -438,7 +341,7 @@ DateRangePicker.propTypes = {
   renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api),
+   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props),
    * that you need to forward to the range start/end inputs respectively.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example
@@ -476,6 +379,7 @@ DateRangePicker.propTypes = {
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
+   * @template TDate
    * @param {TDate} day The date to check.
    * @returns {boolean} If `true` the day will be disabled.
    */
@@ -483,6 +387,7 @@ DateRangePicker.propTypes = {
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @template TDate
    * @param {TDate} year The year to test.
    * @returns {boolean} Return `true` if the year should be disabled.
    */
@@ -530,7 +435,7 @@ DateRangePicker.propTypes = {
    */
   toolbarTitle: PropTypes.node,
   /**
-   * Custom component for popper [Transition](https://mui.com/components/transitions/#transitioncomponent-prop).
+   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
   TransitionComponent: PropTypes.elementType,
   /**

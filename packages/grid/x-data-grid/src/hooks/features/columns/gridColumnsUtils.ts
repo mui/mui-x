@@ -14,6 +14,8 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
+import { GridApiCommon } from '../../../models/api/gridApiCommon';
+import { GridRowEntry } from '../../../models/gridRows';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
@@ -53,7 +55,7 @@ export function computeFlexColumnsWidth({
   totalFlexUnits: number;
   flexColumns: {
     field: GridColDef['field'];
-    flex?: number;
+    flex?: number | null;
     minWidth?: number;
     maxWidth?: number;
   }[];
@@ -265,11 +267,17 @@ export const applyInitialState = (
   const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
     const field = columnsWithUpdatedDimensions[i];
-    newColumnLookup[field] = {
+
+    const newColDef: Omit<GridStateColDef, 'computedWidth'> = {
       ...newColumnLookup[field],
-      ...dimensions[field],
       hasBeenResized: true,
     };
+
+    Object.entries(dimensions[field]).forEach(([key, value]) => {
+      newColDef[key as GridColumnDimensionProperties] = value === -1 ? Infinity : value;
+    });
+
+    newColumnLookup[field] = newColDef;
   }
 
   const newColumnsState: Omit<GridColumnsRawState, 'columnVisibilityModel'> = {
@@ -314,14 +322,14 @@ export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
   initialState,
-  columnsTypes,
+  columnTypes,
   currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   shouldRegenColumnVisibilityModelFromColumns,
   keepOnlyColumnsToUpsert = false,
 }: {
   columnsToUpsert: GridColDef[];
   initialState: GridColumnsInitialState | undefined;
-  columnsTypes: GridColumnTypesRecord;
+  columnTypes: GridColumnTypesRecord;
   currentColumnVisibilityModel?: GridColumnVisibilityModel;
   shouldRegenColumnVisibilityModelFromColumns: boolean;
   keepOnlyColumnsToUpsert: boolean;
@@ -335,7 +343,7 @@ export const createColumnsState = ({
   > & {
     lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
   };
-  if (isInsideStateInitializer || keepOnlyColumnsToUpsert) {
+  if (isInsideStateInitializer) {
     columnsStateWithoutColumnVisibilityModel = {
       all: [],
       lookup: {},
@@ -343,37 +351,64 @@ export const createColumnsState = ({
   } else {
     const currentState = gridColumnsSelector(apiRef.current.state);
     columnsStateWithoutColumnVisibilityModel = {
-      all: [...currentState.all],
-      lookup: { ...currentState.lookup },
+      all: keepOnlyColumnsToUpsert ? [] : [...currentState.all],
+      lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
     };
+  }
+
+  let columnsToKeep: Record<string, boolean> = {};
+  if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
+    columnsToKeep = Object.keys(columnsStateWithoutColumnVisibilityModel.lookup).reduce(
+      (acc, key) => ({ ...acc, [key]: false }),
+      {},
+    );
   }
 
   const columnsToUpsertLookup: Record<string, true> = {};
   columnsToUpsert.forEach((newColumn) => {
-    columnsToUpsertLookup[newColumn.field] = true;
-    if (columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] == null) {
+    const { field } = newColumn;
+    columnsToUpsertLookup[field] = true;
+    columnsToKeep[field] = true;
+    let existingState = columnsStateWithoutColumnVisibilityModel.lookup[field];
+
+    if (existingState == null) {
       // New Column
-      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = {
-        ...getGridColDef(columnsTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
-        ...newColumn,
+      existingState = {
+        ...getGridColDef(columnTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
+        field,
+        hasBeenResized: false,
       };
-      columnsStateWithoutColumnVisibilityModel.all.push(newColumn.field);
-    } else {
-      const mergedColumn = {
-        ...columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field],
-        ...newColumn,
-      };
-
-      if (
-        !mergedColumn.hasBeenResized &&
-        COLUMNS_DIMENSION_PROPERTIES.some((propertyName) => newColumn[propertyName] !== undefined)
-      ) {
-        mergedColumn.hasBeenResized = true;
-      }
-
-      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = mergedColumn;
+      columnsStateWithoutColumnVisibilityModel.all.push(field);
+    } else if (keepOnlyColumnsToUpsert) {
+      columnsStateWithoutColumnVisibilityModel.all.push(field);
     }
+
+    let hasBeenResized = existingState.hasBeenResized;
+    COLUMNS_DIMENSION_PROPERTIES.forEach((key) => {
+      if (newColumn[key] !== undefined) {
+        hasBeenResized = true;
+
+        if (newColumn[key] === -1) {
+          newColumn[key] = Infinity;
+        }
+      }
+    });
+
+    columnsStateWithoutColumnVisibilityModel.lookup[field] = {
+      ...existingState,
+      hide: newColumn.hide == null ? false : newColumn.hide,
+      ...newColumn,
+      hasBeenResized,
+    };
   });
+
+  if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
+    Object.keys(columnsStateWithoutColumnVisibilityModel.lookup).forEach((field) => {
+      if (!columnsToKeep![field]) {
+        delete columnsStateWithoutColumnVisibilityModel.lookup[field];
+      }
+    });
+  }
 
   const columnsLookupBeforePreProcessing = { ...columnsStateWithoutColumnVisibilityModel.lookup };
 
@@ -471,3 +506,64 @@ export const mergeColumnsState =
     ...state,
     columns: columnsState,
   });
+
+export function getFirstNonSpannedColumnToRender({
+  firstColumnToRender,
+  apiRef,
+  firstRowToRender,
+  lastRowToRender,
+  visibleRows,
+}: {
+  firstColumnToRender: number;
+  apiRef: React.MutableRefObject<GridApiCommon>;
+  firstRowToRender: number;
+  lastRowToRender: number;
+  visibleRows: GridRowEntry[];
+}) {
+  let firstNonSpannedColumnToRender = firstColumnToRender;
+  for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
+    const row = visibleRows[i];
+    if (row) {
+      const rowId = visibleRows[i].id;
+      const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+        rowId,
+        firstColumnToRender,
+      );
+      if (cellColSpanInfo && cellColSpanInfo.spannedByColSpan) {
+        firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
+      }
+    }
+  }
+
+  return firstNonSpannedColumnToRender;
+}
+
+export function getFirstColumnIndexToRender({
+  firstColumnIndex,
+  minColumnIndex,
+  columnBuffer,
+  firstRowToRender,
+  lastRowToRender,
+  apiRef,
+  visibleRows,
+}: {
+  firstColumnIndex: number;
+  minColumnIndex: number;
+  columnBuffer: number;
+  apiRef: React.MutableRefObject<GridApiCommon>;
+  firstRowToRender: number;
+  lastRowToRender: number;
+  visibleRows: GridRowEntry[];
+}) {
+  const initialFirstColumnToRender = Math.max(firstColumnIndex - columnBuffer, minColumnIndex);
+
+  const firstColumnToRender = getFirstNonSpannedColumnToRender({
+    firstColumnToRender: initialFirstColumnToRender,
+    apiRef,
+    firstRowToRender,
+    lastRowToRender,
+    visibleRows,
+  });
+
+  return firstColumnToRender;
+}

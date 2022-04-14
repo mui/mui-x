@@ -15,8 +15,7 @@ import { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 import { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 import { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 import { focusStateInitializer, useGridFocus } from '../hooks/features/focus/useGridFocus';
-import { useGridKeyboard } from '../hooks/features/keyboard/useGridKeyboard';
-import { useGridKeyboardNavigation } from '../hooks/features/keyboard/useGridKeyboardNavigation';
+import { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 import {
   useGridPagination,
   paginationStateInitializer,
@@ -47,6 +46,7 @@ import { useGridEvents } from '../hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
 import { rowsMetaStateInitializer, useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
+import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
@@ -79,10 +79,12 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
+  useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridColumnSpanning(apiRef);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
     ? useGridEditing_new
@@ -90,16 +92,14 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridEditing(apiRef, props);
 
   useGridFocus(apiRef, props);
-  useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
+  useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridColumnMenu(apiRef);
-  useGridKeyboard(apiRef);
-  useGridKeyboardNavigation(apiRef, props);
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);

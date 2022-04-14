@@ -12,7 +12,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Button, { ButtonProps } from '@mui/material/Button';
 
 export const isNavigationKey = (key: string) =>
   key === 'Home' ||
@@ -30,7 +30,7 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   );
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown: ButtonProps['onKeyDown'] = (event) => {
     if (event.key === ' ') {
       event.stopPropagation();
     }
@@ -39,7 +39,7 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
     }
   };
 
-  const handleClick = (event) => {
+  const handleClick: ButtonProps['onClick'] = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
@@ -183,7 +183,7 @@ const columns: GridColumns = [
   },
 ];
 
-const getTreeDataPath = (row) => row.hierarchy;
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
 
 const groupingColDef: DataGridProProps['groupingColDef'] = {
   headerName: 'Hierarchy',
