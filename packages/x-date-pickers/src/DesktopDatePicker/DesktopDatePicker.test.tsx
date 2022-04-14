@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { TransitionProps } from '@mui/material/transitions';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import {
   createPickerRenderer,
@@ -12,17 +12,24 @@ import {
   adapterToUse,
 } from '../../../../test/utils/pickers-utils';
 
-const UncontrolledOpenDesktopDatePicker = (({
+const UncontrolledDesktopDatePicker = ({
   onClose = () => {},
   onOpen = () => {},
+  onChange = () => {},
   open: openProp,
   defaultOpen,
+  initialValue,
   ...other
-}: any) => {
+}: Omit<DesktopDatePickerProps, 'value' | 'onChange'> & {
+  defaultOpen?: boolean;
+  initialValue?: Date | null;
+  onChange?: DesktopDatePickerProps['onChange'];
+}) => {
   if (openProp != null) {
     throw new TypeError('Controlling `open` is not supported. Use `defaultOpen` instead.');
   }
   const [open, setOpen] = React.useState(defaultOpen);
+  const [value, setValue] = React.useState(initialValue ?? null);
 
   return (
     <DesktopDatePicker
@@ -35,10 +42,15 @@ const UncontrolledOpenDesktopDatePicker = (({
         setOpen(true);
         onOpen(...args);
       }}
+      onChange={(...args) => {
+        setValue(args[0] as any);
+        onChange(...args);
+      }}
+      value={value}
       {...other}
     />
   );
-}) as typeof DesktopDatePicker;
+};
 
 describe('<DesktopDatePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -160,10 +172,9 @@ describe('<DesktopDatePicker />', () => {
   it('accepts date on day button click', () => {
     const onChangeMock = spy();
     render(
-      <UncontrolledOpenDesktopDatePicker
-        // @ts-expect-error internal prop
+      <UncontrolledDesktopDatePicker
         defaultOpen
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
+        initialValue={adapterToUse.date('2019-01-01T00:00:00.000')}
         onChange={onChangeMock}
         TransitionComponent={FakeTransitionComponent}
         renderInput={(params) => <TextField {...params} />}
@@ -178,12 +189,10 @@ describe('<DesktopDatePicker />', () => {
 
   it('closes on selection', () => {
     render(
-      <UncontrolledOpenDesktopDatePicker
-        // @ts-expect-error internal prop
+      <UncontrolledDesktopDatePicker
         defaultOpen
         TransitionComponent={FakeTransitionComponent}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
-        onChange={() => {}}
+        initialValue={adapterToUse.date('2018-01-01T00:00:00.000')}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
@@ -195,13 +204,11 @@ describe('<DesktopDatePicker />', () => {
 
   it('should not close picker when selecting a value if props.disableCloseOnSelect = true', () => {
     render(
-      <UncontrolledOpenDesktopDatePicker
-        // @ts-expect-error internal prop
+      <UncontrolledDesktopDatePicker
         defaultOpen
         TransitionComponent={FakeTransitionComponent}
         disableCloseOnSelect
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
-        onChange={() => {}}
+        initialValue={adapterToUse.date('2018-01-01T00:00:00.000')}
         renderInput={(params) => <TextField {...params} />}
       />,
     );

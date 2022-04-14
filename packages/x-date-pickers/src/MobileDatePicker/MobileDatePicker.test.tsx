@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { SinonSpy, spy } from 'sinon';
+import { spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
