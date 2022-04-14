@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { DataGridPro, GridColumns, GridRowsProp } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridColumns,
+  GridRowsProp,
+  DataGridProProps,
+} from '@mui/x-data-grid-pro';
 
 const rows: GridRowsProp = [
   {
@@ -104,7 +109,7 @@ const columns: GridColumns = [
   },
 ];
 
-const getTreeDataPath = (row) => row.hierarchy;
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
 
 export default function TreeDataSimple() {
   return (

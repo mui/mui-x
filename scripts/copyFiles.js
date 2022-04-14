@@ -154,12 +154,16 @@ async function run() {
     const packageData = await createPackageFile();
 
     const filesToCopy = [
-      // TODO: Improve if we want to use the core `copy-files.js` file
-      // use enhanced readme from workspace root for `@mui/material`
       './README.md',
+
+      // TODO: Remove `grid` folder to flatten the structure
       packageData.name.includes('grid') ? '../../../CHANGELOG.md' : '../../CHANGELOG.md',
-      // '../../LICENSE',
     ];
+
+    const hasLicenseFileInPackage = await fse.exists(path.join(packagePath, 'LICENSE'));
+    if (hasLicenseFileInPackage) {
+      filesToCopy.push('./LICENSE');
+    }
 
     // Be sure to replicate this behavior if unifying with the core
     if (packageData.name === '@mui/x-license-pro') {

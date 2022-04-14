@@ -1,6 +1,11 @@
 import * as React from 'react';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { DataGrid, GridRenderCellParams, useGridApiContext } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridRenderCellParams,
+  GridColDef,
+  useGridApiContext,
+} from '@mui/x-data-grid';
 
 function SelectEditInputCell(props: GridRenderCellParams) {
   const { id, value, field } = props;
@@ -27,9 +32,9 @@ function SelectEditInputCell(props: GridRenderCellParams) {
   );
 }
 
-function renderSelectEditInputCell(params) {
+const renderSelectEditInputCell: GridColDef['renderCell'] = (params) => {
   return <SelectEditInputCell {...params} />;
-}
+};
 
 export default function AutoStopEditComponent() {
   return (
