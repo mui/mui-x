@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -23,8 +23,17 @@ export default function QuickFilteringGrid() {
     <Box sx={{ height: 400, width: 1 }}>
       <DataGrid
         {...data}
+        disableColumnFilter
+        disableColumnSelector
+        disableDensitySelector
         columns={columns}
-        componentsProps={{ toolbar: { showQuickFilter: true } }}
+        components={{ Toolbar: GridToolbar }}
+        componentsProps={{
+          toolbar: {
+            showQuickFilter: true,
+            quickFilterOptions: { debounceMs: 500 },
+          },
+        }}
       />
     </Box>
   );

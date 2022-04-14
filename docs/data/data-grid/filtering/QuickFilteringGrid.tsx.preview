@@ -1,5 +1,14 @@
 <DataGrid
   {...data}
+  disableColumnFilter
+  disableColumnSelector
+  disableDensitySelector
   columns={columns}
-  componentsProps={{ toolbar: { showQuickFilter: true } }}
+  components={{ Toolbar: GridToolbar }}
+  componentsProps={{
+    toolbar: {
+      showQuickFilter: true,
+      quickFilterOptions: { debounceMs: 500 },
+    },
+  }}
 />

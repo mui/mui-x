@@ -54,7 +54,9 @@ export const getGridSingleSelectQuickFilterFn = (
   }
 
   return ({ value: columnValue }: GridCellParams): boolean => {
-    return columnValue != null ? potentialValues.includes(parseObjectValue(columnValue).toString()) : false;
+    return columnValue != null
+      ? potentialValues.includes(parseObjectValue(columnValue).toString())
+      : false;
   };
 };
 
