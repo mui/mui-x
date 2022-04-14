@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -47,9 +47,10 @@ describe('<DataGrid /> - Quick Filter', () => {
 
   describe('component', () => {
     it('should apply filter', () => {
-      render(<TestCase />);
+      const { container } = render(<TestCase />);
+
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
+      fireEvent.change(container.querySelector('input[type=search]'), {
         target: { value: 'a' },
       });
       clock.runToLast();
@@ -59,7 +60,7 @@ describe('<DataGrid /> - Quick Filter', () => {
     it('should allows to customize input splitting', () => {
       const onFilterModelChange = spy();
 
-      render(
+      const { container } = render(
         <TestCase
           onFilterModelChange={onFilterModelChange}
           componentsProps={{
@@ -73,7 +74,7 @@ describe('<DataGrid /> - Quick Filter', () => {
 
       expect(onFilterModelChange.callCount).to.equal(0);
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
+      fireEvent.change(container.querySelector('input[type=search]'), {
         target: { value: 'adid, nik' },
       });
       clock.runToLast();
@@ -81,44 +82,44 @@ describe('<DataGrid /> - Quick Filter', () => {
         items: [],
         linkOperator: 'and',
         quickFilterValues: ['adid', 'nik'],
-        quickFilterLinkOperator: 'and',
+        quickFilterLogicOperator: 'and',
       });
     });
   });
 
   describe('quick filter logic', () => {
-    it('quick filter return rows that match all values by default', () => {
-      render(<TestCase />);
+    it('should return rows that match all values by default', () => {
+      const { container } = render(<TestCase />);
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
+      fireEvent.change(container.querySelector('input[type=search]'), {
         target: { value: 'adid' },
       });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
+      fireEvent.change(container.querySelector('input[type=search]'), {
         target: { value: 'adid nik' },
       });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
-    it('quick filter can return rows that match some values', () => {
-      render(
+    it('should return rows that match some values if quickFilterLogicOperator="or"', () => {
+      const { container } = render(
         <TestCase
           initialState={{
-            filter: { filterModel: { items: [], quickFilterLinkOperator: GridLinkOperator.Or } },
+            filter: { filterModel: { items: [], quickFilterLogicOperator: GridLinkOperator.Or } },
           }}
         />,
       );
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
+      fireEvent.change(container.querySelector('input[type=search]'), {
         target: { value: 'adid' },
       });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-      fireEvent.change(screen.getByRole('textbox', { name: 'Search' }), {
+      fireEvent.change(container.querySelector('input[type=search]'), {
         target: { value: 'adid nik' },
       });
       clock.runToLast();
