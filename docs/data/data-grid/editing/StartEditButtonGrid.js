@@ -10,20 +10,7 @@ import {
 } from '@mui/x-data-grid-generator';
 
 function EditToolbar(props) {
-  const {
-    selectedCellParams,
-    setSelectedCellParams,
-    cellModesModel,
-    setCellModesModel,
-  } = props;
-
-  const cellMode = React.useMemo(() => {
-    if (!selectedCellParams) {
-      return 'view';
-    }
-    const { id, field } = selectedCellParams;
-    return cellModesModel[id]?.[field]?.mode || 'view';
-  }, [cellModesModel, selectedCellParams]);
+  const { selectedCellParams, cellMode, cellModesModel, setCellModesModel } = props;
 
   const handleSaveOrEdit = () => {
     if (!selectedCellParams) {
@@ -35,15 +22,11 @@ function EditToolbar(props) {
         ...cellModesModel,
         [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.View } },
       });
-
-      setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
     } else {
       setCellModesModel({
         ...cellModesModel,
         [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.Edit } },
       });
-
-      setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
     }
   };
 
@@ -98,36 +81,64 @@ function EditToolbar(props) {
 }
 
 EditToolbar.propTypes = {
+  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
   cellModesModel: PropTypes.object.isRequired,
-  selectedCellParams: PropTypes.any,
+  selectedCellParams: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  }),
   setCellModesModel: PropTypes.func.isRequired,
-  setSelectedCellParams: PropTypes.func.isRequired,
 };
 
 export default function StartEditButtonGrid() {
   const [selectedCellParams, setSelectedCellParams] = React.useState(null);
   const [cellModesModel, setCellModesModel] = React.useState({});
 
-  const handleCellClick = React.useCallback((params) => {
-    setSelectedCellParams(params);
+  const handleCellFocus = React.useCallback((event) => {
+    const row = event.currentTarget.parentElement;
+    const id = row.dataset.id;
+    const field = event.currentTarget.dataset.field;
+    setSelectedCellParams({ id, field });
   }, []);
+
+  const cellMode = React.useMemo(() => {
+    if (!selectedCellParams) {
+      return 'view';
+    }
+    const { id, field } = selectedCellParams;
+    return cellModesModel[id]?.[field]?.mode || 'view';
+  }, [cellModesModel, selectedCellParams]);
+
+  const handleCellKeyDown = React.useCallback(
+    (params, event) => {
+      if (cellMode === 'edit') {
+        // Prevents calling event.preventDefault() if Tab is pressed on a cell in edit mode
+        event.defaultMuiPrevented = true;
+      }
+    },
+    [cellMode],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
+        onCellKeyDown={handleCellKeyDown}
         cellModesModel={cellModesModel}
-        onCellClick={handleCellClick}
         components={{
           Toolbar: EditToolbar,
         }}
         componentsProps={{
           toolbar: {
+            cellMode,
             selectedCellParams,
             setSelectedCellParams,
             cellModesModel,
             setCellModesModel,
+          },
+          cell: {
+            onFocus: handleCellFocus,
           },
         }}
         experimentalFeatures={{ newEditingApi: true }}
