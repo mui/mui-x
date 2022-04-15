@@ -5,7 +5,6 @@ import {
   GridColumns,
   GridRowsProp,
   DataGrid,
-  DataGridProps,
   GridRowId,
   GridCellModes,
   GridEventListener,
