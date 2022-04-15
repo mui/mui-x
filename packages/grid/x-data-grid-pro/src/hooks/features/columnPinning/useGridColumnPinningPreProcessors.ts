@@ -69,10 +69,23 @@ export const useGridColumnPinningPreProcessors = (
         // For columns still pinned, we keep stored their original positions
         allPinnedColumns.forEach((field) => {
           let index = orderedFieldsBeforePinningColumns.current!.indexOf(field);
-          if (index === -1) {
-            // The pinned field didn't exist in the last processing, it's possibly being added now
+          // If index = -1, the pinned field didn't exist in the last processing, it's possibly being added now
+          // If index >= newOrderedFieldsBeforePinningColumns.length, then one or more columns were removed
+          // In both cases, use the position from the columns array
+          // TODO: detect removed columns and decrease the positions after it
+          if (index === -1 || index >= newOrderedFieldsBeforePinningColumns.length) {
             index = columnsState.all.indexOf(field);
           }
+
+          // The fallback above may make the column to be inserted in a position already occupied
+          // In this case, put it in any empty slot available
+          if (newOrderedFieldsBeforePinningColumns[index] !== null) {
+            index = 0;
+            while (newOrderedFieldsBeforePinningColumns[index] !== null) {
+              index += 1;
+            }
+          }
+
           newOrderedFieldsBeforePinningColumns[index] = field;
           // This field was already consumed so we prevent from being added again
           remainingFields.splice(remainingFields.indexOf(field), 1);

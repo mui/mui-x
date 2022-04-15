@@ -562,6 +562,22 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', 'foo', 'bar']);
     });
 
+    it('should restore the position of a column unpinned after a column is removed', () => {
+      const { setProps } = render(
+        <TestCase
+          nbCols={3}
+          columns={[{ field: 'id' }, { field: 'currencyPair' }, { field: 'price1M' }]}
+          pinnedColumns={{ left: ['price1M'] }}
+          disableVirtualization
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal(['price1M', 'id', 'currencyPair']);
+      setProps({ columns: [{ field: 'id' }, { field: 'price1M' }] });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['price1M', 'id']);
+      setProps({ pinnedColumns: {}, columns: [{ field: 'id' }, { field: 'price1M' }] });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M']);
+    });
+
     it('should restore the position when the neighboring columns are reordered', () => {
       const { setProps } = render(<TestCase nbCols={4} disableVirtualization />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', '1M', '2M']); // price1M's index = 2
