@@ -290,6 +290,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
   };
 
+  const handleWheel = (event: React.WheelEvent) => {
+    apiRef.current.publishEvent(GridEvents.virtualScrollerWheel, {}, event);
+  };
+
   const getRows = (
     params: {
       renderContext: GridRenderContext | null;
@@ -449,6 +453,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     getRootProps: ({ style = {}, ...other } = {}) => ({
       ref: handleRef,
       onScroll: handleScroll,
+      onWheel: handleWheel,
       style: { ...style, ...rootStyle },
       ...other,
     }),

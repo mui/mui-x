@@ -17,7 +17,6 @@ export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
  */
 export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
-  const scrollTop = React.useRef(apiRef.current.getScrollPosition().top);
 
   /**
    * API METHODS
@@ -30,7 +29,6 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
         }
 
         logger.debug('Opening Column Menu');
-        scrollTop.current = apiRef.current.getScrollPosition().top;
 
         return {
           ...state,
@@ -53,6 +51,7 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
       }
 
       logger.debug('Hiding Column Menu');
+
       return {
         ...state,
         columnMenu: { ...state.columnMenu, open: false, field: undefined },
@@ -88,15 +87,12 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
   /**
    * EVENTS
    */
-  const handleRowsScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(
-    (params) => {
-      if (params.top !== scrollTop.current) {
-        apiRef.current.hideColumnMenu();
-      }
-    },
-    [apiRef],
-  );
+  const handleVirtualScrollerWheel = React.useCallback<
+    GridEventListener<GridEvents.virtualScrollerWheel>
+  >(() => {
+    apiRef.current.hideColumnMenu();
+  }, [apiRef]);
 
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
-  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleRowsScroll);
+  useGridApiEventHandler(apiRef, GridEvents.virtualScrollerWheel, handleVirtualScrollerWheel);
 };
