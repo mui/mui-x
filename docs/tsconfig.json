@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "types": ["react", "node"],
-    "incremental": true
+    "incremental": true,
+    "noImplicitAny": true
   },
   "include": ["src/pages/**/*", "data/**/*"],
   "exclude": ["docs/.next", "docs/export"]

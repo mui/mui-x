@@ -38,8 +38,6 @@ const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePicker' });
   const {
     cancelText,
-    clearable,
-    clearText,
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
     okText,
@@ -52,19 +50,21 @@ const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(
 
   const isDesktop = useMediaQuery(desktopModeMediaQuery);
 
-  return isDesktop ? (
-    <DesktopDateTimePicker
-      ref={ref}
-      PopperProps={PopperProps}
-      TransitionComponent={TransitionComponent}
-      {...other}
-    />
-  ) : (
+  if (isDesktop) {
+    return (
+      <DesktopDateTimePicker
+        ref={ref}
+        PopperProps={PopperProps}
+        TransitionComponent={TransitionComponent}
+        {...other}
+      />
+    );
+  }
+
+  return (
     <MobileDateTimePicker
       ref={ref}
       cancelText={cancelText}
-      clearable={clearable}
-      clearText={clearText}
       DialogProps={DialogProps}
       okText={okText}
       showTodayButton={showTodayButton}

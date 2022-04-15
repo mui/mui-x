@@ -48,7 +48,7 @@ const PickersMonthRoot = styled<
       backgroundColor: theme.palette.primary.dark,
     },
   },
-}));
+})) as typeof Typography;
 
 /**
  * @ignore - do not document.
@@ -64,6 +64,7 @@ export const PickersMonth: React.FC<MonthProps> = (props) => {
     <PickersMonthRoot
       data-mui-test="month"
       component="button"
+      type="button"
       className={clsx(classes.root, {
         [classes.selected]: selected,
       })}

@@ -17,7 +17,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridNewRowEditingApi,
-  GridEditingSharedApi,
+  GridNewEditingSharedApi,
   GridStopRowEditModeParams,
   GridStartRowEditModeParams,
   GridRowModesModel,
@@ -465,19 +465,7 @@ export const useGridRowEditing = (
         return;
       }
 
-      let rowUpdate = { ...row };
-
-      Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
-        const column = apiRef.current.getColumn(field);
-        if (column.valueSetter) {
-          rowUpdate = column.valueSetter({
-            value: fieldProps.value,
-            row: rowUpdate,
-          });
-        } else {
-          rowUpdate[field] = fieldProps.value;
-        }
-      });
+      const rowUpdate = apiRef.current.unstable_getRowWithUpdatedValuesFromRowEditing(id);
 
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
@@ -628,11 +616,37 @@ export const useGridRowEditing = (
     [apiRef, throwIfNotEditable, updateOrDeleteFieldState],
   );
 
-  const editingApi: Omit<GridNewRowEditingApi, keyof GridEditingSharedApi> = {
+  const getRowWithUpdatedValuesFromRowEditing = React.useCallback<
+    GridNewRowEditingApi['unstable_getRowWithUpdatedValuesFromRowEditing']
+  >(
+    (id) => {
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const row = apiRef.current.getRow(id);
+      let rowUpdate = { ...row };
+
+      Object.entries(editingState[id]).forEach(([field, fieldProps]) => {
+        const column = apiRef.current.getColumn(field);
+        if (column.valueSetter) {
+          rowUpdate = column.valueSetter({
+            value: fieldProps.value,
+            row: rowUpdate,
+          });
+        } else {
+          rowUpdate[field] = fieldProps.value;
+        }
+      });
+
+      return rowUpdate;
+    },
+    [apiRef],
+  );
+
+  const editingApi: Omit<GridNewRowEditingApi, keyof GridNewEditingSharedApi> = {
     getRowMode,
     startRowEditMode,
     stopRowEditMode,
     unstable_setRowEditingEditCellValue: setRowEditingEditCellValue,
+    unstable_getRowWithUpdatedValuesFromRowEditing: getRowWithUpdatedValuesFromRowEditing,
   };
 
   useGridApiMethod(apiRef, editingApi, 'EditingApi');

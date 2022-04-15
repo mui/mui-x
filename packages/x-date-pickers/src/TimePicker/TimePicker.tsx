@@ -38,8 +38,6 @@ export const TimePicker = React.forwardRef(function TimePicker<TDate>(
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
   const {
     cancelText,
-    clearable,
-    clearText,
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
     okText,
@@ -67,8 +65,6 @@ export const TimePicker = React.forwardRef(function TimePicker<TDate>(
     <MobileTimePicker
       ref={ref}
       cancelText={cancelText}
-      clearable={clearable}
-      clearText={clearText}
       DialogProps={DialogProps}
       okText={okText}
       showTodayButton={showTodayButton}

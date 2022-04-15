@@ -292,7 +292,7 @@ describe('<DataGridPro /> - Events Params', () => {
           ]}
         />,
       );
-      fireEvent.click(screen.getByRole('button', { name: 'print' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
       expect(eventStack).to.deep.equal([]);
     });
 
