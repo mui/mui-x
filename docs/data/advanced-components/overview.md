@@ -34,7 +34,7 @@ The detailed feature comparison is available on the [Pricing](https://mui.com/pr
 ### Community Plan
 
 MUI X's Community Plan is published under [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
-This plan contains features we believe are sustainable by the contributions of the open-source community. Free forever.
+This plan contains features we believe are sustainable by the contributions of the open-source community.
 
 Community Plan packages:
 
