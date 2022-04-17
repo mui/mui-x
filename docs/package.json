@@ -53,7 +53,7 @@
     "doctrine": "^3.0.0",
     "express": "^4.17.3",
     "fg-loadcss": "^3.1.0",
-    "fs-extra": "^10.0.1",
+    "fs-extra": "^10.1.0",
     "lodash": "^4.17.21",
     "lz-string": "^1.4.4",
     "markdown-to-jsx": "^7.1.7",
