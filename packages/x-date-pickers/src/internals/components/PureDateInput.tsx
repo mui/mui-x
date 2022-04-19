@@ -51,6 +51,11 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   ) => string;
   // ?? TODO when it will be possible to display "empty" date in datepicker use it instead of ignoring invalid inputs.
   ignoreInvalidInputs?: boolean;
+  /*
+   * Do not call `onChange` when the formatted value is inconsistent with the user input
+   * @default false
+   */
+  acceptInconsistentFormat?: boolean;
   /**
    * Props to pass to keyboard input adornment.
    */
