@@ -588,5 +588,33 @@ describe('<DataGridPro /> - Column pinning', () => {
       setProps({ pinnedColumns: {} });
       expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M', '2M']); // price1M's index = 2
     });
+
+    it('should not crash when unpinning the first column', () => {
+      const { setProps } = render(
+        <TestCase
+          nbCols={3}
+          columns={[{ field: 'id' }, { field: 'currencyPair' }, { field: 'price1M' }]}
+          pinnedColumns={{ left: ['id', 'currencyPair'] }}
+          disableVirtualization
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'currencyPair', 'price1M']);
+      setProps({ pinnedColumns: { left: ['currencyPair'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['currencyPair', 'id', 'price1M']);
+    });
+
+    it('should not crash when unpinning the last column', () => {
+      const { setProps } = render(
+        <TestCase
+          nbCols={3}
+          columns={[{ field: 'id' }, { field: 'currencyPair' }, { field: 'price1M' }]}
+          pinnedColumns={{ right: ['currencyPair', 'price1M'] }}
+          disableVirtualization
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'currencyPair', 'price1M']);
+      setProps({ pinnedColumns: { right: ['currencyPair'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M', 'currencyPair']);
+    });
   });
 });

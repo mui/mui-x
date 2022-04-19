@@ -43,12 +43,8 @@ export const useGridColumnPinningPreProcessors = (
       const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];
 
       if (orderedFieldsBeforePinningColumns.current) {
-        newOrderedFields = [
-          ...leftPinnedColumns,
-          ...new Array(columnsState.all.length - allPinnedColumns.length).fill(null),
-          ...rightPinnedColumns,
-        ];
-        const newOrderedFieldsBeforePinningColumns = new Array(columnsState.all.length).fill(null);
+        newOrderedFields = new Array(columnsState.all.length).fill(null);
+        const newOrderedFieldsBeforePinningColumns = [...newOrderedFields];
 
         // Contains the fields not added to the orderedFields array yet
         const remainingFields = [...columnsState.all];
@@ -86,6 +82,7 @@ export const useGridColumnPinningPreProcessors = (
             }
           }
 
+          newOrderedFields[index] = field;
           newOrderedFieldsBeforePinningColumns[index] = field;
           // This field was already consumed so we prevent from being added again
           remainingFields.splice(remainingFields.indexOf(field), 1);
@@ -94,7 +91,7 @@ export const useGridColumnPinningPreProcessors = (
         // The fields remaining are those that're neither pinnned nor were unpinned
         // For these, we spread them across both arrays making sure to not override existing values
         let i = 0;
-        let j = leftPinnedColumns.length; // No need to start at 0 if there're left pinned columns
+        let j = 0;
         remainingFields.forEach((field) => {
           while (newOrderedFieldsBeforePinningColumns[i] !== null) {
             i += 1;
