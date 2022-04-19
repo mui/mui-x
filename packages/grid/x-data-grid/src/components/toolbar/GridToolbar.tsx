@@ -25,12 +25,13 @@ export interface GridToolbarProps
     Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {
   /**
    * Show the quick filter component
+   * @default false
    */
-  showQuickFilter: boolean;
+  showQuickFilter?: boolean;
   /**
    * props passed to the quick filter component
    */
-  quickFilterOptions: GridToolbarQuickFilterProps;
+  quickFilterOptions?: GridToolbarQuickFilterProps;
 }
 
 const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function GridToolbar(
@@ -79,11 +80,12 @@ GridToolbar.propTypes = {
   /**
    * props passed to the quick filter component
    */
-  quickFilterOptions: PropTypes.object.isRequired,
+  quickFilterOptions: PropTypes.object,
   /**
    * Show the quick filter component
+   * @default false
    */
-  showQuickFilter: PropTypes.bool.isRequired,
+  showQuickFilter: PropTypes.bool,
 } as any;
 
 export { GridToolbar };

@@ -26,6 +26,11 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Szűrők megjelenítése',
   toolbarFiltersTooltipActive: (count) => `${count} aktív szűrő`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportálás',
   toolbarExportLabel: 'Exportálás',
