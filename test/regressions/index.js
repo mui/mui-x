@@ -5,7 +5,6 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import addons, { mockChannel } from '@storybook/addons';
-import FEATURE_TOGGLE from '../../docs/src/featureToggle';
 
 // See https://storybook.js.org/docs/react/workflows/faq#why-is-there-no-addons-channel
 addons.setChannel(mockChannel());
@@ -16,25 +15,23 @@ LicenseInfo.setLicenseKey(
 );
 
 const blacklist = [
-  /^docs-components-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
-  'docs-components-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
-  'docs-components-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
-  'docs-components-data-grid-filtering/CustomInputComponent.png', // Needs interaction
-  // TODO import the Rating from @mui/material, not the lab.
-  'docs-components-data-grid-components/CustomFooter.png',
-  'docs-components-date-pickers-date-picker/CustomInput.png', // Redundant
-  'docs-components-date-pickers-date-picker/LocalizedDatePicker.png', // Redundant
-  'docs-components-date-pickers-date-picker/ResponsiveDatePickers.png', // Redundant
-  'docs-components-date-pickers-date-picker/ServerRequestDatePicker.png', // Redundant
-  'docs-components-date-pickers-date-picker/ViewsDatePicker.png', // Redundant
-  'docs-components-date-pickers-date-range-picker/CalendarsDateRangePicker.png', // Redundant
-  'docs-components-date-pickers-date-range-picker/CustomDateRangeInputs.png', // Redundant
-  'docs-components-date-pickers-date-range-picker/MinMaxDateRangePicker.png', // Redundant
-  'docs-components-date-pickers-date-range-picker/ResponsiveDateRangePicker.png', // Redundant
-  'docs-components-date-pickers-date-time-picker/BasicDateTimePicker.png', // Redundant
-  'docs-components-date-pickers-date-time-picker/ResponsiveDateTimePickers.png', // Redundant
-  'docs-components-date-pickers-time-picker/LocalizedTimePicker.png', // Redundant
-  'docs-components-date-pickers-time-picker/ResponsiveTimePickers.png', // Redundant
+  /^docs-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
+  'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
+  'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
+  'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
+  'docs-date-pickers-date-picker/CustomInput.png', // Redundant
+  'docs-date-pickers-date-picker/LocalizedDatePicker.png', // Redundant
+  'docs-date-pickers-date-picker/ResponsiveDatePickers.png', // Redundant
+  'docs-date-pickers-date-picker/ServerRequestDatePicker.png', // Redundant
+  'docs-date-pickers-date-picker/ViewsDatePicker.png', // Redundant
+  'docs-date-pickers-date-range-picker/CalendarsDateRangePicker.png', // Redundant
+  'docs-date-pickers-date-range-picker/CustomDateRangeInputs.png', // Redundant
+  'docs-date-pickers-date-range-picker/MinMaxDateRangePicker.png', // Redundant
+  'docs-date-pickers-date-range-picker/ResponsiveDateRangePicker.png', // Redundant
+  'docs-date-pickers-date-time-picker/BasicDateTimePicker.png', // Redundant
+  'docs-date-pickers-date-time-picker/ResponsiveDateTimePickers.png', // Redundant
+  'docs-date-pickers-time-picker/LocalizedTimePicker.png', // Redundant
+  'docs-date-pickers-time-picker/ResponsiveTimePickers.png', // Redundant
   // 'docs-system-typography',
   /^stories(.*)(?<!Snap)\.png$/, // Excludes stories that aren't suffixed with 'Snap'.
 ];
@@ -97,15 +94,10 @@ const stories = requireStories.keys().reduce((res, path) => {
 }, []);
 
 // Also use some of the demos to avoid code duplication.
-let requireDocs = require.context('docsx/src/pages', true, /js$/);
-if (FEATURE_TOGGLE.enable_product_scope) {
-  requireDocs = require.context('docsx/data', true, /js$/);
-}
+const requireDocs = require.context('docsx/data', true, /js$/);
 const docs = requireDocs.keys().reduce((res, path) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
-  const suite = `docs-${FEATURE_TOGGLE.enable_product_scope ? 'components-' : ''}${suiteArray
-    .reverse()
-    .join('-')}`;
+  const suite = `docs-${suiteArray.reverse().join('-')}`;
 
   if (excludeTest(suite, name)) {
     return res;

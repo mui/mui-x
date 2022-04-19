@@ -129,7 +129,7 @@ async function main() {
     });
 
     it('should position the headers matching the columns', async function test() {
-      const route = `${baseUrl}/docs-components-data-grid-virtualization/ColumnVirtualizationGrid`;
+      const route = `${baseUrl}/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
       const screenshotPath = path.resolve(
         screenshotDir,
         `${route.replace(baseUrl, '.')}ScrollLeft400px.png`,

@@ -6,17 +6,10 @@ import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildGridSelectorsDocumentation from './buildGridSelectorsDocumentation';
 import buildGridEventsDocumentation from './buildGridEventsDocumentation';
-import FEATURE_TOGGLE from '../../src/featureToggle';
 import { getTypeScriptProjects } from '../getTypeScriptProjects';
 
 async function run() {
-  let documentationRoots = ['./docs/pages/api-docs'];
-  if (FEATURE_TOGGLE.enable_product_scope) {
-    documentationRoots = ['./docs/pages/api-docs', './docs/pages/x/api'];
-  }
-  if (FEATURE_TOGGLE.enable_redirects) {
-    documentationRoots = ['./docs/pages/x/api'];
-  }
+  const documentationRoots = ['./docs/pages/x/api'];
 
   const projects = getTypeScriptProjects();
 

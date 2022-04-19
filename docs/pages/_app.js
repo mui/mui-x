@@ -6,8 +6,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
-import pages from 'docsx/src/pages'; // DO NOT REMOVE
-import newPages from 'docsx/data/pages'; // DO NOT REMOVE
+import pages from 'docsx/data/pages'; // DO NOT REMOVE
 import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
@@ -227,13 +226,7 @@ function AppWrapper(props) {
     }
   }, []);
 
-  const asPathWithoutLang = router.asPath.replace(/^\/[a-z]{2}\//, '/');
-  let productPages = pages;
-  if (asPathWithoutLang.startsWith('/x')) {
-    productPages = newPages;
-  }
-
-  const activePage = findActivePage(productPages, router.pathname);
+  const activePage = findActivePage(pages, router.pathname);
 
   let fonts = [];
   if (router.pathname.match(/onepirate/)) {
@@ -251,7 +244,7 @@ function AppWrapper(props) {
       </NextHead>
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
         <CodeVariantProvider>
-          <PageContext.Provider value={{ activePage, pages: productPages }}>
+          <PageContext.Provider value={{ activePage, pages }}>
             <ThemeProvider>
               <DocsStyledEngineProvider cacheLtr={emotionCache}>
                 <XWrapper>{children}</XWrapper>
