@@ -31,7 +31,17 @@ const pages = [
       { pathname: '/x/react-data-grid/scrolling' },
       { pathname: '/x/react-data-grid/virtualization' },
       { pathname: '/x/react-data-grid/accessibility' },
-      { pathname: '/x/react-data-grid/group-pivot', title: 'Group & Pivot' },
+      {
+        pathname: '/x/react-data-grid/row-grouping',
+        title: 'Group & Pivot',
+        children: [
+          { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping' },
+          { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data' },
+          { pathname: '/x/react-data-grid/master-detail', title: 'Master Detail' },
+          { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧' },
+          { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧' },
+        ],
+      },
       {
         pathname: '/x/api/data-grid',
         title: ' • API Reference',
