@@ -60,6 +60,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
 
   const {
     onChange,
+    PaperProps,
     PopperProps,
     ToolbarComponent = TimePickerToolbar,
     TransitionComponent,
@@ -74,6 +75,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       DateInputProps={DateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
       PopperProps={PopperProps}
+      PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
     >
       {/* @ts-ignore time picker has no component slot for the calendar header */}
