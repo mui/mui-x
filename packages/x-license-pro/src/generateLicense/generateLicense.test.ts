@@ -12,7 +12,11 @@ describe('License: generateLicense', () => {
 
   it('should generate DataGridPro License properly when `scope: "pro"`', () => {
     expect(
-      generateLicense({ expiryDate: new Date(1591723879062), orderNumber: 'MUI-123', scope: 'pro' }),
+      generateLicense({
+        expiryDate: new Date(1591723879062),
+        orderNumber: 'MUI-123',
+        scope: 'pro',
+      }),
     ).to.equal(
       'f18848d49206ea51988c364a2b4b60b4T1JERVI6TVVJLTEyMyxFWFBJUlk9MTU5MTcyMzg3OTA2MixLRVlWRVJTSU9OPTEsVFlQRT1wcm8=',
     );
