@@ -3,7 +3,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEvents } from '../../../models/events';
 import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
-import { GridColumnMenuApi, GridEventListener } from '../../../models';
+import { GridColumnMenuApi } from '../../../models';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
@@ -87,12 +87,11 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
   /**
    * EVENTS
    */
-  const handleVirtualScrollerWheel = React.useCallback<
-    GridEventListener<GridEvents.virtualScrollerWheel>
-  >(() => {
-    apiRef.current.hideColumnMenu();
-  }, [apiRef]);
-
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
-  useGridApiEventHandler(apiRef, GridEvents.virtualScrollerWheel, handleVirtualScrollerWheel);
+  useGridApiEventHandler(apiRef, GridEvents.virtualScrollerWheel, apiRef.current.hideColumnMenu);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.virtualScrollerTouchMove,
+    apiRef.current.hideColumnMenu,
+  );
 };
