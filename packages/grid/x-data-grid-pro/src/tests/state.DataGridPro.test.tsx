@@ -72,6 +72,6 @@ describe('<DataGridPro /> - State', () => {
     }
 
     render(<GridStateTest />);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 });

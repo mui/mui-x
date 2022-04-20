@@ -34,7 +34,7 @@ The following demo lets you filter the rows according to several criteria at the
 
 ### Structure of the model
 
-The full typing details can be found on the [GridFilterModel API page](/api/data-grid/grid-filter-model/).
+The full typing details can be found on the [GridFilterModel API page](/x/api/data-grid/grid-filter-model/).
 
 The filter model is composed of a list of `items` and a `linkOperator`:
 
@@ -135,7 +135,7 @@ In the example below, the _rating_ column can not be filtered.
 
 ## Customize the operators
 
-The full typing details can be found on the [GridFilterOperator api page](/api/data-grid/grid-filter-operator/).
+The full typing details can be found on the [GridFilterOperator api page](/x/api/data-grid/grid-filter-operator/).
 
 An operator determines if a cell value should be considered as a valid filtered value.
 The candidate value used by the operator is the one corresponding to the `field` attribute or the value returned by the `valueGetter` of the `GridColDef`.
@@ -152,7 +152,7 @@ You can get them by importing the following functions:
 | `dateTime`     | `getGridDateOperators(true)`     |
 | `singleSelect` | `getGridSingleSelectOperators()` |
 
-You can find more information about the supported column types in the [columns section](/components/data-grid/columns/#column-types).
+You can find more information about the supported column types in the [columns section](/x/react-data-grid/columns/#column-types).
 
 ### Create a custom operator
 
@@ -182,9 +182,9 @@ const operator: GridFilterOperator = {
 };
 ```
 
-**Note**: The [`valueFormatter`](/components/data-grid/columns/#value-formatter) is only used for rendering purposes.
+**Note**: The [`valueFormatter`](/x/react-data-grid/columns/#value-formatter) is only used for rendering purposes.
 
-**Note**: If the column has a [`valueGetter`](/components/data-grid/columns/#value-getter), then `params.value` will be the resolved value.
+**Note**: If the column has a [`valueGetter`](/x/react-data-grid/columns/#value-getter), then `params.value` will be the resolved value.
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
 
@@ -254,7 +254,7 @@ In the demo below, the `rating` column reuses the numeric operators but the rati
 
 ### Custom column types
 
-When defining a [custom column type](/components/data-grid/columns/#custom-column-types), by default the grid will reuse the operators from the type that was extended.
+When defining a [custom column type](/x/react-data-grid/columns/#custom-column-types), by default the grid will reuse the operators from the type that was extended.
 The filter operators can then be edited just like on a regular column.
 
 ```ts
@@ -268,7 +268,7 @@ const ratingColumnType: GridColTypeDef = {
 
 ## Custom filter panel
 
-You can customize the rendering of the filter panel as shown in [the component section](/components/data-grid/components/#overriding-components) of the documentation.
+You can customize the rendering of the filter panel as shown in [the component section](/x/react-data-grid/components/#overriding-components) of the documentation.
 
 ### Customize the filter panel content
 
@@ -279,7 +279,7 @@ The available props allow overriding:
 - The order of the column selector (can be `"asc"` or `"desc"`)
 - Any prop of the input components
 
-Input components can be [customized](/customization/how-to-customize/) by using two approaches.
+Input components can be [customized](/material-ui/customization/how-to-customize/) by using two approaches.
 You can pass a `sx` prop to any input container or you can use CSS selectors on nested components of the filter panel.
 More details are available in the demo.
 
@@ -328,12 +328,12 @@ However, it can be implemented as in the demo below.
 
 {{"demo": "FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state/#access-the-state)
+More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
-- [GridFilterModel](/api/data-grid/grid-filter-model/)
-- [GridFilterItem](/api/data-grid/grid-filter-item/)
-- [GridFilterOperator](/api/data-grid/grid-filter-operator/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [GridFilterModel](/x/api/data-grid/grid-filter-model/)
+- [GridFilterItem](/x/api/data-grid/grid-filter-item/)
+- [GridFilterOperator](/x/api/data-grid/grid-filter-operator/)

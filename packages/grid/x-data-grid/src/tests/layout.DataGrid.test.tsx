@@ -1,7 +1,7 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
-import { SinonStub, stub } from 'sinon';
+import { SinonStub, stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -807,9 +807,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             <DataGrid {...baselineProps} rows={[]} rowHeight={rowHeight} autoHeight />
           </div>,
         );
-        expect(
-          (document.querySelector('.MuiDataGrid-overlay') as HTMLElement).clientHeight,
-        ).to.equal(rowHeight * 2);
+        expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
+          rowHeight * 2,
+        );
       });
 
       it('should expand content height to one row height when there is an error', () => {
@@ -827,7 +827,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             />
           </div>,
         );
-        const errorOverlayElement = document.querySelector('.MuiDataGrid-overlay') as HTMLElement;
+        const errorOverlayElement = document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!;
         expect(errorOverlayElement.textContent).to.equal(error.message);
         expect(errorOverlayElement.offsetHeight).to.equal(2 * rowHeight);
       });
@@ -844,9 +844,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       };
       render(<TestCase />);
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       // It should not have a horizontal scrollbar
-      expect(virtualScroller!.scrollWidth - virtualScroller!.clientWidth).to.equal(0);
+      expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
     });
 
     it('should have a horizontal scrollbar when there are more columns to show and no rows', function test() {
@@ -859,8 +859,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           <DataGrid columns={[{ field: 'brand' }, { field: 'year' }]} rows={[]} />
         </div>,
       );
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
-      expect(virtualScroller!.scrollWidth - virtualScroller!.clientWidth).not.to.equal(0);
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).not.to.equal(0);
     });
 
     it('should not place the overlay on top of the horizontal scrollbar when rows=[]', () => {
@@ -1023,7 +1023,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           <DataGrid {...baselineProps} error={{ message }} />
         </div>,
       );
-      expect((document.querySelector('.MuiDataGrid-overlay') as HTMLElement).textContent).to.equal(
+      expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.textContent).to.equal(
         message,
       );
     });
@@ -1097,5 +1097,18 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(screen.getByRole('grid')).toHaveComputedStyle({
       color: 'rgb(0, 0, 255)',
     });
+  });
+
+  it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
+    const NoRowsOverlay = spy(() => null);
+    const TestCase = (props: Partial<DataGridProps>) => (
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+      </div>
+    );
+    const { setProps } = render(<TestCase rows={[]} loading />);
+    expect(NoRowsOverlay.callCount).to.equal(0);
+    setProps({ loading: false, rows: [{ id: 1 }] });
+    expect(NoRowsOverlay.callCount).to.equal(0);
   });
 });

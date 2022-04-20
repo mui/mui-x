@@ -3,9 +3,6 @@ import { useFirstRender } from '../../utils/useFirstRender';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridPipeProcessorGroup, GridPipeProcessor } from './gridPipeProcessingApi';
 
-/**
- * TODO: Rename `useGridRegisterPipeProcessor`
- */
 export const useGridRegisterPipeProcessor = <
   Api extends GridApiCommon,
   G extends GridPipeProcessorGroup,

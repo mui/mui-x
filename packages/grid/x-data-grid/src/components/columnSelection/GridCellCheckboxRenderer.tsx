@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useForkRef } from '@mui/material/utils';
 import { GridEvents } from '../../models/events';
-import { GridCellParams } from '../../models/params/gridCellParams';
+import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -27,7 +27,7 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
+const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRenderCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const {
       field,
@@ -42,6 +42,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
       hasFocus,
       tabIndex,
       getValue,
+      api,
       ...other
     } = props;
     const apiRef = useGridApiContext();
@@ -119,6 +120,11 @@ GridCellCheckboxForwardRef.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * GridApi that let you manipulate the grid.
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
+   */
+  api: PropTypes.any.isRequired,
+  /**
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
@@ -131,9 +137,22 @@ GridCellCheckboxForwardRef.propTypes = {
    */
   field: PropTypes.string.isRequired,
   /**
+   * A ref allowing to set imperative focus.
+   * It can be passed to the element that should receive focus.
+   * @ignore - do not document.
+   */
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        focus: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: PropTypes.any.isRequired,
+  formattedValue: PropTypes.any,
   /**
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
@@ -169,7 +188,7 @@ GridCellCheckboxForwardRef.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.any.isRequired,
+  value: PropTypes.any,
 } as any;
 
 export { GridCellCheckboxForwardRef };

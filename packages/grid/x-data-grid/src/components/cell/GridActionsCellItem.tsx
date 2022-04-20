@@ -12,30 +12,39 @@ export type GridActionsCellItemProps = {
   | ({ showInMenu: true } & MenuItemProps)
 );
 
-const GridActionsCellItem = (props: GridActionsCellItemProps) => {
-  const { label, icon, showInMenu, onClick, ...other } = props;
+const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellItemProps>(
+  (props, ref) => {
+    const { label, icon, showInMenu, onClick, ...other } = props;
 
-  const handleClick = (event: any) => {
-    if (onClick) {
-      onClick(event);
+    const handleClick = (event: any) => {
+      if (onClick) {
+        onClick(event);
+      }
+    };
+
+    if (!showInMenu) {
+      return (
+        <IconButton
+          ref={ref}
+          size="small"
+          role="menuitem"
+          aria-label={label}
+          {...(other as any)}
+          onClick={handleClick}
+        >
+          {React.cloneElement(icon!, { fontSize: 'small' })}
+        </IconButton>
+      );
     }
-  };
 
-  if (!showInMenu) {
     return (
-      <IconButton size="small" aria-label={label} {...(other as any)} onClick={handleClick}>
-        {React.cloneElement(icon!, { fontSize: 'small' })}
-      </IconButton>
+      <MenuItem ref={ref} {...(other as any)} onClick={onClick}>
+        {icon && <ListItemIcon>{icon}</ListItemIcon>}
+        {label}
+      </MenuItem>
     );
-  }
-
-  return (
-    <MenuItem {...(other as any)} onClick={onClick}>
-      {icon && <ListItemIcon>{icon}</ListItemIcon>}
-      {label}
-    </MenuItem>
-  );
-};
+  },
+);
 
 GridActionsCellItem.propTypes = {
   // ----------------------------- Warning --------------------------------
