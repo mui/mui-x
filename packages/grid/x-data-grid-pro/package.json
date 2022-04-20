@@ -42,7 +42,7 @@
     "directory": "packages/grid/x-data-grid-pro"
   },
   "dependencies": {
-    "@mui/utils": "^5.6.0",
+    "@mui/utils": "^5.6.1",
     "@mui/x-data-grid": "5.9.0",
     "@mui/x-license-pro": "5.9.0",
     "@types/format-util": "^1.0.2",
