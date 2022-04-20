@@ -19,7 +19,7 @@ const valueManager: PickerStateValueManager<unknown, unknown> = {
   areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
     utils.isEqual(a, b),
   valueReducer: (utils, prevValue, newValue) => {
-    if (prevValue == null) {
+    if (prevValue == null || newValue == null) {
       return newValue;
     }
 
