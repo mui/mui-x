@@ -60,6 +60,7 @@ ponyfillGlobal.muiDocConfig = {
 
     if (newDeps['@mui/x-date-pickers']) {
       newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['date-fns'] = versions['date-fns'];
     }
 
     if (newDeps['@mui/x-date-pickers-pro']) {
@@ -75,6 +76,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
       '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
+      'date-fns': 'latest',
     };
     return output;
   },

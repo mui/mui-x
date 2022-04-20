@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
   GridColumnMenu,
@@ -13,23 +13,26 @@ import {
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
+type PaletteColorKey = 'primary' | 'secondary';
+type OwnerState = {
+  color: PaletteColorKey;
+};
+
 const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)<{
-  ownerState: { color: string };
-}>(({ theme, ownerState }) => ({
+  ownerState: OwnerState;
+}>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,
   color: theme.palette[ownerState.color].contrastText,
 }));
 
 const StyledGridColumnMenu = styled(GridColumnMenu)<{
-  ownerState: { color: string };
-}>(({ theme, ownerState }) => ({
+  ownerState: OwnerState;
+}>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,
   color: theme.palette[ownerState.color].contrastText,
 }));
 
-export function CustomColumnMenuComponent(
-  props: GridColumnMenuProps & { color: string },
-) {
+export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerState) {
   const { hideMenu, currentColumn, color, ...other } = props;
 
   if (currentColumn.field === 'name') {
@@ -79,7 +82,7 @@ export function CustomColumnMenuComponent(
 }
 
 export default function CustomColumnMenu() {
-  const [color, setColor] = React.useState<'primary' | 'secondary'>('primary');
+  const [color, setColor] = React.useState<PaletteColorKey>('primary');
   const apiRef = useGridApiRef();
 
   return (
