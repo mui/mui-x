@@ -16,7 +16,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 
 export const isNavigationKey = (key: string) =>
   key === 'Home' ||
@@ -159,7 +159,7 @@ const fakeDataFetcher = (parentPath: string[] = []) =>
     }, 500 + Math.random() * 300);
   });
 
-const getTreeDataPath = (row) => row.hierarchy;
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
 
 const useUtilityClasses = (ownerState: { classes: DataGridProProps['classes'] }) => {
   const { classes } = ownerState;
@@ -191,7 +191,7 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown: IconButtonProps['onKeyDown'] = (event) => {
     if (event.key === ' ') {
       event.stopPropagation();
     }
@@ -200,7 +200,7 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
     }
   };
 
-  const handleClick = (event) => {
+  const handleClick: IconButtonProps['onClick'] = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();

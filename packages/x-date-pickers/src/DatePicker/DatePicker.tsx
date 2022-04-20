@@ -38,8 +38,6 @@ export const DatePicker = React.forwardRef(function DatePicker<TDate>(
   const props = useThemeProps({ props: inProps, name: 'MuiDatePicker' });
   const {
     cancelText,
-    clearable,
-    clearText,
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
     okText,
@@ -52,21 +50,21 @@ export const DatePicker = React.forwardRef(function DatePicker<TDate>(
 
   const isDesktop = useMediaQuery(desktopModeMediaQuery);
 
-  return isDesktop ? (
-    <DesktopDatePicker
-      ref={ref}
-      PopperProps={PopperProps}
-      TransitionComponent={TransitionComponent}
-      clearText={clearText}
-      clearable={clearable}
-      {...other}
-    />
-  ) : (
+  if (isDesktop) {
+    return (
+      <DesktopDatePicker
+        ref={ref}
+        PopperProps={PopperProps}
+        TransitionComponent={TransitionComponent}
+        {...other}
+      />
+    );
+  }
+
+  return (
     <MobileDatePicker
       ref={ref}
       cancelText={cancelText}
-      clearable={clearable}
-      clearText={clearText}
       DialogProps={DialogProps}
       okText={okText}
       showTodayButton={showTodayButton}
