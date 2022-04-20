@@ -250,6 +250,34 @@ describe('<DesktopTimePicker />', () => {
     );
   });
 
+  it('should keep the date when time value is cleaned', function test() {
+    const handleChange = spy();
+
+    render(
+      <DesktopTimePicker
+        ampm
+        onChange={handleChange}
+        open
+        renderInput={(params) => <TextField {...params} />}
+        value={adapterToUse.date('2019-01-01T04:20:00.000')}
+      />,
+    );
+
+    // reset the time value
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '' } });
+    expect(handleChange.callCount).to.equal(1);
+    expect(handleChange.lastCall.args[0]).to.equal(null);
+
+    // call `onChange` with a valid time
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: '07:00 pm' },
+    });
+    expect(handleChange.callCount).to.equal(2);
+    expect(handleChange.lastCall.args[0]).toEqualDateTime(
+      adapterToUse.date('2019-01-01T19:00:00.000'),
+    );
+  });
+
   context('input validation', () => {
     const shouldDisableTime: TimePickerProps['shouldDisableTime'] = (value) => value === 10;
 

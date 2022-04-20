@@ -1,78 +1,12 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridRenderCellParams,
-  useGridApiContext,
-  GridEvents,
   GridColumns,
   GridRowsProp,
   DataGridProProps,
-  useGridSelector,
-  gridFilteredDescendantCountLookupSelector,
-  GridColDef,
 } from '@mui/x-data-grid-pro';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 
-export const isNavigationKey = (key: string) =>
-  key === 'Home' ||
-  key === 'End' ||
-  key.indexOf('Arrow') === 0 ||
-  key.indexOf('Page') === 0 ||
-  key === ' ';
-
-const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id, field, rowNode } = props;
-  const apiRef = useGridApiContext();
-  const filteredDescendantCountLookup = useGridSelector(
-    apiRef,
-    gridFilteredDescendantCountLookupSelector,
-  );
-  const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
-
-  const handleKeyDown = (event) => {
-    if (event.key === ' ') {
-      event.stopPropagation();
-    }
-    if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
-    }
-  };
-
-  const handleClick = (event) => {
-    apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
-    apiRef.current.setCellFocus(id, field);
-    event.stopPropagation();
-  };
-
-  return (
-    <Box sx={{ ml: rowNode.depth * 4 }}>
-      <div>
-        {filteredDescendantCount > 0 ? (
-          <Button
-            onClick={handleClick}
-            onKeyDown={handleKeyDown}
-            tabIndex={-1}
-            size="small"
-          >
-            See {filteredDescendantCount} employees
-          </Button>
-        ) : (
-          <span />
-        )}
-      </div>
-    </Box>
-  );
-};
-
-interface Row {
-  hierarchy: string[];
-  jobTitle: string;
-  recruitmentDate: Date;
-  id: number;
-}
-
-const rows: GridRowsProp<Row> = [
+const rows: GridRowsProp = [
   {
     hierarchy: ['Sarah'],
     jobTitle: 'Head of Human Resources',
@@ -166,14 +100,6 @@ const rows: GridRowsProp<Row> = [
 ];
 
 const columns: GridColumns = [
-  {
-    field: 'name',
-    headerName: 'Name',
-    valueGetter: (params) => {
-      const hierarchy = params.row.hierarchy;
-      return hierarchy[hierarchy.length - 1];
-    },
-  } as GridColDef<Row, string>,
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
   {
     field: 'recruitmentDate',
@@ -183,14 +109,9 @@ const columns: GridColumns = [
   },
 ];
 
-const getTreeDataPath = (row) => row.hierarchy;
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
 
-const groupingColDef: DataGridProProps['groupingColDef'] = {
-  headerName: 'Hierarchy',
-  renderCell: (params) => <CustomGridTreeDataGroupingCell {...params} />,
-};
-
-export default function TreeDataCustomGroupingColumn() {
+export default function TreeDataSimple() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
@@ -198,7 +119,6 @@ export default function TreeDataCustomGroupingColumn() {
         rows={rows}
         columns={columns}
         getTreeDataPath={getTreeDataPath}
-        groupingColDef={groupingColDef}
       />
     </div>
   );

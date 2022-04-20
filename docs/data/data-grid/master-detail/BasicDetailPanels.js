@@ -1,16 +1,11 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import {
-  DataGridPro,
-  GridColumns,
-  GridRowsProp,
-  useGridApiContext,
-  GRID_DETAIL_PANEL_TOGGLE_FIELD,
-  GridEvents,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomPrice,
@@ -24,39 +19,31 @@ import {
 } from '@mui/x-data-grid-generator';
 
 function DetailPanelContent({ row: rowProp }) {
-  const apiRef = useGridApiContext();
-  const [width, setWidth] = React.useState(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    return dimensions!.viewportInnerSize.width;
-  });
-
-  const handleViewportInnerSizeChange = React.useCallback(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    setWidth(dimensions!.viewportInnerSize.width);
-  }, [apiRef]);
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent(
-      GridEvents.viewportInnerSizeChange,
-      handleViewportInnerSizeChange,
-    );
-  }, [apiRef, handleViewportInnerSizeChange]);
-
   return (
-    <Stack
-      sx={{
-        py: 2,
-        height: 1,
-        boxSizing: 'border-box',
-        position: 'sticky',
-        left: 0,
-        width,
-      }}
-      direction="column"
-    >
+    <Stack sx={{ py: 2, height: 1, boxSizing: 'border-box' }} direction="column">
       <Paper sx={{ flex: 1, mx: 'auto', width: '90%', p: 1 }}>
         <Stack direction="column" spacing={1} sx={{ height: 1 }}>
           <Typography variant="h6">{`Order #${rowProp.id}`}</Typography>
+          <Grid container>
+            <Grid item md={6}>
+              <Typography variant="body2" color="textSecondary">
+                Customer information
+              </Typography>
+              <Typography variant="body1">{rowProp.customer}</Typography>
+              <Typography variant="body1">{rowProp.email}</Typography>
+            </Grid>
+            <Grid item md={6}>
+              <Typography variant="body2" align="right" color="textSecondary">
+                Shipping address
+              </Typography>
+              <Typography variant="body1" align="right">
+                {rowProp.address}
+              </Typography>
+              <Typography variant="body1" align="right">
+                {`${rowProp.city}, ${rowProp.country.label}`}
+              </Typography>
+            </Grid>
+          </Grid>
           <DataGridPro
             density="compact"
             columns={[
@@ -85,27 +72,25 @@ function DetailPanelContent({ row: rowProp }) {
   );
 }
 
-const columns: GridColumns = [
+DetailPanelContent.propTypes = {
+  row: PropTypes.object.isRequired,
+};
+
+const columns = [
   { field: 'id', headerName: 'Order ID' },
   { field: 'customer', headerName: 'Customer', width: 200 },
-  { field: 'email', headerName: 'Email' },
   { field: 'date', type: 'date', headerName: 'Placed at' },
   { field: 'currency', headerName: 'Currency' },
-  { field: 'address', headerName: 'Address' },
-  {
-    field: 'city',
-    headerName: 'City',
-    valueGetter: ({ row }) => `${row.city}, ${row.country.label}`,
-  },
   {
     field: 'total',
     type: 'number',
     headerName: 'Total',
     valueGetter: ({ row }) => {
       const subtotal = row.products.reduce(
-        (acc: number, product: any) => product.unitPrice * product.quantity,
+        (acc, product) => product.unitPrice * product.quantity,
         0,
       );
+
       const taxes = subtotal * 0.05;
       return subtotal + taxes;
     },
@@ -122,7 +107,7 @@ function generateProducts() {
   }));
 }
 
-const rows: GridRowsProp = [
+const rows = [
   {
     id: 1,
     customer: 'Matheus',
@@ -178,20 +163,9 @@ const rows: GridRowsProp = [
     currency: randomCurrency(),
     products: generateProducts(),
   },
-  {
-    id: 6,
-    customer: 'José',
-    email: randomEmail(),
-    date: randomCreatedDate(),
-    address: randomAddress(),
-    country: randomCountry(),
-    city: randomCity(),
-    currency: randomCurrency(),
-    products: generateProducts(),
-  },
 ];
 
-export default function FullWidthDetailPanel() {
+export default function BasicDetailPanels() {
   const getDetailPanelContent = React.useCallback(
     ({ row }) => <DetailPanelContent row={row} />,
     [],
@@ -205,7 +179,6 @@ export default function FullWidthDetailPanel() {
         columns={columns}
         rows={rows}
         rowThreshold={0}
-        pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
       />

@@ -1,5 +1,16 @@
 import * as React from 'react';
-import { DataGridPro, GridColumns, GridRowsProp } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridColumns,
+  GridRowsProp,
+  GridSortModel,
+  DataGridProProps,
+} from '@mui/x-data-grid-pro';
+import Stack from '@mui/material/Stack';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Typography from '@mui/material/Typography';
 
 const rows: GridRowsProp = [
   {
@@ -104,17 +115,43 @@ const columns: GridColumns = [
   },
 ];
 
-const getTreeDataPath = (row) => row.hierarchy;
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
 
-export default function TreeDataSimple() {
+export default function TreeDataDisableChildrenSorting() {
+  const [disableChildrenSorting, setDisableChildrenSorting] = React.useState(true);
+  const [sortModel, setSortModel] = React.useState<GridSortModel>([
+    { field: 'recruitmentDate', sort: 'asc' },
+  ]);
+
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
-        treeData
-        rows={rows}
-        columns={columns}
-        getTreeDataPath={getTreeDataPath}
-      />
-    </div>
+    <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={disableChildrenSorting}
+              onChange={(event) => setDisableChildrenSorting(event.target.checked)}
+            />
+          }
+          label={
+            <Typography component="span">
+              Enable <code>disableChildrenSorting</code>
+            </Typography>
+          }
+        />
+      </FormGroup>
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGridPro
+          treeData
+          rows={rows}
+          columns={columns}
+          disableChildrenSorting={disableChildrenSorting}
+          getTreeDataPath={getTreeDataPath}
+          sortModel={sortModel}
+          onSortModelChange={setSortModel}
+          defaultGroupingExpansionDepth={-1}
+        />
+      </div>
+    </Stack>
   );
 }

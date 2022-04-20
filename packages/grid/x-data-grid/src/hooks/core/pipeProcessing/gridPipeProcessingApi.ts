@@ -12,21 +12,21 @@ import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
 export interface GridPipeProcessingLookup {
+  columnMenu: { value: React.ReactNode[]; context: GridColDef };
+  exportState: { value: GridInitialStateCommunity };
   hydrateColumns: {
     value: GridHydrateColumnsValue;
   };
-  scrollToIndexes: {
-    value: Partial<GridScrollParams>;
-    context: Partial<GridCellIndexCoordinates>;
-  };
-  columnMenu: { value: React.ReactNode[]; context: GridColDef };
-  exportState: { value: GridInitialStateCommunity };
+  preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;
     context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
   };
   rowHeight: { value: Record<string, number>; context: GridRowEntry };
-  preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
+  scrollToIndexes: {
+    value: Partial<GridScrollParams>;
+    context: Partial<GridCellIndexCoordinates>;
+  };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (
