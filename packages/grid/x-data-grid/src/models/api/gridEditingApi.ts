@@ -1,6 +1,6 @@
 import { GridCellMode, GridRowMode } from '../gridCell';
 import { GridEditRowsModel, GridEditCellProps } from '../gridEditRowModel';
-import { GridRowId } from '../gridRows';
+import { GridRowId, GridRowModel } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import {
   GridCommitCellChangeParams,
@@ -9,6 +9,41 @@ import {
 } from '../params/gridEditCellParams';
 import { MuiBaseEvent } from '../muiEvent';
 
+export interface GridNewEditingSharedApi {
+  /**
+   * Controls if a cell is editable.
+   * @param {GridCellParams} params The cell params.
+   * @returns {boolean} A boolean value determining if the cell is editable.
+   */
+  isCellEditable: (params: GridCellParams) => boolean;
+  /**
+   * Sets the value of the edit cell.
+   * Commonly used inside the edit cell component.
+   * @param {GridEditCellValueParams} params Contains the id, field and value to set.
+   * @param {React.SyntheticEvent} event The event to pass forward.
+   * @returns {Promise<boolean> | void} A promise with the validation status if `preventCommitWhileValidating` is `true`. Otherwise, void.
+   */
+  setEditCellValue: (
+    params: GridEditCellValueParams,
+    event?: MuiBaseEvent,
+  ) => Promise<boolean> | void;
+  /**
+   * Immediatelly updates the value of the cell, without waiting for the debounce.
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field to update. If not passed, updates all fields in the given row id.
+   * @ignore - do not document.
+   */
+  unstable_runPendingEditCellValueMutation: (id: GridRowId, field?: string) => void;
+  /**
+   * Returns the row with the values that were set by editing the cells.
+   * In row editing, `field` is ignored and all fields are considered.
+   * @param {GridRowId} id The row id being edited.
+   * @param {string} field The field being edited.
+   * @ignore - do not document.
+   */
+  unstable_getRowWithUpdatedValues: (id: GridRowId, field: string) => GridRowModel;
+}
+
 /**
  * The shared methods used by the cell and row editing API.
  */
@@ -16,11 +51,13 @@ export interface GridEditingSharedApi {
   /**
    * Set the edit rows model of the grid.
    * @param {GridEditRowsModel} model The new edit rows model.
+   * @deprecated Prefer the new editing API.
    */
   setEditRowsModel: (model: GridEditRowsModel) => void;
   /**
    * Gets the edit rows model of the grid.
    * @returns {GridEditRowsModel} The edit rows model.
+   * @deprecated Prefer the new editing API.
    */
   getEditRowsModel: () => GridEditRowsModel;
   /**
@@ -205,7 +242,7 @@ export interface GridStopRowEditModeParams {
 }
 
 export interface GridNewCellEditingApi
-  extends Omit<GridEditingSharedApi, 'getEditRowsModel' | 'setEditRowsModel'>,
+  extends GridNewEditingSharedApi,
     Pick<GridCellEditingApi, 'getCellMode'> {
   /**
    * Puts the cell corresponding to the given row id and field into edit mode.
@@ -226,10 +263,17 @@ export interface GridNewCellEditingApi
    * @ignore - do not document.
    */
   unstable_setCellEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
+  /**
+   * Returns the row with the new value that was set by editing the cell.
+   * @param {GridRowId} id The row id being edited.
+   * @param {string} field The field being edited.
+   * @ignore - do not document.
+   */
+  unstable_getRowWithUpdatedValuesFromCellEditing: (id: GridRowId, field: string) => GridRowModel;
 }
 
 export interface GridNewRowEditingApi
-  extends Omit<GridEditingSharedApi, 'getEditRowsModel' | 'setEditRowsModel'>,
+  extends GridNewEditingSharedApi,
     Pick<GridRowEditingApi, 'getRowMode'> {
   /**
    * Puts the row corresponding to the given id into edit mode.
@@ -250,6 +294,12 @@ export interface GridNewRowEditingApi
    * @ignore - do not document.
    */
   unstable_setRowEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
+  /**
+   * Returns the row with the values that were set by editing all cells.
+   * @param {GridRowId} id The row id being edited.
+   * @ignore - do not document.
+   */
+  unstable_getRowWithUpdatedValuesFromRowEditing: (id: GridRowId) => GridRowModel;
 }
 
 /**

@@ -3,8 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v5.9.0
+
+_Apr 14, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Update peer dependencies to support React 18 (#4332) @m4theushw
+
+  Now the data grid and pickers components support the concurrent mode.
+
+- 🎁 Add support for [Column spanning](https://mui.com/x/react-data-grid/columns/#column-spanning) (#4020) @cherniavskii
+
+  <img src="https://user-images.githubusercontent.com/13808724/162926746-93bcb180-3c9d-4eb9-afc7-c3908a5c6406.png" width="788">
+
+- 📚 New standalone documentation for MUI X (#4313) @siriwatknp
+
+  Each MUI product now has its own documentation.
+  More information on our [blog post](https://mui.com/blog/docs-restructure-2022/).
+
+- 🌍 Add Hungarian (hu-HU) locale (#4458) @x22tri
+
+- 🐞 Bug fixes
+
+### `@mui/x-data-grid@v5.9.0` / `@mui/x-data-grid-pro@v5.9.0`
+
+- [DataGrid] Add indexes relative to the filtered rows and the current page to the `getRowClassName` and `getRowSpacing` props (#3882) @flaviendelangle
+- [DataGrid] Add React 18 to peer dependencies (#4332) @m4theushw
+- [DataGrid] Add support for column spanning (#4020) @cherniavskii
+- [DataGrid] Apply filtering before sorting (#4359) @flaviendelangle
+- [DataGrid] Enable using non-native Select in filter panel (#4361) @kyeongsoosoo
+- [DataGrid] Fix `api` prop leaking to DOM (#4384) @m4theushw
+- [DataGrid] Fix column dimensions import/export with flex and resizing (#4311) @flaviendelangle
+- [DataGrid] Fix focus after stopping row edit mode with pagination enabled (#4326) @m4theushw
+- [DataGrid] Fix inconsistent overlay when changing the `loading` prop (#4334) @m4theushw
+- [DataGrid] Fix scrollbar grabbing issue in Safari (#4405) @cherniavskii
+- [DataGrid] `GridCellParams.formattedValue` should be nullable (#4376) @flaviendelangle
+- [DataGrid] Improve accessibility of the `actions` column (#4325) @m4theushw
+- [DataGrid] Pass updated row to edit components (#4392) @m4theushw
+- [DataGrid] Prevent column header scroll (#4280) @m4theushw
+- [DataGridPro] Fix toggling detail panel using keyboard (#4409) @cherniavskii
+- [l10n] Add Hungarian (hu-HU) locale (#4458) @x22tri
+
+### `@mui/x-date-pickers@5.0.0-alpha.1` / `@mui/x-date-pickers-pro@5.0.0-alpha.1`
+
+- [ClockPicker] Should call `shouldDisableTime` with the hours with meridiem (#4404) @flaviendelangle
+- [MonthPicker] Clicking on a `PickersMonth` button should not trigger the form submit (#4402) @flaviendelangle
+- [TimePicker] Do not update date when updating input in `TimePicker` (#4398) @flaviendelangle
+- [pickers] Add react-dom to pickers peer deps to satisfy react-transition-group (#4411) @CarsonF
+- [pickers] Add `TDate` generic to `CalendarOrClockPicker` component (#4465) @flaviendelangle
+- [pickers] Fix default props behavior on all pickers (#4451) @flaviendelangle
+- [pickers] Export `MuiPickersAdapterContext` (#4367) @flaviendelangle
+
+### Docs
+
+- [docs] Avoid redirections (#4365) @oliviertassinari
+- [docs] Fix docs about date adapter (#4386) @alexfauquette
+- [docs] Fix small external links issue (#4436) @oliviertassinari
+- [docs] Fix some links to date picker docs (#4362) @oliviertassinari
+- [docs] Fix wrong URL (#4415) @siriwatknp
+- [docs] Go live with the new URLs (#4313) @siriwatknp
+- [docs] Update the product names to be in sync @oliviertassinari
+
+### Core
+
+- [core] Add technical doc for pipe processing and family processing (#4322) @flaviendelangle
+- [core] Don't upgrade CircleCI node (#4457) @m4theushw
+- [core] Fix flaky e2e-website tests in CI (#4136) @cherniavskii
+- [core] Fix license file copying during build (#4462) @flaviendelangle
+- [core] Fix links on v5.8.0 (#4464) @oliviertassinari
+- [core] Fix npm page description mistake (#4364) @oliviertassinari
+- [core] Fix typos and JSDoc (#4406) @flaviendelangle
+- [core] Move away for the event system to trigger pipe processings (#4378) @flaviendelangle
+- [core] Small fixes TS on pickers (#4461) @flaviendelangle
+- [core] Unify tests (#4368) @flaviendelangle
+- [core] Enforce `noImplicitAny` in `docs` folder (#4412) @cherniavskii
+
 ## 5.8.0
-<!-- generated comparing v5.7.0..master -->
+
 _Apr 4, 2022_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
@@ -24,17 +100,19 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
   You can now strongly type all the objects related to the row and the cell values.
   Here is an example, you can find out more in the description of #4064.
-  
+
   ```tsx
   const rows: Movie[] = [];
 
   return (
-    <DataGrid 
+    <DataGrid
       rows={rows}
-      columns={[{ 
-        // typeof params.row => Movie (R)
-        valueGetter: params => params.row.year, 
-      }]}
+      columns={[
+        {
+          // typeof params.row => Movie (R)
+          valueGetter: (params) => params.row.year,
+        },
+      ]}
     />
   );
   ```
@@ -226,7 +304,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   -const filterableFields = filterableGridColumnsIdsSelector(apiRef);
   +const lookup = gridFilterableColumnLookupSelector(apiRef);
   +const filterableFields = gridColumnFieldsSelector(apiRef).filter(field => lookup[field]);
-  
+
   -const visibleColumnsNumber = visibleGridColumnsLengthSelector(apiRef);
   +const visibleColumnsNumber = gridVisibleColumnDefinitionsSelector(apiRef).length;
 
