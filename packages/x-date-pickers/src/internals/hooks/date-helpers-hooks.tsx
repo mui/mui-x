@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { useUtils } from './useUtils';
-import { ParseableDate } from '../models/parseableDate';
 import { PickerOnChangeFn } from './useViews';
 import { getMeridiem, convertToMeridiem } from '../utils/time-utils';
-
-export type OverrideParseableDateProps<TDate, TProps, TKey extends keyof TProps> = Omit<
-  TProps,
-  TKey
-> &
-  Partial<Record<TKey, ParseableDate<TDate>>>;
 
 interface MonthValidationOptions<TDate> {
   disablePast?: boolean;
@@ -47,7 +40,7 @@ export function usePreviousMonthDisabled<TDate>(
 }
 
 export function useMeridiemMode<TDate>(
-  date: TDate,
+  date: TDate | null,
   ampm: boolean | undefined,
   onChange: PickerOnChangeFn<TDate>,
 ) {
@@ -56,7 +49,8 @@ export function useMeridiemMode<TDate>(
 
   const handleMeridiemChange = React.useCallback(
     (mode: 'am' | 'pm') => {
-      const timeWithMeridiem = convertToMeridiem<TDate>(date, mode, Boolean(ampm), utils);
+      const timeWithMeridiem =
+        date == null ? null : convertToMeridiem<TDate>(date, mode, Boolean(ampm), utils);
       onChange(timeWithMeridiem, 'partial');
     },
     [ampm, date, onChange, utils],

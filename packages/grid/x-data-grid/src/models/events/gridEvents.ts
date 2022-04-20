@@ -94,7 +94,7 @@ enum GridEvents {
    */
   rowEditCommit = 'rowEditCommit',
   /**
-   * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a cell.
+   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a cell.
    * @ignore - do not document.
    */
   cellNavigationKeyDown = 'cellNavigationKeyDown',
@@ -146,7 +146,7 @@ enum GridEvents {
    */
   columnHeaderFocus = 'columnHeaderFocus',
   /**
-   * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a column header.
+   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a column header.
    * @ignore - do not document.
    */
   columnHeaderNavigationKeyDown = 'columnHeaderNavigationKeyDown',
@@ -276,10 +276,15 @@ enum GridEvents {
    */
   rowExpansionChange = 'rowExpansionChange',
   /**
-   * Fired when the visible rows are updated
+   * Fired when the sorted rows are updated
+   * @ignore - do not document
+   */
+  sortedRowsSet = 'sortedRowsSet',
+  /**
+   * Fired when the filtered rows are updated
    * @ignore - do not document.
    */
-  visibleRowsSet = 'visibleRowsSet',
+  filteredRowsSet = 'filteredRowsSet',
   /**
    * Fired when the columns state is changed.
    */
@@ -294,16 +299,6 @@ enum GridEvents {
    * @ignore - do not document.
    */
   pinnedColumnsChange = 'pinnedColumnsChange',
-  /**
-   * Fired when a pre-processor is registered.
-   * @ignore - do not document.
-   */
-  pipeProcessorRegister = 'pipeProcessorRegister',
-  /**
-   * Fired when a pre-processor is unregistered.
-   * @ignore - do not document.
-   */
-  pipeProcessorUnregister = 'pipeProcessorUnregister',
   /**
    * Fired when a processor of the active strategy changes.
    * @ignore - do not document.

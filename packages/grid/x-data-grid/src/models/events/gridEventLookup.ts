@@ -21,7 +21,6 @@ import type { GridSelectionModel } from '../gridSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
-import type { GridPipeProcessorGroup } from '../../hooks/core/pipeProcessing';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
@@ -157,8 +156,6 @@ export interface GridEventLookup
   resize: { params: ElementSize };
   viewportInnerSizeChange: { params: ElementSize };
   debouncedResize: { params: ElementSize };
-  pipeProcessorRegister: { params: GridPipeProcessorGroup };
-  pipeProcessorUnregister: { params: GridPipeProcessorGroup };
   activeStrategyProcessorChange: {
     params: GridStrategyProcessorName;
   };
@@ -178,7 +175,8 @@ export interface GridEventLookup
 
   // Rows
   rowsSet: {};
-  visibleRowsSet: {};
+  filteredRowsSet: {};
+  sortedRowsSet: {};
   rowExpansionChange: { params: GridRowTreeNodeConfig };
 
   // Edit
@@ -221,7 +219,7 @@ export interface GridEventLookup
   };
 
   // Scroll
-  rowsScroll: { params: GridScrollParams };
+  rowsScroll: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
   virtualScrollerContentSizeChange: {};
 
   // Selection

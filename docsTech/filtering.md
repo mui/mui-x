@@ -4,7 +4,7 @@
 
 ### Data
 
-First, let's see how the filtering is saved in the state. Here are the types of the [filter model](https://mui.com/api/data-grid/grid-filter-model/). It is made of a `linkOperator`, and a list of [items](https://mui.com/api/data-grid/grid-filter-item/). Each item corresponds to a line in the filtering panel. Each item corresponds to a line in the filter panel.
+First, let's see how the filtering is saved in the state. Here are the types of the [filter model](https://mui.com/x/api/data-grid/grid-filter-model/). It is made of a `linkOperator`, and a list of [items](https://mui.com/x/api/data-grid/grid-filter-item/). Each item corresponds to a line in the filtering panel. Each item corresponds to a line in the filter panel.
 
 ```ts
 interface GridFilterModel {
