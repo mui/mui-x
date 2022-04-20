@@ -243,7 +243,27 @@ To install it:
  yarn add exceljs
 ```
 
-### Customizing the export
+### Customization
+
+#### Customizing the columns
+
+You can use the property `columnsStyles` to customize the column style.
+This property accepts an object in which keys are the column field and values an [exceljs style object](https://github.com/exceljs/exceljs#styles).
+
+This can be used to specify value formatting or to add some colors.
+
+```jsx
+<GridToolbarExport
+  excelOptions={{
+    // replace the dd.mm.yyyy default date format
+    recruitmentDay: { numFmt: 'dd/mm/yyyy' },
+    // set this column in green
+    incomes: { font: { argb: 'FF00FF00' } },
+  }}
+/>
+```
+
+#### Customizing the document
 
 You can customize the document using two callback functions:
 
