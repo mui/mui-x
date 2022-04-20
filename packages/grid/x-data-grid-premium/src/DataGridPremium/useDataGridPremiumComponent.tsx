@@ -53,6 +53,7 @@ import {
   useGridDetailPanelCache,
   useGridDetailPanelPreProcessors,
   useGridInfiniteLoader,
+  useGridColumnSpanning,
 } from '@mui/x-data-grid-pro/internals';
 
 import { GridApiPremium } from '../models/gridApiPremium';
@@ -119,6 +120,7 @@ export const useDataGridPremiumComponent = (
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridColumnSpanning(apiRef);
   useGridDetailPanelCache(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
