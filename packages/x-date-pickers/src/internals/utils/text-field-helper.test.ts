@@ -68,7 +68,7 @@ describe('text-field-helper', () => {
         expect(runMaskValidation).toWarnDev(
           [
             `The mask "${mask}" you passed is not valid for the format used ${format}.`,
-            `Falling down to uncontrolled not-masked input.`,
+            `Falling down to uncontrolled no-mask input.`,
           ].join('\n'),
         );
       }
