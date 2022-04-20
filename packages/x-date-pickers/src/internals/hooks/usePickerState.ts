@@ -29,13 +29,11 @@ interface DateState<T> {
    * It is updates whenever the user validates a step.
    */
   draft: T;
-
   /**
    * Last full date provided by the user
    * Is not updated when validating a step of a multistep picker (e.g. validating the date of a date time picker)
    */
   committed: T;
-
   /**
    * Date that will be used if the pickers tries to reset its value
    */
