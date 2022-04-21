@@ -12,9 +12,9 @@ They can be pinned either to the left or right side and cannot be reordered.
 To pin a column, there are a few ways:
 
 - Using the `initialState` prop
-- [Controlling](/x/react-data-grid/columns/#controlling-the-pinned-columns) the `pinnedColumns` and `onPinnedColumnsChange` props
+- [Controlling](/#controlling-the-pinned-columns) the `pinnedColumns` and `onPinnedColumnsChange` props
 - Dedicated buttons in the column menu
-- Accessing the [imperative](/x/react-data-grid/columns/#apiref) API
+- Accessing the [imperative](#apiref) API
 
 To set pinned columns via `initialState`, pass an object with the following shape to this prop:
 
