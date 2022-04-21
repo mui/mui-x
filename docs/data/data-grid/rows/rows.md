@@ -142,6 +142,10 @@ Row reordering allows to rearrange rows by dragging the special reordering cell.
 By default, row reordering is disabled.
 To enable it, you need to add the `rowReordering` prop.
 
+```tsx
+<DataGridPro rowReordering />
+```
+
 {{"demo": "RowOrderingGrid.js", "disableAd": true, "bg": "inline"}}
 
 To capture changes in the order of the dragged row, you can pass a callback to the `onRowOrderChange` prop. This callback is called with a `GridRowOrderChangeParams` object.
@@ -151,6 +155,22 @@ In addition, you can import the following events to customize the row reordering
 - `rowDragStart`: emitted when dragging of a row starts.
 - `rowDragOver`: emitted when dragging a row over another row.
 - `rowDragEnd`: emitted when dragging of a row stops.
+
+### Customizing the reorder value
+
+By default when you start dragging a row that rows' `id` is displayed in the draggable box. To change this you can give a value to the `__reorder__` field for each row.
+
+```tsx
+const columns: GridColumns = [{ field: 'brand' }];
+
+const rows: GridRowsProp = [
+  { id: 0, brand: 'Nike', __reorder__: 'Nike' },
+  { id: 1, brand: 'Adidas', __reorder__: 'Adidas' },
+  { id: 2, brand: 'Puma', __reorder__: 'Puma' },
+];
+
+<DataGridPro rows={rows} columns={columns} rowReordering />;
+```
 
 ### Customizing the row reordering icon
 
@@ -163,6 +183,24 @@ To change the icon used for the row reordering, you can provide a different comp
   }}
 />
 ```
+
+Additional customization way is to add a column with `field: __reorder__` to your set of columns. That way you can overwrite any of the properties from the `GRID_REORDER_COL_DEF` column.
+The grid will detect that there is already a reorder column defined and it will not add another one in the default position.
+By only setting the `field`, is up to you to configure the remaining options (e.g. disable the column menu, filtering, sorting).
+To already start with a few suggested options configured, spread `GRID_REORDER_COL_DEF` when defining the column.
+
+```tsx
+<DataGridPro
+  columns={[
+    {
+      ...GRID_REORDER_COL_DEF, // Already contains the right field
+      width: 40,
+    },
+  ]}
+/>
+```
+
+This approach can also be used to change the location of the toggle column.
 
 > ⚠️ For now, row reordering is disabled if sorting is applied to the grid.
 >

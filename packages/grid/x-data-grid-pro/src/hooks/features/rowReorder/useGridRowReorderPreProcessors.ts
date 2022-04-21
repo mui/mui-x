@@ -6,8 +6,8 @@ import {
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
-import { GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro/colDef';
 import { DataGridProProcessedProps } from '@mui/x-data-grid-pro/models/dataGridProProps';
+import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -42,6 +42,10 @@ export const useGridRowReorderPreProcessors = (
 
       const shouldHaveReorderColumn = props.rowReordering;
       const haveReorderColumn = columnsState.lookup[reorderColumn.field] != null;
+
+      if (shouldHaveReorderColumn && haveReorderColumn) {
+        return columnsState;
+      }
 
       if (shouldHaveReorderColumn && !haveReorderColumn) {
         columnsState.lookup[reorderColumn.field] = reorderColumn;
