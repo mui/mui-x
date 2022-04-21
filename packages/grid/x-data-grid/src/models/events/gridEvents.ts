@@ -318,6 +318,18 @@ enum GridEvents {
    */
   virtualScrollerContentSizeChange = 'virtualScrollerContentSizeChange',
   /**
+   * Fired when the content is scrolled by the mouse wheel.
+   * It's attached to the "mousewheel" event.
+   * @ignore - do not document.
+   */
+  virtualScrollerWheel = 'virtualScrollerWheel',
+  /**
+   * Fired when the content is moved using a touch device.
+   * It's attached to the "touchmove" event.
+   * @ignore - do not document.
+   */
+  virtualScrollerTouchMove = 'virtualScrollerTouchMove',
+  /**
    * Fired when the preferences panel is closed.
    */
   preferencePanelClose = 'preferencePanelClose',
