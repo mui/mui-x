@@ -18,7 +18,7 @@ const pages = [
       {
         pathname: '/x/react-data-grid/columns',
         children: [
-          { pathname: '/x/react-data-grid/columns', title: 'Sections not organized yet' },
+          { pathname: '/x/react-data-grid/column-definition' },
           { pathname: '/x/react-data-grid/column-dimensions' },
           { pathname: '/x/react-data-grid/column-visibility' },
           { pathname: '/x/react-data-grid/column-header' },
@@ -29,6 +29,7 @@ const pages = [
         ],
       },
       { pathname: '/x/react-data-grid/rows' },
+      { pathname: '/x/react-data-grid/cells' },
       { pathname: '/x/react-data-grid/editing' },
       { pathname: '/x/react-data-grid/sorting' },
       { pathname: '/x/react-data-grid/filtering' },
