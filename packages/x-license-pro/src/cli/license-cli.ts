@@ -8,7 +8,7 @@ const oneDayInMs = 1000 * 60 * 60 * 24;
 interface LicenseGenArgv {
   order: string;
   expiry: string;
-  type: string;
+  scope: string;
 }
 
 interface LicenseDecodeArgv {
@@ -62,9 +62,9 @@ export function licenseGenCli() {
             describe: 'Number of days from now until expiry date.',
             type: 'string',
           })
-          .option('type', {
+          .option('scope', {
             default: 'pro',
-            describe: 'The license type.',
+            describe: 'The license scope.',
             type: 'string',
           });
       },
@@ -76,14 +76,14 @@ export function licenseGenCli() {
         const licenseDetails = {
           expiryDate: new Date(new Date().getTime() + parseInt(argv.expiry, 10) * oneDayInMs),
           orderNumber: argv.order,
-          type: argv.type as LicenseScope,
+          scope: argv.scope as LicenseScope,
         };
 
         console.log(
           `Generating new license number for order ${
             licenseDetails.orderNumber
-          } with expiry date ${licenseDetails.expiryDate.toLocaleDateString()} and type "${
-            licenseDetails.type
+          } with expiry date ${licenseDetails.expiryDate.toLocaleDateString()} and scope "${
+            licenseDetails.scope
           }"`,
         );
         const license = generateLicense(licenseDetails);
