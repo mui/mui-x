@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v.5.10.0
+
+_Apr 22, 2022_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+### `@mui/x-data-grid@v5.10.0` / `@mui/x-data-grid-pro@v5.10.0`
+
+- [DataGrid] Don't close column menu when updating rows (#4498) @m4theushw
+- TODO: Row pinning
+
+### `@mui/x-date-pickers@5.0.0-alpha.2` / `@mui/x-date-pickers-pro@5.0.0-alpha.2`
+
+- [pickers] Pass `PaperProps` to `DesktopWrapper` component (#4584) @alexfauquette
+- [TimePicker] Fix bug when time picker clear value (#4582) @alexfauquette
+
+### Docs
+
+- [docs] Clarify where to install the license (#4452) @oliviertassinari
+- [docs] Fix CodeSandbox links for demo with pickers (#4570) @alexfauquette
+- [docs] Include date-fns dependency when opening demos in CodeSandbox (#4508) @m4theushw
+- [docs] Split the 'Group & Pivot' page (#4441) @flaviendelangle
+
+### Core
+
+- [test] Fix test to not depend on screen resolution (#4587) @m4theushw
+
 ## v5.9.0
 
 _Apr 14, 2022_
