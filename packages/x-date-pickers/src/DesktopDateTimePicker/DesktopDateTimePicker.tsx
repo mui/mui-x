@@ -61,6 +61,8 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     ToolbarComponent = DateTimePickerToolbar,
     TransitionComponent,
     value,
+    clearable,
+    clearText,
     ...other
   } = props;
   const AllDateInputProps = { ...inputProps, ...other, ref, validationError };
@@ -73,6 +75,8 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
       PopperProps={PopperProps}
       PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
+      clearable={clearable}
+      clearText={clearText}
     >
       <CalendarOrClockPicker
         {...pickerProps}

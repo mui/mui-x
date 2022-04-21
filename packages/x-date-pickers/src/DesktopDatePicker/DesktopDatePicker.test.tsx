@@ -273,7 +273,7 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe.only('picker state', () => {
+  describe('picker state', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
 
@@ -387,7 +387,7 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose when clicking outside of the picker', () => {
+    it('should call onClose when clicking outside of the picker without prior change', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -505,6 +505,6 @@ describe('<DesktopDatePicker />', () => {
     });
 
     // TODO: Write test once the `allowSameDateSelection` behavior is cleaned
-    it('should not call onChange and onAccept if same date selected', () => {});
+    it('should not (?) call onChange and onAccept if same date selected', () => {});
   });
 });

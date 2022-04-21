@@ -352,10 +352,13 @@ describe('<MobileDatePicker />', () => {
         adapterToUse.date('2018-01-08T00:00:00.000'),
       );
       expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-08T00:00:00.000'),
+      );
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onChange with the reset value when clicking the "Cancel" button', () => {
+    it('should call onClose and onChange with the initial value when clicking the "Cancel" button', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -384,7 +387,7 @@ describe('<MobileDatePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept when clicking the "OK" button', () => {
+    it('should call onClose and onAccept with the live value when clicking the "OK" button', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -405,7 +408,7 @@ describe('<MobileDatePicker />', () => {
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
 
-      // Cancel the modifications
+      // Accept the modifications
       userEvent.mousePress(screen.getByText(/ok/i));
       expect(onChange.callCount).to.equal(1); // The accepted value as already been committed, don't call onChange again
       expect(onAccept.callCount).to.equal(1);
