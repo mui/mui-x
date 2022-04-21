@@ -61,7 +61,7 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate
     ...other
   } = props;
 
-  const { pickerProps, inputProps } = usePickerState(props, valueManager, displayStaticWrapperAs);
+  const { pickerProps, inputProps } = usePickerState(props, valueManager);
   const validationError = useDateValidation(props) !== null;
 
   const DateInputProps = { ...inputProps, ...other, ref, validationError };

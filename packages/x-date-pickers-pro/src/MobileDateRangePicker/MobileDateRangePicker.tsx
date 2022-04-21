@@ -73,7 +73,6 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
   const { pickerProps, inputProps, wrapperProps } = usePickerState(
     pickerStateProps,
     rangePickerValueManager,
-    'mobile',
   );
 
   const validationError = useDateRangeValidation(props);

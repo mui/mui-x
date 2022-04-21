@@ -60,7 +60,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate
   } = props;
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps } = usePickerState(props, valueManager, displayStaticWrapperAs);
+  const { pickerProps, inputProps } = usePickerState(props, valueManager);
 
   const DateInputProps = { ...inputProps, ...other, ref, validationError };
 

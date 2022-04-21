@@ -49,7 +49,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
   );
 
   const validationError = useDateValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager, 'desktop');
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager);
 
   const {
     onChange,

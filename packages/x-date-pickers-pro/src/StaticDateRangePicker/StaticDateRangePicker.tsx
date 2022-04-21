@@ -146,7 +146,6 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
   const { pickerProps, inputProps, wrapperProps } = usePickerState(
     pickerStateProps,
     rangePickerValueManager,
-    displayStaticWrapperAs,
   );
 
   const validationError = useDateRangeValidation(props);

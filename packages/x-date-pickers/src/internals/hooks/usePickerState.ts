@@ -82,13 +82,8 @@ interface PickerStateProps<TInput, TDateValue> {
 export const usePickerState = <TInput, TDate>(
   props: PickerStateProps<TInput, TDate>,
   valueManager: PickerStateValueManager<TInput, TDate>,
-  /**
-   * Wrapper variant currently used
-   * It impacts the default "close on select" behavior
-   */
-  wrapperVariant: WrapperVariant,
 ) => {
-  const { disableCloseOnSelect = wrapperVariant === 'mobile', onAccept, onChange, value } = props;
+  const { onAccept, onChange, value } = props;
 
   const utils = useUtils<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
@@ -161,40 +156,33 @@ export const usePickerState = <TInput, TDate>(
     setDate({ action: 'setCommitted', value: parsedDateValue, internal: true });
   }
 
-  const shouldCloseOnSelect = !(disableCloseOnSelect ?? wrapperVariant === 'mobile');
-
   const wrapperProps = React.useMemo<PrivateWrapperProps>(
     () => ({
       open: isOpen,
       onClear: () => {
-        // Reset all date in state to the empty value and close picker
+        // Reset all date in state to the empty value and close picker.
         setDate({ value: valueManager.emptyValue, action: 'acceptAndClose' });
       },
       onAccept: () => {
-        // Set all date in state to equal the current draft value and close picker
+        // Set all date in state to equal the current draft value and close picker.
         setDate({ value: dateState.draft, action: 'acceptAndClose' });
       },
       onDismiss: () => {
-        if (shouldCloseOnSelect) {
-          // Set all dates in state to equal the last accepted date
-          // e.g. Reset the state to the last accepted value
-          setDate({ value: dateState.resetTarget, action: 'acceptAndClose' });
-        } else {
-          // Set all dates in state to equal the last committed date
-          // e.g. Reset the state to the last committed value
-          setDate({ value: dateState.committed, action: 'acceptAndClose' });
-        }
+        // Set all dates in state to equal the last committed date.
+        // e.g. Reset the state to the last committed value.
+        setDate({ value: dateState.committed, action: 'acceptAndClose' });
       },
       onReset: () => {
-        // Set all dates in state to equal the last accepted date
+        // Set all dates in state to equal the last accepted date and close picker.
         // e.g. Reset the state to the last accepted value
         setDate({ value: dateState.resetTarget, action: 'acceptAndClose' });
       },
       onSetToday: () => {
+        // Set all dates in state to equal today and close picker.
         setDate({ value: utils.date()!, action: 'acceptAndClose' });
       },
     }),
-    [setDate, shouldCloseOnSelect, isOpen, utils, dateState, valueManager.emptyValue],
+    [setDate, isOpen, utils, dateState, valueManager.emptyValue],
   );
 
   // Mobile keyboard view is a special case.
@@ -208,7 +196,7 @@ export const usePickerState = <TInput, TDate>(
       toggleMobileKeyboardView: () => setMobileKeyboardViewOpen(!isMobileKeyboardViewOpen),
       onDateChange: (
         newDate: TDate,
-        _: WrapperVariant,
+        wrapperVariant: WrapperVariant,
         selectionState: PickerSelectionState = 'partial',
       ) => {
         switch (selectionState) {
@@ -223,11 +211,14 @@ export const usePickerState = <TInput, TDate>(
           }
 
           case 'finish': {
-            if (shouldCloseOnSelect) {
-              return setDate({ value: newDate, action: 'acceptAndClose' });
+            const disableCloseOnSelect = props.disableCloseOnSelect ?? wrapperVariant === 'mobile';
+            if (disableCloseOnSelect) {
+              // Updates the `committed` state and fire `onChange`
+              return setDate({ value: newDate, action: 'setCommitted' });
             }
 
-            return setDate({ value: newDate, action: 'setCommitted' });
+            // Set all dates in state to equal the new date and close picker.
+            return setDate({ value: newDate, action: 'acceptAndClose' });
           }
 
           default: {
@@ -236,7 +227,7 @@ export const usePickerState = <TInput, TDate>(
         }
       },
     }),
-    [shouldCloseOnSelect, setDate, isMobileKeyboardViewOpen, dateState.draft],
+    [setDate, isMobileKeyboardViewOpen, dateState.draft, props.disableCloseOnSelect],
   );
 
   const handleInputChange = React.useCallback(
