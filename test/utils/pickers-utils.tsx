@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { parseISO } from 'date-fns';
-import { createRenderer, fireEvent, screen, RenderOptions } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  RenderOptions,
+  userEvent,
+} from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -74,6 +80,36 @@ export function createPickerRenderer({
   };
 }
 
-export function openMobilePicker() {
-  fireEvent.click(screen.getByRole('textbox'));
-}
+export const openMobilePicker = () => userEvent.mousePress(screen.getByRole('textbox'));
+
+export const openDesktopPicker = () => userEvent.mousePress(screen.getByLabelText(/choose date/i));
+
+export const withPickerControls =
+  <Value, Props extends { value: Value | null; onChange: (value: Value) => void }>(
+    Component: React.ComponentType<Props>,
+  ) =>
+  <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
+    return (
+      props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
+        Partial<DefaultProps> & {
+          initialValue: Value | null;
+          onChange?: Props['onChange'];
+        },
+    ) => {
+      const { initialValue, onChange, ...other } = props;
+
+      const [value, setValue] = React.useState(initialValue);
+
+      const handleChange = React.useCallback(
+        (newValue: Value) => {
+          setValue(newValue);
+          onChange?.(newValue);
+        },
+        [onChange],
+      );
+
+      return (
+        <Component {...defaultProps} {...(other as any)} value={value} onChange={handleChange} />
+      );
+    };
+  };

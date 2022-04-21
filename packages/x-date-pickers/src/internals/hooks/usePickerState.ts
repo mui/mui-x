@@ -83,7 +83,7 @@ export const usePickerState = <TInput, TDate>(
   props: PickerStateProps<TInput, TDate>,
   valueManager: PickerStateValueManager<TInput, TDate>,
 ) => {
-  const { onAccept, onChange, value } = props;
+  const { onAccept, onChange, value, disableCloseOnSelect } = props;
 
   const utils = useUtils<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
@@ -211,8 +211,7 @@ export const usePickerState = <TInput, TDate>(
           }
 
           case 'finish': {
-            const disableCloseOnSelect = props.disableCloseOnSelect ?? wrapperVariant === 'mobile';
-            if (disableCloseOnSelect) {
+            if (disableCloseOnSelect ?? wrapperVariant === 'mobile') {
               // Updates the `committed` state and fire `onChange`
               return setDate({ value: newDate, action: 'setCommitted' });
             }
@@ -227,7 +226,7 @@ export const usePickerState = <TInput, TDate>(
         }
       },
     }),
-    [setDate, isMobileKeyboardViewOpen, dateState.draft, props.disableCloseOnSelect],
+    [setDate, isMobileKeyboardViewOpen, dateState.draft, disableCloseOnSelect],
   );
 
   const handleInputChange = React.useCallback(

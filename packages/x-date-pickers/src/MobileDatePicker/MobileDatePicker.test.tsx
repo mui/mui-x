@@ -11,32 +11,16 @@ import {
   FakeTransitionComponent,
   adapterToUse,
   openMobilePicker,
+  withPickerControls,
 } from '../../../../test/utils/pickers-utils';
+
+const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
+  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  renderInput: (params) => <TextField {...params} />,
+});
 
 describe('<MobileDatePicker />', () => {
   const { clock, render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
-
-  it('should accept date on `OK` button click', () => {
-    const onChangeMock = spy();
-    render(
-      <MobileDatePicker
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={onChangeMock}
-        DialogProps={{ TransitionComponent: FakeTransitionComponent }}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    openMobilePicker();
-
-    fireEvent.click(screen.getByLabelText('Jan 2, 2019'));
-    expect(onChangeMock.callCount).to.equal(1);
-    expect(screen.queryByRole('dialog')).not.to.equal(null);
-
-    fireEvent.click(screen.getByText(/ok/i));
-    expect(onChangeMock.callCount).to.equal(1);
-    expect(screen.queryByRole('dialog')).to.equal(null);
-  });
 
   it('selects the closest enabled date if selected date is disabled', () => {
     const onChangeMock = spy();
@@ -96,41 +80,6 @@ describe('<MobileDatePicker />', () => {
 
     fireEvent.click(screen.getByText('2010', { selector: 'button' }));
     expect(screen.getByMuiTest('datepicker-toolbar-date')).to.have.text('Fri, Jan 1');
-  });
-
-  it("doesn't close picker on selection in Mobile mode", () => {
-    render(
-      <MobileDatePicker
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    fireEvent.click(screen.getByRole('textbox'));
-    fireEvent.click(screen.getByLabelText('Jan 2, 2018'));
-
-    expect(screen.queryByRole('dialog')).toBeVisible();
-  });
-
-  it('prop `clearable` - renders clear button in Mobile mode', () => {
-    const onChangeMock = spy();
-    render(
-      <MobileDatePicker
-        clearable
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
-        onChange={onChangeMock}
-        DialogProps={{ TransitionComponent: FakeTransitionComponent }}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    openMobilePicker();
-    fireEvent.click(screen.getByText('Clear'));
-
-    expect(onChangeMock.callCount).to.equal(1);
-    expect(onChangeMock.args[0][0]).to.equal(null);
-    expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
   it('prop `toolbarTitle` – should render title from the prop', () => {
@@ -325,35 +274,219 @@ describe('<MobileDatePicker />', () => {
     });
   });
 
-  it('should reset the values on clicking Cancel button', () => {
-    const onChangeSpy = spy();
-    const initialDateValue = adapterToUse.date('2018-01-01T00:00:00.000');
+  describe('picker state', () => {
+    it('should open when clicking "Choose date"', () => {
+      const onOpen = spy();
 
-    const TestCase = () => {
-      const [value, setValue] = React.useState<Date | null>(initialDateValue);
+      render(<WrappedMobileDatePicker onOpen={onOpen} initialValue={null} />);
 
-      const handleChange = (newValue: Date | null) => {
-        setValue(newValue);
-        onChangeSpy(newValue);
-      };
+      userEvent.mousePress(screen.getByRole('textbox'));
 
-      return (
-        <MobileDatePicker
-          value={value}
-          onChange={handleChange}
-          renderInput={(params) => <TextField {...params} />}
-        />
+      expect(onOpen.callCount).to.equal(1);
+      expect(screen.queryByRole('dialog')).toBeVisible();
+    });
+
+    it('should call onChange when selecting a date', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedMobileDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
       );
-    };
 
-    render(<TestCase />);
+      // Open the picker
+      openMobilePicker();
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByRole('textbox'));
-    fireEvent.click(screen.getByLabelText('Jan 8, 2018')); // changing date followed by clicking cancel button
+      // Change the date
+      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-08T00:00:00.000'),
+      );
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByText(/cancel/i));
+      // Change the date
+      userEvent.mousePress(screen.getByLabelText('Jan 6, 2018'));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      );
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
 
-    expect(onChangeSpy!.callCount).to.equal(2);
-    expect(adapterToUse.date(onChangeSpy!.lastCall.args[0])).toEqualDateTime(initialDateValue);
+    it('should call onClose and onAccept when selecting a date and props.disableCloseOnSelect = false', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedMobileDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          disableCloseOnSelect={false}
+        />,
+      );
+
+      // Open the picker (already tested)
+      openMobilePicker();
+
+      // Change the date
+      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-08T00:00:00.000'),
+      );
+      expect(onAccept.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onClose and onChange with the reset value when clicking the "Cancel" button', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedMobileDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      // Open the picker (already tested)
+      openMobilePicker();
+
+      // Change the date (already tested)
+      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+
+      // Cancel the modifications
+      userEvent.mousePress(screen.getByText(/cancel/i));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(initialValue);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onClose and onAccept when clicking the "OK" button', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedMobileDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      // Open the picker (already tested)
+      openMobilePicker();
+
+      // Change the date (already tested)
+      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+
+      // Cancel the modifications
+      userEvent.mousePress(screen.getByText(/ok/i));
+      expect(onChange.callCount).to.equal(1); // The accepted value as already been committed, don't call onChange again
+      expect(onAccept.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onChange when clicking the "Cancel" button without prior value modification', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedMobileDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      // Open the picker (already tested)
+      openMobilePicker();
+
+      // Cancel the modifications
+      userEvent.mousePress(screen.getByText(/cancel/i));
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedMobileDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          clearable
+        />,
+      );
+
+      openMobilePicker();
+
+      userEvent.mousePress(screen.getByText(/clear/i));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).to.equal(null);
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).to.equal(null);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+
+      render(
+        <WrappedMobileDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={null}
+          clearable
+        />,
+      );
+
+      openMobilePicker();
+      userEvent.mousePress(screen.getByText(/clear/i));
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    // TODO: Write test
+    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+    // })
   });
 });
