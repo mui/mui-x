@@ -14,18 +14,22 @@ function updateRowPosition(initialIndex, newIndex, rows) {
 }
 
 export default function RowOrderingGrid() {
-  const { data } = useDemoData({
+  const { data, loading: initialLoadingState } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,
     maxColumns: 20,
   });
 
   const [rows, setRows] = React.useState(data.rows);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(initialLoadingState);
 
   React.useEffect(() => {
     setRows(data.rows);
   }, [data]);
+
+  React.useEffect(() => {
+    setLoading(initialLoadingState);
+  }, [initialLoadingState]);
 
   const handleRowOrderChange = async (params) => {
     setLoading(true);

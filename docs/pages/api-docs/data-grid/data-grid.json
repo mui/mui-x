@@ -272,7 +272,7 @@
       "columnHeader",
       "columnHeaderCheckbox",
       "columnHeaderDraggableContainer",
-      "rowDraggableContainer",
+      "rowReorderCellPlaceholder",
       "columnHeaderDropZone",
       "columnHeaderTitle",
       "columnHeaderTitleContainer",

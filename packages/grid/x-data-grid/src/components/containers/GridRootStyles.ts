@@ -43,6 +43,9 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['row--editing']}`]: styles['row--editing'] },
     { [`& .${gridClasses['row--dragging']}`]: styles['row--dragging'] },
     { [`& .${gridClasses.row}`]: styles.row },
+    { [`& .${gridClasses.rowReorderCellPlaceholder}`]: styles.rowReorderCellPlaceholder },
+    { [`& .${gridClasses.rowReorderCell}`]: styles.rowReorderCell },
+    { [`& .${gridClasses['rowReorderCell--draggable']}`]: styles['rowReorderCell--draggable'] },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
     { [`& .${gridClasses.withBorder}`]: styles.withBorder },
     { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
@@ -319,7 +322,7 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       width: '100%',
     },
-    [`& .${gridClasses.rowDraggableContainer}`]: {
+    [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
       display: 'none',
     },
     [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
@@ -334,7 +337,7 @@ export const GridRootStyles = styled('div', {
       borderRadius: theme.shape.borderRadius,
       opacity: theme.palette.action.disabledOpacity,
 
-      [`& .${gridClasses.rowDraggableContainer}`]: {
+      [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
         display: 'flex',
       },
     },

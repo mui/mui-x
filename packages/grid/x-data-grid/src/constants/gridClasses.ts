@@ -102,9 +102,9 @@ export interface GridClasses {
    */
   columnHeaderDraggableContainer: string;
   /**
-   * Styles applied to the row's draggable container element inside the special row reorder cell.
+   * Styles applied to the row's draggable placeholder element inside the special row reorder cell.
    */
-  rowDraggableContainer: string;
+  rowReorderCellPlaceholder: string;
   /**
    * Styles applied to the column headers wrapper if a column is being dragged.
    */
@@ -489,7 +489,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--editing',
   'row--lastVisible',
   'row--dragging',
-  'rowDraggableContainer',
+  'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',
   'rowReorderCell',

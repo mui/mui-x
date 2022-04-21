@@ -137,13 +137,14 @@ You can check the [styling rows](/x/react-data-grid/style/#styling-rows) section
 
 ## Row reorder [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Row reorder is used to rearrange rows by dragging the row with the mouse.
+Row reordering allows to rearrange rows by dragging the special reordering cell.
 
-By default, `DataGridPro` does not allow row reordering. To enable reordering on all rows by dragging the special row reordering cells and moving it up or down, use the `rowReordering` prop.
+By default, row reordering is disabled.
+To enable it, you need to add the `rowReordering` prop.
 
 {{"demo": "RowOrderingGrid.js", "disableAd": true, "bg": "inline"}}
 
-To capture changes in the order of the dragged row use the `onRowOrderChange` callback.
+To capture changes in the order of the dragged row, you can pass a callback to the `onRowOrderChange` prop. This callback is called with a `GridRowOrderChangeParams` object.
 
 In addition, you can import the following events to customize the row reordering experience:
 

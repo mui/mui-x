@@ -10,7 +10,6 @@ export const GRID_REORDER_COL_DEF: GridColDef = {
   width: 50,
   align: 'center',
   headerAlign: 'center',
-  headerName: ' ',
   disableColumnMenu: true,
   disableExport: true,
   disableReorder: true,

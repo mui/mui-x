@@ -11,7 +11,6 @@ import {
   getDataGridUtilityClass,
   gridEditRowsStateSelector,
 } from '@mui/x-data-grid';
-import { isObjectEmpty } from '@mui/x-data-grid/utils/utils';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -25,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     root: ['rowReorderCell', isDraggable && 'rowReorderCell--draggable'],
-    container: ['rowDraggableContainer'],
+    placeholder: ['rowReorderCellPlaceholder'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -38,14 +37,14 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   // eslint-disable-next-line no-underscore-dangle
-  const cellValue = params.row.__reorder__ || params.row.id;
+  const cellValue = params.row.__reorder__ || params.id;
 
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
   const isDraggable =
     !!(rootProps as DataGridProProcessedProps).rowReordering &&
     !sortModel.length &&
     treeDepth === 1 &&
-    isObjectEmpty(editRowsState);
+    Object.keys(editRowsState).length === 0;
 
   const ownerState = { isDraggable, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -89,7 +88,7 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   return (
     <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
       <rootProps.components.RowReorderIcon />
-      <div className={classes.container}>{cellValue}</div>
+      <div className={classes.placeholder}>{cellValue}</div>
     </div>
   );
 };

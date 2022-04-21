@@ -246,9 +246,9 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's draggable container element"
     },
-    "rowDraggableContainer": {
+    "rowReorderCellPlaceholder": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the row's draggable container element inside the special row reorder cell"
+      "nodeName": "the row's draggable placeholder element inside the special row reorder cell"
     },
     "columnHeaderDropZone": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",

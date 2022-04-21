@@ -37,6 +37,7 @@ export const useGridRowReorderPreProcessors = (
         ...GRID_REORDER_COL_DEF,
         cellClassName: classes.rowReorderCellContainer,
         headerClassName: classes.columnHeaderReorder,
+        headerName: apiRef.current.getLocaleText('rowReorderingHeaderName'),
       };
 
       const shouldHaveReorderColumn = props.rowReordering;
@@ -52,7 +53,7 @@ export const useGridRowReorderPreProcessors = (
 
       return columnsState;
     },
-    [classes, props.rowReordering],
+    [apiRef, classes, props.rowReordering],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateReorderColumn);
