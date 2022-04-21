@@ -291,6 +291,20 @@ describe('<MobileDatePicker />', () => {
     expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
   });
 
+  it('prop `showToolbar` – renders the toolbar', () => {
+    render(
+      <MobileDatePicker
+        open
+        showToolbar
+        onChange={() => {}}
+        value={null}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+  });
+
   ['readOnly', 'disabled'].forEach((prop) => {
     it(`should not be opened when "Choose date" is clicked when ${prop}={true}`, () => {
       const handleOpen = spy();
