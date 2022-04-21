@@ -10,6 +10,7 @@ import {
   usePickerState,
   PickerStateValueManager,
 } from '@mui/x-date-pickers/internals';
+import { RangeInput, DateRange } from '../internal/models/dateRange';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { parseRangeInputValue } from '../internal/utils/date-utils';
