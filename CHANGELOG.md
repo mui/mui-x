@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Apr 22, 2022_
 
-We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 TODO INSERT HIGHLIGHTS
 
