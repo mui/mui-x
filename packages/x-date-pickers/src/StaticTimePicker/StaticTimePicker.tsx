@@ -107,7 +107,7 @@ StaticTimePicker.propTypes = {
    */
   components: PropTypes.object,
   /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
+   * If `true` the popup or dialog will not immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   disableCloseOnSelect: PropTypes.bool,

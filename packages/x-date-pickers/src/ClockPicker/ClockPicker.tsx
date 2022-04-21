@@ -78,8 +78,8 @@ export interface ClockPickerSlotsComponent {
 export interface ClockPickerComponentsPropsOverrides {}
 
 export interface ClockPickerSlotsComponentsProps {
-  leftArrowButton?: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
-  rightArrowButton?: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
+  leftArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
+  rightArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
 }
 
 export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate> {

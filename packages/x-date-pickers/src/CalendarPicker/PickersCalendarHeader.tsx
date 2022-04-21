@@ -34,7 +34,7 @@ export interface PickersCalendarHeaderComponentsPropsOverrides {}
 
 export interface PickersCalendarHeaderSlotsComponentsProps
   extends PickersArrowSwitcherSlotsComponentsProps {
-  switchViewButton?: React.ComponentPropsWithRef<typeof IconButton> &
+  switchViewButton: React.ComponentPropsWithRef<typeof IconButton> &
     PickersCalendarHeaderComponentsPropsOverrides;
 }
 
