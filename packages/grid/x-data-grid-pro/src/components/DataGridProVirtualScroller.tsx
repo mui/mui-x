@@ -101,7 +101,9 @@ const VirtualScrollerDetailPanels = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanels',
   overridesResolver: (props, styles) => styles.detailPanels,
-})({});
+})({
+  position: 'relative',
+});
 
 const VirtualScrollerDetailPanel = styled(Box, {
   name: 'MuiDataGrid',
