@@ -152,6 +152,18 @@ In addition, you can import the following events to customize the row reordering
 - `rowDragOver`: emitted when dragging a row over another row.
 - `rowDragEnd`: emitted when dragging of a row stops.
 
+### Customizing the row reordering icon
+
+To change the icon used for the row reordering, you can provide a different component for the [icon slot](/x/react-data-grid/components/#icons) as follow:
+
+```tsx
+<DataGridPro
+  components={{
+    RowReorderIcon: CustomMoveIcon,
+  }}
+/>
+```
+
 > ⚠️ For now, row reordering is disabled if sorting is applied to the grid.
 >
 > In addition, if row grouping or tree data is being used, the row reordering is also disabled.
