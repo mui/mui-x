@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function updateRowPossition(initialIndex, newIndex, rows) {
+function updateRowPosition(initialIndex, newIndex, rows) {
   return new Promise((resolve) => {
     setTimeout(() => {
       const rowsClone = [...rows];
@@ -29,7 +29,7 @@ export default function RowOrderingGrid() {
 
   const handleRowOrderChange = async (params) => {
     setLoading(true);
-    const newRows = await updateRowPossition(
+    const newRows = await updateRowPosition(
       params.oldIndex,
       params.targetIndex,
       rows,

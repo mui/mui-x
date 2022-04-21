@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function updateRowPossition(
+function updateRowPosition(
   initialIndex: number,
   newIndex: number,
   rows: Array<GridRowModel>,
@@ -37,7 +37,7 @@ export default function RowOrderingGrid() {
 
   const handleRowOrderChange = async (params: GridRowOrderChangeParams) => {
     setLoading(true);
-    const newRows = await updateRowPossition(
+    const newRows = await updateRowPosition(
       params.oldIndex,
       params.targetIndex,
       rows,
