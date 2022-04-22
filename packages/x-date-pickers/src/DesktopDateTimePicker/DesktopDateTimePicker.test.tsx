@@ -279,7 +279,7 @@ describe('<DesktopDateTimePicker />', () => {
     });
   });
 
-  describe.only('picker state', () => {
+  describe('picker state', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
 
@@ -464,7 +464,7 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value when clicking outside of the picker', function () {
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', function test() {
       if (isJSDOM) {
         this.skip(); // JSDOM events don't have access to nativeEvent on mouseUp
       }
