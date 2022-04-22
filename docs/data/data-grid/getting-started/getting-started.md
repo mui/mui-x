@@ -158,7 +158,7 @@ All the features of the community version are available in the enterprise one.
 The enterprise components come in two plans: Pro and Premium.
 
 | Features                                                                               | Community | Pro <span class="plan-pro"></span> | Premium <span class="plan-premium"></span> |
-|:---------------------------------------------------------------------------------------| :-------: | :--------------------------------: | :----------------------------------------: |
+| :------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
 | **Column**                                                                             |           |                                    |
 | [Column groups](/x/react-data-grid/columns/#column-groups)                             |    🚧     |                 🚧                 |                     🚧                     |
 | [Column spanning](/x/react-data-grid/columns/#column-spanning)                         |    ✅     |                 ✅                 |                     ✅                     |
