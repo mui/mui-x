@@ -14,7 +14,7 @@ TODO INSERT HIGHLIGHTS
 ### `@mui/x-data-grid@v5.10.0` / `@mui/x-data-grid-pro@v5.10.0`
 
 - [DataGrid] Don't close column menu when updating rows (#4498) @m4theushw
-- TODO: Row pinning
+- [DataGridPro] Row reorder (#4034) @DanailH
 
 ### `@mui/x-date-pickers@5.0.0-alpha.2` / `@mui/x-date-pickers-pro@5.0.0-alpha.2`
 
