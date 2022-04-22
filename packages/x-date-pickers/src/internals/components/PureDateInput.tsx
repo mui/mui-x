@@ -4,7 +4,6 @@ import { TextFieldProps as MuiTextFieldPropsType } from '@mui/material/TextField
 import { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { onSpaceOrEnter } from '../utils/utils';
-import { ParseableDate } from '../models/parseableDate';
 import { useUtils } from '../hooks/useUtils';
 import { getDisplayDate, getTextFieldAriaText } from '../utils/text-field-helper';
 import { MuiPickersAdapter } from '../models';
@@ -12,7 +11,7 @@ import { MuiPickersAdapter } from '../models';
 // TODO: make `variant` optional.
 export type MuiTextFieldProps = MuiTextFieldPropsType | Omit<MuiTextFieldPropsType, 'variant'>;
 
-export interface DateInputProps<TDate, TInputDate extends ParseableDate<TDate>> {
+export interface DateInputProps<TInputDate, TDate> {
   /**
    * Regular expression to detect "accepted" symbols.
    * @default /\dap/gi
@@ -39,7 +38,7 @@ export interface DateInputProps<TDate, TInputDate extends ParseableDate<TDate>> 
   disableOpenPicker?: boolean;
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TDate, TInputDate
+   * @template TInputDate, TDate
    * @param {TInputDate} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
@@ -95,8 +94,9 @@ export interface DateInputProps<TDate, TInputDate extends ParseableDate<TDate>> 
   validationError?: boolean;
 }
 
-export type ExportedDateInputProps<TDate, TInputDate extends ParseableDate<TDate>> = Omit<
-  DateInputProps<TDate, TInputDate>,
+// TODO: Is it TInputDate or TInputValue ?
+export type ExportedDateInputProps<TInputDate, TDate> = Omit<
+  DateInputProps<TInputDate, TDate>,
   | 'inputFormat'
   | 'inputValue'
   | 'onBlur'
@@ -109,10 +109,10 @@ export type ExportedDateInputProps<TDate, TInputDate extends ParseableDate<TDate
 >;
 
 // TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?
-export const PureDateInput = React.forwardRef(function PureDateInput<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(props: DateInputProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate, TDate>(
+  props: DateInputProps<TInputDate, TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const {
     disabled,
     getOpenDialogAriaText = getTextFieldAriaText,

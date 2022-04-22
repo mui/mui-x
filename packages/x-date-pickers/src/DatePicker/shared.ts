@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { ParseableDate } from '../internals/models/parseableDate';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
@@ -10,18 +9,18 @@ import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
-export interface BaseDatePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+export interface BaseDatePickerProps<TInputDate, TDate>
   extends ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TDate, TDate | null, TInputDate | null>,
+    BasePickerProps<TInputDate | null, TDate, TDate | null>,
     ValidationProps<DateValidationError, TInputDate | null>,
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
+    ExportedDateInputProps<TInputDate, TDate> {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    * @default {}
    */
   components?: ExportedCalendarPickerProps<TDate>['components'] &
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null>['components'];
+    ExportedDateInputProps<TInputDate, TDate>['components'];
   /**
    * Callback fired on view change.
    * @param {CalendarPickerView} view The new view.
@@ -83,14 +82,14 @@ const getFormatAndMaskByViews = <TDate>(
 export type DefaultizedProps<Props> = Props & { inputFormat: string };
 
 export function useDatePickerDefaultizedProps<
+  TInputDate,
   TDate,
-  TInputDate extends ParseableDate<TDate>,
-  Props extends BaseDatePickerProps<TDate, TInputDate>,
+  Props extends BaseDatePickerProps<TInputDate, TDate>,
 >(
   props: Props,
   name: string,
 ): DefaultizedProps<Props> &
-  Required<Pick<BaseDatePickerProps<TDate, TInputDate>, 'openTo' | 'views'>> {
+  Required<Pick<BaseDatePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates();
 

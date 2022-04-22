@@ -1,5 +1,4 @@
 import { useValidation, ValidationProps, Validator } from './useValidation';
-import { ParseableDate } from '../../models';
 
 export interface ExportedDateValidationProps<TDate> {
   /**
@@ -29,7 +28,7 @@ export interface ExportedDateValidationProps<TDate> {
   shouldDisableDate?: (day: TDate) => boolean;
 }
 
-export interface DateValidationProps<TDate, TInputDate>
+export interface DateValidationProps<TInputDate, TDate>
   extends ValidationProps<DateValidationError, TInputDate | null>,
     ExportedDateValidationProps<TDate> {}
 
@@ -80,6 +79,6 @@ export const validateDate: Validator<any, DateValidationProps<any, any>> = (
 
 const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
-export const useDateValidation = <TDate, TInputDate extends ParseableDate<TDate>>(
-  props: DateValidationProps<TDate, TInputDate>,
+export const useDateValidation = <TInputDate, TDate>(
+  props: DateValidationProps<TInputDate, TDate>,
 ): DateValidationError => useValidation(props, validateDate, isSameDateError);

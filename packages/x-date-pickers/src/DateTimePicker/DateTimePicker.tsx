@@ -4,11 +4,10 @@ import { useThemeProps } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { DesktopDateTimePicker, DesktopDateTimePickerProps } from '../DesktopDateTimePicker';
 import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTimePicker';
-import { ParseableDate } from '../internals/models';
 
-export interface DateTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends DesktopDateTimePickerProps<TDate, TInputDate>,
-    MobileDateTimePickerProps<TDate, TInputDate> {
+export interface DateTimePickerProps<TInputDate, TDate>
+  extends DesktopDateTimePickerProps<TInputDate, TDate>,
+    MobileDateTimePickerProps<TInputDate, TDate> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -17,8 +16,8 @@ export interface DateTimePickerProps<TDate, TInputDate extends ParseableDate<TDa
   desktopModeMediaQuery?: string;
 }
 
-type DateTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: DateTimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
+type DateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: DateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -32,10 +31,10 @@ type DateTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>
  *
  * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
  */
-const DateTimePicker = React.forwardRef(function DateTimePicker<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(inProps: DateTimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+const DateTimePicker = React.forwardRef(function DateTimePicker<TInputDate, TDate = TInputDate>(
+  inProps: DateTimePickerProps<TInputDate, TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePicker' });
   const {
     cancelText,

@@ -11,7 +11,6 @@ import {
   PickerSelectionState,
   ExportedCalendarPickerProps,
   useCalendarState,
-  ParseableDate,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
@@ -27,10 +26,10 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface ExportedDateRangePickerViewProps<TDate, TInputDate extends ParseableDate<TDate>>
+export interface ExportedDateRangePickerViewProps<TInputDate, TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'>,
-    Omit<BasePickerProps<TDate, DateRange<TDate>, DateRange<TInputDate>>, 'value' | 'onChange'> {
+    Omit<BasePickerProps<DateRange<TInputDate>, TDate, DateRange<TDate>>, 'value' | 'onChange'> {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -43,16 +42,16 @@ export interface ExportedDateRangePickerViewProps<TDate, TInputDate extends Pars
   toolbarTitle?: React.ReactNode;
 }
 
-interface DateRangePickerViewProps<TDate, TInputDate extends ParseableDate<TDate>>
+interface DateRangePickerViewProps<TInputDate, TDate>
   extends CurrentlySelectingRangeEndProps,
-    ExportedDateRangePickerViewProps<TDate, TInputDate> {
+    ExportedDateRangePickerViewProps<TInputDate, TDate> {
   calendars: 1 | 2 | 3;
   open: boolean;
   startText: React.ReactNode;
   endText: React.ReactNode;
   isMobileKeyboardViewOpen: boolean;
   toggleMobileKeyboardView: () => void;
-  DateInputProps: DateRangeInputProps<TDate, TInputDate>;
+  DateInputProps: DateRangeInputProps<TInputDate, TDate>;
   date: DateRange<TDate>;
   onDateChange: (
     date: DateRange<TDate>,
@@ -64,8 +63,8 @@ interface DateRangePickerViewProps<TDate, TInputDate extends ParseableDate<TDate
 /**
  * @ignore - internal component.
  */
-export function DateRangePickerView<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: DateRangePickerViewProps<TDate, TInputDate>,
+export function DateRangePickerView<TInputDate, TDate>(
+  props: DateRangePickerViewProps<TInputDate, TDate>,
 ) {
   const {
     calendars,

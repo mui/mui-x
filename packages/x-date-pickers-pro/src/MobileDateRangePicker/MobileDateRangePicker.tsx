@@ -7,7 +7,6 @@ import {
   usePickerState,
   PickerStateValueManager,
   DateInputPropsLike,
-  ParseableDate,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
@@ -29,12 +28,12 @@ const rangePickerValueManager: PickerStateValueManager<any, any> = {
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };
 
-export interface MobileDateRangePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends BaseDateRangePickerProps<TDate, TInputDate>,
+export interface MobileDateRangePickerProps<TInputDate, TDate>
+  extends BaseDateRangePickerProps<TInputDate, TDate>,
     MobileWrapperProps {}
 
-type MobileDateRangePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: MobileDateRangePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: MobileDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -48,15 +47,15 @@ type MobileDateRangePickerComponent = (<TDate, TInputDate extends ParseableDate<
  * - [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)
  */
 export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(inProps: MobileDateRangePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: MobileDateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const props = useDateRangePickerDefaultizedProps<
-    TDate,
     TInputDate,
-    MobileDateRangePickerProps<TDate, TInputDate>
+    TDate,
+    MobileDateRangePickerProps<TInputDate, TDate>
   >(inProps, 'MuiMobileDateRangePicker');
 
   const { value, onChange, ...other } = props;

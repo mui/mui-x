@@ -5,25 +5,24 @@ import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
-import { ParseableDate } from '../internals/models/parseableDate';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 
-export interface BaseDateTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
     ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TDate, TDate | null, TInputDate | null>,
+    BasePickerProps<TInputDate | null, TDate, TDate | null>,
     ValidationProps<DateTimeValidationError, TInputDate | null>,
-    ExportedDateInputProps<TDate, TInputDate> {
+    ExportedDateInputProps<TInputDate, TDate> {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    * @default {}
    */
   components?: ExportedCalendarPickerProps<TDate>['components'] &
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null>['components'];
+    ExportedDateInputProps<TInputDate, TDate>['components'];
   /**
    * To show tabs.
    */
@@ -76,14 +75,14 @@ export interface BaseDateTimePickerProps<TDate, TInputDate extends ParseableDate
 type DefaultizedProps<Props> = Props & { inputFormat: string };
 
 export function useDateTimePickerDefaultizedProps<
+  TInputDate,
   TDate,
-  TInputDate extends ParseableDate<TDate>,
-  Props extends BaseDateTimePickerProps<TDate, TInputDate>,
+  Props extends BaseDateTimePickerProps<TInputDate, TDate>,
 >(
   props: Props,
   name: string,
 ): DefaultizedProps<Props> &
-  Required<Pick<BaseDateTimePickerProps<TDate, TInputDate>, 'openTo' | 'views'>> {
+  Required<Pick<BaseDateTimePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({

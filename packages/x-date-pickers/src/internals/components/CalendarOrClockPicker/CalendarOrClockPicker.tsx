@@ -16,7 +16,7 @@ import { PickerViewRoot } from '../PickerViewRoot';
 import { CalendarOrClockPickerView, CalendarPickerView, ClockPickerView } from '../../models';
 
 export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
-  extends Omit<BasePickerProps<TDate, TDate | null, any>, 'value' | 'onChange'>,
+  extends Omit<BasePickerProps<any, TDate, TDate | null>, 'value' | 'onChange'>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
     ExportedClockPickerProps<TDate> {
   dateRangeIcon?: React.ReactNode;

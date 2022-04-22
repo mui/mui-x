@@ -11,11 +11,11 @@ import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 
-export interface BaseTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+export interface BaseTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
-    BasePickerProps<TDate, TDate | null, TInputDate | null>,
+    BasePickerProps<TInputDate | null, TDate, TDate | null>,
     ValidationProps<TimeValidationError, TInputDate | null>,
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
+    ExportedDateInputProps<TInputDate, TDate> {
   /**
    * Callback fired on view change.
    * @param {ClockPickerView} view The new view.
@@ -49,14 +49,14 @@ function getTextFieldAriaText<TDate>(value: ParseableDate<TDate>, utils: MuiPick
 
 type DefaultizedProps<Props> = Props & { inputFormat: string };
 export function useTimePickerDefaultizedProps<
+  TInputDate,
   TDate,
-  TInputDate extends ParseableDate<TDate>,
-  Props extends BaseTimePickerProps<TDate, TInputDate>,
+  Props extends BaseTimePickerProps<TInputDate, TDate>,
 >(
   props: Props,
   name: string,
 ): DefaultizedProps<Props> &
-  Required<Pick<BaseTimePickerProps<TDate, TInputDate>, 'openTo' | 'views'>> {
+  Required<Pick<BaseTimePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({ props, name });

@@ -6,7 +6,6 @@ import {
   PickerStaticWrapperProps,
   usePickerState,
   PickerStateValueManager,
-  ParseableDate,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
@@ -25,8 +24,8 @@ const rangePickerValueManager: PickerStateValueManager<any, any> = {
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };
 
-export interface StaticDateRangePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends BaseDateRangePickerProps<TDate, TInputDate> {
+export interface StaticDateRangePickerProps<TInputDate, TDate>
+  extends BaseDateRangePickerProps<TInputDate, TDate> {
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default 'mobile'
@@ -34,8 +33,8 @@ export interface StaticDateRangePickerProps<TDate, TInputDate extends ParseableD
   displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
 }
 
-type StaticDateRangePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: StaticDateRangePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: StaticDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -49,15 +48,15 @@ type StaticDateRangePickerComponent = (<TDate, TInputDate extends ParseableDate<
  * - [StaticDateRangePicker API](https://mui.com/x/api/date-pickers/static-date-range-picker/)
  */
 export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(inProps: StaticDateRangePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: StaticDateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const props = useDateRangePickerDefaultizedProps<
-    TDate,
     TInputDate,
-    StaticDateRangePickerProps<TDate, TInputDate>
+    TDate,
+    StaticDateRangePickerProps<TInputDate, TDate>
   >(inProps, 'MuiStaticDateRangePicker');
 
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<

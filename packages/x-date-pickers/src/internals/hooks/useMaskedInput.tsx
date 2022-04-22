@@ -8,10 +8,9 @@ import {
   getDisplayDate,
   checkMaskIsValidForCurrentFormat,
 } from '../utils/text-field-helper';
-import { ParseableDate } from '../models';
 
-type MaskedInputProps<TDate, TInputDate extends ParseableDate<TDate>> = Omit<
-  DateInputProps<TDate, TInputDate>,
+type MaskedInputProps<TInputDate, TDate> = Omit<
+  DateInputProps<TInputDate, TDate>,
   | 'adornmentPosition'
   | 'disableOpenPicker'
   | 'getOpenDialogAriaText'
@@ -23,7 +22,7 @@ type MaskedInputProps<TDate, TInputDate extends ParseableDate<TDate>> = Omit<
   | 'renderInput'
 > & { inputProps?: Partial<React.HTMLProps<HTMLInputElement>> };
 
-export const useMaskedInput = <TDate, TInputDate extends ParseableDate<TDate>>({
+export const useMaskedInput = <TInputDate, TDate>({
   acceptRegex = /[\d]/gi,
   disabled,
   disableMaskedInput,
@@ -38,7 +37,7 @@ export const useMaskedInput = <TDate, TInputDate extends ParseableDate<TDate>>({
   rifmFormatter,
   TextFieldProps,
   validationError,
-}: MaskedInputProps<TDate, TInputDate>): MuiTextFieldProps => {
+}: MaskedInputProps<TInputDate, TDate>): MuiTextFieldProps => {
   const utils = useUtils<TDate>();
   const [isFocused, setIsFocused] = React.useState(false);
 

@@ -3,16 +3,15 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { ParseableDate } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import { DesktopDateRangePicker, DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker, MobileDateRangePickerProps } from '../MobileDateRangePicker';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends DesktopDateRangePickerProps<TDate, TInputDate>,
-    MobileDateRangePickerProps<TDate, TInputDate> {
+export interface DateRangePickerProps<TInputDate, TDate>
+  extends DesktopDateRangePickerProps<TInputDate, TDate>,
+    MobileDateRangePickerProps<TInputDate, TDate> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -21,8 +20,8 @@ export interface DateRangePickerProps<TDate, TInputDate extends ParseableDate<TD
   desktopModeMediaQuery?: string;
 }
 
-type DateRangePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: DateRangePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
+type DateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: DateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -36,9 +35,9 @@ type DateRangePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>
  * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
 export const DateRangePicker = React.forwardRef(function DateRangePicker<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(inProps: DateRangePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: DateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 

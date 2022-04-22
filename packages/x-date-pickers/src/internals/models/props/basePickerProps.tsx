@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BaseToolbarProps } from './baseToolbarProps';
 
-export interface BasePickerProps<TDate, TValue, TInputValue> {
+export interface BasePickerProps<TInputValue, TDate, TValue> {
   /**
    * className applied to the root component.
    */

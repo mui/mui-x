@@ -6,12 +6,11 @@ import {
   DateValidationError,
   validateDate,
   ExportedDateValidationProps,
-  ParseableDate,
 } from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../../utils/date-utils';
 import { DateRange } from '../../models';
 
-export interface DateRangeValidationProps<TDate, TInputDate extends ParseableDate<TDate>>
+export interface DateRangeValidationProps<TInputDate, TDate>
   extends ExportedDateValidationProps<TDate>,
     ValidationProps<DateRangeValidationError, DateRange<TInputDate>> {}
 
@@ -53,8 +52,8 @@ export type DateRangeValidationError = [
 const isSameDateRangeError = (a: DateRangeValidationError, b: DateRangeValidationError | null) =>
   b !== null && a[1] === b[1] && a[0] === b[0];
 
-export const useDateRangeValidation = <TDate, TInputDate extends ParseableDate<TDate>>(
-  props: DateRangeValidationProps<TDate, TInputDate>,
+export const useDateRangeValidation = <TInputDate, TDate>(
+  props: DateRangeValidationProps<TInputDate, TDate>,
 ): DateRangeValidationError => {
   return useValidation(props, validateDateRange, isSameDateRangeError);
 };

@@ -7,7 +7,6 @@ import {
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { ParseableDate } from '../internals/models';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { PureDateInput } from '../internals/components/PureDateInput';
@@ -19,12 +18,12 @@ const valueManager: PickerStateValueManager<any, any> = {
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
 
-export interface MobileDateTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends BaseDateTimePickerProps<TDate, TInputDate>,
+export interface MobileDateTimePickerProps<TInputDate, TDate>
+  extends BaseDateTimePickerProps<TInputDate, TDate>,
     MobileWrapperProps {}
 
-type MobileDateTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: MobileDateTimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: MobileDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -38,13 +37,13 @@ type MobileDateTimePickerComponent = (<TDate, TInputDate extends ParseableDate<T
  * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
  */
 export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(inProps: MobileDateTimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: MobileDateTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useDateTimePickerDefaultizedProps<
-    TDate,
     TInputDate,
-    MobileDateTimePickerProps<TDate, TInputDate>
+    TDate,
+    MobileDateTimePickerProps<TInputDate, TDate>
   >(inProps, 'MuiMobileDateTimePicker');
 
   const validationError = useDateTimeValidation(props) !== null;

@@ -1,27 +1,22 @@
 import * as React from 'react';
-import {
-  ParseableDate,
-  useDefaultDates,
-  useUtils,
-  ValidationProps,
-} from '@mui/x-date-pickers/internals';
+import { useDefaultDates, useUtils, ValidationProps } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 
-export interface BaseDateRangePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends ExportedDateRangePickerViewProps<TDate, TInputDate>,
+export interface BaseDateRangePickerProps<TInputDate, TDate>
+  extends ExportedDateRangePickerViewProps<TInputDate, TDate>,
     ValidationProps<DateRangeValidationError, DateRange<TInputDate>>,
-    ExportedDateRangePickerInputProps<TDate, TInputDate> {
+    ExportedDateRangePickerInputProps<TInputDate, TDate> {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: ExportedDateRangePickerViewProps<TDate, TInputDate>['components'] &
-    ExportedDateRangePickerInputProps<TDate, TInputDate>['components'];
+  components?: ExportedDateRangePickerViewProps<TInputDate, TDate>['components'] &
+    ExportedDateRangePickerInputProps<TInputDate, TDate>['components'];
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
@@ -31,7 +26,7 @@ export interface BaseDateRangePickerProps<TDate, TInputDate extends ParseableDat
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
    */
-  mask?: ExportedDateRangePickerInputProps<TDate, TInputDate>['mask'];
+  mask?: ExportedDateRangePickerInputProps<TInputDate, TDate>['mask'];
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
    * @template TDate
@@ -49,16 +44,16 @@ export interface BaseDateRangePickerProps<TDate, TInputDate extends ParseableDat
 export type DefaultizedProps<Props> = Props & { inputFormat: string };
 
 export function useDateRangePickerDefaultizedProps<
+  TInputDate,
   TDate,
-  TInputDate extends ParseableDate<TDate>,
-  Props extends BaseDateRangePickerProps<TDate, TInputDate>,
+  Props extends BaseDateRangePickerProps<TInputDate, TDate>,
 >(
   props: Props,
   name: string,
 ): DefaultizedProps<Props> &
   Required<
     Pick<
-      BaseDateRangePickerProps<TDate, TInputDate>,
+      BaseDateRangePickerProps<TInputDate, TDate>,
       'calendars' | 'mask' | 'startText' | 'endText'
     >
   > {

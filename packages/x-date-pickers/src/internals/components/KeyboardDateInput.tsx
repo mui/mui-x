@@ -7,12 +7,11 @@ import { Calendar } from './icons';
 import { useMaskedInput } from '../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
 import { getTextFieldAriaText } from '../utils/text-field-helper';
-import { ParseableDate } from '../models';
 
-export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(props: DateInputProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TInputDate, TDate>(
+  props: DateInputProps<TInputDate, TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const {
     components = {},
     disableOpenPicker,

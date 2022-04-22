@@ -1,6 +1,6 @@
 import { createIsAfterIgnoreDatePart } from '../../utils/time-utils';
 import { useValidation, ValidationProps, Validator } from './useValidation';
-import { ClockPickerView, ParseableDate } from '../../models';
+import { ClockPickerView } from '../../models';
 
 export interface ExportedTimeValidationProps<TDate> {
   /**
@@ -28,7 +28,7 @@ export interface ExportedTimeValidationProps<TDate> {
   disableIgnoringDatePartForTimeValidation?: boolean;
 }
 
-export interface TimeValidationProps<TDate, TInputDate extends ParseableDate<TDate>>
+export interface TimeValidationProps<TInputDate, TDate>
   extends ExportedTimeValidationProps<TDate>,
     ValidationProps<TimeValidationError, TInputDate | null> {}
 
@@ -82,6 +82,6 @@ export const validateTime: Validator<any, TimeValidationProps<any, any>> = (
 
 const isSameTimeError = (a: unknown, b: unknown) => a === b;
 
-export const useTimeValidation = <TDate, TInputDate extends ParseableDate<TDate>>(
-  props: TimeValidationProps<TDate, TInputDate>,
+export const useTimeValidation = <TInputDate, TDate>(
+  props: TimeValidationProps<TInputDate, TDate>,
 ): TimeValidationError => useValidation(props, validateTime, isSameTimeError);

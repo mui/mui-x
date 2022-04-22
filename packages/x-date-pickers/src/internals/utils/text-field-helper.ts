@@ -1,7 +1,6 @@
-import { ParseableDate } from '../models/parseableDate';
 import { MuiPickersAdapter } from '../models';
 
-export function getTextFieldAriaText<TDate, TInputDate extends ParseableDate<TDate>>(
+export function getTextFieldAriaText<TInputDate, TDate>(
   rawValue: TInputDate,
   utils: MuiPickersAdapter<TDate>,
 ) {
@@ -15,11 +14,11 @@ export function getTextFieldAriaText<TDate, TInputDate extends ParseableDate<TDa
 
 export const getDisplayDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  value: ParseableDate<TDate>,
+  rawValue: any,
   inputFormat: string,
 ) => {
-  const date = utils.date(value);
-  const isEmpty = value === null;
+  const date = utils.date(rawValue);
+  const isEmpty = rawValue === null;
 
   if (isEmpty) {
     return '';

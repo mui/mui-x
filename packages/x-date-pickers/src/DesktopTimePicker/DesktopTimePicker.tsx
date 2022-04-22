@@ -7,7 +7,6 @@ import {
   DesktopWrapperProps,
 } from '../internals/components/wrappers/DesktopWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { ParseableDate } from '../internals/models';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
@@ -26,12 +25,12 @@ const valueManager: PickerStateValueManager<any, any> = {
   },
 };
 
-export interface DesktopTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends BaseTimePickerProps<TDate, TInputDate>,
+export interface DesktopTimePickerProps<TInputDate, TDate>
+  extends BaseTimePickerProps<TInputDate, TDate>,
     DesktopWrapperProps {}
 
-type DesktopTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: DesktopTimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopTimePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: DesktopTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -45,13 +44,13 @@ type DesktopTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDat
  * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
 export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(inProps: DesktopTimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: DesktopTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useTimePickerDefaultizedProps<
-    TDate,
     TInputDate,
-    DesktopTimePickerProps<TDate, TInputDate>
+    TDate,
+    DesktopTimePickerProps<TInputDate, TDate>
   >(inProps, 'MuiDesktopTimePicker');
 
   const validationError = useTimeValidation(props) !== null;

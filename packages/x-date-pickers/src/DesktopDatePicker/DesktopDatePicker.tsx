@@ -7,7 +7,6 @@ import {
   DesktopWrapperProps,
 } from '../internals/components/wrappers/DesktopWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { ParseableDate } from '../internals/models';
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
@@ -19,12 +18,12 @@ const valueManager: PickerStateValueManager<any, any> = {
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
 
-export interface DesktopDatePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends BaseDatePickerProps<TDate, TInputDate>,
+export interface DesktopDatePickerProps<TInputDate, TDate>
+  extends BaseDatePickerProps<TInputDate, TDate>,
     DesktopWrapperProps {}
 
-type DesktopDatePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: DesktopDatePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDatePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: DesktopDatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -38,13 +37,13 @@ type DesktopDatePickerComponent = (<TDate, TInputDate extends ParseableDate<TDat
  * - [DesktopDatePicker API](https://mui.com/x/api/date-pickers/desktop-date-picker/)
  */
 export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(inProps: DesktopDatePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: DesktopDatePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useDatePickerDefaultizedProps<
-    TDate,
     TInputDate,
-    DesktopDatePickerProps<TDate, TInputDate>
+    TDate,
+    DesktopDatePickerProps<TInputDate, TDate>
   >(inProps, 'MuiDesktopDatePicker');
 
   const validationError = useDateValidation(props) !== null;

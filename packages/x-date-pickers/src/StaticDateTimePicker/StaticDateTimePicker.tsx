@@ -10,7 +10,6 @@ import {
   PickerStaticWrapperProps,
 } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { ParseableDate } from '../internals/models';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
@@ -21,8 +20,8 @@ const valueManager: PickerStateValueManager<any, any> = {
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
 
-export interface StaticDateTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends BaseDateTimePickerProps<TDate, TInputDate> {
+export interface StaticDateTimePickerProps<TInputDate, TDate>
+  extends BaseDateTimePickerProps<TInputDate, TDate> {
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default 'mobile'
@@ -30,8 +29,8 @@ export interface StaticDateTimePickerProps<TDate, TInputDate extends ParseableDa
   displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
 }
 
-type StaticDateTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: StaticDateTimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: StaticDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -45,13 +44,13 @@ type StaticDateTimePickerComponent = (<TDate, TInputDate extends ParseableDate<T
  * - [StaticDateTimePicker API](https://mui.com/x/api/date-pickers/static-date-time-picker/)
  */
 export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(inProps: StaticDateTimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: StaticDateTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useDateTimePickerDefaultizedProps<
-    TDate,
     TInputDate,
-    StaticDateTimePickerProps<TDate, TInputDate>
+    TDate,
+    StaticDateTimePickerProps<TInputDate, TDate>
   >(inProps, 'MuiStaticDateTimePicker');
 
   const validationError = useDateTimeValidation(props) !== null;

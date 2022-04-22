@@ -4,7 +4,6 @@ import { BaseTimePickerProps, useTimePickerDefaultizedProps } from '../TimePicke
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { ParseableDate } from '../internals/models';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { PureDateInput } from '../internals/components/PureDateInput';
@@ -23,12 +22,12 @@ const valueManager: PickerStateValueManager<any, any> = {
   },
 };
 
-export interface MobileTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
-  extends BaseTimePickerProps<TDate, TInputDate>,
+export interface MobileTimePickerProps<TInputDate, TDate>
+  extends BaseTimePickerProps<TInputDate, TDate>,
     MobileWrapperProps {}
 
-type MobileTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
-  props: MobileTimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
+type MobileTimePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: MobileTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -42,13 +41,13 @@ type MobileTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
 export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
-  TDate,
-  TInputDate extends ParseableDate<TDate>,
->(inProps: MobileTimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: MobileTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useTimePickerDefaultizedProps<
-    TDate,
     TInputDate,
-    MobileTimePickerProps<TDate, TInputDate>
+    TDate,
+    MobileTimePickerProps<TInputDate, TDate>
   >(inProps, 'MuiMobileTimePicker');
 
   const validationError = useTimeValidation(props) !== null;
