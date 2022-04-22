@@ -23,7 +23,7 @@ const pages = [
           { pathname: '/x/react-data-grid/column-visibility' },
           { pathname: '/x/react-data-grid/column-header' },
           { pathname: '/x/react-data-grid/column-ordering' },
-          { pathname: '/x/react-data-grid/column-pinning' },
+          { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
           { pathname: '/x/react-data-grid/column-spanning' },
           { pathname: '/x/react-data-grid/column-groups', title: 'Column groups 🚧' },
         ],
