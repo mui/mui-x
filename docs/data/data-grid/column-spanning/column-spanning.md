@@ -1,10 +1,10 @@
 ---
-title: Data Grid - Column Spanning
+title: Data Grid - Column spanning
 ---
 
-# Data Grid - Column Spanning
+# Data Grid - Column spanning
 
-<p class="description">Span cells across several columns with column spanning.</p>
+<p class="description">Span cells across several columns.</p>
 
 By default, each cell takes up the width of one column.
 You can modify this behavior with column spanning.

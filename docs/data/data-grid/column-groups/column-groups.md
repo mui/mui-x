@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Column Groups 🚧
+title: Data Grid - Column groups 🚧
 ---
 
-# Data Grid - Column Groups 🚧
+# Data Grid - Column groups 🚧
 
 <p class="description">Group your columns.</p>
 

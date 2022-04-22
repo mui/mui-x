@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Column Pinning
+title: Data Grid - Column pinning
 ---
 
-# Data Grid - Column Pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data Grid - Column pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 <p class="description">Pin columns to keep them visible at all time.</p>
 

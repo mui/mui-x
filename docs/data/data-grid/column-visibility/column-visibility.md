@@ -1,10 +1,10 @@
 ---
-title: Data Grid - Column Visibility
+title: Data Grid - Column visibility
 ---
 
-# Data Grid - Column Visibility
+# Data Grid - Column visibility
 
-<p class="description">Decide which column should be visible.</p>
+<p class="description">Define which columns are visible.</p>
 
 By default, all the columns are visible.
 The column's visibility can be switched through the user interface in two ways:

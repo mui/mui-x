@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Columns
+title: Data Grid - Column definition
 ---
 
-# Data Grid - Columns
+# Data Grid - Column definition
 
 <p class="description">Define your columns.</p>
 

@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Column Ordering
+title: Data Grid - Column ordering
 ---
 
-# Data Grid - Column Ordering [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data Grid - Column ordering [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 <p class="description">Drag and drop your columns to reorder them.</p>
 

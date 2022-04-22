@@ -25,7 +25,7 @@ const pages = [
           { pathname: '/x/react-data-grid/column-ordering' },
           { pathname: '/x/react-data-grid/column-pinning' },
           { pathname: '/x/react-data-grid/column-spanning' },
-          { pathname: '/x/react-data-grid/column-groups 🚧' },
+          { pathname: '/x/react-data-grid/column-groups', title: 'Column groups 🚧' },
         ],
       },
       { pathname: '/x/react-data-grid/rows' },

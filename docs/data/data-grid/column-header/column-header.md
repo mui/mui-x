@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Columns
+title: Data Grid - Column header
 ---
 
-# Data Grid - Columns
+# Data Grid - Column header
 
 <p class="description">Customize your columns header.</p>
 
