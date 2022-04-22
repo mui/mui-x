@@ -8,7 +8,6 @@ import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/src/pages'; // DO NOT REMOVE
 import newPages from 'docsx/data/pages'; // DO NOT REMOVE
-import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
@@ -76,6 +75,8 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
       '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
+      '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
+      '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       'date-fns': 'latest',
     };
     return output;
@@ -254,7 +255,7 @@ function AppWrapper(props) {
           <PageContext.Provider value={{ activePage, pages: productPages }}>
             <ThemeProvider>
               <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                <XWrapper>{children}</XWrapper>
+                {children}
                 <GoogleAnalytics />
               </DocsStyledEngineProvider>
             </ThemeProvider>

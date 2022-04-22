@@ -80,6 +80,12 @@ export function getColumnHeadersTextContent() {
   );
 }
 
+export function getRowsFieldContent(field: string) {
+  return Array.from(document.querySelectorAll('[role="row"][data-rowindex]')).map(
+    (node) => node.querySelector(`[role="cell"][data-field="${field}"]`)?.textContent,
+  );
+}
+
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector<HTMLElement>(
     `[role="row"][data-rowindex="${rowIndex}"] [role="cell"][data-colindex="${colIndex}"]`,
