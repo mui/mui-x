@@ -36,29 +36,7 @@ export default function QuickFilteringCustomizedGrid() {
 
   // Otherwise filter will be applied on fields such as the hidden column id
   const columns = React.useMemo(
-    () =>
-      data.columns
-        .filter((column) => VISIBLE_FIELDS.includes(column.field))
-        .map((column) => {
-          if (column.field !== 'country') {
-            return column;
-          }
-          return {
-            ...column,
-            getApplyQuickFilterFn: (value) => {
-              if (!value) {
-                return null;
-              }
-              return (params) => {
-                return (
-                  params.value.label &&
-                  params.value.label.slice(0, value.length).toLowerCase() ===
-                    value.toLowerCase()
-                );
-              };
-            },
-          };
-        }),
+    () => data.columns.filter((column) => VISIBLE_FIELDS.includes(column.field)),
     [data.columns],
   );
 

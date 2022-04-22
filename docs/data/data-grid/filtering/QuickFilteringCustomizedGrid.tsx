@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import {
   DataGrid,
-  GridCellParams,
   GridToolbarQuickFilter,
   GridLinkOperator,
 } from '@mui/x-data-grid';
@@ -18,7 +17,7 @@ function QuickSearchToolbar() {
       }}
     >
       <GridToolbarQuickFilter
-        quickFilterParser={(searchInput) =>
+        quickFilterParser={(searchInput: string) =>
           searchInput.split(',').map((value) => value.trim())
         }
       />
@@ -37,29 +36,7 @@ export default function QuickFilteringCustomizedGrid() {
 
   // Otherwise filter will be applied on fields such as the hidden column id
   const columns = React.useMemo(
-    () =>
-      data.columns
-        .filter((column) => VISIBLE_FIELDS.includes(column.field))
-        .map((column) => {
-          if (column.field !== 'country') {
-            return column;
-          }
-          return {
-            ...column,
-            getApplyQuickFilterFn: (value: string) => {
-              if (!value) {
-                return null;
-              }
-              return (params: GridCellParams): boolean => {
-                return (
-                  params.value.label &&
-                  params.value.label.slice(0, value.length).toLowerCase() ===
-                    value.toLowerCase()
-                );
-              };
-            },
-          };
-        }),
+    () => data.columns.filter((column) => VISIBLE_FIELDS.includes(column.field)),
     [data.columns],
   );
 

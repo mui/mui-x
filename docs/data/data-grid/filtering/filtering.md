@@ -329,11 +329,11 @@ initialState={{
 }}
 ```
 
-With the default settings, quick filter will only consider columns with types `string`,`number`, and `singleSelect`.
+With the default settings, quick filter will only consider columns with types `'string'`,`'number'`, and `'singleSelect'`.
 
-- For columns with type `string`, the cell must contain the value to pass the filter
-- For columns with type `number`, the cell must be equal to the value to pass the filter
-- For columns with type `singleSelect`, the cell must start like the value to pass the filter
+- For `'string'` columns, the cell must **contain** the value
+- For `'number'` columns, the cell must **equal** the value
+- For `'singleSelect'` columns, the cell must **start with** the value
 
 To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.
 This function is quite similar to `getApplyFilterFn`.
@@ -343,7 +343,7 @@ In the example below, a custom filter is created for the `date` column to check 
 
 ```ts
 getApplyFilterFn: (value: string) => {
-  if (!value || value.length !== 4 || /\d{4}/.test(str)) {
+  if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
     // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
     return null;
   }
@@ -354,6 +354,10 @@ getApplyFilterFn: (value: string) => {
 ```
 
 To remove the quick filtering on a given column set `getApplyFilterFn: undefined`.
+
+In the demo bellow, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on".
+
+{{"demo": "QuickFilteringCustomLogic.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Parsing values
 
