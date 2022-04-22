@@ -366,11 +366,7 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      // Open the picker
       openDesktopPicker();
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
@@ -405,7 +401,6 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Change the date (already tested)
@@ -446,7 +441,6 @@ describe('<DesktopDateTimePicker />', () => {
         </React.Fragment>,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Dismiss the picker
@@ -475,7 +469,6 @@ describe('<DesktopDateTimePicker />', () => {
         </React.Fragment>,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Change the date (already tested)
@@ -512,7 +505,6 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Clear the date
@@ -539,7 +531,6 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Clear the date

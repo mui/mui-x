@@ -2,9 +2,9 @@ import * as React from 'react';
 import { parseISO } from 'date-fns';
 import {
   createRenderer,
-  fireEvent,
   screen,
   RenderOptions,
+  fireEvent,
   userEvent,
 } from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
@@ -84,26 +84,32 @@ export const openMobilePicker = () => userEvent.mousePress(screen.getByRole('tex
 
 export const openDesktopPicker = () => userEvent.mousePress(screen.getByLabelText(/choose date/i));
 
+export const openMobileDateRangePicker = (initialFocus: 'start' | 'end') =>
+  userEvent.mousePress(screen.getAllByRole('textbox')[initialFocus === 'start' ? 0 : 1]);
+
+export const openDesktopDateRangePicker = (initialFocus: 'start' | 'end') =>
+  fireEvent.focus(screen.getAllByRole('textbox')[initialFocus === 'start' ? 0 : 1]);
+
 export const withPickerControls =
-  <Value, Props extends { value: Value | null; onChange: (value: Value) => void }>(
+  <TValue, Props extends { value: TValue; onChange: Function }>(
     Component: React.ComponentType<Props>,
   ) =>
   <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
     return (
       props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
         Partial<DefaultProps> & {
-          initialValue: Value | null;
-          onChange?: Props['onChange'];
+          initialValue: TValue;
+          onChange?: any;
         },
     ) => {
       const { initialValue, onChange, ...other } = props;
 
-      const [value, setValue] = React.useState(initialValue);
+      const [value, setValue] = React.useState<TValue>(initialValue);
 
       const handleChange = React.useCallback(
-        (newValue: Value) => {
+        (newValue: TValue, keyboardInputValue?: string) => {
           setValue(newValue);
-          onChange?.(newValue);
+          onChange?.(newValue, keyboardInputValue);
         },
         [onChange],
       );

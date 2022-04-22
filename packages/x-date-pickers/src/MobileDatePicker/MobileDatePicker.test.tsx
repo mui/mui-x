@@ -301,7 +301,6 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      // Open the picker
       openMobilePicker();
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -342,7 +341,6 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openMobilePicker();
 
       // Change the date
@@ -373,7 +371,6 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openMobilePicker();
 
       // Change the date (already tested)
@@ -402,7 +399,6 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openMobilePicker();
 
       // Change the date (already tested)
@@ -430,7 +426,6 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openMobilePicker();
 
       // Cancel the modifications
@@ -458,6 +453,7 @@ describe('<MobileDatePicker />', () => {
 
       openMobilePicker();
 
+      // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).to.equal(null);
@@ -482,6 +478,8 @@ describe('<MobileDatePicker />', () => {
       );
 
       openMobilePicker();
+
+      // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);

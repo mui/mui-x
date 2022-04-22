@@ -332,7 +332,6 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Change the date
@@ -370,7 +369,6 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Change the date (already tested)
@@ -406,7 +404,6 @@ describe('<DesktopDatePicker />', () => {
         </React.Fragment>,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Dismiss the picker
@@ -435,7 +432,6 @@ describe('<DesktopDatePicker />', () => {
         </React.Fragment>,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Change the date (already tested)
@@ -467,7 +463,6 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Clear the date
@@ -494,7 +489,6 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openDesktopPicker();
 
       // Clear the date

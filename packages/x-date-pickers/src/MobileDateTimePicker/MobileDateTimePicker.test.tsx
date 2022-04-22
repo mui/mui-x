@@ -125,7 +125,6 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      // Open the picker
       openMobilePicker();
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -171,14 +170,12 @@ describe('<MobileDateTimePicker />', () => {
         this.skip();
       }
 
-      const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
       const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
 
       render(
         <WrappedMobileDateTimePicker
-          onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
@@ -186,7 +183,6 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openMobilePicker();
 
       // Change the date (already tested)
@@ -229,7 +225,6 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openMobilePicker();
 
       // Change the date (already tested)
@@ -248,7 +243,7 @@ describe('<MobileDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose, onClose with the live value and onAccept with the live value when clicking the "OK"', function test() {
+    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', function test() {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         this.skip();
       }
@@ -268,7 +263,6 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      // Open the picker (already tested)
       openMobilePicker();
 
       // Change the date (already tested)
@@ -307,6 +301,7 @@ describe('<MobileDateTimePicker />', () => {
 
       openMobilePicker();
 
+      // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).to.equal(null);
@@ -331,6 +326,8 @@ describe('<MobileDateTimePicker />', () => {
       );
 
       openMobilePicker();
+
+      // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);

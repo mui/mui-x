@@ -48,7 +48,7 @@ export function DesktopWrapper(props: InternalDesktopWrapperProps) {
         PopperProps={PopperProps}
         PaperProps={PaperProps}
         onClose={onDismiss}
-        onReset={onCancel}
+        onCancel={onCancel}
         onClear={onClear}
         clearText={clearText}
         clearable={clearable}
