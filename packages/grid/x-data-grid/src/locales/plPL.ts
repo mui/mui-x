@@ -128,6 +128,9 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Rozwiń',
   collapseDetailPanel: 'Zwiń',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);
