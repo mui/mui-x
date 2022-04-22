@@ -158,7 +158,8 @@ In addition, you can import the following events to customize the row reordering
 
 ### Customizing the reorder value
 
-By default when you start dragging a row that rows' `id` is displayed in the draggable box. To change this you can give a value to the `__reorder__` field for each row.
+By default, when you start dragging a row, the `id` is displayed in the draggable box.
+To change this, you can give a value to the `__reorder__` field for each row.
 
 ```tsx
 const columns: GridColumns = [{ field: 'brand' }];
