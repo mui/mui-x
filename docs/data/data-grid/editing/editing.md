@@ -166,9 +166,7 @@ In this context, the user can only stop editing a cell by pressing <kbd class="k
 Each cell and row has two modes: `edit` and `view`.
 You can control the active mode using the props `cellModesModel` and `rowModesModel` (only works if `editMode="row"`).
 
-The `cellModesModel` prop accepts an object where the key corresponds to the row ID containing the cell whose mode will be changed.
-Since cell editing works on cells, the value for the key is another object where the key is the column field of the cell.
-Finally, the value for the column field key is another object containing `mode` and additional options.
+The `cellModesModel` prop accepts an object containing the `mode` (and additional options) for a given column field, in a given row, as in the following example.
 The options accepted are the same available in `apiRef.current.startCellEditMode` and `apiRef.current.stopCellEditMode`.
 
 ```tsx
