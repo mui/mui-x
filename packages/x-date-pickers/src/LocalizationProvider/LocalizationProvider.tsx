@@ -40,6 +40,21 @@ export interface LocalizationProviderProps {
  */
 export function LocalizationProvider(props: LocalizationProviderProps) {
   const { children, dateAdapter: Utils, dateFormats, dateLibInstance, locale } = props;
+
+  if (process.env.NODE_ENV !== 'production') {
+    const lib = new Utils({}).lib
+    if (lib === 'date-fns' && typeof locale === 'string') {
+      throw Error(
+        'date-fns locale must be an object. For more information on date-fns internationalization see https://date-fns.org/docs/I18n ',
+      );
+    }
+    if (['luxon', 'moment', 'dayjs'].includes(lib) && locale && locale !== 'string') {
+      throw Error(
+        `Locale for ${lib} must be a string.`,
+      );
+    }
+  }
+
   const utils = React.useMemo(
     () => new Utils({ locale, formats: dateFormats, instance: dateLibInstance }),
     [Utils, locale, dateFormats, dateLibInstance],
