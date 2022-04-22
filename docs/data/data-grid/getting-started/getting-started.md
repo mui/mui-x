@@ -158,7 +158,7 @@ All the features of the community version are available in the enterprise one.
 The enterprise components come in two plans: Pro and Premium.
 
 | Features                                                                               | Community | Pro <span class="plan-pro"></span> | Premium <span class="plan-premium"></span> |
-| :------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
+|:---------------------------------------------------------------------------------------| :-------: | :--------------------------------: | :----------------------------------------: |
 | **Column**                                                                             |           |                                    |
 | [Column groups](/x/react-data-grid/columns/#column-groups)                             |    🚧     |                 🚧                 |                     🚧                     |
 | [Column spanning](/x/react-data-grid/columns/#column-spanning)                         |    ✅     |                 ✅                 |                     ✅                     |
@@ -200,7 +200,7 @@ The enterprise components come in two plans: Pro and Premium.
 | **Group & Pivot**                                                                      |           |                                    |                                            |
 | [Tree data](/x/react-data-grid/tree-data)                                              |    ❌     |                 ✅                 |                     ✅                     |
 | [Master detail](/x/react-data-grid/master-detail)                                      |    ❌     |                 ✅                 |                     ✅                     |
-| [Grouping](/x/react-data-grid/row-grouping)                                            |    ❌     |                 ❌                 |                     ✅                     |
+| [Row Grouping](/x/react-data-grid/row-grouping)                                        |    ❌     |                 ❌                 |                     ✅                     |
 | [Aggregation](/x/react-data-grid/aggregation)                                          |    ❌     |                 ❌                 |                     🚧                     |
 | [Pivoting](/x/react-data-grid/pivoting)                                                |    ❌     |                 ❌                 |                     🚧                     |
 | **Misc**                                                                               |           |                                    |                                            |
