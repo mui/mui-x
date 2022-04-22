@@ -309,7 +309,7 @@ The example below demonstrates how to achieve server-side filtering.
 
 ## Quick filter
 
-Quick filter allows filtering rows using free text.
+Quick filter allows filtering rows by multiple columns with a single text input.
 To enable it, you can add the `<GridToolbarQuickFilter />` component to your custom toolbar or pass `showQuickFilter` to the default `<GridToolbar />`.
 
 By default, the quick filter considers the input as a list of values separated by space and keeps only rows that contain all the values.
