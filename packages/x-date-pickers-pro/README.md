@@ -15,7 +15,7 @@ npm install @mui/x-date-pickers-pro
 yarn add @mui/x-date-pickers-pro
 ```
 
-This component has four peer dependencies that you will need to install as well.
+This component has the following peer dependencies that you will need to install as well.
 
 ```json
 "peerDependencies": {
