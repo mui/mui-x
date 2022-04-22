@@ -65,6 +65,7 @@
   { "name": "PickersDayClasses", "kind": "Interface" },
   { "name": "PickersDayClassKey", "kind": "TypeAlias" },
   { "name": "PickersDayProps", "kind": "Interface" },
+  { "name": "RangeInput", "kind": "TypeAlias" },
   { "name": "StaticDatePicker", "kind": "Variable" },
   { "name": "StaticDatePickerProps", "kind": "Interface" },
   { "name": "StaticDateRangePicker", "kind": "Variable" },

@@ -10,7 +10,6 @@ import {
   useNextMonthDisabled,
   DayPicker,
   PickersCalendarProps,
-  ParseableDate,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';

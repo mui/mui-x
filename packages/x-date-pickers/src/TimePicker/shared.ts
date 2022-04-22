@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { Clock } from '../internals/components/icons';
-import { ParseableDate } from '../internals/models/parseableDate';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
 import { useUtils } from '../internals/hooks/useUtils';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
@@ -41,7 +40,7 @@ export interface BaseTimePickerProps<TInputDate, TDate>
   views?: readonly ClockPickerView[];
 }
 
-function getTextFieldAriaText<TDate>(value: ParseableDate<TDate>, utils: MuiPickersAdapter<TDate>) {
+function getTextFieldAriaText<TDate>(value: any, utils: MuiPickersAdapter<TDate>) {
   return value && utils.isValid(utils.date(value))
     ? `Choose time, selected time is ${utils.format(utils.date(value) as TDate, 'fullTime')}`
     : 'Choose time';
