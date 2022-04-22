@@ -44,7 +44,7 @@ The following are the native column types:
 
 ### Converting types
 
-Default methods, such as filtering and sorting, assume that the type of the values will match the type of the column specified in `type` (e.g. the values of a `number` column will be numbers).
+Default methods, such as filtering and sorting, assume that the type of the values will match the type of the column specified in `type`.
 For example, values of column with `type: 'dateTime'` are expecting to be stored as a `Date()` objects.
 If for any reason, your data type is not the correct one, you can use `valueGetter` to parse the value to the correct type.
 
