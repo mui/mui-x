@@ -10,7 +10,7 @@ export interface PrivateWrapperProps {
   onAccept: () => void;
   onClear: () => void;
   onDismiss: () => void;
-  onReset: () => void;
+  onCancel: () => void;
   onSetToday: () => void;
   open: boolean;
 }

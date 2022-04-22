@@ -172,7 +172,7 @@ export const usePickerState = <TInput, TDate>(
         // e.g. Reset the state to the last committed value.
         setDate({ value: dateState.committed, action: 'acceptAndClose' });
       },
-      onReset: () => {
+      onCancel: () => {
         // Set all dates in state to equal the last accepted date and close picker.
         // e.g. Reset the state to the last accepted value
         setDate({ value: dateState.resetTarget, action: 'acceptAndClose' });
