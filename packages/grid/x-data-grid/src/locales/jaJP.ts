@@ -128,6 +128,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);
