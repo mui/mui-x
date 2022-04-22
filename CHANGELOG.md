@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Apr 22, 2022_
 
-We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 TODO INSERT HIGHLIGHTS
 
@@ -20,6 +20,7 @@ TODO INSERT HIGHLIGHTS
 
 - [pickers] Pass `PaperProps` to `DesktopWrapper` component (#4584) @alexfauquette
 - [TimePicker] Fix bug when time picker clear value (#4582) @alexfauquette
+- [DateRangePicker] Fix missing `clearable` and `clearText` props (#4511) @zigang93
 
 ### Docs
 
