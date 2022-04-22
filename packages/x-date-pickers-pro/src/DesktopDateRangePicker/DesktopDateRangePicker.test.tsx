@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { act, describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import {
   wrapPickerMount,

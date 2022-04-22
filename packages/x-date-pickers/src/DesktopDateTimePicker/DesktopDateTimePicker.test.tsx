@@ -13,6 +13,8 @@ import {
   withPickerControls,
 } from '../../../../test/utils/pickers-utils';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 const WrappedDesktopDateTimePicker = withPickerControls(DesktopDateTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
@@ -289,7 +291,11 @@ describe('<DesktopDateTimePicker />', () => {
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should call onChange, when selecting each view and onClose and onAccept when selecting the minutes', () => {
+    it('should call onChange when selecting each view and onClose and onAccept when selecting the minutes', function test() {
+      if (isJSDOM) {
+        this.skip(); // JSDOM eventrs don't have access to nativeEvent on mouseUp
+      }
+
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
