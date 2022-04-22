@@ -209,6 +209,8 @@ export interface GridEventLookup
   // Scroll
   rowsScroll: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
   virtualScrollerContentSizeChange: {};
+  virtualScrollerWheel: { params: {}; event: React.WheelEvent };
+  virtualScrollerTouchMove: { params: {}; event: React.TouchEvent };
 
   // Selection
   headerSelectionCheckboxChange: { params: GridHeaderSelectionCheckboxParams };

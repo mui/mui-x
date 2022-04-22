@@ -356,4 +356,32 @@ describe('<DesktopTimePicker />', () => {
       expect(handleTouchStart.callCount).to.equal(1);
     });
   });
+
+  describe('prop: PaperProps', () => {
+    it('forwards onClick and onTouchStart', () => {
+      const handleClick = spy();
+      const handleTouchStart = spy();
+      render(
+        <DesktopTimePicker
+          open
+          onChange={() => {}}
+          PaperProps={{
+            onClick: handleClick,
+            onTouchStart: handleTouchStart,
+            // @ts-expect-error `data-*` attributes are not recognized in props objects
+            'data-testid': 'paper',
+          }}
+          renderInput={(params) => <TextField {...params} />}
+          value={null}
+        />,
+      );
+      const paper = screen.getByTestId('paper');
+
+      fireEvent.click(paper);
+      fireEvent.touchStart(paper);
+
+      expect(handleClick.callCount).to.equal(1);
+      expect(handleTouchStart.callCount).to.equal(1);
+    });
+  });
 });

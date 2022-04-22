@@ -35,16 +35,16 @@ const pages = [
         pathname: '/x/react-data-grid/row-grouping',
         title: 'Group & Pivot',
         children: [
-          { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping' },
-          { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data' },
-          { pathname: '/x/react-data-grid/master-detail', title: 'Master Detail' },
-          { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧' },
-          { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧' },
+          { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping', plan: 'premium' },
+          { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data', plan: 'pro' },
+          { pathname: '/x/react-data-grid/master-detail', title: 'Master Detail', plan: 'pro' },
+          { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧', plan: 'premium' },
+          { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧', plan: 'premium' },
         ],
       },
       {
         pathname: '/x/api/data-grid',
-        title: ' • API Reference',
+        title: 'API Reference',
         children: [
           { pathname: '/x/api/data-grid', title: 'Index' },
           { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
@@ -82,12 +82,13 @@ const pages = [
       { pathname: '/x/react-date-pickers/date-picker' },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
+        plan: 'pro',
       },
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
       {
         pathname: '/x/api/date-pickers',
-        title: ' • API Reference',
+        title: 'API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
           { pathname: '/x/api/date-pickers/calendar-picker', title: 'CalendarPicker' },
@@ -97,13 +98,22 @@ const pages = [
           },
           { pathname: '/x/api/date-pickers/clock-picker', title: 'ClockPicker' },
           { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
-          { pathname: '/x/api/date-pickers/date-range-picker', title: 'DateRangePicker' },
-          { pathname: '/x/api/date-pickers/date-range-picker-day', title: 'DateRangePickerDay' },
+          {
+            pathname: '/x/api/date-pickers/date-range-picker',
+            title: 'DateRangePicker',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/api/date-pickers/date-range-picker-day',
+            title: 'DateRangePickerDay',
+            plan: 'pro',
+          },
           { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
           { pathname: '/x/api/date-pickers/desktop-date-picker', title: 'DesktopDatePicker' },
           {
             pathname: '/x/api/date-pickers/desktop-date-range-picker',
             title: 'DesktopDateRangePicker',
+            plan: 'pro',
           },
           {
             pathname: '/x/api/date-pickers/desktop-date-time-picker',
@@ -115,6 +125,7 @@ const pages = [
           {
             pathname: '/x/api/date-pickers/mobile-date-range-picker',
             title: 'MobileDateRangePicker',
+            plan: 'pro',
           },
           {
             pathname: '/x/api/date-pickers/mobile-date-time-picker',
@@ -127,6 +138,7 @@ const pages = [
           {
             pathname: '/x/api/date-pickers/static-date-range-picker',
             title: 'StaticDateRangePicker',
+            plan: 'pro',
           },
           {
             pathname: '/x/api/date-pickers/static-date-time-picker',
