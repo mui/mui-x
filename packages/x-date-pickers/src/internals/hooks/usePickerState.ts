@@ -4,19 +4,19 @@ import { useOpenState } from './useOpenState';
 import { useUtils } from './useUtils';
 import { MuiPickersAdapter } from '../models';
 
-export interface PickerStateValueManager<TInputValue, TDateValue> {
+export interface PickerStateValueManager<TValue, TInputValue> {
   areValuesEqual: (
-    utils: MuiPickersAdapter<TDateValue>,
-    valueLeft: TDateValue,
-    valueRight: TDateValue,
+    utils: MuiPickersAdapter<TValue>,
+    valueLeft: TValue,
+    valueRight: TValue,
   ) => boolean;
-  emptyValue: TDateValue;
-  parseInput: (utils: MuiPickersAdapter<TDateValue>, value: TInputValue) => TDateValue;
+  emptyValue: TValue;
+  parseInput: (utils: MuiPickersAdapter<TValue>, value: TInputValue) => TValue;
   valueReducer?: (
-    utils: MuiPickersAdapter<TDateValue>,
-    prevValue: TDateValue | null,
-    value: TDateValue | null,
-  ) => TDateValue;
+    utils: MuiPickersAdapter<TValue>,
+    prevValue: TValue | null,
+    value: TValue | null,
+  ) => TValue;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
@@ -31,26 +31,26 @@ interface DraftAction<DraftValue> {
   payload: DraftValue;
 }
 
-interface PickerStateProps<TInput, TDateValue> {
+interface PickerStateProps<TValue, TInputValue> {
   disableCloseOnSelect?: boolean;
   open?: boolean;
-  onAccept?: (date: TDateValue) => void;
-  onChange: (date: TDateValue, keyboardInputValue?: string) => void;
+  onAccept?: (value: TValue) => void;
+  onChange: (value: TValue, keyboardInputValue?: string) => void;
   onClose?: () => void;
   onOpen?: () => void;
-  value: TInput;
+  value: TInputValue;
 }
 
-export const usePickerState = <TInput, TDateValue>(
-  props: PickerStateProps<TInput, TDateValue>,
-  valueManager: PickerStateValueManager<TInput, TDateValue>,
+export const usePickerState = <TValue, TInputValue>(
+  props: PickerStateProps<TValue, TInputValue>,
+  valueManager: PickerStateValueManager<TValue, TInputValue>,
 ) => {
   const { disableCloseOnSelect, onAccept, onChange, value } = props;
 
-  const utils = useUtils<TDateValue>();
+  const utils = useUtils<TValue>();
   const { isOpen, setIsOpen } = useOpenState(props);
 
-  function initDraftableDate(date: TDateValue): Draftable<TDateValue> {
+  function initDraftableDate(date: TValue): Draftable<TValue> {
     return { committed: date, draft: date };
   }
 
@@ -59,7 +59,7 @@ export const usePickerState = <TInput, TDateValue>(
     [valueManager, utils, value],
   );
 
-  const [lastValidDateValue, setLastValidDateValue] = React.useState<TDateValue | null>(
+  const [lastValidDateValue, setLastValidDateValue] = React.useState<TValue | null>(
     parsedDateValue,
   );
 
@@ -70,7 +70,7 @@ export const usePickerState = <TInput, TDateValue>(
   }, [parsedDateValue]);
 
   const [draftState, dispatch] = React.useReducer(
-    (state: Draftable<TDateValue>, action: DraftAction<TDateValue>): Draftable<TDateValue> => {
+    (state: Draftable<TValue>, action: DraftAction<TValue>): Draftable<TValue> => {
       switch (action.type) {
         case 'reset':
           return initDraftableDate(action.payload);
@@ -90,14 +90,14 @@ export const usePickerState = <TInput, TDateValue>(
     dispatch({ type: 'reset', payload: parsedDateValue });
   }
 
-  const [initialDate, setInitialDate] = React.useState<TDateValue>(draftState.committed);
+  const [initialDate, setInitialDate] = React.useState<TValue>(draftState.committed);
 
   // Mobile keyboard view is a special case.
   // When it's open picker should work like closed, because we are just showing text field
   const [isMobileKeyboardViewOpen, setMobileKeyboardViewOpen] = React.useState(false);
 
   const acceptDate = React.useCallback(
-    (acceptedDate: TDateValue, needClosePicker: boolean) => {
+    (acceptedDate: TValue, needClosePicker: boolean) => {
       onChange(acceptedDate);
 
       if (needClosePicker) {
@@ -118,7 +118,7 @@ export const usePickerState = <TInput, TDateValue>(
       onAccept: () => acceptDate(draftState.draft, true),
       onDismiss: () => acceptDate(initialDate, true),
       onSetToday: () => {
-        const now = utils.date() as TDateValue;
+        const now = utils.date()!;
         dispatch({ type: 'update', payload: now });
         acceptDate(now, !disableCloseOnSelect);
       },
@@ -140,18 +140,18 @@ export const usePickerState = <TInput, TDateValue>(
       isMobileKeyboardViewOpen,
       toggleMobileKeyboardView: () => setMobileKeyboardViewOpen(!isMobileKeyboardViewOpen),
       onDateChange: (
-        newDate: TDateValue,
+        newValue: TValue,
         wrapperVariant: WrapperVariant,
         selectionState: PickerSelectionState = 'partial',
       ) => {
-        dispatch({ type: 'update', payload: newDate });
+        dispatch({ type: 'update', payload: newValue });
         if (selectionState === 'partial') {
-          acceptDate(newDate, false);
+          acceptDate(newValue, false);
         }
 
         if (selectionState === 'finish') {
           const shouldCloseOnSelect = !(disableCloseOnSelect ?? wrapperVariant === 'mobile');
-          acceptDate(newDate, shouldCloseOnSelect);
+          acceptDate(newValue, shouldCloseOnSelect);
         }
 
         // if selectionState === "shallow" do nothing (we already update the draft state)
@@ -161,7 +161,7 @@ export const usePickerState = <TInput, TDateValue>(
   );
 
   const handleInputChange = React.useCallback(
-    (date: TDateValue, keyboardInputValue?: string) => {
+    (date: TValue, keyboardInputValue?: string) => {
       const cleanDate = valueManager.valueReducer
         ? valueManager.valueReducer(utils, lastValidDateValue, date)
         : date;

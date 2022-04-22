@@ -4,17 +4,16 @@ import { BaseTimePickerProps, useTimePickerDefaultizedProps } from '../TimePicke
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
+import { ParseableDate } from '../internals/models';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
+const valueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
   valueReducer: (utils, prevValue, newValue) => {
     if (prevValue == null || newValue == null) {
       return newValue;
@@ -24,12 +23,12 @@ const valueManager: PickerStateValueManager<unknown, unknown> = {
   },
 };
 
-export interface MobileTimePickerProps<TDate = unknown>
-  extends BaseTimePickerProps<TDate>,
+export interface MobileTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+  extends BaseTimePickerProps<TDate, TInputDate>,
     MobileWrapperProps {}
 
-type MobileTimePickerComponent = (<TDate>(
-  props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
+  props: MobileTimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -42,15 +41,15 @@ type MobileTimePickerComponent = (<TDate>(
  *
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
-export const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
-  inProps: MobileTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  // TODO: TDate needs to be instantiated at every usage.
-  const props = useTimePickerDefaultizedProps(
-    inProps as MobileTimePickerProps<unknown>,
-    'MuiMobileTimePicker',
-  );
+export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
+  TDate,
+  TInputDate extends ParseableDate<TDate>,
+>(inProps: MobileTimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  const props = useTimePickerDefaultizedProps<
+    TDate,
+    TInputDate,
+    MobileTimePickerProps<TDate, TInputDate>
+  >(inProps, 'MuiMobileTimePicker');
 
   const validationError = useTimeValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager);

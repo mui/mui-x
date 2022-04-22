@@ -7,6 +7,7 @@ import {
   usePickerState,
   PickerStateValueManager,
   DateInputPropsLike,
+  ParseableDate,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
@@ -28,12 +29,12 @@ const rangePickerValueManager: PickerStateValueManager<any, any> = {
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };
 
-export interface MobileDateRangePickerProps<TDate = unknown>
-  extends BaseDateRangePickerProps<TDate>,
+export interface MobileDateRangePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+  extends BaseDateRangePickerProps<TDate, TInputDate>,
     MobileWrapperProps {}
 
-type MobileDateRangePickerComponent = (<TDate>(
-  props: MobileDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
+  props: MobileDateRangePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -46,17 +47,17 @@ type MobileDateRangePickerComponent = (<TDate>(
  *
  * - [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)
  */
-export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TDate>(
-  inProps: MobileDateRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
+  TDate,
+  TInputDate extends ParseableDate<TDate>,
+>(inProps: MobileDateRangePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  // TODO: TDate needs to be instantiated at every usage.
-  const props = useDateRangePickerDefaultizedProps(
-    inProps as MobileDateRangePickerProps<unknown>,
-    'MuiMobileDateRangePicker',
-  );
+  const props = useDateRangePickerDefaultizedProps<
+    TDate,
+    TInputDate,
+    MobileDateRangePickerProps<TDate, TInputDate>
+  >(inProps, 'MuiMobileDateRangePicker');
 
   const { value, onChange, ...other } = props;
 
@@ -93,7 +94,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
       DateInputProps={DateInputProps}
       PureDateInputComponent={PureDateInputComponent}
     >
-      <DateRangePickerView<any>
+      <DateRangePickerView
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}

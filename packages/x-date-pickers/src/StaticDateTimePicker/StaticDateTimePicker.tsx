@@ -10,19 +10,19 @@ import {
   PickerStaticWrapperProps,
 } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
+import { ParseableDate } from '../internals/models';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
+const valueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
 
-export interface StaticDateTimePickerProps<TDate = unknown> extends BaseDateTimePickerProps<TDate> {
+export interface StaticDateTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+  extends BaseDateTimePickerProps<TDate, TInputDate> {
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default 'mobile'
@@ -30,8 +30,8 @@ export interface StaticDateTimePickerProps<TDate = unknown> extends BaseDateTime
   displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
 }
 
-type StaticDateTimePickerComponent = (<TDate>(
-  props: StaticDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDateTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
+  props: StaticDateTimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -44,15 +44,15 @@ type StaticDateTimePickerComponent = (<TDate>(
  *
  * - [StaticDateTimePicker API](https://mui.com/x/api/date-pickers/static-date-time-picker/)
  */
-export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDate>(
-  inProps: StaticDateTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  // TODO: TDate needs to be instantiated at every usage.
-  const props = useDateTimePickerDefaultizedProps(
-    inProps as StaticDateTimePickerProps<unknown>,
-    'MuiStaticDateTimePicker',
-  );
+export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<
+  TDate,
+  TInputDate extends ParseableDate<TDate>,
+>(inProps: StaticDateTimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  const props = useDateTimePickerDefaultizedProps<
+    TDate,
+    TInputDate,
+    StaticDateTimePickerProps<TDate, TInputDate>
+  >(inProps, 'MuiStaticDateTimePicker');
 
   const validationError = useDateTimeValidation(props) !== null;
   const { pickerProps, inputProps } = usePickerState(props, valueManager);

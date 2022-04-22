@@ -9,13 +9,14 @@ import {
   TimeValidationError,
   ExportedTimeValidationProps,
 } from './useTimeValidation';
+import { ParseableDate } from '../../models/parseableDate';
 
-export interface DateTimeValidationProps<TDate>
+export interface DateTimeValidationProps<TDate, TInputDate extends ParseableDate<TDate>>
   extends ExportedDateValidationProps<TDate>,
     ExportedTimeValidationProps<TDate>,
-    ValidationProps<DateTimeValidationError, TDate> {}
+    ValidationProps<DateTimeValidationError, TInputDate | null> {}
 
-export const validateDateTime: Validator<any, DateTimeValidationProps<any>> = (
+export const validateDateTime: Validator<any, DateTimeValidationProps<any, any>> = (
   utils,
   value,
   { minDate, maxDate, disableFuture, shouldDisableDate, disablePast, ...timeValidationProps },
@@ -39,8 +40,8 @@ export type DateTimeValidationError = DateValidationError | TimeValidationError;
 
 const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) => a === b;
 
-export function useDateTimeValidation<TDate>(
-  props: DateTimeValidationProps<TDate> & ValidationProps<DateTimeValidationError, TDate>,
+export function useDateTimeValidation<TDate, TInputDate extends ParseableDate<TDate>>(
+  props: DateTimeValidationProps<TDate, TInputDate>,
 ): DateTimeValidationError {
   return useValidation(props, validateDateTime, isSameDateTimeError);
 }

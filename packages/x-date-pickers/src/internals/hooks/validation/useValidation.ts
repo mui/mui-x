@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useUtils } from '../useUtils';
 import { MuiPickersAdapter } from '../../models';
 
-export interface ValidationProps<TError, TDateValue> {
+export interface ValidationProps<TError, TInputValue> {
   /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
@@ -15,8 +15,8 @@ export interface ValidationProps<TError, TDateValue> {
    * @param {TError} reason The reason why the current value is not valid.
    * @param {TDateValue} value The invalid value.
    */
-  onError?: (reason: TError, value: TDateValue) => void;
-  value: TDateValue;
+  onError?: (reason: TError, value: TInputValue) => void;
+  value: TInputValue;
 }
 type InferError<Props> = Props extends ValidationProps<infer TError, any> ? TError : never;
 type InferDate<Props> = Props extends ValidationProps<any, infer TDate> ? TDate : never;

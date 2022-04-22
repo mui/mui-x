@@ -1,8 +1,8 @@
 import { ParseableDate } from '../models/parseableDate';
 import { MuiPickersAdapter } from '../models';
 
-export function getTextFieldAriaText<TDate>(
-  rawValue: ParseableDate<TDate>,
+export function getTextFieldAriaText<TDate, TInputDate extends ParseableDate<TDate>>(
+  rawValue: TInputDate,
   utils: MuiPickersAdapter<TDate>,
 ) {
   // TODO: should `isValid` narrow `TDate | null` to `NonNullable<TDate>`?

@@ -28,8 +28,8 @@ describe('<DesktopDatePicker /> localization', () => {
       const { render: localizedRender } = createPickerRenderer({ locale: dateFnsLocale });
 
       interface FormProps {
-        Picker: React.ElementType<DesktopDatePickerProps>;
-        PickerProps: Partial<DesktopDatePickerProps>;
+        Picker: React.ElementType<DesktopDatePickerProps<any, any>>;
+        PickerProps: Partial<DesktopDatePickerProps<any, any>>;
       }
 
       const Form = (props: FormProps) => {

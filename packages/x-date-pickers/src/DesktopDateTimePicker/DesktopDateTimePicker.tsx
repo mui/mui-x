@@ -10,25 +10,24 @@ import {
   DesktopWrapperProps,
 } from '../internals/components/wrappers/DesktopWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
+import { ParseableDate } from '../internals/models';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
+const valueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
 
-export interface DesktopDateTimePickerProps<TDate = unknown>
-  extends BaseDateTimePickerProps<TDate>,
+export interface DesktopDateTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+  extends BaseDateTimePickerProps<TDate, TInputDate>,
     DesktopWrapperProps {}
 
-type DesktopDateTimePickerComponent = (<TDate>(
-  props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
+  props: DesktopDateTimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -41,17 +40,18 @@ type DesktopDateTimePickerComponent = (<TDate>(
  *
  * - [DesktopDateTimePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-picker/)
  */
-export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TDate>(
-  inProps: DesktopDateTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  // TODO: TDate needs to be instantiated at every usage.
-  const props = useDateTimePickerDefaultizedProps(
-    inProps as DesktopDateTimePickerProps<unknown>,
-    'MuiDesktopDateTimePicker',
-  );
+export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
+  TDate,
+  TInputDate extends ParseableDate<TDate>,
+>(inProps: DesktopDateTimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  const props = useDateTimePickerDefaultizedProps<
+    TDate,
+    TInputDate,
+    DesktopDateTimePickerProps<TDate, TInputDate>
+  >(inProps, 'MuiDesktopDateTimePicker');
 
   const validationError = useDateTimeValidation(props) !== null;
+
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager);
 
   const {

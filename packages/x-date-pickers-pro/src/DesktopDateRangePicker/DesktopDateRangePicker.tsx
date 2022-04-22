@@ -7,6 +7,7 @@ import {
   PickerStateValueManager,
   DateInputPropsLike,
   DesktopWrapperProps,
+  ParseableDate,
 } from '@mui/x-date-pickers/internals';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
@@ -28,12 +29,12 @@ const rangePickerValueManager: PickerStateValueManager<any, any> = {
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };
 
-export interface DesktopDateRangePickerProps<TDate = unknown>
-  extends BaseDateRangePickerProps<TDate>,
+export interface DesktopDateRangePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+  extends BaseDateRangePickerProps<TDate, TInputDate>,
     DesktopWrapperProps {}
 
-type DesktopDateRangePickerComponent = (<TDate>(
-  props: DesktopDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
+  props: DesktopDateRangePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -46,37 +47,27 @@ type DesktopDateRangePickerComponent = (<TDate>(
  *
  * - [DesktopDateRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-range-picker/)
  */
-export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<TDate>(
-  inProps: DesktopDateRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
+  TDate,
+  TInputDate extends ParseableDate<TDate>,
+>(inProps: DesktopDateRangePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  // TODO: TDate needs to be instantiated at every usage.
-  const props = useDateRangePickerDefaultizedProps(
-    inProps as DesktopDateRangePickerProps<unknown>,
-    'MuiDesktopDateRangePicker',
-  );
-
-  const { value, onChange, PopperProps, TransitionComponent, ...other } = props;
+  const props = useDateRangePickerDefaultizedProps<
+    TDate,
+    TInputDate,
+    DesktopDateRangePickerProps<TDate, TInputDate>
+  >(inProps, 'MuiDesktopDateRangePicker');
 
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
     'start' | 'end'
   >('start');
 
-  const pickerStateProps = {
-    ...other,
-    value,
-    onChange,
-  };
-
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(
-    pickerStateProps,
-    rangePickerValueManager,
-  );
-
   const validationError = useDateRangeValidation(props);
 
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, rangePickerValueManager);
+
+  const { value, onChange, PopperProps, TransitionComponent, ...other } = props;
   const DateInputProps = {
     ...inputProps,
     ...other,
@@ -94,7 +85,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       PopperProps={PopperProps}
       TransitionComponent={TransitionComponent}
     >
-      <DateRangePickerView<any>
+      <DateRangePickerView<TDate, TInputDate>
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}

@@ -4,10 +4,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
 import { DesktopTimePicker, DesktopTimePickerProps } from '../DesktopTimePicker';
 import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
+import { ParseableDate } from '../internals/models';
 
-export interface TimePickerProps<TDate = unknown>
-  extends DesktopTimePickerProps<TDate>,
-    MobileTimePickerProps<TDate> {
+export interface TimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+  extends DesktopTimePickerProps<TDate, TInputDate>,
+    MobileTimePickerProps<TDate, TInputDate> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -16,8 +17,8 @@ export interface TimePickerProps<TDate = unknown>
   desktopModeMediaQuery?: string;
 }
 
-type TimePickerComponent = (<TDate>(
-  props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type TimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
+  props: TimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -31,10 +32,10 @@ type TimePickerComponent = (<TDate>(
  *
  * - [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)
  */
-export const TimePicker = React.forwardRef(function TimePicker<TDate>(
-  inProps: TimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+export const TimePicker = React.forwardRef(function TimePicker<
+  TDate,
+  TInputDate extends ParseableDate<TDate>,
+>(inProps: TimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
   const {
     cancelText,

@@ -11,10 +11,10 @@ import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 
-export interface BaseTimePickerProps<TDate>
+export interface BaseTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
   extends ExportedClockPickerProps<TDate>,
-    BasePickerProps<ParseableDate<TDate>, TDate | null>,
-    ValidationProps<TimeValidationError, ParseableDate<TDate>>,
+    BasePickerProps<TDate, TDate | null, TInputDate | null>,
+    ValidationProps<TimeValidationError, TInputDate | null>,
     ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
   /**
    * Callback fired on view change.
@@ -29,7 +29,7 @@ export interface BaseTimePickerProps<TDate>
    * Component that will replace default toolbar renderer.
    * @default TimePickerToolbar
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate | null>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate>>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select time'
@@ -48,10 +48,15 @@ function getTextFieldAriaText<TDate>(value: ParseableDate<TDate>, utils: MuiPick
 }
 
 type DefaultizedProps<Props> = Props & { inputFormat: string };
-export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(
+export function useTimePickerDefaultizedProps<
+  TDate,
+  TInputDate extends ParseableDate<TDate>,
+  Props extends BaseTimePickerProps<TDate, TInputDate>,
+>(
   props: Props,
   name: string,
-): DefaultizedProps<Props> & Required<Pick<BaseTimePickerProps<TDate>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props> &
+  Required<Pick<BaseTimePickerProps<TDate, TInputDate>, 'openTo' | 'views'>> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({ props, name });

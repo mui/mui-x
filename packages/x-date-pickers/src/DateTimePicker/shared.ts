@@ -11,12 +11,12 @@ import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 
-export interface BaseDateTimePickerProps<TDate>
+export interface BaseDateTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
   extends ExportedClockPickerProps<TDate>,
     ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<ParseableDate<TDate>, TDate | null>,
-    ValidationProps<DateTimeValidationError, ParseableDate<TDate>>,
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
+    BasePickerProps<TDate, TDate | null, TInputDate | null>,
+    ValidationProps<DateTimeValidationError, TInputDate | null>,
+    ExportedDateInputProps<TDate, TInputDate> {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
@@ -57,7 +57,7 @@ export interface BaseDateTimePickerProps<TDate>
    * Component that will replace default toolbar renderer.
    * @default DateTimePickerToolbar
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate | null>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate>>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date & time'
@@ -77,11 +77,13 @@ type DefaultizedProps<Props> = Props & { inputFormat: string };
 
 export function useDateTimePickerDefaultizedProps<
   TDate,
-  Props extends BaseDateTimePickerProps<TDate>,
+  TInputDate extends ParseableDate<TDate>,
+  Props extends BaseDateTimePickerProps<TDate, TInputDate>,
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> & Required<Pick<BaseDateTimePickerProps<TDate>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props> &
+  Required<Pick<BaseDateTimePickerProps<TDate, TInputDate>, 'openTo' | 'views'>> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({

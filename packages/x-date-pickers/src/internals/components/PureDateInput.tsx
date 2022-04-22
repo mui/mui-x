@@ -12,7 +12,7 @@ import { MuiPickersAdapter } from '../models';
 // TODO: make `variant` optional.
 export type MuiTextFieldProps = MuiTextFieldPropsType | Omit<MuiTextFieldPropsType, 'variant'>;
 
-export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue = unknown> {
+export interface DateInputProps<TDate, TInputDate extends ParseableDate<TDate>> {
   /**
    * Regular expression to detect "accepted" symbols.
    * @default /\dap/gi
@@ -39,16 +39,13 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   disableOpenPicker?: boolean;
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TDateValue
-   * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
-   * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
+   * @template TDate, TInputDate
+   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
    */
-  getOpenDialogAriaText?: (
-    value: ParseableDate<TDateValue>,
-    utils: MuiPickersAdapter<TDateValue>,
-  ) => string;
+  getOpenDialogAriaText?: (date: TInputDate, utils: MuiPickersAdapter<TDate>) => string;
   // ?? TODO when it will be possible to display "empty" date in datepicker use it instead of ignoring invalid inputs.
   ignoreInvalidInputs?: boolean;
   /**
@@ -68,14 +65,14 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   mask?: string;
   // lib/src/wrappers/DesktopPopperWrapper.tsx:87
   onBlur?: () => void;
-  onChange: (date: TDateValue, keyboardInputValue?: string) => void;
+  onChange: (date: TDate | null, keyboardInputValue?: string) => void;
   open: boolean;
   openPicker: () => void;
   /**
    * Props to pass to keyboard adornment button.
    */
   OpenPickerButtonProps?: Partial<IconButtonProps>;
-  rawValue: TInputValue;
+  rawValue: TInputDate;
   readOnly?: boolean;
   /**
    * The `renderInput` prop allows you to customize the rendered input.
@@ -98,8 +95,8 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   validationError?: boolean;
 }
 
-export type ExportedDateInputProps<TInputValue, TDateValue> = Omit<
-  DateInputProps<TInputValue, TDateValue>,
+export type ExportedDateInputProps<TDate, TInputDate extends ParseableDate<TDate>> = Omit<
+  DateInputProps<TDate, TInputDate>,
   | 'inputFormat'
   | 'inputValue'
   | 'onBlur'
@@ -112,10 +109,10 @@ export type ExportedDateInputProps<TInputValue, TDateValue> = Omit<
 >;
 
 // TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?
-export const PureDateInput = React.forwardRef(function PureDateInput(
-  props: DateInputProps,
-  ref: React.Ref<HTMLDivElement>,
-) {
+export const PureDateInput = React.forwardRef(function PureDateInput<
+  TDate,
+  TInputDate extends ParseableDate<TDate>,
+>(props: DateInputProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
   const {
     disabled,
     getOpenDialogAriaText = getTextFieldAriaText,
@@ -130,7 +127,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput(
     validationError,
   } = props;
 
-  const utils = useUtils();
+  const utils = useUtils<TDate>();
   const PureDateInputProps = React.useMemo(
     () => ({
       ...InputProps,

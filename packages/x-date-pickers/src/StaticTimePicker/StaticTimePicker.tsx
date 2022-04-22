@@ -7,19 +7,19 @@ import {
   PickerStaticWrapperProps,
 } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
+import { ParseableDate } from '../internals/models';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
+const valueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
 
-export interface StaticTimePickerProps<TDate = unknown> extends BaseTimePickerProps<TDate> {
+export interface StaticTimePickerProps<TDate, TInputDate extends ParseableDate<TDate>>
+  extends BaseTimePickerProps<TDate, TInputDate> {
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default 'mobile'
@@ -27,8 +27,8 @@ export interface StaticTimePickerProps<TDate = unknown> extends BaseTimePickerPr
   displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
 }
 
-type StaticTimePickerComponent = (<TDate>(
-  props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticTimePickerComponent = (<TDate, TInputDate extends ParseableDate<TDate>>(
+  props: StaticTimePickerProps<TDate, TInputDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -41,15 +41,15 @@ type StaticTimePickerComponent = (<TDate>(
  *
  * - [StaticTimePicker API](https://mui.com/x/api/date-pickers/static-time-picker/)
  */
-export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
-  inProps: StaticTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  // TODO: TDate needs to be instantiated at every usage.
-  const props = useTimePickerDefaultizedProps(
-    inProps as StaticTimePickerProps<unknown>,
-    'MuiStaticTimePicker',
-  );
+export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
+  TDate,
+  TInputDate extends ParseableDate<TDate>,
+>(inProps: StaticTimePickerProps<TDate, TInputDate>, ref: React.Ref<HTMLDivElement>) {
+  const props = useTimePickerDefaultizedProps<
+    TDate,
+    TInputDate,
+    StaticTimePickerProps<TDate, TInputDate>
+  >(inProps, 'MuiStaticTimePicker');
 
   const validationError = useTimeValidation(props) !== null;
   const { pickerProps, inputProps } = usePickerState(props, valueManager);
