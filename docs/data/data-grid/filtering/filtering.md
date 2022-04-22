@@ -318,7 +318,7 @@ By default, the quick filter considers the input as a list of values separated b
 
 ### Custom filtering logic
 
-The logic used for quick filter can be switched to filter rows that contain _at least_ one of the value specified instead of testing if it contains all of them.
+The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
 To do so, set `quickFilterLogicOperator` to `GridLinkOperator.Or` as follow:
 
 ```js
