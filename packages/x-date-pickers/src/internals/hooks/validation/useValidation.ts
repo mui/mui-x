@@ -11,9 +11,9 @@ export interface ValidationProps<TError, TInputValue> {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TDateValue
+   * @template TError, TInputValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TDateValue} value The invalid value.
+   * @param {TInputValue} value The invalid value.
    */
   onError?: (reason: TError, value: TInputValue) => void;
   value: TInputValue;
