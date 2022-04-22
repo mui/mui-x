@@ -23,6 +23,7 @@ TODO INSERT HIGHLIGHTS
 
 ### Docs
 
+- [docs] Add plan in the nav bar for pro-only and premium-only pages (#4591) @flaviendelangle
 - [docs] Clarify where to install the license (#4452) @oliviertassinari
 - [docs] Fix CodeSandbox links for demo with pickers (#4570) @alexfauquette
 - [docs] Include date-fns dependency when opening demos in CodeSandbox (#4508) @m4theushw
@@ -31,6 +32,7 @@ TODO INSERT HIGHLIGHTS
 ### Core
 
 - [test] Fix test to not depend on screen resolution (#4587) @m4theushw
+- [core] Fix the README of the X packages (#4590) @flaviendelangle
 
 ## v5.9.0
 
