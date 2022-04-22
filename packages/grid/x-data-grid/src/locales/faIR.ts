@@ -133,6 +133,9 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'بازکردن پنل جزئیات',
   collapseDetailPanel: 'بستن پنل جزئیات',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);

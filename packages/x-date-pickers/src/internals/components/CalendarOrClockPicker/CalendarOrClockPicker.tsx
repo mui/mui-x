@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { useViews } from '../../hooks/useViews';
+import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
 import { ClockPicker, ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
 import {
   CalendarPicker,
@@ -12,14 +12,13 @@ import { WrapperVariant, WrapperVariantContext } from '../wrappers/WrapperVarian
 import { DateInputPropsLike } from '../wrappers/WrapperProps';
 import { PickerSelectionState } from '../../hooks/usePickerState';
 import { BasePickerProps } from '../../models/props/basePickerProps';
-import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 import { PickerViewRoot } from '../PickerViewRoot';
 import { CalendarOrClockPickerView, CalendarPickerView, ClockPickerView } from '../../models';
 
-export interface ExportedCalendarOrClockPickerProps<View extends CalendarOrClockPickerView>
-  extends Omit<BasePickerProps<unknown, unknown>, 'value' | 'onChange'>,
-    Omit<ExportedCalendarPickerProps<unknown>, 'onViewChange' | 'openTo' | 'view'>,
-    ExportedClockPickerProps<unknown> {
+export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
+  extends Omit<BasePickerProps<unknown, TDate>, 'value' | 'onChange'>,
+    Omit<ExportedCalendarPickerProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
+    ExportedClockPickerProps<TDate> {
   dateRangeIcon?: React.ReactNode;
   /**
    * Callback fired on view change.
@@ -38,14 +37,14 @@ export interface ExportedCalendarOrClockPickerProps<View extends CalendarOrClock
   views: readonly View[];
 }
 
-export interface CalendarOrClockPickerProps<View extends CalendarOrClockPickerView>
-  extends ExportedCalendarOrClockPickerProps<View> {
+export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
+  extends ExportedCalendarOrClockPickerProps<TDate, View> {
   autoFocus?: boolean;
-  date: any;
+  date: TDate | null;
   DateInputProps: DateInputPropsLike;
   isMobileKeyboardViewOpen: boolean;
   onDateChange: (
-    date: any,
+    date: TDate | null,
     currentWrapperVariant: WrapperVariant,
     isFinish?: PickerSelectionState,
   ) => void;
@@ -72,8 +71,8 @@ const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPick
 const isTimePickerView = (view: CalendarOrClockPickerView): view is ClockPickerView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
-export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
-  props: CalendarOrClockPickerProps<View>,
+export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerView>(
+  props: CalendarOrClockPickerProps<TDate, View>,
 ) {
   const {
     autoFocus,
@@ -100,8 +99,8 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
   const toShowToolbar =
     typeof showToolbar === 'undefined' ? wrapperVariant !== 'desktop' : showToolbar;
 
-  const handleDateChange = React.useCallback(
-    (newDate: unknown, selectionState?: PickerSelectionState) => {
+  const handleDateChange = React.useCallback<PickerOnChangeFn<TDate>>(
+    (newDate, selectionState) => {
       onDateChange(newDate, wrapperVariant, selectionState);
     },
     [onDateChange, wrapperVariant],
@@ -119,7 +118,7 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
     [isMobileKeyboardViewOpen, onViewChange, toggleMobileKeyboardView],
   );
 
-  const { openView, setOpenView, handleChangeAndOpenNext } = useViews({
+  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate, View>({
     view: undefined,
     views,
     openTo,
@@ -136,7 +135,7 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
           isLandscape={isLandscape}
           date={date}
           onChange={handleDateChange}
-          setOpenView={setOpenView as NonNullable<BaseToolbarProps<unknown>['setOpenView']>}
+          setOpenView={setOpenView as (view: CalendarOrClockPickerView) => void}
           openView={openView}
           toolbarTitle={toolbarTitle}
           toolbarFormat={toolbarFormat}
@@ -162,9 +161,7 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
               <CalendarPicker
                 autoFocus={autoFocus}
                 date={date}
-                onViewChange={
-                  setOpenView as ExportedCalendarOrClockPickerProps<CalendarPickerView>['onViewChange']
-                }
+                onViewChange={setOpenView as (view: CalendarPickerView) => void}
                 onChange={handleChangeAndOpenNext}
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
@@ -182,9 +179,7 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isTimePickerView) as ClockPickerView[]}
                 onChange={handleChangeAndOpenNext}
-                onViewChange={
-                  setOpenView as ExportedCalendarOrClockPickerProps<ClockPickerView>['onViewChange']
-                }
+                onViewChange={setOpenView as (view: ClockPickerView) => void}
                 showViewSwitcher={wrapperVariant === 'desktop'}
               />
             )}

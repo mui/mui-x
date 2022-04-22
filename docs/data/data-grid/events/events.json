@@ -246,6 +246,12 @@
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
+    "name": "rowOrderChange",
+    "description": "Fired when the user ends reordering a row.",
+    "params": "GridRowOrderChangeParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "rowSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of a row is changed",
     "params": "GridRowSelectionCheckboxParams",
@@ -255,7 +261,7 @@
     "name": "rowsScroll",
     "description": "Fired during the scroll of the grid viewport.",
     "params": "GridScrollParams",
-    "event": "MuiEvent<{}>"
+    "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
   },
   {
     "name": "rowsScrollEnd",

@@ -110,7 +110,7 @@ The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) t
 | `gridPaginatedVisibleSortedGridRowIdsSelector` | The rows after applying the sorting rules, the filtering rules, without the collapsed rows and only for the current page (**Note**: If the pagination is disabled, it will still take the value of `page` and `pageSize`). |
 
 {{"demo": "CsvGetRowsToExport.js", "bg": "inline", "defaultCodeOpen": false}}
-When using [Row grouping](/x/react-data-grid/group-pivot/#row-grouping), it can be useful to remove the groups from the CSV export
+When using [Row grouping](/x/react-data-grid/row-grouping), it can be useful to remove the groups from the CSV export
 
 {{"demo": "CsvGetRowsToExportRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 

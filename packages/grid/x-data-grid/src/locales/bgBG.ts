@@ -131,6 +131,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Разгъване',
   collapseDetailPanel: 'Свиване',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

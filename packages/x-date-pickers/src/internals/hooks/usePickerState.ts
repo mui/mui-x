@@ -15,7 +15,7 @@ export interface PickerStateValueManager<TInputValue, TDateValue> {
   valueReducer?: (
     utils: MuiPickersAdapter<TDateValue>,
     prevValue: TDateValue | null,
-    value: TDateValue,
+    value: TDateValue | null,
   ) => TDateValue;
 }
 

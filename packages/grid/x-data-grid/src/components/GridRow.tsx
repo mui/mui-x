@@ -26,6 +26,7 @@ import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GridRenderEditCellParams } from '../models/params/gridCellParams';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -172,7 +173,12 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         }
 
         // User opened a detail panel
-        if (field === '__detail_panel_toggle__') {
+        if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+          return;
+        }
+
+        // User reorders a row
+        if (field === '__reorder__') {
           return;
         }
 
@@ -263,8 +269,15 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     }
 
     if (editCellState != null && column.renderEditCell) {
+      let updatedRow = row;
+      if (apiRef.current.unstable_getRowWithUpdatedValues) {
+        // Only the new editing API has this method
+        updatedRow = apiRef.current.unstable_getRowWithUpdatedValues(rowId, column.field);
+      }
+
       const params: GridRenderEditCellParams = {
         ...cellParams,
+        row: updatedRow,
         ...editCellState,
         api: apiRef.current,
       };
@@ -290,28 +303,38 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         ? 0
         : -1;
 
-    cells.push(
-      <rootProps.components.Cell
-        key={column.field}
-        value={cellParams.value}
-        field={column.field}
-        width={column.computedWidth}
-        rowId={rowId}
-        height={rowHeight}
-        showRightBorder={showRightBorder}
-        formattedValue={cellParams.formattedValue}
-        align={column.align || 'left'}
-        cellMode={cellParams.cellMode}
-        colIndex={indexRelativeToAllColumns}
-        isEditable={cellParams.isEditable}
-        hasFocus={hasFocus}
-        tabIndex={tabIndex}
-        className={clsx(classNames)}
-        {...rootProps.componentsProps?.cell}
-      >
-        {content}
-      </rootProps.components.Cell>,
+    const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+      rowId,
+      indexRelativeToAllColumns,
     );
+
+    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+      const { colSpan, width } = cellColSpanInfo.cellProps;
+
+      cells.push(
+        <rootProps.components.Cell
+          key={column.field}
+          value={cellParams.value}
+          field={column.field}
+          width={width}
+          rowId={rowId}
+          height={rowHeight}
+          showRightBorder={showRightBorder}
+          formattedValue={cellParams.formattedValue}
+          align={column.align || 'left'}
+          cellMode={cellParams.cellMode}
+          colIndex={indexRelativeToAllColumns}
+          isEditable={cellParams.isEditable}
+          hasFocus={hasFocus}
+          tabIndex={tabIndex}
+          className={clsx(classNames)}
+          colSpan={colSpan}
+          {...rootProps.componentsProps?.cell}
+        >
+          {content}
+        </rootProps.components.Cell>,
+      );
+    }
   }
 
   const emptyCellWidth = containerWidth - columnsTotalWidth;

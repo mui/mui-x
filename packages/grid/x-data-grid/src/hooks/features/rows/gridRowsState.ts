@@ -42,6 +42,10 @@ export interface GridRowsInternalCache {
 
 export interface GridRowsState extends GridRowTreeCreationValue {
   /**
+   * Matches the value of the `loading` prop.
+   */
+  loading?: boolean;
+  /**
    * Amount of rows before applying the filtering.
    * It also counts the expanded and collapsed children rows.
    */

@@ -163,14 +163,14 @@ The enterprise components come in two plans: Pro and Premium.
 | :------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
 | **Column**                                                                             |           |                                    |
 | [Column groups](/x/react-data-grid/columns/#column-groups)                             |    🚧     |                 🚧                 |                     🚧                     |
-| [Column spanning](/x/react-data-grid/columns/#column-spanning)                         |    🚧     |                 🚧                 |                     🚧                     |
+| [Column spanning](/x/react-data-grid/columns/#column-spanning)                         |    ✅     |                 ✅                 |                     ✅                     |
 | [Column resizing](/x/react-data-grid/columns/#resizing)                                |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/x/react-data-grid/columns/#column-reorder)                           |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/x/react-data-grid/columns/#column-pinning)                           |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                |           |                                    |                                            |
 | [Row height](/x/react-data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |
 | [Row spanning](/x/react-data-grid/rows/#row-spanning)                                  |    🚧     |                 🚧                 |                     🚧                     |
-| [Row reordering](/x/react-data-grid/rows/#row-reorder)                                 |    ❌     |                 🚧                 |                     🚧                     |
+| [Row reordering](/x/react-data-grid/rows/#row-reorder)                                 |    ❌     |                 ✅                 |                     ✅                     |
 | [Row pinning](/x/react-data-grid/rows/#row-pinning)                                    |    ❌     |                 🚧                 |                     🚧                     |
 | **Selection**                                                                          |           |                                    |                                            |
 | [Single row selection](/x/react-data-grid/selection/#single-row-selection)             |    ✅     |                 ✅                 |                     ✅                     |
@@ -200,11 +200,11 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization)      |    ✅     |                 ✅                 |                     ✅                     |
 | [Row virtualization > 100 rows](/x/react-data-grid/virtualization/#row-virtualization) |    ❌     |                 ✅                 |                     ✅                     |
 | **Group & Pivot**                                                                      |           |                                    |                                            |
-| [Tree data](/x/react-data-grid/group-pivot/#tree-data)                                 |    ❌     |                 ✅                 |                     ✅                     |
-| [Master detail](/x/react-data-grid/group-pivot/#master-detail)                         |    ❌     |                 ✅                 |                     ✅                     |
-| [Grouping](/x/react-data-grid/group-pivot/#row-grouping)                               |    ❌     |                 ❌                 |                     🚧                     |
-| [Aggregation](/x/react-data-grid/group-pivot/#aggregation)                             |    ❌     |                 ❌                 |                     🚧                     |
-| [Pivoting](/x/react-data-grid/group-pivot/#pivoting)                                   |    ❌     |                 ❌                 |                     🚧                     |
+| [Tree data](/x/react-data-grid/tree-data)                                              |    ❌     |                 ✅                 |                     ✅                     |
+| [Master detail](/x/react-data-grid/master-detail)                                      |    ❌     |                 ✅                 |                     ✅                     |
+| [Grouping](/x/react-data-grid/row-grouping)                                            |    ❌     |                 ❌                 |                     🚧                     |
+| [Aggregation](/x/react-data-grid/aggregation)                                          |    ❌     |                 ❌                 |                     ✅                     |
+| [Pivoting](/x/react-data-grid/pivoting)                                                |    ❌     |                 ❌                 |                     🚧                     |
 | **Misc**                                                                               |           |                                    |                                            |
 | [Accessibility](/x/react-data-grid/accessibility/)                                     |    ✅     |                 ✅                 |                     ✅                     |
 | [Keyboard navigation](/x/react-data-grid/accessibility/#keyboard-navigation)           |    ✅     |                 ✅                 |                     ✅                     |
