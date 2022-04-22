@@ -405,7 +405,7 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   it('prop `clearable` - renders clear button in Desktop mode', () => {
-    function DesktopDatePickerClearable() {
+    function DesktopDateRangePickerClearable() {
       const [value, setValue] = React.useState<DateRange<Date>>([
         adapterToUse.date('2018-01-01T00:00:00.000'),
         adapterToUse.date('2018-01-31T00:00:00.000'),
@@ -431,7 +431,7 @@ describe('<DesktopDateRangePicker />', () => {
         />
       );
     }
-    render(<DesktopDatePickerClearable />);
+    render(<DesktopDateRangePickerClearable />);
     expect(screen.getAllByRole('textbox')[0]).to.have.value('01/01/2018');
     expect(screen.getAllByRole('textbox')[1]).to.have.value('01/31/2018');
 
