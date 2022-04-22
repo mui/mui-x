@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v.5.10.0
+## v5.10.0
 
 _Apr 22, 2022_
 
