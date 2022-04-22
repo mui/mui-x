@@ -120,6 +120,11 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default "() => 500"
    */
   getDetailPanelHeight: (params: GridRowParams) => number;
+  /**
+   * If `true`, the reordering of rows is enabled.
+   * @default false
+   */
+  rowReordering: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -208,4 +213,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @returns {JSX.Element} The row detail element.
    */
   getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
+  /**
+   * Callback fired when a row is being reordered.
+   * @param {GridRowOrderChangeParams} params With all properties from [[GridRowOrderChangeParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowOrderChange?: GridEventListener<GridEvents.rowOrderChange>;
 }

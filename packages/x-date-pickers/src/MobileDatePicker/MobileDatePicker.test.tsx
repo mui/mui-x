@@ -16,7 +16,7 @@ import {
 describe('<MobileDatePicker />', () => {
   const { clock, render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
 
-  it('Accepts date on `OK` button click', () => {
+  it('accepts date on `OK` button click', () => {
     const onChangeMock = spy();
     render(
       <MobileDatePicker
@@ -290,6 +290,20 @@ describe('<MobileDatePicker />', () => {
     expect(onCloseMock.callCount).to.equal(1);
     expect(handleChange.callCount).to.equal(1);
     expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
+  });
+
+  it('prop `showToolbar` – renders the toolbar', () => {
+    render(
+      <MobileDatePicker
+        open
+        showToolbar
+        onChange={() => {}}
+        value={null}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {

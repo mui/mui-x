@@ -133,6 +133,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Esconder',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

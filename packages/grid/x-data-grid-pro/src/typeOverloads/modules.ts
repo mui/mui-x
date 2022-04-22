@@ -1,5 +1,9 @@
 import { GridKeyValue, GridValidRowModel } from '@mui/x-data-grid';
-import type { GridRowScrollEndParams, GridGroupingValueGetterParams } from '../models';
+import type {
+  GridRowScrollEndParams,
+  GridGroupingValueGetterParams,
+  GridRowOrderChangeParams,
+} from '../models';
 import type { GridPinnedColumns, GridRowGroupingModel } from '../hooks';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 
@@ -10,6 +14,7 @@ export interface GridControlledStateEventLookupPro {
 
 export interface GridEventLookupPro {
   rowsScrollEnd: { params: GridRowScrollEndParams };
+  rowOrderChange: { params: GridRowOrderChangeParams };
 }
 
 export interface GridPipeProcessingLookupPro {
