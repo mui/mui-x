@@ -8,7 +8,6 @@ import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/src/pages'; // DO NOT REMOVE
 import newPages from 'docsx/data/pages'; // DO NOT REMOVE
-import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
@@ -256,7 +255,7 @@ function AppWrapper(props) {
           <PageContext.Provider value={{ activePage, pages: productPages }}>
             <ThemeProvider>
               <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                <XWrapper>{children}</XWrapper>
+                {children}
                 <GoogleAnalytics />
               </DocsStyledEngineProvider>
             </ThemeProvider>
