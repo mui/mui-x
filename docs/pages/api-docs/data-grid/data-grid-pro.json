@@ -1,12 +1,20 @@
 {
   "props": {
-    "columns": { "type": { "name": "custom", "description": "array" }, "required": true },
+    "columns": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
     "rows": { "type": { "name": "array" }, "required": true },
+    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },
     "autoPageSize": { "type": { "name": "bool" } },
     "checkboxSelection": { "type": { "name": "bool" } },
+    "checkboxSelectionVisibleOnly": {
+      "type": { "name": "custom", "description": "bool" },
+      "default": "false"
+    },
     "classes": { "type": { "name": "object" } },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
@@ -14,6 +22,7 @@
     "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
+    "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
         "name": "enum",
@@ -21,11 +30,23 @@
       },
       "default": "\"standard\""
     },
+    "detailPanelExpandedRowIds": {
+      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
+    },
+    "disableChildrenFiltering": { "type": { "name": "bool" } },
+    "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
     "disableColumnMenu": { "type": { "name": "bool" } },
+    "disableColumnPinning": { "type": { "name": "bool" } },
+    "disableColumnReorder": { "type": { "name": "bool" } },
+    "disableColumnResize": { "type": { "name": "bool" } },
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableExtendRowFullWidth": { "type": { "name": "bool" } },
+    "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
+    "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
+    "disableMultipleSelection": { "type": { "name": "bool" } },
+    "disableRowGrouping": { "type": { "name": "bool" } },
     "disableSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
@@ -37,11 +58,11 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
-      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
+      "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
     },
     "filterModel": {
@@ -52,16 +73,24 @@
     },
     "getCellClassName": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },
+    "getDetailPanelHeight": { "type": { "name": "func" }, "default": "\"() => 500\"" },
     "getRowClassName": { "type": { "name": "func" } },
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "getRowSpacing": { "type": { "name": "func" } },
+    "getTreeDataPath": { "type": { "name": "func" } },
+    "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
+    "hideFooterRowCount": {
+      "type": { "name": "custom", "description": "bool" },
+      "default": "false"
+    },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": { "type": { "name": "func" } },
+    "isGroupExpandedByDefault": { "type": { "name": "func" } },
     "isRowSelectable": { "type": { "name": "func" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
@@ -94,22 +123,26 @@
     "onColumnHeaderOut": { "type": { "name": "func" } },
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
+    "onColumnResize": { "type": { "name": "func" } },
     "onColumnVisibilityChange": {
       "type": { "name": "func" },
       "deprecated": true,
       "deprecationInfo": "Use <code>onColumnVisibilityModelChange</code> instead."
     },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
+    "onColumnWidthChange": { "type": { "name": "func" } },
+    "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/x/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
+      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
     },
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
+    "onPinnedColumnsChange": { "type": { "name": "func" } },
     "onPreferencePanelClose": { "type": { "name": "func" } },
     "onPreferencePanelOpen": { "type": { "name": "func" } },
     "onProcessRowUpdateError": { "type": { "name": "func" } },
@@ -119,19 +152,35 @@
     "onRowEditCommit": { "type": { "name": "func" } },
     "onRowEditStart": { "type": { "name": "func" } },
     "onRowEditStop": { "type": { "name": "func" } },
+    "onRowGroupingModelChange": { "type": { "name": "func" } },
+    "onRowOrderChange": { "type": { "name": "func" } },
+    "onRowsScrollEnd": { "type": { "name": "func" } },
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "onStateChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
-    "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
+    "pageSize": { "type": { "name": "number" }, "default": "100" },
+    "pagination": { "type": { "name": "bool" } },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
     },
+    "pinnedColumns": {
+      "type": {
+        "name": "shape",
+        "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
+      }
+    },
     "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
+    "rowGroupingColumnMode": {
+      "type": { "name": "enum", "description": "'multiple'<br>&#124;&nbsp;'single'" },
+      "default": "'single'"
+    },
+    "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
+    "rowReordering": { "type": { "name": "bool" } },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
@@ -142,10 +191,11 @@
     },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
+    "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "selectionModel": {
       "type": {
-        "name": "custom",
-        "description": "number<br>&#124;&nbsp;string<br>&#124;&nbsp;array"
+        "name": "union",
+        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
       }
     },
     "showCellRightBorder": { "type": { "name": "bool" } },
@@ -169,7 +219,9 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
-    }
+    },
+    "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
+    "treeData": { "type": { "name": "bool" } }
   },
   "slots": {
     "BaseButton": { "default": "Button", "type": { "name": "elementType" } },
@@ -244,7 +296,7 @@
     "TreeDataCollapseIcon": { "default": "GridExpandMoreIcon", "type": { "name": "elementType" } },
     "TreeDataExpandIcon": { "default": "GridKeyboardArrowRight", "type": { "name": "elementType" } }
   },
-  "name": "DataGrid",
+  "name": "DataGridPro",
   "styles": {
     "classes": [
       "actionsCell",
@@ -353,6 +405,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>"
+  "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
+  "demos": "<ul><li><a href=\"/components/data-grid#commercial-version\">DataGridPro</a></li></ul>"
 }

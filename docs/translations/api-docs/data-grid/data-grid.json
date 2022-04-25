@@ -213,6 +213,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's draggable container element"
     },
+    "rowReorderCellPlaceholder": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the row's draggable placeholder element inside the special row reorder cell"
+    },
     "columnHeaderDropZone": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column headers wrapper",
@@ -433,6 +437,11 @@
       "nodeName": "the row element",
       "conditions": "the row is in edit mode"
     },
+    "row--dragging": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the floating special row reorder cell element",
+      "conditions": "it is dragged"
+    },
     "row--lastVisible": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the last visible row element on every page of the grid"
@@ -441,6 +450,16 @@
     "rowCount": {
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
       "nodeName": "the footer row count element to show the total number of rows"
+    },
+    "rowReorderCellContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the row reorder cell container element"
+    },
+    "rowReorderCell": {
+      "description": "Styles applied to the root element of the row reorder cell"
+    },
+    "rowReorderCell--draggable": {
+      "description": "Styles applied to the root element of the row reorder cell when dragging is allowed"
     },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",
@@ -536,6 +555,7 @@
     "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
     "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
-    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel."
+    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
+    "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row."
   }
 }

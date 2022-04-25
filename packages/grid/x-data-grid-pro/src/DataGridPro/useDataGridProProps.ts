@@ -26,6 +26,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
   rowGroupingColumnMode: 'single',
+  rowReordering: false,
   getDetailPanelHeight: () => 500,
 };
 

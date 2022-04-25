@@ -120,6 +120,22 @@ enum GridEvents {
    */
   editRowsModelChange = 'editRowsModelChange',
   /**
+   * Fired when the user starts dragging a row. It's mapped to the `dragstart` DOM event.
+   * @ignore - do not document.
+   */
+  rowDragStart = 'rowDragStart',
+  /**
+   * Fired while an element or text selection is dragged over the row.
+   * It's mapped to the `dragover` DOM event.
+   * @ignore - do not document.
+   */
+  rowDragOver = 'rowDragOver',
+  /**
+   * Fired when the dragging of a row ends.
+   * @ignore - do not document.
+   */
+  rowDragEnd = 'rowDragEnd',
+  /**
    * Fired when a column header loses focus.
    * @ignore - do not document.
    */
@@ -245,6 +261,10 @@ enum GridEvents {
    * Fired when the user ends reordering a column.
    */
   columnOrderChange = 'columnOrderChange',
+  /**
+   * Fired when the user ends reordering a row.
+   */
+  rowOrderChange = 'rowOrderChange',
   /**
    * Fired when the rows are updated.
    * @ignore - do not document.

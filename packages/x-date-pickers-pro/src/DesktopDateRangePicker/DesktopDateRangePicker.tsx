@@ -66,7 +66,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
 
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, rangePickerValueManager);
 
-  const { value, onChange, PopperProps, TransitionComponent, ...other } = props;
+  const { value, onChange, PopperProps, TransitionComponent, clearText, clearable, ...other } =
+    props;
   const DateInputProps = {
     ...inputProps,
     ...other,
@@ -83,6 +84,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       KeyboardDateInputComponent={KeyboardDateInputComponent}
       PopperProps={PopperProps}
       TransitionComponent={TransitionComponent}
+      clearable={clearable}
+      clearText={clearText}
     >
       <DateRangePickerView<TInputDate, TDate>
         open={wrapperProps.open}

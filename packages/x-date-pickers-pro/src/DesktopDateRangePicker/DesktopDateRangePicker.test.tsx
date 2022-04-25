@@ -404,6 +404,44 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
   });
 
+  it('prop `clearable` - renders clear button in Desktop mode', () => {
+    function DesktopDateRangePickerClearable() {
+      const [value, setValue] = React.useState<DateRange<Date>>([
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-31T00:00:00.000'),
+      ]);
+      const [open, setOpen] = React.useState<boolean | undefined>(true);
+      const handleChange = (newValue: DateRange<Date>) => {
+        setValue(newValue);
+      };
+
+      return (
+        <DesktopDateRangePicker
+          clearable
+          onChange={handleChange}
+          value={value}
+          renderInput={defaultRangeRenderInput}
+          open={open}
+          onClose={() => {
+            setOpen(false);
+          }}
+          onOpen={() => {
+            setOpen(true);
+          }}
+        />
+      );
+    }
+    render(<DesktopDateRangePickerClearable />);
+    expect(screen.getAllByRole('textbox')[0]).to.have.value('01/01/2018');
+    expect(screen.getAllByRole('textbox')[1]).to.have.value('01/31/2018');
+
+    fireEvent.click(screen.getByText('Clear'));
+
+    expect(screen.getAllByRole('textbox')[0]).to.have.value('');
+    expect(screen.getAllByRole('textbox')[1]).to.have.value('');
+    expect(screen.queryByRole('dialog')).to.equal(null);
+  });
+
   describe('prop: PopperProps', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
