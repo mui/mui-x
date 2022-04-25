@@ -65,6 +65,8 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
     ToolbarComponent = TimePickerToolbar,
     TransitionComponent,
     value,
+    clearable,
+    clearText,
     ...other
   } = props;
   const DateInputProps = { ...inputProps, ...other, ref, validationError };
@@ -77,6 +79,8 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       PopperProps={PopperProps}
       PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
+      clearable={clearable}
+      clearText={clearText}
     >
       {/* @ts-ignore time picker has no component slot for the calendar header */}
       <CalendarOrClockPicker

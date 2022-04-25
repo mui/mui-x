@@ -11,7 +11,7 @@ import {
   FakeTransitionComponent,
   adapterToUse,
   withPickerControls,
-  openDesktopPicker,
+  openPicker,
 } from '../../../../test/utils/pickers-utils';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
@@ -301,7 +301,7 @@ describe('<DesktopDatePicker />', () => {
       );
 
       // Open the picker
-      openDesktopPicker();
+      openPicker({ type: 'date', variant: 'desktop' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -332,7 +332,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date
       userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
@@ -369,7 +369,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
@@ -392,19 +392,16 @@ describe('<DesktopDatePicker />', () => {
       const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
 
       render(
-        <React.Fragment>
-          <WrappedDesktopDatePicker
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-            initialValue={initialValue}
-            disableCloseOnSelect
-          />
-          <div id="outside" />
-        </React.Fragment>,
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          disableCloseOnSelect
+        />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date', variant: 'desktop' });
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
@@ -420,19 +417,16 @@ describe('<DesktopDatePicker />', () => {
       const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
 
       render(
-        <React.Fragment>
-          <WrappedDesktopDatePicker
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-            initialValue={initialValue}
-            disableCloseOnSelect
-          />
-          <div id="outside" />
-        </React.Fragment>,
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          disableCloseOnSelect
+        />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
@@ -463,7 +457,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date', variant: 'desktop' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
@@ -489,7 +483,7 @@ describe('<DesktopDatePicker />', () => {
         />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date', variant: 'desktop' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));

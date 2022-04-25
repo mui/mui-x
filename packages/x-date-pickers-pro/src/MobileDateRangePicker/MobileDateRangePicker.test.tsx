@@ -9,8 +9,8 @@ import {
   createPickerRenderer,
   withPickerControls,
   FakeTransitionComponent,
-  openMobileDateRangePicker,
   adapterToUse,
+  openPicker,
 } from '../../../../test/utils/pickers-utils';
 
 const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
@@ -57,7 +57,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(<WrappedMobileDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
 
-      openMobileDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -68,7 +68,7 @@ describe('<MobileDateRangePicker />', () => {
 
       render(<WrappedMobileDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
 
-      openMobileDateRangePicker('end');
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -93,7 +93,7 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      openMobileDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -139,7 +139,7 @@ describe('<MobileDateRangePicker />', () => {
       );
 
       // Open the picker
-      openMobileDateRangePicker('end');
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -172,7 +172,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openMobileDateRangePicker('end');
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
 
       // Change the end date
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
@@ -203,7 +203,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openMobileDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
@@ -235,7 +235,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openMobileDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
@@ -270,7 +270,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openMobileDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));
@@ -297,7 +297,7 @@ describe('<MobileDateRangePicker />', () => {
         />,
       );
 
-      openMobileDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));

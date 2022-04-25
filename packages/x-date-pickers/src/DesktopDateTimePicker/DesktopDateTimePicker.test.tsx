@@ -9,24 +9,15 @@ import {
   adapterToUse,
   createPickerRenderer,
   FakeTransitionComponent,
-  openDesktopPicker,
+  openPicker,
+  getClockMouseEvent,
   withPickerControls,
 } from '../../../../test/utils/pickers-utils';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const WrappedDesktopDateTimePicker = withPickerControls(DesktopDateTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
-
-// TODO: Handle dynamic values
-const getClockMouseEvent = () => {
-  return {
-    offsetX: 20,
-    offsetY: 15,
-  };
-};
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({
@@ -118,26 +109,6 @@ describe('<DesktopDateTimePicker />', () => {
     userEvent.mousePress(screen.getByLabelText('pick time'));
 
     expect(handleClose.callCount).to.equal(0);
-  });
-
-  it('closes on Escape press', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateTimePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        open
-        onClose={handleClose}
-      />,
-    );
-    act(() => {
-      (document.activeElement as HTMLElement).blur();
-    });
-
-    fireEvent.keyDown(document.body, { key: 'Escape' });
-
-    expect(handleClose.callCount).to.equal(1);
   });
 
   it('prop: mask – should take the mask prop into account', () => {
@@ -291,11 +262,7 @@ describe('<DesktopDateTimePicker />', () => {
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should call onChange when selecting each view and onClose and onAccept when selecting the minutes', function test() {
-      if (isJSDOM) {
-        this.skip(); // JSDOM events don't have access to nativeEvent on mouseUp
-      }
-
+    it('should call onChange when selecting each view and onClose and onAccept when selecting the minutes', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -311,7 +278,7 @@ describe('<DesktopDateTimePicker />', () => {
       );
 
       // Open the picker
-      openDesktopPicker();
+      openPicker({ type: 'date-time', variant: 'desktop' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -332,9 +299,8 @@ describe('<DesktopDateTimePicker />', () => {
       );
 
       // Change the hours
-      const hourClockEvent = getClockMouseEvent();
-      fireEvent.mouseMove(screen.getByMuiTest('clock'), hourClockEvent);
-      fireEvent.mouseUp(screen.getByMuiTest('clock'), hourClockEvent);
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
       expect(onChange.callCount).to.equal(3);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
         adapterToUse.date('2010-01-15T11:00:00.000'),
@@ -344,9 +310,8 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the minutes
-      const minuteClockEvent = getClockMouseEvent();
-      fireEvent.mouseMove(screen.getByMuiTest('clock'), minuteClockEvent);
-      fireEvent.mouseUp(screen.getByMuiTest('clock'), minuteClockEvent);
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
       expect(onChange.callCount).to.equal(4);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
         adapterToUse.date('2010-01-15T11:53:00.000'),
@@ -356,11 +321,7 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose and onAccept when selecting the minutes if props.disableCloseOnSelect = true', function test() {
-      if (isJSDOM) {
-        this.skip(); // JSDOM events don't have access to nativeEvent on mouseUp
-      }
-
+    it('should not call onClose and onAccept when selecting the minutes if props.disableCloseOnSelect = true', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -376,30 +337,24 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
 
       // Change the hours (already tested)
-      const hourClockEvent = getClockMouseEvent();
-      fireEvent.mouseMove(screen.getByMuiTest('clock'), hourClockEvent);
-      fireEvent.mouseUp(screen.getByMuiTest('clock'), hourClockEvent);
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
 
       // Change the minutes (already tested)
-      const minuteClockEvent = getClockMouseEvent();
-      fireEvent.mouseMove(screen.getByMuiTest('clock'), minuteClockEvent);
-      fireEvent.mouseUp(screen.getByMuiTest('clock'), minuteClockEvent);
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept with the live value when pressing Escape', function test() {
-      if (isJSDOM) {
-        this.skip(); // JSDOM events don't have access to nativeEvent on mouseUp
-      }
-
+    it('should call onClose and onAccept with the live value when pressing Escape', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -415,15 +370,14 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
 
       // Change the hours (already tested)
-      const hourClockEvent = getClockMouseEvent();
-      fireEvent.mouseMove(screen.getByMuiTest('clock'), hourClockEvent);
-      fireEvent.mouseUp(screen.getByMuiTest('clock'), hourClockEvent);
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
 
       // Dismiss the picker
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
@@ -443,19 +397,16 @@ describe('<DesktopDateTimePicker />', () => {
       const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
 
       render(
-        <React.Fragment>
-          <WrappedDesktopDateTimePicker
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-            initialValue={initialValue}
-            disableCloseOnSelect
-          />
-          <div id="outside" />
-        </React.Fragment>,
+        <WrappedDesktopDateTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          disableCloseOnSelect
+        />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
@@ -464,38 +415,30 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value when clicking outside of the picker', function test() {
-      if (isJSDOM) {
-        this.skip(); // JSDOM events don't have access to nativeEvent on mouseUp
-      }
-
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
       const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
 
       render(
-        <React.Fragment>
-          <WrappedDesktopDateTimePicker
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-            initialValue={initialValue}
-            disableCloseOnSelect
-          />
-          <div id="outside" />
-        </React.Fragment>,
+        <WrappedDesktopDateTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          disableCloseOnSelect
+        />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
 
       // Change the hours (already tested)
-      const hourClockEvent = getClockMouseEvent();
-      fireEvent.mouseMove(screen.getByMuiTest('clock'), hourClockEvent);
-      fireEvent.mouseUp(screen.getByMuiTest('clock'), hourClockEvent);
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
@@ -523,7 +466,7 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
@@ -549,7 +492,7 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      openDesktopPicker();
+      openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));

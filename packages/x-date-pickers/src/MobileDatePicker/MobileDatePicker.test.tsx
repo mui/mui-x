@@ -10,8 +10,8 @@ import {
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
-  openMobilePicker,
   withPickerControls,
+  openPicker,
 } from '../../../../test/utils/pickers-utils';
 
 const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
@@ -301,7 +301,7 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date', variant: 'mobile' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -341,7 +341,7 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date', variant: 'mobile' });
 
       // Change the date
       userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
@@ -371,7 +371,7 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date', variant: 'mobile' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
@@ -399,7 +399,7 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date', variant: 'mobile' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
@@ -426,7 +426,7 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date', variant: 'mobile' });
 
       // Cancel the modifications
       userEvent.mousePress(screen.getByText(/cancel/i));
@@ -451,7 +451,7 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date', variant: 'mobile' });
 
       // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));
@@ -477,7 +477,7 @@ describe('<MobileDatePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date', variant: 'mobile' });
 
       // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));

@@ -75,7 +75,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
     expect(document.activeElement).toHaveAccessibleName('Aug 13, 2020');
   });
 
-  context('YearPicker keyboard navigation', () => {
+  describe('YearPicker keyboard navigation', () => {
     [
       { keyCode: 37, key: 'ArrowLeft', expectFocusedYear: '2019' },
       { keyCode: 38, key: 'ArrowUp', expectFocusedYear: '2016' },

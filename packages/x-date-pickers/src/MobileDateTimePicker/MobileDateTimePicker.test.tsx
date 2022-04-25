@@ -8,7 +8,8 @@ import {
   adapterToUse,
   createPickerRenderer,
   FakeTransitionComponent,
-  openMobilePicker,
+  openPicker,
+  getClockTouchEvent,
   withPickerControls,
 } from '../../../../test/utils/pickers-utils';
 
@@ -16,18 +17,6 @@ const WrappedMobileDateTimePicker = withPickerControls(MobileDateTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
-
-// TODO: Handle dynamic values
-const getClockTouchEvent = () => {
-  return {
-    changedTouches: [
-      {
-        clientX: 20,
-        clientY: 15,
-      },
-    ],
-  };
-};
 
 describe('<MobileDateTimePicker />', () => {
   const { render } = createPickerRenderer({
@@ -125,7 +114,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date-time', variant: 'mobile' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -183,7 +172,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date-time', variant: 'mobile' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
@@ -225,7 +214,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date-time', variant: 'mobile' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
@@ -263,7 +252,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date-time', variant: 'mobile' });
 
       // Change the date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
@@ -299,7 +288,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date-time', variant: 'mobile' });
 
       // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));
@@ -325,7 +314,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openMobilePicker();
+      openPicker({ type: 'date-time', variant: 'mobile' });
 
       // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));

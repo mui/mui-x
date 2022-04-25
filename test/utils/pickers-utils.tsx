@@ -80,15 +80,96 @@ export function createPickerRenderer({
   };
 }
 
-export const openMobilePicker = () => userEvent.mousePress(screen.getByRole('textbox'));
+type OpenPickerParams =
+  | {
+      type: 'date' | 'date-time' | 'time';
+      variant: 'mobile' | 'desktop';
+    }
+  | {
+      type: 'date-range';
+      variant: 'mobile' | 'desktop';
+      initialFocus: 'start' | 'end';
+    };
 
-export const openDesktopPicker = () => userEvent.mousePress(screen.getByLabelText(/choose date/i));
+export const openPicker = (params: OpenPickerParams) => {
+  switch (params.variant) {
+    case 'desktop': {
+      switch (params.type) {
+        case 'date':
+        case 'date-time': {
+          return userEvent.mousePress(screen.getByLabelText(/choose date/i));
+        }
 
-export const openMobileDateRangePicker = (initialFocus: 'start' | 'end') =>
-  userEvent.mousePress(screen.getAllByRole('textbox')[initialFocus === 'start' ? 0 : 1]);
+        case 'time': {
+          return userEvent.mousePress(screen.getByLabelText(/choose time/i));
+        }
 
-export const openDesktopDateRangePicker = (initialFocus: 'start' | 'end') =>
-  fireEvent.focus(screen.getAllByRole('textbox')[initialFocus === 'start' ? 0 : 1]);
+        case 'date-range': {
+          return fireEvent.focus(
+            screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1],
+          );
+        }
+
+        default: {
+          throw Error('Invalid params');
+        }
+      }
+    }
+
+    case 'mobile': {
+      switch (params.type) {
+        case 'date':
+        case 'date-time':
+        case 'time': {
+          return userEvent.mousePress(screen.getByRole('textbox'));
+        }
+
+        case 'date-range': {
+          return userEvent.mousePress(
+            screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1],
+          );
+        }
+
+        default: {
+          throw Error('Invalid params');
+        }
+      }
+    }
+
+    default: {
+      throw Error('Invalid params');
+    }
+  }
+};
+
+// TODO: Handle dynamic values
+export const getClockMouseEvent = (type: 'mousedown' | 'mousemove' | 'mouseup') => {
+  const offsetX = 20;
+  const offsetY = 15;
+
+  const event = new window.MouseEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    buttons: 1,
+  });
+
+  Object.defineProperty(event, 'offsetX', { get: () => offsetX });
+  Object.defineProperty(event, 'offsetY', { get: () => offsetY });
+
+  return event;
+};
+
+// TODO: Handle dynamic values
+export const getClockTouchEvent = () => {
+  return {
+    changedTouches: [
+      {
+        clientX: 20,
+        clientY: 15,
+      },
+    ],
+  };
+};
 
 export const withPickerControls =
   <TValue, Props extends { value: TValue; onChange: Function }>(

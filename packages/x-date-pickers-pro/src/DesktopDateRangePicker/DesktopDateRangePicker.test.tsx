@@ -4,13 +4,14 @@ import { spy } from 'sinon';
 import { describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
+import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import {
   wrapPickerMount,
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
-  openDesktopDateRangePicker,
   withPickerControls,
+  openPicker,
 } from '../../../../test/utils/pickers-utils';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
@@ -392,7 +393,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
 
-      openDesktopDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
@@ -403,7 +404,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
 
-      openDesktopDateRangePicker('end');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
@@ -428,7 +429,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      openDesktopDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -480,7 +481,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      openDesktopDateRangePicker('end');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -517,7 +518,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openDesktopDateRangePicker('end');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
       // Change the end date
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
@@ -544,7 +545,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openDesktopDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
@@ -579,7 +580,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openDesktopDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
@@ -606,7 +607,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openDesktopDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
@@ -622,9 +623,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    // TODO: Active test after merging https://github.com/mui/mui-x/pull/4511
-    // eslint-disable-next-line
-    it.skip('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -643,7 +642,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openDesktopDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));
@@ -654,9 +653,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    // TODO: Active test after merging https://github.com/mui/mui-x/pull/4511
-    // eslint-disable-next-line
-    it.skip('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -672,7 +669,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openDesktopDateRangePicker('start');
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Clear the date
       userEvent.mousePress(screen.getByText(/clear/i));
