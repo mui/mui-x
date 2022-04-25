@@ -200,7 +200,7 @@ The enterprise components come in two plans: Pro and Premium.
 | **Group & Pivot**                                                                      |           |                                    |                                            |
 | [Tree data](/x/react-data-grid/tree-data)                                              |    ❌     |                 ✅                 |                     ✅                     |
 | [Master detail](/x/react-data-grid/master-detail)                                      |    ❌     |                 ✅                 |                     ✅                     |
-| [Grouping](/x/react-data-grid/row-grouping)                                            |    ❌     |                 ❌                 |                     🚧                     |
+| [Row Grouping](/x/react-data-grid/row-grouping)                                        |    ❌     |                 ❌                 |                     ✅                     |
 | [Aggregation](/x/react-data-grid/aggregation)                                          |    ❌     |                 ❌                 |                     🚧                     |
 | [Pivoting](/x/react-data-grid/pivoting)                                                |    ❌     |                 ❌                 |                     🚧                     |
 | **Misc**                                                                               |           |                                    |                                            |
