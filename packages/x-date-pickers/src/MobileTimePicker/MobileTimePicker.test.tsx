@@ -52,7 +52,7 @@ describe('<MobileTimePicker />', () => {
     }),
   );
 
-  describe('picker state', () => {
+  describe.skip('picker state', () => {
     it('should open when clicking "Choose time"', () => {
       const onOpen = spy();
 
