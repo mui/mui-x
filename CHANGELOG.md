@@ -5,16 +5,20 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## v5.10.0
 
-_Apr 22, 2022_
+_Apr 25, 2022_
 
-We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🎁 Introduce [Row reorder](https://mui.com/x/react-data-grid/rows/#row-reorder) (#4034) @DanailH
+
+  <img src="https://user-images.githubusercontent.com/5858539/165070574-07b7a345-d152-4c8f-a48d-be48986f4320.gif" width="814">
+
+- 🐞 Bug fixes
 
 ### `@mui/x-data-grid@v5.10.0` / `@mui/x-data-grid-pro@v5.10.0`
 
 - [DataGrid] Don't close column menu when updating rows (#4498) @m4theushw
-- [DataGridPro] Row reorder (#4034) @DanailH
+- [DataGridPro] Introduce row reorder (#4034) @DanailH
 
 ### `@mui/x-date-pickers@5.0.0-alpha.2` / `@mui/x-date-pickers-pro@5.0.0-alpha.2`
 
@@ -32,8 +36,8 @@ TODO INSERT HIGHLIGHTS
 
 ### Core
 
-- [test] Fix test to not depend on screen resolution (#4587) @m4theushw
 - [core] Fix the README of the X packages (#4590) @flaviendelangle
+- [test] Fix test to not depend on screen resolution (#4587) @m4theushw
 
 ## v5.9.0
 
