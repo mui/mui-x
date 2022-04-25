@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
-import { fireEvent, screen } from '@mui/monorepo/test/utils';
+import { fireEvent, screen, getAllByRole } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { createPickerRenderer, adapterToUse } from '../../../../test/utils/pickers-utils';
 
@@ -66,5 +66,23 @@ describe('<StaticDatePicker />', () => {
     expect(getYearButton(2029)).not.to.have.attribute('disabled');
     expect(getYearButton(2030)).to.have.attribute('disabled');
     expect(getYearButton(2031)).not.to.have.attribute('disabled');
+  });
+
+  it('prop `disabled` – disables all days', () => {
+    render(
+      <StaticDatePicker
+        value={new Date(2020, 3, 25)}
+        disabled
+        onChange={() => {}}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    const daysContainer = screen.getByRole('grid');
+    const days = getAllByRole(daysContainer, 'button');
+    const disabledDays = days.filter((day) => day.getAttribute('disabled') !== null);
+
+    expect(days.length).to.equal(30);
+    expect(disabledDays.length).to.equal(30);
   });
 });
