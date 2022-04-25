@@ -7,11 +7,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Apr 25, 2022_
 
-We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Introduce [Row reorder](https://mui.com/x/react-data-grid/rows/#row-reorder) (#4034) @DanailH
 
-  <img src="https://user-images.githubusercontent.com/5858539/165070574-07b7a345-d152-4c8f-a48d-be48986f4320.gif" width="814">
+  <img src="https://user-images.githubusercontent.com/5858539/165073725-b1cbfc62-3935-4bf8-8458-f1c30f9b20f8.gif" width="814">
 
 - 🐞 Bug fixes
 
