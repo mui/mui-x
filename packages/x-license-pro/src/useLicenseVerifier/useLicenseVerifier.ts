@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { verifyLicense } from '../verifyLicense/verifyLicense';
+import { verifyLicense, LicensePlan } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {
   showExpiredLicenseError,
@@ -27,7 +27,9 @@ export function useLicenseVerifier(
       return sharedLicenseStatuses[packageName]!.status;
     }
 
-    const licenseStatus = verifyLicense(releaseInfo, licenseKey);
+    const minimalPlanRequired: LicensePlan = packageName.includes('premium') ? 'premium' : 'pro'
+
+    const licenseStatus = verifyLicense(releaseInfo, licenseKey, minimalPlanRequired);
 
     sharedLicenseStatuses[packageName] = { key: licenseStatus, status: licenseStatus };
 

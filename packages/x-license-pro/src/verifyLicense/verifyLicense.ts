@@ -11,7 +11,11 @@ export function generateReleaseInfo() {
 
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
-export function verifyLicense(releaseInfo: string, encodedLicense: string | undefined) {
+const PLANS = ['community', 'pro', 'premium'] as const
+
+export type LicensePlan = (typeof PLANS)[number]
+
+export function verifyLicense(releaseInfo: string, encodedLicense: string | undefined, minimumPlanRequired: LicensePlan) {
   if (!releaseInfo) {
     throw new Error('MUI: The release information is missing. Not able to validate license.');
   }
@@ -48,6 +52,8 @@ export function verifyLicense(releaseInfo: string, encodedLicense: string | unde
   if (expiryTimestamp < pkgTimestamp) {
     return LicenseStatus.Expired;
   }
+
+  console.log(clearLicense)
 
   return LicenseStatus.Valid;
 }
