@@ -84,5 +84,12 @@ describe('<StaticDatePicker />', () => {
 
     expect(days.length).to.equal(30);
     expect(disabledDays.length).to.equal(30);
+
+    // All navigation button disabled/removed
+    expect(screen.getByTitle('Previous month')).to.have.attribute('disabled');
+    expect(screen.getByTitle('Next month')).to.have.attribute('disabled');
+    expect(
+      screen.queryByRole('button', { name: 'calendar view is open, switch to year view' }),
+    ).to.equal(null);
   });
 });
