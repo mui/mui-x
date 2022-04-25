@@ -59,39 +59,6 @@ describe('<DesktopDateRangePicker />', () => {
     }),
   );
 
-  it('does not close on clickaway when it is not open', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateRangePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={[null, null]}
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(document.body);
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
-  it('does not close on click inside', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateRangePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={[null, null]}
-        open
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(screen.getAllByLabelText('Previous month')[0]);
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
   it('allows a single day range', () => {
     render(
       <DesktopDateRangePicker
@@ -621,6 +588,32 @@ describe('<DesktopDateRangePicker />', () => {
       );
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
       expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      ];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          disableCloseOnSelect
+        />,
+      );
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
     });
 
     it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {

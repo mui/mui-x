@@ -66,24 +66,6 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  it('does not close on click inside', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDatePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        open
-        onClose={handleClose}
-        TransitionComponent={FakeTransitionComponent}
-      />,
-    );
-
-    userEvent.mousePress(screen.getByLabelText('Next month'));
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
   it('allows to change selected date from the input according to `format`', () => {
     const onChangeMock = spy();
     render(
@@ -439,6 +421,29 @@ describe('<DesktopDatePicker />', () => {
         adapterToUse.date('2018-01-08T00:00:00.000'),
       );
       expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          disableCloseOnSelect
+        />,
+      );
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
     });
 
     it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {

@@ -25,19 +25,6 @@ describe('<DesktopDateTimePicker />', () => {
     clockConfig: adapterToUse.date('2018-01-01T00:00:00.000').getTime(),
   });
 
-  it('opens when "Choose date" is clicked', () => {
-    render(
-      <DesktopDateTimePicker
-        value={null}
-        onChange={() => {}}
-        renderInput={(params) => <TextField autoFocus {...params} />}
-      />,
-    );
-
-    userEvent.mousePress(screen.getByLabelText(/choose date/i));
-    expect(screen.getByRole('dialog')).toBeVisible();
-  });
-
   ['readOnly', 'disabled'].forEach((prop) => {
     it(`cannot be opened when "Choose time" is clicked when ${prop}={true}`, () => {
       const handleOpen = spy();
@@ -58,57 +45,6 @@ describe('<DesktopDateTimePicker />', () => {
 
       expect(handleOpen.callCount).to.equal(0);
     });
-  });
-
-  it('closes on clickaway', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateTimePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        open
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(document.body);
-
-    expect(handleClose.callCount).to.equal(1);
-  });
-
-  it('does not close on clickaway when it is not open', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateTimePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(document.body);
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
-  it('does not close on click inside', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateTimePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        open
-        showToolbar
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(screen.getByLabelText('pick time'));
-
-    expect(handleClose.callCount).to.equal(0);
   });
 
   it('prop: mask – should take the mask prop into account', () => {
@@ -448,6 +384,29 @@ describe('<DesktopDateTimePicker />', () => {
         adapterToUse.date('2018-01-15T11:00:00.000'),
       );
       expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDateTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          disableCloseOnSelect
+        />,
+      );
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
     });
 
     it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
