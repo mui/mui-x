@@ -514,9 +514,9 @@ describe('<DesktopTimePicker />', () => {
     });
 
     // TODO: Write test once the `allowSameDateSelection` behavior is cleaned
-    it('should not (?) call onChange and onAccept if same hour selected', () => {});
+    // it('should not (?) call onChange and onAccept if same hour selected', () => {});
 
     // TODO: Write test once the `allowSameDateSelection` behavior is cleaned
-    it('should not (?) call onChange and onAccept if same minute selected', () => {});
+    // it('should not (?) call onChange and onAccept if same minute selected', () => {});
   });
 });

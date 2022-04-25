@@ -461,6 +461,6 @@ describe('<DesktopDateTimePicker />', () => {
     });
 
     // TODO: Write test once the `allowSameDateSelection` behavior is cleaned
-    it('should not (?) call onChange and onAccept if same date selected', () => {});
+    // it('should not (?) call onChange and onAccept if same date selected', () => {});
   });
 });
