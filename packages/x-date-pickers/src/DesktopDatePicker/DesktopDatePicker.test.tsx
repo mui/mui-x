@@ -255,7 +255,7 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe.skip('picker state', () => {
+  describe.only('picker state', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
 
