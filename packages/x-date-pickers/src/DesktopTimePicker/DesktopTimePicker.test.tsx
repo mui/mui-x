@@ -472,7 +472,6 @@ describe('<DesktopTimePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect
         />,
       );
 
