@@ -155,7 +155,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept when selecting the end date if props.disableCloseOnSelect = false', () => {
+    it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
@@ -168,7 +168,7 @@ describe('<MobileDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect={false}
+          closeOnSelect
         />,
       );
 

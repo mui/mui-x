@@ -105,7 +105,7 @@ describe('<MobileTimePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept when selecting the minutes if props.disableCloseOnSelect = false', function test() {
+    it('should call onClose and onAccept when selecting the minutes if props.closeOnSelect = true', function test() {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         this.skip();
       }
@@ -119,7 +119,7 @@ describe('<MobileTimePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect={false}
+          closeOnSelect
         />,
       );
 
@@ -157,7 +157,6 @@ describe('<MobileTimePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect={false}
         />,
       );
 
@@ -192,7 +191,6 @@ describe('<MobileTimePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect={false}
         />,
       );
 

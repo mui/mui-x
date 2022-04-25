@@ -298,7 +298,7 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose and onAccept when selection a date and props.disableCloseOnSelect = true', () => {
+    it('should not call onClose and onAccept when selection a date and props.closeOnSelect = false', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -310,7 +310,7 @@ describe('<DesktopDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect
+          closeOnSelect={false}
         />,
       );
 
@@ -347,7 +347,7 @@ describe('<DesktopDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect
+          closeOnSelect={false}
         />,
       );
 
@@ -379,7 +379,7 @@ describe('<DesktopDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect
+          closeOnSelect={false}
         />,
       );
 
@@ -404,7 +404,7 @@ describe('<DesktopDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect
+          closeOnSelect={false}
         />,
       );
 
@@ -435,7 +435,7 @@ describe('<DesktopDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect
+          closeOnSelect={false}
         />,
       );
 

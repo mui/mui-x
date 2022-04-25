@@ -8,9 +8,9 @@ export interface BasePickerProps<TInputValue, TDateValue> {
   className?: string;
   /**
    * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `false` for Desktop, `true` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
-  disableCloseOnSelect?: boolean;
+  closeOnSelect?: boolean;
   /**
    * If `true`, the picker and text field are disabled.
    */

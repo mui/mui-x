@@ -70,7 +70,7 @@ interface DateStateAction<DraftValue> {
 }
 
 interface PickerStateProps<TInput, TDateValue> {
-  disableCloseOnSelect?: boolean;
+  closeOnSelect?: boolean;
   open?: boolean;
   onAccept?: (date: TDateValue) => void;
   onChange: (date: TDateValue, keyboardInputValue?: string) => void;
@@ -83,7 +83,7 @@ export const usePickerState = <TInput, TDate>(
   props: PickerStateProps<TInput, TDate>,
   valueManager: PickerStateValueManager<TInput, TDate>,
 ) => {
-  const { onAccept, onChange, value, disableCloseOnSelect } = props;
+  const { onAccept, onChange, value, closeOnSelect } = props;
 
   const utils = useUtils<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
@@ -211,13 +211,13 @@ export const usePickerState = <TInput, TDate>(
           }
 
           case 'finish': {
-            if (disableCloseOnSelect ?? wrapperVariant === 'mobile') {
-              // Updates the `committed` state and fire `onChange`
-              return setDate({ value: newDate, action: 'setCommitted' });
+            if (closeOnSelect ?? wrapperVariant === 'desktop') {
+              // Set all dates in state to equal the new date and close picker.
+              return setDate({ value: newDate, action: 'acceptAndClose' });
             }
 
-            // Set all dates in state to equal the new date and close picker.
-            return setDate({ value: newDate, action: 'acceptAndClose' });
+            // Updates the `committed` state and fire `onChange`
+            return setDate({ value: newDate, action: 'setCommitted' });
           }
 
           default: {
@@ -226,7 +226,7 @@ export const usePickerState = <TInput, TDate>(
         }
       },
     }),
-    [setDate, isMobileKeyboardViewOpen, dateState.draft, disableCloseOnSelect],
+    [setDate, isMobileKeyboardViewOpen, dateState.draft, closeOnSelect],
   );
 
   const handleInputChange = React.useCallback(

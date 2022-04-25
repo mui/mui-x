@@ -12,12 +12,12 @@
     "className": { "type": { "name": "string" } },
     "clearable": { "type": { "name": "bool" } },
     "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
+    "closeOnSelect": {
+      "type": { "name": "bool" },
+      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+    },
     "components": { "type": { "name": "object" } },
     "DialogProps": { "type": { "name": "object" } },
-    "disableCloseOnSelect": {
-      "type": { "name": "bool" },
-      "default": "`false` for Desktop, `true` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
-    },
     "disabled": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },

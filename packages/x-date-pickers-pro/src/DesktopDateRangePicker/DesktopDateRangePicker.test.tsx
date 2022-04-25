@@ -468,7 +468,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose and onAccept when selecting the end date if props.disableCloseOnSelect = true', () => {
+    it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
@@ -481,7 +481,7 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect
+          closeOnSelect={false}
         />,
       );
 
@@ -605,7 +605,6 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect
         />,
       );
 

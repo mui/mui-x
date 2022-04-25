@@ -325,7 +325,7 @@ describe('<MobileDatePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept when selecting a date and props.disableCloseOnSelect = false', () => {
+    it('should call onClose and onAccept when selecting a date and props.closeOnSelect = true', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -337,7 +337,7 @@ describe('<MobileDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          disableCloseOnSelect={false}
+          closeOnSelect
         />,
       );
 
