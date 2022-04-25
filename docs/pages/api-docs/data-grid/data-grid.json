@@ -103,7 +103,7 @@
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/x/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
+      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
     },
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
@@ -354,5 +354,5 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>"
+  "demos": "<ul><li><a href=\"/components/data-grid#mit-version\">DataGrid</a></li></ul>"
 }
