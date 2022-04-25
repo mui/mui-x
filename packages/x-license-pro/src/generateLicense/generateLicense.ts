@@ -1,9 +1,8 @@
 import { md5 } from '../encoding/md5';
 import { base64Encode } from '../encoding/base64';
+import { LicenseScope } from '../utils/licenseScope';
 
 const licenseVersion = '2';
-
-export type LicenseScope = 'pro' | 'premium';
 
 export interface LicenseDetails {
   orderNumber: string;
@@ -13,7 +12,7 @@ export interface LicenseDetails {
 }
 
 function getClearLicenseString(details: LicenseDetails) {
-  return `ORDER:${
+  return `ORDER=${
     details.orderNumber
   },EXPIRY=${details.expiryDate.getTime()},KEYVERSION=${licenseVersion},SCOPE=${details.scope}`;
 }

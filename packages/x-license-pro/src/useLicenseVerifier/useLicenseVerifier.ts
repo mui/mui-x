@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { verifyLicense, LicensePlan } from '../verifyLicense/verifyLicense';
+import { verifyLicense } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {
   showExpiredLicenseError,
@@ -7,6 +7,7 @@ import {
   showNotFoundLicenseError,
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
+import { LicenseScope } from '../utils/licenseScope';
 
 export type MuiCommercialPackageName =
   | 'x-data-grid-pro'
@@ -27,9 +28,11 @@ export function useLicenseVerifier(
       return sharedLicenseStatuses[packageName]!.status;
     }
 
-    const minimalPlanRequired: LicensePlan = packageName.includes('premium') ? 'premium' : 'pro'
+    const acceptedScopes: LicenseScope[] = packageName.includes('premium')
+      ? ['premium']
+      : ['pro', 'premium'];
 
-    const licenseStatus = verifyLicense(releaseInfo, licenseKey, minimalPlanRequired);
+    const licenseStatus = verifyLicense(releaseInfo, licenseKey, acceptedScopes);
 
     sharedLicenseStatuses[packageName] = { key: licenseStatus, status: licenseStatus };
 

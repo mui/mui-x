@@ -1,6 +1,7 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LicenseStatus } from '../utils/licenseStatus';
+import { LicenseScope } from '../utils/licenseScope';
 
 export function generateReleaseInfo() {
   const today = new Date();
@@ -11,11 +12,79 @@ export function generateReleaseInfo() {
 
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
-const PLANS = ['community', 'pro', 'premium'] as const
+interface MuiLicense {
+  scope: LicenseScope | null;
+  expiryTimestamp: number | null;
+}
 
-export type LicensePlan = (typeof PLANS)[number]
+/**
+ * Format: ORDER:${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=1
+ */
+const decodeLicenseVersion1 = (license: string): MuiLicense => {
+  let expiryTimestamp: number | null;
+  try {
+    expiryTimestamp = parseInt(license.match(expiryReg)![1], 10);
+    if (!expiryTimestamp || Number.isNaN(expiryTimestamp)) {
+      expiryTimestamp = null;
+    }
+  } catch (err) {
+    expiryTimestamp = null;
+  }
 
-export function verifyLicense(releaseInfo: string, encodedLicense: string | undefined, minimumPlanRequired: LicensePlan) {
+  return {
+    scope: 'pro',
+    expiryTimestamp,
+  };
+};
+
+/**
+ * Format: ORDER=${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=2,SCOPE=${scope}`;
+ */
+const decodeLicenseVersion2 = (license: string): MuiLicense => {
+  const licenseInfo: MuiLicense = {
+    scope: null,
+    expiryTimestamp: null,
+  };
+
+  license
+    .split(',')
+    .map((token) => token.split('='))
+    .filter((el) => el.length === 2)
+    .forEach(([key, value]) => {
+      if (key === 'SCOPE') {
+        licenseInfo.scope = value as LicenseScope;
+      }
+
+      if (key === 'EXPIRY') {
+        const expiryTimestamp = parseInt(value, 10);
+        if (expiryTimestamp && !Number.isNaN(expiryTimestamp)) {
+          licenseInfo.expiryTimestamp = expiryTimestamp;
+        }
+      }
+    });
+
+  return licenseInfo;
+};
+
+const decodeLicense = (encodedLicense: string): MuiLicense | null => {
+  const license = base64Decode(encodedLicense);
+
+  if (license.includes('KEYVERSION=1')) {
+    return decodeLicenseVersion1(license);
+  }
+
+  if (license.includes('KEYVERSION=2')) {
+    return decodeLicenseVersion2(license);
+  }
+
+  return null;
+};
+
+export function verifyLicense(
+  releaseInfo: string,
+  encodedLicense: string | undefined,
+  acceptedScopes: LicenseScope[],
+) {
   if (!releaseInfo) {
     throw new Error('MUI: The release information is missing. Not able to validate license.');
   }
@@ -31,16 +100,15 @@ export function verifyLicense(releaseInfo: string, encodedLicense: string | unde
     return LicenseStatus.Invalid;
   }
 
-  const clearLicense = base64Decode(encoded);
-  let expiryTimestamp = 0;
-  try {
-    expiryTimestamp = parseInt(clearLicense.match(expiryReg)![1], 10);
-    if (!expiryTimestamp || Number.isNaN(expiryTimestamp)) {
-      console.error('Error checking license. Expiry timestamp not found or invalid!');
-      return LicenseStatus.Invalid;
-    }
-  } catch (err) {
-    console.error('Error extracting license expiry timestamp.', err);
+  const license = decodeLicense(encoded);
+
+  if (license == null) {
+    console.error('Error checking license. Key version not found!');
+    return LicenseStatus.Invalid;
+  }
+
+  if (license.expiryTimestamp == null) {
+    console.error('Error checking license. Expiry timestamp not found or invalid!');
     return LicenseStatus.Invalid;
   }
 
@@ -49,11 +117,18 @@ export function verifyLicense(releaseInfo: string, encodedLicense: string | unde
     throw new Error('MUI: The release information is invalid. Not able to validate license.');
   }
 
-  if (expiryTimestamp < pkgTimestamp) {
+  if (license.expiryTimestamp < pkgTimestamp) {
     return LicenseStatus.Expired;
   }
 
-  console.log(clearLicense)
+  if (license.scope == null) {
+    console.error('Error checking license. scope not found!');
+    return LicenseStatus.Invalid;
+  }
+
+  if (!acceptedScopes.includes(license.scope)) {
+    return LicenseStatus.Invalid;
+  }
 
   return LicenseStatus.Valid;
 }
