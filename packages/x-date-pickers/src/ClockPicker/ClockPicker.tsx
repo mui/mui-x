@@ -493,6 +493,11 @@ ClockPicker.propTypes = {
    */
   date: PropTypes.any,
   /**
+   * If `true`, the picker and text field are disabled.
+   * @default false
+   */
+  disabled: PropTypes.any.isRequired,
+  /**
    * Do not ignore date part when validating min/max time.
    * @default false
    */
@@ -569,6 +574,11 @@ ClockPicker.propTypes = {
    * @default 'hours'
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  /**
+   * Make picker read only.
+   * @default false
+   */
+  readOnly: PropTypes.any.isRequired,
   /**
    * Right arrow icon aria-label text.
    * @default 'open next view'

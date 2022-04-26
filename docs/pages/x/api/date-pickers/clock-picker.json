@@ -1,7 +1,9 @@
 {
   "props": {
     "date": { "type": { "name": "any" }, "required": true },
+    "disabled": { "type": { "name": "any" }, "default": "false", "required": true },
     "onChange": { "type": { "name": "func" }, "required": true },
+    "readOnly": { "type": { "name": "any" }, "default": "false", "required": true },
     "ampm": { "type": { "name": "bool" } },
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
