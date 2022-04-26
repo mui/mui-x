@@ -16,7 +16,11 @@ import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/d
 import { isRangeValid } from '../internal/utils/date-utils';
 import { calculateRangeChange } from './date-range-manager';
 import { DateRangePickerToolbar } from './DateRangePickerToolbar';
-import { DateRangePickerViewMobile } from './DateRangePickerViewMobile';
+import {
+  DateRangePickerViewMobile,
+  DateRangePickerViewMobileSlotsComponent,
+  DateRangePickerViewMobileSlotsComponentsProps,
+} from './DateRangePickerViewMobile';
 import { DateRangePickerInput, DateRangeInputProps } from './DateRangePickerInput';
 import {
   DateRangePickerViewDesktop,
@@ -26,10 +30,27 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
+export interface DateRangePickerViewSlotsComponent
+  extends DateRangePickerViewMobileSlotsComponent {}
+
+export interface DateRangePickerViewSlotsComponentsProps
+  extends DateRangePickerViewMobileSlotsComponentsProps {}
+
 export interface ExportedDateRangePickerViewProps<TInputDate, TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'>,
     Omit<BasePickerProps<DateRange<TInputDate>, TDate, DateRange<TDate>>, 'value' | 'onChange'> {
+  /**
+   * The components used for each slot.
+   * Either a string to use an HTML element or a component.
+   * @default {}
+   */
+  components?: Partial<DateRangePickerViewSlotsComponent>;
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false

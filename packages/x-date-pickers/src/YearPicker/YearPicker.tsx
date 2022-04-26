@@ -55,7 +55,6 @@ export interface YearPickerProps<TDate> extends ExportedYearPickerProps<TDate> {
   autoFocus?: boolean;
   className?: string;
   classes?: YearPickerClasses;
-
   date: TDate | null;
   disabled?: boolean;
   disableFuture?: boolean | null;

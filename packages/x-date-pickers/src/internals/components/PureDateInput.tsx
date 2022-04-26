@@ -11,6 +11,11 @@ import { MuiPickersAdapter } from '../models';
 // TODO: make `variant` optional.
 export type MuiTextFieldProps = MuiTextFieldPropsType | Omit<MuiTextFieldPropsType, 'variant'>;
 
+export interface DateInputSlotsComponent {
+  // Icon displaying for open picker button.
+  OpenPickerIcon: React.ElementType;
+}
+
 export interface DateInputProps<TInputDate, TDate> {
   /**
    * Regular expression to detect "accepted" symbols.
@@ -21,10 +26,7 @@ export interface DateInputProps<TInputDate, TDate> {
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    */
-  components?: {
-    // Icon displaying for open picker button.
-    OpenPickerIcon?: React.ElementType;
-  };
+  components?: Partial<DateInputSlotsComponent>;
   disabled?: boolean;
   /**
    * Disable mask on the keyboard, this should be used rarely. Consider passing proper mask for your format.

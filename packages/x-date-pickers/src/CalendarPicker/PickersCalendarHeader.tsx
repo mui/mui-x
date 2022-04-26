@@ -10,6 +10,8 @@ import { ArrowDropDown } from '../internals/components/icons';
 import {
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
+  PickersArrowSwitcherSlotsComponent,
+  PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
 import {
   usePreviousMonthDisabled,
@@ -19,14 +21,22 @@ import { CalendarPickerView } from '../internals/models';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
-  | 'components'
-  | 'componentsProps'
-  | 'getViewSwitchingButtonText'
-  | 'leftArrowButtonText'
-  | 'rightArrowButtonText'
+  'getViewSwitchingButtonText' | 'leftArrowButtonText' | 'rightArrowButtonText'
 >;
 
+export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
+  SwitchViewButton: React.ElementType;
+  SwitchViewIcon: React.ElementType;
+}
+
+// We keep the interface to allow module augmentation
 export interface PickersCalendarHeaderComponentsPropsOverrides {}
+
+export interface PickersCalendarHeaderSlotsComponentsProps
+  extends PickersArrowSwitcherSlotsComponentsProps {
+  switchViewButton: React.ComponentPropsWithRef<typeof IconButton> &
+    PickersCalendarHeaderComponentsPropsOverrides;
+}
 
 export interface PickersCalendarHeaderProps<TDate>
   extends ExportedArrowSwitcherProps,
@@ -36,18 +46,12 @@ export interface PickersCalendarHeaderProps<TDate>
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: ExportedArrowSwitcherProps['components'] & {
-    SwitchViewButton?: React.ElementType;
-    SwitchViewIcon?: React.ElementType;
-  };
+  components?: Partial<PickersCalendarHeaderSlotsComponent>;
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: ExportedArrowSwitcherProps['componentsProps'] & {
-    switchViewButton?: React.ComponentPropsWithRef<typeof IconButton> &
-      PickersCalendarHeaderComponentsPropsOverrides;
-  };
+  componentsProps?: Partial<PickersCalendarHeaderSlotsComponentsProps>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly CalendarPickerView[];

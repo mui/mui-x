@@ -2,13 +2,23 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import {
+  CalendarPickerSlotsComponent,
+  ExportedCalendarPickerProps,
+} from '../CalendarPicker/CalendarPicker';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
-import { ExportedDateInputProps } from '../internals/components/PureDateInput';
+import {
+  DateInputSlotsComponent,
+  ExportedDateInputProps,
+} from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
+
+export interface DateTimePickerSlotsComponent
+  extends CalendarPickerSlotsComponent,
+    DateInputSlotsComponent {}
 
 export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -21,8 +31,7 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: ExportedCalendarPickerProps<TDate>['components'] &
-    ExportedDateInputProps<TInputDate, TDate>['components'];
+  components?: Partial<DateTimePickerSlotsComponent>;
   /**
    * To show tabs.
    */

@@ -12,8 +12,8 @@ import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
-  BaseDateRangePickerProps,
   useDateRangePickerDefaultizedProps,
+  BaseDateRangePickerProps,
 } from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
@@ -232,10 +232,12 @@ StaticDateRangePicker.propTypes = {
   mask: PropTypes.string,
   /**
    * Max selectable date. @DateIOType
+   * @default defaultMaxDate
    */
   maxDate: PropTypes.any,
   /**
    * Min selectable date. @DateIOType
+   * @default defaultMinDate
    */
   minDate: PropTypes.any,
   /**
