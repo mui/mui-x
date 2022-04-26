@@ -5,7 +5,7 @@ import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
-describe('<StaticDatePicker /> keyboard interactions', () => {
+describe.only('<StaticDatePicker /> keyboard interactions', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('Calendar keyboard navigation', () => {
