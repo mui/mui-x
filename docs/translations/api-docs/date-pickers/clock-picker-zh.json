@@ -32,5 +32,10 @@
       "nodeName": "the arrowSwitcher element"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "LeftArrowButton": "",
+    "LeftArrowIcon": "",
+    "RightArrowButton": "",
+    "RightArrowIcon": ""
+  }
 }

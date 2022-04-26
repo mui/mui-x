@@ -86,7 +86,7 @@
       }
     }
   },
-  "slots": {},
+  "slots": { "OpenPickerIcon": { "type": { "name": "elementType" } } },
   "name": "TimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimePicker" },
   "spread": false,

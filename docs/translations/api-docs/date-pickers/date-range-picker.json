@@ -65,5 +65,13 @@
     "value": "The value of the date range picker."
   },
   "classDescriptions": {},
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "SwitchViewButton": "",
+    "SwitchViewIcon": "",
+    "LeftArrowButton": "",
+    "LeftArrowIcon": "",
+    "RightArrowButton": "",
+    "RightArrowIcon": "",
+    "OpenPickerIcon": ""
+  }
 }

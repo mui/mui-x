@@ -90,7 +90,15 @@
       }
     }
   },
-  "slots": {},
+  "slots": {
+    "LeftArrowButton": { "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "type": { "name": "elementType" } },
+    "RightArrowButton": { "type": { "name": "elementType" } },
+    "RightArrowIcon": { "type": { "name": "elementType" } },
+    "SwitchViewButton": { "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "type": { "name": "elementType" } }
+  },
   "name": "DesktopDatePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDatePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDatePicker/DesktopDatePicker.tsx",

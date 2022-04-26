@@ -108,7 +108,15 @@
       }
     }
   },
-  "slots": {},
+  "slots": {
+    "LeftArrowButton": { "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "type": { "name": "elementType" } },
+    "RightArrowButton": { "type": { "name": "elementType" } },
+    "RightArrowIcon": { "type": { "name": "elementType" } },
+    "SwitchViewButton": { "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "type": { "name": "elementType" } }
+  },
   "name": "MobileDateTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/MobileDateTimePicker/MobileDateTimePicker.tsx",

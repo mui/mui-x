@@ -79,7 +79,7 @@
       }
     }
   },
-  "slots": {},
+  "slots": { "OpenPickerIcon": { "type": { "name": "elementType" } } },
   "name": "MobileTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileTimePicker" },
   "spread": false,

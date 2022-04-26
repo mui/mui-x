@@ -77,7 +77,7 @@
       }
     }
   },
-  "slots": {},
+  "slots": { "OpenPickerIcon": { "type": { "name": "elementType" } } },
   "name": "DesktopTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopTimePicker" },
   "spread": false,

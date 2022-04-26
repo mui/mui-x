@@ -67,5 +67,13 @@
     "views": "Array of views to show."
   },
   "classDescriptions": {},
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "SwitchViewButton": "",
+    "SwitchViewIcon": "",
+    "LeftArrowButton": "",
+    "LeftArrowIcon": "",
+    "RightArrowButton": "",
+    "RightArrowIcon": "",
+    "OpenPickerIcon": ""
+  }
 }
