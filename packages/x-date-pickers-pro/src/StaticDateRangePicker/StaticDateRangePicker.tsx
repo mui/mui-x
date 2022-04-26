@@ -10,6 +10,8 @@ import {
   ValidationProps,
   usePickerState,
   PickerStateValueManager,
+  buildDeprecatedPropsWarning,
+  useLocaleText,
 } from '@mui/x-date-pickers/internals';
 import { RangeInput, DateRange } from '../internal/models/dateRange';
 import {
@@ -40,6 +42,7 @@ interface BaseDateRangePickerProps<TDate>
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
+   * @deprecated
    */
   endText?: React.ReactNode;
   /**
@@ -65,6 +68,7 @@ interface BaseDateRangePickerProps<TDate>
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
+   * @deprecated
    */
   startText?: React.ReactNode;
   /**
@@ -92,6 +96,10 @@ type StaticDateRangePickerComponent = (<TDate>(
   props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 /**
  *
  * Demos:
@@ -115,13 +123,23 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     value,
     onChange,
     mask = '__/__/____',
-    startText = 'Start',
-    endText = 'End',
+    startText: startTextProp,
+    endText: endTextProp,
     inputFormat: passedInputFormat,
     minDate: minDateProp,
     maxDate: maxDateProp,
     ...other
   } = props;
+
+  deprecatedPropsWarning({
+    startText: startTextProp,
+    endText: endTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const startText = startTextProp ?? localeText.start;
+  const endText = endTextProp ?? localeText.end;
 
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -266,6 +284,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
+   * @deprecated
    */
   endText: PropTypes.node,
   /**
@@ -305,6 +324,7 @@ StaticDateRangePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -440,6 +460,7 @@ StaticDateRangePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
@@ -469,6 +490,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
+   * @deprecated
    */
   startText: PropTypes.node,
   /**
