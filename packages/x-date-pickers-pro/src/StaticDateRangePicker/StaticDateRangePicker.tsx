@@ -10,7 +10,6 @@ import {
   usePickerState,
   PickerStateValueManager,
 } from '@mui/x-date-pickers/internals';
-import { RangeInput, DateRange } from '../internal/models/dateRange';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { parseRangeInputValue } from '../internal/utils/date-utils';
@@ -19,8 +18,9 @@ import { BaseDateRangePickerProps } from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
 
-const rangePickerValueManager: PickerStateValueManager<any, any> = {
+const rangePickerValueManager: PickerStateValueManager<any, any, any> = {
   emptyValue: [null, null],
+  getTodayValue: (utils) => [utils.date()!, utils.date()!],
   parseInput: parseRangeInputValue,
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };

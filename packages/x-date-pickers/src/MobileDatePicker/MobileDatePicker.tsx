@@ -4,17 +4,16 @@ import { BaseDatePickerProps, useDatePickerDefaultizedProps } from '../DatePicke
 import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
+const valueManager: PickerStateValueManager<any, any, any> = {
   emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
   parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
 
 export interface MobileDatePickerProps<TDate = unknown>

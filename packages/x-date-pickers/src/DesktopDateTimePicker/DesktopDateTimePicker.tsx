@@ -10,17 +10,16 @@ import {
   DesktopWrapperProps,
 } from '../internals/components/wrappers/DesktopWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
+const valueManager: PickerStateValueManager<any, any, any> = {
   emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
   parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
 
 export interface DesktopDateTimePickerProps<TDate = unknown>

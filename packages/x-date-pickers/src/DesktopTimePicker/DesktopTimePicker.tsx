@@ -7,17 +7,16 @@ import {
   DesktopWrapperProps,
 } from '../internals/components/wrappers/DesktopWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
+const valueManager: PickerStateValueManager<any, any, any> = {
   emptyValue: null,
   parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
+  getTodayValue: (utils) => utils.date()!,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
   valueReducer: (utils, prevValue, newValue) => {
     if (prevValue == null || newValue == null) {
       return newValue;

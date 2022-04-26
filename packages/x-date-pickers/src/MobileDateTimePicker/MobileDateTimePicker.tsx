@@ -13,11 +13,11 @@ import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
+const valueManager: PickerStateValueManager<any, any, any> = {
   emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
   parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
 
 export interface MobileDateTimePickerProps<TDate = unknown>

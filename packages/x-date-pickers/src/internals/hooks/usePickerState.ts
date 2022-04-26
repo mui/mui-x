@@ -6,38 +6,35 @@ import { MuiPickersAdapter } from '../models';
 import { PrivateWrapperProps } from '../components/wrappers/WrapperProps';
 import { DateInputProps } from '../components/PureDateInput';
 
-export interface PickerStateValueManager<TInputValue, TDateValue> {
+export interface PickerStateValueManager<TInputValue, TValue, TDate> {
   areValuesEqual: (
-    utils: MuiPickersAdapter<TDateValue>,
-    valueLeft: TDateValue,
-    valueRight: TDateValue,
+    utils: MuiPickersAdapter<TDate>,
+    valueLeft: TValue,
+    valueRight: TValue,
   ) => boolean;
-  emptyValue: TDateValue;
-  parseInput: (utils: MuiPickersAdapter<TDateValue>, value: TInputValue) => TDateValue;
-  valueReducer?: (
-    utils: MuiPickersAdapter<TDateValue>,
-    prevValue: TDateValue | null,
-    value: TDateValue | null,
-  ) => TDateValue;
+  emptyValue: TValue;
+  getTodayValue: (utils: MuiPickersAdapter<TDate>) => TValue;
+  parseInput: (utils: MuiPickersAdapter<TDate>, value: TInputValue) => TValue;
+  valueReducer?: (utils: MuiPickersAdapter<TDate>, prevValue: TValue, value: TValue) => TValue;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
-interface DateState<T> {
+interface PickerDateState<TValue> {
   /**
    * Date internally used on the picker and displayed in the input.
    * It is updates whenever the user validates a step.
    */
-  draft: T;
+  draft: TValue;
   /**
    * Last full date provided by the user
    * Is not updated when validating a step of a multistep picker (e.g. validating the date of a date time picker)
    */
-  committed: T;
+  committed: TValue;
   /**
    * Date that will be used if the pickers tries to reset its value
    */
-  resetTarget: T;
+  resetFallback: TValue;
 }
 
 type DateStateActionType =
@@ -69,19 +66,19 @@ interface DateStateAction<DraftValue> {
   skipOnChangeCall?: boolean;
 }
 
-interface PickerStateProps<TInput, TDateValue> {
+interface PickerStateProps<TInputValue, TValue> {
   closeOnSelect?: boolean;
   open?: boolean;
-  onAccept?: (date: TDateValue) => void;
-  onChange: (date: TDateValue, keyboardInputValue?: string) => void;
+  onAccept?: (date: TValue) => void;
+  onChange: (date: TValue, keyboardInputValue?: string) => void;
   onClose?: () => void;
   onOpen?: () => void;
-  value: TInput;
+  value: TInputValue;
 }
 
-export const usePickerState = <TInput, TDate>(
-  props: PickerStateProps<TInput, TDate>,
-  valueManager: PickerStateValueManager<TInput, TDate>,
+export const usePickerState = <TInputValue, TValue, TDate>(
+  props: PickerStateProps<TInputValue, TValue>,
+  valueManager: PickerStateValueManager<TInputValue, TValue, TDate>,
 ) => {
   const { onAccept, onChange, value, closeOnSelect } = props;
 
@@ -93,21 +90,21 @@ export const usePickerState = <TInput, TDate>(
     [valueManager, utils, value],
   );
 
-  const [lastValidDateValue, setLastValidDateValue] = React.useState<TDate | null>(parsedDateValue);
+  const [lastValidDateValue, setLastValidDateValue] = React.useState<TValue>(parsedDateValue);
 
-  const [dateState, setDateState] = React.useState<DateState<TDate>>(() => ({
+  const [dateState, setDateState] = React.useState<PickerDateState<TValue>>(() => ({
     committed: parsedDateValue,
     draft: parsedDateValue,
-    resetTarget: parsedDateValue,
+    resetFallback: parsedDateValue,
   }));
 
   const setDate = React.useCallback(
-    (params: DateStateAction<TDate>) => {
+    (params: DateStateAction<TValue>) => {
       setDateState((prev) => {
         switch (params.action) {
           case 'setAll':
           case 'acceptAndClose': {
-            return { draft: params.value, committed: params.value, resetTarget: params.value };
+            return { draft: params.value, committed: params.value, resetFallback: params.value };
           }
           case 'setCommitted': {
             return { ...prev, draft: params.value, committed: params.value };
@@ -130,7 +127,10 @@ export const usePickerState = <TInput, TDate>(
 
       if (params.action === 'acceptAndClose') {
         setIsOpen(false);
-        if (onAccept && !valueManager.areValuesEqual(utils, dateState.resetTarget, params.value)) {
+        if (
+          onAccept &&
+          !valueManager.areValuesEqual(utils, dateState.resetFallback, params.value)
+        ) {
           onAccept(params.value);
         }
       }
@@ -175,14 +175,14 @@ export const usePickerState = <TInput, TDate>(
       onCancel: () => {
         // Set all dates in state to equal the last accepted date and close picker.
         // e.g. Reset the state to the last accepted value
-        setDate({ value: dateState.resetTarget, action: 'acceptAndClose' });
+        setDate({ value: dateState.resetFallback, action: 'acceptAndClose' });
       },
       onSetToday: () => {
         // Set all dates in state to equal today and close picker.
-        setDate({ value: utils.date()!, action: 'acceptAndClose' });
+        setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
       },
     }),
-    [setDate, isOpen, utils, dateState, valueManager.emptyValue],
+    [setDate, isOpen, utils, dateState, valueManager],
   );
 
   // Mobile keyboard view is a special case.
@@ -195,7 +195,7 @@ export const usePickerState = <TInput, TDate>(
       isMobileKeyboardViewOpen,
       toggleMobileKeyboardView: () => setMobileKeyboardViewOpen(!isMobileKeyboardViewOpen),
       onDateChange: (
-        newDate: TDate,
+        newDate: TValue,
         wrapperVariant: WrapperVariant,
         selectionState: PickerSelectionState = 'partial',
       ) => {
@@ -230,7 +230,7 @@ export const usePickerState = <TInput, TDate>(
   );
 
   const handleInputChange = React.useCallback(
-    (date: TDate, keyboardInputValue?: string) => {
+    (date: TValue, keyboardInputValue?: string) => {
       const cleanDate = valueManager.valueReducer
         ? valueManager.valueReducer(utils, lastValidDateValue, date)
         : date;
@@ -240,7 +240,7 @@ export const usePickerState = <TInput, TDate>(
   );
 
   const inputProps = React.useMemo<
-    Pick<DateInputProps<TInput, TDate>, 'onChange' | 'open' | 'rawValue' | 'openPicker'>
+    Pick<DateInputProps<TInputValue, TValue>, 'onChange' | 'open' | 'rawValue' | 'openPicker'>
   >(
     () => ({
       onChange: handleInputChange,

@@ -22,8 +22,9 @@ const releaseInfo = getReleaseInfo();
 
 const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
 
-const rangePickerValueManager: PickerStateValueManager<any, any> = {
+const rangePickerValueManager: PickerStateValueManager<any, any, any> = {
   emptyValue: [null, null],
+  getTodayValue: (utils) => [utils.date()!, utils.date()!],
   parseInput: parseRangeInputValue,
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };
