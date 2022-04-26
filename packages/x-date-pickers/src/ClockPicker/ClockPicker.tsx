@@ -161,12 +161,12 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    * If `true`, the picker and text field are disabled.
    * @default false
    */
-  disabled;
+  disabled?: boolean;
   /**
    * Make picker read only.
    * @default false
    */
-  readOnly;
+  readOnly?: boolean;
 }
 
 const ClockPickerRoot = styled(PickerViewRoot, {
@@ -496,7 +496,7 @@ ClockPicker.propTypes = {
    * If `true`, the picker and text field are disabled.
    * @default false
    */
-  disabled: PropTypes.any.isRequired,
+  disabled: PropTypes.bool,
   /**
    * Do not ignore date part when validating min/max time.
    * @default false
@@ -578,7 +578,7 @@ ClockPicker.propTypes = {
    * Make picker read only.
    * @default false
    */
-  readOnly: PropTypes.any.isRequired,
+  readOnly: PropTypes.bool,
   /**
    * Right arrow icon aria-label text.
    * @default 'open next view'

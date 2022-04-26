@@ -32,8 +32,8 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   selectedId: string | undefined;
   type: ClockPickerView;
   value: number;
-  disabled: boolean;
-  readOnly: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
 const ClockRoot = styled('div')(({ theme }) => ({

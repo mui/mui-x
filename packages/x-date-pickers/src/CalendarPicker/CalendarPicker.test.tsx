@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
+import { fireEvent, screen, describeConformance, getAllByRole } from '@mui/monorepo/test/utils';
 import {
   CalendarPicker,
   calendarPickerClasses as classes,
@@ -15,7 +15,7 @@ import {
 describe('<CalendarPicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<CalendarPicker date={adapterToUse.date()} onChange={() => {}} />, () => ({
+  describeConformance(<CalendarPicker date={adapterToUse.date()} onChange={() => { }} />, () => ({
     classes,
     inheritComponent: 'div',
     render,
@@ -36,7 +36,7 @@ describe('<CalendarPicker />', () => {
 
   it('renders calendar standalone', () => {
     render(
-      <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
+      <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => { }} />,
     );
 
     expect(screen.getByText('January')).toBeVisible();
@@ -53,7 +53,7 @@ describe('<CalendarPicker />', () => {
       <CalendarPicker
         date={adapterToUse.date('2019-01-01T00:00:00.000')}
         openTo="year"
-        onChange={() => {}}
+        onChange={() => { }}
       />,
     );
 
@@ -65,7 +65,7 @@ describe('<CalendarPicker />', () => {
     render(
       <CalendarPicker
         date={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={() => {}}
+        onChange={() => { }}
         onViewChange={handleViewChange}
       />,
     );
@@ -77,7 +77,7 @@ describe('<CalendarPicker />', () => {
     expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
-  it('allows month and view changing, but not selection when readOnly prop is passed', () => {
+  it('should allow month and view changing, but not selection when readOnly prop is passed', () => {
     const onChangeMock = spy();
     const onMonthChangeMock = spy();
     render(
@@ -102,7 +102,7 @@ describe('<CalendarPicker />', () => {
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
-  it('does not allow interaction when disabled prop is passed', () => {
+  it('should not allow interaction when disabled prop is passed', () => {
     const onChangeMock = spy();
     const onMonthChangeMock = spy();
     render(
@@ -119,12 +119,33 @@ describe('<CalendarPicker />', () => {
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).to.equal(null);
 
     fireEvent.click(screen.getByTitle('Previous month'));
-    expect(onMonthChangeMock.callCount).to.equal(1);
+    expect(onMonthChangeMock.callCount).to.equal(0);
 
     fireEvent.click(screen.getByTitle('Next month'));
-    expect(onMonthChangeMock.callCount).to.equal(1);
+    expect(onMonthChangeMock.callCount).to.equal(0);
 
     fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
     expect(onChangeMock.callCount).to.equal(0);
+  });
+
+  it('should display disabled days when disabled prop is passed', () => {
+    const onChangeMock = spy();
+    const onMonthChangeMock = spy();
+    render(
+      <CalendarPicker
+        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        onChange={onChangeMock}
+        onMonthChange={onMonthChangeMock}
+        disabled
+      />,
+    );
+
+    // days are disabled
+    const daysContainer = screen.getByRole('grid');
+    const days = getAllByRole(daysContainer, 'button');
+    const disabledDays = days.filter((day) => day.getAttribute('disabled') !== null);
+
+    expect(days.length).to.equal(31);
+    expect(disabledDays.length).to.equal(31);
   });
 });

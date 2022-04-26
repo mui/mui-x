@@ -7,6 +7,7 @@ import {
   fireTouchChangedEvent,
   screen,
   within,
+  getAllByRole,
 } from '@mui/monorepo/test/utils';
 import { ClockPicker, clockPickerClasses as classes } from '@mui/x-date-pickers/ClockPicker';
 import {
@@ -19,7 +20,7 @@ describe('<ClockPicker />', () => {
   const { render } = createPickerRenderer();
 
   describeConformance(
-    <ClockPicker date={adapterToUse.date()} showViewSwitcher onChange={() => {}} />,
+    <ClockPicker date={adapterToUse.date()} showViewSwitcher onChange={() => { }} />,
     () => ({
       classes,
       inheritComponent: 'div',
@@ -40,21 +41,21 @@ describe('<ClockPicker />', () => {
   );
 
   it('renders a listbox with a name', () => {
-    render(<ClockPicker date={null} onChange={() => {}} />);
+    render(<ClockPicker date={null} onChange={() => { }} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveAccessibleName('Select hours. No time selected');
   });
 
   it('has a name depending on the `date`', () => {
-    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
+    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => { }} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveAccessibleName('Select hours. Selected time is 4:20 AM');
   });
 
   it('renders the current value as an accessible option', () => {
-    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
+    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => { }} />);
 
     const listbox = screen.getByRole('listbox');
     const selectedOption = within(listbox).getByRole('option', { selected: true });
@@ -63,7 +64,7 @@ describe('<ClockPicker />', () => {
   });
 
   it('can be autofocused on mount', () => {
-    render(<ClockPicker autoFocus date={null} onChange={() => {}} />);
+    render(<ClockPicker autoFocus date={null} onChange={() => { }} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveFocus();
@@ -71,7 +72,7 @@ describe('<ClockPicker />', () => {
 
   it('stays focused when the view changes', () => {
     const { setProps } = render(
-      <ClockPicker autoFocus date={null} onChange={() => {}} view="hours" />,
+      <ClockPicker autoFocus date={null} onChange={() => { }} view="hours" />,
     );
 
     setProps({ view: 'minutes' });
@@ -81,7 +82,7 @@ describe('<ClockPicker />', () => {
   });
 
   it('selects the current date on mount', () => {
-    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
+    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => { }} />);
 
     const selectedOption = screen.getByRole('option', { selected: true });
     expect(selectedOption).toHaveAccessibleName('4 hours');
@@ -177,7 +178,7 @@ describe('<ClockPicker />', () => {
       <ClockPicker
         autoFocus
         date={adapterToUse.date('2019-01-01T18:20:00.000')}
-        onChange={() => {}}
+        onChange={() => { }}
         shouldDisableTime={shouldDisableTime}
         ampm
       />,
@@ -191,6 +192,66 @@ describe('<ClockPicker />', () => {
     // Should be called with every hour post meridiem (from 12 to 23) since current date hour is 6PM
     expect(Math.min(...hours)).to.equal(12);
     expect(Math.max(...hours)).to.equal(23);
+  });
+
+  it('should display options, but not update value when readOnly prop is passed', () => {
+    const selectEvent = {
+      changedTouches: [
+        {
+          clientX: 150,
+          clientY: 60,
+        },
+      ],
+    };
+    const onChangeMock = spy();
+    render(
+      <ClockPicker
+        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        onChange={onChangeMock}
+        readOnly
+      />,
+    );
+
+    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    expect(onChangeMock.callCount).to.equal(0);
+
+    // hours are not disabled
+    const hoursContainer = screen.getByRole('listbox');
+    const hours = getAllByRole(hoursContainer, 'option');
+    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+
+    expect(hours.length).to.equal(24);
+    expect(disabledHours.length).to.equal(0);
+  });
+
+  it('should display disabled options when disabled prop is passed', () => {
+    const selectEvent = {
+      changedTouches: [
+        {
+          clientX: 150,
+          clientY: 60,
+        },
+      ],
+    };
+    const onChangeMock = spy();
+    render(
+      <ClockPicker
+        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        onChange={onChangeMock}
+        disabled
+      />,
+    );
+
+    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    expect(onChangeMock.callCount).to.equal(0);
+
+    // hours are disabled
+    const hoursContainer = screen.getByRole('listbox');
+    const hours = getAllByRole(hoursContainer, 'option');
+    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+
+    expect(hours.length).to.equal(24);
+    expect(disabledHours.length).to.equal(24);
   });
 
   describe('Time validation on touch ', () => {

@@ -267,9 +267,9 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
     readOnly,
   };
 
-  // When disable or readonly, limit the view to the selected date
-  const minDateWithReadOnly = ((disabled || readOnly) && date) || minDate;
-  const maxDateWithReadOnly = ((disabled || readOnly) && date) || maxDate;
+  // When disable, limit the view to the selected date
+  const minDateWithDisabled = (disabled && date) || minDate;
+  const maxDateWithDisabled = (disabled && date) || maxDate;
 
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
@@ -280,8 +280,9 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
         currentMonth={calendarState.currentMonth}
         onViewChange={setOpenView}
         onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
-        minDate={minDateWithReadOnly}
-        maxDate={maxDateWithReadOnly}
+        minDate={minDateWithDisabled}
+        maxDate={maxDateWithDisabled}
+        disabled={disabled}
         disablePast={disablePast}
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}

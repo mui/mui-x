@@ -1,15 +1,14 @@
 {
   "props": {
     "date": { "type": { "name": "any" }, "required": true },
-    "disabled": { "type": { "name": "any" }, "default": "false", "required": true },
     "onChange": { "type": { "name": "func" }, "required": true },
-    "readOnly": { "type": { "name": "any" }, "default": "false", "required": true },
     "ampm": { "type": { "name": "bool" } },
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
+    "disabled": { "type": { "name": "any" }, "default": "false" },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "getClockLabelText": {
       "type": { "name": "func" },
@@ -39,6 +38,7 @@
       },
       "default": "'hours'"
     },
+    "readOnly": { "type": { "name": "any" }, "default": "false" },
     "rightArrowButtonText": { "type": { "name": "string" }, "default": "'open next view'" },
     "shouldDisableTime": { "type": { "name": "func" } },
     "view": {
