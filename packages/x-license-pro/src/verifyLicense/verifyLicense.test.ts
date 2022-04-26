@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { generateLicence } from '../generateLicense/generateLicense';
+import { generateLicense } from '../generateLicense/generateLicense';
 import { generateReleaseInfo, verifyLicense } from './verifyLicense';
 import { LicenseStatus } from '../utils/licenseStatus';
 
@@ -8,7 +8,7 @@ const oneYear = oneDayInMS * 365;
 const RELEASE_INFO = generateReleaseInfo();
 
 describe('License: verifyLicense', () => {
-  const validLicense = generateLicence({
+  const validLicense = generateLicense({
     expiryDate: new Date(new Date().getTime() + oneYear),
     orderNumber: 'MUI-123',
   });
@@ -24,7 +24,7 @@ describe('License: verifyLicense', () => {
   });
 
   it('should check expired License properly', () => {
-    const expiredLicense = generateLicence({
+    const expiredLicense = generateLicense({
       expiryDate: new Date(new Date().getTime() - oneDayInMS),
       orderNumber: 'MUI-123',
     });

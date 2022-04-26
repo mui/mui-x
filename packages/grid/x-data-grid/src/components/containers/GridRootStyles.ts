@@ -41,7 +41,11 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.menuList}`]: styles.menuList },
     { [`& .${gridClasses['row--editable']}`]: styles['row--editable'] },
     { [`& .${gridClasses['row--editing']}`]: styles['row--editing'] },
+    { [`& .${gridClasses['row--dragging']}`]: styles['row--dragging'] },
     { [`& .${gridClasses.row}`]: styles.row },
+    { [`& .${gridClasses.rowReorderCellPlaceholder}`]: styles.rowReorderCellPlaceholder },
+    { [`& .${gridClasses.rowReorderCell}`]: styles.rowReorderCell },
+    { [`& .${gridClasses['rowReorderCell--draggable']}`]: styles['rowReorderCell--draggable'] },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
     { [`& .${gridClasses.withBorder}`]: styles.withBorder },
     { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
@@ -287,6 +291,21 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
       gridGap: theme.spacing(1),
     },
+    [`& .${gridClasses.rowReorderCell}`]: {
+      display: 'inline-flex',
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      opacity: theme.palette.action.disabledOpacity,
+    },
+    [`& .${gridClasses['rowReorderCell--draggable']}`]: {
+      cursor: 'move',
+      opacity: 1,
+    },
+    [`& .${gridClasses.rowReorderCellContainer}`]: {
+      padding: 0,
+      alignItems: 'stretch',
+    },
     [`& .${gridClasses.withBorder}`]: {
       borderRight: `1px solid ${borderColor}`,
     },
@@ -303,11 +322,24 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       width: '100%',
     },
-    [`& .${gridClasses['columnHeader--dragging']}`]: {
+    [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
+      display: 'none',
+    },
+    [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
       background: theme.palette.background.paper,
       padding: '0 12px',
       borderRadius: theme.shape.borderRadius,
       opacity: theme.palette.action.disabledOpacity,
+    },
+    [`& .${gridClasses['row--dragging']}`]: {
+      background: theme.palette.background.paper,
+      padding: '0 12px',
+      borderRadius: theme.shape.borderRadius,
+      opacity: theme.palette.action.disabledOpacity,
+
+      [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
+        display: 'flex',
+      },
     },
     [`& .${gridClasses.treeDataGroupingCell}`]: {
       display: 'flex',

@@ -19,8 +19,6 @@ import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 
-export interface ClockPickerComponentsPropsOverrides {}
-
 const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
   const { classes } = ownerState;
   const slots = {
@@ -70,6 +68,21 @@ export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationP
   ) => string;
 }
 
+export interface ClockPickerSlotsComponent {
+  LeftArrowButton: React.ElementType;
+  LeftArrowIcon: React.ElementType;
+  RightArrowButton: React.ElementType;
+  RightArrowIcon: React.ElementType;
+}
+
+// We keep the interface to allow module augmentation
+export interface ClockPickerComponentsPropsOverrides {}
+
+export interface ClockPickerSlotsComponentsProps {
+  leftArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
+  rightArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
+}
+
 export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate> {
   className?: string;
   /**
@@ -84,21 +97,11 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    */
-  components?: {
-    LeftArrowButton?: React.ElementType;
-    LeftArrowIcon?: React.ElementType;
-    RightArrowButton?: React.ElementType;
-    RightArrowIcon?: React.ElementType;
-  };
-
+  components?: Partial<ClockPickerSlotsComponent>;
   /**
    * The props used for each slot inside.
    */
-  componentsProps?: {
-    leftArrowButton?: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
-    rightArrowButton?: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
-  };
-
+  componentsProps?: Partial<ClockPickerSlotsComponentsProps>;
   /**
    * Selected date @DateIOType.
    */

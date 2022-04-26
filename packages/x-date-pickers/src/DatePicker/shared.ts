@@ -3,12 +3,22 @@ import { useThemeProps } from '@mui/material/styles';
 import { ParseableDate } from '../internals/models/parseableDate';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import {
+  CalendarPickerSlotsComponent,
+  ExportedCalendarPickerProps,
+} from '../CalendarPicker/CalendarPicker';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
-import { ExportedDateInputProps } from '../internals/components/PureDateInput';
+import {
+  DateInputSlotsComponent,
+  ExportedDateInputProps,
+} from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+
+export interface DatePickerSlotsComponent
+  extends CalendarPickerSlotsComponent,
+    DateInputSlotsComponent {}
 
 export interface BaseDatePickerProps<TDate>
   extends ExportedCalendarPickerProps<TDate>,
@@ -20,8 +30,7 @@ export interface BaseDatePickerProps<TDate>
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: ExportedCalendarPickerProps<TDate>['components'] &
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null>['components'];
+  components?: Partial<DatePickerSlotsComponent>;
   /**
    * Callback fired on view change.
    * @param {CalendarPickerView} view The new view.

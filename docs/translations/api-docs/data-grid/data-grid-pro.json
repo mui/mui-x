@@ -100,6 +100,7 @@
     "onRowEditStart": "Callback fired when the row turns to edit mode.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams, event: MuiEvent&lt;React.KeyboardEvent | React.MouseEvent&gt;) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br><em>event:</em> The event that caused this prop to be called.",
     "onRowEditStop": "Callback fired when the row turns to view mode.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams, event: MuiEvent&lt;MuiBaseEvent&gt;) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br><em>event:</em> The event that caused this prop to be called.",
     "onRowGroupingModelChange": "Callback fired when the row grouping model changes.<br><br><strong>Signature:</strong><br><code>function(model: GridRowGroupingModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> Columns used as grouping criteria.<br><em>details:</em> Additional details for this callback.",
+    "onRowOrderChange": "Callback fired when a row is being reordered.<br><br><strong>Signature:</strong><br><code>function(params: GridRowOrderChangeParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridRowOrderChangeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onRowsScrollEnd": "Callback fired when scrolling to the bottom of the grid viewport.<br><br><strong>Signature:</strong><br><code>function(params: GridRowScrollEndParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridRowScrollEndParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onSelectionModelChange": "Callback fired when the selection state of one or multiple rows changes.<br><br><strong>Signature:</strong><br><code>function(selectionModel: GridSelectionModel, details: GridCallbackDetails) =&gt; void</code><br><em>selectionModel:</em> With all the row ids GridSelectionModel.<br><em>details:</em> Additional details for this callback.",
     "onSortModelChange": "Callback fired when the sort model changes before a column is sorted.<br><br><strong>Signature:</strong><br><code>function(model: GridSortModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from GridSortModel.<br><em>details:</em> Additional details for this callback.",
@@ -115,6 +116,7 @@
     "rowGroupingColumnMode": "If <code>single</code>, all column we are grouping by will be represented in the same grouping the same column. If <code>multiple</code>, each column we are grouping by will be represented in its own column.",
     "rowGroupingModel": "Set the row grouping model of the grid.",
     "rowHeight": "Set the height in pixel of a row in the grid.",
+    "rowReordering": "If <code>true</code>, the reordering of rows is enabled.",
     "rows": "Set of rows of type GridRowsProp.",
     "rowSpacingType": "Sets the type of space between rows added by <code>getRowSpacing</code>.",
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",
@@ -243,6 +245,10 @@
     "columnHeaderDraggableContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's draggable container element"
+    },
+    "rowReorderCellPlaceholder": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the row's draggable placeholder element inside the special row reorder cell"
     },
     "columnHeaderDropZone": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -464,6 +470,11 @@
       "nodeName": "the row element",
       "conditions": "the row is in edit mode"
     },
+    "row--dragging": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the floating special row reorder cell element",
+      "conditions": "it is dragged"
+    },
     "row--lastVisible": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the last visible row element on every page of the grid"
@@ -472,6 +483,16 @@
     "rowCount": {
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
       "nodeName": "the footer row count element to show the total number of rows"
+    },
+    "rowReorderCellContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the row reorder cell container element"
+    },
+    "rowReorderCell": {
+      "description": "Styles applied to the root element of the row reorder cell"
+    },
+    "rowReorderCell--draggable": {
+      "description": "Styles applied to the root element of the row reorder cell when dragging is allowed"
     },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",
@@ -567,6 +588,7 @@
     "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
     "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
-    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel."
+    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
+    "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row."
   }
 }
