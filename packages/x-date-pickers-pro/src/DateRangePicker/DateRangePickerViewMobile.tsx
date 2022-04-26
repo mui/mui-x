@@ -43,6 +43,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     onChange,
     renderDay = (_, dayProps) => <DateRangePickerDay<TDate> {...dayProps} />,
     rightArrowButtonText,
+    disabled,
+    readOnly,
     ...other
   } = props;
 
@@ -51,14 +53,19 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const minDate = minDateProp ?? defaultDates.minDate;
   const maxDate = maxDateProp ?? defaultDates.maxDate;
 
+  // When disable or readonly, limit the view to the selected range
+  const [start, end] = date;
+  const minDateWithReadOnly = ((disabled || readOnly) && start) || minDate;
+  const maxDateWithReadOnly = ((disabled || readOnly) && end) || maxDate;
+
   return (
     <React.Fragment>
       <PickersCalendarHeader
         components={components}
         componentsProps={componentsProps}
         leftArrowButtonText={leftArrowButtonText}
-        maxDate={maxDate}
-        minDate={minDate}
+        maxDate={maxDateWithReadOnly}
+        minDate={minDateWithReadOnly}
         onMonthChange={changeMonth as any}
         openView="day"
         rightArrowButtonText={rightArrowButtonText}
@@ -67,6 +74,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
       />
       <DayPicker<TDate>
         {...other}
+        disabled={disabled}
+        readOnly={readOnly}
         date={date}
         onChange={onChange}
         onFocusedDayChange={doNothing}

@@ -157,6 +157,16 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    * @default 'hours'
    */
   openTo?: ClockPickerView;
+  /**
+   * If `true`, the picker and text field are disabled.
+   * @default false
+   */
+  disabled;
+  /**
+   * Make picker read only.
+   * @default false
+   */
+  readOnly;
 }
 
 const ClockPickerRoot = styled(PickerViewRoot, {
@@ -237,6 +247,8 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     openTo,
     onViewChange,
     className,
+    disabled,
+    readOnly,
   } = props;
 
   const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
@@ -338,7 +350,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
             ampm,
             onChange: handleHoursChange,
             getClockNumberText: getHoursClockNumberText,
-            isDisabled: (value) => isTimeDisabled(value, 'hours'),
+            isDisabled: (value) => disabled || isTimeDisabled(value, 'hours'),
             selectedId,
           }),
         };
@@ -358,7 +370,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
             value: minutesValue,
             onChange: handleMinutesChange,
             getClockNumberText: getMinutesClockNumberText,
-            isDisabled: (value) => isTimeDisabled(value, 'minutes'),
+            isDisabled: (value) => disabled || isTimeDisabled(value, 'minutes'),
             selectedId,
           }),
         };
@@ -378,7 +390,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
             value: secondsValue,
             onChange: handleSecondsChange,
             getClockNumberText: getSecondsClockNumberText,
-            isDisabled: (value) => isTimeDisabled(value, 'seconds'),
+            isDisabled: (value) => disabled || isTimeDisabled(value, 'seconds'),
             selectedId,
           }),
         };
@@ -400,6 +412,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     dateOrMidnight,
     isTimeDisabled,
     selectedId,
+    disabled,
   ]);
 
   const ownerState = props;
@@ -434,6 +447,8 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         meridiemMode={meridiemMode}
         handleMeridiemChange={handleMeridiemChange}
         selectedId={selectedId}
+        disabled={disabled}
+        readOnly={readOnly}
         {...viewProps}
       />
     </ClockPickerRoot>
