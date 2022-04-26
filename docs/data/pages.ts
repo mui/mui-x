@@ -29,7 +29,6 @@ const pages = [
         ],
       },
       { pathname: '/x/react-data-grid/rows' },
-      { pathname: '/x/react-data-grid/cells' },
       { pathname: '/x/react-data-grid/editing' },
       { pathname: '/x/react-data-grid/sorting' },
       { pathname: '/x/react-data-grid/filtering' },

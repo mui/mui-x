@@ -59,6 +59,17 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 
 {{"demo": "VisibleColumnsModelControlled.js", "bg": "inline"}}
 
+## Column visibility panel
+
+The column visibility panel can be opened through the grid toolbar.
+To enable it, you need to add `Toolbar: GridToolbar` to the grid `components` prop.
+
+The user can then choose which columns are visible using the _Columns_ button.
+
+{{"demo": "ColumnSelectorGrid.js", "bg": "inline"}}
+
+**Note**: To hide the column visibility panel from the toolbar, set the prop `disableColumnSelector={true}`.
+
 ## Column `hide` property (deprecated)
 
 Before the introduction of the `columnVisibilityModel`, the columns could be hidden by setting the `hide` property in `GridColDef` to `true`.

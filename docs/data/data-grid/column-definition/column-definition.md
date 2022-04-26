@@ -27,6 +27,104 @@ interface GridColDef {
 > Otherwise, you take the risk of losing elements like column width or order.
 > You can create the array outside the render function or memoize it.
 
+## Providing content
+
+### Value getter
+
+Sometimes a column might not have a corresponding value, or you might want to render a combination of different fields.
+
+To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below.
+
+```tsx
+function getFullName(params) {
+  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
+}
+
+const columns: GridColDef[] = [
+  { field: 'firstName', headerName: 'First name', width: 130 },
+  { field: 'lastName', headerName: 'Last name', width: 130 },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    width: 160,
+    valueGetter: getFullName,
+  },
+];
+```
+
+{{"demo": "ValueGetterGrid.js", "bg": "inline"}}
+
+The value generated is used for filtering, sorting, rendering, etc. unless overridden by a more specific configuration.
+
+### Value formatter
+
+The value formatter allows you to convert the value before displaying it.
+Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (e.g. "1,000.50").
+
+In the following demo, a formatter is used to display the tax rate's decimal value (e.g. 0.2) as a percentage (e.g. 20%).
+
+{{"demo": "ValueFormatterGrid.js", "bg": "inline"}}
+
+The value generated is only used for rendering purposes.
+Filtering and sorting do not rely on the formatted value.
+Use the [`valueParser`](/x/react-data-grid/cells/#value-parser) to support filtering.
+
+## Rendering content
+
+### Custom cells
+
+By default, the grid renders the value as a string in the cell.
+It resolves the rendered output in the following order:
+
+1. `renderCell() => ReactElement`
+2. `valueFormatter() => string`
+3. `valueGetter() => string`
+4. `row[field]`
+
+The `renderCell` method of the column definitions is similar to `valueFormatter`.
+However, it trades to be able to only render in a cell in exchange for allowing to return a React node (instead of a string).
+
+```tsx
+const columns: GridColDef[] = [
+  {
+    field: 'date',
+    headerName: 'Year',
+    renderCell: (params: GridRenderCellParams<Date>) => (
+      <strong>
+        {params.value.getFullYear()}
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          style={{ marginLeft: 16 }}
+        >
+          Open
+        </Button>
+      </strong>
+    ),
+  },
+];
+```
+
+{{"demo": "RenderCellGrid.js", "bg": "inline"}}
+
+**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/x/react-data-grid/export/#exported-cells) the data.
+
+> ⚠️ When using `renderCell` with object cell values
+> remember to handle [sorting](/x/react-data-grid/sorting/#custom-comparator).
+> Otherwise, sorting won't work.
+
+### Expand cell renderer
+
+By default, the grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
+As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the grid.
+
+{{"demo": "RenderExpandCellGrid.js", "bg": "inline"}}
+
+### Styling cells
+
+You can check the [styling cells](/x/react-data-grid/style/#styling-cells) section for more information.
+
 ## Column types
 
 To facilitate the configuration of the columns, some column types are predefined.
@@ -107,18 +205,6 @@ const usdPrice: GridColTypeDef = {
 {{"demo": "CustomColumnTypesGrid.js", "bg": "inline"}}
 
 > ⚠ If an unsupported column type is used the `string` column type will be used instead.
-
-## Column selector
-
-To enable the toolbar you need to add `Toolbar: GridToolbar` to the grid `components` prop.
-
-In addition, the column selector can be shown by using the "Show columns" menu item in the column menu.
-
-The user can choose which columns are visible using the column selector from the toolbar.
-
-To disable the column selector, set the prop `disableColumnSelector={true}`.
-
-{{"demo": "ColumnSelectorGrid.js", "bg": "inline"}}
 
 ## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
