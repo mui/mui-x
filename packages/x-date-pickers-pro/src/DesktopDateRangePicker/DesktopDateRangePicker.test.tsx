@@ -354,7 +354,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
-  describe.skip('picker state', () => {
+  describe('picker state', () => {
     it('should open when focusing the start input', () => {
       const onOpen = spy();
 
