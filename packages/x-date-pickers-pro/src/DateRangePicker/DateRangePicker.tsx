@@ -103,6 +103,7 @@ DateRangePicker.propTypes = {
   /**
    * Cancel text message.
    * @default 'Cancel'
+   * @deprecated
    */
   cancelText: PropTypes.node,
   children: PropTypes.node,
@@ -118,6 +119,7 @@ DateRangePicker.propTypes = {
   /**
    * Clear text message.
    * @default 'Clear'
+   * @deprecated
    */
   clearText: PropTypes.node,
   /**
@@ -225,6 +227,7 @@ DateRangePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -251,6 +254,7 @@ DateRangePicker.propTypes = {
   /**
    * Ok button text.
    * @default 'OK'
+   * @deprecated
    */
   okText: PropTypes.node,
   /**
@@ -375,6 +379,7 @@ DateRangePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
@@ -414,6 +419,7 @@ DateRangePicker.propTypes = {
   /**
    * Today text message.
    * @default 'Today'
+   * @deprecated
    */
   todayText: PropTypes.node,
   /**

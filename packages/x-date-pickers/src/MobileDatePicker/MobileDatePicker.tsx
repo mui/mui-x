@@ -91,6 +91,7 @@ MobileDatePicker.propTypes = {
   /**
    * Cancel text message.
    * @default 'Cancel'
+   * @deprecated
    */
   cancelText: PropTypes.node,
   children: PropTypes.node,
@@ -106,6 +107,7 @@ MobileDatePicker.propTypes = {
   /**
    * Clear text message.
    * @default 'Clear'
+   * @deprecated
    */
   clearText: PropTypes.node,
   /**
@@ -197,6 +199,7 @@ MobileDatePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -220,6 +223,7 @@ MobileDatePicker.propTypes = {
   /**
    * Ok button text.
    * @default 'OK'
+   * @deprecated
    */
   okText: PropTypes.node,
   /**
@@ -335,6 +339,7 @@ MobileDatePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
@@ -369,6 +374,7 @@ MobileDatePicker.propTypes = {
   /**
    * Today text message.
    * @default 'Today'
+   * @deprecated
    */
   todayText: PropTypes.node,
   /**

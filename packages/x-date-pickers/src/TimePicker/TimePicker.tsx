@@ -97,6 +97,7 @@ TimePicker.propTypes = {
   /**
    * Cancel text message.
    * @default 'Cancel'
+   * @deprecated
    */
   cancelText: PropTypes.node,
   children: PropTypes.node,
@@ -112,6 +113,7 @@ TimePicker.propTypes = {
   /**
    * Clear text message.
    * @default 'Clear'
+   * @deprecated
    */
   clearText: PropTypes.node,
   /**
@@ -221,6 +223,7 @@ TimePicker.propTypes = {
   /**
    * Ok button text.
    * @default 'OK'
+   * @deprecated
    */
   okText: PropTypes.node,
   /**
@@ -329,6 +332,7 @@ TimePicker.propTypes = {
   /**
    * Today text message.
    * @default 'Today'
+   * @deprecated
    */
   todayText: PropTypes.node,
   /**

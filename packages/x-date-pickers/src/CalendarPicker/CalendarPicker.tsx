@@ -381,6 +381,7 @@ CalendarPicker.propTypes = {
   getViewSwitchingButtonText: PropTypes.func,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -450,6 +451,7 @@ CalendarPicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**

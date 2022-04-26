@@ -26,10 +26,12 @@ export interface ExportedArrowSwitcherProps {
   };
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText?: string;
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText?: string;
 }
