@@ -135,7 +135,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Zuklappen',
 
   // Row reordering text
-  rowReorderingHeaderName: 'Reihen neuordnen',
+  rowReorderingHeaderName: 'Reihen neu ordnen',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);
