@@ -25,7 +25,11 @@
       "type": { "name": "func" },
       "default": "(seconds: string) => `${seconds} seconds`"
     },
-    "leftArrowButtonText": { "type": { "name": "string" }, "default": "'open previous view'" },
+    "leftArrowButtonText": {
+      "type": { "name": "string" },
+      "default": "'open previous view'",
+      "deprecated": true
+    },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
@@ -37,7 +41,11 @@
       },
       "default": "'hours'"
     },
-    "rightArrowButtonText": { "type": { "name": "string" }, "default": "'open next view'" },
+    "rightArrowButtonText": {
+      "type": { "name": "string" },
+      "default": "'open next view'",
+      "deprecated": true
+    },
     "shouldDisableTime": { "type": { "name": "func" } },
     "view": {
       "type": {

@@ -8,7 +8,13 @@
       }
     },
     "dateLibInstance": { "type": { "name": "any" } },
-    "locale": { "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" } }
+    "locale": { "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" } },
+    "localeText": {
+      "type": {
+        "name": "shape",
+        "description": "{ cancel?: string, clear?: string, end?: string, nextMonth?: string, ok?: string, openNextView?: string, openPreviousView?: string, previousMonth?: string, start?: string, today?: string }"
+      }
+    }
   },
   "slots": {},
   "name": "LocalizationProvider",

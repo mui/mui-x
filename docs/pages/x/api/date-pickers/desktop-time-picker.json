@@ -10,7 +10,7 @@
     "ampmInClock": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "clearable": { "type": { "name": "bool" } },
-    "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
+    "clearText": { "type": { "name": "node" }, "default": "'Clear'", "deprecated": true },
     "components": { "type": { "name": "object" } },
     "disableCloseOnSelect": {
       "type": { "name": "bool" },
