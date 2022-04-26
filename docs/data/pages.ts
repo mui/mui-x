@@ -34,6 +34,13 @@ const pages = [
       {
         pathname: '/x/react-data-grid/row-grouping',
         title: 'Group & Pivot',
+        scopePathnames: [
+          '/x/react-data-grid/row-grouping',
+          '/x/react-data-grid/tree-data',
+          '/x/react-data-grid/master-detail',
+          '/x/react-data-grid/aggregation',
+          '/x/react-data-grid/pivoting',
+        ],
         children: [
           { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping', plan: 'premium' },
           { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data', plan: 'pro' },
