@@ -177,6 +177,11 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           return;
         }
 
+        // User reorders a row
+        if (field === '__reorder__') {
+          return;
+        }
+
         // User is editing a cell
         if (apiRef.current.getCellMode(rowId, field) === GridCellModes.Edit) {
           return;

@@ -74,9 +74,7 @@ export const useGridColumnReorder = (
     };
   }, []);
 
-  const handleColumnHeaderDragStart = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderDragStart>
-  >(
+  const handleDragStart = React.useCallback<GridEventListener<GridEvents.columnHeaderDragStart>>(
     (params, event) => {
       if (props.disableColumnReorder || params.colDef.disableReorder) {
         return;
@@ -209,7 +207,7 @@ export const useGridColumnReorder = (
     [props.disableColumnReorder, logger, apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnHeaderDragStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleDragStart);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnter, handleDragEnter);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragOver, handleDragOver);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, handleDragEnd);

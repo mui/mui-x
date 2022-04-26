@@ -38,6 +38,7 @@ import {
   GridKeyboardArrowRight,
   GridAddIcon,
   GridRemoveIcon,
+  GridDragIcon,
   GridColumnHeaderFilterIconButton,
 } from '../components';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
@@ -67,6 +68,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   GroupingCriteriaExpandIcon: GridKeyboardArrowRight,
   DetailPanelExpandIcon: GridAddIcon,
   DetailPanelCollapseIcon: GridRemoveIcon,
+  RowReorderIcon: GridDragIcon,
 };
 
 /**
