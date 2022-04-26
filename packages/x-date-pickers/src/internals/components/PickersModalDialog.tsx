@@ -5,26 +5,32 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
+import { buildDeprecatedPropsWarning } from '../utils/warning';
+import { useLocaleText } from '../hooks/useUtils';
 
 export interface ExportedPickerModalProps {
   /**
    * Ok button text.
    * @default 'OK'
+   * @deprecated
    */
   okText?: React.ReactNode;
   /**
    * Cancel text message.
    * @default 'Cancel'
+   * @deprecated
    */
   cancelText?: React.ReactNode;
   /**
    * Clear text message.
    * @default 'Clear'
+   * @deprecated
    */
   clearText?: React.ReactNode;
   /**
    * Today text message.
    * @default 'Today'
+   * @deprecated
    */
   todayText?: React.ReactNode;
   /**
@@ -80,22 +86,40 @@ const PickersModalDialogActions = styled(DialogActions)<{
   }),
 }));
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDialogProps>) => {
   const {
-    cancelText = 'Cancel',
+    cancelText: cancelTextProp,
     children,
     clearable = false,
-    clearText = 'Clear',
+    clearText: clearTextProp,
     DialogProps = {},
-    okText = 'OK',
+    okText: okTextProp,
     onAccept,
     onClear,
     onDismiss,
     onSetToday,
     open,
     showTodayButton = false,
-    todayText = 'Today',
+    todayText: todayTextProp,
   } = props;
+
+  deprecatedPropsWarning({
+    cancelText: cancelTextProp,
+    clearText: clearTextProp,
+    okText: okTextProp,
+    todayText: todayTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const cancelText = cancelTextProp ?? localeText.cancel;
+  const clearText = clearTextProp ?? localeText.clear;
+  const okText = okTextProp ?? localeText.ok;
+  const todayText = todayTextProp ?? localeText.today;
 
   const ownerState = props;
 

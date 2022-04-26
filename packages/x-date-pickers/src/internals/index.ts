@@ -41,6 +41,7 @@ export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 
 export { executeInTheNextEventLoopTick } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
+export { buildDeprecatedPropsWarning } from './utils/warning';
 
 export { PickersCalendarHeader } from '../CalendarPicker/PickersCalendarHeader';
 export type { ExportedCalendarHeaderProps } from '../CalendarPicker/PickersCalendarHeader';

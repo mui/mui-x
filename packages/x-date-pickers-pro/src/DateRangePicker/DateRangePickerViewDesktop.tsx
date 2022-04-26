@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import {
   useDefaultDates,
   useUtils,
+  useLocaleText,
   ExportedDateValidationProps,
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
@@ -10,6 +11,7 @@ import {
   useNextMonthDisabled,
   DayPicker,
   PickersCalendarProps,
+  buildDeprecatedPropsWarning,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
@@ -82,6 +84,10 @@ function getCalendarsArray(calendars: ExportedDesktopDateRangeCalendarProps<unkn
   }
 }
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 /**
  * @ignore - internal component.
  */
@@ -96,14 +102,24 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     date,
     disableFuture,
     disablePast,
-    leftArrowButtonText = 'Previous month',
+    leftArrowButtonText: leftArrowButtonTextProp,
     maxDate: maxDateProp,
     minDate: minDateProp,
     onChange,
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
-    rightArrowButtonText = 'Next month',
+    rightArrowButtonText: rightArrowButtonTextProp,
     ...other
   } = props;
+
+  deprecatedPropsWarning({
+    leftArrowButtonText: leftArrowButtonTextProp,
+    rightArrowButtonText: rightArrowButtonTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
+  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
 
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
