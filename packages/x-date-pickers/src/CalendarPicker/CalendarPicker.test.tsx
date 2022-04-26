@@ -15,7 +15,7 @@ import {
 describe('<CalendarPicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<CalendarPicker date={adapterToUse.date()} onChange={() => { }} />, () => ({
+  describeConformance(<CalendarPicker date={adapterToUse.date()} onChange={() => {}} />, () => ({
     classes,
     inheritComponent: 'div',
     render,
@@ -36,7 +36,7 @@ describe('<CalendarPicker />', () => {
 
   it('renders calendar standalone', () => {
     render(
-      <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => { }} />,
+      <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
     );
 
     expect(screen.getByText('January')).toBeVisible();
@@ -53,7 +53,7 @@ describe('<CalendarPicker />', () => {
       <CalendarPicker
         date={adapterToUse.date('2019-01-01T00:00:00.000')}
         openTo="year"
-        onChange={() => { }}
+        onChange={() => {}}
       />,
     );
 
@@ -65,7 +65,7 @@ describe('<CalendarPicker />', () => {
     render(
       <CalendarPicker
         date={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={() => { }}
+        onChange={() => {}}
         onViewChange={handleViewChange}
       />,
     );

@@ -21,7 +21,7 @@ describe('<StaticTimePicker />', () => {
 
   describeConformance(
     <StaticTimePicker
-      onChange={() => { }}
+      onChange={() => {}}
       renderInput={(props) => <TextField {...props} />}
       value={null}
     />,

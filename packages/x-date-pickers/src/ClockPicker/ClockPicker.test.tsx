@@ -20,7 +20,7 @@ describe('<ClockPicker />', () => {
   const { render } = createPickerRenderer();
 
   describeConformance(
-    <ClockPicker date={adapterToUse.date()} showViewSwitcher onChange={() => { }} />,
+    <ClockPicker date={adapterToUse.date()} showViewSwitcher onChange={() => {}} />,
     () => ({
       classes,
       inheritComponent: 'div',
@@ -41,21 +41,21 @@ describe('<ClockPicker />', () => {
   );
 
   it('renders a listbox with a name', () => {
-    render(<ClockPicker date={null} onChange={() => { }} />);
+    render(<ClockPicker date={null} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveAccessibleName('Select hours. No time selected');
   });
 
   it('has a name depending on the `date`', () => {
-    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => { }} />);
+    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveAccessibleName('Select hours. Selected time is 4:20 AM');
   });
 
   it('renders the current value as an accessible option', () => {
-    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => { }} />);
+    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     const selectedOption = within(listbox).getByRole('option', { selected: true });
@@ -64,7 +64,7 @@ describe('<ClockPicker />', () => {
   });
 
   it('can be autofocused on mount', () => {
-    render(<ClockPicker autoFocus date={null} onChange={() => { }} />);
+    render(<ClockPicker autoFocus date={null} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveFocus();
@@ -72,7 +72,7 @@ describe('<ClockPicker />', () => {
 
   it('stays focused when the view changes', () => {
     const { setProps } = render(
-      <ClockPicker autoFocus date={null} onChange={() => { }} view="hours" />,
+      <ClockPicker autoFocus date={null} onChange={() => {}} view="hours" />,
     );
 
     setProps({ view: 'minutes' });
@@ -82,7 +82,7 @@ describe('<ClockPicker />', () => {
   });
 
   it('selects the current date on mount', () => {
-    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => { }} />);
+    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
 
     const selectedOption = screen.getByRole('option', { selected: true });
     expect(selectedOption).toHaveAccessibleName('4 hours');
@@ -178,7 +178,7 @@ describe('<ClockPicker />', () => {
       <ClockPicker
         autoFocus
         date={adapterToUse.date('2019-01-01T18:20:00.000')}
-        onChange={() => { }}
+        onChange={() => {}}
         shouldDisableTime={shouldDisableTime}
         ampm
       />,
