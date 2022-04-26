@@ -96,7 +96,7 @@ export default function RowGroupingGetRowGroupChildren() {
           }}
         />
       </div>
-      <Alert severity="info" style={{ marginBottom: 8 }}>
+      <Alert severity="info" sx={{ mb: 1 }}>
         {lastGroupClickedChildren ? (
           <code>
             Movies in the last group clicked
