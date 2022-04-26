@@ -43,7 +43,10 @@ export interface DateRangePickerViewSlotsComponentsProps
 export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'>,
-    Omit<BasePickerProps<RangeInput<TDate>, DateRange<TDate>>, 'value' | 'onChange'> {
+    Omit<
+      BasePickerProps<RangeInput<TDate>, DateRange<TDate>>,
+      'value' | 'onChange' | 'orientation'
+    > {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.

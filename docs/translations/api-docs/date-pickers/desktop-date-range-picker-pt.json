@@ -36,7 +36,6 @@
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: CalendarPickerView) =&gt; void</code><br><em>view:</em> The new view.",
     "open": "Control the popup or dialog open state.",
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
-    "orientation": "Force rendering in particular orientation.",
     "PaperProps": "Paper props passed down to <a href=\"https://mui.com/material-ui/api/paper/\">Paper</a> component.",
     "PopperProps": "Popper props passed down to <a href=\"https://mui.com/material-ui/api/popper/\">Popper</a> component.",
     "readOnly": "Make picker read only.",

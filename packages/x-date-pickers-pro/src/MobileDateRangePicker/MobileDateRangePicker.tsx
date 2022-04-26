@@ -331,10 +331,6 @@ MobileDateRangePicker.propTypes = {
    */
   OpenPickerButtonProps: PropTypes.object,
   /**
-   * Force rendering in particular orientation.
-   */
-  orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  /**
    * Make picker read only.
    * @default false
    */
