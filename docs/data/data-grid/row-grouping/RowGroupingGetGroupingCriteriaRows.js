@@ -66,7 +66,7 @@ export default function RowGroupingGetGroupingCriteriaRows() {
         return;
       }
 
-      const rowIds = apiRef.current.getGroupingCriteriaRows({
+      const rowIds = apiRef.current.getRowGroupChildren({
         groupId: params.id,
       });
 
