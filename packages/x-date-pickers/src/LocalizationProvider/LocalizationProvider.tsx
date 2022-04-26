@@ -1,7 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DateIOFormats } from '@date-io/core/IUtils';
+import { useThemeProps } from '@mui/material/styles';
 import { MuiPickersAdapter } from '../internals/models';
+import { PickersLocaleText } from '../locales/utils/pickersLocaleTextApi';
+import { enUS } from '../locales';
 
 export interface MuiPickersAdapterContextValue<TDate> {
   defaultDates: {
@@ -10,6 +13,8 @@ export interface MuiPickersAdapterContextValue<TDate> {
   };
 
   utils: MuiPickersAdapter<TDate>;
+
+  localeText: Partial<PickersLocaleText>;
 }
 
 export const MuiPickersAdapterContext =
@@ -33,13 +38,27 @@ export interface LocalizationProviderProps {
   dateLibInstance?: any;
   /** Locale for the date library you are using */
   locale?: string | object;
+  /**
+   * Locale for components texts
+   */
+  localeText?: Partial<PickersLocaleText>;
 }
 
 /**
  * @ignore - do not document.
  */
-export function LocalizationProvider(props: LocalizationProviderProps) {
-  const { children, dateAdapter: Utils, dateFormats, dateLibInstance, locale } = props;
+export function LocalizationProvider(inProps: LocalizationProviderProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiLocalizationProvider' });
+
+  const {
+    children,
+    dateAdapter: Utils,
+    dateFormats,
+    dateLibInstance,
+    locale,
+    localeText = {},
+  } = props;
+
   const utils = React.useMemo(
     () => new Utils({ locale, formats: dateFormats, instance: dateLibInstance }),
     [Utils, locale, dateFormats, dateLibInstance],
@@ -53,8 +72,15 @@ export function LocalizationProvider(props: LocalizationProviderProps) {
   }, [utils]);
 
   const contextValue: MuiPickersAdapterContextValue<unknown> = React.useMemo(() => {
-    return { utils, defaultDates };
-  }, [defaultDates, utils]);
+    return {
+      utils,
+      defaultDates,
+      localeText: {
+        ...enUS.components.MuiLocalizationProvider.defaultProps.localeText,
+        ...localeText,
+      },
+    };
+  }, [defaultDates, utils, localeText]);
 
   return (
     <MuiPickersAdapterContext.Provider value={contextValue}>
@@ -116,4 +142,19 @@ LocalizationProvider.propTypes = {
    * Locale for the date library you are using
    */
   locale: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.shape({
+    cancel: PropTypes.string,
+    clear: PropTypes.string,
+    end: PropTypes.string,
+    nextMonth: PropTypes.string,
+    ok: PropTypes.string,
+    openNextView: PropTypes.string,
+    openPreviousView: PropTypes.string,
+    previousMonth: PropTypes.string,
+    start: PropTypes.string,
+    today: PropTypes.string,
+  }),
 } as any;

@@ -23,7 +23,7 @@ export { DAY_MARGIN } from './constants/dimensions';
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
-export { useDefaultDates, useUtils } from './hooks/useUtils';
+export { useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export { useValidation } from './hooks/validation/useValidation';
 export type { ValidationProps, Validator } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
