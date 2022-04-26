@@ -14,6 +14,7 @@ export default function ResponsiveDateTimePickers() {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Stack spacing={3}>
         <MobileDateTimePicker
+          label="For mobile"
           value={value}
           onChange={(newValue) => {
             setValue(newValue);
@@ -21,6 +22,7 @@ export default function ResponsiveDateTimePickers() {
           renderInput={(params) => <TextField {...params} />}
         />
         <DesktopDateTimePicker
+          label="For desktop"
           value={value}
           onChange={(newValue) => {
             setValue(newValue);
@@ -28,6 +30,7 @@ export default function ResponsiveDateTimePickers() {
           renderInput={(params) => <TextField {...params} />}
         />
         <DateTimePicker
+          label="Responsive"
           renderInput={(params) => <TextField {...params} />}
           value={value}
           onChange={(newValue) => {
