@@ -66,7 +66,7 @@ interface DateStateAction<DraftValue> {
    * If `true`, do not fire the `onChange` callback
    * @default false
    */
-  internal?: boolean;
+  skipOnChangeCall?: boolean;
 }
 
 interface PickerStateProps<TInput, TDateValue> {
@@ -122,7 +122,7 @@ export const usePickerState = <TInput, TDate>(
       });
 
       if (
-        !params.internal &&
+        !params.skipOnChangeCall &&
         !valueManager.areValuesEqual(utils, dateState.committed, params.value)
       ) {
         onChange(params.value);
@@ -147,13 +147,13 @@ export const usePickerState = <TInput, TDate>(
   React.useEffect(() => {
     if (isOpen) {
       // Update all dates in state to equal the current prop value
-      setDate({ action: 'setAll', value: parsedDateValue, internal: true });
+      setDate({ action: 'setAll', value: parsedDateValue, skipOnChangeCall: true });
     }
   }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Set the draft and committed date to equal the new prop value.
   if (!valueManager.areValuesEqual(utils, dateState.committed, parsedDateValue)) {
-    setDate({ action: 'setCommitted', value: parsedDateValue, internal: true });
+    setDate({ action: 'setCommitted', value: parsedDateValue, skipOnChangeCall: true });
   }
 
   const wrapperProps = React.useMemo<PrivateWrapperProps>(
@@ -202,7 +202,7 @@ export const usePickerState = <TInput, TDate>(
         switch (selectionState) {
           case 'shallow': {
             // Update the `draft` state but do not fire `onChange`
-            return setDate({ action: 'setDraft', value: newDate, internal: true });
+            return setDate({ action: 'setDraft', value: newDate, skipOnChangeCall: true });
           }
 
           case 'partial': {
