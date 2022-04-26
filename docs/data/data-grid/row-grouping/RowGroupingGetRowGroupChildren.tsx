@@ -54,7 +54,7 @@ const useKeepGroupingColumnsHidden = (
   );
 };
 
-export default function RowGroupingGetGroupingCriteriaRows() {
+export default function RowGroupingGetRowGroupChildren() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 

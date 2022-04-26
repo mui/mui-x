@@ -2304,7 +2304,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('apiRef: getGroupingCriteriaRows', () => {
+  describe('apiRef: getRowGroupChildren', () => {
     it('should return the rows in group of depth 0 of length 1 from tree of depth 1', () => {
       render(
         <Test

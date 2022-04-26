@@ -46,7 +46,7 @@ const useKeepGroupingColumnsHidden = (apiRef, columns, initialModel, leafField) 
   );
 };
 
-export default function RowGroupingGetGroupingCriteriaRows() {
+export default function RowGroupingGetRowGroupChildren() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
@@ -96,7 +96,7 @@ export default function RowGroupingGetGroupingCriteriaRows() {
           }}
         />
       </div>
-      <Alert severity="info" style={{ marginBottom: 8 }}>
+      <Alert severity="info" sx={{ mb: 1 }}>
         {lastGroupClickedChildren ? (
           <code>
             Movies in the last group clicked
