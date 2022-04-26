@@ -24,7 +24,7 @@ const useFakeMutation = () => {
   );
 };
 
-export default function CellEditServerSidePersistence() {
+export default function ServerSidePersistence() {
   const mutateRow = useFakeMutation();
 
   const [snackbar, setSnackbar] = React.useState(null);
