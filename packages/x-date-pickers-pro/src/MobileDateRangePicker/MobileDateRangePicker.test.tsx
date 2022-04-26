@@ -51,7 +51,7 @@ describe('<MobileDateRangePicker />', () => {
     }),
   );
 
-  describe('picker state', () => {
+  describe.only('picker state', () => {
     it('should open when focusing the start input', () => {
       const onOpen = spy();
 

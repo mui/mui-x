@@ -274,7 +274,7 @@ describe('<MobileDatePicker />', () => {
     });
   });
 
-  describe('picker state', () => {
+  describe.only('picker state', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
 
