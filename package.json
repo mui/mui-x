@@ -54,6 +54,8 @@
     "test:performance:server": "serve test/performance -p 5001",
     "test:argos": "node ./scripts/pushArgos.js",
     "typescript": "lerna run --no-bail --parallel typescript",
+    "typescript:grid": "lerna run --scope @mui/x-data-grid* --no-bail --parallel typescript",
+    "typescript:pickers": "lerna run --scope @mui/x-date-* --no-bail --parallel typescript",
     "build:codesandbox": "yarn release:build",
     "release:changelog": "node scripts/releaseChangelog",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
