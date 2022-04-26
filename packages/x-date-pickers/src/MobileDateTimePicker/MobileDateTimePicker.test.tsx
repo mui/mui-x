@@ -83,7 +83,7 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByMuiTest('seconds')).to.have.text('22');
   });
 
-  describe.only('picker state', () => {
+  describe('picker state', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
 
