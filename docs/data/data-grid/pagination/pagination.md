@@ -87,7 +87,7 @@ By default, the pagination is handled on the client.
 This means you have to give the rows of all pages to the grid.
 If your dataset is too big, and you only want to fetch the current page, you can use server-side pagination.
 
-**Note**: For more information regarding server-side pagination in combination with controlled selection check [here](/components/data-grid/selection/#usage-with-server-side-pagination)
+**Note**: For more information regarding server-side pagination in combination with controlled selection check [here](/x/react-data-grid/selection/#usage-with-server-side-pagination)
 
 ### Basic implementation
 
@@ -120,7 +120,7 @@ To do so, you just have to keep track of the next cursor associated with each pa
 
 ## Custom pagination UI
 
-You can customize the rendering of the pagination in the footer following [the component section](/components/data-grid/components/#pagination) of the documentation.
+You can customize the rendering of the pagination in the footer following [the component section](/x/react-data-grid/components/#pagination) of the documentation.
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
@@ -132,9 +132,9 @@ You can customize the rendering of the pagination in the footer following [the c
 
 {{"demo": "PaginationSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state/#access-the-state)
+More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

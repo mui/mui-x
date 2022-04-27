@@ -15,7 +15,6 @@ import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 /**
- * Only available in DataGridPro
  * @requires useGridColumns (state)
  * @requires useGridDimensions (method) - can be after
  * @requires useGridScroll (method

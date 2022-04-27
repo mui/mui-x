@@ -126,9 +126,9 @@ export const useGridPrintExport = (
       gridMain!.style.overflow = 'visible';
 
       const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
-      const columnHeadersInner = columnHeaders!.querySelector(
+      const columnHeadersInner = columnHeaders!.querySelector<HTMLElement>(
         `.${gridClasses.columnHeadersInner}`,
-      ) as HTMLElement;
+      )!;
       columnHeadersInner.style.width = '100%';
 
       let gridToolbarElementHeight =

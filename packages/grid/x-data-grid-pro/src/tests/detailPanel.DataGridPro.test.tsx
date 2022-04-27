@@ -155,7 +155,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(virtualScroller.scrollTop).to.equal(50);
   });
 
-  it('should toggle the detail panel when pressing Ctrl+Enter', () => {
+  it('should toggle the detail panel when pressing Ctrl/Cmd+Enter', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 1);
@@ -163,7 +163,19 @@ describe('<DataGridPro /> - Detail panel', () => {
     fireEvent.click(cell);
     fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
     expect(screen.queryByText('Detail')).not.to.equal(null);
-    fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
+    fireEvent.keyDown(cell, { metaKey: true, key: 'Enter' });
+    expect(screen.queryByText('Detail')).to.equal(null);
+  });
+
+  it('should toggle the detail panel when pressing Space on detail toggle cell', () => {
+    render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
+    expect(screen.queryByText('Detail')).to.equal(null);
+    const cell = getCell(0, 0);
+    fireEvent.mouseUp(cell);
+    fireEvent.click(cell);
+    fireEvent.keyDown(cell, { key: ' ' });
+    expect(screen.queryByText('Detail')).not.to.equal(null);
+    fireEvent.keyDown(cell, { key: ' ' });
     expect(screen.queryByText('Detail')).to.equal(null);
   });
 
@@ -201,8 +213,8 @@ describe('<DataGridPro /> - Detail panel', () => {
 
     //   2x during state initialization
     // + 2x during state initialization (StrictMode)
-    // + 2x when visibleRowsSet is fired
-    // + 2x when visibleRowsSet is fired (StrictMode)
+    // + 2x when sortedRowsSet is fired
+    // + 2x when sortedRowsSet is fired (StrictMode)
     // + 2x when the effect runs for the first time = 10x
     expect(getDetailPanelContent.callCount).to.equal(10);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
@@ -236,8 +248,8 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     //   2x during state initialization
     // + 2x during state initialization (StrictMode)
-    // + 2x when visibleRowsSet is fired
-    // + 2x when visibleRowsSet is fired (StrictMode)
+    // + 2x when sortedRowsSet is fired
+    // + 2x when sortedRowsSet is fired (StrictMode)
     // + 2x when the effect runs for the first time = 10x
     expect(getDetailPanelHeight.callCount).to.equal(10);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
@@ -268,8 +280,8 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     //   1x during state initialization
     // + 1x during state initialization (StrictMode)
-    // + 1x when visibleRowsSet is fired
-    // + 1x when visibleRowsSet is fired (StrictMode)
+    // + 1x when sortedRowsSet is fired
+    // + 1x when sortedRowsSet is fired (StrictMode)
     // + 1x when the effect runs for the first time = 5x
     expect(getDetailPanelHeight.callCount).to.equal(5);
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
@@ -291,7 +303,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(handleSelectionModelChange.callCount).to.equal(0);
   });
 
-  describe('props: onDetailPanelsExpandedRowIds', () => {
+  describe('prop: onDetailPanelsExpandedRowIds', () => {
     it('shoull call when a row is expanded or closed', () => {
       const handleDetailPanelsExpandedRowIdsChange = spy();
       render(
@@ -326,7 +338,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     });
   });
 
-  describe('props: detailPanelExpandedRowIds', () => {
+  describe('prop: detailPanelExpandedRowIds', () => {
     it('should open the detail panel of the specified rows', () => {
       render(
         <TestCase

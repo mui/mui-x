@@ -99,12 +99,15 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   editable?: boolean;
   /**
    * If `true`, the rows can be grouped based on this column values (pro-plan only).
+   * Only available in DataGridPremium.
+   * TODO: Use module augmentation to move it to `@mui/x-data-grid-premium` (need to modify how we handle column types default values).
    * @default true
    */
   groupable?: boolean;
   /**
    * If `false`, the menu items for column pinning menu will not be rendered.
    * Only available in DataGridPro.
+   * TODO: Use module augmentation to move it to `@mui/x-data-grid-pro` (need to modify how we handle column types default values).
    * @default true
    */
   pinnable?: boolean;
@@ -225,6 +228,11 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    * @default false
    */
   disableExport?: boolean;
+  /**
+   * Number of columns a cell should span.
+   * @default 1
+   */
+  colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
 }
 
 export interface GridActionsColDef extends GridColDef {

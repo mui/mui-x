@@ -1,3 +1,3 @@
 export * from './commodities.columns';
 export * from './employees.columns';
-export * from './useKeepGroupingColumnsHidden';
+export * from '@mui/x-data-grid-premium/hooks/utils/useKeepGroupingColumnsHidden';

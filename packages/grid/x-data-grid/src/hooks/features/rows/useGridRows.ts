@@ -79,6 +79,7 @@ const getRowsStateFromCache = (
   previousTree: GridRowTreeConfig | null,
   apiRef: React.MutableRefObject<GridApiCommunity>,
   rowCountProp: number | undefined,
+  loadingProp: boolean | undefined,
 ): GridRowsState => {
   const { value } = rowsCache.state;
   const rowCount = rowCountProp ?? 0;
@@ -95,13 +96,14 @@ const getRowsStateFromCache = (
 
   return {
     ...groupingResponse,
+    loading: loadingProp,
     totalRowCount: Math.max(rowCount, groupingResponse.ids.length),
     totalTopLevelRowCount: Math.max(rowCount, dataTopLevelRowCount),
   };
 };
 
 export const rowsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId'>
+  Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId' | 'loading'>
 > = (state, props, apiRef) => {
   const rowsCache = {
     state: convertGridRowsPropToState({
@@ -121,7 +123,7 @@ export const rowsStateInitializer: GridStateInitializer<
 
   return {
     ...state,
-    rows: getRowsStateFromCache(rowsCache, null, apiRef, props.rowCount),
+    rows: getRowsStateFromCache(rowsCache, null, apiRef, props.rowCount, props.loading),
     rowsCache, // TODO remove from state
   };
 };
@@ -137,6 +139,7 @@ export const useGridRows = (
     | 'signature'
     | 'pagination'
     | 'paginationMode'
+    | 'loading'
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
@@ -174,6 +177,7 @@ export const useGridRows = (
             gridRowTreeSelector(apiRef),
             apiRef,
             props.rowCount,
+            props.loading,
           ),
         }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
@@ -201,7 +205,7 @@ export const useGridRows = (
 
       run();
     },
-    [props.throttleRowsMs, props.rowCount, apiRef],
+    [props.throttleRowsMs, props.rowCount, props.loading, apiRef],
   );
 
   /**
@@ -336,12 +340,38 @@ export const useGridRows = (
     [apiRef],
   );
 
+  const setRowIndex = React.useCallback<GridRowApi['setRowIndex']>(
+    (rowId, targetIndex) => {
+      const allRows = gridRowIdsSelector(apiRef);
+      const oldIndex = allRows.findIndex((row) => row === rowId);
+      if (oldIndex === targetIndex) {
+        return;
+      }
+
+      logger.debug(`Moving row ${rowId} to index ${targetIndex}`);
+
+      const updatedRows = [...allRows];
+      updatedRows.splice(targetIndex, 0, updatedRows.splice(oldIndex, 1)[0]);
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          ids: updatedRows,
+        },
+      }));
+      apiRef.current.applySorting();
+    },
+    [apiRef, logger],
+  );
+
   const rowApi: GridRowApi = {
     getRow,
     getRowModels,
     getRowsCount,
     getAllRowIds,
     setRows,
+    setRowIndex,
     updateRows,
     setRowChildrenExpansion,
     getRowNode,

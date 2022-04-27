@@ -132,6 +132,9 @@ export interface GridLocaleText {
     ComponentsPropsList['MuiTablePagination'],
     'page' | 'count' | 'onChangePage' | 'rowsPerPage' | 'onPageChange'
   >;
+
+  // Row reordering text
+  rowReorderingHeaderName: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

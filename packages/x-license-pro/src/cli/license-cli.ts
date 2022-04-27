@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import * as yargs from 'yargs';
-import { generateLicence } from '../generateLicense/generateLicense';
+import { generateLicense, LicenseScope } from '../generateLicense/generateLicense';
 import { base64Decode } from '../encoding/base64';
 
 const oneDayInMs = 1000 * 60 * 60 * 24;
@@ -8,6 +8,7 @@ const oneDayInMs = 1000 * 60 * 60 * 24;
 interface LicenseGenArgv {
   order: string;
   expiry: string;
+  scope: string;
 }
 
 interface LicenseDecodeArgv {
@@ -60,6 +61,11 @@ export function licenseGenCli() {
             default: '366',
             describe: 'Number of days from now until expiry date.',
             type: 'string',
+          })
+          .option('scope', {
+            default: 'pro',
+            describe: 'The license scope.',
+            type: 'string',
           });
       },
       handler: (argv: yargs.ArgumentsCamelCase<LicenseGenArgv>) => {
@@ -70,14 +76,17 @@ export function licenseGenCli() {
         const licenseDetails = {
           expiryDate: new Date(new Date().getTime() + parseInt(argv.expiry, 10) * oneDayInMs),
           orderNumber: argv.order,
+          scope: argv.scope as LicenseScope,
         };
 
         console.log(
           `Generating new license number for order ${
             licenseDetails.orderNumber
-          } with expiry date ${licenseDetails.expiryDate.toLocaleDateString()}`,
+          } with expiry date ${licenseDetails.expiryDate.toLocaleDateString()} and scope "${
+            licenseDetails.scope
+          }"`,
         );
-        const license = generateLicence(licenseDetails);
+        const license = generateLicense(licenseDetails);
         console.log(`New license: \n${license}`);
       },
     })

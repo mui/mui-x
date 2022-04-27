@@ -21,15 +21,9 @@ import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
-import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridInitialStatePro } from './gridStatePro';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
-  /**
-   * Will be part of the premium-plan when fully ready.
-   */
-  rowGrouping: boolean;
-}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -103,23 +97,17 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    */
   disableChildrenSorting: boolean;
   /**
-   * If `true`, the row grouping is disabled.
-   * @default false
-   */
-  disableRowGrouping: boolean;
-  /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
-   * @default 'single'
-   */
-  rowGroupingColumnMode: 'single' | 'multiple';
-  /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {number} The height in pixels.
    * @default "() => 500"
    */
   getDetailPanelHeight: (params: GridRowParams) => number;
+  /**
+   * If `true`, the reordering of rows is enabled.
+   * @default false
+   */
+  rowReordering: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -175,16 +163,6 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   onPinnedColumnsChange?: (pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void;
   /**
-   * Set the row grouping model of the grid.
-   */
-  rowGroupingModel?: GridRowGroupingModel;
-  /**
-   * Callback fired when the row grouping model changes.
-   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
-  /**
    * The grouping column used by the tree data.
    */
   groupingColDef?:
@@ -208,4 +186,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @returns {JSX.Element} The row detail element.
    */
   getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
+  /**
+   * Callback fired when a row is being reordered.
+   * @param {GridRowOrderChangeParams} params With all properties from [[GridRowOrderChangeParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowOrderChange?: GridEventListener<GridEvents.rowOrderChange>;
 }

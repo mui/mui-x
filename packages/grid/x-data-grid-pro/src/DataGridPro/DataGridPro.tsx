@@ -12,7 +12,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { DataGridProProps } from '../models';
+import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
@@ -220,11 +220,6 @@ DataGridProRaw.propTypes = {
    */
   disableMultipleSelection: PropTypes.bool,
   /**
-   * If `true`, the row grouping is disabled.
-   * @default false
-   */
-  disableRowGrouping: PropTypes.bool,
-  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -254,7 +249,6 @@ DataGridProRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
-    rowGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -560,7 +554,7 @@ DataGridProRaw.propTypes = {
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/api/data-grid/grid-col-def/)
+   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
    */
   onEditCellPropsChange: PropTypes.func,
   /**
@@ -600,6 +594,20 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange: PropTypes.func,
+  /**
+   * Callback fired when the preferences panel is closed.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelClose: PropTypes.func,
+  /**
+   * Callback fired when the preferences panel is opened.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelOpen: PropTypes.func,
   /**
    * Callback called when `processRowUpdate` throws an error or rejects.
    * @param {any} error The error thrown.
@@ -646,11 +654,12 @@ DataGridProRaw.propTypes = {
    */
   onRowEditStop: PropTypes.func,
   /**
-   * Callback fired when the row grouping model changes.
-   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
+   * Callback fired when a row is being reordered.
+   * @param {GridRowOrderChangeParams} params With all properties from [[GridRowOrderChangeParams]].
+   * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowGroupingModelChange: PropTypes.func,
+  onRowOrderChange: PropTypes.func,
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
@@ -728,20 +737,15 @@ DataGridProRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
-   * @default 'single'
-   */
-  rowGroupingColumnMode: PropTypes.oneOf(['multiple', 'single']),
-  /**
-   * Set the row grouping model of the grid.
-   */
-  rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
-  /**
    * Set the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
+  /**
+   * If `true`, the reordering of rows is enabled.
+   * @default false
+   */
+  rowReordering: PropTypes.bool,
   /**
    * Set of rows of type [[GridRowsProp]].
    */

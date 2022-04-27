@@ -448,3 +448,174 @@ export function PinnedColumnWithCheckboxSelectionSnap() {
     </div>
   );
 }
+
+export function ColumnSpanning() {
+  const columns = [
+    {
+      field: 'brand',
+      colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1),
+      editable: true,
+    },
+    {
+      field: 'category',
+      colSpan: ({ row }) => (row.brand === 'Adidas' ? 2 : 1),
+      editable: true,
+    },
+    {
+      field: 'price',
+      colSpan: ({ row }) => (row.brand === 'Puma' ? 2 : 1),
+      editable: true,
+    },
+    { field: 'rating', editable: true },
+  ];
+
+  const rows = [
+    {
+      id: 0,
+      brand: 'Nike',
+      category: 'Shoes',
+      price: '$120',
+      rating: '4.5',
+    },
+    {
+      id: 1,
+      brand: 'Adidas',
+      category: 'Shoes',
+      price: '$100',
+      rating: '4.5',
+    },
+    {
+      id: 2,
+      brand: 'Puma',
+      category: 'Shoes',
+      price: '$90',
+      rating: '4.5',
+    },
+  ];
+
+  return (
+    <div style={{ width: '100%', height: 400 }}>
+      <DataGridPro
+        showCellRightBorder
+        showColumnRightBorder
+        disableExtendRowFullWidth
+        rows={rows}
+        columns={columns}
+      />
+    </div>
+  );
+}
+
+export function ColumnSpanningWithRowVirtualization() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 12,
+  });
+
+  const columns = data.columns.map((column) => ({
+    ...column,
+    colSpan:
+      column.field === 'commodity'
+        ? ({ row }) => {
+            if (row.commodity === 'Rapeseed') {
+              return 3;
+            }
+            return 1;
+          }
+        : 1,
+  }));
+
+  return (
+    <div style={{ width: '100%', height: 400 }}>
+      <DataGridPro showCellRightBorder showColumnRightBorder {...data} columns={columns} />
+    </div>
+  );
+}
+
+export function ColumnSpanningWithColumnVirtualization() {
+  return (
+    <div style={{ width: 200, height: 200 }}>
+      <DataGridPro
+        columns={[
+          { field: 'col0', width: 100, colSpan: 3 },
+          { field: 'col1', width: 100 },
+          { field: 'col2', width: 100 },
+          { field: 'col3', width: 100 },
+        ]}
+        rows={[{ id: 0, col0: '0-0', col1: '0-1', col2: '0-2', col3: '0-3' }]}
+        columnBuffer={1}
+        columnThreshold={1}
+      />
+    </div>
+  );
+}
+
+export function ColumnSpanningWithFiltering() {
+  return (
+    <div style={{ width: 500, height: 300 }}>
+      <DataGridPro
+        columns={[
+          {
+            field: 'brand',
+            colSpan: ({ row }) => (row.brand === 'Nike' ? 2 : 1),
+          },
+          { field: 'category' },
+          { field: 'price' },
+          { field: 'rating' },
+        ]}
+        rows={[
+          {
+            id: 0,
+            brand: 'Nike',
+            category: 'Shoes',
+            price: '$120',
+            rating: '4.5',
+          },
+          {
+            id: 1,
+            brand: 'Adidas',
+            category: 'Shoes',
+            price: '$100',
+            rating: '4.5',
+          },
+          {
+            id: 2,
+            brand: 'Puma',
+            category: 'Shoes',
+            price: '$90',
+            rating: '4.5',
+          },
+          {
+            id: 3,
+            brand: 'Nike',
+            category: 'Shoes',
+            price: '$120',
+            rating: '4.5',
+          },
+          {
+            id: 4,
+            brand: 'Adidas',
+            category: 'Shoes',
+            price: '$100',
+            rating: '4.5',
+          },
+          {
+            id: 5,
+            brand: 'Puma',
+            category: 'Shoes',
+            price: '$90',
+            rating: '4.5',
+          },
+        ]}
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+            },
+          },
+        }}
+      />
+    </div>
+  );
+}

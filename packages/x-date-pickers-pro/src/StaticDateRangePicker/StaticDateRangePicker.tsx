@@ -7,70 +7,17 @@ import {
   PickerStaticWrapperProps,
   useDefaultDates,
   useUtils,
-  ValidationProps,
   usePickerState,
   PickerStateValueManager,
 } from '@mui/x-date-pickers/internals';
 import { RangeInput, DateRange } from '../internal/models/dateRange';
-import {
-  DateRangeValidationError,
-  useDateRangeValidation,
-} from '../internal/hooks/validation/useDateRangeValidation';
-import {
-  DateRangePickerView,
-  ExportedDateRangePickerViewProps,
-} from '../DateRangePicker/DateRangePickerView';
-import { ExportedDateRangePickerInputProps } from '../DateRangePicker/DateRangePickerInput';
+import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
+import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { BaseDateRangePickerProps } from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
-
-interface BaseDateRangePickerProps<TDate>
-  extends ExportedDateRangePickerViewProps<TDate>,
-    ValidationProps<DateRangeValidationError, RangeInput<TDate>>,
-    ExportedDateRangePickerInputProps {
-  /**
-   * The components used for each slot.
-   * Either a string to use a HTML element or a component.
-   * @default {}
-   */
-  components?: ExportedDateRangePickerViewProps<TDate>['components'] &
-    ExportedDateRangePickerInputProps['components'];
-  /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   */
-  endText?: React.ReactNode;
-  /**
-   * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
-   * @default '__/__/____'
-   */
-  mask?: ExportedDateRangePickerInputProps['mask'];
-  /**
-   * Min selectable date. @DateIOType
-   */
-  minDate?: TDate;
-  /**
-   * Max selectable date. @DateIOType
-   */
-  maxDate?: TDate;
-  /**
-   * Callback fired when the value (the selected date range) changes @DateIOType.
-   * @param {DateRange<TDate>} date The new parsed date range.
-   * @param {string} keyboardInputValue The current value of the keyboard input.
-   */
-  onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   */
-  startText?: React.ReactNode;
-  /**
-   * The value of the date range picker.
-   */
-  value: RangeInput<TDate>;
-}
 
 const rangePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: [null, null],
@@ -95,11 +42,11 @@ type StaticDateRangePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Date Range Picker](https://mui.com/components/x/react-date-pickers/date-range-picker/)
+ * - [Date Range Picker](https://mui.com/x/react-date-pickers/date-range-picker/)
  *
  * API:
  *
- * - [StaticDateRangePicker API](https://mui.com/api/static-date-range-picker/)
+ * - [StaticDateRangePicker API](https://mui.com/x/api/date-pickers/static-date-range-picker/)
  */
 export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TDate>(
   inProps: StaticDateRangePickerProps<TDate>,
@@ -206,7 +153,7 @@ StaticDateRangePicker.propTypes = {
   className: PropTypes.string,
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    * @default {}
    */
   components: PropTypes.object,
@@ -269,10 +216,11 @@ StaticDateRangePicker.propTypes = {
   endText: PropTypes.node,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @template TDateValue
    * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
+   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
@@ -318,19 +266,23 @@ StaticDateRangePicker.propTypes = {
   mask: PropTypes.string,
   /**
    * Max selectable date. @DateIOType
+   * @default defaultMaxDate
    */
   maxDate: PropTypes.any,
   /**
    * Min selectable date. @DateIOType
+   * @default defaultMinDate
    */
   minDate: PropTypes.any,
   /**
    * Callback fired when date is accepted @DateIOType.
+   * @template TDateValue
    * @param {TDateValue} date The date that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
+   * @template TDate
    * @param {DateRange<TDate>} date The new parsed date range.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
@@ -348,12 +300,14 @@ StaticDateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
+   * @template TError, TDateValue
    * @param {TError} reason The reason why the current value is not valid.
    * @param {TDateValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
    * Callback firing on month change. @DateIOType
+   * @template TDate
    * @param {TDate} month The new month.
    */
   onMonthChange: PropTypes.func,
@@ -392,6 +346,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Custom renderer for `<DateRangePicker />` days. @DateIOType
    * @example (date, dateRangePickerDayProps) => <DateRangePickerDay {...dateRangePickerDayProps} />
+   * @template TDate
    * @param {TDate} day The day to render.
    * @param {DateRangePickerDayProps<TDate>} dateRangePickerDayProps The props of the day to render.
    * @returns {JSX.Element} The element representing the day.
@@ -399,7 +354,7 @@ StaticDateRangePicker.propTypes = {
   renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api),
+   * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props),
    * that you need to forward to the range start/end inputs respectively.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example
@@ -437,6 +392,7 @@ StaticDateRangePicker.propTypes = {
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
+   * @template TDate
    * @param {TDate} day The date to check.
    * @returns {boolean} If `true` the day will be disabled.
    */
@@ -444,6 +400,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @template TDate
    * @param {TDate} year The year to test.
    * @returns {boolean} Return `true` if the year should be disabled.
    */

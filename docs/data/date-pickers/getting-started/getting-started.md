@@ -1,6 +1,7 @@
 ---
+product: date-pickers
 title: Date picker, Time picker React components
-components: DatePicker,DateTimePicker,TimePicker,TextField
+components: DatePicker,DateTimePicker,TimePicker
 githubLabel: 'component: DatePicker'
 materialDesign: https://material.io/components/date-pickers
 waiAria: https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
@@ -46,17 +47,19 @@ Then you have to set the `dateAdapter` prop of the `LocalizationProvider` accord
 
 ```js
 // date-fns
-import { DateAdapter } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // or for Day.js
-import { DateAdapter } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // or for Luxon
-import { DateAdapter } from '@mui/x-date-pickers/AdapterLuxon';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 // or for Moment.js
-import { DateAdapter } from '@mui/x-date-pickers/AdapterMoment';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 function App({ children }) {
   return (
-    <LocalizationProvider dateAdapter={DateAdapter}>{children}</LocalizationProvider>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      {children}
+    </LocalizationProvider>
   );
 }
 ```

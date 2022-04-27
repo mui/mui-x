@@ -45,7 +45,7 @@ describe('<DataGrid /> - Filter', () => {
     );
   };
 
-  describe('props: filterModel', () => {
+  describe('prop: filterModel', () => {
     it('should throw for more than one filter item', () => {
       expect(() => {
         render(

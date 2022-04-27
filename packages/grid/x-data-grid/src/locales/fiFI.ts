@@ -133,6 +133,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid, fiFICore);

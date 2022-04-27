@@ -18,6 +18,13 @@ const valueManager: PickerStateValueManager<unknown, unknown> = {
   parseInput: parsePickerInputValue,
   areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
     utils.isEqual(a, b),
+  valueReducer: (utils, prevValue, newValue) => {
+    if (prevValue == null || newValue == null) {
+      return newValue;
+    }
+
+    return utils.mergeDateAndTime(prevValue, newValue);
+  },
 };
 
 export interface DesktopTimePickerProps<TDate = unknown>
@@ -32,11 +39,11 @@ type DesktopTimePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Time Picker](https://mui.com/components/x/react-date-pickers/time-picker/)
+ * - [Time Picker](https://mui.com/x/react-date-pickers/time-picker/)
  *
  * API:
  *
- * - [DesktopTimePicker API](https://mui.com/api/desktop-time-picker/)
+ * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
 export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   inProps: DesktopTimePickerProps<TDate>,
@@ -53,6 +60,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
 
   const {
     onChange,
+    PaperProps,
     PopperProps,
     ToolbarComponent = TimePickerToolbar,
     TransitionComponent,
@@ -67,6 +75,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       DateInputProps={DateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
       PopperProps={PopperProps}
+      PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
     >
       {/* @ts-ignore time picker has no component slot for the calendar header */}
@@ -119,7 +128,7 @@ DesktopTimePicker.propTypes = {
   clearText: PropTypes.node,
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    */
   components: PropTypes.object,
   /**
@@ -148,6 +157,7 @@ DesktopTimePicker.propTypes = {
   disableOpenPicker: PropTypes.bool,
   /**
    * Accessible text that helps user to understand which time and view is selected.
+   * @template TDate
    * @param {ClockPickerView} view The current view rendered.
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
@@ -164,10 +174,11 @@ DesktopTimePicker.propTypes = {
   getClockLabelText: PropTypes.func,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @template TDateValue
    * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
+   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -211,11 +222,13 @@ DesktopTimePicker.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when date is accepted @DateIOType.
+   * @template TDateValue
    * @param {TDateValue} date The date that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
+   * @template TDate
    * @param {DateRange<TDate>} date The new parsed date.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
@@ -233,6 +246,7 @@ DesktopTimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
+   * @template TError, TDateValue
    * @param {TError} reason The reason why the current value is not valid.
    * @param {TDateValue} value The invalid value.
    */
@@ -264,11 +278,11 @@ DesktopTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/api/paper/) component.
+   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
   PaperProps: PropTypes.object,
   /**
-   * Popper props passed down to [Popper](https://mui.com/api/popper/) component.
+   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
   PopperProps: PropTypes.object,
   /**
@@ -277,7 +291,7 @@ DesktopTimePicker.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `props` argument of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api) that you need to forward.
+   * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example ```jsx
    * renderInput={props => <TextField {...props} />}
@@ -324,7 +338,7 @@ DesktopTimePicker.propTypes = {
    */
   toolbarTitle: PropTypes.node,
   /**
-   * Custom component for popper [Transition](https://mui.com/components/transitions/#transitioncomponent-prop).
+   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
   TransitionComponent: PropTypes.elementType,
   /**

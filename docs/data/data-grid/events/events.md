@@ -8,7 +8,7 @@ title: Data Grid - Events
 
 ## Subscribing to events
 
-You can subscribe to one of the [events emitted](/components/data-grid/events/#catalog-of-events) by calling `apiRef.current.subscribeEvent()` with the name of the event and a handler. The handler will be called with three arguments:
+You can subscribe to one of the [events emitted](/x/react-data-grid/events/#catalog-of-events) by calling `apiRef.current.subscribeEvent()` with the name of the event and a handler. The handler will be called with three arguments:
 
 1. an object with information related to the event
 2. a `MuiEvent` containing the DOM event or the React synthetic event, when available
@@ -47,7 +47,7 @@ Set it to `true` to block the default handling of an event and implement your ow
 />
 ```
 
-Usually, double clicking a cell will put it into [edit mode](/components/data-grid/editing/).
+Usually, double clicking a cell will put it into [edit mode](/x/react-data-grid/editing/).
 The following example changes this behavior by also requiring <kbd class="key">CTRL</kbd> to be pressed.
 
 {{"demo": "DoubleClickWithCtrlToEdit.js", "bg": "inline"}}
@@ -58,5 +58,5 @@ The following example changes this behavior by also requiring <kbd class="key">C
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

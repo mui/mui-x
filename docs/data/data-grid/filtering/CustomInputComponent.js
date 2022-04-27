@@ -17,8 +17,8 @@ function RatingInputValue(props) {
     },
   }));
 
-  const handleFilterChange = (event) => {
-    applyValue({ ...item, value: event.target.value });
+  const handleFilterChange = (event, newValue) => {
+    applyValue({ ...item, value: newValue });
   };
 
   return (

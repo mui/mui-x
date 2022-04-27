@@ -128,6 +128,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);

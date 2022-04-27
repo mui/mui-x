@@ -1,5 +1,10 @@
 const pages = [
   {
+    pathname: '/x/advanced-components',
+    title: 'Overview',
+    icon: 'DescriptionIcon',
+  },
+  {
     pathname: '/x/react-data-grid',
     scopePathnames: ['/x/api/data-grid'],
     title: 'Data Grid',
@@ -8,7 +13,7 @@ const pages = [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/getting-started' },
-      { pathname: '/x/react-data-grid/migration-v4', title: 'Migration From v4' },
+      { pathname: '/x/react-data-grid/migration-v4', title: 'Migration from v4' },
       { pathname: '/x/react-data-grid/layout' },
       { pathname: '/x/react-data-grid/columns' },
       { pathname: '/x/react-data-grid/rows' },
@@ -26,7 +31,24 @@ const pages = [
       { pathname: '/x/react-data-grid/scrolling' },
       { pathname: '/x/react-data-grid/virtualization' },
       { pathname: '/x/react-data-grid/accessibility' },
-      { pathname: '/x/react-data-grid/group-pivot', title: 'Group & Pivot' },
+      {
+        pathname: '/x/react-data-grid/row-grouping',
+        title: 'Group & Pivot',
+        scopePathnames: [
+          '/x/react-data-grid/row-grouping',
+          '/x/react-data-grid/tree-data',
+          '/x/react-data-grid/master-detail',
+          '/x/react-data-grid/aggregation',
+          '/x/react-data-grid/pivoting',
+        ],
+        children: [
+          { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping', plan: 'premium' },
+          { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data', plan: 'pro' },
+          { pathname: '/x/react-data-grid/master-detail', title: 'Master Detail', plan: 'pro' },
+          { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧', plan: 'premium' },
+          { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧', plan: 'premium' },
+        ],
+      },
       {
         pathname: '/x/api/data-grid',
         title: 'API Reference',
@@ -34,6 +56,7 @@ const pages = [
           { pathname: '/x/api/data-grid', title: 'Index' },
           { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
           { pathname: '/x/api/data-grid/data-grid-pro', title: 'DataGridPro' },
+          { pathname: '/x/api/data-grid/data-grid-premium', title: 'DataGridPremium' },
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
@@ -59,17 +82,19 @@ const pages = [
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
     title: 'Date and Time Pickers',
-    icon: 'TableViewIcon',
+    icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
+      { pathname: '/x/react-date-pickers/migration-lab', title: 'Migration from the lab' },
       { pathname: '/x/react-date-pickers/date-picker' },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
+        plan: 'pro',
       },
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
       {
-        pathname: '/x/api/data-grid',
+        pathname: '/x/api/date-pickers',
         title: 'API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
@@ -80,13 +105,22 @@ const pages = [
           },
           { pathname: '/x/api/date-pickers/clock-picker', title: 'ClockPicker' },
           { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
-          { pathname: '/x/api/date-pickers/date-range-picker', title: 'DateRangePicker' },
-          { pathname: '/x/api/date-pickers/date-range-picker-day', title: 'DateRangePickerDay' },
+          {
+            pathname: '/x/api/date-pickers/date-range-picker',
+            title: 'DateRangePicker',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/api/date-pickers/date-range-picker-day',
+            title: 'DateRangePickerDay',
+            plan: 'pro',
+          },
           { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
           { pathname: '/x/api/date-pickers/desktop-date-picker', title: 'DesktopDatePicker' },
           {
             pathname: '/x/api/date-pickers/desktop-date-range-picker',
             title: 'DesktopDateRangePicker',
+            plan: 'pro',
           },
           {
             pathname: '/x/api/date-pickers/desktop-date-time-picker',
@@ -98,6 +132,7 @@ const pages = [
           {
             pathname: '/x/api/date-pickers/mobile-date-range-picker',
             title: 'MobileDateRangePicker',
+            plan: 'pro',
           },
           {
             pathname: '/x/api/date-pickers/mobile-date-time-picker',
@@ -110,6 +145,7 @@ const pages = [
           {
             pathname: '/x/api/date-pickers/static-date-range-picker',
             title: 'StaticDateRangePicker',
+            plan: 'pro',
           },
           {
             pathname: '/x/api/date-pickers/static-date-time-picker',

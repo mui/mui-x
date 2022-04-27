@@ -9,7 +9,7 @@ title: Data Grid - Components
 ## Overriding components
 
 As part of the customization API, the grid allows you to override internal components with the `components` prop.
-The prop accepts an object of type [`GridSlotsComponent`](/api/data-grid/data-grid/#slots).
+The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
 
 If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop.
 This prop is of type `GridSlotsComponentsProps`.
@@ -40,7 +40,7 @@ They can be used as below:
 - `useGridApiContext`: returns the `apiRef`.
 - `useGridSelector`: returns the result of a selector on the current state.
 
-More details about the selectors in the [State page](/components/data-grid/state/#access-the-state)
+More details about the selectors in the [State page](/x/react-data-grid/state/#access-the-state)
 
 ```tsx
 function CustomPagination() {
@@ -60,7 +60,7 @@ function CustomPagination() {
 
 ## Components
 
-The full list of overridable components can be found on the [`GridSlotsComponent`](/api/data-grid/data-grid/#slots) API page.
+The full list of overridable components can be found on the [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots) API page.
 
 ### Column menu
 
@@ -125,8 +125,8 @@ The grid exposes props to hide specific elements of the UI:
 
 ### Pagination
 
-By default, pagination uses the [TablePagination](/components/pagination/#table-pagination) component that is optimized for handling tabular data.
-This demo replaces it with the [Pagination](/components/pagination/) component.
+By default, pagination uses the [TablePagination](/material-ui/react-pagination/#table-pagination) component that is optimized for handling tabular data.
+This demo replaces it with the [Pagination](/material-ui/react-pagination/) component.
 
 {{"demo": "CustomPaginationGrid.js", "bg": "inline"}}
 
@@ -148,7 +148,7 @@ In the following demo, an illustration is added on top of the default "No Rows" 
 ### Row
 
 The `componentsProps.row` prop can be used to pass additional props to the row component.
-One common use case might be to listen for events not exposed by [default](/components/data-grid/events/#catalog-of-events).
+One common use case might be to listen for events not exposed by [default](/x/react-data-grid/events/#catalog-of-events).
 The demo below shows a context menu when a row is right-clicked.
 
 {{"demo": "RowContextMenu.js", "bg": "inline"}}
@@ -168,5 +168,5 @@ As any component slot, every icon can be customized. However, it is not yet poss
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

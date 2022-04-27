@@ -7,9 +7,6 @@ import {
 } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 
-/**
- * Only available in DataGridPro
- */
 export const useGridTreeData = (apiRef: React.MutableRefObject<GridApiPro>) => {
   /**
    * EVENTS
@@ -18,9 +15,6 @@ export const useGridTreeData = (apiRef: React.MutableRefObject<GridApiPro>) => {
     (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
       if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ' && !event.shiftKey) {
-        event.stopPropagation();
-        event.preventDefault();
-
         const filteredDescendantCount =
           gridFilteredDescendantCountLookupSelector(apiRef)[params.id] ?? 0;
 

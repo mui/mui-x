@@ -22,7 +22,7 @@ title: Data Grid - Selection
 - https://demos.telerik.com/kendo-ui/grid/checkbox-selection
 -->
 
-Row selection can be performed with a simple mouse click, or using the [keyboard shortcuts](/components/data-grid/accessibility/#selection). The grid supports single and multiple row selection.
+Row selection can be performed with a simple mouse click, or using the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection). The grid supports single and multiple row selection.
 
 ### Single row selection
 
@@ -102,5 +102,5 @@ With this feature, you will be able to select ranges of cells across the Grid.
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

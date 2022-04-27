@@ -37,13 +37,13 @@ async function run() {
       });
 
       buildGridEventsDocumentation({
-        // TODO: Pass all the projects and add the pro icon for pro-only events
-        project: projects.get('x-data-grid-pro')!,
+        // TODO: Pass all the projects and add the pro / premium icon for pro-only / premium-only events
+        project: projects.get('x-data-grid-premium')!,
         documentedInterfaces,
       });
 
       buildGridSelectorsDocumentation({
-        project: projects.get('x-data-grid-pro')!,
+        project: projects.get('x-data-grid-premium')!,
         documentationRoot,
       });
 

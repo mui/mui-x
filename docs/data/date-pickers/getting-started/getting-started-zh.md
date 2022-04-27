@@ -7,7 +7,7 @@ waiAria: https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepick
 packageName: '@mui/x-date-pickers'
 ---
 
-# Date/Time pickers日期/时间选择器
+# Date/Time pickers 日期/时间选择器
 
 <p class="description">日期选择器和时间选择器提供了一个从事先设定好的日期集合中选择单个值的简单方法。</p>
 
@@ -46,17 +46,17 @@ npm install @date-io/moment
 
 ```js
 // date-fns
-import { DateAdapter } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // or for Day.js
-import { DateAdapter } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // or for Luxon
-import { DateAdapter } from '@mui/x-date-pickers/AdapterLuxon';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 // or for Moment.js
-import { DateAdapter } from '@mui/x-date-pickers/AdapterMoment';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 function App({ children }) {
   return (
-    <LocalizationProvider dateAdapter={DateAdapter}>{children}</LocalizationProvider>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>{children}</LocalizationProvider>
   );
 }
 ```

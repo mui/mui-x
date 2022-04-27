@@ -165,6 +165,9 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);

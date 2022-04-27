@@ -14,12 +14,14 @@ import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasse
 export interface ExportedYearPickerProps<TDate> {
   /**
    * Callback firing on year change @DateIOType.
+   * @template TDate
    * @param {TDate} year The new year.
    */
   onYearChange?: (year: TDate) => void;
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @template TDate
    * @param {TDate} year The year to test.
    * @returns {boolean} Return `true` if the year should be disabled.
    */
@@ -53,7 +55,6 @@ export interface YearPickerProps<TDate> extends ExportedYearPickerProps<TDate> {
   autoFocus?: boolean;
   className?: string;
   classes?: YearPickerClasses;
-
   date: TDate | null;
   disabled?: boolean;
   disableFuture?: boolean | null;
@@ -227,6 +228,7 @@ YearPicker.propTypes = {
   onFocusedDayChange: PropTypes.func,
   /**
    * Callback firing on year change @DateIOType.
+   * @template TDate
    * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
@@ -234,6 +236,7 @@ YearPicker.propTypes = {
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @template TDate
    * @param {TDate} year The year to test.
    * @returns {boolean} Return `true` if the year should be disabled.
    */

@@ -51,7 +51,7 @@ describe('<DataGrid /> - Selection', () => {
     </div>
   );
 
-  describe('props: checkboxSelection = false (single selection)', () => {
+  describe('prop: checkboxSelection = false (single selection)', () => {
     it('should select one row at a time on click WITHOUT ctrl or meta pressed', () => {
       render(<TestDataGridSelection />);
       fireClickEvent(getCell(0, 0));
@@ -95,7 +95,7 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
-  describe('props: checkboxSelection = false (single selection), with keyboard events', () => {
+  describe('prop: checkboxSelection = false (single selection), with keyboard events', () => {
     it('should select one row at a time on Shift + Space', () => {
       render(<TestDataGridSelection disableSelectionOnClick />);
 
@@ -453,9 +453,9 @@ describe('<DataGrid /> - Selection', () => {
     it('should select/unselect all rows when pressing space', () => {
       render(<TestDataGridSelection checkboxSelection disableVirtualization />);
 
-      const selectAllCell = document.querySelector(
+      const selectAllCell = document.querySelector<HTMLElement>(
         '[role="columnheader"][data-field="__check__"] input',
-      ) as HTMLElement;
+      )!;
       selectAllCell.focus();
 
       fireEvent.keyDown(selectAllCell, {
@@ -491,7 +491,7 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
-  describe('props: isRowSelectable', () => {
+  describe('prop: isRowSelectable', () => {
     it('should update the selected rows when the isRowSelectable prop changes', async () => {
       const { setProps } = render(
         <TestDataGridSelection isRowSelectable={() => true} checkboxSelection />,
@@ -557,7 +557,7 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
-  describe('props: rows', () => {
+  describe('prop: rows', () => {
     it('should remove the outdated selected rows when rows prop changes', () => {
       const data = getData(4, 2);
 
@@ -573,7 +573,7 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
-  describe('props: selectionModel and onSelectionModelChange', () => {
+  describe('prop: selectionModel and onSelectionModelChange', () => {
     it('should select rows when initialised (array-version)', () => {
       render(<TestDataGridSelection selectionModel={[1]} />);
       expect(getSelectedRowIds()).to.deep.equal([1]);

@@ -3,7 +3,7 @@ import moment, { Moment } from 'moment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { expectType } from '@mui/types';
 
-// Allows to set date type right with generic JSX syntax
+// Allows setting date type right with generic JSX syntax
 <DatePicker<Date>
   value={new Date()}
   onChange={(date) => date?.getDate()}
@@ -42,7 +42,7 @@ const InferTest = () => {
 
 // TypeScript can't know the type of the DateAdapter in the React context.
 // So in this case it is expected that type will be the type of `value` as for now.
-// Argueable, this usage doesn't make sense since the component would never reflect the user picked value.
+// Arguable, this usage doesn't make sense since the component would never reflect the user picked value.
 {
   <DatePicker
     value={null}

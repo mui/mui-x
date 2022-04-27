@@ -14,7 +14,7 @@ materialDesign: https://material.io/components/date-pickers
 
 ## 基本用法
 
-请注意，你可以从 [DatePicker](/api/date-picker/) 中传递几乎任何的属性。
+请注意，你可以从 [DatePicker](/x/react-date-pickers/date-picker/) 中传递几乎任何的属性。
 
 {{"demo": "BasicDateRangePicker.js"}}
 
@@ -61,6 +61,6 @@ The date range picker component can be disabled or read-only.
 
 ## 自定义日期渲染
 
-你可以通过 `renderDay` 函数属性来自定义所显示的日期。 You can take advantage of the internal [DateRangePickerDay](/api/date-range-picker-day/) component.
+你可以通过 `renderDay` 函数属性来自定义所显示的日期。 You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
 
 {{"demo": "CustomDateRangePickerDay.js"}}

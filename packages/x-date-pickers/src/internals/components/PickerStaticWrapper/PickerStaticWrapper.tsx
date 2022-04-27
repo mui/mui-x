@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
-import { WrapperVariantContext, IsStaticVariantContext } from '../wrappers/WrapperVariantContext';
+import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
 
 import {
   getStaticWrapperUtilityClass,
@@ -48,13 +48,9 @@ export function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
 
   const classes = useUtilityClasses(props);
 
-  const isStatic = true;
-
   return (
-    <IsStaticVariantContext.Provider value={isStatic}>
-      <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <PickerStaticWrapperRoot className={classes.root} {...other} />
-      </WrapperVariantContext.Provider>
-    </IsStaticVariantContext.Provider>
+    <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
+      <PickerStaticWrapperRoot className={classes.root} {...other} />
+    </WrapperVariantContext.Provider>
   );
 }
