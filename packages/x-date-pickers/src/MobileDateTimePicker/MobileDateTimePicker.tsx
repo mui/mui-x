@@ -7,7 +7,6 @@ import {
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { PureDateInput } from '../internals/components/PureDateInput';
