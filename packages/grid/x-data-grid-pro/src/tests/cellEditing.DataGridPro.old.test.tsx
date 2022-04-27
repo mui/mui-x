@@ -22,7 +22,7 @@ function fireClickEvent(cell: HTMLElement) {
 
 const nativeSetTimeout = setTimeout;
 
-describe('<DataGridPro /> - Cell Editing', () => {
+describe.skip('<DataGridPro /> - Cell Editing', () => {
   let baselineProps: Pick<DataGridProProps, 'autoHeight' | 'rows' | 'columns' | 'throttleRowsMs'>;
 
   beforeEach(() => {

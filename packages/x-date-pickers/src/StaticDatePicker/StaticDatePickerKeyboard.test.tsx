@@ -8,7 +8,7 @@ import { adapterToUse, createPickerRenderer } from '../../../../test/utils/picke
 describe('<StaticDatePicker /> keyboard interactions', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
-  describe.skip('Calendar keyboard navigation', () => {
+  describe('Calendar keyboard navigation', () => {
     it('can autofocus selected day on mount', () => {
       render(
         <StaticDatePicker
@@ -82,7 +82,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
       { keyCode: 39, key: 'ArrowRight', expectFocusedYear: '2021' },
       { keyCode: 40, key: 'ArrowDown', expectFocusedYear: '2024' },
     ].forEach(({ key, keyCode, expectFocusedYear }) => {
-      it.skip(key, () => {
+      it(key, () => {
         render(
           <StaticDatePicker
             autoFocus

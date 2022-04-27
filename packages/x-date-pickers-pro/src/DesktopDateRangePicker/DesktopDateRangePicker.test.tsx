@@ -187,7 +187,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   // TODO
   // eslint-disable-next-line mocha/no-skipped-tests
-  it.skip('allows pure keyboard selection of range', () => {
+  it('allows pure keyboard selection of range', () => {
     const onChangeMock = spy();
     render(
       <DesktopDateRangePicker
