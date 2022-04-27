@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGridPremium,
   gridColumnVisibilityModelSelector,
   GridEvents,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
@@ -85,7 +85,7 @@ export default function RowGroupingSortingSingleGroupingColDef() {
         </Select>
       </FormControl>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
+        <DataGridPremium
           {...data}
           apiRef={apiRef}
           columns={columns}
@@ -102,9 +102,6 @@ export default function RowGroupingSortingSingleGroupingColDef() {
               mainGroupingCriteria === 'undefined'
                 ? undefined
                 : mainGroupingCriteria,
-          }}
-          experimentalFeatures={{
-            rowGrouping: true,
           }}
         />
       </div>

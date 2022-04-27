@@ -167,9 +167,6 @@ ViewListItem.propTypes = {
          */
         openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
       }),
-      rowGrouping: PropTypes.shape({
-        model: PropTypes.arrayOf(PropTypes.string),
-      }),
       sorting: PropTypes.shape({
         sortModel: PropTypes.arrayOf(PropTypes.object),
       }),

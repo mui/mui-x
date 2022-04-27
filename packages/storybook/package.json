@@ -21,6 +21,7 @@
     "@mui/x-data-grid": "5.10.0",
     "@mui/x-data-grid-generator": "5.10.0",
     "@mui/x-data-grid-pro": "5.10.0",
+    "@mui/x-data-grid-premium": "5.10.0",
     "@mui/x-license-pro": "5.10.0",
     "@storybook/builder-webpack5": "^6.4.21",
     "@storybook/manager-webpack5": "^6.4.21",

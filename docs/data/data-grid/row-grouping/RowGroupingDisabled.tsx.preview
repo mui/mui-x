@@ -1,8 +1,1 @@
-<DataGridPro
-  {...data}
-  disableSelectionOnClick
-  disableRowGrouping
-  experimentalFeatures={{
-    rowGrouping: true,
-  }}
-/>
+<DataGridPremium {...data} disableSelectionOnClick disableRowGrouping />

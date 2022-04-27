@@ -51,10 +51,17 @@ ponyfillGlobal.muiDocConfig = {
       newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
     }
 
+    if (newDeps['@mui/x-data-grid-premium']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
+      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
+    }
+
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
       newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid']; // TS types are imported from @mui/x-data-grid
+      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid-pro
     }
 
     if (newDeps['@mui/x-date-pickers']) {
@@ -72,9 +79,10 @@ ponyfillGlobal.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     const output = {
       ...versions,
-      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
-      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
+      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
+      '@mui/x-data-grid-premium': getMuiPackageVersion('x-data-grid-premium', muiCommitRef),
+      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       'date-fns': 'latest',
