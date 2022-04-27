@@ -92,54 +92,24 @@ type OpenPickerParams =
     };
 
 export const openPicker = (params: OpenPickerParams) => {
-  switch (params.variant) {
-    case 'desktop': {
-      switch (params.type) {
-        case 'date':
-        case 'date-time': {
-          return userEvent.mousePress(screen.getByLabelText(/choose date/i));
-        }
-
-        case 'time': {
-          return userEvent.mousePress(screen.getByLabelText(/choose time/i));
-        }
-
-        case 'date-range': {
-          return fireEvent.focus(
-            screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1],
-          );
-        }
-
-        default: {
-          throw Error('Invalid params');
-        }
-      }
+  if (params.type === 'date-range') {
+    const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
+    if (params.variant === 'mobile') {
+      return userEvent.mousePress(target);
     }
 
-    case 'mobile': {
-      switch (params.type) {
-        case 'date':
-        case 'date-time':
-        case 'time': {
-          return userEvent.mousePress(screen.getByRole('textbox'));
-        }
-
-        case 'date-range': {
-          return userEvent.mousePress(
-            screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1],
-          );
-        }
-
-        default: {
-          throw Error('Invalid params');
-        }
-      }
-    }
-
-    default: {
-      throw Error('Invalid params');
-    }
+    return fireEvent.focus(target);
   }
+
+  if (params.variant === 'mobile') {
+    return userEvent.mousePress(screen.getByRole('textbox'));
+  }
+
+  const target =
+    params.type === 'time'
+      ? screen.getByLabelText(/choose time/i)
+      : screen.getByLabelText(/choose date/i);
+  return userEvent.mousePress(target);
 };
 
 // TODO: Handle dynamic values
