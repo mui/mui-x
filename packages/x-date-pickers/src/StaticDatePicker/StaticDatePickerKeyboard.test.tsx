@@ -31,7 +31,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
       { keyCode: 39, key: 'ArrowRight', expectFocusedDay: 'Aug 14, 2020' },
       { keyCode: 40, key: 'ArrowDown', expectFocusedDay: 'Aug 20, 2020' },
     ].forEach(({ key, keyCode, expectFocusedDay }) => {
-      it(key, () => {
+      it.skip(key, () => {
         render(
           <StaticDatePicker
             autoFocus
@@ -82,7 +82,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
       { keyCode: 39, key: 'ArrowRight', expectFocusedYear: '2021' },
       { keyCode: 40, key: 'ArrowDown', expectFocusedYear: '2024' },
     ].forEach(({ key, keyCode, expectFocusedYear }) => {
-      it(key, () => {
+      it.skip(key, () => {
         render(
           <StaticDatePicker
             autoFocus
