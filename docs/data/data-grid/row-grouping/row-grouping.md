@@ -11,16 +11,6 @@ In the following example, we're grouping all movies based on their production `c
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
->
-> To avoid future regression for users of the Pro plan, the feature needs to be explicitly activated using the `rowGrouping` experimental feature flag.
->
-> ```tsx
-> <DataGridPro experimentalFeatures={{ rowGrouping: true }} {...otherProps} />
-> ```
->
-> The feature is stable in its current form, and we encourage users willing to migrate to the Premium plan once available to start using it.
-
 ## Set grouping criteria
 
 ### Initialize the row grouping

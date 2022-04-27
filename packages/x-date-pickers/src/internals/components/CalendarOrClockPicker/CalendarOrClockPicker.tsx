@@ -4,6 +4,8 @@ import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
 import { ClockPicker, ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
 import {
   CalendarPicker,
+  CalendarPickerSlotsComponent,
+  CalendarPickerSlotsComponentsProps,
   ExportedCalendarPickerProps,
 } from '../../../CalendarPicker/CalendarPicker';
 import { KeyboardDateInput } from '../KeyboardDateInput';
@@ -14,6 +16,11 @@ import { PickerSelectionState } from '../../hooks/usePickerState';
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { PickerViewRoot } from '../PickerViewRoot';
 import { CalendarOrClockPickerView, CalendarPickerView, ClockPickerView } from '../../models';
+
+export interface CalendarOrClockPickerSlotsComponent extends CalendarPickerSlotsComponent {}
+
+export interface CalendarOrClockPickerSlotsComponentsProps
+  extends CalendarPickerSlotsComponentsProps {}
 
 export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
   extends Omit<BasePickerProps<unknown, TDate>, 'value' | 'onChange'>,
@@ -35,6 +42,17 @@ export interface ExportedCalendarOrClockPickerProps<TDate, View extends Calendar
    * Array of views to show.
    */
   views: readonly View[];
+  /**
+   * The components used for each slot.
+   * Either a string to use an HTML element or a component.
+   * @default {}
+   */
+  components?: Partial<CalendarOrClockPickerSlotsComponent>;
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  componentsProps?: Partial<CalendarOrClockPickerSlotsComponentsProps>;
 }
 
 export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>

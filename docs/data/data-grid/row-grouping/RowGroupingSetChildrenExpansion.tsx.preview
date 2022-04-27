@@ -1,0 +1,14 @@
+<Button onClick={toggleSecondRow}>Toggle 2nd row expansion</Button>
+<div style={{ height: 400, width: '100%' }}>
+  <DataGridPremium
+    {...data}
+    apiRef={apiRef}
+    columns={columns}
+    disableSelectionOnClick
+    initialState={{
+      rowGrouping: {
+        model: INITIAL_GROUPING_COLUMN_MODEL,
+      },
+    }}
+  />
+</div>

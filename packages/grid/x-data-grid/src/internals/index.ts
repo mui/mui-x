@@ -84,5 +84,6 @@ export { createSelector } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual } from '../utils/utils';
+export { buildWarning } from '../utils/warning';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';

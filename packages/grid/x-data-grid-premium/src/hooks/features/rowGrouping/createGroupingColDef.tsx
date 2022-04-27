@@ -5,10 +5,10 @@ import {
   GridStateColDef,
   GridComparatorFn,
   GridRenderCellParams,
-} from '@mui/x-data-grid';
-import { GridColumnRawLookup } from '@mui/x-data-grid/internals';
-import { GridGroupingColDefOverride } from '../../../models';
-import { GridApiPro } from '../../../models/gridApiPro';
+  GridGroupingColDefOverride,
+} from '@mui/x-data-grid-pro';
+import { GridColumnRawLookup } from '@mui/x-data-grid-pro/internals';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColumnLeafCell';
 import {
@@ -252,7 +252,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 };
 
 interface CreateGroupingColDefSeveralCriteriaParams {
-  apiRef: React.MutableRefObject<GridApiPro>;
+  apiRef: React.MutableRefObject<GridApiPremium>;
   columnsLookup: GridColumnRawLookup;
 
   /**

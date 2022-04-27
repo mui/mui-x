@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid';
+import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
