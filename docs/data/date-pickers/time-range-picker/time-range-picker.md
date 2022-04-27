@@ -1,7 +1,6 @@
 ---
 product: date-pickers
 title: React Time Range Picker component
-components: TimeRangePicker, DesktopTimeRangePicker, MobileTimeRangePicker, StaticTimeRangePicker
 githubLabel: 'component: TimeRangePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
