@@ -1,7 +1,7 @@
 {
   "name": "@mui/x-data-grid-pro",
   "version": "5.10.0",
-  "description": "The commercial edition of the data grid component (MUI X).",
+  "description": "The Pro plan edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",

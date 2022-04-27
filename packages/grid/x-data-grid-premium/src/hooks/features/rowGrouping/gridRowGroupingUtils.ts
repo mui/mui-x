@@ -5,13 +5,13 @@ import {
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
   GridFilterState,
-} from '@mui/x-data-grid';
-import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+} from '@mui/x-data-grid-pro';
+import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid-pro/internals';
+import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
-import { GridStatePro } from '../../../models/gridStatePro';
+import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
@@ -139,7 +139,7 @@ export const filterRowTreeFromGroupingColumns = (
 };
 
 export const getColDefOverrides = (
-  groupingColDefProp: DataGridProProcessedProps['groupingColDef'],
+  groupingColDefProp: DataGridPremiumProcessedProps['groupingColDef'],
   fields: string[],
 ) => {
   if (typeof groupingColDefProp === 'function') {
@@ -154,13 +154,13 @@ export const getColDefOverrides = (
 
 export const mergeStateWithRowGroupingModel =
   (rowGroupingModel: GridRowGroupingModel) =>
-  (state: GridStatePro): GridStatePro => ({
+  (state: GridStatePremium): GridStatePremium => ({
     ...state,
     rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
   });
 
 export const setStrategyAvailability = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridApiPremium>,
   disableRowGrouping: boolean,
 ) => {
   let isAvailable: () => boolean;

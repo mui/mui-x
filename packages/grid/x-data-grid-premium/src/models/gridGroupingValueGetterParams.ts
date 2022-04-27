@@ -4,7 +4,7 @@ import {
   GridRowTreeNodeConfig,
   GridColDef,
   GridStateColDef,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 
 /**
  * Parameters passed to `colDef.groupingValueGetter`.

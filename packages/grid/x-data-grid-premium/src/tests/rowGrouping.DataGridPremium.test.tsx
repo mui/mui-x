@@ -8,8 +8,8 @@ import {
 import * as React from 'react';
 import { expect } from 'chai';
 import {
-  DataGridPro,
-  DataGridProProps,
+  DataGridPremium,
+  DataGridPremiumProps,
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridApi,
@@ -18,9 +18,8 @@ import {
   GridRowsProp,
   GridRowTreeNodeConfig,
   useGridApiRef,
-  useGridRootProps,
   GridGroupingColDefOverrideParams,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -42,7 +41,7 @@ const unbalancedRows: GridRowsProp = [
   { id: 5, category1: null },
 ];
 
-const baselineProps: DataGridProProps = {
+const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
   disableVirtualization: true,
   rows,
@@ -58,22 +57,19 @@ const baselineProps: DataGridProProps = {
       field: 'category2',
     },
   ],
-  experimentalFeatures: {
-    rowGrouping: true,
-  },
 };
 
-describe('<DataGridPro /> - Group Rows By Column', () => {
+describe('<DataGridPremium /> - Group Rows By Column', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const Test = (props: Partial<DataGridProProps>) => {
+  const Test = (props: Partial<DataGridPremiumProps>) => {
     apiRef = useGridApiRef();
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
   };
@@ -480,30 +476,6 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
   });
 
   describe('prop: disableRowGrouping', () => {
-    // TODO: Remove once the feature is stable
-    it('should set `disableRowGrouping` to `true` if `experimentalFeatures.rowGrouping = false', () => {
-      const disableRowGroupingSpy = spy();
-
-      const CustomToolbar = () => {
-        const rootProps = useGridRootProps();
-        disableRowGroupingSpy(rootProps.disableRowGrouping);
-        return null;
-      };
-
-      render(
-        <Test
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-          defaultGroupingExpansionDepth={-1}
-          experimentalFeatures={{
-            rowGrouping: false,
-          }}
-          components={{ Toolbar: CustomToolbar }}
-        />,
-      );
-
-      expect(disableRowGroupingSpy.lastCall.firstArg).to.equal(true);
-    });
-
     it('should disable the row grouping when `prop.disableRowGrouping = true`', () => {
       render(
         <Test

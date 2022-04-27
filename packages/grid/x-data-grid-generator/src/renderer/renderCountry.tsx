@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 import { CountryIsoOption } from '../services/static-data';
 
 interface CountryProps {

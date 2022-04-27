@@ -56,6 +56,7 @@ const pages = [
           { pathname: '/x/api/data-grid', title: 'Index' },
           { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
           { pathname: '/x/api/data-grid/data-grid-pro', title: 'DataGridPro' },
+          { pathname: '/x/api/data-grid/data-grid-premium', title: 'DataGridPremium' },
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
