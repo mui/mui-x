@@ -41,20 +41,8 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
       return sortedValue[0];
     },
     types: ['string'],
+    valueFormatter: (params) => `Agg: ${params.value}`,
   };
-
-const lastAlphabeticalAggregation: GridAggregationFunction<string, string | null> = {
-  apply: (params) => {
-    if (params.values.length === 0) {
-      return null;
-    }
-
-    const sortedValue = params.values.sort((a = '', b = '') => a.localeCompare(b));
-
-    return sortedValue[sortedValue.length - 1];
-  },
-  types: ['string'],
-};
 
 export default function AggregationCustomFunction() {
   const data = useMovieData();
@@ -68,7 +56,6 @@ export default function AggregationCustomFunction() {
         aggregationFunctions={{
           ...GRID_AGGREGATION_FUNCTIONS,
           firstAlphabetical: firstAlphabeticalAggregation,
-          lastAlphabetical: lastAlphabeticalAggregation,
         }}
         initialState={{
           aggregation: {

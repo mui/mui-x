@@ -23,7 +23,7 @@ export default function AggregationFiltering() {
   const data = useMovieData();
 
   return (
-    <div style={{ height: 266, width: '100%' }}>
+    <div style={{ height: 214, width: '100%' }}>
       <DataGridPremium
         // The following prop is here to avoid scroll in the demo while we don't have pinned rows
         rows={data.rows.slice(0, 3)}
@@ -31,13 +31,13 @@ export default function AggregationFiltering() {
         initialState={{
           aggregation: {
             model: {
-              gross: 'sum',
+              gross: 'max',
             },
           },
           filter: {
             filterModel: {
               items: [
-                { columnField: 'gross', operatorValue: '>', value: 2500000000 },
+                { columnField: 'title', operatorValue: 'equals', value: 'Titanic' },
               ],
             },
           },

@@ -33,7 +33,7 @@ const firstAlphabeticalAggregation = {
       return null;
     }
 
-    const sortedValue = params.values.sort((a, b) => a.localeCompare(b));
+    const sortedValue = params.values.sort((a = '', b = '') => a.localeCompare(b));
 
     return sortedValue[0];
   },
@@ -46,7 +46,7 @@ const lastAlphabeticalAggregation = {
       return null;
     }
 
-    const sortedValue = params.values.sort((a, b) => a.localeCompare(b));
+    const sortedValue = params.values.sort((a = '', b = '') => a.localeCompare(b));
 
     return sortedValue[sortedValue.length - 1];
   },

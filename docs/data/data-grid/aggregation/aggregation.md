@@ -14,7 +14,10 @@ title: Data Grid - Aggregation
 
 ### Controlled aggregation
 
-TODO (not useful to do it before the rest of the PR is stable, the logic of the controlled models is well-defined).
+If you need to control the state of the aggregation model, use the `aggregationModel` prop.
+You can use the `onAggregationModelChange` prop to listen to changes to the model and update the prop accordingly.
+
+{{"demo": "AggregationControlled.js", "bg": "inline"}}
 
 ## Usage with row grouping
 
@@ -24,7 +27,8 @@ When using aggregation with row grouping, all the groups will contain the aggreg
 
 ### Render aggregated values on the group rows
 
-You can also put the aggregated values on the group row itself by setting the `aggregationPosition` to `"inline"`
+By default, the aggregated values are rendered on a footer row for each group.
+But you can switch the `aggregationPosition` prop to `"inline"` to render them directly on the group row.
 
 {{"demo": "AggregationRowGroupingInline.js", "bg": "inline"}}
 
@@ -41,8 +45,13 @@ isGroupAggregated={(groupNode) => groupNode != null}
 isGroupAggregated={(groupNode) => groupNode?.groupingField === 'company'}
 
 // Will only aggregate the company group "Universal Pictures"
-isGroupAggregated={(groupNode) => groupNode?.groupingField === 'company' && groupNode?.groupingKey === 'Universal Pictures'}
+isGroupAggregated={(groupNode) =>
+  groupNode?.groupingField === 'company' &&
+  groupNode?.groupingKey === 'Universal Pictures'
+}
 ```
+
+The demo below shows only aggregate the groups.
 
 {{"demo": "AggregationIsGroupAggregated.js", "bg": "inline"}}
 
@@ -54,13 +63,23 @@ isGroupAggregated={(groupNode) => groupNode?.groupingField === 'company' && grou
 By default, the aggregation only uses the filtered rows.
 You can set the `aggregatedRows` to `"all"` to use all rows.
 
-In the example below, the movie _Titanic_ is not passing the filters but is still used for the **sum** aggregation of the `gross` column.
+In the example below, the movie _Avatar_ is not passing the filters but is still used for the **max** aggregation of the `gross` column.
 
 {{"demo": "AggregationFiltering.js", "bg": "inline"}}
 
 ## Aggregation functions
 
-### Built-in aggregation functions
+### Basic structure
+
+An aggregation function is an object describing how to generate an aggregated value for a given set of values.
+
+Let's take a look at a simple aggregation function:
+
+The full typing details can be found on the [GridAggregationFunction API page](/x/api/data-grid/grid-aggregation-function/).
+
+### Built-in functions
+
+The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions that should cover all the basic use-cases.
 
 | Name   | Behavior                                                   | Column types                 |
 | ------ | ---------------------------------------------------------- | ---------------------------- |
@@ -70,7 +89,9 @@ In the example below, the movie _Titanic_ is not passing the filters but is stil
 | `max`  | Returns the largest value of the group                     | `number`, `date`, `dateTime` |
 | `size` | Returns the amount of cells in the group                   | all                          |
 
-### Remove a built-in aggregation function for all columns
+### Remove a built-in function
+
+#### Remove a built-in function for all columns
 
 You can remove some aggregations functions for all columns by passing a filtered object to the `aggregationFunctions` prop.
 
@@ -78,7 +99,7 @@ In the example below, the `sum` aggregation function have been removed.
 
 {{"demo": "AggregationRemoveFunctionAllColumns.js", "bg": "inline"}}
 
-### Remove aggregation functions for one column
+#### Remove a built-in function for one column
 
 You can remove some aggregation function for one column by passing a `availableAggregationFunctions` property to the column definition.
 
@@ -94,34 +115,60 @@ In the example below, the only aggregation function available for the **Year** c
 
 {{"demo": "AggregationRemoveFunctionOneColumn.js", "bg": "inline"}}
 
-### Create a custom aggregation functions
+### Create a custom functions
 
 You can pass custom aggregation functions to the `aggregationFunctions` prop.
 
 An aggregation function is an object with the following shape:
 
 ```ts
-const firstAlphabeticalAggregation: GridAggregationFunction<CellValue, AggregatedValue = CellValue> =
-    {
-        apply: (params: GridAggregationParams<CellValue>): AggregatedValue => {
-            if (params.values.length === 0) {
-                return null;
-            }
+const firstAlphabeticalAggregation: GridAggregationFunction<string, string | null> =
+  {
+    // The `apply` method takes the values to aggregate and returns the aggregated value
+    apply: (params) => {
+      if (params.values.length === 0) {
+        return null;
+      }
 
-            const sortedValue = params.values.sort((a, b) => a.localeCompare(b));
+      const sortedValue = params.values.sort((a = '', b = '') => a.localeCompare(b));
 
-            return sortedValue[0];
-        },
-        types: ['string'],
-    };
-
+      return sortedValue[0];
+    },
+    // The `types` property defines which type of columns can use this aggregation function.
+    // Here, we only want to propose this aggregation function for `string` columns.
+    // If not defined, the aggregation will be available for all column types.
+    types: ['string'],
+  };
 ```
 
 In the example below, the grid have two additional custom aggregation functions for `string` columns: `firstAlphabetical` `lastAlphabetical`.
 
 {{"demo": "AggregationCustomFunction.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Aggregation with custom rendering
+### Custom value formatter
+
+By default, the aggregated value will use the value formatter from the column.
+But for some columns, the format of the aggregated value may have to differ from the format of the cell values.
+
+You can provide a `valueFormatter` method to your aggregation function to override the one from the column.
+
+```ts
+const aggregationFunction: GridAggregationFunction = {
+  apply: () => {
+    /* */
+  },
+  types: [
+    /* */
+  ],
+  valueFormatter: (params) => {
+    /* format the aggregated value */
+  },
+};
+```
+
+{{"demo": "AggregationValueFormatter.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Custom rendering
 
 If the column you are aggregating from have a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide whether you want to render your custom UI for it.
 

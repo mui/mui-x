@@ -2,12 +2,10 @@ import * as React from 'react';
 import {
   DataGridPremium,
   GRID_AGGREGATION_FUNCTIONS,
-  GridAggregationFunction,
-  GridColDef,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const COLUMNS: GridColDef[] = [
+const COLUMNS = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
     field: 'director',
@@ -29,21 +27,7 @@ const COLUMNS: GridColDef[] = [
   },
 ];
 
-const firstAlphabeticalAggregation: GridAggregationFunction<string, string | null> =
-  {
-    apply: (params) => {
-      if (params.values.length === 0) {
-        return null;
-      }
-
-      const sortedValue = params.values.sort((a = '', b = '') => a.localeCompare(b));
-
-      return sortedValue[0];
-    },
-    types: ['string'],
-  };
-
-const lastAlphabeticalAggregation: GridAggregationFunction<string, string | null> = {
+const firstAlphabeticalAggregation = {
   apply: (params) => {
     if (params.values.length === 0) {
       return null;
@@ -51,9 +35,10 @@ const lastAlphabeticalAggregation: GridAggregationFunction<string, string | null
 
     const sortedValue = params.values.sort((a = '', b = '') => a.localeCompare(b));
 
-    return sortedValue[sortedValue.length - 1];
+    return sortedValue[0];
   },
   types: ['string'],
+  valueFormatter: (params) => `Agg: ${params.value}`,
 };
 
 export default function AggregationCustomFunction() {
@@ -68,7 +53,6 @@ export default function AggregationCustomFunction() {
         aggregationFunctions={{
           ...GRID_AGGREGATION_FUNCTIONS,
           firstAlphabetical: firstAlphabeticalAggregation,
-          lastAlphabetical: lastAlphabeticalAggregation,
         }}
         initialState={{
           aggregation: {

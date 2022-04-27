@@ -1,7 +1,7 @@
 import { GridValueFormatterParams, GridRowId } from '@mui/x-data-grid-pro';
 
 interface GridAggregationParams<V = any> {
-  values: V[];
+  values: (V | undefined)[];
 }
 
 export type GridAggregationFunction<V = any, AV = V, F = V> = {
@@ -11,7 +11,7 @@ export type GridAggregationFunction<V = any, AV = V, F = V> = {
    * @param {GridAggregationParams<V>} params The params of the current aggregated cell.
    * @returns {AV} The aggregated value.
    */
-  apply: (params: GridAggregationParams<V>) => AV | null;
+  apply: (params: GridAggregationParams<V>) => AV | null | undefined;
 
   /**
    * Column types supported by this aggregation function.
