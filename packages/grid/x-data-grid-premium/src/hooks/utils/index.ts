@@ -1,1 +1,1 @@
-export * from './useKeepGroupingColumnsHidden';
+export * from './useKeepGroupedColumnsHidden';

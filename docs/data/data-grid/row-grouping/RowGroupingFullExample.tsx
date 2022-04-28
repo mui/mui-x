@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPremium,
   useGridApiRef,
-  useKeepGroupingColumnsHidden,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -14,7 +14,7 @@ export default function RowGroupingFullExample() {
   });
   const apiRef = useGridApiRef();
 
-  const initialState = useKeepGroupingColumnsHidden({
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
     initialState: {
       ...data.initialState,

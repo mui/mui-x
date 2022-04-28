@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPremium,
   useGridApiRef,
-  useKeepGroupingColumnsHidden,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -10,7 +10,7 @@ export default function RowGroupingCustomGroupingColDefObject() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
-  const initialState = useKeepGroupingColumnsHidden({
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
     initialState: {
       rowGrouping: {

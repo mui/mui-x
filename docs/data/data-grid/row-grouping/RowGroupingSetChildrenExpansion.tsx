@@ -3,7 +3,7 @@ import {
   DataGridPremium,
   gridVisibleSortedRowIdsSelector,
   useGridApiRef,
-  useKeepGroupingColumnsHidden,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
@@ -13,7 +13,7 @@ export default function RowGroupingSetChildrenExpansion() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
-  const initialState = useKeepGroupingColumnsHidden({
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
     initialState: {
       rowGrouping: {

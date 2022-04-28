@@ -3,7 +3,7 @@ import {
   DataGridPremium,
   GridGroupingColDefOverride,
   useGridApiRef,
-  useKeepGroupingColumnsHidden,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
@@ -19,7 +19,7 @@ export default function RowGroupingCustomGroupingColDefCallback() {
     'director',
   ]);
 
-  const initialState = useKeepGroupingColumnsHidden({
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
     rowGroupingModel,
   });

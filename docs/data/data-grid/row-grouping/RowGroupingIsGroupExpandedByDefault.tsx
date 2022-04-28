@@ -3,7 +3,7 @@ import {
   DataGridPremium,
   GridRowTreeNodeConfig,
   useGridApiRef,
-  useKeepGroupingColumnsHidden,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -14,7 +14,7 @@ export default function RowGroupingIsGroupExpandedByDefault() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
-  const initialState = useKeepGroupingColumnsHidden({
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
     initialState: {
       rowGrouping: {

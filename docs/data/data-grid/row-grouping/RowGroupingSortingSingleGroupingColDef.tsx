@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPremium,
   useGridApiRef,
-  useKeepGroupingColumnsHidden,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
@@ -18,7 +18,7 @@ export default function RowGroupingSortingSingleGroupingColDef() {
 
   const apiRef = useGridApiRef();
 
-  const initialState = useKeepGroupingColumnsHidden({
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
     initialState: {
       rowGrouping: {

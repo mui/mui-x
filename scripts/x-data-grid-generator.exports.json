@@ -67,6 +67,6 @@
   { "name": "renderTotalPrice", "kind": "Function" },
   { "name": "useDemoData", "kind": "Variable" },
   { "name": "UseDemoDataOptions", "kind": "Interface" },
-  { "name": "useKeepGroupingColumnsHidden", "kind": "Variable" },
+  { "name": "useKeepGroupedColumnsHidden", "kind": "Variable" },
   { "name": "useMovieData", "kind": "Variable" }
 ]

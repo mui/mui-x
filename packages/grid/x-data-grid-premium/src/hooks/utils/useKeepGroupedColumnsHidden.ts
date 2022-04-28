@@ -35,7 +35,7 @@ const updateColumnVisibilityModel = (
  * Handles both the `props.initialState.rowGrouping.model` and `props.rowGroupingModel`
  * Does not work when used with the `hide` property of `GridColDef`
  */
-export const useKeepGroupingColumnsHidden = (
+export const useKeepGroupedColumnsHidden = (
   props: {
     apiRef: React.MutableRefObject<GridApi>;
   } & Pick<DataGridPremiumProps, 'initialState' | 'rowGroupingModel'>,
