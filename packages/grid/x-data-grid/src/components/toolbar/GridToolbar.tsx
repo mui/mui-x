@@ -14,7 +14,7 @@ import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolb
 
 export interface GridToolbarProps
   extends GridToolbarContainerProps,
-  Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {
+    Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {
   /**
    * Show the quick filter component
    * @default false
