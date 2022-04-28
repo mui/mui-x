@@ -1,10 +1,14 @@
 const pages = [
   {
     pathname: '/x/getting-started/overview',
+    scopePathnames: ['/x/getting-started/overview'],
     title: 'Getting started',
     icon: 'DescriptionIcon',
     children: [
       { pathname: `/x/getting-started/overview` },
+      { pathname: `/x/getting-started/licensing` },
+      { pathname: `/x/getting-started/support` },
+      { pathname: `/x/getting-started/roadmap` },
     ]
   },
   {
