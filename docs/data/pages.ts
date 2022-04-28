@@ -1,8 +1,11 @@
 const pages = [
   {
-    pathname: '/x/advanced-components',
-    title: 'Overview',
+    pathname: '/x/getting-started/overview',
+    title: 'Getting started',
     icon: 'DescriptionIcon',
+    children: [
+      { pathname: `/x/getting-started/overview` },
+    ]
   },
   {
     pathname: '/x/react-data-grid',
