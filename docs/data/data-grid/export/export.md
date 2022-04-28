@@ -260,7 +260,7 @@ This can be used to specify value formatting or to add some colors.
       recruitmentDay: { numFmt: 'dd/mm/yyyy' },
       // set this column in green
       incomes: { font: { argb: 'FF00FF00' } },
-    }
+    },
   }}
 />
 ```
@@ -303,7 +303,7 @@ function exceljsPostProcess({ worksheet }) {
     exceljsPreProcess,
     exceljsPostProcess,
   }}
-/>
+/>;
 ```
 
 Since `exceljsPreProcess` is applied before adding the content of the grid, you can use it to add some informative rows on top of the document.
