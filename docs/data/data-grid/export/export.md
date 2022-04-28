@@ -342,5 +342,6 @@ In the following demo, both methods are used to set a custom header and a custom
 
 - [csvOptions](/x/api/data-grid/grid-csv-export-options/)
 - [printOptions](/x/api/data-grid/grid-print-export-options/)
+- [excelOptions](/x/api/data-grid/grid-excel-export-options/)
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
