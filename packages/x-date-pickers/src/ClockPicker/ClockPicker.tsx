@@ -5,7 +5,6 @@ import { unstable_useId as useId } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Clock } from './Clock';
-import { pipe } from '../internals/utils/utils';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
@@ -267,48 +266,57 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return false;
       }
 
-      const validateTimeValue = (
-        value: number,
-        getRequestedTimePoint: (when: 'start' | 'end') => TDate,
-      ) => {
-        const isAfterComparingFn = createIsAfterIgnoreDatePart(
-          disableIgnoringDatePartForTimeValidation,
-          utils,
-        );
+      const isAfterComparingFn = createIsAfterIgnoreDatePart(
+        disableIgnoringDatePartForTimeValidation,
+        utils,
+      );
 
-        return Boolean(
-          (minTime && isAfterComparingFn(minTime, getRequestedTimePoint('end'))) ||
-            (maxTime && isAfterComparingFn(getRequestedTimePoint('start'), maxTime)) ||
-            (shouldDisableTime && shouldDisableTime(value, viewType)),
-        );
-      };
+      let start: TDate;
+      let end: TDate;
+      let value: number;
 
       switch (viewType) {
         case 'hours': {
-          const hoursWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-          return validateTimeValue(hoursWithMeridiem, (when: 'start' | 'end') =>
-            pipe(
-              (currentDate) => utils.setHours(currentDate, hoursWithMeridiem),
-              (dateWithHours) => utils.setMinutes(dateWithHours, when === 'start' ? 0 : 59),
-              (dateWithMinutes) => utils.setSeconds(dateWithMinutes, when === 'start' ? 0 : 59),
-            )(date),
-          );
+          value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
+          const dateWithNewHours = utils.setHours(date, value);
+          start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
+          end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
+          break;
         }
 
-        case 'minutes':
-          return validateTimeValue(rawValue, (when: 'start' | 'end') =>
-            pipe(
-              (currentDate) => utils.setMinutes(currentDate, rawValue),
-              (dateWithMinutes) => utils.setSeconds(dateWithMinutes, when === 'start' ? 0 : 59),
-            )(date),
-          );
+        case 'minutes': {
+          value = rawValue;
+          const dateWithNewMinutes = utils.setMinutes(date, rawValue);
+          start = utils.setSeconds(dateWithNewMinutes, 0);
+          end = utils.setSeconds(dateWithNewMinutes, 59);
+          break;
+        }
 
-        case 'seconds':
-          return validateTimeValue(rawValue, () => utils.setSeconds(date, rawValue));
+        case 'seconds': {
+          value = rawValue;
+          const dateWithNewSeconds = utils.setSeconds(date, rawValue);
+          start = dateWithNewSeconds;
+          end = dateWithNewSeconds;
+          break;
+        }
 
         default:
           throw new Error('not supported');
       }
+
+      if (minTime && isAfterComparingFn(minTime, end)) {
+        return true;
+      }
+
+      if (maxTime && isAfterComparingFn(start, maxTime)) {
+        return true;
+      }
+
+      if (shouldDisableTime) {
+        return shouldDisableTime(value, viewType);
+      }
+
+      return false;
     },
     [
       ampm,
