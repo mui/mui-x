@@ -14,7 +14,7 @@ Os seletores de intervalo de datas permitem que o usuário selecione um interval
 
 ## Utilização Básica
 
-Note que você pode passar quase qualquer propriedade de [DatePicker](/api/date-picker/).
+Note que você pode passar quase qualquer propriedade de [DatePicker](/x/react-date-pickers/date-picker/).
 
 {{"demo": "BasicDateRangePicker.js"}}
 
@@ -61,6 +61,6 @@ Desabilitar datas se comporta da mesma forma que `DatePicker`.
 
 ## Renderização customizada do dia
 
-Os dias exibidos são customizados com uma função na propriedade `renderDay`. You can take advantage of the internal [DateRangePickerDay](/api/date-range-picker-day/) component.
+Os dias exibidos são customizados com uma função na propriedade `renderDay`. You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
 
 {{"demo": "CustomDateRangePickerDay.js"}}

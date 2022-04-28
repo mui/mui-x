@@ -23,6 +23,7 @@ export interface ExportedDateValidationProps<TDate> {
   maxDate?: TDate;
   /**
    * Disable specific date. @DateIOType
+   * @template TDate
    * @param {TDate} day The date to test.
    * @returns {boolean} Return `true` if the date should be disabled.
    */

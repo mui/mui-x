@@ -18,8 +18,6 @@ import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 
-export interface ClockPickerComponentsPropsOverrides {}
-
 const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
   const { classes } = ownerState;
   const slots = {
@@ -48,6 +46,7 @@ export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationP
   ampmInClock?: boolean;
   /**
    * Accessible text that helps user to understand which time and view is selected.
+   * @template TDate
    * @param {ClockPickerView} view The current view rendered.
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
@@ -68,6 +67,21 @@ export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationP
   ) => string;
 }
 
+export interface ClockPickerSlotsComponent {
+  LeftArrowButton: React.ElementType;
+  LeftArrowIcon: React.ElementType;
+  RightArrowButton: React.ElementType;
+  RightArrowIcon: React.ElementType;
+}
+
+// We keep the interface to allow module augmentation
+export interface ClockPickerComponentsPropsOverrides {}
+
+export interface ClockPickerSlotsComponentsProps {
+  leftArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
+  rightArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
+}
+
 export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate> {
   className?: string;
   /**
@@ -80,23 +94,13 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   classes?: Partial<ClockPickerClasses>;
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    */
-  components?: {
-    LeftArrowButton?: React.ElementType;
-    LeftArrowIcon?: React.ElementType;
-    RightArrowButton?: React.ElementType;
-    RightArrowIcon?: React.ElementType;
-  };
-
+  components?: Partial<ClockPickerSlotsComponent>;
   /**
    * The props used for each slot inside.
    */
-  componentsProps?: {
-    leftArrowButton?: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
-    rightArrowButton?: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
-  };
-
+  componentsProps?: Partial<ClockPickerSlotsComponentsProps>;
   /**
    * Selected date @DateIOType.
    */
@@ -200,7 +204,7 @@ type ClockPickerComponent = (<TDate>(
  *
  * API:
  *
- * - [ClockPicker API](https://mui.com/api/clock-picker/)
+ * - [ClockPicker API](https://mui.com/x/api/date-pickers/clock-picker/)
  */
 export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends unknown>(
   inProps: ClockPickerProps<TDate>,
@@ -263,7 +267,10 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return false;
       }
 
-      const validateTimeValue = (getRequestedTimePoint: (when: 'start' | 'end') => TDate) => {
+      const validateTimeValue = (
+        value: number,
+        getRequestedTimePoint: (when: 'start' | 'end') => TDate,
+      ) => {
         const isAfterComparingFn = createIsAfterIgnoreDatePart(
           disableIgnoringDatePartForTimeValidation,
           utils,
@@ -272,14 +279,14 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return Boolean(
           (minTime && isAfterComparingFn(minTime, getRequestedTimePoint('end'))) ||
             (maxTime && isAfterComparingFn(getRequestedTimePoint('start'), maxTime)) ||
-            (shouldDisableTime && shouldDisableTime(rawValue, viewType)),
+            (shouldDisableTime && shouldDisableTime(value, viewType)),
         );
       };
 
       switch (viewType) {
         case 'hours': {
           const hoursWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-          return validateTimeValue((when: 'start' | 'end') =>
+          return validateTimeValue(hoursWithMeridiem, (when: 'start' | 'end') =>
             pipe(
               (currentDate) => utils.setHours(currentDate, hoursWithMeridiem),
               (dateWithHours) => utils.setMinutes(dateWithHours, when === 'start' ? 0 : 59),
@@ -289,7 +296,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         }
 
         case 'minutes':
-          return validateTimeValue((when: 'start' | 'end') =>
+          return validateTimeValue(rawValue, (when: 'start' | 'end') =>
             pipe(
               (currentDate) => utils.setMinutes(currentDate, rawValue),
               (dateWithMinutes) => utils.setSeconds(dateWithMinutes, when === 'start' ? 0 : 59),
@@ -297,7 +304,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
           );
 
         case 'seconds':
-          return validateTimeValue(() => utils.setSeconds(date, rawValue));
+          return validateTimeValue(rawValue, () => utils.setSeconds(date, rawValue));
 
         default:
           throw new Error('not supported');
@@ -462,7 +469,7 @@ ClockPicker.propTypes = {
   className: PropTypes.string,
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    */
   components: PropTypes.object,
   /**
@@ -480,6 +487,7 @@ ClockPicker.propTypes = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * Accessible text that helps user to understand which time and view is selected.
+   * @template TDate
    * @param {ClockPickerView} view The current view rendered.
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.

@@ -132,6 +132,9 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'توسيع',
   collapseDetailPanel: 'طوي',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);

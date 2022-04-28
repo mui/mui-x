@@ -25,10 +25,16 @@ import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
+import { GridRenderEditCellParams } from '../models/params/gridCellParams';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 
 export interface GridRowProps {
   rowId: GridRowId;
   selected: boolean;
+  /**
+   * Index of the row in the whole sorted and filtered dataset.
+   * If some rows above have expanded children, this index also take those children into account.
+   */
   index: number;
   rowHeight: number;
   containerWidth: number;
@@ -167,7 +173,12 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         }
 
         // User opened a detail panel
-        if (field === '__detail_panel_toggle__') {
+        if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+          return;
+        }
+
+        // User reorders a row
+        if (field === '__reorder__') {
           return;
         }
 
@@ -214,6 +225,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       ...apiRef.current.getRowParams(rowId),
       isFirstVisible: indexRelativeToCurrentPage === 0,
       isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+      indexRelativeToCurrentPage,
     };
 
     rowClassName = rootProps.getRowClassName(rowParams);
@@ -257,7 +269,19 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     }
 
     if (editCellState != null && column.renderEditCell) {
-      const params = { ...cellParams, ...editCellState, api: apiRef.current };
+      let updatedRow = row;
+      if (apiRef.current.unstable_getRowWithUpdatedValues) {
+        // Only the new editing API has this method
+        updatedRow = apiRef.current.unstable_getRowWithUpdatedValues(rowId, column.field);
+      }
+
+      const params: GridRenderEditCellParams = {
+        ...cellParams,
+        row: updatedRow,
+        ...editCellState,
+        api: apiRef.current,
+      };
+
       content = column.renderEditCell(params);
       // TODO move to GridCell
       classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));
@@ -279,28 +303,38 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         ? 0
         : -1;
 
-    cells.push(
-      <rootProps.components.Cell
-        key={column.field}
-        value={cellParams.value}
-        field={column.field}
-        width={column.computedWidth}
-        rowId={rowId}
-        height={rowHeight}
-        showRightBorder={showRightBorder}
-        formattedValue={cellParams.formattedValue}
-        align={column.align || 'left'}
-        cellMode={cellParams.cellMode}
-        colIndex={indexRelativeToAllColumns}
-        isEditable={cellParams.isEditable}
-        hasFocus={hasFocus}
-        tabIndex={tabIndex}
-        className={clsx(classNames)}
-        {...rootProps.componentsProps?.cell}
-      >
-        {content}
-      </rootProps.components.Cell>,
+    const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+      rowId,
+      indexRelativeToAllColumns,
     );
+
+    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+      const { colSpan, width } = cellColSpanInfo.cellProps;
+
+      cells.push(
+        <rootProps.components.Cell
+          key={column.field}
+          value={cellParams.value}
+          field={column.field}
+          width={width}
+          rowId={rowId}
+          height={rowHeight}
+          showRightBorder={showRightBorder}
+          formattedValue={cellParams.formattedValue}
+          align={column.align || 'left'}
+          cellMode={cellParams.cellMode}
+          colIndex={indexRelativeToAllColumns}
+          isEditable={cellParams.isEditable}
+          hasFocus={hasFocus}
+          tabIndex={tabIndex}
+          className={clsx(classNames)}
+          colSpan={colSpan}
+          {...rootProps.componentsProps?.cell}
+        >
+          {content}
+        </rootProps.components.Cell>,
+      );
+    }
   }
 
   const emptyCellWidth = containerWidth - columnsTotalWidth;
@@ -336,6 +370,10 @@ GridRow.propTypes = {
   containerWidth: PropTypes.number.isRequired,
   editRowsState: PropTypes.object.isRequired,
   firstColumnToRender: PropTypes.number.isRequired,
+  /**
+   * Index of the row in the whole sorted and filtered dataset.
+   * If some rows above have expanded children, this index also take those children into account.
+   */
   index: PropTypes.number.isRequired,
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,

@@ -207,13 +207,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     const columnMenuState = apiRef.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-      if (focusableElement) {
-        focusableElement!.focus();
-      } else {
-        headerCellRef.current!.focus();
-      }
+      const elementToFocus = focusableElement || headerCellRef.current;
+      elementToFocus?.focus();
+      apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
     }
-  });
+  }, [apiRef, hasFocus]);
 
   const headerClassName =
     typeof column.headerClassName === 'function'

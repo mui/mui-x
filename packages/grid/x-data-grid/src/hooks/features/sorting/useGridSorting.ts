@@ -119,19 +119,18 @@ export const useGridSorting = (
    * API METHODS
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-    if (props.sortingMode === GridFeatureModeConstant.server) {
-      logger.debug('Skipping sorting rows as sortingMode = server');
-      apiRef.current.setState((state) => ({
-        ...state,
-        sorting: {
-          ...state.sorting,
-          sortedRows: gridRowIdsSelector(state, apiRef.current.instanceId),
-        },
-      }));
-      return;
-    }
-
     apiRef.current.setState((state) => {
+      if (props.sortingMode === GridFeatureModeConstant.server) {
+        logger.debug('Skipping sorting rows as sortingMode = server');
+        return {
+          ...state,
+          sorting: {
+            ...state.sorting,
+            sortedRows: gridRowIdsSelector(state, apiRef.current.instanceId),
+          },
+        };
+      }
+
       const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
       const sortedRows = apiRef.current.unstable_applyStrategyProcessor('sorting', {
@@ -143,6 +142,8 @@ export const useGridSorting = (
         sorting: { ...state.sorting, sortedRows },
       };
     });
+
+    apiRef.current.publishEvent(GridEvents.sortedRowsSet);
     apiRef.current.forceUpdate();
   }, [apiRef, logger, props.sortingMode]);
 

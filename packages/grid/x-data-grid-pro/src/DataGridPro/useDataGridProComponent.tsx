@@ -33,6 +33,7 @@ import {
   useGridDimensions,
   useGridStatePersistence,
   useGridSelectionPreProcessors,
+  useGridColumnSpanning,
   columnMenuStateInitializer,
   densityStateInitializer,
   focusStateInitializer,
@@ -67,6 +68,8 @@ import {
 } from '../hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelCache } from '../hooks/features/detailPanel/useGridDetailPanelCache';
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
+import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
+import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -78,6 +81,7 @@ export const useDataGridProComponent = (
    * Register all pre-processors called during state initialization here.
    */
   useGridSelectionPreProcessors(apiRef, props);
+  useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
@@ -119,6 +123,7 @@ export const useDataGridProComponent = (
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridColumnSpanning(apiRef);
   useGridDetailPanelCache(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
@@ -127,14 +132,15 @@ export const useDataGridProComponent = (
   useGridEditing(apiRef, props);
 
   useGridFocus(apiRef, props);
-  useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
+  useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
+  useGridRowReorder(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);

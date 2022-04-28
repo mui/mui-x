@@ -562,7 +562,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/api/data-grid/grid-col-def/)
+   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
    */
   onEditCellPropsChange: PropTypes.func,
   /**
@@ -602,6 +602,20 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange: PropTypes.func,
+  /**
+   * Callback fired when the preferences panel is closed.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelClose: PropTypes.func,
+  /**
+   * Callback fired when the preferences panel is opened.
+   * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPreferencePanelOpen: PropTypes.func,
   /**
    * Callback called when `processRowUpdate` throws an error or rejects.
    * @param {any} error The error thrown.
@@ -653,6 +667,13 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowGroupingModelChange: PropTypes.func,
+  /**
+   * Callback fired when a row is being reordered.
+   * @param {GridRowOrderChangeParams} params With all properties from [[GridRowOrderChangeParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowOrderChange: PropTypes.func,
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
@@ -744,6 +765,11 @@ DataGridPremiumRaw.propTypes = {
    * @default 52
    */
   rowHeight: PropTypes.number,
+  /**
+   * If `true`, the reordering of rows is enabled.
+   * @default false
+   */
+  rowReordering: PropTypes.bool,
   /**
    * Set of rows of type [[GridRowsProp]].
    */

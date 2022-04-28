@@ -87,11 +87,11 @@ const monthMap = [
  *
  * Demos:
  *
- * - [Date Picker](https://mui.com/components/x/react-date-pickers/date-picker/)
+ * - [Date Picker](https://mui.com/x/react-date-pickers/date-picker/)
  *
  * API:
  *
- * - [CalendarPickerSkeleton API](https://mui.com/api/calendar-picker-skeleton/)
+ * - [CalendarPickerSkeleton API](https://mui.com/x/api/date-pickers/calendar-picker-skeleton/)
  */
 function CalendarPickerSkeleton(props: CalendarPickerSkeletonProps) {
   const { className, ...other } = useThemeProps<

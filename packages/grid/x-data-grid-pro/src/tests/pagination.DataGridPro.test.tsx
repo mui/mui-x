@@ -32,12 +32,12 @@ describe('<DataGridPro /> - Pagination', () => {
 
       render(<GridTest />);
 
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
       act(() => {
         apiRef.current.setPage(1);
       });
 
-      expect(getColumnValues()).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
     it('should apply last page if trying to go to a non-existing page', () => {
@@ -61,12 +61,12 @@ describe('<DataGridPro /> - Pagination', () => {
 
       render(<GridTest />);
 
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
       act(() => {
         apiRef.current.setPage(50);
       });
 
-      expect(getColumnValues()).to.deep.equal(['19']);
+      expect(getColumnValues(0)).to.deep.equal(['19']);
     });
   });
 
@@ -96,12 +96,12 @@ describe('<DataGridPro /> - Pagination', () => {
       render(<GridTest />);
       clock.runToLast();
 
-      expect(getColumnValues()).to.deep.equal(['0', '1', '2', '3', '4']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
       act(() => {
         apiRef.current.setPageSize(2);
       });
 
-      expect(getColumnValues()).to.deep.equal(['0', '1']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
   });
 });

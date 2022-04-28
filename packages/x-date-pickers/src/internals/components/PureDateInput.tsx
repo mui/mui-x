@@ -12,6 +12,11 @@ import { MuiPickersAdapter } from '../models';
 // TODO: make `variant` optional.
 export type MuiTextFieldProps = MuiTextFieldPropsType | Omit<MuiTextFieldPropsType, 'variant'>;
 
+export interface DateInputSlotsComponent {
+  // Icon displaying for open picker button.
+  OpenPickerIcon: React.ElementType;
+}
+
 export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue = unknown> {
   /**
    * Regular expression to detect "accepted" symbols.
@@ -20,12 +25,9 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   acceptRegex?: RegExp;
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    */
-  components?: {
-    // Icon displaying for open picker button.
-    OpenPickerIcon?: React.ElementType;
-  };
+  components?: Partial<DateInputSlotsComponent>;
   disabled?: boolean;
   /**
    * Disable mask on the keyboard, this should be used rarely. Consider passing proper mask for your format.
@@ -39,10 +41,11 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   disableOpenPicker?: boolean;
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @template TDateValue
    * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
+   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
    */
   getOpenDialogAriaText?: (
     value: ParseableDate<TDateValue>,
@@ -78,7 +81,7 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   readOnly?: boolean;
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `props` argument of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api) that you need to forward.
+   * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example ```jsx
    * renderInput={props => <TextField {...props} />}

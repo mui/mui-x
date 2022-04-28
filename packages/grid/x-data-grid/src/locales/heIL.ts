@@ -132,6 +132,9 @@ const heILGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

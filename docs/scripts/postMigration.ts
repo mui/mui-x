@@ -113,12 +113,7 @@ function run() {
   const redirectsPath = path.join(process.cwd(), 'docs/public/_redirects');
   let redirects = fs.readFileSync(redirectsPath, { encoding: 'utf8' });
 
-  redirects = redirects.replace(
-    `/ /components/data-grid/`,
-    `/ /x/react-data-grid/ 301
-/components/data-grid/* /x/react-data-grid/:splat 301
-/api/data-grid/* /x/api/data-grid/:splat 301`,
-  );
+  redirects = redirects.replace(`/ /components/data-grid/`, `/ /x/react-data-grid/`);
 
   fs.writeFileSync(redirectsPath, redirects);
 }

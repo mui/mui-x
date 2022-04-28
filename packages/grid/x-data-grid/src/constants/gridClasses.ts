@@ -102,6 +102,10 @@ export interface GridClasses {
    */
   columnHeaderDraggableContainer: string;
   /**
+   * Styles applied to the row's draggable placeholder element inside the special row reorder cell.
+   */
+  rowReorderCellPlaceholder: string;
+  /**
    * Styles applied to the column headers wrapper if a column is being dragged.
    */
   columnHeaderDropZone: string;
@@ -326,6 +330,10 @@ export interface GridClasses {
    */
   'row--editing': string;
   /**
+   * Styles applied to the floating special row reorder cell element when it is dragged.
+   */
+  'row--dragging': string;
+  /**
    * Styles applied to the last visible row element on every page of the grid.
    */
   'row--lastVisible': string;
@@ -338,6 +346,18 @@ export interface GridClasses {
    * Only works when pagination is disabled.
    */
   rowCount: string;
+  /**
+   * Styles applied to the row reorder cell container element.
+   */
+  rowReorderCellContainer: string;
+  /**
+   * Styles applied to the root element of the row reorder cell
+   */
+  rowReorderCell: string;
+  /**
+   * Styles applied to the root element of the row reorder cell when dragging is allowed
+   */
+  'rowReorderCell--draggable': string;
   /**
    * Styles applied to both scroll area elements.
    */
@@ -464,11 +484,16 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'menuList',
   'overlay',
   'root',
+  'row',
   'row--editable',
   'row--editing',
-  'row',
   'row--lastVisible',
+  'row--dragging',
+  'rowReorderCellPlaceholder',
   'rowCount',
+  'rowReorderCellContainer',
+  'rowReorderCell',
+  'rowReorderCell--draggable',
   'scrollArea--left',
   'scrollArea--right',
   'scrollArea',

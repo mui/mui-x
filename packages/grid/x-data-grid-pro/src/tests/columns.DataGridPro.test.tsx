@@ -8,7 +8,6 @@ import {
   useGridApiRef,
   DataGridPro,
   gridClasses,
-  GridEvents,
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
   GridApi,
@@ -348,29 +347,29 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  describe('column pre-processing', () => {
-    it('should not loose column width when re-applying pre-processing', () => {
+  describe('column pipe processing', () => {
+    it('should not loose column width when re-applying pipe processing', () => {
       render(<Test checkboxSelection />);
       apiRef.current.setColumnWidth('brand', 300);
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
-      apiRef.current.publishEvent(GridEvents.pipeProcessorRegister, 'hydrateColumns' as any);
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
 
-    it('should not loose column index when re-applying pre-processing', () => {
+    it('should not loose column index when re-applying pipe processing', () => {
       render(<Test checkboxSelection columns={[{ field: 'id' }, { field: 'brand' }]} />);
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       apiRef.current.setColumnIndex('brand', 1);
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
-      apiRef.current.publishEvent(GridEvents.pipeProcessorRegister, 'hydrateColumns' as any);
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
 
-    it('should not loose imperatively added columns when re-applying pre-processing', () => {
+    it('should not loose imperatively added columns when re-applying pipe processing', () => {
       render(<Test checkboxSelection />);
       apiRef.current.updateColumn({ field: 'id' });
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
-      apiRef.current.publishEvent(GridEvents.pipeProcessorRegister, 'hydrateColumns' as any);
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
   });

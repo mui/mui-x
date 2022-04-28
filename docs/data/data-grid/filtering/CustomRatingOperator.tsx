@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
+import Rating, { RatingProps } from '@mui/material/Rating';
 import {
   GridFilterInputValueProps,
   DataGrid,
@@ -21,8 +21,8 @@ function RatingInputValue(props: GridFilterInputValueProps) {
     },
   }));
 
-  const handleFilterChange = (event) => {
-    applyValue({ ...item, value: event.target.value });
+  const handleFilterChange: RatingProps['onChange'] = (event, newValue) => {
+    applyValue({ ...item, value: newValue });
   };
 
   return (

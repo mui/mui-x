@@ -1,4 +1,4 @@
 module.exports = {
   enable_product_scope: true,
-  enable_redirects: false,
+  enable_redirects: true,
 };

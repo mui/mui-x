@@ -163,6 +163,9 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

@@ -7,8 +7,3 @@ export type WrapperVariant = 'mobile' | 'desktop' | null;
  * @ignore - internal component.
  */
 export const WrapperVariantContext = React.createContext<WrapperVariant>(null);
-
-/**
- * @ignore - internal component.
- */
-export const IsStaticVariantContext = React.createContext(false);

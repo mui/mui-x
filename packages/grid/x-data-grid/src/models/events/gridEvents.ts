@@ -94,7 +94,7 @@ enum GridEvents {
    */
   rowEditCommit = 'rowEditCommit',
   /**
-   * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a cell.
+   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a cell.
    * @ignore - do not document.
    */
   cellNavigationKeyDown = 'cellNavigationKeyDown',
@@ -120,6 +120,22 @@ enum GridEvents {
    */
   editRowsModelChange = 'editRowsModelChange',
   /**
+   * Fired when the user starts dragging a row. It's mapped to the `dragstart` DOM event.
+   * @ignore - do not document.
+   */
+  rowDragStart = 'rowDragStart',
+  /**
+   * Fired while an element or text selection is dragged over the row.
+   * It's mapped to the `dragover` DOM event.
+   * @ignore - do not document.
+   */
+  rowDragOver = 'rowDragOver',
+  /**
+   * Fired when the dragging of a row ends.
+   * @ignore - do not document.
+   */
+  rowDragEnd = 'rowDragEnd',
+  /**
    * Fired when a column header loses focus.
    * @ignore - do not document.
    */
@@ -130,7 +146,7 @@ enum GridEvents {
    */
   columnHeaderFocus = 'columnHeaderFocus',
   /**
-   * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a column header.
+   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a column header.
    * @ignore - do not document.
    */
   columnHeaderNavigationKeyDown = 'columnHeaderNavigationKeyDown',
@@ -246,6 +262,10 @@ enum GridEvents {
    */
   columnOrderChange = 'columnOrderChange',
   /**
+   * Fired when the user ends reordering a row.
+   */
+  rowOrderChange = 'rowOrderChange',
+  /**
    * Fired when the rows are updated.
    * @ignore - do not document.
    */
@@ -256,10 +276,15 @@ enum GridEvents {
    */
   rowExpansionChange = 'rowExpansionChange',
   /**
-   * Fired when the visible rows are updated
+   * Fired when the sorted rows are updated
+   * @ignore - do not document
+   */
+  sortedRowsSet = 'sortedRowsSet',
+  /**
+   * Fired when the filtered rows are updated
    * @ignore - do not document.
    */
-  visibleRowsSet = 'visibleRowsSet',
+  filteredRowsSet = 'filteredRowsSet',
   /**
    * Fired when the columns state is changed.
    */
@@ -274,16 +299,6 @@ enum GridEvents {
    * @ignore - do not document.
    */
   pinnedColumnsChange = 'pinnedColumnsChange',
-  /**
-   * Fired when a pre-processor is registered.
-   * @ignore - do not document.
-   */
-  pipeProcessorRegister = 'pipeProcessorRegister',
-  /**
-   * Fired when a pre-processor is unregistered.
-   * @ignore - do not document.
-   */
-  pipeProcessorUnregister = 'pipeProcessorUnregister',
   /**
    * Fired when a processor of the active strategy changes.
    * @ignore - do not document.
@@ -322,6 +337,26 @@ enum GridEvents {
    * @ignore - do not document.
    */
   virtualScrollerContentSizeChange = 'virtualScrollerContentSizeChange',
+  /**
+   * Fired when the content is scrolled by the mouse wheel.
+   * It's attached to the "mousewheel" event.
+   * @ignore - do not document.
+   */
+  virtualScrollerWheel = 'virtualScrollerWheel',
+  /**
+   * Fired when the content is moved using a touch device.
+   * It's attached to the "touchmove" event.
+   * @ignore - do not document.
+   */
+  virtualScrollerTouchMove = 'virtualScrollerTouchMove',
+  /**
+   * Fired when the preferences panel is closed.
+   */
+  preferencePanelClose = 'preferencePanelClose',
+  /**
+   * Fired when the preferences panel is opened.
+   */
+  preferencePanelOpen = 'preferencePanelOpen',
 }
 
 export type GridEventsStr = keyof GridEventLookup;

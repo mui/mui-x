@@ -1,4 +1,4 @@
-import type { GridRowScrollEndParams } from '../models';
+import type { GridRowScrollEndParams, GridRowOrderChangeParams } from '../models';
 import type { GridPinnedColumns } from '../hooks';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 
@@ -8,6 +8,7 @@ export interface GridControlledStateEventLookupPro {
 
 export interface GridEventLookupPro {
   rowsScrollEnd: { params: GridRowScrollEndParams };
+  rowOrderChange: { params: GridRowOrderChangeParams };
 }
 
 export interface GridPipeProcessingLookupPro {

@@ -77,7 +77,7 @@ describe('<DataGridPro /> - Rows', () => {
           );
         };
         render(<Test />);
-        expect(getColumnValues()).to.deep.equal(['c1', 'c2', 'c3']);
+        expect(getColumnValues(0)).to.deep.equal(['c1', 'c2', 'c3']);
         apiRef!.current.updateRows([
           { clientId: 'c2', age: 30 },
           { clientId: 'c3', age: 31 },
@@ -130,7 +130,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
   });
 
-  describe('props: rows', () => {
+  describe('prop: rows', () => {
     it('should not throttle even when props.throttleRowsMs is defined', () => {
       const { rows, columns } = getData(5, 2);
 
@@ -189,19 +189,19 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should not throttle by default', () => {
       render(<TestCase />);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
     });
 
     it('should allow to enable throttle', () => {
       render(<TestCase throttleRowsMs={100} />);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
       clock.tick(50);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       clock.tick(50);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
     });
 
     it('should allow to update row data', () => {
@@ -209,7 +209,7 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
       apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
       apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
-      expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum']);
+      expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
     it('update row data can also add rows', () => {
@@ -218,7 +218,7 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
       apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
       apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]);
-      expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
+      expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
     it('update row data can also add rows in bulk', () => {
@@ -229,7 +229,7 @@ describe('<DataGridPro /> - Rows', () => {
         { id: 2, brand: 'Pum' },
         { id: 3, brand: 'Jordan' },
       ]);
-      expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
+      expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
     it('update row data can also delete rows', () => {
@@ -238,7 +238,7 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]);
       apiRef.current.updateRows([{ id: 2, _action: 'delete' }]);
       apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]);
-      expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
+      expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
     it('update row data can also delete rows in bulk', () => {
@@ -249,7 +249,7 @@ describe('<DataGridPro /> - Rows', () => {
         { id: 2, _action: 'delete' },
         { id: 5, brand: 'Atari' },
       ]);
-      expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
+      expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
     it('update row data should process getRowId', () => {
@@ -269,14 +269,14 @@ describe('<DataGridPro /> - Rows', () => {
       };
 
       render(<TestCaseGetRowId />);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       apiRef.current.updateRows([
         { idField: 1, _action: 'delete' },
         { idField: 0, brand: 'Apple' },
         { idField: 2, _action: 'delete' },
         { idField: 5, brand: 'Atari' },
       ]);
-      expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
+      expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
   });
 
@@ -315,7 +315,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should not throttle by default', () => {
       render(<TestCase />);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const newRows = [
         {
           id: 3,
@@ -324,12 +324,12 @@ describe('<DataGridPro /> - Rows', () => {
       ];
       apiRef.current.setRows(newRows);
 
-      expect(getColumnValues()).to.deep.equal(['Asics']);
+      expect(getColumnValues(0)).to.deep.equal(['Asics']);
     });
 
     it('should allow to enable throttle', () => {
       render(<TestCase throttleRowsMs={100} />);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const newRows = [
         {
           id: 3,
@@ -339,9 +339,9 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.setRows(newRows);
 
       clock.tick(50);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       clock.tick(50);
-      expect(getColumnValues()).to.deep.equal(['Asics']);
+      expect(getColumnValues(0)).to.deep.equal(['Asics']);
     });
   });
 
@@ -389,9 +389,9 @@ describe('<DataGridPro /> - Rows', () => {
       );
 
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      const renderingZone = document.querySelector(
+      const renderingZone = document.querySelector<HTMLElement>(
         '.MuiDataGrid-virtualScrollerRenderZone',
-      )! as HTMLElement;
+      )!;
       virtualScroller.scrollTop = 10e6; // scroll to the bottom
       virtualScroller.dispatchEvent(new Event('scroll'));
 

@@ -132,6 +132,9 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Udvid',
   collapseDetailPanel: 'Kollaps',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const daDK: Localization = getGridLocalization(daDKGrid, daDKCore);

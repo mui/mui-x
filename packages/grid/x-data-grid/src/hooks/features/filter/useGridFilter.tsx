@@ -72,10 +72,7 @@ export const useGridFilter = (
     changeEvent: GridEvents.filterModelChange,
   });
 
-  /**
-   * API METHODS
-   */
-  const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
+  const updateFilteredRows = React.useCallback(() => {
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
@@ -95,9 +92,16 @@ export const useGridFilter = (
         },
       };
     });
-    apiRef.current.publishEvent(GridEvents.visibleRowsSet);
+    apiRef.current.publishEvent(GridEvents.filteredRowsSet);
+  }, [props.filterMode, apiRef]);
+
+  /**
+   * API METHODS
+   */
+  const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
+    updateFilteredRows();
     apiRef.current.forceUpdate();
-  }, [apiRef, props.filterMode]);
+  }, [apiRef, updateFilteredRows]);
 
   const upsertFilterItem = React.useCallback<GridFilterApi['upsertFilterItem']>(
     (item) => {
@@ -319,7 +323,9 @@ export const useGridFilter = (
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.unstable_applyFilters);
+  // Do not call `apiRef.current.forceUpdate` to avoid re-render before updating the sorted rows.
+  // Otherwise, the state is not consistent during the render
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, updateFilteredRows);
   useGridApiEventHandler(
     apiRef,
     GridEvents.rowExpansionChange,

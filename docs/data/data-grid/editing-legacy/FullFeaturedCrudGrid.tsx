@@ -18,6 +18,7 @@ import {
   GridActionsCellItem,
   GridEventListener,
   GridEvents,
+  GridRowId,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -117,12 +118,12 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleEditClick = (id) => (event) => {
+  const handleEditClick = (id: GridRowId) => (event: React.MouseEvent) => {
     event.stopPropagation();
     apiRef.current.setRowMode(id, 'edit');
   };
 
-  const handleSaveClick = (id) => async (event) => {
+  const handleSaveClick = (id: GridRowId) => async (event: React.MouseEvent) => {
     event.stopPropagation();
     // Wait for the validation to run
     const isValid = await apiRef.current.commitRowChange(id);
@@ -133,12 +134,12 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-  const handleDeleteClick = (id) => (event) => {
+  const handleDeleteClick = (id: GridRowId) => (event: React.MouseEvent) => {
     event.stopPropagation();
     apiRef.current.updateRows([{ id, _action: 'delete' }]);
   };
 
-  const handleCancelClick = (id) => (event) => {
+  const handleCancelClick = (id: GridRowId) => (event: React.MouseEvent) => {
     event.stopPropagation();
     apiRef.current.setRowMode(id, 'view');
 

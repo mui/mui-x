@@ -21,18 +21,18 @@ export interface ExportedPickerPaperProps {
    */
   clearText?: React.ReactNode;
   /**
-   * Paper props passed down to [Paper](https://mui.com/api/paper/) component.
+   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
   PaperProps?: Partial<MuiPaperProps>;
 }
 
 export interface ExportedPickerPopperProps {
   /**
-   * Popper props passed down to [Popper](https://mui.com/api/popper/) component.
+   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
   PopperProps?: Partial<MuiPopperProps>;
   /**
-   * Custom component for popper [Transition](https://mui.com/components/transitions/#transitioncomponent-prop).
+   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
   TransitionComponent?: React.JSXElementConstructor<MuiTransitionProps>;
 }

@@ -130,6 +130,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const zhCN: Localization = getGridLocalization(zhCNGrid, zhCNCore);

@@ -19,7 +19,7 @@ export interface GridColumnsState {
   columnVisibilityModel: GridColumnVisibilityModel;
 }
 
-export type GridColumnDimensions = Pick<GridStateColDef, GridColumnDimensionProperties>;
+export type GridColumnDimensions = { [key in GridColumnDimensionProperties]?: number };
 
 export interface GridColumnsInitialState {
   columnVisibilityModel?: GridColumnVisibilityModel;

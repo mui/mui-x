@@ -29,6 +29,7 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
         }
 
         logger.debug('Opening Column Menu');
+
         return {
           ...state,
           columnMenu: { open: true, field },
@@ -50,6 +51,7 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
       }
 
       logger.debug('Hiding Column Menu');
+
       return {
         ...state,
         columnMenu: { ...state.columnMenu, open: false, field: undefined },
@@ -86,5 +88,10 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
    * EVENTS
    */
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
-  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, hideColumnMenu);
+  useGridApiEventHandler(apiRef, GridEvents.virtualScrollerWheel, apiRef.current.hideColumnMenu);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.virtualScrollerTouchMove,
+    apiRef.current.hideColumnMenu,
+  );
 };

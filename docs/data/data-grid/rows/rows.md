@@ -16,7 +16,7 @@ The rows can be defined with the `rows` prop, which expects an array of objects.
 {{"demo": "RowsGrid.js", "bg": "inline"}}
 
 > ⚠️ Each row object should have a field that uniquely identifies the row.
-> By default, the grid will use the `id` property of the row. Note that [column definition](/components/data-grid/columns/#column-definitions) for `id` field is not required.
+> By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/columns/#column-definitions) for `id` field is not required.
 >
 > When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
 >
@@ -76,7 +76,7 @@ The following demo updates the rows every 10ms, but they are only applied every 
 By default, the rows have a height of 52 pixels.
 This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
 
-If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/components/data-grid/accessibility/#density-selector)
+If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/x/react-data-grid/accessibility/#density-selector)
 
 To change the row height for the whole grid, set the `rowHeight` prop:
 
@@ -103,7 +103,7 @@ If you need some rows to have different row heights this can be achieved using t
 ## Row spacing
 
 You can use the `getRowSpacing` prop to increase the spacing between rows.
-This prop is called with a [`GridRowSpacingParams`](/api/data-grid/grid-row-spacing-params/) object.
+This prop is called with a [`GridRowSpacingParams`](/x/api/data-grid/grid-row-spacing-params/) object.
 
 ```tsx
 const getRowSpacing = React.useCallback((params: GridRowSpacingParams) => {
@@ -127,13 +127,86 @@ To add a border instead, set `rowSpacingType` to `"border"` and customize the co
 />
 ```
 
-> ⚠ Adding a bottom margin or border to rows that also have a [detail panel](/components/data-grid/group-pivot/#master-detail) is not recommended because the detail panel relays on the bottom margin to work.
+> ⚠ Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/master-detail) is not recommended because the detail panel relays on the bottom margin to work.
 > As an alternative, only use the top spacing to define the space between rows.
 > It will be easier to always increase the next row spacing not matter if the detail panel is expanded or not, but you can use `gridDetailPanelExpandedRowIdsSelector` to only do when open.
 
 ## Styling rows
 
-You can check the [styling rows](/components/data-grid/style/#styling-rows) section for more information.
+You can check the [styling rows](/x/react-data-grid/style/#styling-rows) section for more information.
+
+## Row reorder [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+Row reordering allows to rearrange rows by dragging the special reordering cell.
+
+By default, row reordering is disabled.
+To enable it, you need to add the `rowReordering` prop.
+
+```tsx
+<DataGridPro rowReordering />
+```
+
+{{"demo": "RowOrderingGrid.js", "disableAd": true, "bg": "inline"}}
+
+To capture changes in the order of the dragged row, you can pass a callback to the `onRowOrderChange` prop. This callback is called with a `GridRowOrderChangeParams` object.
+
+In addition, you can import the following events to customize the row reordering experience:
+
+- `rowDragStart`: emitted when dragging of a row starts.
+- `rowDragOver`: emitted when dragging a row over another row.
+- `rowDragEnd`: emitted when dragging of a row stops.
+
+### Customizing the reorder value
+
+By default, when you start dragging a row, the `id` is displayed in the draggable box.
+To change this, you can give a value to the `__reorder__` field for each row.
+
+```tsx
+const columns: GridColumns = [{ field: 'brand' }];
+
+const rows: GridRowsProp = [
+  { id: 0, brand: 'Nike', __reorder__: 'Nike' },
+  { id: 1, brand: 'Adidas', __reorder__: 'Adidas' },
+  { id: 2, brand: 'Puma', __reorder__: 'Puma' },
+];
+
+<DataGridPro rows={rows} columns={columns} rowReordering />;
+```
+
+### Customizing the row reordering icon
+
+To change the icon used for the row reordering, you can provide a different component for the [icon slot](/x/react-data-grid/components/#icons) as follow:
+
+```tsx
+<DataGridPro
+  components={{
+    RowReorderIcon: CustomMoveIcon,
+  }}
+/>
+```
+
+Another way to customize is to add a column with `field: __reorder__` to your set of columns.
+That way, you can overwrite any of the properties from the `GRID_REORDER_COL_DEF` column.
+The grid will detect that there is already a reorder column defined and it will not add another one in the default position.
+By only setting the `field`, is up to you to configure the remaining options (e.g. disable the column menu, filtering, sorting).
+To already start with a few suggested options configured, spread `GRID_REORDER_COL_DEF` when defining the column.
+
+```tsx
+<DataGridPro
+  columns={[
+    {
+      ...GRID_REORDER_COL_DEF, // Already contains the right field
+      width: 40,
+    },
+  ]}
+/>
+```
+
+This approach can also be used to change the location of the toggle column.
+
+> ⚠️ For now, row reordering is disabled if sorting is applied to the grid.
+>
+> In addition, if row grouping or tree data is being used, the row reordering is also disabled.
 
 ## 🚧 Row spanning
 
@@ -146,14 +219,6 @@ Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
-## 🚧 Row reorder [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #206](https://github.com/mui/mui-x/issues/206) if you want to see it land faster.
-
-Row reorder is used to rearrange rows by dragging the row with the mouse.
-
 ## 🚧 Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
@@ -164,5 +229,5 @@ Pinned (or frozen, locked, or sticky) rows are rows that are visible at all time
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

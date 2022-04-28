@@ -70,7 +70,7 @@ For ease of use, the date picker will automatically change the layout between po
 
 ## Subcomponentes
 
-Some lower-level sub-components (`CalendarPicker`, `MonthPicker`, and `YearPicker`) are also exported. Estes são renderizados sem estar encapsulado ou  lógica exterior (campo com mascara, valores de data e validação, etc.).
+Some lower-level sub-components (`CalendarPicker`, `MonthPicker`, and `YearPicker`) are also exported. Estes são renderizados sem estar encapsulado ou lógica exterior (campo com mascara, valores de data e validação, etc.).
 
 {{"demo": "SubComponentsPickers.js"}}
 
@@ -82,7 +82,7 @@ You can customize the rendering of the input with the `renderInput` prop. Certif
 
 ## Renderização customizada do dia
 
-Os dias exibidos são customizados com uma função na propriedade `renderDay`. You can take advantage of the [PickersDay](/api/pickers-day/) component.
+Os dias exibidos são customizados com uma função na propriedade `renderDay`. You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
 
 {{"demo": "CustomDay.js"}}
 

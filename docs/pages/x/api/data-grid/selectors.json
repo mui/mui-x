@@ -282,6 +282,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridRowsLoadingSelector",
+    "returnType": "boolean | undefined",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridRowsLookupSelector",
     "returnType": "GridRowsLookup<any>",
     "description": "",

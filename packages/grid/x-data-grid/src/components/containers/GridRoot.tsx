@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useForkRef } from '@mui/material/utils';
+import { useForkRef, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import NoSsr from '@mui/material/NoSsr';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { GridRootStyles } from './GridRootStyles';
 import { gridVisibleColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';
@@ -32,24 +31,38 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
 
   apiRef.current.rootElementRef = rootContainerRef;
 
+  // Our implementation of <NoSsr />
+  const [mountedState, setMountedState] = React.useState(false);
+  useEnhancedEffect(() => {
+    setMountedState(true);
+  }, []);
+
+  useEnhancedEffect(() => {
+    if (mountedState) {
+      apiRef.current.unstable_updateGridDimensionsRef();
+    }
+  }, [apiRef, mountedState]);
+
+  if (!mountedState) {
+    return null;
+  }
+
   return (
-    <NoSsr>
-      <GridRootStyles
-        ref={handleRef}
-        className={clsx(className, rootProps.classes?.root, gridClasses.root, {
-          [gridClasses.autoHeight]: rootProps.autoHeight,
-        })}
-        role="grid"
-        aria-colcount={visibleColumns.length}
-        aria-rowcount={totalRowCount}
-        aria-multiselectable={!rootProps.disableMultipleSelection}
-        aria-label={rootProps['aria-label']}
-        aria-labelledby={rootProps['aria-labelledby']}
-        {...other}
-      >
-        {children}
-      </GridRootStyles>
-    </NoSsr>
+    <GridRootStyles
+      ref={handleRef}
+      className={clsx(className, rootProps.classes?.root, gridClasses.root, {
+        [gridClasses.autoHeight]: rootProps.autoHeight,
+      })}
+      role="grid"
+      aria-colcount={visibleColumns.length}
+      aria-rowcount={totalRowCount}
+      aria-multiselectable={!rootProps.disableMultipleSelection}
+      aria-label={rootProps['aria-label']}
+      aria-labelledby={rootProps['aria-labelledby']}
+      {...other}
+    >
+      {children}
+    </GridRootStyles>
   );
 });
 

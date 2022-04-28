@@ -30,15 +30,15 @@ function escapeOperandAttributeSelector(operand: string): string {
 }
 
 export function getGridColumnHeaderElement(root: Element, field: string) {
-  return root.querySelector(
+  return root.querySelector<HTMLDivElement>(
     `[role="columnheader"][data-field="${escapeOperandAttributeSelector(field)}"]`,
-  ) as HTMLDivElement;
+  );
 }
 
 export function getGridRowElement(root: Element, id: GridRowId) {
-  return root.querySelector(
+  return root.querySelector<HTMLDivElement>(
     `.${gridClasses.row}[data-id="${escapeOperandAttributeSelector(String(id))}"]`,
-  ) as HTMLDivElement;
+  );
 }
 
 export function getGridCellElement(root: Element, { id, field }: { id: GridRowId; field: string }) {
@@ -46,7 +46,7 @@ export function getGridCellElement(root: Element, { id, field }: { id: GridRowId
   if (!row) {
     return null;
   }
-  return row.querySelector(
+  return row.querySelector<HTMLDivElement>(
     `.${gridClasses.cell}[data-field="${escapeOperandAttributeSelector(field)}"]`,
-  ) as HTMLDivElement;
+  );
 }

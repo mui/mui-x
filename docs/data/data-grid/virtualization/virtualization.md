@@ -46,5 +46,5 @@ You may want to turn it off to be able to test the grid with a headless browser,
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)

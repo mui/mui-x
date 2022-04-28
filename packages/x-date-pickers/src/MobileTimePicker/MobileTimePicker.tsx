@@ -15,6 +15,13 @@ const valueManager: PickerStateValueManager<unknown, unknown> = {
   parseInput: parsePickerInputValue,
   areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
     utils.isEqual(a, b),
+  valueReducer: (utils, prevValue, newValue) => {
+    if (prevValue == null || newValue == null) {
+      return newValue;
+    }
+
+    return utils.mergeDateAndTime(prevValue, newValue);
+  },
 };
 
 export interface MobileTimePickerProps<TDate = unknown>
@@ -29,11 +36,11 @@ type MobileTimePickerComponent = (<TDate>(
  *
  * Demos:
  *
- * - [Time Picker](https://mui.com/components/x/react-date-pickers/time-picker/)
+ * - [Time Picker](https://mui.com/x/react-date-pickers/time-picker/)
  *
  * API:
  *
- * - [MobileTimePicker API](https://mui.com/api/mobile-time-picker/)
+ * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
 export const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   inProps: MobileTimePickerProps<TDate>,
@@ -115,11 +122,11 @@ MobileTimePicker.propTypes = {
   clearText: PropTypes.node,
   /**
    * The components used for each slot.
-   * Either a string to use a HTML element or a component.
+   * Either a string to use an HTML element or a component.
    */
   components: PropTypes.object,
   /**
-   * Props applied to the [`Dialog`](/api/dialog/) element.
+   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
    */
   DialogProps: PropTypes.object,
   /**
@@ -148,6 +155,7 @@ MobileTimePicker.propTypes = {
   disableOpenPicker: PropTypes.bool,
   /**
    * Accessible text that helps user to understand which time and view is selected.
+   * @template TDate
    * @param {ClockPickerView} view The current view rendered.
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
@@ -164,10 +172,11 @@ MobileTimePicker.propTypes = {
   getClockLabelText: PropTypes.func,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @template TDateValue
    * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
+   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -216,11 +225,13 @@ MobileTimePicker.propTypes = {
   okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
+   * @template TDateValue
    * @param {TDateValue} date The date that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
+   * @template TDate
    * @param {DateRange<TDate>} date The new parsed date.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
@@ -238,6 +249,7 @@ MobileTimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
+   * @template TError, TDateValue
    * @param {TError} reason The reason why the current value is not valid.
    * @param {TDateValue} value The invalid value.
    */
@@ -274,7 +286,7 @@ MobileTimePicker.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
-   * The `props` argument of this render prop contains props of [TextField](https://mui.com/api/text-field/#textfield-api) that you need to forward.
+   * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
    * @example ```jsx
    * renderInput={props => <TextField {...props} />}

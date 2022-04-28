@@ -53,6 +53,9 @@ import {
   useGridDetailPanelCache,
   useGridDetailPanelPreProcessors,
   useGridInfiniteLoader,
+  useGridColumnSpanning,
+  useGridRowReorder,
+  useGridRowReorderPreProcessors,
 } from '@mui/x-data-grid-pro/internals';
 
 import { GridApiPremium } from '../models/gridApiPremium';
@@ -76,6 +79,7 @@ export const useDataGridPremiumComponent = (
    * Register all pre-processors called during state initialization here.
    */
   useGridSelectionPreProcessors(apiRef, props);
+  useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
@@ -120,6 +124,7 @@ export const useDataGridPremiumComponent = (
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridColumnSpanning(apiRef);
   useGridDetailPanelCache(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
@@ -128,14 +133,15 @@ export const useDataGridPremiumComponent = (
   useGridEditing(apiRef, props);
 
   useGridFocus(apiRef, props);
-  useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
+  useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
+  useGridRowReorder(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);

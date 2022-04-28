@@ -129,6 +129,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Genişlet',
   collapseDetailPanel: 'Gizle',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);

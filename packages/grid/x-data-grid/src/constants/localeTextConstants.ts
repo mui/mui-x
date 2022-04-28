@@ -133,4 +133,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Used core components translation keys
   MuiTablePagination: {},
+
+  // Row reordering text
+  rowReorderingHeaderName: 'Row reordering',
 };

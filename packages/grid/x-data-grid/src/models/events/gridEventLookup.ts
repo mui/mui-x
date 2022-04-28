@@ -7,6 +7,7 @@ import type {
   GridColumnVisibilityChangeParams,
   GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
+  GridPreferencePanelParams,
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
@@ -20,7 +21,6 @@ import type { GridSelectionModel } from '../gridSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
-import type { GridPipeProcessorGroup } from '../../hooks/core/pipeProcessing';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
@@ -30,6 +30,18 @@ export interface GridRowEventLookup {
   rowDoubleClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   rowMouseEnter: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  rowDragStart: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragOver: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragEnd: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
 }
 
 export interface GridColumnHeaderEventLookup {
@@ -144,8 +156,6 @@ export interface GridEventLookup
   resize: { params: ElementSize };
   viewportInnerSizeChange: { params: ElementSize };
   debouncedResize: { params: ElementSize };
-  pipeProcessorRegister: { params: GridPipeProcessorGroup };
-  pipeProcessorUnregister: { params: GridPipeProcessorGroup };
   activeStrategyProcessorChange: {
     params: GridStrategyProcessorName;
   };
@@ -165,7 +175,8 @@ export interface GridEventLookup
 
   // Rows
   rowsSet: {};
-  visibleRowsSet: {};
+  filteredRowsSet: {};
+  sortedRowsSet: {};
   rowExpansionChange: { params: GridRowTreeNodeConfig };
 
   // Edit
@@ -208,8 +219,10 @@ export interface GridEventLookup
   };
 
   // Scroll
-  rowsScroll: { params: GridScrollParams };
+  rowsScroll: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
   virtualScrollerContentSizeChange: {};
+  virtualScrollerWheel: { params: {}; event: React.WheelEvent };
+  virtualScrollerTouchMove: { params: {}; event: React.TouchEvent };
 
   // Selection
   headerSelectionCheckboxChange: { params: GridHeaderSelectionCheckboxParams };
@@ -217,4 +230,8 @@ export interface GridEventLookup
     params: GridRowSelectionCheckboxParams;
     event: React.ChangeEvent<HTMLElement>;
   };
+
+  // PreferencePanel
+  preferencePanelClose: { params: GridPreferencePanelParams };
+  preferencePanelOpen: { params: GridPreferencePanelParams };
 }

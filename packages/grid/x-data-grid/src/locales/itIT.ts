@@ -134,6 +134,9 @@ const itITGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

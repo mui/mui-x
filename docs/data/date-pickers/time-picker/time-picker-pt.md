@@ -57,7 +57,7 @@ Use `LocalizationProvider` para alterar a date-engine de localização que é us
 
 ## Subcomponentes
 
-Some lower-level sub-components (`ClockPicker`) are also exported. Estes são renderizados sem estar encapsulado ou  lógica exterior (campo com mascara, valores de data e validação, etc.).
+Some lower-level sub-components (`ClockPicker`) are also exported. Estes são renderizados sem estar encapsulado ou lógica exterior (campo com mascara, valores de data e validação, etc.).
 
 {{"demo": "SubComponentsTimePickers.js"}}
 
