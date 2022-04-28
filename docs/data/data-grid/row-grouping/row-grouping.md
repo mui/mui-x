@@ -33,7 +33,7 @@ In this example, we want to group all the movies matching the same company name,
 ### Controlled row grouping
 
 If you need to control the state of the criteria used for grouping, use the `rowGroupingModel` prop.
-You can use the `onRowGroupingModelChange` prop to listen to changes to the page size and update the prop accordingly.
+You can use the `onRowGroupingModelChange` prop to listen to changes to the grouping criteria and update the prop accordingly.
 
 {{"demo": "RowGroupingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
 

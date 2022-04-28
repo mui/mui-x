@@ -77,7 +77,7 @@ To initialize the page without controlling it, provide the page to the `initialS
 
 Use the `page` prop to control the size of the pages.
 
-You can use the `onPageChange` prop to listen to changes to the page size and update the prop accordingly.
+You can use the `onPageChange` prop to listen to changes to the page and update the prop accordingly.
 
 {{"demo": "PageControlled.js", "bg": "inline"}}
 
