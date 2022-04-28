@@ -226,12 +226,6 @@ The demo below shows how to add a JSON export.
 
 ## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
-
-Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/components/data-grid/columns/#converting-types) as needed.
-
-{{"demo": "ExcelExport.js", "bg": "inline", "defaultCodeOpen": false}}
-
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
 To install it:
 
@@ -242,6 +236,12 @@ To install it:
  // with yarn
  yarn add exceljs
 ```
+
+The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
+
+Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/components/data-grid/columns/#converting-types) as needed.
+
+{{"demo": "ExcelExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Customization
 
