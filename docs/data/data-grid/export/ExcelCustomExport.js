@@ -305,10 +305,9 @@ const exceljsPreProcess = ({ workbook, worksheet }) => {
 };
 const exceljsPostProcess = ({ worksheet }) => {
   // add a text after the data
-  worksheet.addRow(); // Add empty row
+  worksheet.addRow({}); // Add empty row
 
-  const newRow = worksheet.addRow();
-  newRow.getCell(1).value = 'Those data are for internal use only';
+  worksheet.addRow(['Those data are for internal use only']);
 };
 
 const excelOptions = { exceljsPreProcess, exceljsPostProcess };

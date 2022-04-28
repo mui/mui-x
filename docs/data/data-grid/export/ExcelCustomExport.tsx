@@ -1,6 +1,6 @@
 import * as React from 'react';
 import 'exceljs';
-import { DataGridPremium, GridToolbar } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridToolbar, GridExceljsProcessInput } from '@mui/x-data-grid-premium';
 
 const rows = [
   {
@@ -274,7 +274,7 @@ const groupingColDef = {
   headerName: 'Feature',
 };
 
-const exceljsPreProcess = ({ workbook, worksheet }) => {
+const exceljsPreProcess = ({ workbook, worksheet }: GridExceljsProcessInput) => {
   // Set document meta data
   workbook.creator = 'MUI-X team';
   workbook.created = new Date();
@@ -302,12 +302,11 @@ const exceljsPreProcess = ({ workbook, worksheet }) => {
   };
   worksheet.addRow([]);
 };
-const exceljsPostProcess = ({ worksheet }) => {
+const exceljsPostProcess = ({ worksheet }: GridExceljsProcessInput) => {
   // add a text after the data
-  worksheet.addRow(); // Add empty row
+  worksheet.addRow({}); // Add empty row
 
-  const newRow = worksheet.addRow();
-  newRow.getCell(1).value = 'Those data are for internal use only';
+  worksheet.addRow(['Those data are for internal use only']);
 };
 
 const excelOptions = { exceljsPreProcess, exceljsPostProcess };
