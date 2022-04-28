@@ -54,13 +54,7 @@ export function useGridDimensions(
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'rows'
-    | 'onResize'
-    | 'scrollbarSize'
-    | 'pagination'
-    | 'paginationMode'
-    | 'autoHeight'
-    | 'getRowHeight'
+    'onResize' | 'scrollbarSize' | 'pagination' | 'paginationMode' | 'autoHeight' | 'getRowHeight'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
