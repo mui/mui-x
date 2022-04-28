@@ -1,5 +1,5 @@
 import * as React from 'react';
-import 'exceljs';
+import {} from 'exceljs';
 import {
   DataGridPremium,
   GridToolbarContainer,
