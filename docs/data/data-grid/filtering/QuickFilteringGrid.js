@@ -31,7 +31,7 @@ export default function QuickFilteringGrid() {
         componentsProps={{
           toolbar: {
             showQuickFilter: true,
-            quickFilterOptions: { debounceMs: 500 },
+            quickFilterProps: { debounceMs: 500 },
           },
         }}
       />

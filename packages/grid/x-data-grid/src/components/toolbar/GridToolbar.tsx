@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import {
   GridToolbarContainer,
   GridToolbarContainerProps,
@@ -12,17 +12,9 @@ import { GridToolbarExport, GridToolbarExportProps } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolbarQuickFilter';
 
-const GridToolbarButtonsWrapper = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'ToolbarButtonsWrapper',
-  overridesResolver: (props, styles) => styles.toolbarButtonsWrapper,
-})(() => ({
-  marginRight: 'auto',
-}));
-
 export interface GridToolbarProps
   extends GridToolbarContainerProps,
-    Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {
+  Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {
   /**
    * Show the quick filter component
    * @default false
@@ -31,7 +23,7 @@ export interface GridToolbarProps
   /**
    * props passed to the quick filter component
    */
-  quickFilterOptions?: GridToolbarQuickFilterProps;
+  quickFilterProps?: GridToolbarQuickFilterProps;
 }
 
 const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function GridToolbar(
@@ -43,7 +35,7 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function 
     csvOptions,
     printOptions,
     showQuickFilter = false,
-    quickFilterOptions = {},
+    quickFilterProps = {},
     ...other
   } = props;
   const rootProps = useGridRootProps();
@@ -59,13 +51,12 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function 
 
   return (
     <GridToolbarContainer ref={ref} {...other}>
-      <GridToolbarButtonsWrapper>
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-        <GridToolbarExport csvOptions={csvOptions} printOptions={printOptions} />
-      </GridToolbarButtonsWrapper>
-      {showQuickFilter && <GridToolbarQuickFilter {...quickFilterOptions} />}
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <GridToolbarExport csvOptions={csvOptions} printOptions={printOptions} />
+      <Box sx={{ flex: 1 }} />
+      {showQuickFilter && <GridToolbarQuickFilter {...quickFilterProps} />}
     </GridToolbarContainer>
   );
 });
@@ -80,7 +71,7 @@ GridToolbar.propTypes = {
   /**
    * props passed to the quick filter component
    */
-  quickFilterOptions: PropTypes.object,
+  quickFilterProps: PropTypes.object,
   /**
    * Show the quick filter component
    * @default false
