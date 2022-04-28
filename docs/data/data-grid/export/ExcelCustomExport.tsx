@@ -1,6 +1,10 @@
 import * as React from 'react';
 import 'exceljs';
-import { DataGridPremium, GridToolbar, GridExceljsProcessInput } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridToolbar,
+  GridExceljsProcessInput,
+} from '@mui/x-data-grid-premium';
 
 const rows = [
   {
