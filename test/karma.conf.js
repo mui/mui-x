@@ -21,7 +21,7 @@ const browserStack = {
   // Since we have limited resources on browserstack we often time out on PRs.
   // However, browserstack rarely fails with a true-positive so we use it as a stop gap for release not merge.
   // But always enable it locally since people usually have to explicitly have to expose their browserstack access key anyway.
-  enabled: !CI || !isPR || process.env.BROWSERSTACK_FORCE === 'true',
+  enabled: !CI || isPR || process.env.BROWSERSTACK_FORCE === 'true',
   username: process.env.BROWSERSTACK_USERNAME,
   accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
   build,
@@ -132,7 +132,7 @@ module.exports = function setKarmaConfig(config) {
     newConfig = {
       ...baseConfig,
       browserStack,
-      browsers: baseConfig.browsers.concat(['chrome', 'firefox', 'safari', 'edge']),
+      browsers: baseConfig.browsers.concat(['firefox']),
       plugins: baseConfig.plugins.concat(['karma-browserstack-launcher']),
       customLaunchers: {
         ...baseConfig.customLaunchers,
