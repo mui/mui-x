@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGridPremium,
   GridApi,
   GridColumns,
   gridColumnVisibilityModelSelector,
@@ -8,7 +8,7 @@ import {
   GridEvents,
   GridRowGroupingModel,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { Movie, useMovieData } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
 
@@ -91,7 +91,7 @@ export default function RowGroupingGetRowGroupChildren() {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
+        <DataGridPremium
           {...data}
           apiRef={apiRef}
           columns={columns}
@@ -101,9 +101,6 @@ export default function RowGroupingGetRowGroupChildren() {
             rowGrouping: {
               model: INITIAL_GROUPING_COLUMN_MODEL,
             },
-          }}
-          experimentalFeatures={{
-            rowGrouping: true,
           }}
         />
       </div>
