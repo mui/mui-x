@@ -255,10 +255,12 @@ This can be used to specify value formatting or to add some colors.
 ```jsx
 <GridToolbarExport
   excelOptions={{
-    // replace the dd.mm.yyyy default date format
-    recruitmentDay: { numFmt: 'dd/mm/yyyy' },
-    // set this column in green
-    incomes: { font: { argb: 'FF00FF00' } },
+    columnsStyles: {
+      // replace the dd.mm.yyyy default date format
+      recruitmentDay: { numFmt: 'dd/mm/yyyy' },
+      // set this column in green
+      incomes: { font: { argb: 'FF00FF00' } },
+    }
   }}
 />
 ```
@@ -274,7 +276,7 @@ Both functions receive `{ workbook, worksheet }` as input.
 They are [exceljs](https://github.com/exceljs/exceljs#interface) objects and allow you to directly manipulate the Excel file.
 
 Thanks to these two methods, you can modify the metadata of the exported spreadsheet.
-You can also use it to add add custom content on top or bottom of the worksheet, as follow:
+You can also use it to add custom content on top or bottom of the worksheet, as follows:
 
 ```jsx
 function exceljsPreProcess({ workbook, worksheet }) {
@@ -293,6 +295,15 @@ function exceljsPostProcess({ worksheet }) {
   const newRow = worksheet.addRow();
   newRow.getCell(1).value = 'Those data are for internal use only';
 }
+
+// ...
+
+<GridToolbarExport
+  excelOptions={{
+    exceljsPreProcess,
+    exceljsPostProcess,
+  }}
+/>
 ```
 
 Since `exceljsPreProcess` is applied before adding the content of the grid, you can use it to add some informative rows on top of the document.

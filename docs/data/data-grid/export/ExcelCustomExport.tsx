@@ -295,7 +295,7 @@ const exceljsPreProcess = ({ workbook, worksheet }) => {
     name: 'Arial Black',
     size: 14,
   };
-  worksheet.getCell('A1').alignment = { vertical: 'top', horizontal: 'center' };
+  worksheet.getCell('A1').alignment = { vertical: 'top', horizontal: 'center', wrapText: true };
   worksheet.addRow([]);
 };
 const exceljsPostProcess = ({ worksheet }) => {
