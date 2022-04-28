@@ -6,10 +6,6 @@ title: MUI X - Licensing
 
 <p class="description">MUI X is an open-core, MIT-licensed library. Purchase a commercial license for advanced features and support.</p>
 
-> While [MUI Core](/core/) is entirely licensed under MIT, [MUI X](/x/) serves a part of its components as MIT and the rest under a commercial license.
-> You will need to purchase a license to access features that are only available with the Pro and Premium Plans.
-> See [Pricing](https://mui.com/pricing/) for details.
-
 ## MIT vs. commercial
 
 _How do we decide if a feature is MIT or commercial?_
