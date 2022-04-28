@@ -82,7 +82,6 @@ export function useGridColumns(
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
     | 'columnTypes'
-    | 'checkboxSelection'
     | 'classes'
     | 'components'
     | 'componentsProps'

@@ -7,28 +7,32 @@
 
 The [main repository](https://github.com/mui/material-ui) of MUI focuses on providing a ready-to-use design system, as well as empowering developers to build their own.
 
-This MUI X mono-repo gathers the advanced MUI components – it's an extension of the core. The fundamental features are MIT licensed, and the more advanced ones commercial.
+This MUI X mono-repo gathers the advanced MUI components – it's an extension of the core.
+The fundamental features are MIT licensed, and the more advanced ones commercial.
+
+## Components
+
+- [Data grid](https://mui.com/x/react-data-grid/)
+- [Date / Time pickers](https://mui.com/x/react-date-pickers/getting-started/)
 
 ## How do we decide if a feature is MIT or commercial?
 
 We have been building MIT React components since 2014,
 and have learned much about the strengths and weaknesses of the MIT license model.
-The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
-However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT licensed components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
+The health of this model is improving every day.
+As the community grows, it increases the probability that developers contribute improvements to the project.
+You can find our pledge to nurture the MIT licensed content on [this Stewardship page](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+
+However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward.
+We have seen too many MIT licensed components moving slowly or getting abandoned.
+The community isn't contributing improvements as fast as the problems deserved to be solved.
 
 We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
-A solution to a problem should only be commercial if it has no MIT alternatives.
+A feature should only be commercial if it has no great MIT alternatives.
 
-We provide three options:
+Find more details [on the docs](https://mui.com/x/advanced-components/#licenses).
 
-- **Community**. This plan contains the MIT components that are sustainable by the contributions of the open-source community. Free forever.
-- **Pro**. This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components. From a price perspective, the plan is designed to be accessible to most professionals.
-- **Premium**. This plan contains the most advanced features.
-
-## Components
-
-- [DataGrid](https://mui.com/x/react-data-grid/), published under `@mui/x-data-grid`, MIT licensed.
-- [DataGridPro](https://mui.com/x/react-data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.
+- [DataGridPremium](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-premium`, commercially licensed.
 
 ## Questions
 
@@ -41,8 +45,9 @@ There is a StackOverflow tag called "mui" that you can use to tag your questions
 You can create an [issue](https://github.com/mui/mui-x/issues) on this repository.
 Please always provide a reproduction case, the following templates can be a good start:
 
-- [DataGrid free version](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1)
-- [DataGridPro paid version](https://codesandbox.io/s/datagridpro-v5-quick-start-5pjhc)
+- [DataGrid community version](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1)
+- [DataGridPro commercial version](https://codesandbox.io/s/datagridpro-v5-quick-start-5pjhc)
+- [DataGridPremium commercial version](https://codesandbox.io/s/datagridpremium-v5-quick-start-h2ztp2)
 
 ## Contributing
 

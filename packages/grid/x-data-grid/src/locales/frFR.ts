@@ -138,6 +138,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

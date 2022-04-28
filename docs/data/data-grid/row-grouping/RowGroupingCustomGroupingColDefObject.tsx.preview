@@ -1,0 +1,14 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  columns={columns}
+  disableSelectionOnClick
+  initialState={{
+    rowGrouping: {
+      model: INITIAL_GROUPING_COLUMN_MODEL,
+    },
+  }}
+  groupingColDef={{
+    headerName: 'Group',
+  }}
+/>

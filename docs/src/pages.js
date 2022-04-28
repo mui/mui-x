@@ -56,6 +56,7 @@ dataGridComponentAPI.children = [
   { pathname: '/api-docs/data-grid', title: 'API Reference' },
   { pathname: '/api-docs/data-grid/data-grid', title: 'DataGrid' },
   { pathname: '/api-docs/data-grid/data-grid-pro', title: 'DataGridPro' },
+  { pathname: '/api-docs/data-grid/data-grid-premium', title: 'DataGridPremium' },
   { pathname: '/api-docs/data-grid/grid-api', title: 'GridApi' },
   { pathname: '/api-docs/data-grid/grid-cell-params', title: 'GridCellParams' },
   { pathname: '/api-docs/data-grid/grid-col-def', title: 'GridColDef' },

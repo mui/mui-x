@@ -220,12 +220,18 @@ const buildComponentDocumentation = async (options: {
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
       demos.push(['/x/react-data-grid#commercial-version', 'DataGridPro']);
     }
+    if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/x/react-data-grid#commercial-version', 'DataGridPremium']);
+    }
   } else {
     if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
       demos.push(['/components/data-grid#mit-version', 'DataGrid']);
     }
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
       demos.push(['/components/data-grid#commercial-version', 'DataGridPro']);
+    }
+    if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/components/data-grid#commercial-version', 'DataGridPremium']);
     }
   }
   reactApi.demos = demos;

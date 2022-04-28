@@ -115,4 +115,9 @@ export interface GridIconSlotsComponent {
    * @default GridCloseIcon
    */
   FilterPanelDeleteIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed on the `reorder` column type to reorder a row.
+   * @default GridDragIcon
+   */
+  RowReorderIcon: React.JSXElementConstructor<any>;
 }

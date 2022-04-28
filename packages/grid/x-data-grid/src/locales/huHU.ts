@@ -133,6 +133,9 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Kibontás',
   collapseDetailPanel: 'Összecsukás',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const huHU: Localization = getGridLocalization(huHUGrid, huHUCore);

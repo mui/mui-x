@@ -5,6 +5,8 @@
 ## Import
 
 ```js
+import { GridFilterModel } from '@mui/x-data-grid-premium';
+// or
 import { GridFilterModel } from '@mui/x-data-grid-pro';
 // or
 import { GridFilterModel } from '@mui/x-data-grid';

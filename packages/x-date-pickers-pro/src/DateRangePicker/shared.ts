@@ -1,10 +1,22 @@
 import * as React from 'react';
-import { useDefaultDates, useUtils, ValidationProps } from '@mui/x-date-pickers/internals';
+import {
+  DateInputSlotsComponent,
+  useDefaultDates,
+  useUtils,
+  ValidationProps,
+} from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
-import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
+import {
+  DateRangePickerViewSlotsComponent,
+  ExportedDateRangePickerViewProps,
+} from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange, RangeInput } from '../internal/models';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
+
+interface DateRangePickerSlotsComponent
+  extends DateRangePickerViewSlotsComponent,
+    DateInputSlotsComponent {}
 
 export interface BaseDateRangePickerProps<TDate>
   extends ExportedDateRangePickerViewProps<TDate>,
@@ -15,8 +27,7 @@ export interface BaseDateRangePickerProps<TDate>
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: ExportedDateRangePickerViewProps<TDate>['components'] &
-    ExportedDateRangePickerInputProps['components'];
+  components?: Partial<DateRangePickerSlotsComponent>;
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'

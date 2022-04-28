@@ -56,6 +56,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
 
   const {
     onChange,
+    PaperProps,
     PopperProps,
     ToolbarComponent = DateTimePickerToolbar,
     TransitionComponent,
@@ -70,6 +71,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
       DateInputProps={AllDateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
       PopperProps={PopperProps}
+      PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
     >
       <CalendarOrClockPicker
