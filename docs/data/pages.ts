@@ -9,7 +9,7 @@ const pages = [
       { pathname: `/x/getting-started/licensing` },
       { pathname: `/x/getting-started/support` },
       { pathname: `/x/getting-started/roadmap` },
-    ]
+    ],
   },
   {
     pathname: '/x/react-data-grid',
