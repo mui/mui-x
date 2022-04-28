@@ -55,6 +55,9 @@ ponyfillGlobal.muiDocConfig = {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
+      // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
+      // use `import 'exceljs'` in demonstrations instead
+      newDeps.exceljs = versions.exceljs;
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
