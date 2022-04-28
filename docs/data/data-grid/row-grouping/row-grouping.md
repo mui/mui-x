@@ -101,6 +101,10 @@ const initialState = useKeepGroupedColumnsHidden({
     rowGrouping: {
       model: ['company'],
     },
+    columns: {
+      // Other hidden columns
+      columnVisibilityModel: { gross: false },
+    },
   },
 });
 
@@ -119,6 +123,12 @@ const [rowGroupingModel, setRowGroupingModel] = React.useState([
 const initialState = useKeepGroupedColumnsHidden({
   apiRef,
   rowGroupingModel,
+  initialState: {
+    columns: {
+      // Other hidden columns
+      columnVisibilityModel: { gross: false },
+    },
+  },
 });
 
 return (
@@ -131,8 +141,9 @@ return (
 );
 ```
 
-> ⚠️ This hook is not compatible with the deprecated column property `hide`.
-> You must use the `columnVisibilityModel` prop instead.
+> ⚠️ This hook is only compatible with the deprecated column property `hide` or with the controlled `columnVisibilityModel` prop.
+>
+> You must use the `columnVisibilityModel` in the `initialState` instead.
 
 {{"demo": "RowGroupingUseKeepGroupedColumnsHidden.js", "bg": "inline", "defaultCodeOpen": false}}
 
