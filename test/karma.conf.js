@@ -120,7 +120,7 @@ module.exports = function setKarmaConfig(config) {
     customLaunchers: {
       chromeHeadless: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox'],
+        flags: ['--no-sandbox', '--remote-debugging-address=0.0.0.0'],
       },
     },
     singleRun: CI,

@@ -18,9 +18,13 @@ enum GridSignature {
 // We use class to make it easier to detect in heap snapshots by name
 class ObjectToBeRetainedByReact {}
 
+interface RegistryHolder {
+  registry: CleanupTracking | null;
+}
+
 // Based on https://github.com/Bnaya/use-dispose-uncommitted/blob/main/src/finalization-registry-based-impl.ts
 // Check https://github.com/facebook/react/issues/15317 to get more information
-export function createUseGridApiEventHandler(registry: CleanupTracking) {
+export function createUseGridApiEventHandler(registryHolder: RegistryHolder) {
   let cleanupTokensCounter = 0;
 
   return function useGridApiEventHandler<Api extends GridApiCommon, E extends GridEventsStr>(
@@ -29,6 +33,13 @@ export function createUseGridApiEventHandler(registry: CleanupTracking) {
     handler?: GridEventListener<E>,
     options?: EventListenerOptions,
   ) {
+    if (registryHolder.registry === null) {
+      registryHolder.registry =
+        typeof FinalizationRegistry !== 'undefined'
+          ? new FinalizationRegistryBasedCleanupTracking()
+          : new TimerBasedCleanupTracking();
+    }
+
     const [objectRetainedByReact] = React.useState(new ObjectToBeRetainedByReact());
     const subscription = React.useRef<(() => void) | null>(null);
     const handlerRef = React.useRef<GridEventListener<E> | undefined>();
@@ -47,7 +58,7 @@ export function createUseGridApiEventHandler(registry: CleanupTracking) {
       cleanupTokensCounter += 1;
       cleanupTokenRef.current = { cleanupToken: cleanupTokensCounter };
 
-      registry.register(
+      registryHolder.registry.register(
         objectRetainedByReact, // The callback below will be called once this reference stops being retained
         () => {
           subscription.current?.();
@@ -61,7 +72,7 @@ export function createUseGridApiEventHandler(registry: CleanupTracking) {
       subscription.current = null;
 
       if (cleanupTokenRef.current) {
-        registry.unregister(cleanupTokenRef.current);
+        registryHolder.registry.unregister(cleanupTokenRef.current);
         cleanupTokenRef.current = null;
       }
     }
@@ -77,10 +88,10 @@ export function createUseGridApiEventHandler(registry: CleanupTracking) {
         subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
       }
 
-      if (cleanupTokenRef.current && registry) {
+      if (cleanupTokenRef.current && registryHolder.registry) {
         // If the effect was called, it means that this render was committed
         // so we can trust the cleanup function to remove the listener.
-        registry.unregister(cleanupTokenRef.current);
+        registryHolder.registry.unregister(cleanupTokenRef.current);
         cleanupTokenRef.current = null;
       }
 
@@ -92,15 +103,15 @@ export function createUseGridApiEventHandler(registry: CleanupTracking) {
   };
 }
 
-const registry =
-  typeof FinalizationRegistry !== 'undefined'
-    ? new FinalizationRegistryBasedCleanupTracking()
-    : new TimerBasedCleanupTracking();
+const registryHolder: RegistryHolder = { registry: null };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const unstable_resetCleanupTracking = () => registry.reset();
+export const unstable_resetCleanupTracking = () => {
+  registryHolder.registry?.reset();
+  registryHolder.registry = null;
+};
 
-export const useGridApiEventHandler = createUseGridApiEventHandler(registry);
+export const useGridApiEventHandler = createUseGridApiEventHandler(registryHolder!);
 
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
