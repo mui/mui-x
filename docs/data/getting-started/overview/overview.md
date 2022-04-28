@@ -12,7 +12,7 @@ MUI X is a collection of advanced UI components, including our [Data Grid](/x/re
 
 These components are significantly more complex than anything found in the MUI Core libraries, and feature advanced functionality for data-heavy applications and a wide range of other use cases.
 
-> **Note:** MUI X is _open core_—base components are MIT-licensed, while more advanced features require Pro or Premium commercial plans.
+> **Note:** MUI X is **open core**—base components are MIT-licensed, while more advanced features require Pro or Premium commercial plans.
 > See [Licensing](/x/getting-started/licensing/) for details.
 >
 > Thoughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/) and [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-premium/) icons, respectively.
