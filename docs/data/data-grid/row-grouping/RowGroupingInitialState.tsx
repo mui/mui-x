@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
@@ -9,16 +9,13 @@ export default function RowGroupingInitialState() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         {...data}
         disableSelectionOnClick
         initialState={{
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },
-        }}
-        experimentalFeatures={{
-          rowGrouping: true,
         }}
       />
     </div>

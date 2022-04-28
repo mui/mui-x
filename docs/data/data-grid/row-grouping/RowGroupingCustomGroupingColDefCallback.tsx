@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGridPremium,
   GridApi,
   GridColumns,
   gridColumnVisibilityModelSelector,
@@ -8,7 +8,7 @@ import {
   GridGroupingColDefOverride,
   GridRowGroupingModel,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
@@ -93,7 +93,7 @@ export default function RowGroupingCustomGroupingColDefCallback() {
         />
       </Stack>
       <Box sx={{ height: 400 }}>
-        <DataGridPro
+        <DataGridPremium
           {...data}
           apiRef={apiRef}
           columns={columns}
@@ -117,9 +117,6 @@ export default function RowGroupingCustomGroupingColDefCallback() {
             }
 
             return override;
-          }}
-          experimentalFeatures={{
-            rowGrouping: true,
           }}
         />
       </Box>

@@ -8,12 +8,12 @@ import {
   getDataGridUtilityClass,
   GridEvents,
   GridRenderCellParams,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
-type OwnerState = { classes: DataGridProProcessedProps['classes'] };
+type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;

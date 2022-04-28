@@ -1,4 +1,4 @@
-<DataGridPro
+<DataGridPremium
   {...data}
   apiRef={apiRef}
   columns={columns}
@@ -6,8 +6,5 @@
     rowGrouping: {
       model: INITIAL_GROUPING_COLUMN_MODEL,
     },
-  }}
-  experimentalFeatures={{
-    rowGrouping: true,
   }}
 />

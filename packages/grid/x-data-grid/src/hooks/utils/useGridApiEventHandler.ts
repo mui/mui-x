@@ -105,6 +105,7 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
 
 const registryContainer: RegistryContainer = { registry: null };
 
+// TODO: move to @mui/x-data-grid/internals
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_resetCleanupTracking = () => {
   registryContainer.registry?.reset();

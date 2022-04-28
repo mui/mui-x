@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGridPremium,
   gridColumnVisibilityModelSelector,
   GridEvents,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
@@ -57,7 +57,7 @@ export default function RowGroupingSortingMultipleGroupingColDef() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         {...data}
         apiRef={apiRef}
         columns={columns}
@@ -77,9 +77,6 @@ export default function RowGroupingSortingMultipleGroupingColDef() {
               }
             : {}
         }
-        experimentalFeatures={{
-          rowGrouping: true,
-        }}
       />
     </div>
   );

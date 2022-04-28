@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGridPremium,
   gridColumnVisibilityModelSelector,
   GridEvents,
   gridVisibleSortedRowIdsSelector,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -74,7 +74,7 @@ export default function RowGroupingSetChildrenExpansion() {
     <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
       <Button onClick={toggleSecondRow}>Toggle 2nd row expansion</Button>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
+        <DataGridPremium
           {...data}
           apiRef={apiRef}
           columns={columns}
@@ -83,9 +83,6 @@ export default function RowGroupingSetChildrenExpansion() {
             rowGrouping: {
               model: INITIAL_GROUPING_COLUMN_MODEL,
             },
-          }}
-          experimentalFeatures={{
-            rowGrouping: true,
           }}
         />
       </div>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGridPremium,
   GridApi,
   GridColumns,
   gridColumnVisibilityModelSelector,
@@ -8,7 +8,7 @@ import {
   GridRowGroupingModel,
   GridRowTreeNodeConfig,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
@@ -68,7 +68,7 @@ export default function RowGroupingIsGroupExpandedByDefault() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         {...data}
         apiRef={apiRef}
         columns={columns}
@@ -78,9 +78,6 @@ export default function RowGroupingIsGroupExpandedByDefault() {
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },
-        }}
-        experimentalFeatures={{
-          rowGrouping: true,
         }}
       />
     </div>

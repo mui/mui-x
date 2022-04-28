@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderEditCellParams, GridEvents } from '@mui/x-data-grid-pro';
+import { GridRenderEditCellParams, GridEvents } from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { MenuProps } from '@mui/material/Menu';

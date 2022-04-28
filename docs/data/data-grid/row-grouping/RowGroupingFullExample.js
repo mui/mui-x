@@ -1,11 +1,11 @@
 import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGridPremium,
   gridColumnVisibilityModelSelector,
   GridEvents,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 
 const INITIAL_GROUPING_COLUMN_MODEL = ['commodity'];
 
@@ -62,7 +62,7 @@ export default function RowGroupingFullExample() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         {...data}
         apiRef={apiRef}
         columns={columns}
@@ -88,9 +88,6 @@ export default function RowGroupingFullExample() {
         }}
         groupingColDef={{
           leafField: 'traderEmail',
-        }}
-        experimentalFeatures={{
-          rowGrouping: true,
         }}
       />
     </div>
