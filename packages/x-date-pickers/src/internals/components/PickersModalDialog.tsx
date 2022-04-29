@@ -12,25 +12,25 @@ export interface ExportedPickerModalProps {
   /**
    * Ok button text.
    * @default 'OK'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   okText?: React.ReactNode;
   /**
    * Cancel text message.
    * @default 'Cancel'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   cancelText?: React.ReactNode;
   /**
    * Clear text message.
    * @default 'Clear'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   clearText?: React.ReactNode;
   /**
    * Today text message.
    * @default 'Today'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   todayText?: React.ReactNode;
   /**
@@ -116,10 +116,10 @@ export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDi
 
   const localeText = useLocaleText();
 
-  const cancelText = cancelTextProp ?? localeText.cancel;
-  const clearText = clearTextProp ?? localeText.clear;
-  const okText = okTextProp ?? localeText.ok;
-  const todayText = todayTextProp ?? localeText.today;
+  const cancelText = cancelTextProp ?? localeText.cancelButtonLabel;
+  const clearText = clearTextProp ?? localeText.clearButtonLabel;
+  const okText = okTextProp ?? localeText.okButtonLabel;
+  const todayText = todayTextProp ?? localeText.todayButtonLabel;
 
   const ownerState = props;
 

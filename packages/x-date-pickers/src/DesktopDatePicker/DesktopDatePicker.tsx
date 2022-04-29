@@ -116,7 +116,7 @@ DesktopDatePicker.propTypes = {
   /**
    * Clear text message.
    * @default 'Clear'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   clearText: PropTypes.node,
   /**

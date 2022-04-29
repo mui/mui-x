@@ -228,7 +228,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   endText: PropTypes.node,
   /**
@@ -436,7 +436,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   startText: PropTypes.node,
   /**

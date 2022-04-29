@@ -130,7 +130,7 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   /**
    * Left arrow icon aria-label text.
    * @default 'open previous view'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   leftArrowButtonText?: string;
   /**
@@ -140,7 +140,7 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   /**
    * Right arrow icon aria-label text.
    * @default 'open next view'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   rightArrowButtonText?: string;
   showViewSwitcher?: boolean;
@@ -543,7 +543,7 @@ ClockPicker.propTypes = {
   /**
    * Left arrow icon aria-label text.
    * @default 'open previous view'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -578,7 +578,7 @@ ClockPicker.propTypes = {
   /**
    * Right arrow icon aria-label text.
    * @default 'open next view'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   rightArrowButtonText: PropTypes.string,
   /**

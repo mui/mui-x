@@ -103,7 +103,7 @@ MobileTimePicker.propTypes = {
   /**
    * Cancel text message.
    * @default 'Cancel'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   cancelText: PropTypes.node,
   children: PropTypes.node,
@@ -119,7 +119,7 @@ MobileTimePicker.propTypes = {
   /**
    * Clear text message.
    * @default 'Clear'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   clearText: PropTypes.node,
   /**
@@ -223,7 +223,7 @@ MobileTimePicker.propTypes = {
   /**
    * Ok button text.
    * @default 'OK'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   okText: PropTypes.node,
   /**
@@ -324,7 +324,7 @@ MobileTimePicker.propTypes = {
   /**
    * Today text message.
    * @default 'Today'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   todayText: PropTypes.node,
   /**

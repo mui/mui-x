@@ -131,7 +131,7 @@ MobileDateRangePicker.propTypes = {
   /**
    * Cancel text message.
    * @default 'Cancel'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   cancelText: PropTypes.node,
   children: PropTypes.node,
@@ -147,7 +147,7 @@ MobileDateRangePicker.propTypes = {
   /**
    * Clear text message.
    * @default 'Clear'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   clearText: PropTypes.node,
   /**
@@ -210,6 +210,7 @@ MobileDateRangePicker.propTypes = {
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   endText: PropTypes.node,
   /**
@@ -276,7 +277,7 @@ MobileDateRangePicker.propTypes = {
   /**
    * Ok button text.
    * @default 'OK'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   okText: PropTypes.node,
   /**
@@ -428,12 +429,13 @@ MobileDateRangePicker.propTypes = {
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   startText: PropTypes.node,
   /**
    * Today text message.
    * @default 'Today'
-   * @deprecated
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   todayText: PropTypes.node,
   /**
