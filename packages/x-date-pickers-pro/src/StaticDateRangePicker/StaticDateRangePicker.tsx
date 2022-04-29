@@ -8,22 +8,13 @@ import {
   useDefaultDates,
   useUtils,
   usePickerState,
-  PickerStateValueManager,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
-import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
-import { BaseDateRangePickerProps } from '../DateRangePicker/shared';
+import { BaseDateRangePickerProps, dateRangePickerValueManager } from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
-
-const rangePickerValueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: [null, null],
-  getTodayValue: (utils) => [utils.date()!, utils.date()!],
-  parseInput: parseRangeInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
-};
 
 export interface StaticDateRangePickerProps<TDate = unknown>
   extends BaseDateRangePickerProps<TDate> {
@@ -91,7 +82,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
 
   const { pickerProps, inputProps, wrapperProps } = usePickerState(
     pickerStateProps,
-    rangePickerValueManager,
+    dateRangePickerValueManager,
   );
 
   const validationError = useDateRangeValidation(props);

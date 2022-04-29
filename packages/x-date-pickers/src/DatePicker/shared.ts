@@ -15,6 +15,8 @@ import {
 } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
 
 export interface DatePickerSlotsComponent
   extends CalendarPickerSlotsComponent,
@@ -116,3 +118,10 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     views,
   };
 }
+
+export const datePickerValueManager: PickerStateValueManager<any, any, any> = {
+  emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
+  parseInput: parsePickerInputValue,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+};

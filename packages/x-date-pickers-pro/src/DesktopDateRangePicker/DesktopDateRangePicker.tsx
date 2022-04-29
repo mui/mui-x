@@ -4,30 +4,22 @@ import { useLicenseVerifier } from '@mui/x-license-pro';
 import {
   DesktopTooltipWrapper,
   usePickerState,
-  PickerStateValueManager,
   DateInputPropsLike,
   DesktopWrapperProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
-import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   BaseDateRangePickerProps,
   useDateRangePickerDefaultizedProps,
+  dateRangePickerValueManager,
 } from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
 
 const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
-
-const rangePickerValueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: [null, null],
-  getTodayValue: (utils) => [utils.date()!, utils.date()!],
-  parseInput: parseRangeInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
-};
 
 export interface DesktopDateRangePickerProps<TDate = unknown>
   extends BaseDateRangePickerProps<TDate>,
@@ -74,7 +66,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
 
   const { pickerProps, inputProps, wrapperProps } = usePickerState(
     pickerStateProps,
-    rangePickerValueManager,
+    dateRangePickerValueManager,
   );
 
   const validationError = useDateRangeValidation(props);
