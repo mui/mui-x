@@ -15,8 +15,9 @@ import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<any, any> = {
+const valueManager: PickerStateValueManager<any, any, any> = {
   emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
   parseInput: parsePickerInputValue,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };
@@ -60,6 +61,8 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     ToolbarComponent = DateTimePickerToolbar,
     TransitionComponent,
     value,
+    clearable,
+    clearText,
     ...other
   } = props;
   const AllDateInputProps = { ...inputProps, ...other, ref, validationError };
@@ -72,6 +75,8 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
       PopperProps={PopperProps}
       PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
+      clearable={clearable}
+      clearText={clearText}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -127,6 +132,11 @@ DesktopDateTimePicker.propTypes = {
    */
   clearText: PropTypes.node,
   /**
+   * If `true` the popup or dialog will immediately close after submitting full date.
+   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect: PropTypes.bool,
+  /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    * @default {}
@@ -145,11 +155,6 @@ DesktopDateTimePicker.propTypes = {
    * Default calendar month displayed when `value={null}`.
    */
   defaultCalendarMonth: PropTypes.any,
-  /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
-   */
-  disableCloseOnSelect: PropTypes.bool,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false

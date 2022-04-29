@@ -8,7 +8,7 @@ import {
   gridRowTreeSelector,
   useFirstRender,
   GridColDef,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
   GridColumnRawLookup,
@@ -16,8 +16,11 @@ import {
   GridHydrateColumnsValue,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
-} from '@mui/x-data-grid/internals';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+  sortRowTree,
+  buildRowTree,
+  BuildRowTreeGroupingCriteria,
+} from '@mui/x-data-grid-pro/internals';
+import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
@@ -33,15 +36,13 @@ import {
   isGroupingColumn,
   setStrategyAvailability,
 } from './gridRowGroupingUtils';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingValueGetterParams } from '../../../models/gridGroupingValueGetterParams';
-import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
-import { sortRowTree } from '../../../utils/tree/sortRowTree';
 
 export const useGridRowGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridApiPremium>,
   props: Pick<
-    DataGridProProcessedProps,
+    DataGridPremiumProcessedProps,
     | 'disableRowGrouping'
     | 'groupingColDef'
     | 'rowGroupingColumnMode'

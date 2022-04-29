@@ -1,26 +1,25 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
 import {
-  GridEvents,
   GridEventListener,
   useGridApiEventHandler,
   useGridApiMethod,
   gridFilteredDescendantCountLookupSelector,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
   isDeepEqual,
-} from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+} from '@mui/x-data-grid-pro/internals';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
   gridRowGroupingStateSelector,
 } from './gridRowGroupingSelector';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   getRowGroupingFieldFromGroupingCriteria,
   ROW_GROUPING_STRATEGY,
@@ -31,10 +30,10 @@ import {
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
 import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
-import { GridInitialStatePro } from '../../../models/gridStatePro';
+import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
-  Pick<DataGridProProcessedProps, 'rowGroupingModel' | 'initialState'>
+  Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
 > = (state, props) => ({
   ...state,
   rowGrouping: {
@@ -44,16 +43,14 @@ export const rowGroupingStateInitializer: GridStateInitializer<
 });
 
 /**
- * Only available in DataGridPro
  * @requires useGridColumns (state, method) - can be after, async only
  * @requires useGridRows (state, method) - can be after, async only
  * @requires useGridParamsApi (method) - can be after, async only
- * TODO: Move the the Premium plan once available and remove the `experimentalFeatures.rowGrouping` flag
  */
 export const useGridRowGrouping = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridApiPremium>,
   props: Pick<
-    DataGridProProcessedProps,
+    DataGridPremiumProcessedProps,
     | 'initialState'
     | 'rowGroupingModel'
     | 'onRowGroupingModelChange'
@@ -69,7 +66,7 @@ export const useGridRowGrouping = (
     propModel: props.rowGroupingModel,
     propOnChange: props.onRowGroupingModelChange,
     stateSelector: gridRowGroupingModelSelector,
-    changeEvent: GridEvents.rowGroupingModelChange,
+    changeEvent: 'rowGroupingModelChange',
   });
 
   /**
@@ -197,7 +194,7 @@ export const useGridRowGrouping = (
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
-    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
+    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePremium>) => {
       if (props.disableRowGrouping) {
         return params;
       }
@@ -218,7 +215,7 @@ export const useGridRowGrouping = (
   /**
    * EVENTS
    */
-  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
       if (isGroupingColumn(cellParams.field) && event.key === ' ' && !event.shiftKey) {
@@ -242,7 +239,7 @@ export const useGridRowGrouping = (
   );
 
   const checkGroupingColumnsModelDiff = React.useCallback<
-    GridEventListener<GridEvents.columnsChange>
+    GridEventListener<'columnsChange'>
   >(() => {
     const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
     const lastGroupingColumnsModelApplied = gridRowGroupingStateSelector(
@@ -264,14 +261,14 @@ export const useGridRowGrouping = (
       // Refresh the row tree creation strategy processing
       // TODO: Add a clean way to re-run a strategy processing without publishing a private event
       if (apiRef.current.unstable_getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
-        apiRef.current.publishEvent(GridEvents.activeStrategyProcessorChange, 'rowTreeCreation');
+        apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
       }
     }
   }, [apiRef, props.disableRowGrouping]);
 
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
-  useGridApiEventHandler(apiRef, GridEvents.columnsChange, checkGroupingColumnsModelDiff);
-  useGridApiEventHandler(apiRef, GridEvents.rowGroupingModelChange, checkGroupingColumnsModelDiff);
+  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridApiEventHandler(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
+  useGridApiEventHandler(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
 
   /**
    * EFFECTS

@@ -58,11 +58,6 @@ import {
 import { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 import { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 import {
-  useGridRowGrouping,
-  rowGroupingStateInitializer,
-} from '../hooks/features/rowGrouping/useGridRowGrouping';
-import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
-import {
   useGridColumnPinning,
   columnPinningStateInitializer,
 } from '../hooks/features/columnPinning/useGridColumnPinning';
@@ -87,7 +82,6 @@ export const useDataGridProComponent = (
    */
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
-  useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
@@ -98,7 +92,6 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
   useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
@@ -122,7 +115,6 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
-  useGridRowGrouping(apiRef, props);
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);

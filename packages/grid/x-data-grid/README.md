@@ -1,6 +1,6 @@
 # @mui/x-data-grid
 
-This package is the community edition of the data grid component.
+This package is the Community Plan edition of the data grid component.
 It's part of MUI X, an open core extension of MUI, with advanced components.
 
 ## Installation
