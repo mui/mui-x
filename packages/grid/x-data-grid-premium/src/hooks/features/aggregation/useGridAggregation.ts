@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   gridColumnLookupSelector,
-  GridEvents,
   useGridApiEventHandler,
   useGridApiMethod,
 } from '@mui/x-data-grid-pro';
@@ -41,7 +40,7 @@ export const useGridAggregation = (
     propModel: props.aggregationModel,
     propOnChange: props.onAggregationModelChange,
     stateSelector: gridAggregationModelSelector,
-    changeEvent: GridEvents.aggregationModelChange,
+    changeEvent: 'aggregationModelChange',
   });
 
   /**
@@ -109,9 +108,9 @@ export const useGridAggregation = (
     }
   }, [apiRef, applyAggregation, props.aggregationFunctions]);
 
-  useGridApiEventHandler(apiRef, GridEvents.aggregationModelChange, checkAggregationRulesDiff);
-  useGridApiEventHandler(apiRef, GridEvents.columnsChange, checkAggregationRulesDiff);
-  useGridApiEventHandler(apiRef, GridEvents.filteredRowsSet, applyAggregation);
+  useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
+  useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);
+  useGridApiEventHandler(apiRef, 'filteredRowsSet', applyAggregation);
 
   /**
    * EFFECTS
