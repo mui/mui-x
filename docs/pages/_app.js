@@ -21,6 +21,7 @@ import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
 import { LANGUAGES } from 'docs/src/modules/constants';
 import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
+import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
 import {
   UserLanguageProvider,
   useSetUserLanguage,
@@ -259,17 +260,19 @@ function AppWrapper(props) {
         ))}
       </NextHead>
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
-        <CodeVariantProvider>
-          <PageContext.Provider value={{ activePage, pages: productPages }}>
-            <ThemeProvider>
-              <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                {children}
-                <GoogleAnalytics />
-              </DocsStyledEngineProvider>
-            </ThemeProvider>
-          </PageContext.Provider>
-          <LanguageNegotiation />
-        </CodeVariantProvider>
+        <CodeCopyProvider>
+          <CodeVariantProvider>
+            <PageContext.Provider value={{ activePage, pages: productPages }}>
+              <ThemeProvider>
+                <DocsStyledEngineProvider cacheLtr={emotionCache}>
+                  {children}
+                  <GoogleAnalytics />
+                </DocsStyledEngineProvider>
+              </ThemeProvider>
+            </PageContext.Provider>
+            <LanguageNegotiation />
+          </CodeVariantProvider>
+        </CodeCopyProvider>
       </UserLanguageProvider>
     </React.Fragment>
   );
