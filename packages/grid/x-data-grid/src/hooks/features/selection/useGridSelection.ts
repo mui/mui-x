@@ -291,7 +291,7 @@ export const useGridSelection = (
       // multiple selection is only allowed if:
       // - it is a checkboxSelection
       // - it is a keyboard selection
-      // - CTRL is pressed
+      // - Ctrl is pressed
 
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);

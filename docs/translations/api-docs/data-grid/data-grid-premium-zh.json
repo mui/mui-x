@@ -31,7 +31,7 @@
     "disableExtendRowFullWidth": "If <code>true</code>, rows will not be extended to fill the full width of the grid container.",
     "disableMultipleColumnsFiltering": "If <code>true</code>, filtering with multiple columns is disabled.",
     "disableMultipleColumnsSorting": "If <code>true</code>, sorting with multiple columns is disabled.",
-    "disableMultipleSelection": "If <code>true</code>, multiple selection using the CTRL or CMD key is disabled.",
+    "disableMultipleSelection": "If <code>true</code>, multiple selection using the Ctrl or CMD key is disabled.",
     "disableRowGrouping": "If <code>true</code>, the row grouping is disabled.",
     "disableSelectionOnClick": "If <code>true</code>, the selection on click on a row or cell is disabled.",
     "disableVirtualization": "If <code>true</code>, the virtualization is disabled.",

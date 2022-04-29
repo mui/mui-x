@@ -218,7 +218,7 @@ DataGridPremiumRaw.propTypes = {
    */
   disableMultipleColumnsSorting: PropTypes.bool,
   /**
-   * If `true`, multiple selection using the CTRL or CMD key is disabled.
+   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
    * @default false
    */
   disableMultipleSelection: PropTypes.bool,
