@@ -32,6 +32,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Lataa CSV-muodossa',
   toolbarExportPrint: 'Tulosta',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Etsi sarake',

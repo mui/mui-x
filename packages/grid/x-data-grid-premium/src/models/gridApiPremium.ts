@@ -6,7 +6,7 @@ import {
   GridDetailPanelApi,
 } from '@mui/x-data-grid-pro';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
-import type { GridRowGroupingApi } from '../hooks';
+import type { GridRowGroupingApi, GridExcelExportApi } from '../hooks';
 
 type GridStateApiUntyped = {
   [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
@@ -22,4 +22,5 @@ export interface GridApiPremium
     GridStatePersistenceApi<GridInitialStatePremium>,
     GridColumnPinningApi,
     GridDetailPanelApi,
-    GridRowGroupingApi {}
+    GridRowGroupingApi,
+    GridExcelExportApi {}

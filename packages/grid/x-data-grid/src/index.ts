@@ -18,6 +18,8 @@ export * from './colDef';
 export * from './utils';
 
 export type { DataGridProps, GridExperimentalFeatures } from './models/props/DataGridProps';
+export type { GridToolbarExportProps } from './components/toolbar/GridToolbarExport';
+export type { GridExportFormat, GridExportExtension } from './models/gridExport';
 
 /**
  * The full grid API.

@@ -250,6 +250,36 @@ const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
 useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
 ```
 
+##### `'exportMenu'`
+
+**Publisher**: `GridToolbarExport` component on render.
+
+**Why register to this processing**: Add menu options according to the props and the plan (excel can only be added with premium plan).
+
+```ts
+// Example from useGridExcelExport
+const addExportMenuButtons = React.useCallback<GridPipeProcessor<'exportMenu'>>(
+  (
+    initialValue, // the array of components already added
+    options: { excelOptions }, // the options received by GridToolbarExport
+  ) => {
+    if (options.excelOptions?.disableToolbarButton) {
+      return initialValue;
+    }
+    return [
+      ...initialValue,
+      {
+        component: <GridExcelExportMenuItem options={options.excelOptions} />,
+        componentName: 'excelExport', // the name of the export is used to sort options
+      },
+    ];
+  },
+  [],
+);
+
+useGridRegisterPipeProcessor(apiRef, 'exportMenu', addExportMenuButtons);
+```
+
 ##### `'preferencePanel'`
 
 **Publisher**: `GridPreferencePanel` component on render.
