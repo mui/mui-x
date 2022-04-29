@@ -46,7 +46,7 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
     expect(handleClose.callCount).to.equal(1);
   });
 
-  context('input', () => {
+  describe('input', () => {
     it('allows to change selected date from the input according to `format`', () => {
       const onChangeMock = spy();
       render(<TestKeyboardDatePicker onChange={onChangeMock} inputFormat="dd/MM/yyyy" />);
@@ -140,7 +140,7 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
     });
   });
 
-  context('input validaiton', () => {
+  describe('input validaiton', () => {
     [
       { expectedError: 'invalidDate', props: {}, input: 'invalidText' },
       { expectedError: 'disablePast', props: { disablePast: true }, input: '01/01/1900' },

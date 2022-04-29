@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridRenderCellParams } from '@mui/x-data-grid';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const GridGroupingColumnLeafCell = (props: GridRenderCellParams) => {

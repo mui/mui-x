@@ -16,11 +16,11 @@
       "deprecated": true,
       "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
     },
-    "components": { "type": { "name": "object" } },
-    "disableCloseOnSelect": {
+    "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
+    "components": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },

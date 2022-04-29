@@ -8,8 +8,8 @@ import {
 import * as React from 'react';
 import { expect } from 'chai';
 import {
-  DataGridPro,
-  DataGridProProps,
+  DataGridPremium,
+  DataGridPremiumProps,
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridApi,
@@ -18,9 +18,9 @@ import {
   GridRowsProp,
   GridRowTreeNodeConfig,
   useGridApiRef,
-  useGridRootProps,
   GridGroupingColDefOverrideParams,
-} from '@mui/x-data-grid-pro';
+  getGroupRowIdFromPath,
+} from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -42,7 +42,7 @@ const unbalancedRows: GridRowsProp = [
   { id: 5, category1: null },
 ];
 
-const baselineProps: DataGridProProps = {
+const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
   disableVirtualization: true,
   rows,
@@ -58,22 +58,19 @@ const baselineProps: DataGridProProps = {
       field: 'category2',
     },
   ],
-  experimentalFeatures: {
-    rowGrouping: true,
-  },
 };
 
-describe('<DataGridPro /> - Group Rows By Column', () => {
+describe('<DataGridPremium /> - Group Rows By Column', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const Test = (props: Partial<DataGridProProps>) => {
+  const Test = (props: Partial<DataGridPremiumProps>) => {
     apiRef = useGridApiRef();
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
   };
@@ -480,30 +477,6 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
   });
 
   describe('prop: disableRowGrouping', () => {
-    // TODO: Remove once the feature is stable
-    it('should set `disableRowGrouping` to `true` if `experimentalFeatures.rowGrouping = false', () => {
-      const disableRowGroupingSpy = spy();
-
-      const CustomToolbar = () => {
-        const rootProps = useGridRootProps();
-        disableRowGroupingSpy(rootProps.disableRowGrouping);
-        return null;
-      };
-
-      render(
-        <Test
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-          defaultGroupingExpansionDepth={-1}
-          experimentalFeatures={{
-            rowGrouping: false,
-          }}
-          components={{ Toolbar: CustomToolbar }}
-        />,
-      );
-
-      expect(disableRowGroupingSpy.lastCall.firstArg).to.equal(true);
-    });
-
     it('should disable the row grouping when `prop.disableRowGrouping = true`', () => {
       render(
         <Test
@@ -2300,6 +2273,126 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1', 'category2'] } }} />);
       apiRef.current.setRowGroupingCriteriaIndex('category1', 1);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category2', 'category1']);
+    });
+  });
+
+  describe('apiRef: getRowGroupChildren', () => {
+    it('should return the rows in group of depth 0 of length 1 from tree of depth 1', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'desc' }],
+            },
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'id', operatorValue: '>=', value: '1' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      const groupId = getGroupRowIdFromPath([{ field: 'category1', key: 'Cat A' }]);
+      expect(apiRef.current.getRowGroupChildren({ groupId })).to.deep.equal([0, 1, 2]);
+      expect(apiRef.current.getRowGroupChildren({ groupId, applySorting: true })).to.deep.equal([
+        2, 1, 0,
+      ]);
+      expect(apiRef.current.getRowGroupChildren({ groupId, applyFiltering: true })).to.deep.equal([
+        1, 2,
+      ]);
+      expect(
+        apiRef.current.getRowGroupChildren({
+          groupId,
+          applySorting: true,
+          applyFiltering: true,
+        }),
+      ).to.deep.equal([2, 1]);
+    });
+
+    it('should return the rows in group of depth 0 from tree of depth 2', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1', 'category2'] },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'desc' }],
+            },
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'id', operatorValue: '>=', value: '1' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      const groupId = getGroupRowIdFromPath([{ field: 'category1', key: 'Cat A' }]);
+      expect(apiRef.current.getRowGroupChildren({ groupId })).to.deep.equal([0, 1, 2]);
+      expect(apiRef.current.getRowGroupChildren({ groupId, applySorting: true })).to.deep.equal([
+        0, 2, 1,
+      ]);
+      expect(apiRef.current.getRowGroupChildren({ groupId, applyFiltering: true })).to.deep.equal([
+        1, 2,
+      ]);
+      expect(
+        apiRef.current.getRowGroupChildren({
+          groupId,
+          applySorting: true,
+          applyFiltering: true,
+        }),
+      ).to.deep.equal([2, 1]);
+      expect(
+        apiRef.current.getRowGroupChildren({
+          groupId,
+          skipAutoGeneratedRows: false,
+        }),
+      ).to.deep.equal([
+        'auto-generated-row-category1/Cat A-category2/Cat 1',
+        0,
+        'auto-generated-row-category1/Cat A-category2/Cat 2',
+        1,
+        2,
+      ]);
+      expect(
+        apiRef.current.getRowGroupChildren({
+          groupId,
+          skipAutoGeneratedRows: false,
+          applySorting: true,
+          applyFiltering: true,
+        }),
+      ).to.deep.equal(['auto-generated-row-category1/Cat A-category2/Cat 2', 2, 1]);
+    });
+
+    it('should return the rows in group of depth 1 from tree of depth 2', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1', 'category2'] },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'desc' }],
+            },
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'id', operatorValue: '>=', value: '2' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      const groupId = getGroupRowIdFromPath([
+        { field: 'category1', key: 'Cat A' },
+        { field: 'category2', key: 'Cat 2' },
+      ]);
+      expect(apiRef.current.getRowGroupChildren({ groupId })).to.deep.equal([1, 2]);
+      expect(apiRef.current.getRowGroupChildren({ groupId, applySorting: true })).to.deep.equal([
+        2, 1,
+      ]);
+      expect(apiRef.current.getRowGroupChildren({ groupId, applyFiltering: true })).to.deep.equal([
+        2,
+      ]);
     });
   });
 });

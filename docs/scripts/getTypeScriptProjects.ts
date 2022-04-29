@@ -33,6 +33,7 @@ export type ProjectNames =
   | 'x-license-pro'
   | 'x-data-grid'
   | 'x-data-grid-pro'
+  | 'x-data-grid-premium'
   | 'x-data-grid-generator'
   | 'x-date-pickers'
   | 'x-date-pickers-pro';
@@ -189,6 +190,22 @@ export const getTypeScriptProjects = () => {
       }),
       getComponentsWithApiDoc: getComponentPaths({
         files: ['src/DataGridPro/DataGridPro.tsx'],
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-data-grid-premium',
+    createProject({
+      name: 'x-data-grid-premium',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-premium'),
+      documentationFolderName: 'data-grid',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src/components'],
+        files: ['src/DataGridPremium/DataGridPremium.tsx'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        files: ['src/DataGridPremium/DataGridPremium.tsx'],
       }),
     }),
   );

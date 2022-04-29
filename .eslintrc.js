@@ -54,6 +54,7 @@ module.exports = {
       excludedFiles: [
         'packages/grid/x-data-grid/src/themeAugmentation/index.js', // TypeScript ignores JS files with the same name as the TS file
         'packages/grid/x-data-grid-pro/src/themeAugmentation/index.js',
+        'packages/grid/x-data-grid-premium/src/themeAugmentation/index.js',
       ],
       rules: {
         'material-ui/no-direct-state-access': 'error',

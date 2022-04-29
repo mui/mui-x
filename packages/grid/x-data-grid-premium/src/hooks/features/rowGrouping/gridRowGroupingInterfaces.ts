@@ -27,7 +27,7 @@ export interface GridRowGroupingApi {
    */
   addRowGroupingCriteria: (groupingCriteriaField: string, groupingIndex?: number) => void;
   /**
-   * sRemove the field from the row grouping model.
+   * Remove the field from the row grouping model.
    * @param {string} groupingCriteriaField The field from which we want to stop grouping the rows.
    */
   removeRowGroupingCriteria: (groupingCriteriaField: string) => void;
