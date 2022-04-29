@@ -17,7 +17,7 @@ export interface LicenseDetails {
 function getClearLicenseString(details: LicenseDetails) {
   return `ORDER=${
     details.orderNumber
-  },EXPIRY=${details.expiryDate.getTime()},KEYVERSION=${licenseVersion},SCOPE=${
+  },E=${details.expiryDate.getTime()},KEYVERSION=${licenseVersion},SCOPE=${
     details.scope ?? 'pro'
   },TERM=${details.term ?? 'subscription'}`;
 }

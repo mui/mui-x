@@ -1,5 +1,5 @@
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 
 LicenseInfo.setLicenseKey(
-  'e8d0d6124d6e21bee635aae6358c5bfcT1JERVI9TVVJLVN0b3J5Ym9vayxFWFBJUlk9MTY4MjUyNzMzNDQ1MixLRVlWRVJTSU9OPTIsU0NPUEU9cHJlbWl1bQ==',
+  '5abdc6ddfa0eec6e04e57360c6bc5997T1JERVI9TVVJLVN0b3J5Ym9vayxFWFBJUlk9MTY4Mjg0NDU0MjQwNixLRVlWRVJTSU9OPTIsU0NPUEU9cHJlbWl1bSxURVJNPXN1YnNjcmlwdGlvbg==',
 );
