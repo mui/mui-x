@@ -190,7 +190,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableMultipleColumnsFiltering: boolean;
   /**
-   * If `true`, multiple selection using the CTRL or CMD key is disabled.
+   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
    * @default false
    */
   disableMultipleSelection: boolean;
