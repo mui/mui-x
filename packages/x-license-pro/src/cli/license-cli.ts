@@ -67,6 +67,11 @@ export function licenseGenCli() {
             default: 'pro',
             describe: 'The license scope.',
             type: 'string',
+          })
+            .option('term', {
+            default: 'subscription',
+            describe: 'The license term.',
+            type: 'string',
           });
       },
       handler: (argv: yargs.ArgumentsCamelCase<LicenseGenArgv>) => {

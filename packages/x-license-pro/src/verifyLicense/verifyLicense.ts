@@ -2,6 +2,7 @@ import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope } from '../utils/licenseScope';
+import { LicenseTerm } from '../utils/licenseTerm';
 
 export function generateReleaseInfo() {
   const today = new Date();
@@ -13,6 +14,7 @@ export function generateReleaseInfo() {
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
 interface MuiLicense {
+  term: LicenseTerm | null;
   scope: LicenseScope | null;
   expiryTimestamp: number | null;
 }
@@ -33,6 +35,7 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
 
   return {
     scope: 'pro',
+    term: 'perpetual',
     expiryTimestamp,
   };
 };
@@ -43,6 +46,7 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
 const decodeLicenseVersion2 = (license: string): MuiLicense => {
   const licenseInfo: MuiLicense = {
     scope: null,
+    term: null,
     expiryTimestamp: null,
   };
 
@@ -53,6 +57,10 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
     .forEach(([key, value]) => {
       if (key === 'SCOPE') {
         licenseInfo.scope = value as LicenseScope;
+      }
+
+      if (key === 'TERM') {
+        licenseInfo.term = value as LicenseTerm;
       }
 
       if (key === 'EXPIRY') {
@@ -107,18 +115,29 @@ export function verifyLicense(
     return LicenseStatus.Invalid;
   }
 
+  if (license.term == null) {
+    console.error('Error checking license. Term not found or invalid!');
+    return LicenseStatus.Invalid;
+  }
+
   if (license.expiryTimestamp == null) {
     console.error('Error checking license. Expiry timestamp not found or invalid!');
     return LicenseStatus.Invalid;
   }
 
-  const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
-  if (Number.isNaN(pkgTimestamp)) {
-    throw new Error('MUI: The release information is invalid. Not able to validate license.');
-  }
+  if (license.term === 'perpetual' || process.env.NODE_ENV === 'production') {
+    const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
+    if (Number.isNaN(pkgTimestamp)) {
+      throw new Error('MUI: The release information is invalid. Not able to validate license.');
+    }
 
-  if (license.expiryTimestamp < pkgTimestamp) {
-    return LicenseStatus.Expired;
+    if (license.expiryTimestamp < pkgTimestamp) {
+      return LicenseStatus.Expired;
+    }
+  } else if (license.term === 'subscription') {
+    if (license.expiryTimestamp < new Date().getTime()) {
+      return LicenseStatus.Expired;
+    }
   }
 
   if (license.scope == null) {
