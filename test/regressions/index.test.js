@@ -102,7 +102,7 @@ async function main() {
         page.mouse.move(0, 0);
 
         if (
-          pathURL.startsWith('/docs-components-data-grid-filtering') &&
+          pathURL.startsWith('/docs-data-grid-filtering') &&
           !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL) // These cases don't render content
         ) {
           // Wait for the flags to load
