@@ -71,6 +71,9 @@ DataGridPremiumRaw.propTypes = {
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: PropTypes.object,
+  /**
+   * Set the aggregation model of the grid.
+   */
   aggregationModel: PropTypes.object,
   /**
    * @default "footer"
@@ -403,6 +406,11 @@ DataGridPremiumRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
   isCellEditable: PropTypes.func,
+  /**
+   * Determines in a group of rows should be aggregated.
+   * @param {GridRowTreeNodeConfig | null} rowNode The current group (`null` being the top level group)
+   * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
+   */
   isGroupAggregated: PropTypes.func,
   /**
    * Determines if a group should be expanded after its creation.

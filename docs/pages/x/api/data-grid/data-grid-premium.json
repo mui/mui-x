@@ -5,6 +5,7 @@
       "required": true
     },
     "rows": { "type": { "name": "array" }, "required": true },
+    "aggregationModel": { "type": { "name": "object" } },
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -91,6 +92,7 @@
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": { "type": { "name": "func" } },
+    "isGroupAggregated": { "type": { "name": "func" } },
     "isGroupExpandedByDefault": { "type": { "name": "func" } },
     "isRowSelectable": { "type": { "name": "func" } },
     "loading": { "type": { "name": "bool" } },
