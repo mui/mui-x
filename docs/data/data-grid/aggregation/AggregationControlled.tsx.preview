@@ -3,5 +3,5 @@
   rows={data.rows.slice(0, 3)}
   columns={COLUMNS}
   aggregationModel={aggregationModel}
-  onAggregationModelChange={newModel => setAggregationModel(newModel)}
+  onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
 />

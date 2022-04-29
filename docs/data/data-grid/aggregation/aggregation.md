@@ -41,7 +41,8 @@ This function receives the group from which the grid is trying to aggregate or `
 // Will aggregate all the groups but not the root
 isGroupAggregated={(groupNode) => groupNode != null}
 
-// Will only aggregate the company groups, director groups and the root will not be aggregated
+// Will only aggregate the company groups
+// Director groups and the root will not be aggregated
 isGroupAggregated={(groupNode) => groupNode?.groupingField === 'company'}
 
 // Will only aggregate the company group "Universal Pictures"
@@ -51,7 +52,7 @@ isGroupAggregated={(groupNode) =>
 }
 ```
 
-The demo below shows only aggregate the groups.
+The demo below only aggregates the director groups.
 
 {{"demo": "AggregationIsGroupAggregated.js", "bg": "inline"}}
 
@@ -79,7 +80,7 @@ The full typing details can be found on the [GridAggregationFunction API page](/
 
 ### Built-in functions
 
-The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions that should cover all the basic use-cases.
+The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions to cover the basic use-cases:
 
 | Name   | Behavior                                                   | Column types                 |
 | ------ | ---------------------------------------------------------- | ---------------------------- |
@@ -95,7 +96,7 @@ The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation 
 
 You can remove some aggregations functions for all columns by passing a filtered object to the `aggregationFunctions` prop.
 
-In the example below, the `sum` aggregation function have been removed.
+In the example below, the `sum` aggregation function has been removed.
 
 {{"demo": "AggregationRemoveFunctionAllColumns.js", "bg": "inline"}}
 
@@ -147,19 +148,16 @@ In the example below, the grid have two additional custom aggregation functions 
 
 ### Custom value formatter
 
-By default, the aggregated value will use the value formatter from the column.
-But for some columns, the format of the aggregated value may have to differ from the format of the cell values.
+By default, the aggregated cell uses the value formatter of its column.
+But for some columns, the format of the aggregated value may have to differ from the format of the other cell values.
 
-You can provide a `valueFormatter` method to your aggregation function to override the one from the column.
+You can provide a `valueFormatter` method to your aggregation function to override the one of the column.
 
 ```ts
 const aggregationFunction: GridAggregationFunction = {
   apply: () => {
     /* */
   },
-  types: [
-    /* */
-  ],
   valueFormatter: (params) => {
     /* format the aggregated value */
   },
@@ -170,9 +168,9 @@ const aggregationFunction: GridAggregationFunction = {
 
 ## Custom rendering
 
-If the column you are aggregating from have a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide whether you want to render your custom UI for it.
+If the column you are aggregating from have a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide how you want to render it.
 
-This objects contains a `hasCellUnit` which lets you know if the current aggregation has the same unit as the rest of this column's data (for instance, if your column is in `$`, does the aggregated value is also in `$` or is it unit-less)
+This objects contains a `hasCellUnit` which informs you if the current aggregation has the same unit as the rest of this column's data (for instance, if your column is in `$`, does the aggregated value is also in `$` or is it unit-less ?)
 
 In the example below, you can see that all the aggregation function are rendered with the rating UI except the `size` one because it is not a valid rating.
 

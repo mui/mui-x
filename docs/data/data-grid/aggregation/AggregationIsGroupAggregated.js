@@ -54,7 +54,7 @@ export default function AggregationIsGroupAggregated() {
             },
           },
         }}
-        isGroupAggregated={(groupNode) => groupNode != null}
+        isGroupAggregated={(groupNode) => groupNode?.groupingField === 'director'}
       />
     </div>
   );
