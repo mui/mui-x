@@ -3,7 +3,6 @@ import {
   GridApi,
   DataGridProProps,
   useGridApiRef,
-  GridEvents,
   DataGridPro,
   GridRenderEditCellParams,
   GridValueSetterParams,
@@ -533,7 +532,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should publish 'rowEditStart' with reason=cellDoubleClick`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStart, listener);
+        apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
         expect(listener.lastCall.args[0].reason).to.equal('cellDoubleClick');
@@ -542,7 +541,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should not publish 'rowEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStart, listener);
+        apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
@@ -561,7 +560,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should publish 'rowEditStart' with reason=enterKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStart, listener);
+        apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -572,7 +571,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should not publish 'rowEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStart, listener);
+        apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -599,7 +598,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should publish 'rowEditStart' with reason=deleteKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStart, listener);
+        apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -610,7 +609,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should not publish 'rowEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStart, listener);
+        apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -651,7 +650,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should publish 'rowEditStart' with reason=printableKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStart, listener);
+        apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -662,7 +661,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should not publish 'rowEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStart, listener);
+        apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -674,7 +673,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         it(`should not publish 'rowEditStart' if ${key} is pressed`, () => {
           render(<TestCase />);
           const listener = spy();
-          apiRef.current.subscribeEvent(GridEvents.rowEditStart, listener);
+          apiRef.current.subscribeEvent('rowEditStart', listener);
           const cell = getCell(0, 1);
           fireEvent.mouseUp(cell);
           fireEvent.click(cell);
@@ -720,7 +719,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should publish 'rowEditStop' with reason=rowFocusOut`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStop, listener);
+        apiRef.current.subscribeEvent('rowEditStop', listener);
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.callCount).to.equal(0);
         fireEvent.click(getCell(1, 1));
@@ -761,7 +760,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should publish 'rowEditStop' with reason=escapeKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStop, listener);
+        apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -793,7 +792,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should publish 'rowEditStop' with reason=enterKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStop, listener);
+        apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -840,7 +839,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should publish 'rowEditStop' with reason=tabKeyDown if on the last column`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStop, listener);
+        apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 2);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -853,7 +852,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it(`should publish 'rowEditStop' with reason=shiftTabKeyDown if on the first column and Shift is pressed`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.rowEditStop, listener);
+        apiRef.current.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);

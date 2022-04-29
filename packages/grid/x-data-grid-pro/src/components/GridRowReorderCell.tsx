@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
-  GridEvents,
   GridRenderCellParams,
   GridRowEventLookup,
   gridRowTreeDepthSelector,
@@ -80,9 +79,9 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   );
 
   const draggableEventHandlers = {
-    onDragStart: publish(GridEvents.rowDragStart),
-    onDragOver: publish(GridEvents.rowDragOver),
-    onDragEnd: publish(GridEvents.rowDragEnd),
+    onDragStart: publish('rowDragStart'),
+    onDragOver: publish('rowDragOver'),
+    onDragEnd: publish('rowDragEnd'),
   };
 
   return (
