@@ -329,7 +329,7 @@ enum GridEvents {
    * Fired when a column visibility changes.
    * It is not fired when the `columnVisibilityModel` is controlled or initialized.
    * It is not fired when toggling all column's visibility at once.
-   * @deprecated Use `GridEvents.columnVisibilityModelChange` instead.
+   * @deprecated Use `'columnVisibilityModelChange'` instead.
    */
   columnVisibilityChange = 'columnVisibilityChange',
   /**

@@ -9,7 +9,7 @@ import { adapterToUse, createPickerRenderer } from '../../../../test/utils/picke
 import { MakeOptional } from '../internals/models/helpers';
 
 function TestKeyboardDatePicker(
-  PickerProps: MakeOptional<DesktopDatePickerProps, 'value' | 'onChange' | 'renderInput'>,
+  PickerProps: MakeOptional<DesktopDatePickerProps<any, any>, 'value' | 'onChange' | 'renderInput'>,
 ) {
   const [value, setValue] = React.useState<unknown>(
     PickerProps.value ?? adapterToUse.date('2019-01-01T00:00:00.000'),
@@ -46,7 +46,7 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
     expect(handleClose.callCount).to.equal(1);
   });
 
-  context('input', () => {
+  describe('input', () => {
     it('allows to change selected date from the input according to `format`', () => {
       const onChangeMock = spy();
       render(<TestKeyboardDatePicker onChange={onChangeMock} inputFormat="dd/MM/yyyy" />);
@@ -140,7 +140,7 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
     });
   });
 
-  context('input validaiton', () => {
+  describe('input validaiton', () => {
     [
       { expectedError: 'invalidDate', props: {}, input: 'invalidText' },
       { expectedError: 'disablePast', props: { disablePast: true }, input: '01/01/1900' },
@@ -168,7 +168,7 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
           const [date, setDate] = React.useState<Date | null>(null);
 
           return (
-            <DesktopDatePicker<Date>
+            <DesktopDatePicker
               value={date}
               onError={onErrorMock}
               onChange={(newDate) => setDate(newDate)}

@@ -1,11 +1,6 @@
 <DataGridPremium
   {...data}
   apiRef={apiRef}
-  columns={columns}
   rowGroupingColumnMode="multiple"
-  initialState={{
-    rowGrouping: {
-      model: INITIAL_GROUPING_COLUMN_MODEL,
-    },
-  }}
+  initialState={initialState}
 />

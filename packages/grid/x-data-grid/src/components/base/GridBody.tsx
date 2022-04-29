@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridEvents } from '../../models/events';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
@@ -65,7 +64,7 @@ function GridBody(props: GridBodyProps) {
 
   const handleResize = React.useCallback(
     (size: ElementSize) => {
-      apiRef.current.publishEvent(GridEvents.resize, size);
+      apiRef.current.publishEvent('resize', size);
     },
     [apiRef],
   );

@@ -8,7 +8,6 @@ import {
   GridApi,
   useGridApiRef,
   DataGridPro,
-  GridEvents,
   DataGridProProps,
   GridSelectionModel,
 } from '@mui/x-data-grid-pro';
@@ -404,7 +403,7 @@ describe('<DataGridPro /> - Selection', () => {
       const handleSelectionChange = spy();
       const selectionModel: GridSelectionModel = [];
       render(<TestDataGridSelection selectionModel={selectionModel} />);
-      apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
+      apiRef.current.subscribeEvent('selectionChange', handleSelectionChange);
       apiRef.current.setSelectionModel(selectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
     });

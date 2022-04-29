@@ -13,6 +13,7 @@ export * from '@mui/x-data-grid-pro/models';
 export * from '@mui/x-data-grid/context';
 export * from '@mui/x-data-grid/colDef';
 export * from '@mui/x-data-grid/utils';
+export * from '@mui/x-data-grid-pro/utils';
 
 export * from './DataGridPremium';
 export * from './hooks';
