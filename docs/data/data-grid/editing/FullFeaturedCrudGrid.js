@@ -102,24 +102,20 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleEditClick = (id) => (event) => {
-    event.stopPropagation();
+  const handleEditClick = (id) => () => {
     apiRef.current.startRowEditMode({ id });
   };
 
-  const handleSaveClick = (id) => async (event) => {
-    event.stopPropagation();
-    await apiRef.current.stopRowEditMode({ id });
+  const handleSaveClick = (id) => () => {
+    apiRef.current.stopRowEditMode({ id });
   };
 
-  const handleDeleteClick = (id) => (event) => {
-    event.stopPropagation();
+  const handleDeleteClick = (id) => () => {
     apiRef.current.updateRows([{ id, _action: 'delete' }]);
   };
 
-  const handleCancelClick = (id) => async (event) => {
-    event.stopPropagation();
-    await apiRef.current.stopRowEditMode({ id, ignoreModifications: true });
+  const handleCancelClick = (id) => async () => {
+    apiRef.current.stopRowEditMode({ id, ignoreModifications: true });
 
     const row = apiRef.current.getRow(id);
     if (row.isNew) {

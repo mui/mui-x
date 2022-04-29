@@ -113,24 +113,20 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleEditClick = (id: GridRowId) => (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const handleEditClick = (id: GridRowId) => () => {
     apiRef.current.startRowEditMode({ id });
   };
 
-  const handleSaveClick = (id: GridRowId) => async (event: React.MouseEvent) => {
-    event.stopPropagation();
-    await apiRef.current.stopRowEditMode({ id });
+  const handleSaveClick = (id: GridRowId) => () => {
+    apiRef.current.stopRowEditMode({ id });
   };
 
-  const handleDeleteClick = (id: GridRowId) => (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const handleDeleteClick = (id: GridRowId) => () => {
     apiRef.current.updateRows([{ id, _action: 'delete' }]);
   };
 
-  const handleCancelClick = (id: GridRowId) => async (event: React.MouseEvent) => {
-    event.stopPropagation();
-    await apiRef.current.stopRowEditMode({ id, ignoreModifications: true });
+  const handleCancelClick = (id: GridRowId) => async () => {
+    apiRef.current.stopRowEditMode({ id, ignoreModifications: true });
 
     const row = apiRef.current.getRow(id);
     if (row!.isNew) {
