@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   DataGridPremium,
   gridColumnVisibilityModelSelector,
-  GridEvents,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
@@ -14,7 +13,7 @@ const useKeepGroupingColumnsHidden = (apiRef, columns, initialModel, leafField) 
   const prevModel = React.useRef(initialModel);
 
   React.useEffect(() => {
-    apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
+    apiRef.current.subscribeEvent('rowGroupingModelChange', (newModel) => {
       const columnVisibilityModel = {
         ...gridColumnVisibilityModelSelector(apiRef),
       };
