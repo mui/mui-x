@@ -250,7 +250,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
 
   const localeText = useLocaleText();
 
-  const clearText = clearTextProp ?? localeText.clear;
+  const clearText = clearTextProp ?? localeText.clearButtonLabel;
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {

@@ -1,11 +1,12 @@
 export const buildDeprecatedPropsWarning = (message: string | string[]) => {
   let alreadyWarned = false;
 
-  const cleanMessage = Array.isArray(message) ? message.join('\n') : message;
-
   if (process.env.NODE_ENV === 'production') {
     return () => {};
   }
+
+  const cleanMessage = Array.isArray(message) ? message.join('\n') : message;
+
   return (deprecatedProps: { [key: string]: any }) => {
     const deprecatedKeys = Object.entries(deprecatedProps)
       .filter(([, value]) => value !== undefined)

@@ -6,10 +6,10 @@ export interface PickersLocaleText {
   nextMonth: string;
   openPreviousView: string;
   openNextView: string;
-  cancel: string;
-  clear: string;
-  ok: string;
-  today: string;
+  cancelButtonLabel: string;
+  clearButtonLabel: string;
+  okButtonLabel: string;
+  todayButtonLabel: string;
   start: string;
   end: string;
 }

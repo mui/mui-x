@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { DateIOFormats } from '@date-io/core/IUtils';
 import { useThemeProps } from '@mui/material/styles';
 import { MuiPickersAdapter } from '../internals/models';
-import { PickersLocaleText } from '../locales/utils/pickersLocaleTextApi';
-import { enUS } from '../locales';
+import { DEFAULT_LOCALE, PickersLocaleText } from '../locales';
 
 export interface MuiPickersAdapterContextValue<TDate> {
   defaultDates: {
@@ -13,8 +12,7 @@ export interface MuiPickersAdapterContextValue<TDate> {
   };
 
   utils: MuiPickersAdapter<TDate>;
-
-  localeText: Partial<PickersLocaleText>;
+  localeText: PickersLocaleText;
 }
 
 export const MuiPickersAdapterContext =
@@ -50,14 +48,7 @@ export interface LocalizationProviderProps {
 export function LocalizationProvider(inProps: LocalizationProviderProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiLocalizationProvider' });
 
-  const {
-    children,
-    dateAdapter: Utils,
-    dateFormats,
-    dateLibInstance,
-    locale,
-    localeText = {},
-  } = props;
+  const { children, dateAdapter: Utils, dateFormats, dateLibInstance, locale, localeText } = props;
 
   const utils = React.useMemo(
     () => new Utils({ locale, formats: dateFormats, instance: dateLibInstance }),
@@ -76,8 +67,8 @@ export function LocalizationProvider(inProps: LocalizationProviderProps) {
       utils,
       defaultDates,
       localeText: {
-        ...enUS.components.MuiLocalizationProvider.defaultProps.localeText,
-        ...localeText,
+        ...DEFAULT_LOCALE,
+        ...(localeText ?? {}),
       },
     };
   }, [defaultDates, utils, localeText]);
@@ -146,15 +137,15 @@ LocalizationProvider.propTypes = {
    * Locale for components texts
    */
   localeText: PropTypes.shape({
-    cancel: PropTypes.string,
-    clear: PropTypes.string,
+    cancelButtonLabel: PropTypes.string,
+    clearButtonLabel: PropTypes.string,
     end: PropTypes.string,
     nextMonth: PropTypes.string,
-    ok: PropTypes.string,
+    okButtonLabel: PropTypes.string,
     openNextView: PropTypes.string,
     openPreviousView: PropTypes.string,
     previousMonth: PropTypes.string,
     start: PropTypes.string,
-    today: PropTypes.string,
+    todayButtonLabel: PropTypes.string,
   }),
 } as any;
