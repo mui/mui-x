@@ -9,9 +9,9 @@ import { MobileDateRangePicker, MobileDateRangePickerProps } from '../MobileDate
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerProps<TDate>
-  extends DesktopDateRangePickerProps<TDate>,
-    MobileDateRangePickerProps<TDate> {
+export interface DateRangePickerProps<TInputDate, TDate>
+  extends DesktopDateRangePickerProps<TInputDate, TDate>,
+    MobileDateRangePickerProps<TInputDate, TDate> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -20,8 +20,8 @@ export interface DateRangePickerProps<TDate>
   desktopModeMediaQuery?: string;
 }
 
-type DateRangePickerComponent = (<TDate>(
-  props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: DateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -34,10 +34,10 @@ type DateRangePickerComponent = (<TDate>(
  *
  * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
-export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
-  inProps: DateRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+export const DateRangePicker = React.forwardRef(function DateRangePicker<
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: DateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
@@ -190,11 +190,11 @@ DateRangePicker.propTypes = {
   endText: PropTypes.node,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TDateValue
-   * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
-   * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
+   * @template TInputDate, TDate
+   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
@@ -240,12 +240,10 @@ DateRangePicker.propTypes = {
   mask: PropTypes.string,
   /**
    * Max selectable date. @DateIOType
-   * @default defaultMaxDate
    */
   maxDate: PropTypes.any,
   /**
    * Min selectable date. @DateIOType
-   * @default defaultMinDate
    */
   minDate: PropTypes.any,
   /**
@@ -255,8 +253,8 @@ DateRangePicker.propTypes = {
   okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
-   * @template TDateValue
-   * @param {TDateValue} date The date that was just accepted.
+   * @template TValue
+   * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
@@ -279,9 +277,9 @@ DateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TDateValue
+   * @template TError, TInputValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TDateValue} value The invalid value.
+   * @param {TInputValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -438,15 +436,5 @@ DateRangePicker.propTypes = {
    * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
   TransitionComponent: PropTypes.elementType,
-  /**
-   * The value of the date range picker.
-   */
-  value: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.any,
-      PropTypes.instanceOf(Date),
-      PropTypes.number,
-      PropTypes.string,
-    ]),
-  ).isRequired,
+  value: PropTypes.arrayOf(PropTypes.any).isRequired,
 } as any;

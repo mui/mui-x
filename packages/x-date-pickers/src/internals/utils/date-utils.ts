@@ -72,7 +72,7 @@ export const findClosestEnabledDate = <TDate>({
 
 export const parsePickerInputValue = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  value: TDate,
+  value: TDate | null,
 ): TDate | null => {
   const parsedValue = utils.date(value);
 

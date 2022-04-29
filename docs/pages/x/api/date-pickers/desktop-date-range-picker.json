@@ -2,13 +2,6 @@
   "props": {
     "onChange": { "type": { "name": "func" }, "required": true },
     "renderInput": { "type": { "name": "func" }, "required": true },
-    "value": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;any<br>&#124;&nbsp;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt;"
-      },
-      "required": true
-    },
     "acceptRegex": {
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
@@ -36,7 +29,7 @@
     "endText": { "type": { "name": "node" }, "default": "'End'" },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
-      "default": "(value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`"
+      "default": "(date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`"
     },
     "getViewSwitchingButtonText": { "type": { "name": "func" } },
     "InputAdornmentProps": { "type": { "name": "object" } },
@@ -47,8 +40,8 @@
     "leftArrowButtonText": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" } },
     "mask": { "type": { "name": "string" }, "default": "'__/__/____'" },
-    "maxDate": { "type": { "name": "any" }, "default": "defaultMaxDate" },
-    "minDate": { "type": { "name": "any" }, "default": "defaultMinDate" },
+    "maxDate": { "type": { "name": "any" } },
+    "minDate": { "type": { "name": "any" } },
     "onAccept": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },

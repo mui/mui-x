@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridEvents } from '../../../models/events';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -34,7 +33,7 @@ export const useGridPreferencesPanel = (apiRef: React.MutableRefObject<GridApiCo
   const hidePreferences = React.useCallback(() => {
     logger.debug('Hiding Preferences Panel');
     if (preferencePanelState.openedPanelValue) {
-      apiRef.current.publishEvent(GridEvents.preferencePanelClose, {
+      apiRef.current.publishEvent('preferencePanelClose', {
         openedPanelValue: preferencePanelState.openedPanelValue,
       });
     }
@@ -64,7 +63,7 @@ export const useGridPreferencesPanel = (apiRef: React.MutableRefObject<GridApiCo
         ...state,
         preferencePanel: { ...state.preferencePanel, open: true, openedPanelValue: newValue },
       }));
-      apiRef.current.publishEvent(GridEvents.preferencePanelOpen, {
+      apiRef.current.publishEvent('preferencePanelOpen', {
         openedPanelValue: newValue,
       });
       apiRef.current.forceUpdate();

@@ -23,7 +23,7 @@ export interface CalendarOrClockPickerSlotsComponentsProps
   extends CalendarPickerSlotsComponentsProps {}
 
 export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
-  extends Omit<BasePickerProps<unknown, TDate>, 'value' | 'onChange'>,
+  extends Omit<BasePickerProps<any, TDate, TDate | null>, 'value' | 'onChange'>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
     ExportedClockPickerProps<TDate> {
   dateRangeIcon?: React.ReactNode;

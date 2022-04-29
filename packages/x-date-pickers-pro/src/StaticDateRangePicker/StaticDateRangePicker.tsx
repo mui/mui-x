@@ -1,23 +1,24 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import {
   PickerStaticWrapper,
   PickerStaticWrapperProps,
-  useDefaultDates,
-  useUtils,
   usePickerState,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
-import { BaseDateRangePickerProps, dateRangePickerValueManager } from '../DateRangePicker/shared';
+import {
+  useDateRangePickerDefaultizedProps,
+  BaseDateRangePickerProps,
+  dateRangePickerValueManager,
+} from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
 
-export interface StaticDateRangePickerProps<TDate = unknown>
-  extends BaseDateRangePickerProps<TDate> {
+export interface StaticDateRangePickerProps<TInputDate, TDate>
+  extends BaseDateRangePickerProps<TInputDate, TDate> {
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default 'mobile'
@@ -25,8 +26,8 @@ export interface StaticDateRangePickerProps<TDate = unknown>
   displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
 }
 
-type StaticDateRangePickerComponent = (<TDate>(
-  props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: StaticDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -39,79 +40,49 @@ type StaticDateRangePickerComponent = (<TDate>(
  *
  * - [StaticDateRangePicker API](https://mui.com/x/api/date-pickers/static-date-range-picker/)
  */
-export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TDate>(
-  inProps: StaticDateRangePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const props = useThemeProps({ props: inProps, name: 'MuiStaticDateRangePicker' });
+export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: StaticDateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const {
-    calendars = 2,
-    displayStaticWrapperAs = 'mobile',
-    value,
-    onChange,
-    mask = '__/__/____',
-    startText = 'Start',
-    endText = 'End',
-    inputFormat: passedInputFormat,
-    minDate: minDateProp,
-    maxDate: maxDateProp,
-    ...other
-  } = props;
+  const props = useDateRangePickerDefaultizedProps<
+    TInputDate,
+    TDate,
+    StaticDateRangePickerProps<TInputDate, TDate>
+  >(inProps, 'MuiStaticDateRangePicker');
 
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-  const minDate = minDateProp ?? defaultDates.minDate;
-  const maxDate = maxDateProp ?? defaultDates.maxDate;
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
     'start' | 'end'
   >('start');
 
-  const pickerStateProps = {
-    ...other,
-    value,
-    onChange,
-  };
-
-  const restProps = {
-    ...other,
-    minDate,
-    maxDate,
-  };
+  const validationError = useDateRangeValidation(props);
 
   const { pickerProps, inputProps, wrapperProps } = usePickerState(
-    pickerStateProps,
+    props,
     dateRangePickerValueManager,
   );
 
-  const validationError = useDateRangeValidation(props);
+  const { displayStaticWrapperAs = 'mobile', value, onChange, ...other } = props;
 
   const DateInputProps = {
     ...inputProps,
-    ...restProps,
+    ...other,
     currentlySelectingRangeEnd,
-    inputFormat: passedInputFormat || utils.formats.keyboardDate,
     setCurrentlySelectingRangeEnd,
-    startText,
-    endText,
-    mask,
     validationError,
     ref,
   };
 
   return (
     <PickerStaticWrapper displayStaticWrapperAs={displayStaticWrapperAs}>
-      <DateRangePickerView<any>
+      <DateRangePickerView
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        calendars={calendars}
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}
         setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-        startText={startText}
-        endText={endText}
         {...pickerProps}
-        {...restProps}
+        {...other}
       />
     </PickerStaticWrapper>
   );
@@ -207,11 +178,11 @@ StaticDateRangePicker.propTypes = {
   endText: PropTypes.node,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TDateValue
-   * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
-   * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
+   * @template TInputDate, TDate
+   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
@@ -257,18 +228,16 @@ StaticDateRangePicker.propTypes = {
   mask: PropTypes.string,
   /**
    * Max selectable date. @DateIOType
-   * @default defaultMaxDate
    */
   maxDate: PropTypes.any,
   /**
    * Min selectable date. @DateIOType
-   * @default defaultMinDate
    */
   minDate: PropTypes.any,
   /**
    * Callback fired when date is accepted @DateIOType.
-   * @template TDateValue
-   * @param {TDateValue} date The date that was just accepted.
+   * @template TValue
+   * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
@@ -291,9 +260,9 @@ StaticDateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TDateValue
+   * @template TError, TInputValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TDateValue} value The invalid value.
+   * @param {TInputValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -428,15 +397,5 @@ StaticDateRangePicker.propTypes = {
    * @default 'Select date range'
    */
   toolbarTitle: PropTypes.node,
-  /**
-   * The value of the date range picker.
-   */
-  value: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.any,
-      PropTypes.instanceOf(Date),
-      PropTypes.number,
-      PropTypes.string,
-    ]),
-  ).isRequired,
+  value: PropTypes.arrayOf(PropTypes.any).isRequired,
 } as any;
