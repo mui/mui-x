@@ -10,35 +10,14 @@ import {
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
+  withPickerControls,
+  openPicker,
 } from '../../../../test/utils/pickers-utils';
 
-const UncontrolledOpenDesktopDatePicker = (({
-  onClose = () => {},
-  onOpen = () => {},
-  open: openProp,
-  defaultOpen,
-  ...other
-}: any) => {
-  if (openProp != null) {
-    throw new TypeError('Controlling `open` is not supported. Use `defaultOpen` instead.');
-  }
-  const [open, setOpen] = React.useState(defaultOpen);
-
-  return (
-    <DesktopDatePicker
-      open={open}
-      onClose={(...args) => {
-        setOpen(false);
-        onClose(...args);
-      }}
-      onOpen={(...args) => {
-        setOpen(true);
-        onOpen(...args);
-      }}
-      {...other}
-    />
-  );
-}) as typeof DesktopDatePicker;
+const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
+  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  renderInput: (params) => <TextField {...params} />,
+});
 
 describe('<DesktopDatePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -67,24 +46,6 @@ describe('<DesktopDatePicker />', () => {
     expect(getByTestId('component-test')).not.to.equal(null);
   });
 
-  it('opens when "Choose date" is clicked', () => {
-    const handleOpen = spy();
-    render(
-      <DesktopDatePicker
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={() => {}}
-        onOpen={handleOpen}
-        TransitionComponent={FakeTransitionComponent}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    userEvent.mousePress(screen.getByLabelText(/Choose date/));
-
-    expect(handleOpen.callCount).to.equal(1);
-    expect(screen.queryByRole('dialog')).not.to.equal(null);
-  });
-
   ['readOnly', 'disabled'].forEach((prop) => {
     it(`cannot be opened when "Choose date" is clicked when ${prop}={true}`, () => {
       const handleOpen = spy();
@@ -103,129 +64,6 @@ describe('<DesktopDatePicker />', () => {
 
       expect(handleOpen.callCount).to.equal(0);
     });
-  });
-
-  it('closes on clickaway', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDatePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        open
-        onClose={handleClose}
-        TransitionComponent={FakeTransitionComponent}
-      />,
-    );
-
-    userEvent.mousePress(document.body);
-
-    expect(handleClose.callCount).to.equal(1);
-  });
-
-  it('does not close on clickaway when it is not open', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDatePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(document.body);
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
-  it('does not close on click inside', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDatePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        open
-        onClose={handleClose}
-        TransitionComponent={FakeTransitionComponent}
-      />,
-    );
-
-    userEvent.mousePress(screen.getByLabelText('Next month'));
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
-  it('accepts date on day button click', () => {
-    const onChangeMock = spy();
-    render(
-      <UncontrolledOpenDesktopDatePicker
-        // @ts-expect-error internal prop
-        defaultOpen
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={onChangeMock}
-        TransitionComponent={FakeTransitionComponent}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    fireEvent.click(screen.getByLabelText('Jan 2, 2019'));
-
-    expect(onChangeMock.callCount).to.equal(1);
-    expect(screen.queryByRole('dialog')).to.equal(null);
-  });
-
-  it('closes on selection', () => {
-    render(
-      <UncontrolledOpenDesktopDatePicker
-        // @ts-expect-error internal prop
-        defaultOpen
-        TransitionComponent={FakeTransitionComponent}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    fireEvent.click(screen.getByLabelText('Jan 2, 2018'));
-
-    expect(screen.queryByRole('dialog')).to.equal(null);
-  });
-
-  it("prop `disableCloseOnSelect` – if `true` doesn't close picker", () => {
-    render(
-      <UncontrolledOpenDesktopDatePicker
-        // @ts-expect-error internal prop
-        defaultOpen
-        TransitionComponent={FakeTransitionComponent}
-        disableCloseOnSelect
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    fireEvent.click(screen.getByLabelText('Jan 2, 2018'));
-
-    expect(screen.queryByRole('dialog')).toBeVisible();
-  });
-
-  it('does not call onChange if same date selected', () => {
-    const onChangeMock = spy();
-    render(
-      <DesktopDatePicker
-        open
-        TransitionComponent={FakeTransitionComponent}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
-        onChange={onChangeMock}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    fireEvent.click(screen.getByLabelText('Jan 1, 2018'));
-
-    expect(onChangeMock.callCount).to.equal(0);
   });
 
   it('allows to change selected date from the input according to `format`', () => {
@@ -266,42 +104,6 @@ describe('<DesktopDatePicker />', () => {
     );
 
     expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
-  });
-
-  it('prop `clearable` - renders clear button in Desktop mode', () => {
-    function DesktopDatePickerClearable() {
-      const [value, setValue] = React.useState<Date | null>(
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-      );
-      const [open, setOpen] = React.useState<boolean | undefined>(true);
-      const handleChange = (newValue: Date | null) => {
-        setValue(newValue);
-      };
-      return (
-        <DesktopDatePicker
-          onChange={handleChange}
-          value={value}
-          clearable
-          renderInput={(params) => <TextField {...params} />}
-          TransitionComponent={FakeTransitionComponent}
-          open={open}
-          onClose={() => {
-            setOpen(false);
-          }}
-          onOpen={() => {
-            setOpen(true);
-          }}
-        />
-      );
-    }
-    render(<DesktopDatePickerClearable />);
-
-    expect(screen.getByRole('textbox')).to.have.value('01/01/2018');
-
-    fireEvent.click(screen.getByText('Clear'));
-
-    expect(screen.getByRole('textbox')).to.have.value('');
-    expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
   it('switches between views uncontrolled', () => {
@@ -451,5 +253,251 @@ describe('<DesktopDatePicker />', () => {
       expect(handleOpen.callCount).to.equal(1);
       expect(window.scrollY, 'focus caused scroll').to.equal(scrollYBeforeOpen);
     });
+  });
+
+  describe('picker state', () => {
+    it('should open when clicking "Choose date"', () => {
+      const onOpen = spy();
+
+      render(<WrappedDesktopDatePicker onOpen={onOpen} initialValue={null} />);
+
+      userEvent.mousePress(screen.getByLabelText(/Choose date/));
+
+      expect(onOpen.callCount).to.equal(1);
+      expect(screen.queryByRole('dialog')).toBeVisible();
+    });
+
+    it('should call onChange, onClose and onAccept when selecting a date', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      // Open the picker
+      openPicker({ type: 'date', variant: 'desktop' });
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the date
+      fireEvent.click(screen.getByLabelText('Jan 8, 2018'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-08T00:00:00.000'),
+      );
+      expect(onAccept.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose and onAccept when selection a date and props.closeOnSelect = false', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          closeOnSelect={false}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      // Change the date
+      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-08T00:00:00.000'),
+      );
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the date
+      userEvent.mousePress(screen.getByLabelText('Jan 6, 2018'));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      );
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
+
+    it('should call onClose and onAccept with the live value when pressing Escape', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          closeOnSelect={false}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      // Change the date (already tested)
+      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+
+      // Dismiss the picker
+      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      expect(onChange.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-08T00:00:00.000'),
+      );
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onClose when clicking outside of the picker without prior change', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          closeOnSelect={false}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          closeOnSelect={false}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      // Change the date (already tested)
+      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-08T00:00:00.000'),
+      );
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          closeOnSelect={false}
+        />,
+      );
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
+
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          clearable
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      // Clear the date
+      fireEvent.click(screen.getByText(/clear/i));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).to.equal(null);
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).to.equal(null);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={null}
+          clearable
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      // Clear the date
+      fireEvent.click(screen.getByText(/clear/i));
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    // TODO: Write test once the `allowSameDateSelection` behavior is cleaned
+    // it('should not (?) call onChange and onAccept if same date selected', () => {});
   });
 });

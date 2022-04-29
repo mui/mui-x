@@ -10,14 +10,14 @@
     "ampm": { "type": { "name": "bool" } },
     "ampmInClock": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
+    "closeOnSelect": {
+      "type": { "name": "bool" },
+      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+    },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "dateRangeIcon": { "type": { "name": "node" } },
     "defaultCalendarMonth": { "type": { "name": "any" } },
-    "disableCloseOnSelect": {
-      "type": { "name": "bool" },
-      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
-    },
     "disabled": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },

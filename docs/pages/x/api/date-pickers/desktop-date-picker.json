@@ -10,13 +10,13 @@
     "className": { "type": { "name": "string" } },
     "clearable": { "type": { "name": "bool" } },
     "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
-    "defaultCalendarMonth": { "type": { "name": "any" } },
-    "disableCloseOnSelect": {
+    "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "defaultCalendarMonth": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },

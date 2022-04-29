@@ -3,14 +3,22 @@ import TextField from '@mui/material/TextField';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { act, describeConformance, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
-import { TransitionProps } from '@mui/material/transitions';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { TimePickerProps } from '@mui/x-date-pickers/TimePicker';
 import {
   wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
+  withPickerControls,
+  FakeTransitionComponent,
+  openPicker,
+  getClockMouseEvent,
 } from '../../../../test/utils/pickers-utils';
+
+const WrappedDesktopTimePicker = withPickerControls(DesktopTimePicker)({
+  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  renderInput: (params) => <TextField {...params} />,
+});
 
 describe('<DesktopTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -40,42 +48,6 @@ describe('<DesktopTimePicker />', () => {
     }),
   );
 
-  const NoTransition = React.forwardRef(function NoTransition(
-    props: TransitionProps & { children?: React.ReactNode },
-    ref: React.Ref<HTMLDivElement>,
-  ) {
-    const { children, in: inProp } = props;
-
-    if (!inProp) {
-      return null;
-    }
-    return (
-      <div ref={ref} tabIndex={-1}>
-        {children}
-      </div>
-    );
-  });
-
-  it('opens when "Choose time" is clicked', () => {
-    const handleClose = spy();
-    const handleOpen = spy();
-    render(
-      <DesktopTimePicker
-        value={null}
-        onChange={() => {}}
-        onClose={handleClose}
-        onOpen={handleOpen}
-        renderInput={(params) => <TextField {...params} />}
-        TransitionComponent={NoTransition}
-      />,
-    );
-
-    userEvent.mousePress(screen.getByLabelText(/choose time/i));
-
-    expect(handleClose.callCount).to.equal(0);
-    expect(handleOpen.callCount).to.equal(1);
-  });
-
   ['readOnly', 'disabled'].forEach((prop) => {
     it(`cannot be opened when "Choose time" is clicked when ${prop}={true}`, () => {
       const handleOpen = spy();
@@ -96,76 +68,6 @@ describe('<DesktopTimePicker />', () => {
 
       expect(handleOpen.callCount).to.equal(0);
     });
-  });
-
-  it('closes on clickaway', () => {
-    const handleClose = spy();
-    render(
-      <DesktopTimePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        open
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(document.body);
-
-    expect(handleClose.callCount).to.equal(1);
-  });
-
-  it('does not close on clickaway when it is not open', () => {
-    const handleClose = spy();
-    render(
-      <DesktopTimePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(document.body);
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
-  it('does not close on click inside', () => {
-    const handleClose = spy();
-    render(
-      <DesktopTimePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        open
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(screen.getByLabelText('open next view'));
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
-  it('closes on Escape press', () => {
-    const handleClose = spy();
-    render(
-      <DesktopTimePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={null}
-        open
-        onClose={handleClose}
-      />,
-    );
-    act(() => {
-      (document.activeElement as HTMLElement).blur();
-    });
-
-    fireEvent.keyDown(document.body, { key: 'Escape' });
-
-    expect(handleClose.callCount).to.equal(1);
   });
 
   it('allows to navigate between timepicker views using arrow switcher', () => {
@@ -278,7 +180,7 @@ describe('<DesktopTimePicker />', () => {
     );
   });
 
-  context('input validation', () => {
+  describe('input validation', () => {
     const shouldDisableTime: TimePickerProps['shouldDisableTime'] = (value) => value === 10;
 
     [
@@ -383,5 +285,234 @@ describe('<DesktopTimePicker />', () => {
       expect(handleClick.callCount).to.equal(1);
       expect(handleTouchStart.callCount).to.equal(1);
     });
+  });
+
+  describe('picker state', () => {
+    it('should open when clicking "Choose date"', () => {
+      const onOpen = spy();
+
+      render(<WrappedDesktopTimePicker onOpen={onOpen} initialValue={null} />);
+
+      userEvent.mousePress(screen.getByLabelText(/Choose time/));
+
+      expect(onOpen.callCount).to.equal(1);
+      expect(screen.queryByRole('dialog')).toBeVisible();
+    });
+
+    it('should call onChange when selecting each view and onClose and onAccept when selecting the minutes', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      // Open the picker
+      openPicker({ type: 'time', variant: 'desktop' });
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the hours
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-01T11:00:00.000'),
+      );
+
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the minutes
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-01T11:53:00.000'),
+      );
+
+      expect(onAccept.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose and onAccept when selecting the minutes if props.closeOnSelect = false', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          closeOnSelect={false}
+        />,
+      );
+
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      // Change the hours (already tested)
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+
+      // Change the minutes (already tested)
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
+
+    it('should call onClose and onAccept with the live value when pressing Escape', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      // Change the hours (already tested)
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+
+      // Dismiss the picker
+      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      expect(onChange.callCount).to.equal(1); // Hours change
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-01T11:00:00.000'),
+      );
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onClose when clicking outside of the picker without prior change', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      // Change the hours (already tested)
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(1); // Hours change
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-01T11:00:00.000'),
+      );
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
+
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          clearable
+        />,
+      );
+
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      // Clear the date
+      fireEvent.click(screen.getByText(/clear/i));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).to.equal(null);
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).to.equal(null);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    // TODO: Write test once the `allowSameDateSelection` behavior is cleaned
+    // it('should not (?) call onChange and onAccept if same hour selected', () => {});
+
+    // TODO: Write test once the `allowSameDateSelection` behavior is cleaned
+    // it('should not (?) call onChange and onAccept if same minute selected', () => {});
   });
 });

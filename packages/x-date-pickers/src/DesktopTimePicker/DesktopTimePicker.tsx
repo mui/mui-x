@@ -7,17 +7,16 @@ import {
   DesktopWrapperProps,
 } from '../internals/components/wrappers/DesktopWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
+const valueManager: PickerStateValueManager<any, any, any> = {
   emptyValue: null,
   parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
+  getTodayValue: (utils) => utils.date()!,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
   valueReducer: (utils, prevValue, newValue) => {
     if (prevValue == null || newValue == null) {
       return newValue;
@@ -65,6 +64,8 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
     ToolbarComponent = TimePickerToolbar,
     TransitionComponent,
     value,
+    clearable,
+    clearText,
     ...other
   } = props;
   const DateInputProps = { ...inputProps, ...other, ref, validationError };
@@ -77,6 +78,8 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       PopperProps={PopperProps}
       PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
+      clearable={clearable}
+      clearText={clearText}
     >
       {/* @ts-ignore time picker has no component slot for the calendar header */}
       <CalendarOrClockPicker
@@ -127,15 +130,15 @@ DesktopTimePicker.propTypes = {
    */
   clearText: PropTypes.node,
   /**
+   * If `true` the popup or dialog will immediately close after submitting full date.
+   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect: PropTypes.bool,
+  /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    */
   components: PropTypes.object,
-  /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
-   */
-  disableCloseOnSelect: PropTypes.bool,
   /**
    * If `true`, the picker and text field are disabled.
    */

@@ -22,8 +22,9 @@ const releaseInfo = getReleaseInfo();
 
 const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
 
-const rangePickerValueManager: PickerStateValueManager<any, any> = {
+const rangePickerValueManager: PickerStateValueManager<any, any, any> = {
   emptyValue: [null, null],
+  getTodayValue: (utils) => [utils.date()!, utils.date()!],
   parseInput: parseRangeInputValue,
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };
@@ -146,6 +147,11 @@ DesktopDateRangePicker.propTypes = {
    */
   clearText: PropTypes.node,
   /**
+   * If `true` the popup or dialog will immediately close after submitting full date.
+   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect: PropTypes.bool,
+  /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    * @default {}
@@ -165,11 +171,6 @@ DesktopDateRangePicker.propTypes = {
    * @default false
    */
   disableAutoMonthSwitching: PropTypes.bool,
-  /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
-   */
-  disableCloseOnSelect: PropTypes.bool,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
