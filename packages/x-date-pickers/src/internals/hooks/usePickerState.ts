@@ -3,8 +3,6 @@ import { WrapperVariant } from '../components/wrappers/WrapperVariantContext';
 import { useOpenState } from './useOpenState';
 import { useUtils } from './useUtils';
 import { MuiPickersAdapter } from '../models';
-import { PrivateWrapperProps } from '../components/wrappers/WrapperProps';
-import { DateInputProps } from '../components/PureDateInput';
 
 export interface PickerStateValueManager<TInputValue, TValue, TDate> {
   areValuesEqual: (
@@ -76,10 +74,44 @@ interface PickerStateProps<TInputValue, TValue> {
   value: TInputValue;
 }
 
+interface PickerStateInputProps<TInputValue, TValue> {
+  onChange: (date: TValue, keyboardInputValue?: string) => void;
+  open: boolean;
+  rawValue: TInputValue;
+  openPicker: () => void;
+}
+
+interface PickerStatePickerProps<TValue> {
+  // TODO: Rename `value`, for the date range it make no sense to call it `date`
+  date: TValue;
+  isMobileKeyboardViewOpen: boolean;
+  toggleMobileKeyboardView: () => void;
+  onDateChange: (
+    newDate: TValue,
+    wrapperVariant: WrapperVariant,
+    selectionState?: PickerSelectionState,
+  ) => void;
+}
+
+export interface PickerStateWrapperProps {
+  onAccept: () => void;
+  onClear: () => void;
+  onDismiss: () => void;
+  onCancel: () => void;
+  onSetToday: () => void;
+  open: boolean;
+}
+
+interface PickerState<TInputValue, TValue> {
+  inputProps: PickerStateInputProps<TInputValue, TValue>;
+  pickerProps: PickerStatePickerProps<TValue>;
+  wrapperProps: PickerStateWrapperProps;
+}
+
 export const usePickerState = <TInputValue, TValue, TDate>(
   props: PickerStateProps<TInputValue, TValue>,
   valueManager: PickerStateValueManager<TInputValue, TValue, TDate>,
-) => {
+): PickerState<TInputValue, TValue> => {
   const { onAccept, onChange, value, closeOnSelect } = props;
 
   const utils = useUtils<TDate>();
@@ -156,7 +188,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
     setDate({ action: 'setCommitted', value: parsedDateValue, skipOnChangeCall: true });
   }
 
-  const wrapperProps = React.useMemo<PrivateWrapperProps>(
+  const wrapperProps = React.useMemo<PickerStateWrapperProps>(
     () => ({
       open: isOpen,
       onClear: () => {
@@ -189,7 +221,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
   // When it's open picker should work like closed, because we are just showing text field
   const [isMobileKeyboardViewOpen, setMobileKeyboardViewOpen] = React.useState(false);
 
-  const pickerProps = React.useMemo(
+  const pickerProps = React.useMemo<PickerStatePickerProps<TValue>>(
     () => ({
       date: dateState.draft,
       isMobileKeyboardViewOpen,
@@ -239,9 +271,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
     [onChange, valueManager, lastValidDateValue, utils],
   );
 
-  const inputProps = React.useMemo<
-    Pick<DateInputProps<TInputValue, TValue>, 'onChange' | 'open' | 'rawValue' | 'openPicker'>
-  >(
+  const inputProps = React.useMemo<PickerStateInputProps<TInputValue, TValue>>(
     () => ({
       onChange: handleInputChange,
       open: isOpen,
@@ -251,7 +281,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
     [handleInputChange, isOpen, value, setIsOpen],
   );
 
-  const pickerState = { pickerProps, inputProps, wrapperProps };
+  const pickerState: PickerState<TInputValue, TValue> = { pickerProps, inputProps, wrapperProps };
   React.useDebugValue(pickerState, () => ({
     MuiPickerState: {
       dateState,

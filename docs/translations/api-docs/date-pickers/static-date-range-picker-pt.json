@@ -16,7 +16,7 @@
     "disableOpenPicker": "Do not render open picker button (renders only text field with validation).",
     "displayStaticWrapperAs": "Force static wrapper inner components to be rendered in mobile or desktop mode.",
     "endText": "Text for end input label and toolbar placeholder.",
-    "getOpenDialogAriaText": "Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(value: ParseableDate&lt;TDateValue&gt;, utils: MuiPickersAdapter&lt;TDateValue&gt;) =&gt; string</code><br><em>value:</em> The date from which we want to add an aria-text.<br><em>utils:</em> The utils to manipulate the date.<br> <em>returns</em> (string): The aria-text to render inside the dialog.",
+    "getOpenDialogAriaText": "Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(date: TInputDate, utils: MuiPickersAdapter&lt;TDate&gt;) =&gt; string</code><br><em>date:</em> The date from which we want to add an aria-text.<br><em>utils:</em> The utils to manipulate the date.<br> <em>returns</em> (string): The aria-text to render inside the dialog.",
     "getViewSwitchingButtonText": "Get aria-label text for switching between views button.<br><br><strong>Signature:</strong><br><code>function(currentView: CalendarPickerView) =&gt; string</code><br><em>currentView:</em> The view from which we want to get the button text.<br> <em>returns</em> (string): The label of the view.",
     "InputAdornmentProps": "Props to pass to keyboard input adornment.",
     "inputFormat": "Format string.",
@@ -26,10 +26,10 @@
     "mask": "Custom mask. Can be used to override generate from format. (e.g. <code>__/__/____ __:__</code> or <code>__/__/____ __:__ _M</code>).",
     "maxDate": "Max selectable date. @DateIOType",
     "minDate": "Min selectable date. @DateIOType",
-    "onAccept": "Callback fired when date is accepted @DateIOType.<br><br><strong>Signature:</strong><br><code>function(date: TDateValue) =&gt; void</code><br><em>date:</em> The date that was just accepted.",
+    "onAccept": "Callback fired when date is accepted @DateIOType.<br><br><strong>Signature:</strong><br><code>function(value: TValue) =&gt; void</code><br><em>value:</em> The value that was just accepted.",
     "onChange": "Callback fired when the value (the selected date range) changes @DateIOType.<br><br><strong>Signature:</strong><br><code>function(date: DateRange&lt;TDate&gt;, keyboardInputValue: string) =&gt; void</code><br><em>date:</em> The new parsed date range.<br><em>keyboardInputValue:</em> The current value of the keyboard input.",
     "onClose": "Callback fired when the popup requests to be closed. Use in controlled mode (see open).",
-    "onError": "Callback that fired when input value or new <code>value</code> prop validation returns <strong>new</strong> validation error (or value is valid after error). In case of validation error detected <code>reason</code> prop return non-null value and <code>TextField</code> must be displayed in <code>error</code> state. This can be used to render appropriate form error.<br><a href=\"https://next.material-ui-pickers.dev/guides/forms\">Read the guide</a> about form integration and error displaying.<br><br><strong>Signature:</strong><br><code>function(reason: TError, value: TDateValue) =&gt; void</code><br><em>reason:</em> The reason why the current value is not valid.<br><em>value:</em> The invalid value.",
+    "onError": "Callback that fired when input value or new <code>value</code> prop validation returns <strong>new</strong> validation error (or value is valid after error). In case of validation error detected <code>reason</code> prop return non-null value and <code>TextField</code> must be displayed in <code>error</code> state. This can be used to render appropriate form error.<br><a href=\"https://next.material-ui-pickers.dev/guides/forms\">Read the guide</a> about form integration and error displaying.<br><br><strong>Signature:</strong><br><code>function(reason: TError, value: TInputValue) =&gt; void</code><br><em>reason:</em> The reason why the current value is not valid.<br><em>value:</em> The invalid value.",
     "onMonthChange": "Callback firing on month change. @DateIOType<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void</code><br><em>month:</em> The new month.",
     "onOpen": "Callback fired when the popup requests to be opened. Use in controlled mode (see open).",
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: CalendarPickerView) =&gt; void</code><br><em>view:</em> The new view.",
@@ -51,8 +51,7 @@
     "ToolbarComponent": "Component that will replace default toolbar renderer.",
     "toolbarFormat": "Date format, that is displaying in toolbar.",
     "toolbarPlaceholder": "Mobile picker date value placeholder, displaying if <code>value</code> === <code>null</code>.",
-    "toolbarTitle": "Mobile picker title, displaying in the toolbar.",
-    "value": "The value of the date range picker."
+    "toolbarTitle": "Mobile picker title, displaying in the toolbar."
   },
   "classDescriptions": {},
   "slotDescriptions": {}

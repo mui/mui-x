@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { WrapperVariantContext } from './WrapperVariantContext';
 import { PickersModalDialog, ExportedPickerModalProps } from '../PickersModalDialog';
-import { PrivateWrapperProps, DateInputPropsLike } from './WrapperProps';
+import { DateInputPropsLike } from './WrapperProps';
+import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 
 export interface MobileWrapperProps extends ExportedPickerModalProps {
   children?: React.ReactNode;
 }
 
-export interface InternalMobileWrapperProps extends MobileWrapperProps, PrivateWrapperProps {
+export interface InternalMobileWrapperProps extends MobileWrapperProps, PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   PureDateInputComponent: React.JSXElementConstructor<DateInputPropsLike>;
 }

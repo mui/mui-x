@@ -6,13 +6,14 @@ import {
   ExportedPickerPopperProps,
   ExportedPickerPaperProps,
 } from '../PickersPopper';
-import { DateInputPropsLike, PrivateWrapperProps } from './WrapperProps';
+import { DateInputPropsLike } from './WrapperProps';
+import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 
 export interface DesktopWrapperProps extends ExportedPickerPopperProps, ExportedPickerPaperProps {
   children?: React.ReactNode;
 }
 
-export interface InternalDesktopWrapperProps extends DesktopWrapperProps, PrivateWrapperProps {
+export interface InternalDesktopWrapperProps extends DesktopWrapperProps, PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   KeyboardDateInputComponent: React.JSXElementConstructor<
     DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> }
