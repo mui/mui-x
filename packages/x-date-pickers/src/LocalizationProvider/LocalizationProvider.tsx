@@ -34,13 +34,20 @@ export interface LocalizationProviderProps {
    * ```
    */
   dateLibInstance?: any;
-  /** Locale for the date library you are using */
+  /** Locale for the date library you are using
+   * @deprecated Use `adapterLocale` instead
+   */
   locale?: string | object;
+  /** Locale for the date library you are using
+   */
+  adapterLocale?: string | object;
   /**
    * Locale for components texts
    */
   localeText?: Partial<PickersLocaleText>;
 }
+
+let warnedOnce = false;
 
 /**
  * @ignore - do not document.
@@ -48,11 +55,33 @@ export interface LocalizationProviderProps {
 export function LocalizationProvider(inProps: LocalizationProviderProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiLocalizationProvider' });
 
-  const { children, dateAdapter: Utils, dateFormats, dateLibInstance, locale, localeText } = props;
+  const {
+    children,
+    dateAdapter: Utils,
+    dateFormats,
+    dateLibInstance,
+    locale,
+    adapterLocale,
+    localeText,
+  } = props;
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (!warnedOnce && locale !== undefined) {
+      warnedOnce = true;
+      console.warn(
+        "LocalizationProvider's prop `locale` is deprecated and replaced by `adapterLocale`",
+      );
+    }
+  }
 
   const utils = React.useMemo(
-    () => new Utils({ locale, formats: dateFormats, instance: dateLibInstance }),
-    [Utils, locale, dateFormats, dateLibInstance],
+    () =>
+      new Utils({
+        locale: adapterLocale ?? locale,
+        formats: dateFormats,
+        instance: dateLibInstance,
+      }),
+    [Utils, locale, adapterLocale, dateFormats, dateLibInstance],
   );
 
   const defaultDates: MuiPickersAdapterContextValue<unknown>['defaultDates'] = React.useMemo(() => {
@@ -85,6 +114,10 @@ LocalizationProvider.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Locale for the date library you are using
+   */
+  adapterLocale: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   children: PropTypes.node,
   /**
    * DateIO adapter class function
@@ -131,6 +164,7 @@ LocalizationProvider.propTypes = {
   dateLibInstance: PropTypes.any,
   /**
    * Locale for the date library you are using
+   * @deprecated Use `adapterLocale` instead
    */
   locale: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   /**

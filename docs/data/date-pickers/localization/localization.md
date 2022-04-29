@@ -28,6 +28,7 @@ You can set the locale text by using the theme provider.
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import bgLocale from 'date-fns/locale/bg';
 
 const theme = createTheme(
   {
@@ -35,11 +36,14 @@ const theme = createTheme(
       primary: { main: '#1976d2' },
     },
   },
-  bgBG,
+  bgBG, // use 'bg' locale for UI texts (start, next month, ...)
 );
 
 <ThemeProvider theme={theme}>
-  <LocalizationProvider dateAdapter={AdapterDateFns}>
+  <LocalizationProvider
+    dateAdapter={AdapterDateFns}
+    adapterLocale={bgLocale} // use 'bg' locale for date parser/formatter
+  >
     <CalendarPicker />
   </LocalizationProvider>
 </ThemeProvider>;
@@ -53,6 +57,7 @@ The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG as dataGridBgBG } from '@mui/x-data-grid';
 import { bgBG as coreBgBG } from '@mui/material/locale';
+import bgLocale from 'date-fns/locale/bg';
 
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -69,7 +74,7 @@ const theme = createTheme(
 );
 
 <ThemeProvider theme={theme}>
-  <LocalizationProvider dateAdapter={AdapterDateFns}>
+  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={bgLocale}>
     <CalendarPicker />
     <DataGrid />
   </LocalizationProvider>
@@ -81,9 +86,11 @@ If you want to pass language translations without using `createTheme` and `Theme
 ```jsx
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import bgLocale from 'date-fns/locale/bg';
 
 <LocalizationProvider
   dateAdapter={AdapterDateFns}
+  adapterLocale={bgLocale}
   localeText={bgBG.components.MuiLocalizationProvider.defaultProps.localeText}
 >
   <CalendarPicker />

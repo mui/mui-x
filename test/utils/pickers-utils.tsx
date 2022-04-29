@@ -60,7 +60,7 @@ export function createPickerRenderer({
 
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (
-      <LocalizationProvider locale={locale} dateAdapter={AdapterClassToUse}>
+      <LocalizationProvider adapterLocale={locale} dateAdapter={AdapterClassToUse}>
         {children}
       </LocalizationProvider>
     );
