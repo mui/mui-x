@@ -33,10 +33,14 @@ export interface MonthPickerProps<TDate> {
   maxDate: TDate;
   /** Callback fired on date change. */
   onChange: PickerOnChangeFn<TDate>;
+
   onMonthChange?: (date: TDate) => void | Promise<void>;
   /**
    * Disable specific months dynamically.
    * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth?: (month: TDate) => boolean;
   /** If `true` picker is readonly */
@@ -211,6 +215,9 @@ MonthPicker.propTypes = {
   /**
    * Disable specific months dynamically.
    * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**

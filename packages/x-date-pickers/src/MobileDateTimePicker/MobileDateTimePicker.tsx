@@ -412,6 +412,9 @@ MobileDateTimePicker.propTypes = {
   /**
    * Disable specific months dynamically.
    * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
@@ -425,6 +428,9 @@ MobileDateTimePicker.propTypes = {
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} year The year to check.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
