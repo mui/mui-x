@@ -268,60 +268,50 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
 
-      const shouldDisableDatePeriod = ({
-        start,
-        end,
-        value,
-      }: {
-        start: TDate;
-        end: TDate;
-        value: number;
-      }) => {
+      const containsValidTime = ({ start, end }: { start: TDate; end: TDate }) => {
         if (minTime && isAfter(minTime, end)) {
-          return true;
+          return false;
         }
 
         if (maxTime && isAfter(start, maxTime)) {
-          return true;
+          return false;
         }
 
+        return true;
+      };
+
+      const isValidValue = (value: number) => {
         if (shouldDisableTime) {
-          return shouldDisableTime(value, viewType);
+          return !shouldDisableTime(value, viewType);
         }
 
-        return false;
+        return true;
       };
 
       switch (viewType) {
         case 'hours': {
           const value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
           const dateWithNewHours = utils.setHours(date, value);
+          const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
+          const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
-          return shouldDisableDatePeriod({
-            value,
-            start: utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0),
-            end: utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59),
-          });
+          return !containsValidTime({ start, end }) || !isValidValue(value);
         }
 
         case 'minutes': {
           const dateWithNewMinutes = utils.setMinutes(date, rawValue);
+          const start = utils.setSeconds(dateWithNewMinutes, 0);
+          const end = utils.setSeconds(dateWithNewMinutes, 59);
 
-          return shouldDisableDatePeriod({
-            value: rawValue,
-            start: utils.setSeconds(dateWithNewMinutes, 0),
-            end: utils.setSeconds(dateWithNewMinutes, 59),
-          });
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
         }
 
         case 'seconds': {
           const dateWithNewSeconds = utils.setSeconds(date, rawValue);
+          const start = dateWithNewSeconds;
+          const end = dateWithNewSeconds;
 
-          return shouldDisableDatePeriod({
-            value: rawValue,
-            start: dateWithNewSeconds,
-            end: dateWithNewSeconds,
-          });
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
         }
 
         default:
