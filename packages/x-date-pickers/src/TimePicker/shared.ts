@@ -9,8 +9,8 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
-import { PickerStateValueManager } from '@mui/x-date-pickers/internals';
-import { parsePickerInputValue } from '@mui/x-date-pickers/internals/utils/date-utils';
+import { PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
 
 export interface BaseTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
