@@ -45,7 +45,7 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
 };
 
 /**
- * Format: ORDER=${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=2,SCOPE=${scope}`;
+ * Format: ORDER=${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=2,SCOPE=${scope},TERM=${term}`;
  */
 const decodeLicenseVersion2 = (license: string): MuiLicense => {
   const licenseInfo: MuiLicense = {
