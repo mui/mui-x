@@ -108,6 +108,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
   /**
+   * Set the aggregation model of the grid.
    */
   aggregationModel?: GridAggregationModel;
   /**
@@ -116,5 +117,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
+  /**
+   * Determines in a group of rows should be aggregated.
+   * @param {GridRowTreeNodeConfig | null} rowNode The current group (`null` being the top level group)
+   * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
+   */
   isGroupAggregated?: (rowNode: GridRowTreeNodeConfig | null) => boolean;
 }

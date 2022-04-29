@@ -31,15 +31,10 @@ export const useGridAggregationPreProcessors = (
 
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (props.disableAggregation) {
-        return columnsState;
-      }
-
       const lastAppliedAggregationRules =
         apiRef.current.unstable_getCache('aggregation')?.aggregationRulesOnLastColumnHydration ??
         {};
 
-      // We can't use `gridAggregationSanitizedModelSelector` here because the new columns are not in the state yet
       const aggregationRules = getAggregationRules({
         columnsLookup: columnsState.lookup,
         aggregationModel: gridAggregationModelSelector(apiRef),
@@ -49,17 +44,16 @@ export const useGridAggregationPreProcessors = (
       columnsState.all.forEach((field) => {
         const shouldHaveAggregation = !props.disableAggregation && !!aggregationRules[field];
         const haveAggregationColumn = !!lastAppliedAggregationRules[field];
+        let column = columnsState.lookup[field];
 
-        if (!shouldHaveAggregation && haveAggregationColumn) {
-          columnsState.lookup[field] = unwrapColumnFromAggregation({
-            column: columnsState.lookup[field],
+        if (haveAggregationColumn) {
+          column = unwrapColumnFromAggregation({
+            column,
           });
-        } else if (shouldHaveAggregation) {
-          const column = unwrapColumnFromAggregation({
-            column: columnsState.lookup[field],
-          });
+        }
 
-          columnsState.lookup[field] = wrapColumnWithAggregation({
+        if (shouldHaveAggregation) {
+          column = wrapColumnWithAggregation({
             column,
             aggregationRule: aggregationRules[field],
             apiRef,
@@ -67,6 +61,8 @@ export const useGridAggregationPreProcessors = (
             isGroupAggregated: props.isGroupAggregated,
           });
         }
+
+        columnsState.lookup[field] = column;
       });
 
       apiRef.current.unstable_setCache('aggregation', (prev) => ({

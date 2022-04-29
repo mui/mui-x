@@ -9,7 +9,7 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 
-const AGGREGATION_WRAPPABLE_METHODS = [
+const AGGREGATION_WRAPPABLE_PROPERTIES = [
   'valueGetter',
   'valueFormatter',
   'renderCell',
@@ -27,7 +27,7 @@ type AggregationWrappedVariable<M extends Function | object[]> = M extends Funct
   ? AggregationWrappedObject<M>[number][]
   : never;
 
-type AggregationWrappedColDefProperty<M extends typeof AGGREGATION_WRAPPABLE_METHODS[number]> =
+type AggregationWrappedColDefProperty<M extends typeof AGGREGATION_WRAPPABLE_PROPERTIES[number]> =
   AggregationWrappedVariable<NonNullable<GridColDef[M]>>;
 
 const getWrappedValueGetter = ({
@@ -154,6 +154,9 @@ const getWrappedFilterOperators = ({
   });
 };
 
+/**
+ * Add a wrapper around each wrappable property of the column to customize the behavior of the aggregation cells.
+ */
 export const wrapColumnWithAggregation = ({
   column,
   apiRef,
@@ -212,12 +215,15 @@ export const wrapColumnWithAggregation = ({
   };
 };
 
+/**
+ * Remove the aggregation wrappers around the wrappable properties of the column.
+ */
 export const unwrapColumnFromAggregation = ({ column }: { column: GridColDef }) => {
   let hasUnwrappedSomeProperty = false;
 
   const unwrappedColumn: GridColDef = { ...column };
 
-  AGGREGATION_WRAPPABLE_METHODS.forEach((propertyName) => {
+  AGGREGATION_WRAPPABLE_PROPERTIES.forEach((propertyName) => {
     const propertyValue = unwrappedColumn[propertyName];
     if (propertyValue == null) {
       return;
