@@ -78,6 +78,9 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
   return licenseInfo;
 };
 
+/**
+ * Decode the license based on its key version and return a version-agnostic `MuiLicense` object.
+ */
 const decodeLicense = (encodedLicense: string): MuiLicense | null => {
   const license = base64Decode(encodedLicense);
 
