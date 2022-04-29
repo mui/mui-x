@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   DataGridPro,
   useGridApiContext,
-  GridEvents,
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
 } from '@mui/x-data-grid-pro';
@@ -32,7 +31,7 @@ const CustomGridTreeDataGroupingCell = (props) => {
       event.stopPropagation();
     }
     if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
     }
   };
 

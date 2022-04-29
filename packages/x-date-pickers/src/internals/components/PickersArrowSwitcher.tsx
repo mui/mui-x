@@ -4,26 +4,30 @@ import { useTheme, styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeft, ArrowRight } from './icons';
 
+export interface PickersArrowSwitcherSlotsComponent {
+  LeftArrowButton: React.ElementType;
+  LeftArrowIcon: React.ElementType;
+  RightArrowButton: React.ElementType;
+  RightArrowIcon: React.ElementType;
+}
+
+export interface PickersArrowSwitcherSlotsComponentsProps {
+  leftArrowButton: Record<string, any>;
+  rightArrowButton: Record<string, any>;
+}
+
 export interface ExportedArrowSwitcherProps {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: {
-    LeftArrowButton?: React.ElementType;
-    LeftArrowIcon?: React.ElementType;
-    RightArrowButton?: React.ElementType;
-    RightArrowIcon?: React.ElementType;
-  };
+  components?: Partial<PickersArrowSwitcherSlotsComponent>;
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: {
-    leftArrowButton?: Record<string, any>;
-    rightArrowButton?: Record<string, any>;
-  };
+  componentsProps?: Partial<PickersArrowSwitcherSlotsComponentsProps>;
   /**
    * Left arrow icon aria-label text.
    */

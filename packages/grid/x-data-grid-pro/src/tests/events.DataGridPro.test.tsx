@@ -11,7 +11,6 @@ import {
   GridCellParams,
   GridRowsProp,
   GridColumns,
-  GridEvents,
   gridClasses,
   GridActionsCellItem,
   GridApi,
@@ -330,7 +329,7 @@ describe('<DataGridPro /> - Events Params', () => {
   it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {
     const handleRowsScrollEnd = spy();
     render(<TestEvents onRowsScrollEnd={handleRowsScrollEnd} />);
-    apiRef.current.publishEvent(GridEvents.rowsScroll, { left: 0, top: 3 * 52 });
+    apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 });
     expect(handleRowsScrollEnd.callCount).to.equal(1);
   });
 
@@ -379,7 +378,7 @@ describe('<DataGridPro /> - Events Params', () => {
     expect(handleRowsScrollEnd.callCount).to.equal(2);
   });
 
-  it('should publish GridEvents.unmount when unmounting the Grid', () => {
+  it('should publish "unmount" event when unmounting the Grid', () => {
     const onUnmount = spy();
 
     const { unmount } = render(<TestEvents />);

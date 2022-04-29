@@ -211,7 +211,7 @@ jobs:
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Tests TypeScript definitions
-          command: yarn typescript
+          command: yarn typescript:ci
   test_e2e:
     <<: *defaults
     docker:

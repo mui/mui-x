@@ -6,7 +6,7 @@ import {
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
-import { DataGridProProcessedProps } from '@mui/x-data-grid-pro/models/dataGridProProps';
+import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };

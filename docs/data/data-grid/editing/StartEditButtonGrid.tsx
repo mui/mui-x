@@ -8,7 +8,6 @@ import {
   GridCellParams,
   GridEventListener,
   MuiEvent,
-  GridEvents,
   useGridApiContext,
 } from '@mui/x-data-grid';
 import {
@@ -81,10 +80,7 @@ export default function StartEditButtonGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleCellEditStop: GridEventListener<GridEvents.cellEditStop> = (
-    params,
-    event,
-  ) => {
+  const handleCellEditStop: GridEventListener<'cellEditStop'> = (params, event) => {
     event.defaultMuiPrevented = true;
   };
 

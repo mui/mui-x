@@ -8,7 +8,6 @@ import {
   GridColumns,
   useGridApiContext,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
-  GridEvents,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -36,7 +35,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
 
   React.useEffect(() => {
     return apiRef.current.subscribeEvent(
-      GridEvents.viewportInnerSizeChange,
+      'viewportInnerSizeChange',
       handleViewportInnerSizeChange,
     );
   }, [apiRef, handleViewportInnerSizeChange]);

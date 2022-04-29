@@ -28,9 +28,9 @@ export interface ExportedTimeValidationProps<TDate> {
   disableIgnoringDatePartForTimeValidation?: boolean;
 }
 
-export interface TimeValidationProps<TDate>
+export interface TimeValidationProps<TInputDate, TDate>
   extends ExportedTimeValidationProps<TDate>,
-    ValidationProps<TimeValidationError, TDate> {}
+    ValidationProps<TimeValidationError, TInputDate | null> {}
 
 export type TimeValidationError =
   | 'invalidDate'
@@ -41,7 +41,7 @@ export type TimeValidationError =
   | 'shouldDisableTime-seconds'
   | null;
 
-export const validateTime: Validator<any, TimeValidationProps<any>> = (
+export const validateTime: Validator<any, TimeValidationProps<any, any>> = (
   utils,
   value,
   { minTime, maxTime, shouldDisableTime, disableIgnoringDatePartForTimeValidation },
@@ -82,6 +82,6 @@ export const validateTime: Validator<any, TimeValidationProps<any>> = (
 
 const isSameTimeError = (a: unknown, b: unknown) => a === b;
 
-export const useTimeValidation = <TDate>(
-  props: TimeValidationProps<TDate> & ValidationProps<TimeValidationError, TDate>,
+export const useTimeValidation = <TInputDate, TDate>(
+  props: TimeValidationProps<TInputDate, TDate>,
 ): TimeValidationError => useValidation(props, validateTime, isSameTimeError);

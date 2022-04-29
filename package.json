@@ -1,5 +1,5 @@
 {
-  "version": "5.9.0",
+  "version": "5.10.0",
   "private": true,
   "scripts": {
     "start": "yarn docs:dev",
@@ -52,6 +52,7 @@
     "test:performance:server": "serve test/performance -p 5001",
     "test:argos": "node ./scripts/pushArgos.js",
     "typescript": "lerna run --no-bail --parallel typescript",
+    "typescript:ci": "lerna run --concurrency 7 --no-bail --no-sort typescript",
     "build:codesandbox": "yarn release:build",
     "release:changelog": "node scripts/releaseChangelog",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
