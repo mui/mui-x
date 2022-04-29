@@ -41,10 +41,10 @@
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@date-io/date-fns": "^2.11.0",
-    "@date-io/dayjs": "^2.11.0",
-    "@date-io/luxon": "^2.11.1",
-    "@date-io/moment": "^2.11.0",
+    "@date-io/date-fns": "^2.13.1",
+    "@date-io/dayjs": "^2.13.1",
+    "@date-io/luxon": "^2.13.1",
+    "@date-io/moment": "^2.13.1",
     "@mui/utils": "^5.6.1",
     "@mui/x-date-pickers": "5.0.0-alpha.2",
     "@mui/x-license-pro": "5.10.0",
