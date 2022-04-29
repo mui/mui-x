@@ -3,7 +3,7 @@
   disableSelectionOnClick
   initialState={{
     rowGrouping: {
-      model: INITIAL_GROUPING_COLUMN_MODEL,
+      model: ['company', 'director'],
     },
   }}
 />

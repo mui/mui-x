@@ -6,10 +6,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const isGroupExpandedByDefault = (node) =>
-  node.groupingField === 'company' && node.groupingKey === '20th Century Fox';
-
-export default function RowGroupingIsGroupExpandedByDefault() {
+export default function RowGroupingUseKeepGroupedColumnsHidden() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
@@ -17,7 +14,7 @@ export default function RowGroupingIsGroupExpandedByDefault() {
     apiRef,
     initialState: {
       rowGrouping: {
-        model: ['company', 'director'],
+        model: ['company'],
       },
     },
   });
@@ -27,8 +24,7 @@ export default function RowGroupingIsGroupExpandedByDefault() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
-        isGroupExpandedByDefault={isGroupExpandedByDefault}
-        disableSelectionOnClick
+        rowGroupingColumnMode="single"
         initialState={initialState}
       />
     </div>

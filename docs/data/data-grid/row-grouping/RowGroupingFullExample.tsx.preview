@@ -1,9 +1,10 @@
 <DataGridPremium
   {...data}
   apiRef={apiRef}
+  loading={loading}
   disableSelectionOnClick
   initialState={initialState}
   groupingColDef={{
-    hideDescendantCount: true,
+    leafField: 'traderEmail',
   }}
 />
