@@ -6,11 +6,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import {
   wrapPickerMount,
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
+  AdapterClassToUse,
 } from '../../../../test/utils/pickers-utils';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
@@ -343,29 +345,32 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
-  // TODO: remove once we use describeConformance.
-  it("respect theme's defaultProps", () => {
+  it('respect localeText', () => {
     const theme = createTheme({
       components: {
-        MuiDesktopDateRangePicker: {
-          defaultProps: { startText: 'Início', endText: 'Fim' },
+        MuiLocalizationProvider: {
+          defaultProps: {
+            localeText: { start: 'Início', end: 'Fim' },
+          },
         },
       } as any,
     });
 
     render(
       <ThemeProvider theme={theme}>
-        <DesktopDateRangePicker
-          renderInput={(startProps, endProps) => (
-            <React.Fragment>
-              <TextField {...startProps} variant="standard" />
-              <TextField {...endProps} variant="standard" />
-            </React.Fragment>
-          )}
-          onChange={() => {}}
-          TransitionComponent={FakeTransitionComponent}
-          value={[null, null]}
-        />
+        <LocalizationProvider dateAdapter={AdapterClassToUse}>
+          <DesktopDateRangePicker
+            renderInput={(startProps, endProps) => (
+              <React.Fragment>
+                <TextField {...startProps} variant="standard" />
+                <TextField {...endProps} variant="standard" />
+              </React.Fragment>
+            )}
+            onChange={() => {}}
+            TransitionComponent={FakeTransitionComponent}
+            value={[null, null]}
+          />
+        </LocalizationProvider>
       </ThemeProvider>,
     );
 
