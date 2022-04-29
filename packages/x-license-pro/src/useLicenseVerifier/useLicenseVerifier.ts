@@ -32,7 +32,12 @@ export function useLicenseVerifier(
       ? ['premium']
       : ['pro', 'premium'];
 
-    const licenseStatus = verifyLicense(releaseInfo, licenseKey, acceptedScopes);
+    const licenseStatus = verifyLicense({
+      releaseInfo,
+      licenseKey,
+      acceptedScopes,
+      isProduction: process.env.NODE_ENV === 'production',
+    });
 
     sharedLicenseStatuses[packageName] = { key: licenseStatus, status: licenseStatus };
 

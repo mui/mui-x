@@ -4,11 +4,15 @@ import { LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope } from '../utils/licenseScope';
 import { LicenseTerm } from '../utils/licenseTerm';
 
-export function generateReleaseInfo() {
+const getDefaultReleaseDate = () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  return base64Encode(today.getTime().toString());
+  return today;
+};
+
+export function generateReleaseInfo(releaseDate = getDefaultReleaseDate()) {
+  return base64Encode(releaseDate.getTime().toString());
 }
 
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
@@ -88,21 +92,27 @@ const decodeLicense = (encodedLicense: string): MuiLicense | null => {
   return null;
 };
 
-export function verifyLicense(
-  releaseInfo: string,
-  encodedLicense: string | undefined,
-  acceptedScopes: LicenseScope[],
-) {
+export function verifyLicense({
+  releaseInfo,
+  licenseKey,
+  acceptedScopes,
+  isProduction,
+}: {
+  releaseInfo: string;
+  licenseKey: string | undefined;
+  acceptedScopes: LicenseScope[];
+  isProduction: boolean;
+}) {
   if (!releaseInfo) {
     throw new Error('MUI: The release information is missing. Not able to validate license.');
   }
 
-  if (!encodedLicense) {
+  if (!licenseKey) {
     return LicenseStatus.NotFound;
   }
 
-  const hash = encodedLicense.substr(0, 32);
-  const encoded = encodedLicense.substr(32);
+  const hash = licenseKey.substr(0, 32);
+  const encoded = licenseKey.substr(32);
 
   if (hash !== md5(encoded)) {
     return LicenseStatus.Invalid;
@@ -125,7 +135,7 @@ export function verifyLicense(
     return LicenseStatus.Invalid;
   }
 
-  if (license.term === 'perpetual' || process.env.NODE_ENV === 'production') {
+  if (license.term === 'perpetual' || isProduction) {
     const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
     if (Number.isNaN(pkgTimestamp)) {
       throw new Error('MUI: The release information is invalid. Not able to validate license.');
