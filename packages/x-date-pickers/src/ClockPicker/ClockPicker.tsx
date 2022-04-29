@@ -8,7 +8,7 @@ import { Clock } from './Clock';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
-import { convertValueToMeridiem, createIsAfter } from '../internals/utils/time-utils';
+import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { ExportedTimeValidationProps } from '../internals/hooks/validation/useTimeValidation';
@@ -266,7 +266,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return false;
       }
 
-      const isAfter = createIsAfter(disableIgnoringDatePartForTimeValidation, utils);
+      const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
 
       const shouldDisableDatePeriod = ({
         start,

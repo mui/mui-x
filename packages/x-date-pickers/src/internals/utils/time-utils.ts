@@ -35,7 +35,7 @@ export const getSecondsInDay = <TDate>(date: TDate, utils: MuiPickersAdapter<TDa
   return utils.getHours(date) * 3600 + utils.getMinutes(date) * 60 + utils.getSeconds(date);
 };
 
-export const createIsAfter =
+export const createIsAfterIgnoreDatePart =
   <TDate>(
     disableIgnoringDatePartForTimeValidation: boolean = false,
     utils: MuiPickersAdapter<TDate>,
