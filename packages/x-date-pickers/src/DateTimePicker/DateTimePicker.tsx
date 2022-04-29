@@ -424,6 +424,11 @@ DateTimePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
+   * Disable specific months dynamically.
+   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   */
+  shouldDisableMonth: PropTypes.func,
+  /**
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
@@ -434,9 +439,6 @@ DateTimePicker.propTypes = {
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
-   * @template TDate
-   * @param {TDate} year The year to test.
-   * @returns {boolean} Return `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
