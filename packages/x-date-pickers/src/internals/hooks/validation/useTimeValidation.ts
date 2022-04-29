@@ -1,4 +1,4 @@
-import { createIsAfterIgnoreDatePart } from '../../utils/time-utils';
+import { createIsAfter } from '../../utils/time-utils';
 import { useValidation, ValidationProps, Validator } from './useValidation';
 import { ClockPickerView } from '../../models';
 
@@ -47,10 +47,7 @@ export const validateTime: Validator<any, TimeValidationProps<any>> = (
   { minTime, maxTime, shouldDisableTime, disableIgnoringDatePartForTimeValidation },
 ): TimeValidationError => {
   const date = utils.date(value);
-  const isAfterComparingFn = createIsAfterIgnoreDatePart(
-    Boolean(disableIgnoringDatePartForTimeValidation),
-    utils,
-  );
+  const isAfterComparingFn = createIsAfter(disableIgnoringDatePartForTimeValidation, utils);
 
   if (value === null) {
     return null;

@@ -8,7 +8,7 @@ import { Clock } from './Clock';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
-import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
+import { convertValueToMeridiem, createIsAfter } from '../internals/utils/time-utils';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { ExportedTimeValidationProps } from '../internals/hooks/validation/useTimeValidation';
@@ -221,7 +221,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     components,
     componentsProps,
     date,
-    disableIgnoringDatePartForTimeValidation = false,
+    disableIgnoringDatePartForTimeValidation,
     getClockLabelText = defaultGetClockLabelText,
     getHoursClockNumberText = defaultGetHoursClockNumberText,
     getMinutesClockNumberText = defaultGetMinutesClockNumberText,
@@ -266,57 +266,67 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return false;
       }
 
-      const isAfterComparingFn = createIsAfterIgnoreDatePart(
-        disableIgnoringDatePartForTimeValidation,
-        utils,
-      );
+      const isAfter = createIsAfter(disableIgnoringDatePartForTimeValidation, utils);
 
-      let start: TDate;
-      let end: TDate;
-      let value: number;
+      const shouldDisableDatePeriod = ({
+        start,
+        end,
+        value,
+      }: {
+        start: TDate;
+        end: TDate;
+        value: number;
+      }) => {
+        if (minTime && isAfter(minTime, end)) {
+          return true;
+        }
+
+        if (maxTime && isAfter(start, maxTime)) {
+          return true;
+        }
+
+        if (shouldDisableTime) {
+          return shouldDisableTime(value, viewType);
+        }
+
+        return false;
+      };
 
       switch (viewType) {
         case 'hours': {
-          value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
+          const value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
           const dateWithNewHours = utils.setHours(date, value);
-          start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
-          end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
-          break;
+
+          return shouldDisableDatePeriod({
+            value,
+            start: utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0),
+            end: utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59),
+          });
         }
 
         case 'minutes': {
-          value = rawValue;
           const dateWithNewMinutes = utils.setMinutes(date, rawValue);
-          start = utils.setSeconds(dateWithNewMinutes, 0);
-          end = utils.setSeconds(dateWithNewMinutes, 59);
-          break;
+
+          return shouldDisableDatePeriod({
+            value: rawValue,
+            start: utils.setSeconds(dateWithNewMinutes, 0),
+            end: utils.setSeconds(dateWithNewMinutes, 59),
+          });
         }
 
         case 'seconds': {
-          value = rawValue;
           const dateWithNewSeconds = utils.setSeconds(date, rawValue);
-          start = dateWithNewSeconds;
-          end = dateWithNewSeconds;
-          break;
+
+          return shouldDisableDatePeriod({
+            value: rawValue,
+            start: dateWithNewSeconds,
+            end: dateWithNewSeconds,
+          });
         }
 
         default:
           throw new Error('not supported');
       }
-
-      if (minTime && isAfterComparingFn(minTime, end)) {
-        return true;
-      }
-
-      if (maxTime && isAfterComparingFn(start, maxTime)) {
-        return true;
-      }
-
-      if (shouldDisableTime) {
-        return shouldDisableTime(value, viewType);
-      }
-
-      return false;
     },
     [
       ampm,
