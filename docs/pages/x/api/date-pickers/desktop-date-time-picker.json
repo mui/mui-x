@@ -11,7 +11,12 @@
     "ampmInClock": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "clearable": { "type": { "name": "bool" } },
-    "clearText": { "type": { "name": "node" }, "default": "'Clear'", "deprecated": true },
+    "clearText": {
+      "type": { "name": "node" },
+      "default": "'Clear'",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "dateRangeIcon": { "type": { "name": "node" } },

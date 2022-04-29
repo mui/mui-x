@@ -12,7 +12,7 @@
     "localeText": {
       "type": {
         "name": "shape",
-        "description": "{ cancel?: string, clear?: string, end?: string, nextMonth?: string, ok?: string, openNextView?: string, openPreviousView?: string, previousMonth?: string, start?: string, today?: string }"
+        "description": "{ cancelButtonLabel?: string, clearButtonLabel?: string, end?: string, nextMonth?: string, okButtonLabel?: string, openNextView?: string, openPreviousView?: string, previousMonth?: string, start?: string, todayButtonLabel?: string }"
       }
     }
   },

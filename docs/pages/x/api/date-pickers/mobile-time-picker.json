@@ -8,10 +8,20 @@
     },
     "ampm": { "type": { "name": "bool" } },
     "ampmInClock": { "type": { "name": "bool" } },
-    "cancelText": { "type": { "name": "node" }, "default": "'Cancel'", "deprecated": true },
+    "cancelText": {
+      "type": { "name": "node" },
+      "default": "'Cancel'",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "className": { "type": { "name": "string" } },
     "clearable": { "type": { "name": "bool" } },
-    "clearText": { "type": { "name": "node" }, "default": "'Clear'", "deprecated": true },
+    "clearText": {
+      "type": { "name": "node" },
+      "default": "'Clear'",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "components": { "type": { "name": "object" } },
     "DialogProps": { "type": { "name": "object" } },
     "disableCloseOnSelect": {
@@ -39,7 +49,12 @@
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "okText": { "type": { "name": "node" }, "default": "'OK'", "deprecated": true },
+    "okText": {
+      "type": { "name": "node" },
+      "default": "'OK'",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "onAccept": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
@@ -61,7 +76,12 @@
     "shouldDisableTime": { "type": { "name": "func" } },
     "showTodayButton": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "todayText": { "type": { "name": "node" }, "default": "'Today'", "deprecated": true },
+    "todayText": {
+      "type": { "name": "node" },
+      "default": "'Today'",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
