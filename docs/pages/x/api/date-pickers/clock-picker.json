@@ -8,7 +8,7 @@
     "classes": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
-    "disabled": { "type": { "name": "any" }, "default": "false" },
+    "disabled": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "getClockLabelText": {
       "type": { "name": "func" },
@@ -38,7 +38,7 @@
       },
       "default": "'hours'"
     },
-    "readOnly": { "type": { "name": "any" }, "default": "false" },
+    "readOnly": { "type": { "name": "bool" } },
     "rightArrowButtonText": { "type": { "name": "string" }, "default": "'open next view'" },
     "shouldDisableTime": { "type": { "name": "func" } },
     "view": {
