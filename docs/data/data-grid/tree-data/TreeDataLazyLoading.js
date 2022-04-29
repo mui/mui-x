@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   DataGridPro,
   getDataGridUtilityClass,
-  GridEvents,
   useGridApiContext,
   useGridApiRef,
   useGridRootProps,
@@ -178,7 +177,7 @@ const GroupingCellWithLazyLoading = (props) => {
       event.stopPropagation();
     }
     if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
     }
   };
 
@@ -344,12 +343,8 @@ export default function TreeDataLazyLoading() {
       }
     };
 
-    apiRef.current.subscribeEvent(
-      GridEvents.rowExpansionChange,
-      handleRowExpansionChange,
-    );
-
-    apiRef.current.subscribeEvent(GridEvents.cellKeyDown, handleCellKeyDown, {
+    apiRef.current.subscribeEvent('rowExpansionChange', handleRowExpansionChange);
+    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
       isFirst: true,
     });
   }, [apiRef]);

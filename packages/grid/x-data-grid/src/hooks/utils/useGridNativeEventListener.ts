@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridEvents } from '../../models/events';
 import { isFunction } from '../../utils/utils';
 import { useGridLogger } from './useGridLogger';
 import { GridApiCommon } from '../../models';
@@ -43,7 +42,7 @@ export const useGridNativeEventListener = <Api extends GridApiCommon, E extends 
         boundElem.removeEventListener(eventName, wrapHandler, options);
       };
 
-      apiRef.current.subscribeEvent(GridEvents.unmount, unsubscribe);
+      apiRef.current.subscribeEvent('unmount', unsubscribe);
     }
   }, [ref, wrapHandler, eventName, added, logger, options, apiRef]);
 };

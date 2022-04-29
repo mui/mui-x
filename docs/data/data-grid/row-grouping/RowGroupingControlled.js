@@ -2,14 +2,13 @@ import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
-
 export default function RowGroupingControlled() {
   const data = useMovieData();
 
-  const [rowGroupingModel, setRowGroupingModel] = React.useState(
-    INITIAL_GROUPING_COLUMN_MODEL,
-  );
+  const [rowGroupingModel, setRowGroupingModel] = React.useState([
+    'company',
+    'director',
+  ]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>

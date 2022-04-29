@@ -8,7 +8,6 @@ import {
 } from '../CalendarPicker/CalendarPicker';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
-import { ParseableDate } from '../internals/models/parseableDate';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import {
@@ -21,12 +20,12 @@ export interface DateTimePickerSlotsComponent
   extends CalendarPickerSlotsComponent,
     DateInputSlotsComponent {}
 
-export interface BaseDateTimePickerProps<TDate>
+export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
     ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<ParseableDate<TDate>, TDate | null>,
-    ValidationProps<DateTimeValidationError, ParseableDate<TDate>>,
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
+    BasePickerProps<TInputDate | null, TDate, TDate | null>,
+    ValidationProps<DateTimeValidationError, TInputDate | null>,
+    ExportedDateInputProps<TInputDate, TDate> {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
@@ -66,7 +65,7 @@ export interface BaseDateTimePickerProps<TDate>
    * Component that will replace default toolbar renderer.
    * @default DateTimePickerToolbar
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate | null>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate>>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date & time'
@@ -85,12 +84,14 @@ export interface BaseDateTimePickerProps<TDate>
 type DefaultizedProps<Props> = Props & { inputFormat: string };
 
 export function useDateTimePickerDefaultizedProps<
+  TInputDate,
   TDate,
-  Props extends BaseDateTimePickerProps<TDate>,
+  Props extends BaseDateTimePickerProps<TInputDate, TDate>,
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> & Required<Pick<BaseDateTimePickerProps<TDate>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props> &
+  Required<Pick<BaseDateTimePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({

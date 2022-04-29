@@ -32,18 +32,18 @@ const EventRow = ({ event }) => {
     }
 
     return `
-const onEvent: GridEventListener<GridEvents.${event.name}> = (
+const onEvent: GridEventListener<'${event.name}'> = (
   ${args.join('\n  ')}
 ) => {...}    
   
 // Imperative subscription    
 apiRef.current.subscribeEvent(
-  GridEvents.${event.name},
+  '${event.name}',
   onEvent,
 );
 
 // Hook subscription (only available inside the scope of the grid)
-useGridApiEventHandler(GridEvents.${event.name}, onEvent);    
+useGridApiEventHandler('${event.name}', onEvent);    
 `;
   }, [event]);
 

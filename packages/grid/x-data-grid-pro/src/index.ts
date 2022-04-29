@@ -14,6 +14,7 @@ export * from './DataGridPro';
 export * from './hooks';
 export * from './models';
 export * from './components';
+export * from './utils';
 
 export type { DataGridProProps, GridExperimentalProFeatures } from './models/dataGridProProps';
 
