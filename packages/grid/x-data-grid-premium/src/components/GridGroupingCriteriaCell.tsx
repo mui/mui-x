@@ -6,7 +6,6 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  GridEvents,
   GridRenderCellParams,
 } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -51,7 +50,7 @@ export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) =
     if (event.key === ' ') {
       event.stopPropagation();
     }
-    apiRef.current.publishEvent(GridEvents.cellKeyDown, props, event);
+    apiRef.current.publishEvent('cellKeyDown', props, event);
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
