@@ -39,7 +39,6 @@
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: CalendarPickerView) =&gt; void</code><br><em>view:</em> The new view.",
     "open": "Control the popup or dialog open state.",
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
-    "orientation": "Force rendering in particular orientation.",
     "readOnly": "Make picker read only.",
     "reduceAnimations": "Disable heavy animations.",
     "renderDay": "Custom renderer for <code>&lt;DateRangePicker /&gt;</code> days. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate, dateRangePickerDayProps: DateRangePickerDayProps&lt;TDate&gt;) =&gt; JSX.Element</code><br><em>day:</em> The day to render.<br><em>dateRangePickerDayProps:</em> The props of the day to render.<br> <em>returns</em> (JSX.Element): The element representing the day.",

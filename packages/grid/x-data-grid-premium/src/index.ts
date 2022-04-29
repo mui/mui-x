@@ -18,6 +18,7 @@ export * from '@mui/x-data-grid-pro/utils';
 export * from './DataGridPremium';
 export * from './hooks';
 export * from './models';
+export * from './components';
 
 export type {
   DataGridPremiumProps,

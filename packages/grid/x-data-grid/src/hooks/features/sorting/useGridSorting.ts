@@ -283,7 +283,7 @@ export const useGridSorting = (
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     ({ colDef }, event) => {
-      // CTRL + Enter opens the column menu
+      // Ctrl + Enter opens the column menu
       if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
         sortColumn(colDef, undefined, event.shiftKey);
       }

@@ -4,7 +4,7 @@ import { GridCellParams } from '../../../../models/params/gridCellParams';
 import { GridStateColDef } from '../../../../models/colDef/gridColDef';
 import { buildWarning } from '../../../../utils/warning';
 
-const serialiseCellValue = (value: any, delimiterCharacter: string) => {
+const serializeCellValue = (value: any, delimiterCharacter: string) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
 
@@ -24,7 +24,7 @@ const objectFormattedValueWarning = buildWarning([
   'You can provide a `valueFormatter` with a string representation to be used.',
 ]);
 
-const serialiseRow = (
+const serializeRow = (
   id: GridRowId,
   columns: GridStateColDef[],
   getCellParams: (id: GridRowId, field: string) => GridCellParams,
@@ -37,7 +37,7 @@ const serialiseRow = (
         objectFormattedValueWarning();
       }
     }
-    return serialiseCellValue(cellParams.formattedValue, delimiterCharacter);
+    return serializeCellValue(cellParams.formattedValue, delimiterCharacter);
   });
 
 interface BuildCSVOptions {
@@ -54,7 +54,7 @@ export function buildCSV(options: BuildCSVOptions): string {
   const CSVBody = rowIds
     .reduce<string>(
       (acc, id) =>
-        `${acc}${serialiseRow(id, columns, getCellParams, delimiterCharacter).join(
+        `${acc}${serializeRow(id, columns, getCellParams, delimiterCharacter).join(
           delimiterCharacter,
         )}\r\n`,
       '',
@@ -67,7 +67,7 @@ export function buildCSV(options: BuildCSVOptions): string {
 
   const CSVHead = `${columns
     .filter((column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field)
-    .map((column) => serialiseCellValue(column.headerName || column.field, delimiterCharacter))
+    .map((column) => serializeCellValue(column.headerName || column.field, delimiterCharacter))
     .join(delimiterCharacter)}\r\n`;
 
   return `${CSVHead}${CSVBody}`.trim();

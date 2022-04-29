@@ -308,10 +308,6 @@ DesktopDateRangePicker.propTypes = {
    */
   OpenPickerButtonProps: PropTypes.object,
   /**
-   * Force rendering in particular orientation.
-   */
-  orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  /**
    * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
   PaperProps: PropTypes.object,

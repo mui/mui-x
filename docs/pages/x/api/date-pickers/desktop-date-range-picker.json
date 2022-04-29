@@ -50,9 +50,6 @@
     "onViewChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
-    "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
-    },
     "PaperProps": { "type": { "name": "object" } },
     "PopperProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
