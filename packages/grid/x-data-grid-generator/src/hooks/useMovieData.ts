@@ -211,7 +211,6 @@ const ROWS: GridRowModel<Movie>[] = [
     director: 'David Yates',
     company: 'Warner Bros. Pictures',
     year: 2011,
-    cinematicUniverse: 'Harry Potter',
     imdbRating: 8.2,
     composer: {
       name: 'Alexandre Desplat',
