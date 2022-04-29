@@ -8,17 +8,16 @@ title: Pickers - Localization
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
-## Localization
 
 Localization can impact pickers components rendering in two distincts ways: The date format, and the components attributes such as `aria-label`.
 
-### Date-engine locale
+## Date-engine locale
 
 Use `LocalizationProvider` to change the date-engine locale that is used to render pickers. Here is an example of changing the locale for the `date-fns` adapter:
 
 {{"demo": "LocalizedDatePicker.js"}}
 
-### Translation keys
+## Translation keys
 
 As the rest of MUI components, you can modify text and translations.
 You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
@@ -92,7 +91,7 @@ import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers'
 </LocalizationProvider>;
 ```
 
-### Supported locales
+## Supported locales
 
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
