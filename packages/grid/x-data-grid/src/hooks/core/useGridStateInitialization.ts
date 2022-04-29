@@ -4,7 +4,6 @@ import { GridApiCommon } from '../../models/api/gridApiCommon';
 import { GridStateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
 import { GridSignature } from '../utils/useGridApiEventHandler';
-import { GridEvents } from '../../models/events';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
@@ -86,7 +85,7 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
         apiRef.current.state = newState;
 
         if (apiRef.current.publishEvent) {
-          apiRef.current.publishEvent(GridEvents.stateChange, newState);
+          apiRef.current.publishEvent('stateChange', newState);
         }
       }
 

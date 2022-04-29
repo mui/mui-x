@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  GridEvents,
-  GridApi,
-  DataGridProProps,
-  useGridApiRef,
-  DataGridPro,
-} from '@mui/x-data-grid-pro';
+import { GridApi, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
@@ -338,7 +332,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireClickEvent(cell);
     expect(cell).to.have.text('Adidas');
     const params = apiRef.current.getCellParams(1, 'brand');
-    apiRef.current.publishEvent(GridEvents.cellKeyDown, params, {
+    apiRef.current.publishEvent('cellKeyDown', params, {
       key: 'a',
       code: 1,
       target: cell,

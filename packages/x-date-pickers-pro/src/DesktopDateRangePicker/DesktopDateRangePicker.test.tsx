@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { act, describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
+import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import {
   wrapPickerMount,
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
+  withPickerControls,
+  openPicker,
 } from '../../../../test/utils/pickers-utils';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
@@ -19,6 +20,16 @@ const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextField
     <TextField {...endProps} />
   </React.Fragment>
 );
+
+const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)({
+  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  renderInput: (startProps, endProps) => (
+    <React.Fragment>
+      <TextField {...startProps} />
+      <TextField {...endProps} />
+    </React.Fragment>
+  ),
+});
 
 describe('<DesktopDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -47,103 +58,6 @@ describe('<DesktopDateRangePicker />', () => {
       ],
     }),
   );
-
-  it('closes on clickaway', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateRangePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={[null, null]}
-        open
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(document.body);
-
-    expect(handleClose.callCount).to.equal(1);
-  });
-
-  it('does not close on clickaway when it is not open', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateRangePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={[null, null]}
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(document.body);
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
-  it('does not close on click inside', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateRangePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={[null, null]}
-        open
-        onClose={handleClose}
-      />,
-    );
-
-    userEvent.mousePress(screen.getAllByLabelText('Previous month')[0]);
-
-    expect(handleClose.callCount).to.equal(0);
-  });
-
-  it('closes on Escape press', () => {
-    const handleClose = spy();
-    render(
-      <DesktopDateRangePicker
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={[null, null]}
-        open
-        onClose={handleClose}
-      />,
-    );
-    act(() => {
-      (document.activeElement as HTMLElement).blur();
-    });
-
-    fireEvent.keyDown(document.body, { key: 'Escape' });
-
-    expect(handleClose.callCount).to.equal(1);
-  });
-
-  it('allows to select date range end-to-end', () => {
-    function RangePickerTest() {
-      const [range, changeRange] = React.useState<DateRange<Date>>([
-        adapterToUse.date('2019-01-01T00:00:00.000'),
-        adapterToUse.date('2019-01-01T00:00:00.000'),
-      ]);
-
-      return (
-        <DesktopDateRangePicker
-          open
-          reduceAnimations
-          renderInput={defaultRangeRenderInput}
-          onChange={(date) => changeRange(date)}
-          value={range}
-          TransitionComponent={FakeTransitionComponent}
-        />
-      );
-    }
-
-    render(<RangePickerTest />);
-
-    fireEvent.click(screen.getByLabelText('Jan 1, 2019'));
-    fireEvent.click(screen.getByLabelText('Jan 24, 2019'));
-
-    expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(24);
-  });
 
   it('allows a single day range', () => {
     render(
@@ -177,7 +91,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
   });
 
-  it('selects the range from the next month', function test() {
+  it('should select the range from the next month', function test() {
     const onChangeMock = spy();
     render(
       <DesktopDateRangePicker
@@ -197,7 +111,7 @@ describe('<DesktopDateRangePicker />', () => {
     fireEvent.click(visibleButton);
     fireEvent.click(screen.getByLabelText('Mar 19, 2019'));
 
-    expect(onChangeMock.callCount).to.equal(2);
+    expect(onChangeMock.callCount).to.equal(1);
     const [changedRange] = onChangeMock.lastCall.args;
     expect(changedRange[0]).to.toEqualDateTime(adapterToUse.date('2019-01-01T00:00:00.000'));
     expect(changedRange[1]).to.toEqualDateTime(adapterToUse.date('2019-03-19T00:00:00.000'));
@@ -343,36 +257,6 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
-  // TODO: remove once we use describeConformance.
-  it("respect theme's defaultProps", () => {
-    const theme = createTheme({
-      components: {
-        MuiDesktopDateRangePicker: {
-          defaultProps: { startText: 'Início', endText: 'Fim' },
-        },
-      } as any,
-    });
-
-    render(
-      <ThemeProvider theme={theme}>
-        <DesktopDateRangePicker
-          renderInput={(startProps, endProps) => (
-            <React.Fragment>
-              <TextField {...startProps} variant="standard" />
-              <TextField {...endProps} variant="standard" />
-            </React.Fragment>
-          )}
-          onChange={() => {}}
-          TransitionComponent={FakeTransitionComponent}
-          value={[null, null]}
-        />
-      </ThemeProvider>,
-    );
-
-    expect(screen.queryByText('Início')).not.to.equal(null);
-    expect(screen.queryByText('Fim')).not.to.equal(null);
-  });
-
   it('prop – `renderDay` should be called and render days', async () => {
     render(
       <DesktopDateRangePicker
@@ -468,5 +352,326 @@ describe('<DesktopDateRangePicker />', () => {
       expect(handleClick.callCount).to.equal(1);
       expect(handleTouchStart.callCount).to.equal(1);
     });
+  });
+
+  describe('picker state', () => {
+    it('should open when focusing the start input', () => {
+      const onOpen = spy();
+
+      render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      expect(onOpen.callCount).to.equal(1);
+      expect(screen.getByRole('tooltip')).toBeVisible();
+    });
+
+    it('should open when focusing the end input', () => {
+      const onOpen = spy();
+
+      render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+
+      expect(onOpen.callCount).to.equal(1);
+      expect(screen.getByRole('tooltip')).toBeVisible();
+    });
+
+    it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      ];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      // Open the picker
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the start date
+      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0][0]).toEqualDateTime(
+        adapterToUse.date('2018-01-03T00:00:00.000'),
+      );
+      expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+
+      // Change the end date
+      userEvent.mousePress(screen.getByLabelText('Jan 5, 2018'));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0][0]).toEqualDateTime(
+        adapterToUse.date('2018-01-03T00:00:00.000'),
+      );
+      expect(onChange.lastCall.args[0][1]).toEqualDateTime(
+        adapterToUse.date('2018-01-05T00:00:00.000'),
+      );
+
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
+        adapterToUse.date('2018-01-03T00:00:00.000'),
+      );
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(
+        adapterToUse.date('2018-01-05T00:00:00.000'),
+      );
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      ];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      // Open the picker
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the end date
+      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+      expect(onChange.lastCall.args[0][1]).toEqualDateTime(
+        adapterToUse.date('2018-01-03T00:00:00.000'),
+      );
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(
+        adapterToUse.date('2018-01-03T00:00:00.000'),
+      );
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      ];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          closeOnSelect={false}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+
+      // Change the end date
+      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
+
+    it('should call onClose and onAccept with the live value when pressing Escape', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      ];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      // Change the start date (already tested)
+      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+
+      // Dismiss the picker
+      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      expect(onChange.callCount).to.equal(1); // Start date change
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
+        adapterToUse.date('2018-01-03T00:00:00.000'),
+      );
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onClose when clicking outside of the picker without prior change', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      ];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      ];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      // Change the start date (already tested)
+      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(1); // Start date change
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
+        adapterToUse.date('2018-01-03T00:00:00.000'),
+      );
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onClose or onAccept when clicking outside of the picker if not opened', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      ];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+        />,
+      );
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
+
+    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+        adapterToUse.date('2018-01-06T00:00:00.000'),
+      ];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          clearable
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      // Clear the date
+      userEvent.mousePress(screen.getByText(/clear/i));
+      expect(onChange.callCount).to.equal(1); // Start date change
+      expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = [null, null];
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          clearable
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      // Clear the date
+      userEvent.mousePress(screen.getByText(/clear/i));
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(1);
+    });
+
+    // TODO: Write test
+    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+    // })
   });
 });

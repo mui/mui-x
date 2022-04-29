@@ -7,7 +7,7 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
 } from '../../utils';
-import { GridEvents, GridEventListener } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
@@ -71,7 +71,7 @@ export const useGridPage = (
     propModel: props.page,
     propOnChange: props.onPageChange,
     stateSelector: gridPageSelector,
-    changeEvent: GridEvents.pageChange,
+    changeEvent: 'pageChange',
   });
 
   /**
@@ -138,7 +138,7 @@ export const useGridPage = (
   /**
    * EVENTS
    */
-  const handlePageSizeChange: GridEventListener<GridEvents.pageSizeChange> = (pageSize) => {
+  const handlePageSizeChange: GridEventListener<'pageSizeChange'> = (pageSize) => {
     apiRef.current.setState((state) => {
       const pageCount = getPageCount(state.pagination.rowCount, pageSize);
 
@@ -155,13 +155,13 @@ export const useGridPage = (
     apiRef.current.forceUpdate();
   };
 
-  const handlePageChange: GridEventListener<GridEvents.pageChange> = () =>
+  const handlePageChange: GridEventListener<'pageChange'> = () =>
     apiRef.current.scrollToIndexes({
       rowIndex: gridPageSelector(apiRef) * gridPageSizeSelector(apiRef),
     });
 
-  useGridApiEventHandler(apiRef, GridEvents.pageSizeChange, handlePageSizeChange);
-  useGridApiEventHandler(apiRef, GridEvents.pageChange, handlePageChange);
+  useGridApiEventHandler(apiRef, 'pageSizeChange', handlePageSizeChange);
+  useGridApiEventHandler(apiRef, 'pageChange', handlePageChange);
 
   /**
    * EFFECTS

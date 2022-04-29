@@ -531,8 +531,8 @@ interface GridColDef {
 
 > ⚠ When using `colSpan`, some other features may be pointless or may not work as expected (depending on the data model). To avoid confusing grid layout, consider disabling the following features for the column(s) that are affected by `colSpan`:
 >
-> - [sorting](/components/data-grid/sorting/#disable-the-sorting)
-> - [filtering](/components/data-grid/filtering/#disable-the-filters)
+> - [sorting](/x/react-data-grid/sorting/#disable-the-sorting)
+> - [filtering](/x/react-data-grid/filtering/#disable-the-filters)
 > - [column reorder](#column-reorder)
 > - [hiding columns](#column-visibility)
 > - [column pinning](#blocking-column-unpinning)
@@ -552,7 +552,7 @@ interface GridColDef {
 ### Function signature
 
 The function signature allows spanning only **specific cells** in the column.
-The function receives [`GridCellParams`](/api/data-grid/grid-cell-params/) as argument.
+The function receives [`GridCellParams`](/x/api/data-grid/grid-cell-params/) as argument.
 
 ```ts
 interface GridColDef {

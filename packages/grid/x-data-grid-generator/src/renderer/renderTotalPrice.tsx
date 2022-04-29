@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { alpha, styled } from '@mui/material/styles';
-import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 
 const Value = styled('div')(({ theme }) => ({
   width: '100%',

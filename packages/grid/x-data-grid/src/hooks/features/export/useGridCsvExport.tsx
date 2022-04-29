@@ -1,25 +1,17 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridFilteredSortedRowIdsSelector } from '../filter';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
-import { GridCsvExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
+import { GridCsvExportOptions } from '../../../models/gridExport';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
-import { GridRowId } from '../../../models';
-import { getColumnsToExport } from './utils';
-
-const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
-  const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
-  const selectedRows = apiRef.current.getSelectedRows();
-
-  if (selectedRows.size > 0) {
-    return filteredSortedRowIds.filter((id) => selectedRows.has(id));
-  }
-
-  return filteredSortedRowIds;
-};
+import { getColumnsToExport, defaultGetRowsToExport } from './utils';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import {
+  GridExportDisplayOptions,
+  GridCsvExportMenuItem,
+} from '../../../components/toolbar/GridToolbarExport';
 
 /**
  * @requires useGridColumns (state)
@@ -74,4 +66,25 @@ export const useGridCsvExport = (apiRef: React.MutableRefObject<GridApiCommunity
   };
 
   useGridApiMethod(apiRef, csvExportApi, 'GridCsvExportApi');
+
+  /**
+   * PRE-PROCESSING
+   */
+  const addExportMenuButtons = React.useCallback<GridPipeProcessor<'exportMenu'>>(
+    (initialValue, options: { csvOptions: GridCsvExportOptions & GridExportDisplayOptions }) => {
+      if (options.csvOptions?.disableToolbarButton) {
+        return initialValue;
+      }
+      return [
+        ...initialValue,
+        {
+          component: <GridCsvExportMenuItem options={options.csvOptions} />,
+          componentName: 'csvExport',
+        },
+      ];
+    },
+    [],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'exportMenu', addExportMenuButtons);
 };

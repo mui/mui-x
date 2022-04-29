@@ -7,7 +7,6 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  GridEvents,
   GridRenderCellParams,
 } from '@mui/x-data-grid';
 import { isNavigationKey } from '@mui/x-data-grid/internals';
@@ -55,7 +54,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
       event.stopPropagation();
     }
     if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
     }
   };
 

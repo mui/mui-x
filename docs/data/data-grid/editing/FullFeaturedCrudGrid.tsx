@@ -17,7 +17,6 @@ import {
   GridToolbarContainer,
   GridActionsCellItem,
   GridEventListener,
-  GridEvents,
   GridRowId,
   GridRowModel,
 } from '@mui/x-data-grid-pro';
@@ -106,10 +105,7 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleRowEditStop: GridEventListener<GridEvents.rowEditStop> = (
-    params,
-    event,
-  ) => {
+  const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     event.defaultMuiPrevented = true;
   };
 

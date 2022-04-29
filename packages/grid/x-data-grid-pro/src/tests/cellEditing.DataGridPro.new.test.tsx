@@ -3,7 +3,6 @@ import {
   GridApi,
   DataGridProProps,
   useGridApiRef,
-  GridEvents,
   DataGridPro,
   GridRenderEditCellParams,
   GridValueSetterParams,
@@ -514,7 +513,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should publish 'cellEditStart' with reason=cellDoubleClick`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStart, listener);
+        apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
         expect(listener.lastCall.args[0].reason).to.equal('cellDoubleClick');
@@ -523,7 +522,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStart, listener);
+        apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
@@ -542,7 +541,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should publish 'cellEditStart' with reason=enterKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStart, listener);
+        apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -553,7 +552,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStart, listener);
+        apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -576,7 +575,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should publish 'cellEditStart' with reason=deleteKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStart, listener);
+        apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -587,7 +586,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStart, listener);
+        apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -624,7 +623,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStart, listener);
+        apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -635,7 +634,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStart, listener);
+        apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -647,7 +646,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         it(`should not publish 'cellEditStart' if ${key} is pressed`, () => {
           render(<TestCase />);
           const listener = spy();
-          apiRef.current.subscribeEvent(GridEvents.cellEditStart, listener);
+          apiRef.current.subscribeEvent('cellEditStart', listener);
           const cell = getCell(0, 1);
           fireEvent.mouseUp(cell);
           fireEvent.click(cell);
@@ -687,7 +686,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should publish 'cellEditStop' with reason=cellFocusOut`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStop, listener);
+        apiRef.current.subscribeEvent('cellEditStop', listener);
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.callCount).to.equal(0);
         fireEvent.click(getCell(1, 1));
@@ -725,7 +724,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should publish 'cellEditStop' with reason=escapeKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStop, listener);
+        apiRef.current.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -757,7 +756,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should publish 'cellEditStop' with reason=enterKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStop, listener);
+        apiRef.current.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
@@ -804,7 +803,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it(`should publish 'cellEditStop' with reason=tabKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent(GridEvents.cellEditStop, listener);
+        apiRef.current.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
