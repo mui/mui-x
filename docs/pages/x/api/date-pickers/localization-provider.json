@@ -14,12 +14,7 @@
       "deprecated": true,
       "deprecationInfo": "Use <code>adapterLocale</code> instead"
     },
-    "localeText": {
-      "type": {
-        "name": "shape",
-        "description": "{ cancelButtonLabel?: string, clearButtonLabel?: string, end?: string, nextMonth?: string, okButtonLabel?: string, openNextView?: string, openPreviousView?: string, previousMonth?: string, start?: string, todayButtonLabel?: string }"
-      }
-    }
+    "localeText": { "type": { "name": "object" } }
   },
   "slots": {},
   "name": "LocalizationProvider",

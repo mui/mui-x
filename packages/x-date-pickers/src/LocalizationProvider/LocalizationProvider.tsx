@@ -170,16 +170,5 @@ LocalizationProvider.propTypes = {
   /**
    * Locale for components texts
    */
-  localeText: PropTypes.shape({
-    cancelButtonLabel: PropTypes.string,
-    clearButtonLabel: PropTypes.string,
-    end: PropTypes.string,
-    nextMonth: PropTypes.string,
-    okButtonLabel: PropTypes.string,
-    openNextView: PropTypes.string,
-    openPreviousView: PropTypes.string,
-    previousMonth: PropTypes.string,
-    start: PropTypes.string,
-    todayButtonLabel: PropTypes.string,
-  }),
+  localeText: PropTypes.object,
 } as any;
