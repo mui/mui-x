@@ -1,10 +1,6 @@
 <DataGridPremium
   {...data}
+  columns={columnsWithComposer}
   apiRef={apiRef}
-  columns={columns}
-  initialState={{
-    rowGrouping: {
-      model: INITIAL_GROUPING_COLUMN_MODEL,
-    },
-  }}
+  initialState={initialState}
 />
