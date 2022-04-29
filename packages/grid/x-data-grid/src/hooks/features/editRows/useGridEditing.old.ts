@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridEvents } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
@@ -59,7 +58,7 @@ export function useGridEditing(
     propModel: props.editRowsModel,
     propOnChange: props.onEditRowsModelChange,
     stateSelector: gridEditRowsStateSelector,
-    changeEvent: GridEvents.editRowsModelChange,
+    changeEvent: 'editRowsModelChange',
   });
 
   const isCellEditable = React.useCallback<GridEditingApi['isCellEditable']>(
@@ -139,7 +138,7 @@ export function useGridEditing(
           field: params.field,
           props: { value: params.value },
         };
-        return apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
+        return apiRef.current.publishEvent('editCellPropsChange', newParams, event);
       });
     },
     [apiRef, props.editMode, props.experimentalFeatures?.preventCommitWhileValidating],
@@ -190,7 +189,7 @@ export function useGridEditing(
     [apiRef],
   );
 
-  const preventTextSelection = React.useCallback<GridEventListener<GridEvents.cellMouseDown>>(
+  const preventTextSelection = React.useCallback<GridEventListener<'cellMouseDown'>>(
     (params, event) => {
       const isMoreThanOneClick = event.detail > 1;
       if (params.isEditable && params.cellMode === GridCellModes.View && isMoreThanOneClick) {
@@ -201,9 +200,9 @@ export function useGridEditing(
     [],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventTextSelection);
+  useGridApiEventHandler(apiRef, 'cellMouseDown', preventTextSelection);
 
-  useGridApiOptionHandler(apiRef, GridEvents.editCellPropsChange, props.onEditCellPropsChange); // TODO v6: remove, use `preProcessEditCellProps` instead
+  useGridApiOptionHandler(apiRef, 'editCellPropsChange', props.onEditCellPropsChange); // TODO v6: remove, use `preProcessEditCellProps` instead
 
   const editingSharedApi: GridEditingSharedApi = {
     isCellEditable,
