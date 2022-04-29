@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  useGridApiEventHandler,
-  gridRowIdsSelector,
-  GridEvents,
-  GridRowId,
-} from '@mui/x-data-grid';
+import { useGridApiEventHandler, gridRowIdsSelector, GridRowId } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -61,7 +56,7 @@ export const useGridDetailPanelCache = (
     apiRef.current.forceUpdate();
   }, [apiRef, props.getDetailPanelContent, props.getDetailPanelHeight]);
 
-  useGridApiEventHandler(apiRef, GridEvents.sortedRowsSet, updateCaches);
+  useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCaches);
 
   const isFirstRender = React.useRef(true);
   if (isFirstRender.current) {
