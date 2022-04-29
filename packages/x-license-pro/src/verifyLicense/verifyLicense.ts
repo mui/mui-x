@@ -77,12 +77,6 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
 const decodeLicense = (encodedLicense: string): MuiLicense | null => {
   const license = base64Decode(encodedLicense);
 
-  console.log(
-    base64Decode(
-      '0034eb49ad24bb49ad31729ab9cd447eTz1NVUktU3Rvcnlib29rLEU9MTY4Mjg0NDg4OTUwNSxLVj0yLFM9cHJlbWl1bSxUPXM=',
-    ),
-  );
-
   if (license.includes('KEYVERSION=1')) {
     return decodeLicenseVersion1(license);
   }
