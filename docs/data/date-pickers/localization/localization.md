@@ -8,7 +8,6 @@ title: Pickers - Localization
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
-
 Localization can impact pickers components rendering in two distincts ways: The date format, and the components attributes such as `aria-label`.
 
 ## Date-engine locale
