@@ -12,15 +12,13 @@ export interface ExportedDateValidationProps<TDate> {
    */
   disableFuture?: boolean;
   /**
-   * Min selectable date. @DateIOType
-   * @default Date(1900-01-01)
-   */
-  minDate?: TDate;
-  /**
    * Max selectable date. @DateIOType
-   * @default Date(2099-31-12)
    */
   maxDate?: TDate;
+  /**
+   * Min selectable date. @DateIOType
+   */
+  minDate?: TDate;
   /**
    * Disable specific date. @DateIOType
    * @template TDate
@@ -30,8 +28,8 @@ export interface ExportedDateValidationProps<TDate> {
   shouldDisableDate?: (day: TDate) => boolean;
 }
 
-export interface DateValidationProps<TDate>
-  extends ValidationProps<DateValidationError, TDate>,
+export interface DateValidationProps<TInputDate, TDate>
+  extends ValidationProps<DateValidationError, TInputDate | null>,
     ExportedDateValidationProps<TDate> {}
 
 export type DateValidationError =
@@ -43,7 +41,7 @@ export type DateValidationError =
   | 'maxDate'
   | null;
 
-export const validateDate: Validator<any, DateValidationProps<any>> = (
+export const validateDate: Validator<any, DateValidationProps<any, any>> = (
   utils,
   value,
   { disablePast, disableFuture, minDate, maxDate, shouldDisableDate },
@@ -81,6 +79,6 @@ export const validateDate: Validator<any, DateValidationProps<any>> = (
 
 const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
-export const useDateValidation = <TDate>(
-  props: DateValidationProps<TDate> & ValidationProps<DateValidationError, TDate>,
+export const useDateValidation = <TInputDate, TDate>(
+  props: DateValidationProps<TInputDate, TDate>,
 ): DateValidationError => useValidation(props, validateDate, isSameDateError);

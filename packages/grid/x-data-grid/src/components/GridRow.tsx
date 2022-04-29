@@ -4,7 +4,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridRowEventLookup, GridEvents } from '../models/events';
+import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import {
   GridEditModes,
@@ -194,7 +194,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         }
       }
 
-      publish(GridEvents.rowClick, onClick)(event);
+      publish('rowClick', onClick)(event);
     },
     [apiRef, onClick, publish, rowId],
   );
@@ -349,9 +349,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       aria-selected={selected}
       style={style}
       onClick={publishClick}
-      onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
-      onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
-      onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
+      onDoubleClick={publish('rowDoubleClick', onDoubleClick)}
+      onMouseEnter={publish('rowMouseEnter', onMouseEnter)}
+      onMouseLeave={publish('rowMouseLeave', onMouseLeave)}
       {...other}
     >
       {cells}

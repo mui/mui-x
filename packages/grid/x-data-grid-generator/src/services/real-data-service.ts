@@ -1,4 +1,8 @@
-import { GridRowModel, GridColumnVisibilityModel, GridInitialState } from '@mui/x-data-grid-pro';
+import {
+  GridRowModel,
+  GridColumnVisibilityModel,
+  GridInitialState,
+} from '@mui/x-data-grid-premium';
 import asyncWorker from './asyncWorker';
 import { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGenerator';
 

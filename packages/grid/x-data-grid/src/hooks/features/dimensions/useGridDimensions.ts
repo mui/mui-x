@@ -4,7 +4,7 @@ import {
   ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/material/utils';
-import { GridEvents, GridEventListener } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
@@ -128,10 +128,7 @@ export function useGridDimensions(
       newFullDimensions.viewportInnerSize.width !== prevDimensions?.viewportInnerSize.width ||
       newFullDimensions.viewportInnerSize.height !== prevDimensions?.viewportInnerSize.height
     ) {
-      apiRef.current.publishEvent(
-        GridEvents.viewportInnerSizeChange,
-        newFullDimensions.viewportInnerSize,
-      );
+      apiRef.current.publishEvent('viewportInnerSizeChange', newFullDimensions.viewportInnerSize);
     }
   }, [
     apiRef,
@@ -143,7 +140,7 @@ export function useGridDimensions(
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
-    apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current!);
+    apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
   }, [apiRef, updateGridDimensionsRef]);
 
   const getRootDimensions = React.useCallback<GridDimensionsApi['getRootDimensions']>(
@@ -192,7 +189,7 @@ export function useGridDimensions(
 
   const isFirstSizing = React.useRef(true);
 
-  const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(
+  const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
       rootDimensionsRef.current = size;
 
@@ -247,10 +244,10 @@ export function useGridDimensions(
 
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
-  useGridApiOptionHandler(apiRef, GridEvents.sortedRowsSet, updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, GridEvents.pageChange, updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, GridEvents.pageSizeChange, updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, GridEvents.columnsChange, updateGridDimensionsRef);
-  useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
-  useGridApiOptionHandler(apiRef, GridEvents.debouncedResize, props.onResize);
+  useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'pageChange', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'pageSizeChange', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'columnsChange', updateGridDimensionsRef);
+  useGridApiEventHandler(apiRef, 'resize', handleResize);
+  useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
 }

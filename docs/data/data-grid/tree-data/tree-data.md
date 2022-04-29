@@ -123,7 +123,7 @@ Alternatively, you can achieve a similar behavior by implementing this feature o
 This implementation does not support every feature of the grid but can be a good starting point for large datasets.
 
 The idea is to add a property `descendantCount` on the row and to use it instead of the internal grid state.
-To do so, we need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `GridEvents.rowExpansionChange`.
+To do so, we need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `rowExpansionChange` event.
 
 {{"demo": "TreeDataLazyLoading.js", "bg": "inline", "defaultCodeOpen": false}}
 

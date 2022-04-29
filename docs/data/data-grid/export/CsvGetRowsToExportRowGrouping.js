@@ -3,12 +3,12 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 import { createSvgIcon } from '@mui/material/utils';
 import {
-  DataGridPro,
+  DataGridPremium,
   gridRowTreeSelector,
   GridToolbarContainer,
   gridFilteredSortedRowIdsSelector,
   useGridApiContext,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 
 const getRowsWithGroups = ({ apiRef }) => gridFilteredSortedRowIdsSelector(apiRef);
 
@@ -62,7 +62,7 @@ export default function CsvGetRowsToExportRowGrouping() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGridPro
+      <DataGridPremium
         {...data}
         loading={loading}
         components={{ Toolbar: CustomToolbar }}
@@ -71,7 +71,6 @@ export default function CsvGetRowsToExportRowGrouping() {
             model: ['commodity'],
           },
         }}
-        experimentalFeatures={{ rowGrouping: true }}
       />
     </div>
   );

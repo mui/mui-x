@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
@@ -110,7 +110,7 @@ export function useGridColumns(
     propModel: props.columnVisibilityModel,
     propOnChange: props.onColumnVisibilityModelChange,
     stateSelector: gridColumnVisibilityModelSelector,
-    changeEvent: GridEvents.columnVisibilityModelChange,
+    changeEvent: 'columnVisibilityModelChange',
   });
 
   const setGridColumnsState = React.useCallback(
@@ -119,7 +119,7 @@ export function useGridColumns(
 
       apiRef.current.setState(mergeColumnsState(columnsState));
       apiRef.current.forceUpdate();
-      apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
+      apiRef.current.publishEvent('columnsChange', columnsState.all);
     },
     [logger, apiRef],
   );
@@ -234,7 +234,7 @@ export function useGridColumns(
           isVisible,
         };
 
-        apiRef.current.publishEvent(GridEvents.columnVisibilityChange, params);
+        apiRef.current.publishEvent('columnVisibilityChange', params);
       }
     },
     [apiRef],
@@ -261,7 +261,7 @@ export function useGridColumns(
         targetIndex: targetIndexPosition,
         oldIndex: oldIndexPosition,
       };
-      apiRef.current.publishEvent(GridEvents.columnOrderChange, params);
+      apiRef.current.publishEvent('columnOrderChange', params);
     },
     [apiRef, logger, setGridColumnsState],
   );
@@ -274,7 +274,7 @@ export function useGridColumns(
       const newColumn = { ...column, width };
       apiRef.current.updateColumns([newColumn]);
 
-      apiRef.current.publishEvent(GridEvents.columnWidthChange, {
+      apiRef.current.publishEvent('columnWidthChange', {
         element: apiRef.current.getColumnHeaderElement(field),
         colDef: newColumn,
         width,
@@ -371,7 +371,7 @@ export function useGridColumns(
       apiRef.current.setState(mergeColumnsState(columnsState));
 
       if (initialState != null) {
-        apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
+        apiRef.current.publishEvent('columnsChange', columnsState.all);
       }
 
       return params;
@@ -399,7 +399,7 @@ export function useGridColumns(
    * EVENTS
    */
   const prevInnerWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange: GridEventListener<GridEvents.viewportInnerSizeChange> = (
+  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (
     viewportInnerSize,
   ) => {
     if (prevInnerWidth.current !== viewportInnerSize.width) {
@@ -410,13 +410,9 @@ export function useGridColumns(
     }
   };
 
-  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleGridSizeChange);
+  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
 
-  useGridApiOptionHandler(
-    apiRef,
-    GridEvents.columnVisibilityChange,
-    props.onColumnVisibilityChange,
-  );
+  useGridApiOptionHandler(apiRef, 'columnVisibilityChange', props.onColumnVisibilityChange);
 
   /**
    * APPLIERS

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ownerDocument } from '@mui/material/utils';
-import { GridEvents, GridEventListener } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -55,7 +55,7 @@ export const useGridFocus = (
         };
       });
       apiRef.current.forceUpdate();
-      apiRef.current.publishEvent(GridEvents.cellFocusIn, apiRef.current.getCellParams(id, field));
+      apiRef.current.publishEvent('cellFocusIn', apiRef.current.getCellParams(id, field));
     },
     [apiRef, logger],
   );
@@ -65,7 +65,7 @@ export const useGridFocus = (
       const cell = gridFocusCellSelector(apiRef);
       if (cell) {
         apiRef.current.publishEvent(
-          GridEvents.cellFocusOut,
+          'cellFocusOut',
           apiRef.current.getCellParams(cell.id, cell.field),
           event,
         );
@@ -134,14 +134,14 @@ export const useGridFocus = (
     [apiRef, props.pagination, props.paginationMode],
   );
 
-  const handleCellDoubleClick = React.useCallback<GridEventListener<GridEvents.cellDoubleClick>>(
+  const handleCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
     ({ id, field }) => {
       apiRef.current.setCellFocus(id, field);
     },
     [apiRef],
   );
 
-  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       // GRID_CELL_NAVIGATION_KEY_DOWN handles the focus on Enter, Tab and navigation keys
       if (event.key === 'Enter' || event.key === 'Tab' || isNavigationKey(event.key)) {
@@ -152,9 +152,7 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const handleColumnHeaderFocus = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderFocus>
-  >(
+  const handleColumnHeaderFocus = React.useCallback<GridEventListener<'columnHeaderFocus'>>(
     ({ field }, event) => {
       if (event.target !== event.currentTarget) {
         return;
@@ -164,7 +162,7 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const handleBlur = React.useCallback<GridEventListener<GridEvents.columnHeaderBlur>>(() => {
+  const handleBlur = React.useCallback<GridEventListener<'columnHeaderBlur'>>(() => {
     logger.debug(`Clearing focus`);
     apiRef.current.setState((state) => ({
       ...state,
@@ -172,12 +170,9 @@ export const useGridFocus = (
     }));
   }, [logger, apiRef]);
 
-  const handleCellMouseUp = React.useCallback<GridEventListener<GridEvents.cellMouseUp>>(
-    (params) => {
-      lastClickedCell.current = params;
-    },
-    [],
-  );
+  const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseUp'>>((params) => {
+    lastClickedCell.current = params;
+  }, []);
 
   const handleDocumentClick = React.useCallback(
     (event: MouseEvent) => {
@@ -210,7 +205,7 @@ export const useGridFocus = (
       // There's a focused cell but another cell was clicked
       // Publishes an event to notify that the focus was lost
       apiRef.current.publishEvent(
-        GridEvents.cellFocusOut,
+        'cellFocusOut',
         apiRef.current.getCellParams(focusedCell.id, focusedCell.field),
         event,
       );
@@ -228,7 +223,7 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const handleCellModeChange = React.useCallback<GridEventListener<GridEvents.cellModeChange>>(
+  const handleCellModeChange = React.useCallback<GridEventListener<'cellModeChange'>>(
     (params) => {
       if (params.cellMode === 'view') {
         return;
@@ -275,10 +270,10 @@ export const useGridFocus = (
     };
   }, [apiRef, handleDocumentClick]);
 
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderBlur, handleBlur);
-  useGridApiEventHandler(apiRef, GridEvents.cellDoubleClick, handleCellDoubleClick);
-  useGridApiEventHandler(apiRef, GridEvents.cellMouseUp, handleCellMouseUp);
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
-  useGridApiEventHandler(apiRef, GridEvents.cellModeChange, handleCellModeChange);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderFocus, handleColumnHeaderFocus);
+  useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleBlur);
+  useGridApiEventHandler(apiRef, 'cellDoubleClick', handleCellDoubleClick);
+  useGridApiEventHandler(apiRef, 'cellMouseUp', handleCellMouseUp);
+  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridApiEventHandler(apiRef, 'cellModeChange', handleCellModeChange);
+  useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
 };

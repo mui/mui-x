@@ -9,7 +9,6 @@ import {
   gridVisibleColumnFieldsSelector,
   gridRowsMetaSelector,
   useGridApiEventHandler,
-  GridEvents,
   GridRowId,
 } from '@mui/x-data-grid';
 import {
@@ -207,9 +206,9 @@ const DataGridProVirtualScroller = React.forwardRef<
     }
   }, [renderContext, updateRenderZonePosition]);
 
-  useGridApiEventHandler(apiRef, GridEvents.columnWidthChange, refreshRenderZonePosition);
-  useGridApiEventHandler(apiRef, GridEvents.columnOrderChange, refreshRenderZonePosition);
-  useGridApiEventHandler(apiRef, GridEvents.rowOrderChange, refreshRenderZonePosition);
+  useGridApiEventHandler(apiRef, 'columnWidthChange', refreshRenderZonePosition);
+  useGridApiEventHandler(apiRef, 'columnOrderChange', refreshRenderZonePosition);
+  useGridApiEventHandler(apiRef, 'rowOrderChange', refreshRenderZonePosition);
 
   const leftRenderContext =
     renderContext && leftPinnedColumns.length > 0

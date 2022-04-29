@@ -8,7 +8,6 @@ import {
   GridRowId,
   GridCellModes,
   GridEventListener,
-  GridEvents,
   GridCellModesModel,
 } from '@mui/x-data-grid';
 import {
@@ -123,9 +122,7 @@ export default function StartEditButtonGrid() {
     return cellModesModel[id]?.[field]?.mode || 'view';
   }, [cellModesModel, selectedCellParams]);
 
-  const handleCellKeyDown = React.useCallback<
-    GridEventListener<GridEvents.cellKeyDown>
-  >(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (cellMode === 'edit') {
         // Prevents calling event.preventDefault() if Tab is pressed on a cell in edit mode
