@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import { unstable_resetCleanupTracking } from '@mui/x-data-grid';
 import { unstable_resetCreateSelectorCache } from '@mui/x-data-grid/internals';
 
-const packagesContext = require.context('../packages/grid/x-data-grid', true, /\.test\.tsx$/);
+const packagesContext = require.context('../packages', true, /\.test\.tsx$/);
 packagesContext.keys().forEach(packagesContext);
 
 afterEach(function afterEach() {
