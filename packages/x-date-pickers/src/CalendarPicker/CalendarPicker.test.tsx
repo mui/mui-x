@@ -6,7 +6,9 @@ import {
   CalendarPicker,
   calendarPickerClasses as classes,
 } from '@mui/x-date-pickers/CalendarPicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
+  AdapterClassToUse,
   adapterToUse,
   wrapPickerMount,
   createPickerRenderer,
@@ -125,5 +127,18 @@ describe('<CalendarPicker />', () => {
 
     fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
     expect(onChangeMock.callCount).to.equal(0);
+  });
+
+  it('renders header label text according to monthAndYear format', () => {
+    render(
+      <LocalizationProvider
+        dateAdapter={AdapterClassToUse}
+        dateFormats={{ monthAndYear: 'yyyy/MM' }}
+      >
+        <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
+      </LocalizationProvider>,
+    );
+
+    expect(screen.getByText('2019/01')).toBeVisible();
   });
 });
