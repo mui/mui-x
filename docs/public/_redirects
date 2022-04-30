@@ -1,6 +1,7 @@
 / /x/advanced-components/
 
 # For links that we can't edit later on, e.g. hosted in the code published on npm
+# should all be prefixed with x-
 /r/x-license https://mui.com/store/items/material-ui-pro/ 302
 /r/x-license-eula https://mui.com/store/legal/mui-x-eula/ 302
 
