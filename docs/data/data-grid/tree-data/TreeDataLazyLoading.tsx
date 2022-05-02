@@ -5,7 +5,6 @@ import {
   GridColumns,
   DataGridProProps,
   GridEventListener,
-  GridEvents,
   GridGroupingColDefOverride,
   GridRenderCellParams,
   GridRowModel,
@@ -196,7 +195,7 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
       event.stopPropagation();
     }
     if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
     }
   };
 
@@ -246,9 +245,9 @@ export default function TreeDataLazyLoading() {
   React.useEffect(() => {
     fakeDataFetcher().then(setRows);
 
-    const handleRowExpansionChange: GridEventListener<
-      GridEvents.rowExpansionChange
-    > = async (node) => {
+    const handleRowExpansionChange: GridEventListener<'rowExpansionChange'> = async (
+      node,
+    ) => {
       const row = apiRef.current.getRow(node.id) as Row | null;
 
       if (!node.childrenExpanded || !row || row.childrenFetched) {
@@ -278,10 +277,7 @@ export default function TreeDataLazyLoading() {
      * By default, the grid does not toggle the expansion of rows with 0 children
      * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
      */
-    const handleCellKeyDown: GridEventListener<GridEvents.cellKeyDown> = (
-      params,
-      event,
-    ) => {
+    const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
       if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
         event.stopPropagation();
@@ -295,11 +291,8 @@ export default function TreeDataLazyLoading() {
       }
     };
 
-    apiRef.current.subscribeEvent(
-      GridEvents.rowExpansionChange,
-      handleRowExpansionChange,
-    );
-    apiRef.current.subscribeEvent(GridEvents.cellKeyDown, handleCellKeyDown, {
+    apiRef.current.subscribeEvent('rowExpansionChange', handleRowExpansionChange);
+    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
       isFirst: true,
     });
   }, [apiRef]);

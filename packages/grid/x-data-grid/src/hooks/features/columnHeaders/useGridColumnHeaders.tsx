@@ -20,7 +20,7 @@ import { gridColumnMenuSelector } from '../columnMenu/columnMenuSelector';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
@@ -114,7 +114,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
   }, [renderContext, updateInnerPosition]);
 
-  const handleScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(
+  const handleScroll = React.useCallback<GridEventListener<'rowsScroll'>>(
     ({ left, renderContext: nextRenderContext = null }, event) => {
       if (!innerRef.current) {
         return;
@@ -161,28 +161,31 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [updateInnerPosition],
   );
 
-  const handleColumnResizeStart = React.useCallback<
-    GridEventListener<GridEvents.columnResizeStart>
-  >((params) => setResizeCol(params.field), []);
-  const handleColumnResizeStop = React.useCallback<GridEventListener<GridEvents.columnResizeStop>>(
+  const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
+    (params) => setResizeCol(params.field),
+    [],
+  );
+  const handleColumnResizeStop = React.useCallback<GridEventListener<'columnResizeStop'>>(
     () => setResizeCol(''),
     [],
   );
 
-  const handleColumnReorderStart = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderDragStart>
-  >((params) => setDragCol(params.field), []);
+  const handleColumnReorderStart = React.useCallback<GridEventListener<'columnHeaderDragStart'>>(
+    (params) => setDragCol(params.field),
+    [],
+  );
 
-  const handleColumnReorderStop = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderDragEnd>
-  >(() => setDragCol(''), []);
+  const handleColumnReorderStop = React.useCallback<GridEventListener<'columnHeaderDragEnd'>>(
+    () => setDragCol(''),
+    [],
+  );
 
-  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
-  useGridApiEventHandler(apiRef, GridEvents.columnResizeStop, handleColumnResizeStop);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnReorderStart);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, handleColumnReorderStop);
+  useGridApiEventHandler(apiRef, 'columnResizeStart', handleColumnResizeStart);
+  useGridApiEventHandler(apiRef, 'columnResizeStop', handleColumnResizeStop);
+  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleColumnReorderStart);
+  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleColumnReorderStop);
 
-  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleScroll);
+  useGridApiEventHandler(apiRef, 'rowsScroll', handleScroll);
 
   const getColumns = (
     params?: {

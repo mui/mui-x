@@ -264,12 +264,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowGroupingStateSelector",
-    "returnType": "GridRowGroupingState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
     "name": "gridRowIdsSelector",
     "returnType": "GridRowId[]",
     "description": "",
@@ -284,6 +278,12 @@
   {
     "name": "gridRowTreeSelector",
     "returnType": "GridRowTreeConfig",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowsIdToIdLookupSelector",
+    "returnType": "Record<string, GridRowId>",
     "description": "",
     "supportsApiRef": true
   },

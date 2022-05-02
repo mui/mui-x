@@ -10,8 +10,7 @@ import {
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
-import { GridEvents } from '../../models/events/gridEvents';
-import { ValueOptions } from '../../models/colDef/gridColDef';
+import { GridColDef, ValueOptions } from '../../models/colDef/gridColDef';
 import { getValueFromValueOptions } from '../panel/filterPanel/filterPanelUtils';
 
 const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.ElementType) => {
@@ -120,7 +119,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       if ((event as any).key) {
         // TODO v6: remove once we stop ignoring events fired from portals
         const params = api.getCellParams(id, field);
-        api.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
+        api.publishEvent('cellNavigationKeyDown', params, event);
       }
     }
   };

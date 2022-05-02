@@ -34,6 +34,13 @@ const pages = [
       {
         pathname: '/x/react-data-grid/row-grouping',
         title: 'Group & Pivot',
+        scopePathnames: [
+          '/x/react-data-grid/row-grouping',
+          '/x/react-data-grid/tree-data',
+          '/x/react-data-grid/master-detail',
+          '/x/react-data-grid/aggregation',
+          '/x/react-data-grid/pivoting',
+        ],
         children: [
           { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping', plan: 'premium' },
           { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data', plan: 'pro' },
@@ -49,10 +56,10 @@ const pages = [
           { pathname: '/x/api/data-grid', title: 'Index' },
           { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
           { pathname: '/x/api/data-grid/data-grid-pro', title: 'DataGridPro' },
+          { pathname: '/x/api/data-grid/data-grid-premium', title: 'DataGridPremium' },
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
-          { pathname: '/x/api/data-grid/grid-csv-export-options', title: 'GridCsvExportOptions' },
           { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
           { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
           { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
@@ -62,9 +69,14 @@ const pages = [
           },
           { pathname: '/x/api/data-grid/grid-row-params', title: 'GridRowParams' },
           { pathname: '/x/api/data-grid/grid-row-spacing-params', title: 'GridRowSpacingParams' },
+          { pathname: '/x/api/data-grid/grid-csv-export-options', title: 'GridCsvExportOptions' },
           {
             pathname: '/x/api/data-grid/grid-print-export-options',
             title: 'GridPrintExportOptions',
+          },
+          {
+            pathname: '/x/api/data-grid/grid-excel-export-options',
+            title: 'GridExcelExportOptions',
           },
         ],
       },

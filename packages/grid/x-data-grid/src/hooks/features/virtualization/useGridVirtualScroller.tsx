@@ -13,7 +13,7 @@ import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../editRows/gridEditRowsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
-import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
 import { GridRenderContext, GridRowEntry } from '../../../models';
@@ -154,13 +154,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     setContainerWidth(rootRef.current!.clientWidth);
   }, [rowsMeta.currentPageTotalHeight]);
 
-  const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(() => {
+  const handleResize = React.useCallback<GridEventListener<'resize'>>(() => {
     if (rootRef.current) {
       setContainerWidth(rootRef.current.clientWidth);
     }
   }, []);
 
-  useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
+  useGridApiEventHandler(apiRef, 'resize', handleResize);
 
   const updateRenderZonePosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
@@ -231,7 +231,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const { top, left } = scrollPosition.current!;
     const params = { top, left, renderContext: initialRenderContext };
-    apiRef.current.publishEvent(GridEvents.rowsScroll, params);
+    apiRef.current.publishEvent('rowsScroll', params);
   }, [apiRef, computeRenderContext, containerWidth, updateRenderContext]);
 
   const handleScroll = (event: React.UIEvent) => {
@@ -272,7 +272,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     // TODO v6: rename event to a wider name, it's not only fired for row scrolling
     apiRef.current.publishEvent(
-      GridEvents.rowsScroll,
+      'rowsScroll',
       {
         top: scrollTop,
         left: scrollLeft,
@@ -291,11 +291,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   };
 
   const handleWheel = (event: React.WheelEvent) => {
-    apiRef.current.publishEvent(GridEvents.virtualScrollerWheel, {}, event);
+    apiRef.current.publishEvent('virtualScrollerWheel', {}, event);
   };
 
   const handleTouchMove = (event: React.TouchEvent) => {
-    apiRef.current.publishEvent(GridEvents.virtualScrollerTouchMove, {}, event);
+    apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
   };
 
   const getRows = (
@@ -432,7 +432,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   ]);
 
   React.useEffect(() => {
-    apiRef.current.publishEvent(GridEvents.virtualScrollerContentSizeChange);
+    apiRef.current.publishEvent('virtualScrollerContentSizeChange');
   }, [apiRef, contentSize]);
 
   if (rootProps.autoHeight && currentPage.rows.length === 0) {

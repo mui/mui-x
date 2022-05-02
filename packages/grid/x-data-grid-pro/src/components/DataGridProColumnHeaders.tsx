@@ -7,7 +7,6 @@ import {
   useGridSelector,
   useGridApiEventHandler,
   gridVisibleColumnFieldsSelector,
-  GridEvents,
   GridColumnHeaderSeparatorSides,
 } from '@mui/x-data-grid';
 import {
@@ -113,11 +112,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
     setScrollbarSize(newScrollbarSize);
   }, [apiRef]);
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.virtualScrollerContentSizeChange,
-    handleContentSizeChange,
-  );
+  useGridApiEventHandler(apiRef, 'virtualScrollerContentSizeChange', handleContentSizeChange);
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);

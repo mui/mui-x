@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Alert from '@mui/material/Alert';
 import {
-  GridEvents,
   GridColumns,
   GridRowsProp,
   useGridApiRef,
@@ -18,22 +17,19 @@ export default function CatchEditingEventsGrid() {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(
-      GridEvents.cellEditStart,
-      (params, event) => {
-        setMessage(
-          `Editing cell with value: ${params.value} and row id: ${
-            params.id
-          }, column: ${params.field}, triggered by ${
-            (event as React.SyntheticEvent)!.type
-          }.`,
-        );
-      },
-    );
+    return apiRef.current.subscribeEvent('cellEditStart', (params, event) => {
+      setMessage(
+        `Editing cell with value: ${params.value} and row id: ${
+          params.id
+        }, column: ${params.field}, triggered by ${
+          (event as React.SyntheticEvent)!.type
+        }.`,
+      );
+    });
   }, [apiRef]);
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GridEvents.cellEditStop, () => {
+    return apiRef.current.subscribeEvent('cellEditStop', () => {
       setMessage('');
     });
   }, [apiRef]);
