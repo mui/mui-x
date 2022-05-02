@@ -5,7 +5,6 @@ import { unstable_useId as useId } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Clock } from './Clock';
-import { pipe } from '../internals/utils/utils';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
@@ -222,7 +221,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     components,
     componentsProps,
     date,
-    disableIgnoringDatePartForTimeValidation = false,
+    disableIgnoringDatePartForTimeValidation,
     getClockLabelText = defaultGetClockLabelText,
     getHoursClockNumberText = defaultGetHoursClockNumberText,
     getMinutesClockNumberText = defaultGetMinutesClockNumberText,
@@ -267,44 +266,53 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return false;
       }
 
-      const validateTimeValue = (
-        value: number,
-        getRequestedTimePoint: (when: 'start' | 'end') => TDate,
-      ) => {
-        const isAfterComparingFn = createIsAfterIgnoreDatePart(
-          disableIgnoringDatePartForTimeValidation,
-          utils,
-        );
+      const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
 
-        return Boolean(
-          (minTime && isAfterComparingFn(minTime, getRequestedTimePoint('end'))) ||
-            (maxTime && isAfterComparingFn(getRequestedTimePoint('start'), maxTime)) ||
-            (shouldDisableTime && shouldDisableTime(value, viewType)),
-        );
+      const containsValidTime = ({ start, end }: { start: TDate; end: TDate }) => {
+        if (minTime && isAfter(minTime, end)) {
+          return false;
+        }
+
+        if (maxTime && isAfter(start, maxTime)) {
+          return false;
+        }
+
+        return true;
+      };
+
+      const isValidValue = (value: number) => {
+        if (shouldDisableTime) {
+          return !shouldDisableTime(value, viewType);
+        }
+
+        return true;
       };
 
       switch (viewType) {
         case 'hours': {
-          const hoursWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-          return validateTimeValue(hoursWithMeridiem, (when: 'start' | 'end') =>
-            pipe(
-              (currentDate) => utils.setHours(currentDate, hoursWithMeridiem),
-              (dateWithHours) => utils.setMinutes(dateWithHours, when === 'start' ? 0 : 59),
-              (dateWithMinutes) => utils.setSeconds(dateWithMinutes, when === 'start' ? 0 : 59),
-            )(date),
-          );
+          const value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
+          const dateWithNewHours = utils.setHours(date, value);
+          const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
+          const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
+
+          return !containsValidTime({ start, end }) || !isValidValue(value);
         }
 
-        case 'minutes':
-          return validateTimeValue(rawValue, (when: 'start' | 'end') =>
-            pipe(
-              (currentDate) => utils.setMinutes(currentDate, rawValue),
-              (dateWithMinutes) => utils.setSeconds(dateWithMinutes, when === 'start' ? 0 : 59),
-            )(date),
-          );
+        case 'minutes': {
+          const dateWithNewMinutes = utils.setMinutes(date, rawValue);
+          const start = utils.setSeconds(dateWithNewMinutes, 0);
+          const end = utils.setSeconds(dateWithNewMinutes, 59);
 
-        case 'seconds':
-          return validateTimeValue(rawValue, () => utils.setSeconds(date, rawValue));
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
+        }
+
+        case 'seconds': {
+          const dateWithNewSeconds = utils.setSeconds(date, rawValue);
+          const start = dateWithNewSeconds;
+          const end = dateWithNewSeconds;
+
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
+        }
 
         default:
           throw new Error('not supported');

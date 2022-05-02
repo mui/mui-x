@@ -47,10 +47,7 @@ export const validateTime: Validator<any, TimeValidationProps<any, any>> = (
   { minTime, maxTime, shouldDisableTime, disableIgnoringDatePartForTimeValidation },
 ): TimeValidationError => {
   const date = utils.date(value);
-  const isAfterComparingFn = createIsAfterIgnoreDatePart(
-    Boolean(disableIgnoringDatePartForTimeValidation),
-    utils,
-  );
+  const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
 
   if (value === null) {
     return null;
@@ -60,10 +57,10 @@ export const validateTime: Validator<any, TimeValidationProps<any, any>> = (
     case !utils.isValid(value):
       return 'invalidDate';
 
-    case Boolean(minTime && isAfterComparingFn(minTime, date!)):
+    case Boolean(minTime && isAfter(minTime, date!)):
       return 'minTime';
 
-    case Boolean(maxTime && isAfterComparingFn(date!, maxTime)):
+    case Boolean(maxTime && isAfter(date!, maxTime)):
       return 'maxTime';
 
     case Boolean(shouldDisableTime && shouldDisableTime(utils.getHours(date!), 'hours')):
