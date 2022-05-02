@@ -72,10 +72,21 @@ export default function LinkedFieldsRowEditing() {
       headerName: 'Account',
       type: 'singleSelect',
       valueOptions: ({ row }) => {
-        if (row.type === 'Income') {
-          return ['Sales', 'Investments', 'Ads'];
+        if (!row) {
+          return [
+            'Sales',
+            'Investments',
+            'Ads',
+            'Taxes',
+            'Payroll',
+            'Utilities',
+            'Marketing',
+          ];
         }
-        return ['Taxes', 'Payroll', 'Utilities', 'Marketing'];
+
+        return row.type === 'Income'
+          ? ['Sales', 'Investments', 'Ads']
+          : ['Taxes', 'Payroll', 'Utilities', 'Marketing'];
       },
       width: 140,
       editable: true,

@@ -440,7 +440,7 @@ Once at the least one field has the `error` attribute set to a truthy value, the
 
 The following demo requires a value for the **Payment method** column only if the **Is paid?** column is checked:
 
-{{"demo": "ConditionalValidationGrid.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "ConditionalValidationGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Linked fields
 
@@ -453,6 +453,11 @@ const columns: GridColDef[] = [
     field: 'account',
     type: 'singleSelect',
     valueOptions: ({ row }) => {
+      if (!row) {
+        // The row is not available when filtering this column
+        return ['Sales', 'Investments', 'Ads', 'Taxes', 'Payroll', 'Utilities'];
+      }
+
       return row.type === 'Income' // Gets the value of the "type" field
         ? ['Sales', 'Investments', 'Ads']
         : ['Taxes', 'Payroll', 'Utilities'];
@@ -462,7 +467,7 @@ const columns: GridColDef[] = [
 ```
 
 The code above is already enough to display different options in the **Account** column based on the value selected in the **Type** column.
-There is one task left which is to reset the account once the type is changed.
+The only task left which is to reset the account once the type is changed.
 This is needed because the previously selected account will not exist now in the options.
 To solve that, you can create a custom edit component, reusing the built-in one, and pass a function to the `onChange` prop.
 This function should call `apiRef.current.setEditCellValue` to reset the value of the other field.
@@ -487,10 +492,20 @@ The demo below combines the steps showed above.
 You can experiment it by changing the value of any cell in the **Type** column.
 The **Account** column is automatically updated with the correct options.
 
-{{"demo": "LinkedFieldsRowEditing.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "LinkedFieldsRowEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
 > ⚠ The call to `apiRef.current.setEditCellValue` returns a promise that must be awaited.
-> With the `singleSelect` column type, not awaiting for it will cause the other column to be rendered with a `value` that is not in the options.
+> For instance, if the `singleSelect` column type is used, not awaiting will cause the other column to be rendered with a `value` that is not in the options.
+>
+> ```ts
+> const handleChange = async () => {
+>   await apiRef.current.setEditCellValue({
+>     id: props.id,
+>     field: 'account',
+>     value: '',
+>   });
+> };
+> ```
 
 ### Full-featured CRUD component
 
@@ -498,7 +513,7 @@ Row editing makes it possible to create a full-featured CRUD (Create, Read, Upda
 In the following demo, the typical ways to start and stop editing are all disabled.
 Instead, use the buttons available in each row or in the toolbar.
 
-{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "disableAd": true, "defaultCodeOpen": false}}
+{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
