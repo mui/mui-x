@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { MonthPicker } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
@@ -9,7 +9,12 @@ import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DayPicker, ExportedCalendarProps } from './DayPicker';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
-import { PickersCalendarHeader, ExportedCalendarHeaderProps } from './PickersCalendarHeader';
+import {
+  PickersCalendarHeader,
+  ExportedCalendarHeaderProps,
+  PickersCalendarHeaderSlotsComponent,
+  PickersCalendarHeaderSlotsComponentsProps,
+} from './PickersCalendarHeader';
 import { YearPicker, ExportedYearPickerProps } from '../YearPicker/YearPicker';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { CalendarPickerView } from '../internals/models';
@@ -17,12 +22,28 @@ import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { CalendarPickerClasses, getCalendarPickerUtilityClass } from './calendarPickerClasses';
 
+export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
+
+export interface CalendarPickerSlotsComponentsProps
+  extends PickersCalendarHeaderSlotsComponentsProps {}
+
 export interface CalendarPickerProps<TDate>
   extends ExportedCalendarProps<TDate>,
     ExportedYearPickerProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
+  /**
+   * The components used for each slot.
+   * Either a string to use an HTML element or a component.
+   * @default {}
+   */
+  components?: Partial<CalendarPickerSlotsComponent>;
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  componentsProps?: Partial<CalendarPickerSlotsComponentsProps>;
   date: TDate | null;
   /**
    * Default calendar month displayed when `value={null}`.
@@ -160,11 +181,11 @@ type CalendarPickerComponent = (<TDate>(
  *
  * - [CalendarPicker API](https://mui.com/x/api/date-pickers/calendar-picker/)
  */
-const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends unknown>(
+const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   inProps: CalendarPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps<Theme, CalendarPickerProps<TDate>, 'MuiCalendarPicker'>({
+  const props = useThemeProps({
     props: inProps,
     name: 'MuiCalendarPicker',
   });
@@ -215,7 +236,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
     isDateDisabled,
     handleChangeMonth,
     onMonthSwitchingAnimationEnd,
-  } = useCalendarState<TDate>({
+  } = useCalendarState({
     date,
     defaultCalendarMonth,
     reduceAnimations,

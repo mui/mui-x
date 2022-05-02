@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   GridRowTreeNodeConfig,
   GridEventListener,
-  GridEvents,
   GridCallbackDetails,
   GridRowParams,
   GridRowId,
@@ -21,15 +20,9 @@ import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
-import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridInitialStatePro } from './gridStatePro';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
-  /**
-   * Will be part of the premium-plan when fully ready.
-   */
-  rowGrouping: boolean;
-}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -103,17 +96,6 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    */
   disableChildrenSorting: boolean;
   /**
-   * If `true`, the row grouping is disabled.
-   * @default false
-   */
-  disableRowGrouping: boolean;
-  /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
-   * @default 'single'
-   */
-  rowGroupingColumnMode: 'single' | 'multiple';
-  /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {number} The height in pixels.
@@ -154,21 +136,21 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnResize?: GridEventListener<GridEvents.columnResize>;
+  onColumnResize?: GridEventListener<'columnResize'>;
   /**
    * Callback fired when the width of a column is changed.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnWidthChange?: GridEventListener<GridEvents.columnWidthChange>;
+  onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowsScrollEnd?: GridEventListener<GridEvents.rowsScrollEnd>;
+  onRowsScrollEnd?: GridEventListener<'rowsScrollEnd'>;
   /**
    * The column fields to display pinned to left or right.
    */
@@ -179,16 +161,6 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange?: (pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void;
-  /**
-   * Set the row grouping model of the grid.
-   */
-  rowGroupingModel?: GridRowGroupingModel;
-  /**
-   * Callback fired when the row grouping model changes.
-   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
   /**
    * The grouping column used by the tree data.
    */
@@ -219,5 +191,5 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowOrderChange?: GridEventListener<GridEvents.rowOrderChange>;
+  onRowOrderChange?: GridEventListener<'rowOrderChange'>;
 }

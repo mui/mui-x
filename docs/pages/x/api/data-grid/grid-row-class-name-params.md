@@ -5,6 +5,8 @@
 ## Import
 
 ```js
+import { GridRowClassNameParams } from '@mui/x-data-grid-premium';
+// or
 import { GridRowClassNameParams } from '@mui/x-data-grid-pro';
 // or
 import { GridRowClassNameParams } from '@mui/x-data-grid';

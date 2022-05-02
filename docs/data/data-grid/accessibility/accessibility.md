@@ -57,8 +57,8 @@ Use the arrow keys to move the focus.
 |                                    <kbd class="key">Arrow Up</kbd> | Navigate between cell elements                              |
 |                                        <kbd class="key">Home</kbd> | Navigate to the first cell of the current row               |
 |                                         <kbd class="key">End</kbd> | Navigate to the last cell of the current row                |
-| <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">Home</kbd></kbd> | Navigate to the first cell of the first row                 |
-|  <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">End</kbd></kbd> | Navigate to the last cell of the last row                   |
+| <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Home</kbd></kbd> | Navigate to the first cell of the first row                 |
+|  <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">End</kbd></kbd> | Navigate to the last cell of the last row                   |
 |                                       <kbd class="key">Space</kbd> | Navigate to the next scrollable page                        |
 |                                     <kbd class="key">Page Up</kbd> | Navigate to the previous scrollable page                    |
 |                                   <kbd class="key">Page Down</kbd> | Navigate to the next scrollable page                        |
@@ -71,34 +71,34 @@ Use the arrow keys to move the focus.
 |         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select the current row                                               |
 | <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Select the current row and the row above or below                    |
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
-|              <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |
-|              <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected row(s)                                   |
+|              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |
+|              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected row(s)                                   |
 |               <kbd><kbd class="key">ALT</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected row(s) including headers                 |
-|                                   <kbd class="key">CTRL</kbd>+ Click on cell | Enable multi-selection                                               |
-|                         <kbd class="key">CTRL</kbd>+ Click on a selected row | Deselect the row                                                     |
+|                                   <kbd class="key">Ctrl</kbd>+ Click on cell | Enable multi-selection                                               |
+|                         <kbd class="key">Ctrl</kbd>+ Click on a selected row | Deselect the row                                                     |
 
 ### Sorting
 
 |                                                                 Keys | Description                                        |
 | -------------------------------------------------------------------: | :------------------------------------------------- |
-|                         <kbd class="key">CTRL</kbd>+ Click on header | Enable multi-sorting                               |
+|                         <kbd class="key">Ctrl</kbd>+ Click on header | Enable multi-sorting                               |
 |                        <kbd class="key">Shift</kbd>+ Click on header | Enable multi-sorting                               |
 | <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Enter</kbd></kbd> | Enable multi-sorting when column header is focused |
 |                                         <kbd class="key">Enter</kbd> | Sort column when column header is focused          |
-|  <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">Enter</kbd></kbd> | Open column menu when column header is focused     |
+|  <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> | Open column menu when column header is focused     |
 
 ### Group & pivot
 
 |                                                                Keys | Description                       |
 | ------------------------------------------------------------------: | :-------------------------------- |
-| <kbd><kbd class="key">CTRL</kbd>+<kbd class="key">Enter</kbd></kbd> | Toggles the detail panel of a row |
+| <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> | Toggles the detail panel of a row |
 
 ### Key assignment conventions
 
 The above key assignments are for Windows and Linux.
 On macOS:
 
-- replace <kbd class="key">CTRL</kbd> with <kbd class="key">⌘ Command</kbd>
+- replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
 - replace <kbd class="key">ALT</kbd> with <kbd class="key">⌥ Option</kbd>
 
 ## API

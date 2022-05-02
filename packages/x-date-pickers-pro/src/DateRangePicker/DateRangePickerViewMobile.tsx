@@ -7,12 +7,20 @@ import {
   ExportedDateValidationProps,
   DayPicker,
   PickersCalendarProps,
+  PickersCalendarHeaderSlotsComponent,
+  PickersCalendarHeaderSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { doNothing } from '../internal/utils/utils';
 import { DateRange } from '../internal/models/dateRange';
 import { DateRangePickerDay } from '../DateRangePickerDay';
 import { ExportedDesktopDateRangeCalendarProps } from './DateRangePickerViewDesktop';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
+
+export interface DateRangePickerViewMobileSlotsComponent
+  extends PickersCalendarHeaderSlotsComponent {}
+
+export interface DateRangePickerViewMobileSlotsComponentsProps
+  extends PickersCalendarHeaderSlotsComponentsProps {}
 
 export interface ExportedMobileDateRangeCalendarProps<TDate>
   extends Pick<ExportedDesktopDateRangeCalendarProps<TDate>, 'renderDay'> {}
@@ -22,6 +30,17 @@ interface DesktopDateRangeCalendarProps<TDate>
     Omit<PickersCalendarProps<TDate>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
+  /**
+   * The components used for each slot.
+   * Either a string to use an HTML element or a component.
+   * @default {}
+   */
+  components?: Partial<DateRangePickerViewMobileSlotsComponent>;
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  componentsProps?: Partial<DateRangePickerViewMobileSlotsComponentsProps>;
   date: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
 }

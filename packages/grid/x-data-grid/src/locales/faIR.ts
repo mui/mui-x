@@ -32,6 +32,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'خروجی',
   toolbarExportCSV: 'دانلود به صورت CSV',
   toolbarExportPrint: 'چاپ',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'پیداکردن ستون',

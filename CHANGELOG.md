@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v5.10.0
+
+_Apr 25, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce [Row reorder](https://mui.com/x/react-data-grid/rows/#row-reorder) (#4034) @DanailH
+
+  <img src="https://user-images.githubusercontent.com/5858539/165091263-23472fbb-a989-44b8-849a-d2185adfe13b.gif" width="800">
+
+- 🐞 Bug fixes
+
+### `@mui/x-data-grid@v5.10.0` / `@mui/x-data-grid-pro@v5.10.0`
+
+- [DataGrid] Don't close column menu when updating rows (#4498) @m4theushw
+- [DataGridPro] Introduce row reorder (#4034) @DanailH
+
+### `@mui/x-date-pickers@5.0.0-alpha.2` / `@mui/x-date-pickers-pro@5.0.0-alpha.2`
+
+- [pickers] Pass `PaperProps` to `DesktopWrapper` component (#4584) @alexfauquette
+- [TimePicker] Fix bug when time picker clear value (#4582) @alexfauquette
+- [DateRangePicker] Fix missing `clearable` and `clearText` props (#4511) @zigang93
+
+### Docs
+
+- [docs] Add plan in the nav bar for pro-only and premium-only pages (#4591) @flaviendelangle
+- [docs] Clarify where to install the license (#4452) @oliviertassinari
+- [docs] Fix CodeSandbox links for demo with pickers (#4570) @alexfauquette
+- [docs] Include date-fns dependency when opening demos in CodeSandbox (#4508) @m4theushw
+- [docs] Split the 'Group & Pivot' page (#4441) @flaviendelangle
+
+### Core
+
+- [core] Fix the README of the X packages (#4590) @flaviendelangle
+- [test] Fix test to not depend on screen resolution (#4587) @m4theushw
+
 ## v5.9.0
 
 _Apr 14, 2022_
@@ -2368,7 +2404,7 @@ _July 1, 2021_
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 As a focus of Q2, we have kept fixing bugs
-- 💅 End users are now allowed to copy the selected rows to the clipboard with <kbd>CTRL</kbd> + <kbd>c</kbd> (#1929) @m4theushw
+- 💅 End users are now allowed to copy the selected rows to the clipboard with <kbd>Ctrl</kbd> + <kbd>c</kbd> (#1929) @m4theushw
 - 🐛 We have fixed the `Select all` checkbox. When triggered, it should only select the filtered rows (#1879) @ZeeshanTamboli
 - ⚡️ We have added a new `singleSelect` column type (#1956) @DanailH
 
@@ -2568,7 +2604,7 @@ _June 9, 2021_
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 💅 Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
-- 🐛 Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
+- 🐛 Allow to deselect rows with <kbd>Ctrl</kbd> + click (#1813) @ZeeshanTamboli
 - ⚡️ Refactor scroll size detector (#1703) @dtassone
 - 📖 Add [documentation](https://mui.com/x/api/data-grid/) for interfaces and events (#1529) @m4theushw
 - 🐞 Bugfixes
@@ -2595,7 +2631,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add `valueParser` to parse values entered by the user (#1785) @m4theushw
 - [DataGrid] Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
-- [DataGrid] Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
+- [DataGrid] Allow to deselect rows with <kbd>Ctrl</kbd> + click (#1813) @ZeeshanTamboli
 - [DataGrid] Improve general architecture to better isolate hooks (#1720) @dtassone
 - [DataGrid] Fix cell height after changing grid density (#1819) @DanailH
 - [DataGrid] Fix fluid columns width when available `viewportWidth` < 0 (#1816) @DanailH

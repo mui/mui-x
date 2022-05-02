@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
@@ -69,7 +69,7 @@ export const useGridFilter = (
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
     stateSelector: gridFilterModelSelector,
-    changeEvent: GridEvents.filterModelChange,
+    changeEvent: 'filterModelChange',
   });
 
   const updateFilteredRows = React.useCallback(() => {
@@ -92,7 +92,7 @@ export const useGridFilter = (
         },
       };
     });
-    apiRef.current.publishEvent(GridEvents.filteredRowsSet);
+    apiRef.current.publishEvent('filteredRowsSet');
   }, [props.filterMode, apiRef]);
 
   /**
@@ -300,7 +300,7 @@ export const useGridFilter = (
   /**
    * EVENTS
    */
-  const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
+  const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef);
     const filterableColumnsLookup = gridFilterableColumnLookupSelector(apiRef);
@@ -313,7 +313,7 @@ export const useGridFilter = (
   }, [apiRef, logger]);
 
   const handleStrategyProcessorChange = React.useCallback<
-    GridEventListener<GridEvents.activeStrategyProcessorChange>
+    GridEventListener<'activeStrategyProcessorChange'>
   >(
     (methodName) => {
       if (methodName === 'filtering') {
@@ -325,18 +325,10 @@ export const useGridFilter = (
 
   // Do not call `apiRef.current.forceUpdate` to avoid re-render before updating the sorted rows.
   // Otherwise, the state is not consistent during the render
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, updateFilteredRows);
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.rowExpansionChange,
-    apiRef.current.unstable_applyFilters,
-  );
-  useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.activeStrategyProcessorChange,
-    handleStrategyProcessorChange,
-  );
+  useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', apiRef.current.unstable_applyFilters);
+  useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
+  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
 
   /**
    * 1ST RENDER

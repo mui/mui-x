@@ -1,65 +1,27 @@
 import * as React from 'react';
 import {
-  DataGridPro,
-  gridColumnVisibilityModelSelector,
-  GridEvents,
+  DataGridPremium,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+  useKeepGroupedColumnsHidden,
+} from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 
-const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
-
-const useKeepGroupingColumnsHidden = (apiRef, columns, initialModel, leafField) => {
-  const prevModel = React.useRef(initialModel);
-
-  React.useEffect(() => {
-    apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
-      const columnVisibilityModel = {
-        ...gridColumnVisibilityModelSelector(apiRef),
-      };
-
-      newModel.forEach((field) => {
-        if (!prevModel.current.includes(field)) {
-          columnVisibilityModel[field] = false;
-        }
-      });
-      prevModel.current.forEach((field) => {
-        if (!newModel.includes(field)) {
-          columnVisibilityModel[field] = true;
-        }
-      });
-      apiRef.current.setColumnVisibilityModel(columnVisibilityModel);
-      prevModel.current = newModel;
-    });
-  }, [apiRef]);
-
-  return React.useMemo(
-    () =>
-      columns.map((colDef) =>
-        initialModel.includes(colDef.field) ||
-        (leafField && colDef.field === leafField)
-          ? { ...colDef, hide: true }
-          : colDef,
-      ),
-    [columns, initialModel, leafField],
-  );
-};
-
 export default function RowGroupingCustomGroupingColDefCallback() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
-  const [rowGroupingModel, setRowGroupingModel] = React.useState(
-    INITIAL_GROUPING_COLUMN_MODEL,
-  );
 
-  const columns = useKeepGroupingColumnsHidden(
+  const [rowGroupingModel, setRowGroupingModel] = React.useState([
+    'company',
+    'director',
+  ]);
+
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
-    data.columns,
-    INITIAL_GROUPING_COLUMN_MODEL,
-  );
+    rowGroupingModel,
+  });
 
   const rowGroupingModelStr = rowGroupingModel.join('-');
 
@@ -85,12 +47,12 @@ export default function RowGroupingCustomGroupingColDefCallback() {
         />
       </Stack>
       <Box sx={{ height: 400 }}>
-        <DataGridPro
+        <DataGridPremium
           {...data}
           apiRef={apiRef}
-          columns={columns}
           disableSelectionOnClick
           rowGroupingModel={rowGroupingModel}
+          initialState={initialState}
           groupingColDef={(params) => {
             const override = {};
             if (params.fields.includes('director')) {
@@ -108,9 +70,6 @@ export default function RowGroupingCustomGroupingColDefCallback() {
             }
 
             return override;
-          }}
-          experimentalFeatures={{
-            rowGrouping: true,
           }}
         />
       </Box>

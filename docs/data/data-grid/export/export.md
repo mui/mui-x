@@ -36,7 +36,7 @@ By default, the export menu displays all the available export formats, according
 
 - [Print](#print-export)
 - [CSV](#csv-export)
-- [Excel](#excel-export) [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/) (🚧 Not delivered yet)
+- [Excel](#excel-export) [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 - [Clipboard](#clipboard) [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/) (🚧 Not delivered yet)
 
 You can customize their respective behavior by passing an options object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
@@ -200,6 +200,10 @@ By default, the print export display all the DataGrid. It is possible to remove 
 
 For more option to customize the print export, please visit the [`printOptions` api page](/x/api/data-grid/grid-print-export-options/).
 
+> ⚠️ Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
+>
+> In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN`.
+
 ## Custom export format
 
 You can add custom export formats by creating your own export menu.
@@ -220,16 +224,96 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠️ Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
->
-> In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN`.
+## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-## 🚧 Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+This feature relies on [exceljs](https://github.com/exceljs/exceljs).
+To install it:
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #198](https://github.com/mui/mui-x/issues/198) if you want to see it land faster.
-> You will be able to export the displayed data to Excel with an API call, or using the grid UI.
+```sh
+ // with npm
+ npm install exceljs
+
+ // with yarn
+ yarn add exceljs
+```
+
+The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
+
+Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/components/data-grid/columns/#converting-types) as needed.
+
+{{"demo": "ExcelExport.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Customization
+
+#### Customizing the columns
+
+You can use the property `columnsStyles` to customize the column style.
+This property accepts an object in which keys are the column field and values an [exceljs style object](https://github.com/exceljs/exceljs#styles).
+
+This can be used to specify value formatting or to add some colors.
+
+```jsx
+<GridToolbarExport
+  excelOptions={{
+    columnsStyles: {
+      // replace the dd.mm.yyyy default date format
+      recruitmentDay: { numFmt: 'dd/mm/yyyy' },
+      // set this column in green
+      incomes: { font: { argb: 'FF00FF00' } },
+    },
+  }}
+/>
+```
+
+#### Customizing the document
+
+You can customize the document using two callback functions:
+
+- `exceljsPreProcess` called **before** adding the rows' dataset.
+- `exceljsPostProcess` called **after** the dataset has been exported to the document.
+
+Both functions receive `{ workbook, worksheet }` as input.
+They are [exceljs](https://github.com/exceljs/exceljs#interface) objects and allow you to directly manipulate the Excel file.
+
+Thanks to these two methods, you can modify the metadata of the exported spreadsheet.
+You can also use it to add custom content on top or bottom of the worksheet, as follows:
+
+```jsx
+function exceljsPreProcess({ workbook, worksheet }) {
+  workbook.created = new Date(); // Add metadata
+  worksheet.name = 'Monthly Results'; // Modify worksheet name
+
+  // Write on first line the date of creation
+  worksheet.getCell('A1').value = `Values from the`;
+  worksheet.getCell('A2').value = new Date();
+}
+
+function exceljsPostProcess({ worksheet }) {
+  // Add a text after the data
+  worksheet.addRow(); // Add empty row
+
+  const newRow = worksheet.addRow();
+  newRow.getCell(1).value = 'Those data are for internal use only';
+}
+
+// ...
+
+<GridToolbarExport
+  excelOptions={{
+    exceljsPreProcess,
+    exceljsPostProcess,
+  }}
+/>;
+```
+
+Since `exceljsPreProcess` is applied before adding the content of the grid, you can use it to add some informative rows on top of the document.
+The content of the grid will start on the next row after those added by `exceljsPreProcess`.
+
+To customize the rows after the grid content, you should use `exceljsPostProcess`. As it is applied after adding the content, you can also use it to access the generated cells.
+
+In the following demo, both methods are used to set a custom header and a custom footer.
+
+{{"demo": "ExcelCustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
@@ -250,9 +334,14 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
+### Excel [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+
+{{"demo": "ExcelExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
 ## API
 
 - [csvOptions](/x/api/data-grid/grid-csv-export-options/)
 - [printOptions](/x/api/data-grid/grid-print-export-options/)
+- [excelOptions](/x/api/data-grid/grid-excel-export-options/)
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
