@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -29,7 +29,7 @@ const GridPanelFooterRoot = styled('div', {
 }));
 
 export function GridPanelFooter(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
+  props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> },
 ) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
