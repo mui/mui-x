@@ -37,6 +37,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Xuất',
   toolbarExportCSV: 'Xuất CSV',
   toolbarExportPrint: 'In',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Tìm kiếm',

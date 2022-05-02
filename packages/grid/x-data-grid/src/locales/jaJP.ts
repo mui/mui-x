@@ -36,6 +36,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'エクスポート',
   toolbarExportCSV: 'CSVダウンロード',
   // toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '列検索',

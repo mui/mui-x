@@ -155,6 +155,46 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(virtualScroller.scrollTop).to.equal(50);
   });
 
+  it('should not scroll vertically when navigating expanded row cells', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    function Component() {
+      const data = useData(10, 4);
+      return (
+        <TestCase
+          {...data}
+          getDetailPanelContent={() => <div />}
+          initialState={{
+            detailPanel: {
+              expandedRowIds: [0],
+            },
+          }}
+          hideFooter
+        />
+      );
+    }
+    render(<Component />);
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+
+    const cell = getCell(0, 0);
+
+    fireEvent.mouseUp(cell);
+    fireEvent.click(cell);
+
+    fireEvent.keyDown(cell, { key: 'ArrowRight' });
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(0);
+
+    fireEvent.keyDown(getCell(0, 1), { key: 'ArrowRight' });
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(0);
+
+    fireEvent.keyDown(getCell(0, 2), { key: 'ArrowRight' });
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(0);
+  });
+
   it('should toggle the detail panel when pressing Ctrl/Cmd+Enter', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);

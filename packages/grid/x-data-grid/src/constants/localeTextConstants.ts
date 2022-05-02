@@ -35,6 +35,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Download as CSV',
   toolbarExportPrint: 'Print',
+  toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',

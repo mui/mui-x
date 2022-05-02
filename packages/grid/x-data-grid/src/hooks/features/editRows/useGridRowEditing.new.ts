@@ -3,7 +3,6 @@ import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
-import { GridEvents } from '../../../models/events/gridEvents';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import {
   GridEditModes,
@@ -81,7 +80,7 @@ export const useGridRowEditing = (
     [apiRef],
   );
 
-  const handleCellDoubleClick = React.useCallback<GridEventListener<GridEvents.cellDoubleClick>>(
+  const handleCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
     (params, event) => {
       if (!params.isEditable) {
         return;
@@ -95,19 +94,16 @@ export const useGridRowEditing = (
         field: params.field,
         reason: GridRowEditStartReasons.cellDoubleClick,
       };
-      apiRef.current.publishEvent(GridEvents.rowEditStart, newParams, event);
+      apiRef.current.publishEvent('rowEditStart', newParams, event);
     },
     [apiRef],
   );
 
-  const handleCellFocusIn = React.useCallback<GridEventListener<GridEvents.cellFocusIn>>(
-    (params) => {
-      nextFocusedCell.current = params;
-    },
-    [],
-  );
+  const handleCellFocusIn = React.useCallback<GridEventListener<'cellFocusIn'>>((params) => {
+    nextFocusedCell.current = params;
+  }, []);
 
-  const handleCellFocusOut = React.useCallback<GridEventListener<GridEvents.cellFocusOut>>(
+  const handleCellFocusOut = React.useCallback<GridEventListener<'cellFocusOut'>>(
     (params, event) => {
       if (!params.isEditable) {
         return;
@@ -130,7 +126,7 @@ export const useGridRowEditing = (
             field: params.field,
             reason: GridRowEditStopReasons.rowFocusOut,
           };
-          apiRef.current.publishEvent(GridEvents.rowEditStop, newParams, event);
+          apiRef.current.publishEvent('rowEditStop', newParams, event);
         }
       });
     },
@@ -143,7 +139,7 @@ export const useGridRowEditing = (
     };
   }, []);
 
-  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
         let reason: GridRowEditStopReasons | undefined;
@@ -179,7 +175,7 @@ export const useGridRowEditing = (
             reason,
             field: params.field,
           };
-          apiRef.current.publishEvent(GridEvents.rowEditStop, newParams, event);
+          apiRef.current.publishEvent('rowEditStop', newParams, event);
         }
       } else if (params.isEditable) {
         let reason: GridRowEditStartReasons | undefined;
@@ -198,14 +194,14 @@ export const useGridRowEditing = (
         if (reason) {
           const rowParams = apiRef.current.getRowParams(params.id);
           const newParams: GridRowEditStartParams = { ...rowParams, field: params.field, reason };
-          apiRef.current.publishEvent(GridEvents.rowEditStart, newParams, event);
+          apiRef.current.publishEvent('rowEditStart', newParams, event);
         }
       }
     },
     [apiRef],
   );
 
-  const handleRowEditStart = React.useCallback<GridEventListener<GridEvents.rowEditStart>>(
+  const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
     (params, event) => {
       const { id, field, reason } = params;
       apiRef.current.startRowEditMode({ id, fieldToFocus: field });
@@ -220,7 +216,7 @@ export const useGridRowEditing = (
     [apiRef],
   );
 
-  const handleRowEditStop = React.useCallback<GridEventListener<GridEvents.rowEditStop>>(
+  const handleRowEditStop = React.useCallback<GridEventListener<'rowEditStop'>>(
     (params) => {
       const { id, reason, field } = params;
 
@@ -250,20 +246,16 @@ export const useGridRowEditing = (
     [apiRef],
   );
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.cellDoubleClick,
-    runIfEditModeIsRow(handleCellDoubleClick),
-  );
-  useGridApiEventHandler(apiRef, GridEvents.cellFocusIn, runIfEditModeIsRow(handleCellFocusIn));
-  useGridApiEventHandler(apiRef, GridEvents.cellFocusOut, runIfEditModeIsRow(handleCellFocusOut));
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, runIfEditModeIsRow(handleCellKeyDown));
+  useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsRow(handleCellDoubleClick));
+  useGridApiEventHandler(apiRef, 'cellFocusIn', runIfEditModeIsRow(handleCellFocusIn));
+  useGridApiEventHandler(apiRef, 'cellFocusOut', runIfEditModeIsRow(handleCellFocusOut));
+  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfEditModeIsRow(handleCellKeyDown));
 
-  useGridApiEventHandler(apiRef, GridEvents.rowEditStart, runIfEditModeIsRow(handleRowEditStart));
-  useGridApiEventHandler(apiRef, GridEvents.rowEditStop, runIfEditModeIsRow(handleRowEditStop));
+  useGridApiEventHandler(apiRef, 'rowEditStart', runIfEditModeIsRow(handleRowEditStart));
+  useGridApiEventHandler(apiRef, 'rowEditStop', runIfEditModeIsRow(handleRowEditStop));
 
-  useGridApiOptionHandler(apiRef, GridEvents.rowEditStart, props.onRowEditStart);
-  useGridApiOptionHandler(apiRef, GridEvents.rowEditStop, props.onRowEditStop);
+  useGridApiOptionHandler(apiRef, 'rowEditStart', props.onRowEditStart);
+  useGridApiOptionHandler(apiRef, 'rowEditStop', props.onRowEditStop);
 
   const getRowMode = React.useCallback<GridNewRowEditingApi['getRowMode']>(
     (id) => {

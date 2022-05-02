@@ -14,7 +14,7 @@ import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolb
 
 export interface GridToolbarProps
   extends GridToolbarContainerProps,
-    Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {
+    Omit<GridToolbarExportProps, 'color'> {
   /**
    * Show the quick filter component
    * @default false
@@ -30,10 +30,13 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function 
   props,
   ref,
 ) {
+  // TODO v6: think about where export option should be passed.
+  // from componentProps={{ toolbarExport: { ...exportOption} }} seems to be more appropriate
   const {
     className,
     csvOptions,
     printOptions,
+    excelOptions,
     showQuickFilter = false,
     quickFilterProps = {},
     ...other
@@ -54,7 +57,12 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function 
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
-      <GridToolbarExport csvOptions={csvOptions} printOptions={printOptions} />
+      <GridToolbarExport
+        csvOptions={csvOptions}
+        printOptions={printOptions}
+        // TODO: remove the reference to excelOptions in community package
+        excelOptions={excelOptions}
+      />
       <Box sx={{ flex: 1 }} />
       {showQuickFilter && <GridToolbarQuickFilter {...quickFilterProps} />}
     </GridToolbarContainer>
@@ -66,8 +74,6 @@ GridToolbar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  csvOptions: PropTypes.object,
-  printOptions: PropTypes.object,
   /**
    * props passed to the quick filter component
    */

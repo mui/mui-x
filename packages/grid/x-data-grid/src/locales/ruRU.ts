@@ -47,6 +47,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Экспорт',
   toolbarExportCSV: 'Скачать в формате CSV',
   toolbarExportPrint: 'Печать',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Найти столбец',

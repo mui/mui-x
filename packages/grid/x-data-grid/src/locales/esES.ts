@@ -37,6 +37,7 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Descargar como CSV',
   // toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Columna de búsqueda',

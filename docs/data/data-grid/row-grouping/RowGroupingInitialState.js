@@ -2,8 +2,6 @@ import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
-
 export default function RowGroupingInitialState() {
   const data = useMovieData();
 
@@ -14,7 +12,7 @@ export default function RowGroupingInitialState() {
         disableSelectionOnClick
         initialState={{
           rowGrouping: {
-            model: INITIAL_GROUPING_COLUMN_MODEL,
+            model: ['company', 'director'],
           },
         }}
       />

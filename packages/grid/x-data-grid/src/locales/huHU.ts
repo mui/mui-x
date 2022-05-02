@@ -36,6 +36,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exportálás',
   toolbarExportCSV: 'Mentés CSV fájlként',
   toolbarExportPrint: 'Nyomtatás',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Oszlop keresése',
