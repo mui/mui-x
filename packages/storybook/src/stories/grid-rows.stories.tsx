@@ -15,7 +15,6 @@ import {
   GridRowModel,
   useGridApiRef,
   DataGridPro,
-  GridEvents,
   MuiEvent,
   GridEventListener,
   GridRenderCellParams,
@@ -488,7 +487,7 @@ export function EditRowsControl() {
     setEditRowsModel(updatedModel);
   }, []);
 
-  const onCellEditCommit = React.useCallback<GridEventListener<GridEvents.cellEditCommit>>(
+  const onCellEditCommit = React.useCallback<GridEventListener<'cellEditCommit'>>(
     (params, event) => {
       const { id, field, value } = params;
       (event as React.SyntheticEvent)?.persist();
@@ -511,7 +510,7 @@ export function EditRowsControl() {
       setTimeout(() => {
         apiRef.current.updateRows([cellUpdate]);
         apiRef.current.publishEvent(
-          GridEvents.cellEditStop,
+          'cellEditStop',
           apiRef.current.getCellParams(id, field) as GridCellEditStopParams,
           event,
         );
@@ -673,9 +672,7 @@ export function EditBooleanCellSnap() {
 export function ValidateEditValueWithApiRefGrid() {
   const apiRef = useGridApiRef();
 
-  const onEditCellPropsChange = React.useCallback<
-    GridEventListener<GridEvents.editCellPropsChange>
-  >(
+  const onEditCellPropsChange = React.useCallback<GridEventListener<'editCellPropsChange'>>(
     ({ id, field, props }, event) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
@@ -750,9 +747,7 @@ export function ValidateEditValueServerSide() {
   const apiRef = useGridApiRef();
   const keyStrokeTimeoutRef = React.useRef<any>();
 
-  const handleCellEditPropChange = React.useCallback<
-    GridEventListener<GridEvents.editCellPropsChange>
-  >(
+  const handleCellEditPropChange = React.useCallback<GridEventListener<'editCellPropsChange'>>(
     async ({ id, field, props }, event) => {
       if (field === 'username') {
         // TODO refactor this block
@@ -852,7 +847,7 @@ export function EditCellUsingExternalButtonGrid() {
   }, []);
 
   // Prevent from committing on focus out
-  const handleCellFocusOut = React.useCallback<GridEventListener<GridEvents.cellFocusOut>>(
+  const handleCellFocusOut = React.useCallback<GridEventListener<'cellFocusOut'>>(
     (params, event) => {
       if (params.cellMode === 'edit' && event) {
         event.defaultMuiPrevented = true;
@@ -904,15 +899,11 @@ export function EditCellWithModelGrid() {
 export function EditCellWithCellClickGrid() {
   const apiRef = useGridApiRef();
 
-  const handleCellClick = React.useCallback<GridEventListener<GridEvents.cellClick>>(
+  const handleCellClick = React.useCallback<GridEventListener<'cellClick'>>(
     (params, event) => {
       // Or you can use the editRowModel prop, but I find it easier
       // apiRef.current.setCellMode(params.id, params.field, 'edit');
-      apiRef.current.publishEvent(
-        GridEvents.cellEditStart,
-        params as GridCellEditStartParams,
-        event,
-      );
+      apiRef.current.publishEvent('cellEditStart', params as GridCellEditStartParams, event);
 
       // if I want to prevent selection I can do
       event.defaultMuiPrevented = true;
@@ -939,7 +930,7 @@ export function EditCellWithMessageGrid() {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GridEvents.cellEditStart, (params, event) => {
+    return apiRef.current.subscribeEvent('cellEditStart', (params, event) => {
       setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
         params.field
       },

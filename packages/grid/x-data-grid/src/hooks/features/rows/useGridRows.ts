@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
@@ -189,7 +189,7 @@ export const useGridRows = (
             props.loading,
           ),
         }));
-        apiRef.current.publishEvent(GridEvents.rowsSet);
+        apiRef.current.publishEvent('rowsSet');
         apiRef.current.forceUpdate();
       };
 
@@ -339,7 +339,7 @@ export const useGridRows = (
         };
       });
       apiRef.current.forceUpdate();
-      apiRef.current.publishEvent(GridEvents.rowExpansionChange, newNode);
+      apiRef.current.publishEvent('rowExpansionChange', newNode);
     },
     [apiRef],
   );
@@ -393,7 +393,7 @@ export const useGridRows = (
     (rowId, targetIndex) => {
       const allRows = gridRowIdsSelector(apiRef);
       const oldIndex = allRows.findIndex((row) => row === rowId);
-      if (oldIndex === targetIndex) {
+      if (oldIndex === -1 || oldIndex === targetIndex) {
         return;
       }
 
@@ -456,7 +456,7 @@ export const useGridRows = (
   }, [logger, throttledRowsChange, props.getRowId, props.rows]);
 
   const handleStrategyProcessorChange = React.useCallback<
-    GridEventListener<GridEvents.activeStrategyProcessorChange>
+    GridEventListener<'activeStrategyProcessorChange'>
   >(
     (methodName) => {
       if (methodName === 'rowTreeCreation') {
@@ -467,7 +467,7 @@ export const useGridRows = (
   );
 
   const handleStrategyActivityChange = React.useCallback<
-    GridEventListener<GridEvents.strategyAvailabilityChange>
+    GridEventListener<'strategyAvailabilityChange'>
   >(() => {
     // `rowTreeCreation` is the only processor ran when `strategyAvailabilityChange` is fired.
     // All the other processors listen to `rowsSet` which will be published by the `groupRows` method below.
@@ -478,16 +478,8 @@ export const useGridRows = (
     }
   }, [apiRef, groupRows]);
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.activeStrategyProcessorChange,
-    handleStrategyProcessorChange,
-  );
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.strategyAvailabilityChange,
-    handleStrategyActivityChange,
-  );
+  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+  useGridApiEventHandler(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
 
   /**
    * APPLIERS
@@ -532,7 +524,7 @@ export const useGridRows = (
       return;
     }
 
-    // The new rows have already been applied (most likely in the `GridEvents.rowGroupsPreProcessingChange` listener)
+    // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
     if (rowsCache.current.state.rowsBeforePartialUpdates === props.rows) {
       return;
     }

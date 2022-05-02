@@ -72,6 +72,7 @@ import {
   rowGroupingStateInitializer,
 } from '../hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
+import { useGridExcelExport } from '../hooks/features/export/useGridExcelExport';
 
 export const useDataGridPremiumComponent = (
   inputApiRef: React.MutableRefObject<GridApiPremium> | undefined,
@@ -154,6 +155,7 @@ export const useDataGridPremiumComponent = (
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);
+  useGridExcelExport(apiRef);
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);

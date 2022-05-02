@@ -6,7 +6,9 @@ import {
   CalendarPicker,
   calendarPickerClasses as classes,
 } from '@mui/x-date-pickers/CalendarPicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
+  AdapterClassToUse,
   adapterToUse,
   wrapPickerMount,
   createPickerRenderer,
@@ -39,8 +41,7 @@ describe('<CalendarPicker />', () => {
       <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
     );
 
-    expect(screen.getByText('January')).toBeVisible();
-    expect(screen.getByText('2019')).toBeVisible();
+    expect(screen.getByText('January 2019')).toBeVisible();
     expect(screen.getAllByMuiTest('day')).to.have.length(31);
     // It should follow https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
     expect(
@@ -98,7 +99,7 @@ describe('<CalendarPicker />', () => {
     fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
     expect(onChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByText('January'));
+    fireEvent.click(screen.getByText('January 2019'));
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
@@ -114,8 +115,8 @@ describe('<CalendarPicker />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByText('January'));
-    expect(screen.queryByText('January')).toBeVisible();
+    fireEvent.click(screen.getByText('January 2019'));
+    expect(screen.queryByText('January 2019')).toBeVisible();
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).to.equal(null);
 
     fireEvent.click(screen.getByTitle('Previous month'));
@@ -126,5 +127,18 @@ describe('<CalendarPicker />', () => {
 
     fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
     expect(onChangeMock.callCount).to.equal(0);
+  });
+
+  it('renders header label text according to monthAndYear format', () => {
+    render(
+      <LocalizationProvider
+        dateAdapter={AdapterClassToUse}
+        dateFormats={{ monthAndYear: 'yyyy/MM' }}
+      >
+        <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
+      </LocalizationProvider>,
+    );
+
+    expect(screen.getByText('2019/01')).toBeVisible();
   });
 });

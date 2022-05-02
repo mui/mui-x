@@ -4,14 +4,14 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { expectType } from '@mui/types';
 
 // Allows setting date type right with generic JSX syntax
-<DatePicker<Date>
+<DatePicker<Date, Date>
   value={new Date()}
   onChange={(date) => date?.getDate()}
   renderInput={() => <input />}
 />;
 
 // Throws error if passed value is invalid
-<DatePicker<Date>
+<DatePicker<Date, Date>
   // @ts-expect-error Value is invalid
   value={moment()}
   onChange={(date) => date?.getDate()}
@@ -52,7 +52,7 @@ const InferTest = () => {
     renderInput={() => <input />}
   />;
   // workaround
-  <DatePicker<Date>
+  <DatePicker<Date, Date | null>
     value={null}
     onChange={(date) => {
       expectType<Date | null, typeof date>(date);

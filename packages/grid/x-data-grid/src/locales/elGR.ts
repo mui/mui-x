@@ -31,6 +31,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Εξαγωγή',
   toolbarExportCSV: 'Λήψη ως CSV',
   // toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Εύρεση στήλης',

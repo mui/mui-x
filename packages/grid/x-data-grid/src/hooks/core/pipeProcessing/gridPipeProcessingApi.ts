@@ -21,6 +21,7 @@ export interface GridPipeProcessingLookup {
   hydrateRows: {
     value: GridHydrateRowsValue;
   };
+  exportMenu: { value: { component: React.ReactElement; componentName: string }[]; context: any };
   preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;

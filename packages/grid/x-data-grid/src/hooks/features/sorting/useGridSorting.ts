@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
@@ -70,7 +70,7 @@ export const useGridSorting = (
     propModel: props.sortModel,
     propOnChange: props.onSortModelChange,
     stateSelector: gridSortModelSelector,
-    changeEvent: GridEvents.sortModelChange,
+    changeEvent: 'sortModelChange',
   });
 
   const upsertSortModel = React.useCallback(
@@ -144,7 +144,7 @@ export const useGridSorting = (
       };
     });
 
-    apiRef.current.publishEvent(GridEvents.sortedRowsSet);
+    apiRef.current.publishEvent('sortedRowsSet');
     apiRef.current.forceUpdate();
   }, [apiRef, logger, props.sortingMode]);
 
@@ -297,9 +297,7 @@ export const useGridSorting = (
   /**
    * EVENTS
    */
-  const handleColumnHeaderClick = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderClick>
-  >(
+  const handleColumnHeaderClick = React.useCallback<GridEventListener<'columnHeaderClick'>>(
     ({ colDef }, event) => {
       const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
       sortColumn(colDef, undefined, allowMultipleSorting);
@@ -307,11 +305,9 @@ export const useGridSorting = (
     [sortColumn],
   );
 
-  const handleColumnHeaderKeyDown = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderKeyDown>
-  >(
+  const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     ({ colDef }, event) => {
-      // CTRL + Enter opens the column menu
+      // Ctrl + Enter opens the column menu
       if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
         sortColumn(colDef, undefined, event.shiftKey);
       }
@@ -319,7 +315,7 @@ export const useGridSorting = (
     [sortColumn],
   );
 
-  const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
+  const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
     const sortModel = gridSortModelSelector(apiRef);
     const latestColumns = gridColumnLookupSelector(apiRef);
@@ -334,7 +330,7 @@ export const useGridSorting = (
   }, [apiRef]);
 
   const handleStrategyProcessorChange = React.useCallback<
-    GridEventListener<GridEvents.activeStrategyProcessorChange>
+    GridEventListener<'activeStrategyProcessorChange'>
   >(
     (methodName) => {
       if (methodName === 'sorting') {
@@ -344,15 +340,11 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.activeStrategyProcessorChange,
-    handleStrategyProcessorChange,
-  );
+  useGridApiEventHandler(apiRef, 'columnHeaderClick', handleColumnHeaderClick);
+  useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, 'rowsSet', apiRef.current.applySorting);
+  useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
+  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
 
   /**
    * 1ST RENDER
