@@ -386,7 +386,7 @@ export const useGridRows = (
     (rowId, targetIndex) => {
       const allRows = gridRowIdsSelector(apiRef);
       const oldIndex = allRows.findIndex((row) => row === rowId);
-      if (oldIndex === targetIndex) {
+      if (oldIndex === -1 || oldIndex === targetIndex) {
         return;
       }
 
