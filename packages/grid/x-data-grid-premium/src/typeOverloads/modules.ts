@@ -4,6 +4,9 @@ import type { GridGroupingValueGetterParams } from '../models';
 import type { GridRowGroupingModel } from '../hooks';
 
 export interface GridControlledStateEventLookupPremium {
+  /**
+   * Fired when the row grouping model changes.
+   */
   rowGroupingModelChange: { params: GridRowGroupingModel };
 }
 
