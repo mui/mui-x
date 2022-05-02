@@ -8,7 +8,7 @@ export interface BaseToolbarProps<TDate>
   extends ExportedCalendarPickerProps<TDate>,
     ExportedClockPickerProps<TDate> {
   ampmInClock?: boolean;
-  date: TDate | null;
+  parsedValue: TDate | null;
   dateRangeIcon?: React.ReactNode;
   getMobileKeyboardInputViewButtonText?: () => string;
   hideTabs?: boolean;
