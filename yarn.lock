@@ -2560,10 +2560,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@mui/base@5.0.0-alpha.77", "@mui/base@^5.0.0-alpha.77":
-  version "5.0.0-alpha.77"
-  resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-alpha.77.tgz#a88985597708c354520579e4f76e617b29f8f593"
-  integrity sha512-Zqm3qlczGViD3lJSYo8ZnQLHJ3PwGYftbDfVuh2Rq5OD88F7H6oDILlqknzty59NDkeSVO2qlymYmHOY1nLodg==
+"@mui/base@5.0.0-alpha.79", "@mui/base@^5.0.0-alpha.79":
+  version "5.0.0-alpha.79"
+  resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-alpha.79.tgz#1994a6382a162b52ec93b66f3c74d193820d2365"
+  integrity sha512-/lZLF027BkiEjM8MIYoeS/FEhTKf+41ePU9SOijMGrCin1Y0Igucw+IHa1fF8HXD7wDbFKqHuso3J1jMG8wyNw==
   dependencies:
     "@babel/runtime" "^7.17.2"
     "@emotion/is-prop-valid" "^1.1.2"
@@ -2581,14 +2581,14 @@
   dependencies:
     "@babel/runtime" "^7.17.2"
 
-"@mui/material@^5.6.2":
-  version "5.6.2"
-  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.6.2.tgz#bcd0ecdb265aca1bfee11773f6561aeedaa25b45"
-  integrity sha512-bwMvroBrMgUTwUh/BcjhtcJwEw9uH4chV3+ZSj6RckOJtMj8U4yEeD7S4NgHE8Ioj5eObKFzHpih/cTD1sDRpg==
+"@mui/material@^5.6.4":
+  version "5.6.4"
+  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.6.4.tgz#5c6d6770acaea84d7b1c6492639627baed62f65b"
+  integrity sha512-7TD+u/SExZK2a55w6reX56oPk37gKr/M/XGt156X+m0d9LhzOsW864nkErIX/H8oSkX/6kCimxu1FDsO+gjiVw==
   dependencies:
     "@babel/runtime" "^7.17.2"
-    "@mui/base" "5.0.0-alpha.77"
-    "@mui/system" "^5.6.2"
+    "@mui/base" "5.0.0-alpha.79"
+    "@mui/system" "^5.6.4"
     "@mui/types" "^7.1.3"
     "@mui/utils" "^5.6.1"
     "@types/react-transition-group" "^4.4.4"
@@ -2644,10 +2644,10 @@
     jss-plugin-vendor-prefixer "^10.8.2"
     prop-types "^15.7.2"
 
-"@mui/system@^5.6.2":
-  version "5.6.2"
-  resolved "https://registry.yarnpkg.com/@mui/system/-/system-5.6.2.tgz#04687d60d6a1f0f9df2c9d817b4942dac6b44aac"
-  integrity sha512-Wg9TRbvavSwEYk6UdpnoDx+CqJfaAN7AzlmwEx7DtGmx0snFVBST8FVb1Ev1vXosxEnq6/fe7ZDRobFVewvEPQ==
+"@mui/system@^5.6.4":
+  version "5.6.4"
+  resolved "https://registry.yarnpkg.com/@mui/system/-/system-5.6.4.tgz#b1c615c70b3573d61a8a56dbaee6700bb9a5ca9b"
+  integrity sha512-7rsWED1wMFMePySJobsBerFZNu7ga580QSi3Zd6sJR8nVj12qD3yIdfvxA70/PxJ/805KbIT0GX7edKI+hpyhA==
   dependencies:
     "@babel/runtime" "^7.17.2"
     "@mui/private-theming" "^5.6.2"
