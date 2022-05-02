@@ -236,7 +236,7 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const handleCleanFocus = React.useCallback<GridEventListener<'rowsSet'>>(() => {
+  const handleRowSet = React.useCallback<GridEventListener<'rowsSet'>>(() => {
     const cell = gridFocusCellSelector(apiRef);
 
     // If the focused cell is in a row which does not exist anymore, then remove the focus
@@ -273,5 +273,5 @@ export const useGridFocus = (
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridApiEventHandler(apiRef, 'cellModeChange', handleCellModeChange);
   useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
-  useGridApiEventHandler(apiRef, 'rowsSet', handleCleanFocus);
+  useGridApiEventHandler(apiRef, 'rowsSet', handleRowSet);
 };
