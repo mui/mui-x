@@ -467,7 +467,7 @@ const columns: GridColDef[] = [
 ```
 
 The code above is already enough to display different options in the **Account** column based on the value selected in the **Type** column.
-The only task left which is to reset the account once the type is changed.
+The only task left is to reset the account once the type is changed.
 This is needed because the previously selected account will not exist now in the options.
 To solve that, you can create a custom edit component, reusing the built-in one, and pass a function to the `onChange` prop.
 This function should call `apiRef.current.setEditCellValue` to reset the value of the other field.
