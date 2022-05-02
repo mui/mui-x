@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   DateInputSlotsComponent,
+  PickerStateValueManager,
   useDefaultDates,
   useUtils,
   ValidationProps,
@@ -12,6 +13,7 @@ import {
 } from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
+import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 
 interface DateRangePickerSlotsComponent
@@ -89,3 +91,10 @@ export function useDateRangePickerDefaultizedProps<
     ...themeProps,
   };
 }
+
+export const dateRangePickerValueManager: PickerStateValueManager<[any, any], [any, any], any> = {
+  emptyValue: [null, null],
+  getTodayValue: (utils) => [utils.date()!, utils.date()!],
+  parseInput: parseRangeInputValue,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
+};

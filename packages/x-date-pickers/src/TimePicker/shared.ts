@@ -9,6 +9,8 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
+import { PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
 
 export interface BaseTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -79,3 +81,17 @@ export function useTimePickerDefaultizedProps<
     },
   };
 }
+
+export const timePickerValueManager: PickerStateValueManager<any, any, any> = {
+  emptyValue: null,
+  parseInput: parsePickerInputValue,
+  getTodayValue: (utils) => utils.date()!,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+  valueReducer: (utils, prevValue, newValue) => {
+    if (prevValue == null || newValue == null) {
+      return newValue;
+    }
+
+    return utils.mergeDateAndTime(prevValue, newValue);
+  },
+};

@@ -5,25 +5,17 @@ import {
   PickerStaticWrapper,
   PickerStaticWrapperProps,
   usePickerState,
-  PickerStateValueManager,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
-import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   useDateRangePickerDefaultizedProps,
   BaseDateRangePickerProps,
+  dateRangePickerValueManager,
 } from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
-
-const rangePickerValueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: [null, null],
-  getTodayValue: (utils) => [utils.date()!, utils.date()!],
-  parseInput: parseRangeInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
-};
 
 export interface StaticDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate> {
@@ -66,7 +58,10 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
 
   const validationError = useDateRangeValidation(props);
 
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, rangePickerValueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(
+    props,
+    dateRangePickerValueManager,
+  );
 
   const { displayStaticWrapperAs = 'mobile', value, onChange, ...other } = props;
 

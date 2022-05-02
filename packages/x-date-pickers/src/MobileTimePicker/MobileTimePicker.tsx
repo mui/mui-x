@@ -1,27 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { BaseTimePickerProps, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import {
+  BaseTimePickerProps,
+  useTimePickerDefaultizedProps,
+  timePickerValueManager,
+} from '../TimePicker/shared';
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { PureDateInput } from '../internals/components/PureDateInput';
-import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
-
-const valueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-  valueReducer: (utils, prevValue, newValue) => {
-    if (prevValue == null || newValue == null) {
-      return newValue;
-    }
-
-    return utils.mergeDateAndTime(prevValue, newValue);
-  },
-};
+import { usePickerState } from '../internals/hooks/usePickerState';
 
 export interface MobileTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate>,
@@ -52,7 +41,7 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   >(inProps, 'MuiMobileTimePicker');
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
