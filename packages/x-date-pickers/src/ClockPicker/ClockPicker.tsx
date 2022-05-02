@@ -34,11 +34,6 @@ export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationP
    */
   ampm?: boolean;
   /**
-   * Step over minutes.
-   * @default 1
-   */
-  minutesStep?: number;
-  /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default false
    */
