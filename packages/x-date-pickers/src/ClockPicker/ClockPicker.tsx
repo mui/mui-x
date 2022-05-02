@@ -262,10 +262,6 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
   const isTimeDisabled = React.useCallback(
     (rawValue: number, viewType: ClockPickerView) => {
-      if (date === null) {
-        return false;
-      }
-
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
 
       const containsValidTime = ({ start, end }: { start: TDate; end: TDate }) => {
@@ -280,7 +276,11 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return true;
       };
 
-      const isValidValue = (value: number) => {
+      const isValidValue = (value: number, step = 1) => {
+        if (value % step !== 0) {
+          return false;
+        }
+
         if (shouldDisableTime) {
           return !shouldDisableTime(value, viewType);
         }
@@ -291,6 +291,11 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
       switch (viewType) {
         case 'hours': {
           const value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
+
+          if (date == null) {
+            return !isValidValue(value);
+          }
+
           const dateWithNewHours = utils.setHours(date, value);
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
@@ -299,14 +304,22 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         }
 
         case 'minutes': {
+          if (date == null) {
+            return !isValidValue(rawValue, minutesStep);
+          }
+
           const dateWithNewMinutes = utils.setMinutes(date, rawValue);
           const start = utils.setSeconds(dateWithNewMinutes, 0);
           const end = utils.setSeconds(dateWithNewMinutes, 59);
 
-          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue, minutesStep);
         }
 
         case 'seconds': {
+          if (date == null) {
+            return !isValidValue(rawValue);
+          }
+
           const dateWithNewSeconds = utils.setSeconds(date, rawValue);
           const start = dateWithNewSeconds;
           const end = dateWithNewSeconds;
