@@ -28,7 +28,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
  */
 export const useGridFocus = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'rows' | 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
 
@@ -236,6 +236,18 @@ export const useGridFocus = (
     [apiRef],
   );
 
+  const handleRowSet = React.useCallback<GridEventListener<'rowsSet'>>(() => {
+    const cell = gridFocusCellSelector(apiRef);
+
+    // If the focused cell is in a row which does not exist anymore, then remove the focus
+    if (cell && !apiRef.current.getRow(cell.id)) {
+      apiRef.current.setState((state) => ({
+        ...state,
+        focus: { cell: null, columnHeader: null },
+      }));
+    }
+  }, [apiRef]);
+
   useGridApiMethod(
     apiRef,
     {
@@ -245,21 +257,6 @@ export const useGridFocus = (
     },
     'GridFocusApi',
   );
-
-  React.useEffect(() => {
-    const cell = gridFocusCellSelector(apiRef);
-
-    if (cell) {
-      const updatedRow = apiRef.current.getRow(cell.id);
-
-      if (!updatedRow) {
-        apiRef.current.setState((state) => ({
-          ...state,
-          focus: { cell: null, columnHeader: null },
-        }));
-      }
-    }
-  }, [apiRef, props.rows]);
 
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current);
@@ -276,4 +273,5 @@ export const useGridFocus = (
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridApiEventHandler(apiRef, 'cellModeChange', handleCellModeChange);
   useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
+  useGridApiEventHandler(apiRef, 'rowsSet', handleRowSet);
 };

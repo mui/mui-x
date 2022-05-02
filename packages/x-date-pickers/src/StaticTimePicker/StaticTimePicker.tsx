@@ -1,6 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { BaseTimePickerProps, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import {
+  BaseTimePickerProps,
+  useTimePickerDefaultizedProps,
+  timePickerValueManager,
+} from '../TimePicker/shared';
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import {
   PickerStaticWrapper,
@@ -8,15 +12,7 @@ import {
 } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
-import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
-
-const valueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};
+import { usePickerState } from '../internals/hooks/usePickerState';
 
 export interface StaticTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate> {
@@ -60,7 +56,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
   } = props;
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps } = usePickerState(props, valueManager);
+  const { pickerProps, inputProps } = usePickerState(props, timePickerValueManager);
 
   const DateInputProps = { ...inputProps, ...other, ref, validationError };
 
