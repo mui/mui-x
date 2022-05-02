@@ -261,11 +261,11 @@ export const usePickerState = <TInputValue, TValue, TDate>(
   );
 
   const handleInputChange = React.useCallback(
-    (value: TValue, keyboardInputValue?: string) => {
-      const cleanDate = valueManager.valueReducer
-        ? valueManager.valueReducer(utils, lastValidDateValue, value)
-        : value;
-      onChange(cleanDate, keyboardInputValue);
+    (newParsedValue: TValue, keyboardInputValue?: string) => {
+      const cleanParsedValue = valueManager.valueReducer
+        ? valueManager.valueReducer(utils, lastValidDateValue, newParsedValue)
+        : newParsedValue;
+      onChange(cleanParsedValue, keyboardInputValue);
     },
     [onChange, valueManager, lastValidDateValue, utils],
   );
