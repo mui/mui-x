@@ -338,6 +338,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
       maxTime,
       meridiemMode,
       minTime,
+      minutesStep,
       shouldDisableTime,
       utils,
     ],
