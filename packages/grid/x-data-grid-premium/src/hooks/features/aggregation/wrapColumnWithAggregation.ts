@@ -195,7 +195,7 @@ export const wrapColumnWithAggregation = ({
     const isGroup = id.toString().startsWith('auto-generated-row-');
 
     if (isGroup) {
-      if (isGroupAggregated && !isGroupAggregated(apiRef.current.getRowNode(id))) {
+      if (isGroupAggregated && !isGroupAggregated(apiRef.current.getRowNode(id), 'inline')) {
         return null;
       }
 
@@ -204,7 +204,18 @@ export const wrapColumnWithAggregation = ({
 
     const isFooter = id.toString().startsWith('auto-generated-group-footer-');
     if (isFooter) {
-      // We don't have to check `isGroupAggregated` because if it returns false, the footer is not created at all
+      if (!isGroupAggregated) {
+        return 'footer';
+      }
+
+      const rowNode = apiRef.current.getRowNode(id)!;
+      const parentRowNode =
+        rowNode.parent == null ? null : apiRef.current.getRowNode(rowNode.parent);
+
+      if (!isGroupAggregated(parentRowNode, 'footer')) {
+        return null;
+      }
+
       return 'footer';
     }
 

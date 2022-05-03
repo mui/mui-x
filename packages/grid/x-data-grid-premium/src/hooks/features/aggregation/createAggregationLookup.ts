@@ -76,41 +76,52 @@ const getGroupAggregatedValue = ({
   aggregatedRows,
   aggregatedFields,
   aggregationRules,
+  isGroupAggregated,
 }: {
   id: GridRowId;
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregatedRows: DataGridPremiumProcessedProps['aggregatedRows'];
   aggregatedFields: string[];
   aggregationRules: GridAggregationRules;
+  isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
 }) => {
-  const rowAggregationLookup: GridAggregationLookup[GridRowId] = {};
+  const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
+  const rowNode = apiRef.current.getRowNode(id)!;
 
   for (let j = 0; j < aggregatedFields.length; j += 1) {
     const aggregatedField = aggregatedFields[j];
     const columnAggregationRules = aggregationRules[aggregatedField];
+    const columnAggregationLookup: GridAggregationLookup[GridRowId][string] = {};
 
-    rowAggregationLookup[aggregatedField] = {
-      inline: columnAggregationRules.inline
-        ? getAggregationCellValue({
-            apiRef,
-            id,
-            field: aggregatedField,
-            aggregationFunction: columnAggregationRules.inline.aggregationFunction,
-            aggregatedRows,
-          })
-        : null,
-      footer: columnAggregationRules.footer
-        ? getAggregationCellValue({
-            apiRef,
-            id,
-            field: aggregatedField,
-            aggregationFunction: columnAggregationRules.footer.aggregationFunction,
-            aggregatedRows,
-          })
-        : null,
-    };
+    if (
+      columnAggregationRules.inline &&
+      (!isGroupAggregated || isGroupAggregated(rowNode, 'inline'))
+    ) {
+      columnAggregationLookup.inline = getAggregationCellValue({
+        apiRef,
+        id,
+        field: aggregatedField,
+        aggregationFunction: columnAggregationRules.inline.aggregationFunction,
+        aggregatedRows,
+      });
+    }
+
+    if (
+      columnAggregationRules.footer &&
+      (!isGroupAggregated || isGroupAggregated(rowNode, 'footer'))
+    ) {
+      columnAggregationLookup.footer = getAggregationCellValue({
+        apiRef,
+        id,
+        field: aggregatedField,
+        aggregationFunction: columnAggregationRules.footer.aggregationFunction,
+        aggregatedRows,
+      });
+    }
+
+    groupAggregationLookup[aggregatedField] = columnAggregationRules;
   }
-  return rowAggregationLookup;
+  return groupAggregationLookup;
 };
 
 export const createAggregationLookup = ({
@@ -142,18 +153,19 @@ export const createAggregationLookup = ({
     const rowId = rowIds[i];
     const isGroup = rowId.toString().startsWith('auto-generated-row-');
 
-    if (isGroup && (!isGroupAggregated || isGroupAggregated(apiRef.current.getRowNode(rowId)))) {
+    if (isGroup) {
       aggregationLookup[rowId] = getGroupAggregatedValue({
         id: rowId,
         apiRef,
         aggregatedFields,
         aggregatedRows,
         aggregationRules,
+        isGroupAggregated,
       });
     }
   }
 
-  if (!isGroupAggregated || isGroupAggregated(null)) {
+  if (!isGroupAggregated) {
     // TODO: Add custom root id
     aggregationLookup[''] = getGroupAggregatedValue({
       id: '',
@@ -161,6 +173,7 @@ export const createAggregationLookup = ({
       aggregatedFields,
       aggregatedRows,
       aggregationRules,
+      isGroupAggregated,
     });
   }
 

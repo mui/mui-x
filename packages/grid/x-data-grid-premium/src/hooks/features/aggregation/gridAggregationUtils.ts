@@ -174,7 +174,7 @@ export const addFooterRows = ({
   const addGroupFooter = (parentNode: GridRowTreeNodeConfig | null) => {
     const parentId = parentNode?.id ?? null;
 
-    if (isGroupAggregated && !isGroupAggregated(parentNode)) {
+    if (isGroupAggregated && !isGroupAggregated(parentNode, 'footer')) {
       return;
     }
 
@@ -225,6 +225,9 @@ export const addFooterRows = ({
   };
 };
 
+/**
+ * Compares two sets of aggregation rules to determine if they are equal or not.
+ */
 export const hasAggregationRulesChanged = (
   previousValue: GridAggregationRules | undefined,
   newValue: GridAggregationRules,

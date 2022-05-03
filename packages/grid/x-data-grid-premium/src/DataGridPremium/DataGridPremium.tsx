@@ -408,7 +408,8 @@ DataGridPremiumRaw.propTypes = {
   isCellEditable: PropTypes.func,
   /**
    * Determines in a group of rows should be aggregated.
-   * @param {GridRowTreeNodeConfig | null} rowNode The current group (`null` being the top level group)
+   * @param {GridRowTreeNodeConfig | null} rowNode The current group (`null` being the top level group).
+   * @param {GridAggregationPosition} position The position on which the aggregation has to be done.
    * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
    */
   isGroupAggregated: PropTypes.func,

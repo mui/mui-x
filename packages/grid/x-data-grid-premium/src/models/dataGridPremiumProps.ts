@@ -12,7 +12,11 @@ import {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
-import type { GridAggregationModel, GridAggregationFunction } from '../hooks/features/aggregation';
+import type {
+  GridAggregationModel,
+  GridAggregationFunction,
+  GridAggregationPosition,
+} from '../hooks/features/aggregation';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 
@@ -111,8 +115,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
   /**
    * Determines in a group of rows should be aggregated.
-   * @param {GridRowTreeNodeConfig | null} rowNode The current group (`null` being the top level group)
+   * @param {GridRowTreeNodeConfig | null} rowNode The current group (`null` being the top level group).
+   * @param {GridAggregationPosition} position The position on which the aggregation has to be done.
    * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
    */
-  isGroupAggregated?: (rowNode: GridRowTreeNodeConfig | null) => boolean;
+  isGroupAggregated?: (
+    rowNode: GridRowTreeNodeConfig | null,
+    position: GridAggregationPosition,
+  ) => boolean;
 }
