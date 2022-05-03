@@ -9,7 +9,13 @@ import type {
 } from '../hooks';
 
 export interface GridControlledStateEventLookupPremium {
+  /**
+   * Fired when the aggregation model changes.
+   */
   aggregationModelChange: { params: GridAggregationModel };
+  /**
+   * Fired when the row grouping model changes.
+   */
   rowGroupingModelChange: { params: GridRowGroupingModel };
 }
 
