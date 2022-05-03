@@ -34,6 +34,7 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
   quickFilterParser?: (input: string) => any[];
   /**
    * The debounce time in milliseconds.
+   * @default 500
    */
   debounceMs?: number;
 };
@@ -92,6 +93,7 @@ GridToolbarQuickFilter.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The debounce time in milliseconds.
+   * @default 500
    */
   debounceMs: PropTypes.number,
   /**

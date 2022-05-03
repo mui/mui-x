@@ -323,9 +323,12 @@ To do so, set `quickFilterLogicOperator` to `GridLinkOperator.Or` as follow:
 
 ```js
 initialState={{
-  filterModel: {
-    quickFilterLogicOperator: GridLinkOperator.Or
-  }
+  filter: {
+    filterModel: {
+      items: [],
+      quickFilterLogicOperator: GridLinkOperator.Or,
+    },
+  },
 }}
 ```
 

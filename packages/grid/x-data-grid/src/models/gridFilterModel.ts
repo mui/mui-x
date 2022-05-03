@@ -22,7 +22,7 @@ export interface GridFilterModel {
   /**
    * - `GridLinkOperator.And`: the row must pass all the values.
    * - `GridLinkOperator.Or`: the row must pass at least one value.
-   * @default `GridLinkOperator.Or`
+   * @default `GridLinkOperator.And`
    */
   quickFilterLogicOperator?: GridLinkOperator;
 }

@@ -16,12 +16,12 @@ export interface GridToolbarProps
   extends GridToolbarContainerProps,
     Omit<GridToolbarExportProps, 'color'> {
   /**
-   * Show the quick filter component
+   * Show the quick filter component.
    * @default false
    */
   showQuickFilter?: boolean;
   /**
-   * props passed to the quick filter component
+   * Props passed to the quick filter component.
    */
   quickFilterProps?: GridToolbarQuickFilterProps;
 }
@@ -75,11 +75,11 @@ GridToolbar.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * props passed to the quick filter component
+   * Props passed to the quick filter component.
    */
   quickFilterProps: PropTypes.object,
   /**
-   * Show the quick filter component
+   * Show the quick filter component.
    * @default false
    */
   showQuickFilter: PropTypes.bool,
