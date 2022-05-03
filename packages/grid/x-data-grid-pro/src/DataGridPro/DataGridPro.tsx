@@ -12,7 +12,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { DataGridProProps } from '../models';
+import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
@@ -84,6 +84,10 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   autoPageSize: PropTypes.bool,
+  /**
+   * Controls the modes of the cells.
+   */
+  cellModesModel: PropTypes.object,
   /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
@@ -215,15 +219,10 @@ DataGridProRaw.propTypes = {
    */
   disableMultipleColumnsSorting: PropTypes.bool,
   /**
-   * If `true`, multiple selection using the CTRL or CMD key is disabled.
+   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
    * @default false
    */
   disableMultipleSelection: PropTypes.bool,
-  /**
-   * If `true`, the row grouping is disabled.
-   * @default false
-   */
-  disableRowGrouping: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
@@ -254,7 +253,6 @@ DataGridProRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
-    rowGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -472,6 +470,12 @@ DataGridProRaw.propTypes = {
    */
   onCellKeyDown: PropTypes.func,
   /**
+   * Callback fired when the `cellModesModel` prop changes.
+   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellModesModelChange: PropTypes.func,
+  /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -660,11 +664,18 @@ DataGridProRaw.propTypes = {
    */
   onRowEditStop: PropTypes.func,
   /**
-   * Callback fired when the row grouping model changes.
-   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
+   * Callback fired when the `rowModesModel` prop changes.
+   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowGroupingModelChange: PropTypes.func,
+  onRowModesModelChange: PropTypes.func,
+  /**
+   * Callback fired when a row is being reordered.
+   * @param {GridRowOrderChangeParams} params With all properties from [[GridRowOrderChangeParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowOrderChange: PropTypes.func,
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
@@ -742,20 +753,19 @@ DataGridProRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
-   * @default 'single'
-   */
-  rowGroupingColumnMode: PropTypes.oneOf(['multiple', 'single']),
-  /**
-   * Set the row grouping model of the grid.
-   */
-  rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
-  /**
    * Set the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
+  /**
+   * Controls the modes of the rows.
+   */
+  rowModesModel: PropTypes.object,
+  /**
+   * If `true`, the reordering of rows is enabled.
+   * @default false
+   */
+  rowReordering: PropTypes.bool,
   /**
    * Set of rows of type [[GridRowsProp]].
    */

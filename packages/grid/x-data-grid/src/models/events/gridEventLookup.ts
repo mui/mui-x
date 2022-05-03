@@ -24,12 +24,25 @@ import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
+import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   rowDoubleClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   rowMouseEnter: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  rowDragStart: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragOver: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
+  rowDragEnd: {
+    params: GridRowParams;
+    event: React.DragEvent<HTMLElement>;
+  };
 }
 
 export interface GridColumnHeaderEventLookup {
@@ -169,6 +182,8 @@ export interface GridEventLookup
 
   // Edit
   cellModeChange: { params: GridCellParams };
+  cellModesModelChange: { params: GridCellModesModel };
+  rowModesModelChange: { params: GridRowModesModel };
   cellEditStart: {
     params: GridCellEditStartParams;
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
@@ -209,6 +224,8 @@ export interface GridEventLookup
   // Scroll
   rowsScroll: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
   virtualScrollerContentSizeChange: {};
+  virtualScrollerWheel: { params: {}; event: React.WheelEvent };
+  virtualScrollerTouchMove: { params: {}; event: React.TouchEvent };
 
   // Selection
   headerSelectionCheckboxChange: { params: GridHeaderSelectionCheckboxParams };

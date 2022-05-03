@@ -31,6 +31,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: '导出',
   toolbarExportCSV: '导出至CSV',
   // toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '搜索列',
@@ -129,6 +130,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const zhCN: Localization = getGridLocalization(zhCNGrid, zhCNCore);

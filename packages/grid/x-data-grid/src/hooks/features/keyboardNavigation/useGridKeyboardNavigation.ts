@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEvents, GridEventListener } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
@@ -65,9 +65,7 @@ export const useGridKeyboardNavigation = (
     [apiRef, logger],
   );
 
-  const handleCellNavigationKeyDown = React.useCallback<
-    GridEventListener<GridEvents.cellNavigationKeyDown>
-  >(
+  const handleCellNavigationKeyDown = React.useCallback<GridEventListener<'cellNavigationKeyDown'>>(
     (params, event) => {
       const dimensions = apiRef.current.getRootDimensions();
       if (!currentPage.range || !dimensions) {
@@ -198,9 +196,7 @@ export const useGridKeyboardNavigation = (
     [apiRef, currentPage, goToCell, goToHeader],
   );
 
-  const handleColumnHeaderKeyDown = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderKeyDown>
-  >(
+  const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     (params, event) => {
       const headerTitleNode = event.currentTarget.querySelector(
         `.${gridClasses.columnHeaderTitleContainerContent}`,
@@ -293,7 +289,7 @@ export const useGridKeyboardNavigation = (
     [apiRef, currentPage, goToCell, goToHeader],
   );
 
-  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       // Ignore portal
       if (!event.currentTarget.contains(event.target as Element)) {
@@ -304,13 +300,13 @@ export const useGridKeyboardNavigation = (
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
 
       if (cellParams.cellMode !== GridCellModes.Edit && isNavigationKey(event.key)) {
-        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, cellParams, event);
+        apiRef.current.publishEvent('cellNavigationKeyDown', cellParams, event);
       }
     },
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, handleCellNavigationKeyDown);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, 'cellNavigationKeyDown', handleCellNavigationKeyDown);
+  useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 };

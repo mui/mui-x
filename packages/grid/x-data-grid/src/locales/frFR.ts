@@ -32,6 +32,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exporter',
   toolbarExportCSV: 'Télécharger en CSV',
   toolbarExportPrint: 'Imprimer',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',
@@ -133,6 +134,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

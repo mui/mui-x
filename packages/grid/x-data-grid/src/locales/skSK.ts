@@ -41,6 +41,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stiahnuť ako CSV',
   toolbarExportPrint: 'Vytlačiť',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Nájsť stĺpec',
@@ -165,6 +166,9 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

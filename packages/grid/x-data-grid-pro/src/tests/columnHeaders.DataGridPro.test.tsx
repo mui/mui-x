@@ -2,7 +2,7 @@ import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { gridClasses, DataGridPro } from '@mui/x-data-grid-pro';
+import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -55,7 +55,7 @@ describe('<DataGridPro /> - Column Headers', () => {
   describe('GridColumnHeaderMenu', () => {
     it('should close the menu when the window is scrolled', () => {
       render(
-        <div style={{ width: 300, height: 500 }}>
+        <div style={{ width: 300, height: 200 }}>
           <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
         </div>,
       );
@@ -65,9 +65,28 @@ describe('<DataGridPro /> - Column Headers', () => {
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      fireEvent.scroll(virtualScroller);
+      fireEvent.wheel(virtualScroller);
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
+    });
+
+    it('should not close the menu when updating the rows prop', () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} {...props} />
+          </div>
+        );
+      };
+      const { setProps } = render(<Test />);
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      fireEvent.click(menuIconButton);
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      setProps({ rows: [...baselineProps.rows] });
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
     });
 
     it('should not modify column order when menu is clicked', () => {

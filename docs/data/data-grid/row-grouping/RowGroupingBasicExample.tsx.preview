@@ -1,0 +1,6 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  rowGroupingColumnMode="single"
+  initialState={initialState}
+/>

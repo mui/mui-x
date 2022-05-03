@@ -102,7 +102,7 @@ const GridMenu = (props: GridMenuProps) => {
       {...rootProps.componentsProps?.basePopper}
     >
       {({ TransitionProps, placement }) => (
-        <ClickAwayListener onClickAway={onClickAway}>
+        <ClickAwayListener onClickAway={onClickAway} mouseEvent="onMouseDown">
           <Grow
             {...TransitionProps}
             style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}

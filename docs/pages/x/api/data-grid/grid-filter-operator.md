@@ -5,6 +5,8 @@
 ## Import
 
 ```js
+import { GridFilterOperator } from '@mui/x-data-grid-premium';
+// or
 import { GridFilterOperator } from '@mui/x-data-grid-pro';
 // or
 import { GridFilterOperator } from '@mui/x-data-grid';
