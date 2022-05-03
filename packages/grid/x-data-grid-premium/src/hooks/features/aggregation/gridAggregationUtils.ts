@@ -247,6 +247,8 @@ export const hasAggregationRulesChanged = (
     if (previousRule?.aggregationFunctionName !== newRule?.aggregationFunctionName) {
       return true;
     }
+
+    return false;
   };
 
   return newFields.some((field) => {
