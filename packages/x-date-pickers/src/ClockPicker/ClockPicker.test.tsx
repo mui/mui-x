@@ -318,6 +318,21 @@ describe('<ClockPicker />', () => {
       expect(handleChange.callCount).to.equal(0);
     });
 
+    it('should visually disable the dates not matching minutesStep', () => {
+      render(
+        <ClockPicker
+          ampm={false}
+          date={adapterToUse.date('2018-01-01T13:20:00.000')}
+          minutesStep={15}
+          onChange={() => {}}
+          view="minutes"
+        />,
+      );
+
+      expect(screen.getByLabelText('25 minutes')).to.have.class('Mui-disabled');
+      expect(screen.getByLabelText('30 minutes')).not.to.have.class('Mui-disabled');
+    });
+
     it('should select enabled second', () => {
       const handleChange = spy();
       const handleViewChange = spy();

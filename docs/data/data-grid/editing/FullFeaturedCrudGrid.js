@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import {
-  useGridApiRef,
+  GridRowModes,
   DataGridPro,
   GridToolbarContainer,
   GridActionsCellItem,
@@ -20,7 +20,7 @@ import {
   randomId,
 } from '@mui/x-data-grid-generator';
 
-const rows = [
+const initialRows = [
   {
     id: randomId(),
     name: randomTraderName(),
@@ -59,21 +59,15 @@ const rows = [
 ];
 
 function EditToolbar(props) {
-  const { apiRef } = props;
+  const { setRows, setRowModesModel } = props;
 
   const handleClick = () => {
     const id = randomId();
-    apiRef.current.updateRows([{ id, isNew: true }]);
-    apiRef.current.startRowEditMode({ id });
-
-    // Wait for the grid to render with the new row
-    setTimeout(() => {
-      apiRef.current.scrollToIndexes({
-        rowIndex: apiRef.current.getRowsCount() - 1,
-      });
-
-      apiRef.current.setCellFocus(id, 'name');
-    });
+    setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
+    setRowModesModel((oldModel) => ({
+      ...oldModel,
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+    }));
   };
 
   return (
@@ -86,13 +80,13 @@ function EditToolbar(props) {
 }
 
 EditToolbar.propTypes = {
-  apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
-  }).isRequired,
+  setRowModesModel: PropTypes.func.isRequired,
+  setRows: PropTypes.func.isRequired,
 };
 
 export default function FullFeaturedCrudGrid() {
-  const apiRef = useGridApiRef();
+  const [rows, setRows] = React.useState(initialRows);
+  const [rowModesModel, setRowModesModel] = React.useState({});
 
   const handleRowEditStart = (params, event) => {
     event.defaultMuiPrevented = true;
@@ -103,28 +97,33 @@ export default function FullFeaturedCrudGrid() {
   };
 
   const handleEditClick = (id) => () => {
-    apiRef.current.startRowEditMode({ id });
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
   const handleSaveClick = (id) => () => {
-    apiRef.current.stopRowEditMode({ id });
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
   const handleDeleteClick = (id) => () => {
-    apiRef.current.updateRows([{ id, _action: 'delete' }]);
+    setRows(rows.filter((row) => row.id !== id));
   };
 
-  const handleCancelClick = (id) => async () => {
-    apiRef.current.stopRowEditMode({ id, ignoreModifications: true });
+  const handleCancelClick = (id) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
 
-    const row = apiRef.current.getRow(id);
-    if (row.isNew) {
-      apiRef.current.updateRows([{ id, _action: 'delete' }]);
+    const editedRow = rows.find((row) => row.id === id);
+    if (editedRow.isNew) {
+      setRows(rows.filter((row) => row.id !== id));
     }
   };
 
-  const processRowUpdate = async (newRow) => {
-    return { ...newRow, isNew: false };
+  const processRowUpdate = (newRow) => {
+    const updatedRow = { ...newRow, isNew: false };
+    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    return updatedRow;
   };
 
   const columns = [
@@ -151,7 +150,7 @@ export default function FullFeaturedCrudGrid() {
       width: 100,
       cellClassName: 'actions',
       getActions: ({ id }) => {
-        const isInEditMode = apiRef.current.getRowMode(id) === 'edit';
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
         if (isInEditMode) {
           return [
@@ -206,8 +205,8 @@ export default function FullFeaturedCrudGrid() {
       <DataGridPro
         rows={rows}
         columns={columns}
-        apiRef={apiRef}
         editMode="row"
+        rowModesModel={rowModesModel}
         onRowEditStart={handleRowEditStart}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
@@ -215,7 +214,7 @@ export default function FullFeaturedCrudGrid() {
           Toolbar: EditToolbar,
         }}
         componentsProps={{
-          toolbar: { apiRef },
+          toolbar: { setRows, setRowModesModel },
         }}
         experimentalFeatures={{ newEditingApi: true }}
       />

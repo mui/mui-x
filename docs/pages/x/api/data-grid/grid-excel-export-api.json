@@ -1,0 +1,16 @@
+{
+  "name": "GridExcelExportApi",
+  "description": "The excel export API interface that is available in the grid apiRef.",
+  "properties": [
+    {
+      "name": "exportDataAsExcel",
+      "description": "Downloads and exports an Excel file of the grid&#39;s data.",
+      "type": "(options?: GridExcelExportOptions) => Promise<void>"
+    },
+    {
+      "name": "getDataAsExcel",
+      "description": "Returns the grid data as an exceljs workbook.\nThis method is used internally by <code>exportDataAsExcel</code>.",
+      "type": "(options?: GridExcelExportOptions) => Promise<Excel.Workbook> | null"
+    }
+  ]
+}

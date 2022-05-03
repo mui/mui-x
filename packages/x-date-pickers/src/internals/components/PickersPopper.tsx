@@ -47,6 +47,7 @@ export interface PickerPopperProps extends ExportedPickerPopperProps, ExportedPi
   onClose: () => void;
   onBlur?: () => void;
   onClear?: () => void;
+  onCancel?: () => void;
 }
 
 const PickersPopperRoot = styled(Popper)<{ ownerState: PickerPopperProps }>(({ theme }) => ({

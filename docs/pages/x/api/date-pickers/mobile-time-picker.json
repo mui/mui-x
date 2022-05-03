@@ -12,12 +12,12 @@
     "className": { "type": { "name": "string" } },
     "clearable": { "type": { "name": "bool" } },
     "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
-    "components": { "type": { "name": "object" } },
-    "DialogProps": { "type": { "name": "object" } },
-    "disableCloseOnSelect": {
+    "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
+    "components": { "type": { "name": "object" } },
+    "DialogProps": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },
@@ -28,7 +28,7 @@
     },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
-      "default": "(value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`"
+      "default": "(date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`"
     },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
@@ -66,12 +66,7 @@
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
-    "value": {
-      "type": {
-        "name": "union",
-        "description": "any<br>&#124;&nbsp;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
-      }
-    },
+    "value": { "type": { "name": "any" } },
     "views": {
       "type": {
         "name": "arrayOf",
