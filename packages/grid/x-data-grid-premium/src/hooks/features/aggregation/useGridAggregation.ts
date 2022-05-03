@@ -9,7 +9,11 @@ import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumPr
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridAggregationApi } from './gridAggregationInterfaces';
-import { getAggregationRules, mergeStateWithAggregationModel } from './gridAggregationUtils';
+import {
+  getAggregationRules,
+  mergeStateWithAggregationModel,
+  hasAggregationRulesChanged,
+} from './gridAggregationUtils';
 import { createAggregationLookup } from './createAggregationLookup';
 
 export const aggregationStateInitializer: GridStateInitializer<
@@ -92,7 +96,7 @@ export const useGridAggregation = (
     });
 
     // Re-apply the row hydration to add / remove the aggregation footers
-    if (!isDeepEqual(aggregationRulesOnLastRowHydration, aggregationRules)) {
+    if (hasAggregationRulesChanged(aggregationRulesOnLastRowHydration, aggregationRules)) {
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
       applyAggregation();
     }

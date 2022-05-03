@@ -73,6 +73,11 @@ export const useGridAggregationPreProcessors = (
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       if (props.disableAggregation) {
+        apiRef.current.unstable_setCache('aggregation', (prev) => ({
+          ...prev,
+          aggregationRulesOnLastRowHydration: {},
+        }));
+
         return groupingParams;
       }
 

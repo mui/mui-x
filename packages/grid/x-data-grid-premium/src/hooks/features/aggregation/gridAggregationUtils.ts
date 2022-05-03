@@ -4,10 +4,15 @@ import {
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
 } from '@mui/x-data-grid-pro';
-import { GridColumnRawLookup, GridRowTreeCreationValue } from '@mui/x-data-grid-pro/internals';
+import {
+  GridColumnRawLookup,
+  GridRowTreeCreationValue,
+  isDeepEqual,
+} from '@mui/x-data-grid-pro/internals';
 import {
   GridAggregationFunction,
   GridAggregationModel,
+  GridAggregationRule,
   GridAggregationRules,
   GridColumnAggregationRules,
 } from './gridAggregationInterfaces';
@@ -218,4 +223,45 @@ export const addFooterRows = ({
     idRowsLookup,
     tree,
   };
+};
+
+export const hasAggregationRulesChanged = (
+  previousValue: GridAggregationRules | undefined,
+  newValue: GridAggregationRules,
+) => {
+  const previousFields = Object.keys(previousValue ?? {});
+  const newFields = Object.keys(newValue);
+
+  if (!isDeepEqual(previousFields, newFields)) {
+    return true;
+  }
+
+  const hasAggregationRuleChanged = (
+    previousRule: GridAggregationRule | undefined,
+    newRule: GridAggregationRule | undefined,
+  ) => {
+    if (previousRule?.aggregationFunction !== newRule?.aggregationFunction) {
+      return true;
+    }
+
+    if (previousRule?.aggregationFunctionName !== newRule?.aggregationFunctionName) {
+      return true;
+    }
+  };
+
+  return newFields.some((field) => {
+    const previousColumnAggregationRules = previousValue?.[field];
+    const newColumnAggregationRules = newValue[field];
+
+    return (
+      hasAggregationRuleChanged(
+        previousColumnAggregationRules?.inline,
+        newColumnAggregationRules.inline,
+      ) ||
+      hasAggregationRuleChanged(
+        previousColumnAggregationRules?.footer,
+        newColumnAggregationRules.footer,
+      )
+    );
+  });
 };
