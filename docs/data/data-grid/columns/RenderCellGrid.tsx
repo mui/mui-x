@@ -31,7 +31,7 @@ const RenderDate = (props: GridRenderCellParams<Date>) => {
         style={{ marginLeft: 16 }}
         // Remove button from tab sequence when cell does not have focus
         tabIndex={hasFocus ? 0 : -1}
-        onKeyDown={(event) => {
+        onKeyDown={(event: React.KeyboardEvent) => {
           if (event.key === ' ') {
             // Prevent key navigation when focus is on button
             event.stopPropagation();

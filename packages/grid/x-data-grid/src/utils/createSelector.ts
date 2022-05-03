@@ -17,7 +17,7 @@ type StateFromSelector<T> = T extends (first: infer F, ...args: any[]) => any
 
 type StateFromSelectorList<Selectors extends readonly any[]> = Selectors extends [
   f: infer F,
-  ...rest: infer R
+  ...rest: infer R,
 ]
   ? StateFromSelector<F> extends StateFromSelectorList<R>
     ? StateFromSelector<F>
