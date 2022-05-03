@@ -13,10 +13,8 @@ import {
 import { gridFilterStateSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortingStateSelector } from '../sorting/gridSortingSelector';
-import { GridEventListener } from '../../../models/events/gridEventListener';
-import { GridEvents } from '../../../models/events/gridEvents';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -139,19 +137,7 @@ export const useGridRowsMeta = (
     hydrateRowsMeta();
   }, [rowHeight, filterState, paginationState, sortingState, hydrateRowsMeta]);
 
-  const handlepipeProcessorRegister = React.useCallback<
-    GridEventListener<GridEvents.pipeProcessorRegister>
-  >(
-    (name) => {
-      if (name !== 'rowHeight') {
-        return;
-      }
-      hydrateRowsMeta();
-    },
-    [hydrateRowsMeta],
-  );
-
-  useGridApiEventHandler(apiRef, GridEvents.pipeProcessorRegister, handlepipeProcessorRegister);
+  useGridRegisterPipeApplier(apiRef, 'rowHeight', hydrateRowsMeta);
 
   const rowsMetaApi: GridRowsMetaApi = {
     unstable_getRowHeight: getTargetRowHeight,

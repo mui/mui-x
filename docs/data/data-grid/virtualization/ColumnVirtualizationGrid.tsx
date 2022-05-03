@@ -18,7 +18,7 @@ function useData(rowLength: number, columnLength: number) {
     const rows: DataRowModel[] = [];
 
     for (let i = 0; i < rowLength; i += 1) {
-      const row = {
+      const row: DataRowModel = {
         id: i,
       };
 

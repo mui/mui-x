@@ -48,6 +48,12 @@
     "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
+    "name": "cellModesModelChange",
+    "description": "Fired when the model that controls the cell modes changes.",
+    "params": "GridCellModesModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "cellMouseDown",
     "description": "Fired when a <code>mousedown</code> event happens in a cell.",
     "params": "GridCellParams",
@@ -228,6 +234,12 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "name": "rowModesModelChange",
+    "description": "Fired when the model that controls the row modes changes.",
+    "params": "GridRowModesModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "rowMouseEnter",
     "description": "Fired when the mouse enters the row. Called with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
     "params": "GridRowParams",
@@ -240,6 +252,12 @@
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
+    "name": "rowOrderChange",
+    "description": "Fired when the user ends reordering a row.",
+    "params": "GridRowOrderChangeParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "rowSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of a row is changed",
     "params": "GridRowSelectionCheckboxParams",
@@ -249,7 +267,7 @@
     "name": "rowsScroll",
     "description": "Fired during the scroll of the grid viewport.",
     "params": "GridScrollParams",
-    "event": "MuiEvent<{}>"
+    "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
   },
   {
     "name": "rowsScrollEnd",

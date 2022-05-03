@@ -43,9 +43,9 @@ SelectEditInputCell.propTypes = {
   value: PropTypes.any,
 };
 
-function renderSelectEditInputCell(params) {
+const renderSelectEditInputCell = (params) => {
   return <SelectEditInputCell {...params} />;
-}
+};
 
 export default function AutoStopEditComponent() {
   return (

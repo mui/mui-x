@@ -1,8 +1,22 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
+import { generateUtilityClasses } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeft, ArrowRight } from './icons';
+
+export interface PickersArrowSwitcherSlotsComponent {
+  LeftArrowButton: React.ElementType;
+  LeftArrowIcon: React.ElementType;
+  RightArrowButton: React.ElementType;
+  RightArrowIcon: React.ElementType;
+}
+
+export interface PickersArrowSwitcherSlotsComponentsProps {
+  leftArrowButton: Record<string, any>;
+  rightArrowButton: Record<string, any>;
+}
 
 export interface ExportedArrowSwitcherProps {
   /**
@@ -10,20 +24,12 @@ export interface ExportedArrowSwitcherProps {
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: {
-    LeftArrowButton?: React.ElementType;
-    LeftArrowIcon?: React.ElementType;
-    RightArrowButton?: React.ElementType;
-    RightArrowIcon?: React.ElementType;
-  };
+  components?: Partial<PickersArrowSwitcherSlotsComponent>;
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: {
-    leftArrowButton?: Record<string, any>;
-    rightArrowButton?: Record<string, any>;
-  };
+  componentsProps?: Partial<PickersArrowSwitcherSlotsComponentsProps>;
   /**
    * Left arrow icon aria-label text.
    */
@@ -46,19 +52,33 @@ interface ArrowSwitcherProps
   onRightClick: () => void;
 }
 
-const PickersArrowSwitcherRoot = styled('div')<{
+const classes = generateUtilityClasses('MuiPickersArrowSwitcher', ['root', 'spacer', 'button']);
+
+const PickersArrowSwitcherRoot = styled('div', {
+  name: 'MuiPickersArrowSwitcher',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{
   ownerState: ArrowSwitcherProps;
 }>({
   display: 'flex',
 });
 
-const PickersArrowSwitcherSpacer = styled('div')<{
+const PickersArrowSwitcherSpacer = styled('div', {
+  name: 'MuiPickersArrowSwitcher',
+  slot: 'Spacer',
+  overridesResolver: (props, styles) => styles.spacer,
+})<{
   ownerState: ArrowSwitcherProps;
 }>(({ theme }) => ({
   width: theme.spacing(3),
 }));
 
-const PickersArrowSwitcherButton = styled(IconButton)<{
+const PickersArrowSwitcherButton = styled(IconButton, {
+  name: 'MuiPickersArrowSwitcher',
+  slot: 'Button',
+  overridesResolver: (props, styles) => styles.button,
+})<{
   ownerState: ArrowSwitcherProps;
 }>(({ ownerState }) => ({
   ...(ownerState.hidden && {
@@ -97,7 +117,12 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const ownerState = props;
 
   return (
-    <PickersArrowSwitcherRoot ref={ref} className={className} ownerState={ownerState} {...other}>
+    <PickersArrowSwitcherRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      {...other}
+    >
       <PickersArrowSwitcherButton
         as={components.LeftArrowButton}
         size="small"
@@ -107,7 +132,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
         edge="end"
         onClick={onLeftClick}
         {...leftArrowButtonProps}
-        className={leftArrowButtonProps.className}
+        className={clsx(classes.button, leftArrowButtonProps.className)}
         ownerState={{ ...ownerState, ...leftArrowButtonProps, hidden: isLeftHidden }}
       >
         {isRtl ? <RightArrowIcon /> : <LeftArrowIcon />}
@@ -117,7 +142,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
           {children}
         </Typography>
       ) : (
-        <PickersArrowSwitcherSpacer ownerState={ownerState} />
+        <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
       <PickersArrowSwitcherButton
         as={components.RightArrowButton}
@@ -128,7 +153,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
         disabled={isRightDisabled}
         onClick={onRightClick}
         {...rightArrowButtonProps}
-        className={rightArrowButtonProps.className}
+        className={clsx(classes.button, rightArrowButtonProps.className)}
         ownerState={{ ...ownerState, ...rightArrowButtonProps, hidden: isRightHidden }}
       >
         {isRtl ? <LeftArrowIcon /> : <RightArrowIcon />}

@@ -8,6 +8,7 @@ import {
 export interface GridRowTreeCreationParams {
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
+  idToIdLookup: Record<string, GridRowId>;
   previousTree: GridRowTreeConfig | null;
 }
 
@@ -21,6 +22,7 @@ export interface GridRowTreeCreationValue {
   treeDepth: number;
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
+  idToIdLookup: Record<string, GridRowId>;
 }
 
 export type GridRowInternalCacheValue = Omit<GridRowTreeCreationParams, 'previousTree'>;
@@ -41,6 +43,10 @@ export interface GridRowsInternalCache {
 }
 
 export interface GridRowsState extends GridRowTreeCreationValue {
+  /**
+   * Matches the value of the `loading` prop.
+   */
+  loading?: boolean;
   /**
    * Amount of rows before applying the filtering.
    * It also counts the expanded and collapsed children rows.

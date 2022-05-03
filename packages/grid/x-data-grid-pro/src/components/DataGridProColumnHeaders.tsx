@@ -7,7 +7,6 @@ import {
   useGridSelector,
   useGridApiEventHandler,
   gridVisibleColumnFieldsSelector,
-  GridEvents,
   GridColumnHeaderSeparatorSides,
 } from '@mui/x-data-grid';
 import {
@@ -113,35 +112,19 @@ export const DataGridProColumnHeaders = React.forwardRef<
     setScrollbarSize(newScrollbarSize);
   }, [apiRef]);
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.virtualScrollerContentSizeChange,
-    handleContentSizeChange,
-  );
+  useGridApiEventHandler(apiRef, 'virtualScrollerContentSizeChange', handleContentSizeChange);
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
 
-  const {
-    isDragging,
-    renderContext,
-    updateInnerPosition,
-    getRootProps,
-    getInnerProps,
-    getColumns,
-  } = useGridColumnHeaders({
-    innerRef,
-    minColumnIndex: leftPinnedColumns.length,
-  });
+  const { isDragging, renderContext, getRootProps, getInnerProps, getColumns } =
+    useGridColumnHeaders({
+      innerRef,
+      minColumnIndex: leftPinnedColumns.length,
+    });
 
   const ownerState = { leftPinnedColumns, rightPinnedColumns, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-
-  React.useEffect(() => {
-    if (renderContext) {
-      updateInnerPosition(renderContext);
-    }
-  }, [renderContext, updateInnerPosition]);
 
   const leftRenderContext =
     renderContext && leftPinnedColumns.length

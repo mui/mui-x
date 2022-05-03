@@ -117,4 +117,21 @@ describe('<MonthPicker />', () => {
     fireEvent.click(screen.getByText('Jul', { selector: 'button' }));
     expect(onChangeMock.callCount).to.equal(0);
   });
+
+  it('clicking on a PickersMonth button should not trigger the form submit', () => {
+    const onSubmitMock = spy();
+    render(
+      <form onSubmit={onSubmitMock}>
+        <MonthPicker
+          minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
+          maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
+          date={adapterToUse.date('2019-02-02T00:00:00.000')}
+          onChange={() => {}}
+        />
+      </form>,
+    );
+
+    fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
+    expect(onSubmitMock.callCount).to.equal(0);
+  });
 });

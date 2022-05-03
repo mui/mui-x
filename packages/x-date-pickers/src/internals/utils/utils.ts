@@ -25,15 +25,6 @@ export const onSpaceOrEnter =
     }
   };
 
-/* Quick untyped helper to improve function composition readability */
-export const pipe = (...fns: Array<(...args: any[]) => any>) =>
-  fns.reduceRight(
-    (prevFn, nextFn) =>
-      (...args) =>
-        nextFn(prevFn(...args)),
-    (value) => value,
-  );
-
 export const executeInTheNextEventLoopTick = (fn: () => void) => {
   setTimeout(fn, 0);
 };

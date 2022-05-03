@@ -8,6 +8,11 @@ export const gridRowCountSelector = createSelector(
   (rows) => rows.totalRowCount,
 );
 
+export const gridRowsLoadingSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows.loading,
+);
+
 export const gridTopLevelRowCountSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.totalTopLevelRowCount,
@@ -16,6 +21,11 @@ export const gridTopLevelRowCountSelector = createSelector(
 export const gridRowsLookupSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.idRowsLookup,
+);
+
+export const gridRowsIdToIdLookupSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows.idToIdLookup,
 );
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);

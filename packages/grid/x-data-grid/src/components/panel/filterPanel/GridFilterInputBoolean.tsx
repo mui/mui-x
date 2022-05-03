@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
@@ -7,6 +8,10 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
   const { item, applyValue, apiRef, focusElementRef, ...others } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const rootProps = useGridRootProps();
+
+  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const isSelectNative = baseSelectProps.native ?? true;
+  const OptionComponent = isSelectNative ? 'option' : MenuItem;
 
   const onFilterChange = React.useCallback(
     (event) => {
@@ -29,7 +34,9 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
       variant="standard"
       select
       SelectProps={{
-        native: true,
+        native: isSelectNative,
+        displayEmpty: true,
+        ...rootProps.componentsProps?.baseSelect,
       }}
       InputLabelProps={{
         shrink: true,
@@ -38,9 +45,13 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
       {...others}
       {...rootProps.componentsProps?.baseTextField}
     >
-      <option value="">{apiRef.current.getLocaleText('filterValueAny')}</option>
-      <option value="true">{apiRef.current.getLocaleText('filterValueTrue')}</option>
-      <option value="false">{apiRef.current.getLocaleText('filterValueFalse')}</option>
+      <OptionComponent value="">{apiRef.current.getLocaleText('filterValueAny')}</OptionComponent>
+      <OptionComponent value="true">
+        {apiRef.current.getLocaleText('filterValueTrue')}
+      </OptionComponent>
+      <OptionComponent value="false">
+        {apiRef.current.getLocaleText('filterValueFalse')}
+      </OptionComponent>
     </rootProps.components.BaseTextField>
   );
 }

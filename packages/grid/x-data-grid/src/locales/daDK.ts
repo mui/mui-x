@@ -32,6 +32,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Eksporter',
   toolbarExportCSV: 'Download som CSV',
   toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find kolonne',
@@ -131,6 +132,9 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Udvid',
   collapseDetailPanel: 'Kollaps',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const daDK: Localization = getGridLocalization(daDKGrid, daDKCore);

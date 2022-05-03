@@ -1,8 +1,9 @@
 [
-  { "name": "generateLicence", "kind": "Function" },
+  { "name": "generateLicense", "kind": "Function" },
   { "name": "generateReleaseInfo", "kind": "Function" },
   { "name": "LicenseDetails", "kind": "Interface" },
   { "name": "LicenseInfo", "kind": "Class" },
+  { "name": "LicenseScope", "kind": "TypeAlias" },
   { "name": "LicenseStatus", "kind": "Enum" },
   { "name": "MuiCommercialPackageName", "kind": "TypeAlias" },
   { "name": "showExpiredLicenseError", "kind": "Function" },

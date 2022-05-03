@@ -6,7 +6,6 @@ import {
   useGridApiOptionHandler,
   useGridApiEventHandler,
 } from '../../utils/useGridApiEventHandler';
-import { GridEvents } from '../../../models/events/gridEvents';
 import {
   GridCellModes,
   GridEditModes,
@@ -82,10 +81,7 @@ export const useCellEditing = (
         return { ...state, editRows: newEditRowsState };
       });
       apiRef.current.forceUpdate();
-      apiRef.current.publishEvent(
-        GridEvents.cellModeChange,
-        apiRef.current.getCellParams(id, field),
-      );
+      apiRef.current.publishEvent('cellModeChange', apiRef.current.getCellParams(id, field));
     },
     [apiRef, logger],
   );
@@ -137,7 +133,7 @@ export const useCellEditing = (
             if (newEditCellProps.error) {
               return false;
             }
-            apiRef.current.publishEvent(GridEvents.cellEditCommit, commitParams, event);
+            apiRef.current.publishEvent('cellEditCommit', commitParams, event);
             return true;
           });
         }
@@ -147,7 +143,7 @@ export const useCellEditing = (
       }
 
       if (!hasError) {
-        apiRef.current.publishEvent(GridEvents.cellEditCommit, commitParams, event);
+        apiRef.current.publishEvent('cellEditCommit', commitParams, event);
         return true;
       }
 
@@ -210,7 +206,7 @@ export const useCellEditing = (
 
   useGridApiMethod(apiRef, cellEditingApi, 'EditRowApi');
 
-  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
       const { id, field, cellMode, isEditable } = params;
       if (!isEditable) {
@@ -226,20 +222,12 @@ export const useCellEditing = (
         !isModifierKeyPressed &&
         !(event.key === ' ' && event.shiftKey)
       ) {
-        apiRef.current.publishEvent(
-          GridEvents.cellEditStart,
-          params as GridCellEditStartParams,
-          event,
-        );
+        apiRef.current.publishEvent('cellEditStart', params as GridCellEditStartParams, event);
       }
       if (!isEditMode && isDeleteKeys(event.key)) {
         apiRef.current.setEditCellValue({ id, field, value: '' });
         apiRef.current.commitCellChange({ id, field }, event);
-        apiRef.current.publishEvent(
-          GridEvents.cellEditStop,
-          params as GridCellEditStopParams,
-          event,
-        );
+        apiRef.current.publishEvent('cellEditStop', params as GridCellEditStopParams, event);
       }
       if (isEditMode && isCellEditCommitKeys(event.key)) {
         const commitParams = { id, field };
@@ -249,26 +237,18 @@ export const useCellEditing = (
         }
       }
       if (isEditMode && isCellExitEditModeKeys(event.key)) {
-        apiRef.current.publishEvent(
-          GridEvents.cellEditStop,
-          params as GridCellEditStopParams,
-          event,
-        );
+        apiRef.current.publishEvent('cellEditStop', params as GridCellEditStopParams, event);
       }
     },
     [apiRef],
   );
 
-  const handleCellDoubleClick = React.useCallback<GridEventListener<GridEvents.cellDoubleClick>>(
+  const handleCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
     (params, event) => {
       if (!params.isEditable) {
         return;
       }
-      apiRef.current.publishEvent(
-        GridEvents.cellEditStart,
-        params as GridCellEditStartParams,
-        event,
-      );
+      apiRef.current.publishEvent('cellEditStart', params as GridCellEditStartParams, event);
     },
     [apiRef],
   );
@@ -278,26 +258,27 @@ export const useCellEditing = (
       return;
     }
     await apiRef.current.commitCellChange(params, event);
-    apiRef.current.publishEvent(GridEvents.cellEditStop, params as GridCellEditStopParams, event);
+    apiRef.current.publishEvent('cellEditStop', params as GridCellEditStopParams, event);
   };
 
-  const handleCellFocusOut: GridEventListener<GridEvents.cellFocusOut> = useEventCallback(
+  const handleCellFocusOut: GridEventListener<'cellFocusOut'> = useEventCallback(
     (params, event) => {
       commitPropsAndExit(params, event);
     },
   );
 
-  const handleColumnHeaderDragStart: GridEventListener<GridEvents.columnHeaderDragEnter> =
-    useEventCallback(() => {
+  const handleColumnHeaderDragStart: GridEventListener<'columnHeaderDragEnter'> = useEventCallback(
+    () => {
       const cell = gridFocusCellSelector(apiRef);
       if (!cell) {
         return;
       }
       const params = apiRef.current.getCellParams(cell.id, cell.field);
       commitPropsAndExit(params, {});
-    });
+    },
+  );
 
-  const handleCellEditStart = React.useCallback<GridEventListener<GridEvents.cellEditStart>>(
+  const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params, event) => {
       if (!params.isEditable) {
         return;
@@ -316,7 +297,7 @@ export const useCellEditing = (
     [apiRef],
   );
 
-  const handleCellEditStop = React.useCallback<GridEventListener<GridEvents.cellEditStop>>(
+  const handleCellEditStop = React.useCallback<GridEventListener<'cellEditStop'>>(
     (params, event) => {
       apiRef.current.setCellMode(params.id, params.field, GridCellModes.View);
 
@@ -325,7 +306,7 @@ export const useCellEditing = (
       }
 
       if (isCellEditCommitKeys(event.key)) {
-        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
+        apiRef.current.publishEvent('cellNavigationKeyDown', params, event);
         return;
       }
       if (event.key === 'Escape' || isDeleteKeys(event.key)) {
@@ -335,7 +316,7 @@ export const useCellEditing = (
     [apiRef],
   );
 
-  const handleCellEditCommit = React.useCallback<GridEventListener<GridEvents.cellEditCommit>>(
+  const handleCellEditCommit = React.useCallback<GridEventListener<'cellEditCommit'>>(
     (params) => {
       const { id, field } = params;
       const model = apiRef.current.getEditRowsModel();
@@ -354,9 +335,7 @@ export const useCellEditing = (
     [apiRef, logger],
   );
 
-  const handleEditCellPropsChange = React.useCallback<
-    GridEventListener<GridEvents.editCellPropsChange>
-  >(
+  const handleEditCellPropsChange = React.useCallback<GridEventListener<'editCellPropsChange'>>(
     (params) => {
       const row = apiRef.current.getRow(params.id)!;
 
@@ -376,24 +355,20 @@ export const useCellEditing = (
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, buildCallback(handleCellKeyDown));
-  useGridApiEventHandler(apiRef, GridEvents.cellDoubleClick, buildCallback(handleCellDoubleClick));
-  useGridApiEventHandler(apiRef, GridEvents.cellFocusOut, buildCallback(handleCellFocusOut));
+  useGridApiEventHandler(apiRef, 'cellKeyDown', buildCallback(handleCellKeyDown));
+  useGridApiEventHandler(apiRef, 'cellDoubleClick', buildCallback(handleCellDoubleClick));
+  useGridApiEventHandler(apiRef, 'cellFocusOut', buildCallback(handleCellFocusOut));
   useGridApiEventHandler(
     apiRef,
-    GridEvents.columnHeaderDragStart,
+    'columnHeaderDragStart',
     buildCallback(handleColumnHeaderDragStart),
   );
-  useGridApiEventHandler(apiRef, GridEvents.cellEditStart, buildCallback(handleCellEditStart));
-  useGridApiEventHandler(apiRef, GridEvents.cellEditStop, buildCallback(handleCellEditStop));
-  useGridApiEventHandler(apiRef, GridEvents.cellEditCommit, buildCallback(handleCellEditCommit));
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.editCellPropsChange,
-    buildCallback(handleEditCellPropsChange),
-  );
+  useGridApiEventHandler(apiRef, 'cellEditStart', buildCallback(handleCellEditStart));
+  useGridApiEventHandler(apiRef, 'cellEditStop', buildCallback(handleCellEditStop));
+  useGridApiEventHandler(apiRef, 'cellEditCommit', buildCallback(handleCellEditCommit));
+  useGridApiEventHandler(apiRef, 'editCellPropsChange', buildCallback(handleEditCellPropsChange));
 
-  useGridApiOptionHandler(apiRef, GridEvents.cellEditCommit, props.onCellEditCommit);
-  useGridApiOptionHandler(apiRef, GridEvents.cellEditStart, props.onCellEditStart);
-  useGridApiOptionHandler(apiRef, GridEvents.cellEditStop, props.onCellEditStop);
+  useGridApiOptionHandler(apiRef, 'cellEditCommit', props.onCellEditCommit);
+  useGridApiOptionHandler(apiRef, 'cellEditStart', props.onCellEditStart);
+  useGridApiOptionHandler(apiRef, 'cellEditStop', props.onCellEditStop);
 };

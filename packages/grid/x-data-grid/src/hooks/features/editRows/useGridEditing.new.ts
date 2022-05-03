@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
+import { GridEditingApi, GridNewEditingSharedApi } from '../../../models/api/gridEditingApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridCellEditing } from './useGridCellEditing.new';
-import { GridCellModes } from '../../../models/gridEditRowModel';
+import { GridCellModes, GridEditModes } from '../../../models/gridEditRowModel';
 import { useGridRowEditing } from './useGridRowEditing.new';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 
@@ -120,7 +120,7 @@ export const useGridEditing = (
       return new Promise((resolve) => {
         maybeDebounce(id, field, debounceMs, async () => {
           const setEditCellValueToCall =
-            props.editMode === 'row'
+            props.editMode === GridEditModes.Row
               ? apiRef.current.unstable_setRowEditingEditCellValue
               : apiRef.current.unstable_setCellEditingEditCellValue;
 
@@ -136,13 +136,22 @@ export const useGridEditing = (
     [apiRef, props.editMode],
   );
 
-  const editingSharedApi: Pick<
-    GridEditingSharedApi,
-    'isCellEditable' | 'setEditCellValue' | 'unstable_runPendingEditCellValueMutation'
-  > = {
+  const getRowWithUpdatedValues = React.useCallback<
+    GridNewEditingSharedApi['unstable_getRowWithUpdatedValues']
+  >(
+    (id, field) => {
+      return props.editMode === GridEditModes.Cell
+        ? apiRef.current.unstable_getRowWithUpdatedValuesFromCellEditing(id, field)
+        : apiRef.current.unstable_getRowWithUpdatedValuesFromRowEditing(id);
+    },
+    [apiRef, props.editMode],
+  );
+
+  const editingSharedApi: GridNewEditingSharedApi = {
     isCellEditable,
     setEditCellValue,
     unstable_runPendingEditCellValueMutation: runPendingEditCellValueMutation,
+    unstable_getRowWithUpdatedValues: getRowWithUpdatedValues,
   };
 
   useGridApiMethod(apiRef, editingSharedApi, 'EditingApi');

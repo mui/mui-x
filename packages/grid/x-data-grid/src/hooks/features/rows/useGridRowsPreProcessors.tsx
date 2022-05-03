@@ -11,6 +11,7 @@ import {
 const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = ({
   ids,
   idRowsLookup,
+  idToIdLookup,
   previousTree,
 }) => {
   const tree: GridRowTreeConfig = {};
@@ -29,6 +30,7 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = ({
     tree,
     treeDepth: 1,
     idRowsLookup,
+    idToIdLookup,
     ids,
   };
 };

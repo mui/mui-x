@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DataGridPro, GridLinkOperator, GridToolbar } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import type { Theme } from '@mui/material/styles';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
@@ -79,7 +80,7 @@ export default function CustomFilterPanelContent() {
               // Customize inputs using css selectors
               '& .MuiDataGrid-filterForm': { p: 2 },
               '& .MuiDataGrid-filterForm:nth-child(even)': {
-                backgroundColor: (theme) =>
+                backgroundColor: (theme: Theme) =>
                   theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
               },
               '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },

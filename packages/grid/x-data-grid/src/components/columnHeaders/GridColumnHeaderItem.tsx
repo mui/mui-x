@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridEvents, GridColumnHeaderEventLookup } from '../../models/events';
+import { GridColumnHeaderEventLookup } from '../../models/events';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -123,22 +123,22 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   const mouseEventsHandlers = {
-    onClick: publish(GridEvents.columnHeaderClick),
-    onDoubleClick: publish(GridEvents.columnHeaderDoubleClick),
-    onMouseOver: publish(GridEvents.columnHeaderOver), // TODO remove as it's not used
-    onMouseOut: publish(GridEvents.columnHeaderOut), // TODO remove as it's not used
-    onMouseEnter: publish(GridEvents.columnHeaderEnter), // TODO remove as it's not used
-    onMouseLeave: publish(GridEvents.columnHeaderLeave), // TODO remove as it's not used
-    onKeyDown: publish(GridEvents.columnHeaderKeyDown),
-    onFocus: publish(GridEvents.columnHeaderFocus),
-    onBlur: publish(GridEvents.columnHeaderBlur),
+    onClick: publish('columnHeaderClick'),
+    onDoubleClick: publish('columnHeaderDoubleClick'),
+    onMouseOver: publish('columnHeaderOver'), // TODO remove as it's not used
+    onMouseOut: publish('columnHeaderOut'), // TODO remove as it's not used
+    onMouseEnter: publish('columnHeaderEnter'), // TODO remove as it's not used
+    onMouseLeave: publish('columnHeaderLeave'), // TODO remove as it's not used
+    onKeyDown: publish('columnHeaderKeyDown'),
+    onFocus: publish('columnHeaderFocus'),
+    onBlur: publish('columnHeaderBlur'),
   };
 
   const draggableEventHandlers = {
-    onDragStart: publish(GridEvents.columnHeaderDragStart),
-    onDragEnter: publish(GridEvents.columnHeaderDragEnter),
-    onDragOver: publish(GridEvents.columnHeaderDragOver),
-    onDragEnd: publish(GridEvents.columnHeaderDragEnd),
+    onDragStart: publish('columnHeaderDragStart'),
+    onDragEnter: publish('columnHeaderDragEnter'),
+    onDragOver: publish('columnHeaderDragOver'),
+    onDragEnd: publish('columnHeaderDragEnd'),
   };
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
@@ -207,13 +207,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     const columnMenuState = apiRef.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-      if (focusableElement) {
-        focusableElement!.focus();
-      } else {
-        headerCellRef.current!.focus();
-      }
+      const elementToFocus = focusableElement || headerCellRef.current;
+      elementToFocus?.focus();
+      apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
     }
-  });
+  }, [apiRef, hasFocus]);
 
   const headerClassName =
     typeof column.headerClassName === 'function'
@@ -259,7 +257,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         resizable={!rootProps.disableColumnResize && !!column.resizable}
         resizing={isResizing}
         height={headerHeight}
-        onMouseDown={publish(GridEvents.columnSeparatorMouseDown)}
+        onMouseDown={publish('columnSeparatorMouseDown')}
         side={separatorSide}
       />
       <GridColumnHeaderMenu

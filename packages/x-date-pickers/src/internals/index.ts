@@ -13,9 +13,8 @@ export type {
   DateInputProps,
   ExportedDateInputProps,
   MuiTextFieldProps,
+  DateInputSlotsComponent,
 } from './components/PureDateInput';
-export { ResponsiveTooltipWrapper } from './components/wrappers/ResponsiveWrapper';
-export type { ResponsiveWrapperProps } from './components/wrappers/ResponsiveWrapper';
 export type { DateInputPropsLike } from './components/wrappers/WrapperProps';
 export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
 export type { WrapperVariant } from './components/wrappers/WrapperVariantContext';
@@ -38,14 +37,17 @@ export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-hel
 
 export type { BasePickerProps } from './models/props/basePickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
-export type { ParseableDate } from './models/parseableDate';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 
 export { executeInTheNextEventLoopTick } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 
 export { PickersCalendarHeader } from '../CalendarPicker/PickersCalendarHeader';
-export type { ExportedCalendarHeaderProps } from '../CalendarPicker/PickersCalendarHeader';
+export type {
+  ExportedCalendarHeaderProps,
+  PickersCalendarHeaderSlotsComponent,
+  PickersCalendarHeaderSlotsComponentsProps,
+} from '../CalendarPicker/PickersCalendarHeader';
 
 export { DayPicker } from '../CalendarPicker/DayPicker';
 export type { PickersCalendarProps } from '../CalendarPicker/DayPicker';

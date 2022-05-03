@@ -2,8 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useForkRef } from '@mui/material/utils';
-import { GridEvents } from '../../models/events';
-import { GridCellParams } from '../../models/params/gridCellParams';
+import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -27,7 +26,7 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
+const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRenderCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const {
       field,
@@ -42,6 +41,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
       hasFocus,
       tabIndex,
       getValue,
+      api,
       ...other
     } = props;
     const apiRef = useGridApiContext();
@@ -56,7 +56,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
-      apiRef.current.publishEvent(GridEvents.rowSelectionCheckboxChange, params, event);
+      apiRef.current.publishEvent('rowSelectionCheckboxChange', params, event);
     };
 
     React.useLayoutEffect(() => {
@@ -81,7 +81,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+          apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
         }
       },
       [apiRef, props],
@@ -119,6 +119,11 @@ GridCellCheckboxForwardRef.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * GridApi that let you manipulate the grid.
+   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
+   */
+  api: PropTypes.any.isRequired,
+  /**
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
@@ -130,6 +135,19 @@ GridCellCheckboxForwardRef.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
+  /**
+   * A ref allowing to set imperative focus.
+   * It can be passed to the element that should receive focus.
+   * @ignore - do not document.
+   */
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        focus: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */

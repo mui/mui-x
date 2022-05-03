@@ -2,11 +2,13 @@ import * as React from 'react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
+import {
+  gridRowCountSelector,
+  gridRowsLoadingSelector,
+} from '../../hooks/features/rows/gridRowsSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { GridEvents } from '../../models/events';
 
 function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   const apiRef = useGridApiContext();
@@ -22,10 +24,7 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   }, [apiRef]);
 
   useEnhancedEffect(() => {
-    return apiRef.current.subscribeEvent(
-      GridEvents.viewportInnerSizeChange,
-      handleViewportSizeChange,
-    );
+    return apiRef.current.subscribeEvent('viewportInnerSizeChange', handleViewportSizeChange);
   }, [apiRef, handleViewportSizeChange]);
 
   let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
@@ -57,9 +56,10 @@ export function GridOverlays() {
 
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
 
-  const showNoRowsOverlay = !rootProps.loading && totalRowCount === 0;
-  const showNoResultsOverlay = !rootProps.loading && totalRowCount > 0 && visibleRowCount === 0;
+  const showNoRowsOverlay = !loading && totalRowCount === 0;
+  const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
 
   let overlay: JSX.Element | null = null;
 
