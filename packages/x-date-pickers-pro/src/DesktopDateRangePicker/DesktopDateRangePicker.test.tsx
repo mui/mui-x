@@ -154,6 +154,7 @@ describe('<DesktopDateRangePicker />', () => {
     );
 
     fireEvent.focus(screen.getAllByRole('textbox')[1]);
+    fireEvent.click(screen.getAllByRole('textbox')[1]);
 
     fireEvent.click(screen.getByLabelText('Jan 30, 2019'));
     fireEvent.click(screen.getByLabelText('Jan 19, 2019'));
@@ -178,7 +179,7 @@ describe('<DesktopDateRangePicker />', () => {
       </React.Fragment>,
     );
 
-    fireEvent.focus(screen.getAllByRole('textbox')[0]);
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
     expect(screen.getByRole('tooltip')).toBeVisible();
 
     fireEvent.focus(screen.getByText('focus me'));
@@ -231,7 +232,7 @@ describe('<DesktopDateRangePicker />', () => {
       />,
     );
 
-    fireEvent.focus(screen.getAllByRole('textbox')[0]);
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
     expect(screen.getByText('May 2019')).toBeVisible();
 
     fireEvent.focus(screen.getAllByRole('textbox')[1]);
@@ -253,7 +254,7 @@ describe('<DesktopDateRangePicker />', () => {
       />,
     );
 
-    fireEvent.focus(screen.getAllByRole('textbox')[0]);
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
@@ -355,7 +356,7 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when focusing the start input', () => {
+    it('should open when clicking the start input', () => {
       const onOpen = spy();
 
       render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
@@ -366,7 +367,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(screen.getByRole('tooltip')).toBeVisible();
     });
 
-    it('should open when focusing the end input', () => {
+    it('should open when clicking the end input', () => {
       const onOpen = spy();
 
       render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
@@ -376,6 +377,36 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onOpen.callCount).to.equal(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
     });
+
+    ['Enter', ' '].forEach((key) =>
+      it(`should open when pressing "${key}" in the start input`, () => {
+        const onOpen = spy();
+
+        render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
+
+        const startInput = screen.getAllByRole('textbox')[0];
+        startInput.focus();
+        fireEvent.keyDown(startInput, { key });
+
+        expect(onOpen.callCount).to.equal(1);
+        expect(screen.getByRole('tooltip')).toBeVisible();
+      }),
+    );
+
+    ['Enter', ' '].forEach((key) =>
+      it(`should open when pressing "${key}" in the end input`, () => {
+        const onOpen = spy();
+
+        render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
+
+        const endInput = screen.getAllByRole('textbox')[1];
+        endInput.focus();
+        fireEvent.keyDown(endInput, { key });
+
+        expect(onOpen.callCount).to.equal(1);
+        expect(screen.getByRole('tooltip')).toBeVisible();
+      }),
+    );
 
     it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', () => {
       const onChange = spy();

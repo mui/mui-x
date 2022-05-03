@@ -4,8 +4,8 @@ import {
   createRenderer,
   screen,
   RenderOptions,
-  fireEvent,
   userEvent,
+  fireEvent,
 } from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { TransitionProps } from '@mui/material/transitions';
@@ -94,11 +94,8 @@ type OpenPickerParams =
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
     const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
-    if (params.variant === 'mobile') {
-      return userEvent.mousePress(target);
-    }
 
-    return fireEvent.focus(target);
+    return userEvent.mousePress(target);
   }
 
   if (params.variant === 'mobile') {

@@ -39,7 +39,7 @@ export type { BasePickerProps } from './models/props/basePickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 
-export { executeInTheNextEventLoopTick } from './utils/utils';
+export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 
 export { PickersCalendarHeader } from '../CalendarPicker/PickersCalendarHeader';
