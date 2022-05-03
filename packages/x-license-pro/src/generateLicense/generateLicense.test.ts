@@ -10,7 +10,7 @@ describe('License: generateLicense', () => {
         term: 'subscription',
       }),
     ).to.equal(
-      '310495f37c0e32a88a5371ced300ac05T1JERVI9TVVJLTEyMyxFWFBJUlk9MTU5MTcyMzg3OTA2MixLRVlWRVJTSU9OPTIsU0NPUEU9cHJvLFRFUk09c3Vic2NyaXB0aW9u',
+      '2af8412f4b193d494ad14d311f20afdcTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxUPXN1YnNjcmlwdGlvbixLVj0y',
     );
   });
 
@@ -23,7 +23,7 @@ describe('License: generateLicense', () => {
         term: 'subscription',
       }),
     ).to.equal(
-      '310495f37c0e32a88a5371ced300ac05T1JERVI9TVVJLTEyMyxFWFBJUlk9MTU5MTcyMzg3OTA2MixLRVlWRVJTSU9OPTIsU0NPUEU9cHJvLFRFUk09c3Vic2NyaXB0aW9u',
+      '2af8412f4b193d494ad14d311f20afdcTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxUPXN1YnNjcmlwdGlvbixLVj0y',
     );
   });
 
@@ -36,7 +36,7 @@ describe('License: generateLicense', () => {
         term: 'subscription',
       }),
     ).to.equal(
-      '42e3b10f822986504fe9469ed53fc3dcT1JERVI9TVVJLTEyMyxFWFBJUlk9MTU5MTcyMzg3OTA2MixLRVlWRVJTSU9OPTIsU0NPUEU9cHJlbWl1bSxURVJNPXN1YnNjcmlwdGlvbg==',
+      '846ffde2dae9865df655c0c4deea401dTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sVD1zdWJzY3JpcHRpb24sS1Y9Mg==',
     );
   });
 
@@ -48,7 +48,7 @@ describe('License: generateLicense', () => {
         scope: 'pro',
       }),
     ).to.equal(
-      '310495f37c0e32a88a5371ced300ac05T1JERVI9TVVJLTEyMyxFWFBJUlk9MTU5MTcyMzg3OTA2MixLRVlWRVJTSU9OPTIsU0NPUEU9cHJvLFRFUk09c3Vic2NyaXB0aW9u',
+      '2af8412f4b193d494ad14d311f20afdcTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxUPXN1YnNjcmlwdGlvbixLVj0y',
     );
   });
 
@@ -61,7 +61,7 @@ describe('License: generateLicense', () => {
         term: 'subscription',
       }),
     ).to.equal(
-      '310495f37c0e32a88a5371ced300ac05T1JERVI9TVVJLTEyMyxFWFBJUlk9MTU5MTcyMzg3OTA2MixLRVlWRVJTSU9OPTIsU0NPUEU9cHJvLFRFUk09c3Vic2NyaXB0aW9u',
+      '2af8412f4b193d494ad14d311f20afdcTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxUPXN1YnNjcmlwdGlvbixLVj0y',
     );
   });
 
@@ -74,7 +74,7 @@ describe('License: generateLicense', () => {
         term: 'perpetual',
       }),
     ).to.equal(
-      'ab260e0003d2473c4d3bc34eb83f4d8bT1JERVI9TVVJLTEyMyxFWFBJUlk9MTU5MTcyMzg3OTA2MixLRVlWRVJTSU9OPTIsU0NPUEU9cHJvLFRFUk09cGVycGV0dWFs',
+      'f677f286ff9eaabf37e87e44a6fa3746Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxUPXBlcnBldHVhbCxLVj0y',
     );
   });
 });

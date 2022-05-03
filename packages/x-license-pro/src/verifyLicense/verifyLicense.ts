@@ -1,8 +1,8 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope } from '../utils/licenseScope';
-import { LicenseTerm } from '../utils/licenseTerm';
+import { LicenseScope, LICENSE_SCOPES } from '../utils/licenseScope';
+import { LicenseTerm, LICENSE_TERMS } from '../utils/licenseTerm';
 
 const getDefaultReleaseDate = () => {
   const today = new Date();
@@ -45,7 +45,7 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
 };
 
 /**
- * Format: ORDER=${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=2,SCOPE=${scope},TERM=${term}`;
+ * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},T=${term},KV=2`;
  */
 const decodeLicenseVersion2 = (license: string): MuiLicense => {
   const licenseInfo: MuiLicense = {
@@ -59,15 +59,15 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
     .map((token) => token.split('='))
     .filter((el) => el.length === 2)
     .forEach(([key, value]) => {
-      if (key === 'SCOPE') {
+      if (key === 'S') {
         licenseInfo.scope = value as LicenseScope;
       }
 
-      if (key === 'TERM') {
+      if (key === 'T') {
         licenseInfo.term = value as LicenseTerm;
       }
 
-      if (key === 'EXPIRY') {
+      if (key === 'E') {
         const expiryTimestamp = parseInt(value, 10);
         if (expiryTimestamp && !Number.isNaN(expiryTimestamp)) {
           licenseInfo.expiryTimestamp = expiryTimestamp;
@@ -88,7 +88,7 @@ const decodeLicense = (encodedLicense: string): MuiLicense | null => {
     return decodeLicenseVersion1(license);
   }
 
-  if (license.includes('KEYVERSION=2')) {
+  if (license.includes('KV=2')) {
     return decodeLicenseVersion2(license);
   }
 
@@ -128,7 +128,7 @@ export function verifyLicense({
     return LicenseStatus.Invalid;
   }
 
-  if (license.term == null) {
+  if (license.term == null || !LICENSE_TERMS.includes(license.term)) {
     console.error('Error checking license. Term not found or invalid!');
     return LicenseStatus.Invalid;
   }
@@ -153,8 +153,8 @@ export function verifyLicense({
     }
   }
 
-  if (license.scope == null) {
-    console.error('Error checking license. scope not found!');
+  if (license.scope == null || !LICENSE_SCOPES.includes(license.scope)) {
+    console.error('Error checking license. scope not found or invalid!');
     return LicenseStatus.Invalid;
   }
 

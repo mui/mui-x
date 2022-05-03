@@ -5,7 +5,7 @@ import { configureActions } from '@storybook/addon-actions';
 
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(
-  '5abdc6ddfa0eec6e04e57360c6bc5997T1JERVI9TVVJLVN0b3J5Ym9vayxFWFBJUlk9MTY4Mjg0NDU0MjQwNixLRVlWRVJTSU9OPTIsU0NPUEU9cHJlbWl1bSxURVJNPXN1YnNjcmlwdGlvbg==',
+  '15a0de3200829d7d58f46064e4ddaa20Tz1NVUktU3Rvcnlib29rLEU9MTY4MzE5MTk1ODMwMSxTPXByZW1pdW0sVD1zdWJzY3JpcHRpb24sS1Y9Mg==',
 );
 
 configureActions({

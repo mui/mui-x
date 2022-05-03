@@ -1,7 +1,7 @@
 import { md5 } from '../encoding/md5';
 import { base64Encode } from '../encoding/base64';
-import { LicenseScope } from '../utils/licenseScope';
-import { LicenseTerm } from '../utils/licenseTerm';
+import { LICENSE_SCOPES, LicenseScope } from '../utils/licenseScope';
+import { LICENSE_TERMS, LicenseTerm } from '../utils/licenseTerm';
 
 const licenseVersion = '2';
 
@@ -15,11 +15,17 @@ export interface LicenseDetails {
 }
 
 function getClearLicenseString(details: LicenseDetails) {
-  return `ORDER=${
-    details.orderNumber
-  },EXPIRY=${details.expiryDate.getTime()},KEYVERSION=${licenseVersion},SCOPE=${
+  if (details.scope && !LICENSE_SCOPES.includes(details.scope)) {
+    throw new Error('MUI: Invalid scope');
+  }
+
+  if (details.term && !LICENSE_TERMS.includes(details.term)) {
+    throw new Error('MUI: Invalid term');
+  }
+
+  return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${
     details.scope ?? 'pro'
-  },TERM=${details.term ?? 'subscription'}`;
+  },T=${details.term ?? 'subscription'},KV=${licenseVersion}`;
 }
 
 export function generateLicense(details: LicenseDetails) {
