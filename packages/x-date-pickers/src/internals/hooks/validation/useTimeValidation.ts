@@ -14,6 +14,11 @@ export interface ExportedTimeValidationProps<TDate> {
    */
   maxTime?: TDate;
   /**
+   * Step over minutes.
+   * @default 1
+   */
+  minutesStep?: number;
+  /**
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
@@ -34,6 +39,7 @@ export interface TimeValidationProps<TInputDate, TDate>
 
 export type TimeValidationError =
   | 'invalidDate'
+  | 'minutesStep'
   | 'minTime'
   | 'maxTime'
   | 'shouldDisableTime-hours'
@@ -44,7 +50,7 @@ export type TimeValidationError =
 export const validateTime: Validator<any, TimeValidationProps<any, any>> = (
   utils,
   value,
-  { minTime, maxTime, shouldDisableTime, disableIgnoringDatePartForTimeValidation },
+  { minTime, maxTime, minutesStep, shouldDisableTime, disableIgnoringDatePartForTimeValidation },
 ): TimeValidationError => {
   const date = utils.date(value);
   const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
@@ -71,6 +77,9 @@ export const validateTime: Validator<any, TimeValidationProps<any, any>> = (
 
     case Boolean(shouldDisableTime && shouldDisableTime(utils.getSeconds(date!), 'seconds')):
       return 'shouldDisableTime-seconds';
+
+    case Boolean(minutesStep && utils.getMinutes(date!) % minutesStep !== 0):
+      return 'minutesStep';
 
     default:
       return null;
