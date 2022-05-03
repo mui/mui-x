@@ -163,7 +163,7 @@ function App() {
           }
 
           let isDataGridTest = false;
-          if (path.indexOf('/docs-components-data-grid') === 0 || path.indexOf('/stories-') === 0) {
+          if (path.indexOf('/docs-data-grid') === 0 || path.indexOf('/stories-') === 0) {
             isDataGridTest = true;
           }
 
