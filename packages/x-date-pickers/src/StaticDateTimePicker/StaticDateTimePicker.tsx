@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
+  dateTimePickerValueManager,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import {
@@ -11,15 +12,7 @@ import {
 } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
-import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
-
-const valueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};
+import { usePickerState } from '../internals/hooks/usePickerState';
 
 export interface StaticDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate> {
@@ -64,7 +57,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
     ...other
   } = props;
 
-  const { pickerProps, inputProps } = usePickerState(props, valueManager);
+  const { pickerProps, inputProps } = usePickerState(props, dateTimePickerValueManager);
   const validationError = useDateTimeValidation(props) !== null;
 
   const DateInputProps = { ...inputProps, ...other, ref, validationError };

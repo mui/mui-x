@@ -486,7 +486,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       virtualScroller.dispatchEvent(new Event('scroll'));
       expect(getActiveCell()).to.equal('0-3');
       // should be scrolled to the end of the cell
-      expect(virtualScroller.scrollLeft).to.equal(5 * 100 - virtualScroller.offsetWidth);
+      expect(virtualScroller.scrollLeft).to.equal(3 * 100);
 
       fireEvent.keyDown(getCell(0, 3), { key: 'ArrowLeft' });
       virtualScroller.dispatchEvent(new Event('scroll'));

@@ -21,6 +21,7 @@ export interface GridFocusApi {
    * @param {GridRowId} id The base row id.
    * @param {string} field The base column field.
    * @param {'below' | 'right' | 'left'} direction Which direction is the next cell to focus.
+   * @ignore - do not document.
    */
   unstable_moveFocusToRelativeCell: (
     id: GridRowId,

@@ -20,6 +20,8 @@ enum GridEvents {
   cellEditCommit = 'cellEditCommit',
   cellEditStart = 'cellEditStart',
   cellEditStop = 'cellEditStop',
+  cellModesModelChange = 'cellModesModelChange',
+  rowModesModelChange = 'rowModesModelChange',
   rowEditStart = 'rowEditStart',
   rowEditStop = 'rowEditStop',
   rowEditCommit = 'rowEditCommit',

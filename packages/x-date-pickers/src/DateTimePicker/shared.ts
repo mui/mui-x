@@ -15,6 +15,8 @@ import {
   ExportedDateInputProps,
 } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
+import { PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
 
 export interface DateTimePickerSlotsComponent
   extends CalendarPickerSlotsComponent,
@@ -129,3 +131,10 @@ export function useDateTimePickerDefaultizedProps<
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
   };
 }
+
+export const dateTimePickerValueManager: PickerStateValueManager<any, any, any> = {
+  emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
+  parseInput: parsePickerInputValue,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+};

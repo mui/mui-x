@@ -24,6 +24,7 @@ import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
+import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 
 export interface GridRowEventLookup {
   /**
@@ -376,6 +377,14 @@ export interface GridEventLookup
    * @ignore - do not document
    */
   cellModeChange: { params: GridCellParams };
+  /**
+   * Fired when the model that controls the cell modes changes.
+   */
+  cellModesModelChange: { params: GridCellModesModel };
+  /**
+   * Fired when the model that controls the row modes changes.
+   */
+  rowModesModelChange: { params: GridRowModesModel };
   /**
    * Fired when the cell turns to edit mode.
    */

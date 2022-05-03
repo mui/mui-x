@@ -5,14 +5,46 @@ import { useUtils } from './useUtils';
 import { MuiPickersAdapter } from '../models';
 
 export interface PickerStateValueManager<TInputValue, TValue, TDate> {
+  /**
+   * Determines if two values are equal.
+   * @template TDate, TValue
+   * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @param {TValue} valueLeft The first value to compare.
+   * @param {TValue} valueRight The second value to compare.
+   * @returns {boolean} A boolean indicating if the two values are equal.
+   */
   areValuesEqual: (
     utils: MuiPickersAdapter<TDate>,
     valueLeft: TValue,
     valueRight: TValue,
   ) => boolean;
+  /**
+   * Value to set when clicking the "Clear" button.
+   */
   emptyValue: TValue;
+  /**
+   * Method returning the value to set when clicking the "Today" button
+   * @template TDate, TValue
+   * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @returns {TValue} The value to set when clicking the "Today" button.
+   */
   getTodayValue: (utils: MuiPickersAdapter<TDate>) => TValue;
+  /**
+   * Method parsing the input value.
+   * @template TDate, TInputValue, TValue
+   * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @param {TInputValue} value The raw value to parse.
+   * @returns {TValue} The parsed value.
+   */
   parseInput: (utils: MuiPickersAdapter<TDate>, value: TInputValue) => TValue;
+  /**
+   * Generates the new value, given the previous value and the new proposed value.
+   * @template TDate, TValue
+   * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @param {TValue} prevValue The previous value.
+   * @param {TValue} value The proposed value.
+   * @returns {TValue} The new value.
+   */
   valueReducer?: (utils: MuiPickersAdapter<TDate>, prevValue: TValue, value: TValue) => TValue;
 }
 
