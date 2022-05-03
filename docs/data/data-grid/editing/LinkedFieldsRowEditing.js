@@ -35,7 +35,7 @@ const rows = [
 const CustomTypeEditComponent = (props) => {
   const apiRef = useGridApiContext();
 
-  const handleChange = async () => {
+  const handleValueChange = async () => {
     await apiRef.current.setEditCellValue({
       id: props.id,
       field: 'account',
@@ -43,7 +43,7 @@ const CustomTypeEditComponent = (props) => {
     });
   };
 
-  return <GridEditSingleSelectCell onChange={handleChange} {...props} />;
+  return <GridEditSingleSelectCell onValueChange={handleValueChange} {...props} />;
 };
 
 CustomTypeEditComponent.propTypes = {

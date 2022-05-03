@@ -38,7 +38,7 @@ const GridEditInputCellRoot = styled(InputBase, {
 
 export interface GridEditInputCellProps
   extends GridRenderEditCellParams,
-    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex' | 'onChange'> {
+    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex'> {
   debounceMs?: number;
   /**
    * Callback called when the value is changed by the user.
@@ -46,7 +46,10 @@ export interface GridEditInputCellProps
    * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>, newValue: string) => Promise<void> | void;
+  onValueChange?: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    newValue: string,
+  ) => Promise<void> | void;
 }
 
 function GridEditInputCell(props: GridEditInputCellProps) {
@@ -69,7 +72,7 @@ function GridEditInputCell(props: GridEditInputCellProps) {
     isValidating,
     debounceMs = rootProps.experimentalFeatures?.newEditingApi ? 200 : SUBMIT_FILTER_STROKE_TIME,
     isProcessingProps,
-    onChange,
+    onValueChange,
     ...other
   } = props;
 
@@ -82,14 +85,14 @@ function GridEditInputCell(props: GridEditInputCellProps) {
     async (event) => {
       const newValue = event.target.value;
 
-      if (onChange) {
-        await onChange(event, newValue);
+      if (onValueChange) {
+        await onValueChange(event, newValue);
       }
 
       setValueState(newValue);
       api.setEditCellValue({ id, field, value: newValue, debounceMs }, event);
     },
-    [api, debounceMs, field, id, onChange],
+    [api, debounceMs, field, id, onValueChange],
   );
 
   React.useEffect(() => {
@@ -171,7 +174,7 @@ GridEditInputCell.propTypes = {
    * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onChange: PropTypes.func,
+  onValueChange: PropTypes.func,
   /**
    * The row model of the row that the current cell belongs to.
    */

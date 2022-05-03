@@ -29,14 +29,14 @@ const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.
 
 export interface GridEditSingleSelectCellProps
   extends GridRenderEditCellParams,
-    Omit<SelectProps, 'id' | 'tabIndex' | 'onChange' | 'value'> {
+    Omit<SelectProps, 'id' | 'tabIndex' | 'value'> {
   /**
    * Callback called when the value is changed by the user.
    * @param {SelectChangeEvent<any>} event The event source of the callback.
    * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onChange?: (event: SelectChangeEvent<any>, newValue: any) => Promise<void> | void;
+  onValueChange?: (event: SelectChangeEvent<any>, newValue: any) => Promise<void> | void;
 }
 
 function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
@@ -58,7 +58,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     isValidating,
     isProcessingProps,
     error,
-    onChange,
+    onValueChange,
     ...other
   } = props;
 
@@ -97,8 +97,8 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     // NativeSelect casts the value to a string.
     const formattedTargetValue = getValueFromValueOptions(target.value, valueOptionsFormatted);
 
-    if (onChange) {
-      await onChange(event, formattedTargetValue);
+    if (onValueChange) {
+      await onValueChange(event, formattedTargetValue);
     }
 
     const isValid = await api.setEditCellValue({ id, field, value: formattedTargetValue }, event);
@@ -226,7 +226,7 @@ GridEditSingleSelectCell.propTypes = {
    * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onChange: PropTypes.func,
+  onValueChange: PropTypes.func,
   /**
    * The row model of the row that the current cell belongs to.
    */

@@ -22,14 +22,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 export interface GridEditDateCellProps
   extends GridRenderEditCellParams,
-    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex' | 'onChange'> {
+    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex'> {
   /**
    * Callback called when the value is changed by the user.
    * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
    * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onChange?: (
+  onValueChange?: (
     event: React.ChangeEvent<HTMLInputElement>,
     newValue: Date | null,
   ) => Promise<void> | void;
@@ -53,7 +53,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
     inputProps,
     isValidating,
     isProcessingProps,
-    onChange,
+    onValueChange,
     ...other
   } = props;
 
@@ -109,14 +109,14 @@ function GridEditDateCell(props: GridEditDateCellProps) {
         }
       }
 
-      if (onChange) {
-        await onChange(event, newParsedDate);
+      if (onValueChange) {
+        await onValueChange(event, newParsedDate);
       }
 
       setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
       api.setEditCellValue({ id, field, value: newParsedDate }, event);
     },
-    [api, field, id, onChange],
+    [api, field, id, onValueChange],
   );
 
   React.useEffect(() => {
@@ -208,7 +208,7 @@ GridEditDateCell.propTypes = {
    * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onChange: PropTypes.func,
+  onValueChange: PropTypes.func,
   /**
    * The row model of the row that the current cell belongs to.
    */

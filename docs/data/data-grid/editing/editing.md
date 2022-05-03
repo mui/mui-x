@@ -297,7 +297,7 @@ This property works like the `renderCell` property, which is rendered while cell
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
-  return <input type="text" value={params.value} onChange={...}>;
+  return <input type="text" value={params.value} onValueChange={...}>;
 }
 
 const columns: GridColDef[] = [
@@ -327,12 +327,12 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value; // The new value entered by the user
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  return <input type="text" value={value} onChange={handleChange}>;
+  return <input type="text" value={value} onValueChange={handleValueChange}>;
 }
 ```
 
@@ -469,14 +469,14 @@ const columns: GridColDef[] = [
 The code above is already enough to display different options in the **Account** column based on the value selected in the **Type** column.
 The only task left is to reset the account once the type is changed.
 This is needed because the previously selected account will not exist now in the options.
-To solve that, you can create a custom edit component, reusing the built-in one, and pass a function to the `onChange` prop.
+To solve that, you can create a custom edit component, reusing the built-in one, and pass a function to the `onValueChange` prop.
 This function should call `apiRef.current.setEditCellValue` to reset the value of the other field.
 
 ```tsx
 const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
   const apiRef = useGridApiContext();
 
-  const handleChange = async () => {
+  const handleValueChange = async () => {
     await apiRef.current.setEditCellValue({
       id: props.id,
       field: 'account',
@@ -484,7 +484,7 @@ const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
     });
   };
 
-  return <GridEditSingleSelectCell onChange={handleChange} {...props} />;
+  return <GridEditSingleSelectCell onValueChange={handleValueChange} {...props} />;
 };
 ```
 

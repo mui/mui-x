@@ -37,7 +37,7 @@ const rows: GridRowsProp = [
 const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
   const apiRef = useGridApiContext();
 
-  const handleChange = async () => {
+  const handleValueChange = async () => {
     await apiRef.current.setEditCellValue({
       id: props.id,
       field: 'account',
@@ -45,7 +45,7 @@ const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
     });
   };
 
-  return <GridEditSingleSelectCell onChange={handleChange} {...props} />;
+  return <GridEditSingleSelectCell onValueChange={handleValueChange} {...props} />;
 };
 
 export default function LinkedFieldsRowEditing() {

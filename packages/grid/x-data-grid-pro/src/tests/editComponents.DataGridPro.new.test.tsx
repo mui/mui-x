@@ -126,11 +126,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
     });
 
-    it('should call onChange if defined', async () => {
-      const onChange = spy();
+    it('should call onValueChange if defined', async () => {
+      const onValueChange = spy();
 
       defaultData.columns[0].renderEditCell = (params) =>
-        renderEditInputCell({ ...params, onChange });
+        renderEditInputCell({ ...params, onValueChange });
 
       render(<TestCase />);
 
@@ -141,8 +141,8 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.change(input, { target: { value: 'Puma' } });
       await new Promise((resolve) => nativeSetTimeout(resolve));
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[1]).to.equal('Puma');
+      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.lastCall.args[1]).to.equal('Puma');
     });
   });
 
@@ -327,11 +327,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
     });
 
-    it('should call onChange if defined', async () => {
-      const onChange = spy();
+    it('should call onValueChange if defined', async () => {
+      const onValueChange = spy();
 
       defaultData.columns[0].renderEditCell = (params) =>
-        renderEditDateCell({ ...params, onChange });
+        renderEditDateCell({ ...params, onValueChange });
 
       render(<TestCase />);
 
@@ -342,8 +342,8 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.change(input, { target: { value: '2022-02-10' } });
       await new Promise((resolve) => nativeSetTimeout(resolve));
 
-      expect(onChange.callCount).to.equal(1);
-      expect((onChange.lastCall.args[1]! as Date).toISOString()).to.equal(
+      expect(onValueChange.callCount).to.equal(1);
+      expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
     });
@@ -559,11 +559,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
     });
 
-    it('should call onChange if defined', async () => {
-      const onChange = spy();
+    it('should call onValueChange if defined', async () => {
+      const onValueChange = spy();
 
       defaultData.columns[0].renderEditCell = (params) =>
-        renderEditSingleSelectCell({ ...params, onChange });
+        renderEditSingleSelectCell({ ...params, onValueChange });
 
       render(<TestCase />);
 
@@ -572,8 +572,8 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.click(screen.queryAllByRole('option')[1]);
       await new Promise((resolve) => nativeSetTimeout(resolve));
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[1]).to.equal('Adidas');
+      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
     });
   });
 
@@ -601,11 +601,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       });
     });
 
-    it('should call onChange if defined', async () => {
-      const onChange = spy();
+    it('should call onValueChange if defined', async () => {
+      const onValueChange = spy();
 
       defaultData.columns[0].renderEditCell = (params) =>
-        renderEditBooleanCell({ ...params, onChange });
+        renderEditBooleanCell({ ...params, onValueChange });
 
       render(<TestCase />);
 
@@ -616,8 +616,8 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.click(input);
       await new Promise((resolve) => nativeSetTimeout(resolve));
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[1]).to.equal(true);
+      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.lastCall.args[1]).to.equal(true);
     });
   });
 });

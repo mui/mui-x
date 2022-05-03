@@ -27,7 +27,7 @@ export interface GridEditBooleanCellProps
   extends GridRenderEditCellParams,
     Omit<
       React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
-      'id' | 'tabIndex' | 'onChange'
+      'id' | 'tabIndex'
     > {
   /**
    * Callback called when the value is changed by the user.
@@ -35,7 +35,7 @@ export interface GridEditBooleanCellProps
    * @param {boolean} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onChange?: (
+  onValueChange?: (
     event: React.ChangeEvent<HTMLInputElement>,
     newValue: boolean,
   ) => Promise<void> | void;
@@ -60,7 +60,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
     isValidating,
     isProcessingProps,
     error,
-    onChange,
+    onValueChange,
     ...other
   } = props;
 
@@ -75,14 +75,14 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = event.target.checked;
 
-      if (onChange) {
-        await onChange(event, newValue);
+      if (onValueChange) {
+        await onValueChange(event, newValue);
       }
 
       setValueState(newValue);
       await api.setEditCellValue({ id: idProp, field, value: newValue }, event);
     },
-    [api, field, idProp, onChange],
+    [api, field, idProp, onValueChange],
   );
 
   React.useEffect(() => {
@@ -163,7 +163,7 @@ GridEditBooleanCell.propTypes = {
    * @param {boolean} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onChange: PropTypes.func,
+  onValueChange: PropTypes.func,
   /**
    * The row model of the row that the current cell belongs to.
    */
