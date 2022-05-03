@@ -10,7 +10,7 @@ import Link from '@mui/material/Link';
 
 const CorrectRenderLink = (props: GridRenderCellParams) => (
   <Box>
-    <Link tabIndex={props.tabIndex} href="/#">
+    <Link tabIndex={props.tabIndex} href="/#tab-sequence">
       more info
     </Link>
   </Box>
@@ -18,7 +18,7 @@ const CorrectRenderLink = (props: GridRenderCellParams) => (
 
 const WrongRenderLink = () => (
   <Box>
-    <Link href="/#">more info</Link>
+    <Link href="/#tab-sequence">more info</Link>
   </Box>
 );
 
