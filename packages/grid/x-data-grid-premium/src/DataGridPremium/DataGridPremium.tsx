@@ -100,6 +100,10 @@ DataGridPremiumRaw.propTypes = {
    */
   autoPageSize: PropTypes.bool,
   /**
+   * Controls the modes of the cells.
+   */
+  cellModesModel: PropTypes.object,
+  /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
    */
@@ -503,6 +507,12 @@ DataGridPremiumRaw.propTypes = {
    */
   onCellKeyDown: PropTypes.func,
   /**
+   * Callback fired when the `cellModesModel` prop changes.
+   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellModesModelChange: PropTypes.func,
+  /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -697,6 +707,12 @@ DataGridPremiumRaw.propTypes = {
    */
   onRowGroupingModelChange: PropTypes.func,
   /**
+   * Callback fired when the `rowModesModel` prop changes.
+   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowModesModelChange: PropTypes.func,
+  /**
    * Callback fired when a row is being reordered.
    * @param {GridRowOrderChangeParams} params With all properties from [[GridRowOrderChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
@@ -794,6 +810,10 @@ DataGridPremiumRaw.propTypes = {
    * @default 52
    */
   rowHeight: PropTypes.number,
+  /**
+   * Controls the modes of the rows.
+   */
+  rowModesModel: PropTypes.object,
   /**
    * If `true`, the reordering of rows is enabled.
    * @default false

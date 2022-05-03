@@ -59,12 +59,14 @@ const convertGridRowsPropToState = ({
   if (rows) {
     value = {
       idRowsLookup: {},
+      idToIdLookup: {},
       ids: [],
     };
     for (let i = 0; i < rows.length; i += 1) {
       const row = rows[i];
       const id = getGridRowId(row, getRowId);
       value.idRowsLookup[id] = row;
+      value.idToIdLookup[id] = id;
       value.ids.push(id);
     }
   } else {
@@ -121,6 +123,7 @@ export const rowsStateInitializer: GridStateInitializer<
       prevState: {
         value: {
           idRowsLookup: {},
+          idToIdLookup: {},
           ids: [],
         },
         rowsBeforePartialUpdates: [],
@@ -268,6 +271,7 @@ export const useGridRows = (
 
       const newStateValue: GridRowInternalCacheValue = {
         idRowsLookup: { ...rowsCache.current.state.value.idRowsLookup },
+        idToIdLookup: { ...rowsCache.current.state.value.idToIdLookup },
         ids: [...rowsCache.current.state.value.ids],
       };
 
@@ -275,6 +279,7 @@ export const useGridRows = (
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
           delete newStateValue.idRowsLookup[id];
+          delete newStateValue.idToIdLookup[id];
           deletedRowIds.push(id);
           return;
         }
@@ -282,6 +287,7 @@ export const useGridRows = (
         const oldRow = apiRef.current.getRow(id);
         if (!oldRow) {
           newStateValue.idRowsLookup[id] = partialRow;
+          newStateValue.idToIdLookup[id] = id;
           newStateValue.ids.push(id);
           return;
         }

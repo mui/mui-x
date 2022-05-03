@@ -165,7 +165,7 @@ ViewListItem.propTypes = {
          * @default GridPreferencePanelsValue.filter
          * TODO v6: Remove the default behavior
          */
-        openedPanelValue: PropTypes.oneOf(['aggregation', 'columns', 'filters']),
+        openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
       }),
       sorting: PropTypes.shape({
         sortModel: PropTypes.arrayOf(PropTypes.object),

@@ -82,6 +82,14 @@ enum GridEvents {
    */
   cellEditStop = 'cellEditStop',
   /**
+   * Fired when the model that controls the cell modes changes.
+   */
+  cellModesModelChange = 'cellModesModelChange',
+  /**
+   * Fired when the model that controls the row modes changes.
+   */
+  rowModesModelChange = 'rowModesModelChange',
+  /**
    * Fired when the row turns to edit mode.
    */
   rowEditStart = 'rowEditStart',
