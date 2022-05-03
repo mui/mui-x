@@ -15,7 +15,7 @@ import { gridAggregationModelSelector } from '../hooks/features/aggregation/grid
 import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregationInterfaces';
 
 interface GridAggregationColumnMenuItemsProps {
-  column: GridColDef;
+  column?: GridColDef;
 }
 
 export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuItemsProps) => {
@@ -24,18 +24,26 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
   const rootProps = useGridRootProps();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
 
-  const availableAggregationFunctions = getAvailableAggregationFunctions({
-    aggregationFunctions: rootProps.aggregationFunctions,
-    column,
-  });
+  const availableAggregationFunctions = column
+    ? getAvailableAggregationFunctions({
+        aggregationFunctions: rootProps.aggregationFunctions,
+        column,
+      })
+    : [];
 
-  const aggregationRules = getColumnAggregationRules({
-    columnItem: aggregationModel[column.field],
-    column,
-    aggregationFunctions: rootProps.aggregationFunctions,
-  });
+  const aggregationRules = column
+    ? getColumnAggregationRules({
+        columnItem: aggregationModel[column.field],
+        column,
+        aggregationFunctions: rootProps.aggregationFunctions,
+      })
+    : {};
 
   const renderPosition = (position: 'inline' | 'footer') => {
+    if (!column) {
+      return null;
+    }
+
     const idPrefix = `mui-data-grid-column-menu-aggregation-${column.field}-${position}`;
     const label = position;
 
