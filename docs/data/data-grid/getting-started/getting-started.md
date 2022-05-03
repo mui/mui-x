@@ -8,7 +8,7 @@ title: Data Grid - Getting started
 
 ## Installation
 
-Using your favorite package manager, install `@mui/x-data-grid-pro` for the full-featured enterprise grid, or `@mui/x-data-grid` for the free community version.
+Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-data-grid-premium` for the commercial version, or `@mui/x-data-grid` for the free community version.
 
 ```sh
 // with npm

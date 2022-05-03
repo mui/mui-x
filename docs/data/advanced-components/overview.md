@@ -46,7 +46,8 @@ Community Plan packages:
 The MUI X Pro Plan expands on the limitations of the Community Plan with more advanced features such as multi-filtering, multi-sorting, column resizing and column pinning.
 
 The Pro Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
-This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components.
+This plan contains the features that are at the limit of what the open-source model can sustain.
+For instance, providing a very comprehensive set of components.
 The price of the plan is designed to be accessible to most professionals.
 
 Pro Plan packages:
@@ -65,12 +66,17 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
 
 ### Premium Plan <span class="plan-premium"></span>
 
-The MUI X Premium Plan contains the most advanced features such as Row grouping, Excel export, Aggregation, as well as everything that's included in the Pro Plan.
+The MUI X Premium Plan contains the most advanced features such as Row grouping, Excel export, Aggregation (🚧), as well as everything that's included in the Pro Plan.
+
+The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+This plan contains highly complex features that can be useful to analyze and group data without the use of an external application.
+The price of the plan targets small to medium-size teams.
+
+Premium Plan package:
+
+- [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
 The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
-This plan contains the most advanced features, ones that we haven't seen any open-source libraries able to deliver well.
-
-The Premium Plan is not available yet (🚧) but will soon be available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
 
 ## Evaluation (trial) licenses
 
