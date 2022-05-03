@@ -23,7 +23,9 @@ export default function AggregationControlled() {
   const data = useMovieData();
 
   const [aggregationModel, setAggregationModel] = React.useState({
-    gross: 'sum',
+    gross: {
+      footer: 'sum',
+    },
   });
 
   return (

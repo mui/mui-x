@@ -9,6 +9,7 @@ import {
   GridAggregationFunction,
   GridAggregationModel,
   GridAggregationRules,
+  GridColumnAggregationRules,
 } from './gridAggregationInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -82,30 +83,46 @@ export const mergeStateWithAggregationModel =
     aggregation: { ...state.aggregation, model: aggregationModel },
   });
 
-export const getSanitizedAggregationModel = ({
-  columnsLookup,
-  aggregationModel,
+export const getColumnAggregationRules = ({
+  columnItem,
+  column,
   aggregationFunctions,
 }: {
-  columnsLookup: GridColumnRawLookup;
-  aggregationModel: GridAggregationModel;
+  columnItem: GridAggregationModel[string] | undefined;
+  column: GridColDef | undefined;
   aggregationFunctions: Record<string, GridAggregationFunction>;
 }) => {
-  const sanitizedModel: GridAggregationModel = {};
+  const columnAggregationRules: GridColumnAggregationRules = {};
 
-  Object.entries(aggregationModel).forEach(([field, aggregationFunctionName]) => {
-    const shouldAggregate = canColumnHaveAggregationFunction({
-      column: columnsLookup[field],
-      aggregationFunctionName,
-      aggregationFunction: aggregationFunctions[aggregationFunctionName],
-    });
+  if (
+    columnItem?.inline &&
+    canColumnHaveAggregationFunction({
+      column,
+      aggregationFunctionName: columnItem.inline,
+      aggregationFunction: aggregationFunctions[columnItem.inline],
+    })
+  ) {
+    columnAggregationRules.inline = {
+      aggregationFunctionName: columnItem.inline!,
+      aggregationFunction: aggregationFunctions[columnItem.inline],
+    };
+  }
 
-    if (shouldAggregate) {
-      sanitizedModel[field] = aggregationFunctionName;
-    }
-  });
+  if (
+    columnItem?.footer &&
+    canColumnHaveAggregationFunction({
+      column,
+      aggregationFunctionName: columnItem.footer,
+      aggregationFunction: aggregationFunctions[columnItem.footer],
+    })
+  ) {
+    columnAggregationRules.footer = {
+      aggregationFunctionName: columnItem.footer!,
+      aggregationFunction: aggregationFunctions[columnItem.footer],
+    };
+  }
 
-  return sanitizedModel;
+  return columnAggregationRules;
 };
 
 export const getAggregationRules = ({
@@ -117,19 +134,16 @@ export const getAggregationRules = ({
   aggregationModel: GridAggregationModel;
   aggregationFunctions: Record<string, GridAggregationFunction>;
 }) => {
-  const sanitizedAggregationModel = getSanitizedAggregationModel({
-    columnsLookup,
-    aggregationModel,
-    aggregationFunctions,
-  });
   const aggregationRules: GridAggregationRules = {};
 
-  Object.keys(sanitizedAggregationModel).forEach((field) => {
-    const aggregationFunctionName = sanitizedAggregationModel[field];
-    aggregationRules[field] = {
-      aggregationFunctionName,
-      aggregationFunction: aggregationFunctions[aggregationFunctionName],
-    };
+  Object.entries(aggregationModel).forEach(([field, columnItem]) => {
+    if (columnsLookup[field]) {
+      aggregationRules[field] = getColumnAggregationRules({
+        columnItem,
+        column: columnsLookup[field],
+        aggregationFunctions,
+      });
+    }
   });
 
   return aggregationRules;

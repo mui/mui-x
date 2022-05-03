@@ -47,7 +47,9 @@ export default function AggregationRenderCell() {
         initialState={{
           aggregation: {
             model: {
-              imdbRating: 'avg',
+              imdbRating: {
+                footer: 'avg',
+              },
             },
           },
         }}

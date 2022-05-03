@@ -27,8 +27,7 @@ When using aggregation with row grouping, all the groups will contain the aggreg
 
 ### Render aggregated values on the group rows
 
-By default, the aggregated values are rendered on a footer row for each group.
-But you can switch the `aggregationPosition` prop to `"inline"` to render them directly on the group row.
+When using the aggregation with row grouping, you can aggregate the values both on the footer and on the group row itself.
 
 {{"demo": "AggregationRowGroupingInline.js", "bg": "inline"}}
 
@@ -55,9 +54,6 @@ isGroupAggregated={(groupNode) =>
 The demo below only aggregates the director groups.
 
 {{"demo": "AggregationIsGroupAggregated.js", "bg": "inline"}}
-
-> ⚠️ If you are using `aggregationPosition: "inline"`, there is no root footer,
-> so the root will not be aggregated, even is `isGroupAggregated` says otherwise.
 
 ## Filtering
 

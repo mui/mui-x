@@ -33,14 +33,16 @@ export default function AggregationRowGroupingInline() {
         {...data}
         columns={COLUMNS}
         disableSelectionOnClick
-        aggregationPosition="inline"
         initialState={{
           rowGrouping: {
             model: ['company'],
           },
           aggregation: {
             model: {
-              gross: 'sum',
+              gross: {
+                inline: 'sum',
+                footer: 'max',
+              },
             },
           },
           columns: {

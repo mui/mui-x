@@ -31,7 +31,9 @@ export default function AggregationInitialState() {
         initialState={{
           aggregation: {
             model: {
-              gross: 'sum',
+              gross: {
+                footer: 'sum',
+              },
             },
           },
         }}

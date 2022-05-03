@@ -495,7 +495,7 @@ export const useGridRows = (
         ),
       },
     }));
-    apiRef.current.publishEvent(GridEvents.rowsSet);
+    apiRef.current.publishEvent('rowsSet');
     apiRef.current.forceUpdate();
   }, [apiRef]);
 

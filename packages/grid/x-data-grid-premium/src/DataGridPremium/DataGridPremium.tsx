@@ -76,10 +76,6 @@ DataGridPremiumRaw.propTypes = {
    */
   aggregationModel: PropTypes.object,
   /**
-   * @default "footer"
-   */
-  aggregationPosition: PropTypes.oneOf(['footer', 'inline']),
-  /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
   apiRef: PropTypes.shape({

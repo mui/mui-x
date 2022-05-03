@@ -12,11 +12,7 @@ import {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
-import type {
-  GridAggregationModel,
-  GridAggregationFunction,
-  GridAggregationPosition,
-} from '../hooks/features/aggregation';
+import type { GridAggregationModel, GridAggregationFunction } from '../hooks/features/aggregation';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 
@@ -75,10 +71,6 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: Record<string, GridAggregationFunction>;
-  /**
-   * @default "footer"
-   */
-  aggregationPosition: GridAggregationPosition;
   /**
    * @default "filtered"
    */

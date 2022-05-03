@@ -39,7 +39,9 @@ export default function AggregationRowGroupingFooter() {
           },
           aggregation: {
             model: {
-              gross: 'sum',
+              gross: {
+                footer: 'sum',
+              },
             },
           },
           columns: {

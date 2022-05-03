@@ -113,6 +113,7 @@
   { "name": "GridColDef", "kind": "Interface" },
   { "name": "GridColType", "kind": "TypeAlias" },
   { "name": "GridColTypeDef", "kind": "TypeAlias" },
+  { "name": "GridColumnAggregationRules", "kind": "Interface" },
   { "name": "GridColumnApi", "kind": "Interface" },
   { "name": "gridColumnDefinitionsSelector", "kind": "Variable" },
   { "name": "gridColumnFieldsSelector", "kind": "Variable" },

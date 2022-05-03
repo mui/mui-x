@@ -28,7 +28,9 @@ export default function AggregationControlled() {
 
   const [aggregationModel, setAggregationModel] =
     React.useState<GridAggregationModel>({
-      gross: 'sum',
+      gross: {
+        footer: 'sum',
+      },
     });
 
   return (

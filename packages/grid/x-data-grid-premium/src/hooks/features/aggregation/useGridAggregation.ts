@@ -30,7 +30,6 @@ export const useGridAggregation = (
     | 'initialState'
     | 'aggregationModel'
     | 'isGroupAggregated'
-    | 'aggregationPosition'
     | 'aggregationFunctions'
     | 'aggregatedRows'
   >,
@@ -57,12 +56,9 @@ export const useGridAggregation = (
     [apiRef],
   );
 
-  const aggregationPositionRef = React.useRef(props.aggregationPosition);
-  aggregationPositionRef.current = props.aggregationPosition;
   const applyAggregation = React.useCallback(() => {
     const aggregationLookup = createAggregationLookup({
       apiRef,
-      aggregationPositionRef,
       isGroupAggregated: props.isGroupAggregated,
       aggregationFunctions: props.aggregationFunctions,
       aggregatedRows: props.aggregatedRows,

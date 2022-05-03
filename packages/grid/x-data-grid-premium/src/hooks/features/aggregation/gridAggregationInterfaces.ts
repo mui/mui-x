@@ -36,11 +36,16 @@ export type GridAggregationFunction<V = any, AV = V, F = V> = {
   hasCellUnit?: boolean;
 };
 
-export type GridAggregationModel = Record<string, string>;
+export type GridAggregationModel = {
+  [field: string]: { footer?: string | null; inline?: string | null };
+};
 
 export type GridAggregationLookup = {
   [rowId: GridRowId]: {
-    [field: string]: any;
+    [field: string]: {
+      footer?: any;
+      inline?: any;
+    };
   };
 };
 
@@ -78,4 +83,9 @@ export interface GridAggregationRule {
   aggregationFunction: GridAggregationFunction;
 }
 
-export type GridAggregationRules = { [field: string]: GridAggregationRule };
+export interface GridColumnAggregationRules {
+  inline?: GridAggregationRule;
+  footer?: GridAggregationRule;
+}
+
+export type GridAggregationRules = { [field: string]: GridColumnAggregationRules };

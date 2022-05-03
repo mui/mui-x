@@ -60,7 +60,9 @@ export default function AggregationCustomFunction() {
         initialState={{
           aggregation: {
             model: {
-              director: 'firstAlphabetical',
+              director: {
+                footer: 'firstAlphabetical',
+              },
             },
           },
         }}
