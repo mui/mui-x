@@ -98,7 +98,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     const formattedTargetValue = getValueFromValueOptions(target.value, valueOptionsFormatted);
 
     if (onChange) {
-      await Promise.resolve(onChange(event, formattedTargetValue));
+      await onChange(event, formattedTargetValue);
     }
 
     const isValid = await api.setEditCellValue({ id, field, value: formattedTargetValue }, event);

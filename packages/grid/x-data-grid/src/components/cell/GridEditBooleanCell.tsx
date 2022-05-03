@@ -76,7 +76,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
       const newValue = event.target.checked;
 
       if (onChange) {
-        await Promise.resolve(onChange(event, newValue));
+        await onChange(event, newValue);
       }
 
       setValueState(newValue);

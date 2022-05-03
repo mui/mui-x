@@ -110,7 +110,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       }
 
       if (onChange) {
-        await Promise.resolve(onChange(event, newParsedDate));
+        await onChange(event, newParsedDate);
       }
 
       setValueState({ parsed: newParsedDate, formatted: newFormattedDate });

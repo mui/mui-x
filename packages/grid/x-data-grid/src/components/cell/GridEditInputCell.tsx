@@ -83,7 +83,7 @@ function GridEditInputCell(props: GridEditInputCellProps) {
       const newValue = event.target.value;
 
       if (onChange) {
-        await Promise.resolve(onChange(event, newValue));
+        await onChange(event, newValue);
       }
 
       setValueState(newValue);
