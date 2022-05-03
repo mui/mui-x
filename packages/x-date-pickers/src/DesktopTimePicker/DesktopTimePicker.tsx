@@ -1,38 +1,26 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { BaseTimePickerProps, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import {
+  BaseTimePickerProps,
+  useTimePickerDefaultizedProps,
+  timePickerValueManager,
+} from '../TimePicker/shared';
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
 } from '../internals/components/wrappers/DesktopWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { MuiPickersAdapter } from '../internals/models';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
-import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { usePickerState } from '../internals/hooks/usePickerState';
 
-const valueManager: PickerStateValueManager<unknown, unknown> = {
-  emptyValue: null,
-  parseInput: parsePickerInputValue,
-  areValuesEqual: (utils: MuiPickersAdapter<unknown>, a: unknown, b: unknown) =>
-    utils.isEqual(a, b),
-  valueReducer: (utils, prevValue, newValue) => {
-    if (prevValue == null) {
-      return newValue;
-    }
-
-    return utils.mergeDateAndTime(prevValue, newValue);
-  },
-};
-
-export interface DesktopTimePickerProps<TDate = unknown>
-  extends BaseTimePickerProps<TDate>,
+export interface DesktopTimePickerProps<TInputDate, TDate>
+  extends BaseTimePickerProps<TInputDate, TDate>,
     DesktopWrapperProps {}
 
-type DesktopTimePickerComponent = (<TDate>(
-  props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopTimePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: DesktopTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -45,25 +33,28 @@ type DesktopTimePickerComponent = (<TDate>(
  *
  * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
-export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
-  inProps: DesktopTimePickerProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  // TODO: TDate needs to be instantiated at every usage.
-  const props = useTimePickerDefaultizedProps(
-    inProps as DesktopTimePickerProps<unknown>,
-    'MuiDesktopTimePicker',
-  );
+export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: DesktopTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
+  const props = useTimePickerDefaultizedProps<
+    TInputDate,
+    TDate,
+    DesktopTimePickerProps<TInputDate, TDate>
+  >(inProps, 'MuiDesktopTimePicker');
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
 
   const {
     onChange,
+    PaperProps,
     PopperProps,
     ToolbarComponent = TimePickerToolbar,
     TransitionComponent,
     value,
+    clearable,
+    clearText,
     ...other
   } = props;
   const DateInputProps = { ...inputProps, ...other, ref, validationError };
@@ -74,7 +65,10 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       DateInputProps={DateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
       PopperProps={PopperProps}
+      PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
+      clearable={clearable}
+      clearText={clearText}
     >
       {/* @ts-ignore time picker has no component slot for the calendar header */}
       <CalendarOrClockPicker
@@ -125,15 +119,15 @@ DesktopTimePicker.propTypes = {
    */
   clearText: PropTypes.node,
   /**
+   * If `true` the popup or dialog will immediately close after submitting full date.
+   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
+  closeOnSelect: PropTypes.bool,
+  /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    */
   components: PropTypes.object,
-  /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
-   */
-  disableCloseOnSelect: PropTypes.bool,
   /**
    * If `true`, the picker and text field are disabled.
    */
@@ -172,11 +166,11 @@ DesktopTimePicker.propTypes = {
   getClockLabelText: PropTypes.func,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TDateValue
-   * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
-   * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
+   * @template TInputDate, TDate
+   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -220,14 +214,14 @@ DesktopTimePicker.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when date is accepted @DateIOType.
-   * @template TDateValue
-   * @param {TDateValue} date The date that was just accepted.
+   * @template TValue
+   * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
-   * @template TDate
-   * @param {DateRange<TDate>} date The new parsed date.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -244,9 +238,9 @@ DesktopTimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TDateValue
+   * @template TError, TInputValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TDateValue} value The invalid value.
+   * @param {TInputValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -342,12 +336,7 @@ DesktopTimePicker.propTypes = {
   /**
    * The value of the picker.
    */
-  value: PropTypes.oneOfType([
-    PropTypes.any,
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.string,
-  ]),
+  value: PropTypes.any,
   /**
    * Array of views to show.
    */

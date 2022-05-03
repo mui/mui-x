@@ -104,7 +104,8 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
           name === 'classes' ||
           name === 'state' ||
           name === 'currentColumn' ||
-          name === 'colDef'
+          name === 'colDef' ||
+          name === 'row'
         ) {
           return false;
         }

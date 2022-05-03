@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 import { styled } from '@mui/material/styles';
 
 interface ProgressBarProps {

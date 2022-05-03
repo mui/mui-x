@@ -76,6 +76,19 @@ GridDetailPanelToggleCell.propTypes = {
    */
   field: PropTypes.string.isRequired,
   /**
+   * A ref allowing to set imperative focus.
+   * It can be passed to the element that should receive focus.
+   * @ignore - do not document.
+   */
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        focus: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: PropTypes.any,

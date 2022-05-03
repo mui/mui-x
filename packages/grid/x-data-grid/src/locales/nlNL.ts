@@ -32,6 +32,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exporteren',
   toolbarExportCSV: 'Exporteer naar CSV',
   toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Zoek kolom',
@@ -133,6 +134,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

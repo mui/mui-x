@@ -32,6 +32,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exportieren',
   toolbarExportCSV: 'Download als CSV',
   toolbarExportPrint: 'Drucken',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Finde Spalte',
@@ -43,7 +44,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
   filterPanelDeleteIconLabel: 'Löschen',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLinkOperator: 'Logische Operatoren',
   filterPanelOperators: 'Operatoren',
 
   // TODO v6: rename to filterPanelOperator
@@ -66,7 +67,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'ist am oder vor',
   filterOperatorIsEmpty: 'ist leer',
   filterOperatorIsNotEmpty: 'ist nicht leer',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'ist einer der Werte',
 
   // Filter values text
   filterValueAny: 'Beliebig',
@@ -133,6 +134,9 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Aufklappen',
   collapseDetailPanel: 'Zuklappen',
+
+  // Row reordering text
+  rowReorderingHeaderName: 'Reihen neu ordnen',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

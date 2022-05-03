@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.2",
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -41,13 +41,13 @@
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@date-io/date-fns": "^2.11.0",
-    "@date-io/dayjs": "^2.11.0",
-    "@date-io/luxon": "^2.11.1",
-    "@date-io/moment": "^2.11.0",
-    "@mui/utils": "^5.6.0",
-    "@mui/x-date-pickers": "5.0.0-alpha.0",
-    "@mui/x-license-pro": "^5.7.0",
+    "@date-io/date-fns": "^2.13.1",
+    "@date-io/dayjs": "^2.13.1",
+    "@date-io/luxon": "^2.13.1",
+    "@date-io/moment": "^2.13.1",
+    "@mui/utils": "^5.6.1",
+    "@mui/x-date-pickers": "5.0.0-alpha.2",
+    "@mui/x-license-pro": "5.10.0",
     "clsx": "^1.1.1",
     "prop-types": "^15.7.2",
     "react-transition-group": "^4.4.2",
@@ -78,11 +78,11 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^2.0.7",
-    "date-fns": "^2.27.0",
-    "dayjs": "^1.10.7",
+    "@types/luxon": "^2.3.1",
+    "date-fns": "^2.28.0",
+    "dayjs": "^1.11.1",
     "luxon": "^1.21.3 || ^2.x",
-    "moment": "^2.29.1"
+    "moment": "^2.29.3"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

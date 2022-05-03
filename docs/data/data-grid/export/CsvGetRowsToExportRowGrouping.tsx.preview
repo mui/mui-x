@@ -1,4 +1,4 @@
-<DataGridPro
+<DataGridPremium
   {...data}
   loading={loading}
   components={{ Toolbar: CustomToolbar }}
@@ -7,5 +7,4 @@
       model: ['commodity'],
     },
   }}
-  experimentalFeatures={{ rowGrouping: true }}
 />

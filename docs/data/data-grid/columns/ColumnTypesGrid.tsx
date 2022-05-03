@@ -3,7 +3,7 @@ import {
   DataGrid,
   GridActionsCellItem,
   GridRowId,
-  GridValueOptionsParams,
+  GridColumns,
 } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -43,8 +43,10 @@ const initialRows = [
   },
 ];
 
+type Row = typeof initialRows[number];
+
 export default function ColumnTypesGrid() {
-  const [rows, setRows] = React.useState(initialRows);
+  const [rows, setRows] = React.useState<Row[]>(initialRows);
 
   const deleteUser = React.useCallback(
     (id: GridRowId) => () => {
@@ -76,7 +78,7 @@ export default function ColumnTypesGrid() {
     [],
   );
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<GridColumns<Row>>(
     () => [
       { field: 'name', type: 'string' },
       { field: 'age', type: 'number' },
@@ -101,7 +103,7 @@ export default function ColumnTypesGrid() {
         type: 'singleSelect',
         width: 120,
         editable: true,
-        valueOptions: ({ row }: GridValueOptionsParams) => {
+        valueOptions: ({ row }) => {
           if (row === undefined) {
             return ['EU-resident', 'junior'];
           }

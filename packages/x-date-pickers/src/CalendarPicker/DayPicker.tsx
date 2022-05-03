@@ -139,12 +139,20 @@ export function DayPicker<TDate>(props: PickersCalendarProps<TDate>) {
       if (readOnly) {
         return;
       }
+
       // TODO possibly buggy line figure out and add tests
-      const finalDate = Array.isArray(date) ? day : utils.mergeDateAndTime(day, date || now);
+      let finalDate: TDate;
+      if (date && !Array.isArray(date)) {
+        // If we are selecting a single date (not a range) and there is a date already selected
+        // Then we want to keep the time from this date
+        finalDate = utils.mergeDateAndTime(day, date);
+      } else {
+        finalDate = day;
+      }
 
       onChange(finalDate, isFinish);
     },
-    [date, now, onChange, readOnly, utils],
+    [date, onChange, readOnly, utils],
   );
 
   const currentMonthNumber = utils.getMonth(currentMonth);

@@ -46,7 +46,10 @@ describe('text-field-helper', () => {
         expect(runMaskValidation()).to.be.equal(true);
       } else {
         expect(runMaskValidation).toWarnDev(
-          `The mask "${mask}" you passed is not valid for the format used ${format}. Falling down to uncontrolled not-masked input.`,
+          [
+            `The mask "${mask}" you passed is not valid for the format used ${format}.`,
+            `Falling down to uncontrolled no-mask input.`,
+          ].join('\n'),
         );
       }
     });

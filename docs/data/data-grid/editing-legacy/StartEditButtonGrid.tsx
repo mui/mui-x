@@ -42,7 +42,7 @@ function EditToolbar(props: EditToolbarProps) {
     }
   };
 
-  const handleMouseDown = (event) => {
+  const handleMouseDown = (event: React.MouseEvent) => {
     // Keep the focus in the cell
     event.preventDefault();
   };

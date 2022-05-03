@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useForkRef } from '@mui/material/utils';
-import { GridEvents } from '../../models/events';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -57,7 +56,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
-      apiRef.current.publishEvent(GridEvents.rowSelectionCheckboxChange, params, event);
+      apiRef.current.publishEvent('rowSelectionCheckboxChange', params, event);
     };
 
     React.useLayoutEffect(() => {
@@ -82,7 +81,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+          apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
         }
       },
       [apiRef, props],
@@ -136,6 +135,19 @@ GridCellCheckboxForwardRef.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
+  /**
+   * A ref allowing to set imperative focus.
+   * It can be passed to the element that should receive focus.
+   * @ignore - do not document.
+   */
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        focus: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */

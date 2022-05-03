@@ -59,9 +59,9 @@ RatingEditInputCell.propTypes = {
   value: PropTypes.number,
 };
 
-function renderRatingEditInputCell(params) {
+const renderRatingEditInputCell = (params) => {
   return <RatingEditInputCell {...params} />;
-}
+};
 
 export default function CustomEditComponent() {
   return (

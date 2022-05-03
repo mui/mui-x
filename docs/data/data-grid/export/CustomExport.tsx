@@ -11,18 +11,19 @@ import {
   useGridApiContext,
   gridFilteredSortedRowIdsSelector,
   gridVisibleColumnFieldsSelector,
+  GridApi,
 } from '@mui/x-data-grid';
 import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
 
-const getJson = (apiRef) => {
+const getJson = (apiRef: React.MutableRefObject<GridApi>) => {
   // Select rows and columns
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
   const visibleColumnsField = gridVisibleColumnFieldsSelector(apiRef);
 
   // Format the data. Here we only keep the value
   const data = filteredSortedRowIds.map((id) => {
-    const row = {};
+    const row: Record<string, any> = {};
     visibleColumnsField.forEach((field) => {
       row[field] = apiRef.current.getCellParams(id, field).value;
     });
@@ -34,7 +35,7 @@ const getJson = (apiRef) => {
   return JSON.stringify(data, null, 2);
 };
 
-const exportBlob = (blob, filename) => {
+const exportBlob = (blob: Blob, filename: string) => {
   // Save the blob in a json file
   const url = URL.createObjectURL(blob);
 

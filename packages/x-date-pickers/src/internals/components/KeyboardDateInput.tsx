@@ -8,8 +8,8 @@ import { useMaskedInput } from '../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
 import { getTextFieldAriaText } from '../utils/text-field-helper';
 
-export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput(
-  props: DateInputProps,
+export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TInputDate, TDate>(
+  props: DateInputProps<TInputDate, TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
@@ -24,7 +24,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput(
     renderInput,
     ...other
   } = props;
-  const utils = useUtils();
+  const utils = useUtils<TDate>();
   const textFieldProps = useMaskedInput(other);
   const adornmentPosition = InputAdornmentProps?.position || 'end';
   const OpenPickerIcon = components.OpenPickerIcon || Calendar;

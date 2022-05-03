@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   useGridSelector,
-  GridEvents,
   GridEventListener,
   GridScrollParams,
   useGridApiEventHandler,
@@ -15,7 +14,6 @@ import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 /**
- * Only available in DataGridPro
  * @requires useGridColumns (state)
  * @requires useGridDimensions (method) - can be after
  * @requires useGridScroll (method
@@ -57,20 +55,20 @@ export const useGridInfiniteLoader = (
           viewportPageSize,
           virtualRowsCount: currentPage.rows.length,
         };
-        apiRef.current.publishEvent(GridEvents.rowsScrollEnd, rowScrollEndParam);
+        apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParam);
         isInScrollBottomArea.current = true;
       }
     },
     [contentHeight, props.scrollEndThreshold, visibleColumns, apiRef, currentPage.rows.length],
   );
 
-  const handleGridScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(
+  const handleGridScroll = React.useCallback<GridEventListener<'rowsScroll'>>(
     ({ left, top }) => {
       handleRowsScrollEnd({ left, top });
     },
     [handleRowsScrollEnd],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleGridScroll);
-  useGridApiOptionHandler(apiRef, GridEvents.rowsScrollEnd, props.onRowsScrollEnd);
+  useGridApiEventHandler(apiRef, 'rowsScroll', handleGridScroll);
+  useGridApiOptionHandler(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
 };

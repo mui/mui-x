@@ -170,6 +170,29 @@ describe('<ClockPicker />', () => {
     expect(reason).to.equal('partial');
   });
 
+  it('should call `shouldDisableTime` with the hours with meridiem', () => {
+    const shouldDisableTime = spy(() => false);
+
+    render(
+      <ClockPicker
+        autoFocus
+        date={adapterToUse.date('2019-01-01T18:20:00.000')}
+        onChange={() => {}}
+        shouldDisableTime={shouldDisableTime}
+        ampm
+      />,
+    );
+
+    const hours = shouldDisableTime
+      .getCalls()
+      .filter((el) => el.lastArg === 'hours')
+      .map((el) => el.firstArg);
+
+    // Should be called with every hour post meridiem (from 12 to 23) since current date hour is 6PM
+    expect(Math.min(...hours)).to.equal(12);
+    expect(Math.max(...hours)).to.equal(23);
+  });
+
   describe('Time validation on touch ', () => {
     before(function beforeHook() {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
@@ -293,6 +316,21 @@ describe('<ClockPicker />', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['20:--']);
 
       expect(handleChange.callCount).to.equal(0);
+    });
+
+    it('should visually disable the dates not matching minutesStep', () => {
+      render(
+        <ClockPicker
+          ampm={false}
+          date={adapterToUse.date('2018-01-01T13:20:00.000')}
+          minutesStep={15}
+          onChange={() => {}}
+          view="minutes"
+        />,
+      );
+
+      expect(screen.getByLabelText('25 minutes')).to.have.class('Mui-disabled');
+      expect(screen.getByLabelText('30 minutes')).not.to.have.class('Mui-disabled');
     });
 
     it('should select enabled second', () => {

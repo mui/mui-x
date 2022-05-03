@@ -9,8 +9,8 @@ import {
   checkMaskIsValidForCurrentFormat,
 } from '../utils/text-field-helper';
 
-type MaskedInputProps = Omit<
-  DateInputProps,
+type MaskedInputProps<TInputDate, TDate> = Omit<
+  DateInputProps<TInputDate, TDate>,
   | 'adornmentPosition'
   | 'disableOpenPicker'
   | 'getOpenDialogAriaText'
@@ -22,7 +22,7 @@ type MaskedInputProps = Omit<
   | 'renderInput'
 > & { inputProps?: Partial<React.HTMLProps<HTMLInputElement>> };
 
-export const useMaskedInput = ({
+export const useMaskedInput = <TInputDate, TDate>({
   acceptRegex = /[\d]/gi,
   disabled,
   disableMaskedInput,
@@ -37,8 +37,8 @@ export const useMaskedInput = ({
   rifmFormatter,
   TextFieldProps,
   validationError,
-}: MaskedInputProps): MuiTextFieldProps => {
-  const utils = useUtils();
+}: MaskedInputProps<TInputDate, TDate>): MuiTextFieldProps => {
+  const utils = useUtils<TDate>();
   const [isFocused, setIsFocused] = React.useState(false);
 
   const formatHelperText = utils.getFormatHelperText(inputFormat);

@@ -31,6 +31,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Изтегли',
   toolbarExportCSV: 'Изтегли като CSV',
   toolbarExportPrint: 'Принтиране',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Намери колона',
@@ -131,6 +132,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Разгъване',
   collapseDetailPanel: 'Свиване',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

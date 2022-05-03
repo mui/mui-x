@@ -122,10 +122,11 @@ Internally, it uses module augmentation to extend the default theme structure.
 // When using TypeScript 4.x and above
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+import type {} from '@mui/x-data-grid-premium/themeAugmentation';
 
 const theme = createTheme({
   components: {
-    // Use `MuiDataGrid` on both DataGrid and DataGridPro
+    // Use `MuiDataGrid` on DataGrid, DataGridPro and DataGridPremium
     MuiDataGrid: {
       styleOverrides: {
         root: {
@@ -148,6 +149,7 @@ The component comes [in different plans](/pricing/):
 
 - **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 - **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](/x/license/).
+- **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](/x/license/).
 
 More information about the various plans on [the dedicated section](/x/advanced-components#plans)
 
@@ -168,7 +170,7 @@ The enterprise components come in two plans: Pro and Premium.
 | **Row**                                                                                |           |                                    |                                            |
 | [Row height](/x/react-data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |
 | [Row spanning](/x/react-data-grid/rows/#row-spanning)                                  |    🚧     |                 🚧                 |                     🚧                     |
-| [Row reordering](/x/react-data-grid/rows/#row-reorder)                                 |    ❌     |                 🚧                 |                     🚧                     |
+| [Row reordering](/x/react-data-grid/rows/#row-reorder)                                 |    ❌     |                 ✅                 |                     ✅                     |
 | [Row pinning](/x/react-data-grid/rows/#row-pinning)                                    |    ❌     |                 🚧                 |                     🚧                     |
 | **Selection**                                                                          |           |                                    |                                            |
 | [Single row selection](/x/react-data-grid/selection/#single-row-selection)             |    ✅     |                 ✅                 |                     ✅                     |
@@ -198,11 +200,11 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization)      |    ✅     |                 ✅                 |                     ✅                     |
 | [Row virtualization > 100 rows](/x/react-data-grid/virtualization/#row-virtualization) |    ❌     |                 ✅                 |                     ✅                     |
 | **Group & Pivot**                                                                      |           |                                    |                                            |
-| [Tree data](/x/react-data-grid/group-pivot/#tree-data)                                 |    ❌     |                 ✅                 |                     ✅                     |
-| [Master detail](/x/react-data-grid/group-pivot/#master-detail)                         |    ❌     |                 ✅                 |                     ✅                     |
-| [Grouping](/x/react-data-grid/group-pivot/#row-grouping)                               |    ❌     |                 ❌                 |                     🚧                     |
-| [Aggregation](/x/react-data-grid/group-pivot/#aggregation)                             |    ❌     |                 ❌                 |                     🚧                     |
-| [Pivoting](/x/react-data-grid/group-pivot/#pivoting)                                   |    ❌     |                 ❌                 |                     🚧                     |
+| [Tree data](/x/react-data-grid/tree-data)                                              |    ❌     |                 ✅                 |                     ✅                     |
+| [Master detail](/x/react-data-grid/master-detail)                                      |    ❌     |                 ✅                 |                     ✅                     |
+| [Row Grouping](/x/react-data-grid/row-grouping)                                        |    ❌     |                 ❌                 |                     ✅                     |
+| [Aggregation](/x/react-data-grid/aggregation)                                          |    ❌     |                 ❌                 |                     🚧                     |
+| [Pivoting](/x/react-data-grid/pivoting)                                                |    ❌     |                 ❌                 |                     🚧                     |
 | **Misc**                                                                               |           |                                    |                                            |
 | [Accessibility](/x/react-data-grid/accessibility/)                                     |    ✅     |                 ✅                 |                     ✅                     |
 | [Keyboard navigation](/x/react-data-grid/accessibility/#keyboard-navigation)           |    ✅     |                 ✅                 |                     ✅                     |

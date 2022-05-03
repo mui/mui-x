@@ -31,6 +31,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Eksportuj',
   toolbarExportCSV: 'Pobierz jako plik CSV',
   toolbarExportPrint: 'Drukuj',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Znajdź kolumnę',
@@ -128,6 +129,9 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Rozwiń',
   collapseDetailPanel: 'Zwiń',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

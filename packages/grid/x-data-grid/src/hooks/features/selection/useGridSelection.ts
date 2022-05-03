@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEvents, GridEventListener } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
@@ -22,6 +22,7 @@ import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
 import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridSelectionModel } from '../../../models';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['selectionModel'],
@@ -87,7 +88,7 @@ export const useGridSelection = (
     propModel: propSelectionModel,
     propOnChange: props.onSelectionModelChange,
     stateSelector: gridSelectionStateSelector,
-    changeEvent: GridEvents.selectionChange,
+    changeEvent: 'selectionChange',
   });
 
   const {
@@ -290,7 +291,7 @@ export const useGridSelection = (
       // multiple selection is only allowed if:
       // - it is a checkboxSelection
       // - it is a keyboard selection
-      // - CTRL is pressed
+      // - Ctrl is pressed
 
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
@@ -307,7 +308,7 @@ export const useGridSelection = (
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );
 
-  const handleCellClick = React.useCallback<GridEventListener<GridEvents.cellClick>>(
+  const handleCellClick = React.useCallback<GridEventListener<'cellClick'>>(
     (params, event) => {
       if (disableSelectionOnClick) {
         return;
@@ -318,7 +319,7 @@ export const useGridSelection = (
         return;
       }
 
-      if (params.field === '__detail_panel_toggle__') {
+      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
         // click to open the detail panel should not select the row
         return;
       }
@@ -347,7 +348,7 @@ export const useGridSelection = (
     ],
   );
 
-  const preventSelectionOnShift = React.useCallback<GridEventListener<GridEvents.cellMouseDown>>(
+  const preventSelectionOnShift = React.useCallback<GridEventListener<'cellMouseDown'>>(
     (params, event) => {
       if (canHaveMultipleSelection && event.shiftKey) {
         window.getSelection()?.removeAllRanges();
@@ -357,7 +358,7 @@ export const useGridSelection = (
   );
 
   const handleRowSelectionCheckboxChange = React.useCallback<
-    GridEventListener<GridEvents.rowSelectionCheckboxChange>
+    GridEventListener<'rowSelectionCheckboxChange'>
   >(
     (params, event) => {
       if ((event.nativeEvent as any).shiftKey) {
@@ -370,7 +371,7 @@ export const useGridSelection = (
   );
 
   const handleHeaderSelectionCheckboxChange = React.useCallback<
-    GridEventListener<GridEvents.headerSelectionCheckboxChange>
+    GridEventListener<'headerSelectionCheckboxChange'>
   >(
     (params) => {
       const shouldLimitSelectionToCurrentPage =
@@ -385,7 +386,7 @@ export const useGridSelection = (
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
   );
 
-  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       // Get the most recent cell mode because it may have been changed by another listener
       if (apiRef.current.getCellMode(params.id, params.field) === GridCellModes.Edit) {
@@ -461,20 +462,16 @@ export const useGridSelection = (
     [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows, canHaveMultipleSelection],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.sortedRowsSet, removeOutdatedSelection);
-  useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
+  useGridApiEventHandler(apiRef, 'sortedRowsSet', removeOutdatedSelection);
+  useGridApiEventHandler(apiRef, 'cellClick', handleCellClick);
+  useGridApiEventHandler(apiRef, 'rowSelectionCheckboxChange', handleRowSelectionCheckboxChange);
   useGridApiEventHandler(
     apiRef,
-    GridEvents.rowSelectionCheckboxChange,
-    handleRowSelectionCheckboxChange,
-  );
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.headerSelectionCheckboxChange,
+    'headerSelectionCheckboxChange',
     handleHeaderSelectionCheckboxChange,
   );
-  useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventSelectionOnShift);
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, 'cellMouseDown', preventSelectionOnShift);
+  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 
   /**
    * EFFECTS

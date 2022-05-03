@@ -75,7 +75,7 @@ function CustomColumnMenuComponent(props) {
 }
 
 CustomColumnMenuComponent.propTypes = {
-  color: PropTypes.string.isRequired,
+  color: PropTypes.oneOf(['primary', 'secondary']).isRequired,
   currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
 };

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GridEvents,
   GridEventListener,
   GridRowId,
   useGridSelector,
@@ -51,7 +50,7 @@ export const useGridDetailPanel = (
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
 
-  const handleCellClick = React.useCallback<GridEventListener<GridEvents.cellClick>>(
+  const handleCellClick = React.useCallback<GridEventListener<'cellClick'>>(
     (params: GridCellParams, event: React.MouseEvent) => {
       if (params.field !== GRID_DETAIL_PANEL_TOGGLE_FIELD || props.getDetailPanelContent == null) {
         return;
@@ -72,18 +71,27 @@ export const useGridDetailPanel = (
     [apiRef, contentCache, props.getDetailPanelContent],
   );
 
-  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
-      if (!event.ctrlKey || event.key !== 'Enter' || props.getDetailPanelContent == null) {
+      if (props.getDetailPanelContent == null) {
         return;
       }
-      apiRef.current.toggleDetailPanel(params.id);
+
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        // TODO v6: only support Space on the detail toggle
+        apiRef.current.toggleDetailPanel(params.id);
+        return;
+      }
+
+      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD && event.key === ' ') {
+        apiRef.current.toggleDetailPanel(params.id);
+      }
     },
     [apiRef, props.getDetailPanelContent],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, 'cellClick', handleCellClick);
+  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 
   const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
     (initialValue, row) => {
@@ -106,7 +114,7 @@ export const useGridDetailPanel = (
     propModel: props.detailPanelExpandedRowIds,
     propOnChange: props.onDetailPanelExpandedRowIdsChange,
     stateSelector: gridDetailPanelExpandedRowIdsSelector,
-    changeEvent: GridEvents.detailPanelsExpandedRowIdsChange,
+    changeEvent: 'detailPanelsExpandedRowIdsChange',
   });
 
   const toggleDetailPanel = React.useCallback<GridDetailPanelApi['toggleDetailPanel']>(

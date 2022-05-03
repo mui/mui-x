@@ -2,8 +2,8 @@ import * as React from 'react';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
+  GridSignature,
 } from '../../utils/useGridApiEventHandler';
-import { GridEvents } from '../../../models/events/gridEvents';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import {
   GridEditModes,
@@ -15,14 +15,18 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridNewCellEditingApi,
-  GridEditingSharedApi,
   GridStopCellEditModeParams,
+  GridStartCellEditModeParams,
+  GridCellModesModel,
+  GridCellModesModelProps,
+  GridNewEditingSharedApi,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
 import { buildWarning } from '../../../utils/warning';
+import { gridRowsIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import {
   GridCellEditStartParams,
   GridCellEditStopParams,
@@ -47,10 +51,21 @@ export const useGridCellEditing = (
     | 'processRowUpdate'
     | 'onCellEditStart'
     | 'onCellEditStop'
+    | 'cellModesModel'
+    | 'onCellModesModelChange'
     | 'onProcessRowUpdateError'
+    | 'signature'
   >,
 ) => {
-  const { processRowUpdate, onProcessRowUpdateError } = props;
+  const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
+  const prevCellModesModel = React.useRef<GridCellModesModel>({});
+  const {
+    processRowUpdate,
+    onProcessRowUpdateError,
+    cellModesModel: cellModesModelProp,
+    onCellModesModelChange,
+    signature,
+  } = props;
 
   const runIfEditModeIsCell =
     <Args extends any[]>(callback: (...args: Args) => void) =>
@@ -79,7 +94,7 @@ export const useGridCellEditing = (
     [apiRef],
   );
 
-  const handleCellDoubleClick = React.useCallback<GridEventListener<GridEvents.cellDoubleClick>>(
+  const handleCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
     (params, event) => {
       if (!params.isEditable) {
         return;
@@ -91,23 +106,23 @@ export const useGridCellEditing = (
         ...params,
         reason: GridCellEditStartReasons.cellDoubleClick,
       };
-      apiRef.current.publishEvent(GridEvents.cellEditStart, newParams, event);
+      apiRef.current.publishEvent('cellEditStart', newParams, event);
     },
     [apiRef],
   );
 
-  const handleCellFocusOut = React.useCallback<GridEventListener<GridEvents.cellFocusOut>>(
+  const handleCellFocusOut = React.useCallback<GridEventListener<'cellFocusOut'>>(
     (params, event) => {
       if (params.cellMode === GridCellModes.View) {
         return;
       }
       const newParams = { ...params, reason: GridCellEditStopReasons.cellFocusOut };
-      apiRef.current.publishEvent(GridEvents.cellEditStop, newParams, event);
+      apiRef.current.publishEvent('cellEditStop', newParams, event);
     },
     [apiRef],
   );
 
-  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
         let reason: GridCellEditStopReasons | undefined;
@@ -125,7 +140,7 @@ export const useGridCellEditing = (
 
         if (reason) {
           const newParams: GridCellEditStopParams = { ...params, reason };
-          apiRef.current.publishEvent(GridEvents.cellEditStop, newParams, event);
+          apiRef.current.publishEvent('cellEditStop', newParams, event);
         }
       } else if (params.isEditable) {
         let reason: GridCellEditStartReasons | undefined;
@@ -143,30 +158,32 @@ export const useGridCellEditing = (
 
         if (reason) {
           const newParams: GridCellEditStartParams = { ...params, reason };
-          apiRef.current.publishEvent(GridEvents.cellEditStart, newParams, event);
+          apiRef.current.publishEvent('cellEditStart', newParams, event);
         }
       }
     },
     [apiRef],
   );
 
-  const handleCellEditStart = React.useCallback<GridEventListener<GridEvents.cellEditStart>>(
-    (params, event) => {
+  const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
+    (params) => {
       const { id, field, reason } = params;
 
-      apiRef.current.startCellEditMode(params);
+      const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
       if (
         reason === GridCellEditStartReasons.deleteKeyDown ||
         reason === GridCellEditStartReasons.printableKeyDown
       ) {
-        apiRef.current.setEditCellValue({ id, field, value: '' }, event);
+        startCellEditModeParams.deleteValue = true;
       }
+
+      apiRef.current.startCellEditMode(startCellEditModeParams);
     },
     [apiRef],
   );
 
-  const handleCellEditStop = React.useCallback<GridEventListener<GridEvents.cellEditStop>>(
+  const handleCellEditStop = React.useCallback<GridEventListener<'cellEditStop'>>(
     (params) => {
       const { id, field, reason } = params;
 
@@ -197,23 +214,15 @@ export const useGridCellEditing = (
     [apiRef],
   );
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.cellDoubleClick,
-    runIfEditModeIsCell(handleCellDoubleClick),
-  );
-  useGridApiEventHandler(apiRef, GridEvents.cellFocusOut, runIfEditModeIsCell(handleCellFocusOut));
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, runIfEditModeIsCell(handleCellKeyDown));
+  useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
+  useGridApiEventHandler(apiRef, 'cellFocusOut', runIfEditModeIsCell(handleCellFocusOut));
+  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfEditModeIsCell(handleCellKeyDown));
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.cellEditStart,
-    runIfEditModeIsCell(handleCellEditStart),
-  );
-  useGridApiEventHandler(apiRef, GridEvents.cellEditStop, runIfEditModeIsCell(handleCellEditStop));
+  useGridApiEventHandler(apiRef, 'cellEditStart', runIfEditModeIsCell(handleCellEditStart));
+  useGridApiEventHandler(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
 
-  useGridApiOptionHandler(apiRef, GridEvents.cellEditStart, props.onCellEditStart);
-  useGridApiOptionHandler(apiRef, GridEvents.cellEditStop, props.onCellEditStop);
+  useGridApiOptionHandler(apiRef, 'cellEditStart', props.onCellEditStart);
+  useGridApiOptionHandler(apiRef, 'cellEditStop', props.onCellEditStop);
 
   const getCellMode = React.useCallback<GridNewCellEditingApi['getCellMode']>(
     (id, field) => {
@@ -222,6 +231,44 @@ export const useGridCellEditing = (
       return isEditing ? GridCellModes.Edit : GridCellModes.View;
     },
     [apiRef],
+  );
+
+  const updateCellModesModel = React.useCallback(
+    (newModel: GridCellModesModel) => {
+      const isNewModelDifferentFromProp = newModel !== props.cellModesModel;
+
+      if (onCellModesModelChange && isNewModelDifferentFromProp) {
+        const details = signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
+        onCellModesModelChange(newModel, details);
+      }
+
+      if (props.cellModesModel && isNewModelDifferentFromProp) {
+        return; // The prop always win
+      }
+
+      setCellModesModel(newModel);
+      apiRef.current.publishEvent('cellModesModelChange', newModel);
+    },
+    [apiRef, onCellModesModelChange, props.cellModesModel, signature],
+  );
+
+  const updateFieldInCellModesModel = React.useCallback(
+    (id: GridRowId, field: string, newProps: GridCellModesModelProps | null) => {
+      const newModel = { ...cellModesModel };
+
+      if (newProps !== null) {
+        newModel[id] = { ...newModel[id], [field]: { ...newProps } };
+      } else {
+        const { [field]: fieldToRemove, ...otherFields } = cellModesModel[id]; // Ensure that we have a new object, not a reference
+        newModel[id] = otherFields;
+        if (Object.keys(newModel[id]).length === 0) {
+          delete newModel[id];
+        }
+      }
+
+      updateCellModesModel(newModel);
+    },
+    [cellModesModel, updateCellModesModel],
   );
 
   const updateOrDeleteFieldState = React.useCallback(
@@ -247,13 +294,24 @@ export const useGridCellEditing = (
 
   const startCellEditMode = React.useCallback<GridNewCellEditingApi['startCellEditMode']>(
     (params) => {
-      const { id, field } = params;
+      const { id, field, ...other } = params;
 
       throwIfNotEditable(id, field);
       throwIfNotInMode(id, field, GridCellModes.View);
 
+      updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit, ...other });
+    },
+    [throwIfNotEditable, throwIfNotInMode, updateFieldInCellModesModel],
+  );
+
+  const updateStateToStartCellEditMode = React.useCallback<
+    GridNewCellEditingApi['startCellEditMode']
+  >(
+    (params) => {
+      const { id, field, deleteValue } = params;
+
       const newProps = {
-        value: apiRef.current.getCellValue(id, field),
+        value: deleteValue ? '' : apiRef.current.getCellValue(id, field),
         error: false,
         isProcessingProps: false,
       };
@@ -262,41 +320,51 @@ export const useGridCellEditing = (
 
       apiRef.current.setCellFocus(id, field);
     },
-    [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
+    [apiRef, updateOrDeleteFieldState],
   );
 
   const stopCellEditMode = React.useCallback<GridNewCellEditingApi['stopCellEditMode']>(
     (params) => {
+      const { id, field, ...other } = params;
+
+      throwIfNotInMode(id, field, GridCellModes.Edit);
+
+      updateFieldInCellModesModel(id, field, { mode: GridCellModes.View, ...other });
+    },
+    [throwIfNotInMode, updateFieldInCellModesModel],
+  );
+
+  const updateStateToStopCellEditMode = React.useCallback<
+    GridNewCellEditingApi['stopCellEditMode']
+  >(
+    async (params) => {
       const { id, field, ignoreModifications, cellToFocusAfter = 'none' } = params;
 
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
       apiRef.current.unstable_runPendingEditCellValueMutation(id, field);
 
-      const updateFocusedCellIfNeeded = () => {
+      const finishCellEditMode = () => {
         if (cellToFocusAfter !== 'none') {
           apiRef.current.unstable_moveFocusToRelativeCell(id, field, cellToFocusAfter);
         }
+        updateOrDeleteFieldState(id, field, null);
+        updateFieldInCellModesModel(id, field, null);
       };
 
       if (ignoreModifications) {
-        updateFocusedCellIfNeeded();
-        updateOrDeleteFieldState(id, field, null);
+        finishCellEditMode();
         return;
       }
 
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      const row = apiRef.current.getRow(id)!;
-      const column = apiRef.current.getColumn(field);
-      const { value, error, isProcessingProps } = editingState[id][field];
+      const { error, isProcessingProps } = editingState[id][field];
 
       if (error || isProcessingProps) {
         return;
       }
 
-      const rowUpdate = column.valueSetter
-        ? column.valueSetter({ value, row })
-        : { ...row, [field]: value };
+      const rowUpdate = apiRef.current.unstable_getRowWithUpdatedValuesFromCellEditing(id, field);
 
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
@@ -308,11 +376,11 @@ export const useGridCellEditing = (
         };
 
         try {
+          const row = apiRef.current.getRow(id)!;
           Promise.resolve(processRowUpdate(rowUpdate, row))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
-              updateFocusedCellIfNeeded();
-              updateOrDeleteFieldState(id, field, null);
+              finishCellEditMode();
             })
             .catch(handleError);
         } catch (errorThrown) {
@@ -320,11 +388,17 @@ export const useGridCellEditing = (
         }
       } else {
         apiRef.current.updateRows([rowUpdate]);
-        updateFocusedCellIfNeeded();
-        updateOrDeleteFieldState(id, field, null);
+        finishCellEditMode();
       }
     },
-    [apiRef, onProcessRowUpdateError, processRowUpdate, throwIfNotInMode, updateOrDeleteFieldState],
+    [
+      apiRef,
+      onProcessRowUpdateError,
+      processRowUpdate,
+      throwIfNotInMode,
+      updateFieldInCellModesModel,
+      updateOrDeleteFieldState,
+    ],
   );
 
   const setCellEditingEditCellValue = React.useCallback<
@@ -378,12 +452,48 @@ export const useGridCellEditing = (
     [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
   );
 
-  const editingApi: Omit<GridNewCellEditingApi, keyof GridEditingSharedApi> = {
+  const getRowWithUpdatedValuesFromCellEditing = React.useCallback<
+    GridNewCellEditingApi['unstable_getRowWithUpdatedValuesFromCellEditing']
+  >(
+    (id, field) => {
+      const column = apiRef.current.getColumn(field);
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const { value } = editingState[id][field];
+      const row = apiRef.current.getRow(id)!;
+      return column.valueSetter ? column.valueSetter({ value, row }) : { ...row, [field]: value };
+    },
+    [apiRef],
+  );
+
+  const editingApi: Omit<GridNewCellEditingApi, keyof GridNewEditingSharedApi> = {
     getCellMode,
     startCellEditMode,
     stopCellEditMode,
     unstable_setCellEditingEditCellValue: setCellEditingEditCellValue,
+    unstable_getRowWithUpdatedValuesFromCellEditing: getRowWithUpdatedValuesFromCellEditing,
   };
 
   useGridApiMethod(apiRef, editingApi, 'EditingApi');
+
+  React.useEffect(() => {
+    if (cellModesModelProp) {
+      updateCellModesModel(cellModesModelProp);
+    }
+  }, [cellModesModelProp, updateCellModesModel]);
+
+  React.useEffect(() => {
+    const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+    Object.entries(cellModesModel).forEach(([id, fields]) => {
+      Object.entries(fields).forEach(([field, params]) => {
+        const prevMode = prevCellModesModel.current[id]?.[field]?.mode || GridCellModes.View;
+        const originalId = idToIdLookup[id] ?? id;
+        if (params.mode === GridCellModes.Edit && prevMode === GridCellModes.View) {
+          updateStateToStartCellEditMode({ id: originalId, field, ...params });
+        } else if (params.mode === GridCellModes.View && prevMode === GridCellModes.Edit) {
+          updateStateToStopCellEditMode({ id: originalId, field, ...params });
+        }
+      });
+    });
+    prevCellModesModel.current = cellModesModel;
+  }, [apiRef, cellModesModel, updateStateToStartCellEditMode, updateStateToStopCellEditMode]);
 };
