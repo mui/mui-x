@@ -68,9 +68,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
       return;
     }
 
-    const numberOfChildren = rootRef.current.children.length;
-    if (focusedButtonIndex >= numberOfChildren) {
-      setFocusedButtonIndex(numberOfChildren - 1);
+    if (focusedButtonIndex >= rootRef.current.children.length) {
       return;
     }
 
