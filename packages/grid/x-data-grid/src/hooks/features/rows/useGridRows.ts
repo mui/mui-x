@@ -104,7 +104,7 @@ const getRowsStateFromCache = (
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId' | 'loading'>
 > = (state, props, apiRef) => {
-  apiRef.current.rowsCache = convertRowsPropToState({
+  apiRef.current.unstable_caches.rows = convertRowsPropToState({
     rows: props.rows,
     getRowId: props.getRowId,
     prevCache: {
@@ -120,7 +120,7 @@ export const rowsStateInitializer: GridStateInitializer<
   return {
     ...state,
     rows: getRowsStateFromCache(
-      apiRef.current.rowsCache,
+      apiRef.current.unstable_caches.rows,
       null,
       apiRef,
       props.rowCount,
@@ -176,7 +176,7 @@ export const useGridRows = (
         apiRef.current.setState((state) => ({
           ...state,
           rows: getRowsStateFromCache(
-            apiRef.current.rowsCache,
+            apiRef.current.unstable_caches.rows!,
             gridRowTreeSelector(apiRef),
             apiRef,
             props.rowCount,
@@ -192,7 +192,7 @@ export const useGridRows = (
         timeout.current = null;
       }
 
-      apiRef.current.rowsCache = newCache;
+      apiRef.current.unstable_caches.rows = newCache;
 
       if (!throttle) {
         run();
@@ -219,7 +219,7 @@ export const useGridRows = (
       throttledRowsChange(
         convertRowsPropToState({
           rows,
-          prevCache: apiRef.current.rowsCache,
+          prevCache: apiRef.current.unstable_caches.rows!,
           getRowId: props.getRowId,
         }),
         true,
@@ -260,9 +260,9 @@ export const useGridRows = (
       const deletedRowIds: GridRowId[] = [];
 
       const newStateValue: GridRowInternalCacheValue = {
-        idRowsLookup: { ...apiRef.current.rowsCache.value.idRowsLookup },
-        idToIdLookup: { ...apiRef.current.rowsCache.value.idToIdLookup },
-        ids: [...apiRef.current.rowsCache.value.ids],
+        idRowsLookup: { ...apiRef.current.unstable_caches.rows!.value.idRowsLookup },
+        idToIdLookup: { ...apiRef.current.unstable_caches.rows!.value.idToIdLookup },
+        ids: [...apiRef.current.unstable_caches.rows!.value.ids],
       };
 
       uniqUpdates.forEach((partialRow, id) => {
@@ -290,7 +290,7 @@ export const useGridRows = (
       }
 
       const state: GridRowsInternalCache = {
-        ...apiRef.current.rowsCache,
+        ...apiRef.current.unstable_caches.rows!,
         value: newStateValue,
       };
 
@@ -410,7 +410,7 @@ export const useGridRows = (
     [apiRef, logger],
   );
 
-  const rowApi: Omit<GridRowApi, 'rowsCache'> = {
+  const rowApi: GridRowApi = {
     getRow,
     getRowModels,
     getRowsCount,
@@ -431,7 +431,7 @@ export const useGridRows = (
     logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
 
     let rows: GridRowsProp | undefined;
-    if (apiRef.current.rowsCache.rowsBeforePartialUpdates === props.rows) {
+    if (apiRef.current.unstable_caches.rows!.rowsBeforePartialUpdates === props.rows) {
       // The `props.rows` has not changed since the last row grouping
       // We can keep the potential updates stored in `inputRowsAfterUpdates` on the new grouping
       rows = undefined;
@@ -445,7 +445,7 @@ export const useGridRows = (
       convertRowsPropToState({
         rows,
         getRowId: props.getRowId,
-        prevCache: apiRef.current.rowsCache,
+        prevCache: apiRef.current.unstable_caches.rows!,
       }),
       false,
     );
@@ -500,7 +500,7 @@ export const useGridRows = (
     }
 
     // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
-    if (apiRef.current.rowsCache.rowsBeforePartialUpdates === props.rows) {
+    if (apiRef.current.unstable_caches.rows!.rowsBeforePartialUpdates === props.rows) {
       return;
     }
 
@@ -509,7 +509,7 @@ export const useGridRows = (
       convertRowsPropToState({
         rows: props.rows,
         getRowId: props.getRowId,
-        prevCache: apiRef.current.rowsCache,
+        prevCache: apiRef.current.unstable_caches.rows!,
       }),
       false,
     );
