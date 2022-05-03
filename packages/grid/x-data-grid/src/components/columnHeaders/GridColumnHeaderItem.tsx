@@ -156,7 +156,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const width = column.computedWidth;
 
-  let ariaSort: 'ascending' | 'descending' | undefined;
+  let ariaSort: 'ascending' | 'descending' | 'none' = 'none';
   if (sortDirection != null) {
     ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
   }
