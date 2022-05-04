@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  BasePickerProps,
   DateInputSlotsComponent,
   PickerStateValueManager,
   useDefaultDates,
@@ -7,10 +8,7 @@ import {
   ValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  DateRangePickerViewSlotsComponent,
-  ExportedDateRangePickerViewProps,
-} from './DateRangePickerView';
+import {DateRangePickerViewSlotsComponent, ExportedDateRangePickerViewProps} from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
 import { parseRangeInputValue } from '../internal/utils/date-utils';
@@ -21,7 +19,9 @@ interface DateRangePickerSlotsComponent
     DateInputSlotsComponent {}
 
 export interface BaseDateRangePickerProps<TInputDate, TDate>
-  extends ExportedDateRangePickerViewProps<TInputDate, TDate>,
+  extends
+      Omit<BasePickerProps<DateRange<TInputDate>, TDate, DateRange<TDate>>, 'orientation'>,
+      ExportedDateRangePickerViewProps<TDate>,
     ValidationProps<DateRangeValidationError, DateRange<TInputDate>>,
     ExportedDateRangePickerInputProps<TInputDate, TDate> {
   /**

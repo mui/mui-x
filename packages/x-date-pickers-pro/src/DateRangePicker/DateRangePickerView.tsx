@@ -2,15 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license-pro';
 import {
-  BasePickerProps,
   useUtils,
-  WrapperVariant,
   WrapperVariantContext,
   MobileKeyboardInputView,
   defaultReduceAnimations,
-  PickerSelectionState,
   ExportedCalendarPickerProps,
   useCalendarState,
+  PickerStatePickerProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
@@ -36,13 +34,13 @@ export interface DateRangePickerViewSlotsComponent
 export interface DateRangePickerViewSlotsComponentsProps
   extends DateRangePickerViewMobileSlotsComponentsProps {}
 
-export interface ExportedDateRangePickerViewProps<TInputDate, TDate>
+export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'>,
     Omit<
-      BasePickerProps<DateRange<TInputDate>, TDate, DateRange<TDate>>,
-      'value' | 'onChange' | 'orientation'
-    > {
+      ExportedCalendarPickerProps<TDate>,
+      | 'onYearChange'
+      | 'renderDay'
+        > {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
@@ -64,30 +62,39 @@ export interface ExportedDateRangePickerViewProps<TInputDate, TDate>
    * @default 'Select date range'
    */
   toolbarTitle?: React.ReactNode;
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   */
+  showToolbar?: boolean;
+  /**
+   * Date format, that is displaying in toolbar.
+   */
+  toolbarFormat?: string;
+  /**
+   * className applied to the root component.
+   */
+  className?: string;
 }
 
 interface DateRangePickerViewProps<TInputDate, TDate>
   extends CurrentlySelectingRangeEndProps,
-    ExportedDateRangePickerViewProps<TInputDate, TDate> {
+    ExportedDateRangePickerViewProps<TDate>,
+    PickerStatePickerProps<DateRange<TDate>> {
   calendars: 1 | 2 | 3;
   open: boolean;
   startText: React.ReactNode;
   endText: React.ReactNode;
-  isMobileKeyboardViewOpen: boolean;
-  toggleMobileKeyboardView: () => void;
   DateInputProps: DateRangeInputProps<TInputDate, TDate>;
-  date: DateRange<TDate>;
-  onDateChange: (
-    date: DateRange<TDate>,
-    currentWrapperVariant: WrapperVariant,
-    isFinish?: PickerSelectionState,
-  ) => void;
 }
+
+type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
+    props: DateRangePickerViewProps<TInputDate, TDate>
+) => JSX.Element) & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
-export function DateRangePickerView<TInputDate, TDate>(
+function DateRangePickerViewRaw<TInputDate, TDate>(
   props: DateRangePickerViewProps<TInputDate, TDate>,
 ) {
   const {
@@ -270,7 +277,9 @@ export function DateRangePickerView<TInputDate, TDate>(
   );
 }
 
-DateRangePickerView.propTypes = {
+export const DateRangePickerView = DateRangePickerViewRaw as DateRangePickerViewComponent
+
+DateRangePickerViewRaw.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   disableAutoMonthSwitching: PropTypes.bool,
 };

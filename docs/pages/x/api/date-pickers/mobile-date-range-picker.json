@@ -2,6 +2,7 @@
   "props": {
     "onChange": { "type": { "name": "func" }, "required": true },
     "renderInput": { "type": { "name": "func" }, "required": true },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" }, "required": true },
     "acceptRegex": {
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
@@ -75,7 +76,7 @@
     "ToolbarComponent": { "type": { "name": "elementType" } },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" }
+    "toolbarTitle": { "type": { "name": "node" } }
   },
   "slots": {},
   "name": "MobileDateRangePicker",

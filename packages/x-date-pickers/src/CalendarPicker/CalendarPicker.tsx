@@ -7,7 +7,7 @@ import { MonthPicker } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DayPicker, ExportedCalendarProps } from './DayPicker';
+import { DayPicker, ExportedDayPickerProps } from './DayPicker';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import {
   PickersCalendarHeader,
@@ -28,7 +28,7 @@ export interface CalendarPickerSlotsComponentsProps
   extends PickersCalendarHeaderSlotsComponentsProps {}
 
 export interface CalendarPickerProps<TDate>
-  extends ExportedCalendarProps<TDate>,
+  extends ExportedDayPickerProps<TDate>,
     ExportedYearPickerProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   className?: string;

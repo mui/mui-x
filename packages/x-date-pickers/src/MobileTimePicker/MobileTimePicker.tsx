@@ -313,7 +313,6 @@ MobileTimePicker.propTypes = {
   todayText: PropTypes.node,
   /**
    * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
    */
   ToolbarComponent: PropTypes.elementType,
   /**

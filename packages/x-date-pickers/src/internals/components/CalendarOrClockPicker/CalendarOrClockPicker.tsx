@@ -10,9 +10,9 @@ import {
 } from '../../../CalendarPicker/CalendarPicker';
 import { KeyboardDateInput } from '../KeyboardDateInput';
 import { useIsLandscape } from '../../hooks/useIsLandscape';
-import { WrapperVariant, WrapperVariantContext } from '../wrappers/WrapperVariantContext';
+import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
 import { DateInputPropsLike } from '../wrappers/WrapperProps';
-import { PickerSelectionState } from '../../hooks/usePickerState';
+import { PickerStatePickerProps } from '../../hooks/usePickerState';
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { PickerViewRoot } from '../PickerViewRoot';
 import { CalendarOrClockPickerView, CalendarPickerView, ClockPickerView } from '../../models';
@@ -56,17 +56,10 @@ export interface ExportedCalendarOrClockPickerProps<TDate, View extends Calendar
 }
 
 export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
-  extends ExportedCalendarOrClockPickerProps<TDate, View> {
+  extends ExportedCalendarOrClockPickerProps<TDate, View>,
+    PickerStatePickerProps<TDate | null> {
   autoFocus?: boolean;
-  date: TDate | null;
   DateInputProps: DateInputPropsLike;
-  isMobileKeyboardViewOpen: boolean;
-  onDateChange: (
-    date: TDate | null,
-    currentWrapperVariant: WrapperVariant,
-    isFinish?: PickerSelectionState,
-  ) => void;
-  toggleMobileKeyboardView: () => void;
 }
 
 export const MobileKeyboardInputView = styled('div')({

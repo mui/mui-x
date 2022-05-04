@@ -312,7 +312,6 @@ DesktopTimePicker.propTypes = {
   showToolbar: PropTypes.bool,
   /**
    * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
    */
   ToolbarComponent: PropTypes.elementType,
   /**

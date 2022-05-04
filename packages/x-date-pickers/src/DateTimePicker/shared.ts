@@ -9,7 +9,6 @@ import {
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import {
   DateInputSlotsComponent,
   ExportedDateInputProps,
@@ -63,11 +62,6 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    * First view to show.
    */
   openTo?: CalendarOrClockPickerView;
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DateTimePickerToolbar
-   */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate>>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date & time'

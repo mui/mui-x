@@ -157,7 +157,6 @@ DateRangePicker.propTypes = {
   disableAutoMonthSwitching: PropTypes.bool,
   /**
    * If `true`, the picker and text field are disabled.
-   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -316,7 +315,6 @@ DateRangePicker.propTypes = {
   PopperProps: PropTypes.object,
   /**
    * Make picker read only.
-   * @default false
    */
   readOnly: PropTypes.bool,
   /**
@@ -424,13 +422,15 @@ DateRangePicker.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date range'
+   * Prop forwarded to the ToolbarComponent.
    */
   toolbarTitle: PropTypes.node,
   /**
    * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
   TransitionComponent: PropTypes.elementType,
+  /**
+   * The value of the picker.
+   */
   value: PropTypes.arrayOf(PropTypes.any).isRequired,
 } as any;

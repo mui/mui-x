@@ -6,22 +6,15 @@ import {
   timePickerValueManager,
 } from '../TimePicker/shared';
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
-import {
-  PickerStaticWrapper,
-  PickerStaticWrapperProps,
-} from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
+import { PickerStaticWrapper } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 
-export interface StaticTimePickerProps<TInputDate, TDate>
-  extends BaseTimePickerProps<TInputDate, TDate> {
-  /**
-   * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
-   */
-  displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
-}
+export type StaticTimePickerProps<TInputDate, TDate> = StaticPickerProps<
+  BaseTimePickerProps<TInputDate, TDate>
+>;
 
 type StaticTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -211,11 +204,6 @@ StaticTimePicker.propTypes = {
    */
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   */
-  onClose: PropTypes.func,
-  /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
    * This can be used to render appropriate form error.
@@ -229,19 +217,10 @@ StaticTimePicker.propTypes = {
    */
   onError: PropTypes.func,
   /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   */
-  onOpen: PropTypes.func,
-  /**
    * Callback fired on view change.
    * @param {ClockPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
-  /**
-   * Control the popup or dialog open state.
-   */
-  open: PropTypes.bool,
   /**
    * Props to pass to keyboard adornment button.
    */
@@ -289,7 +268,6 @@ StaticTimePicker.propTypes = {
   showToolbar: PropTypes.bool,
   /**
    * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
    */
   ToolbarComponent: PropTypes.elementType,
   /**
