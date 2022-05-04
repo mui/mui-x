@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { PickerStateProps } from '../../hooks/usePickerState';
 
 export interface BasePickerProps<TInputValue, TValue>
