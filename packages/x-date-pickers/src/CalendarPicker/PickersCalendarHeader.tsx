@@ -10,6 +10,8 @@ import { ArrowDropDown } from '../internals/components/icons';
 import {
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
+  PickersArrowSwitcherSlotsComponent,
+  PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
 import {
   usePreviousMonthDisabled,
@@ -19,14 +21,22 @@ import { CalendarPickerView } from '../internals/models';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
-  | 'components'
-  | 'componentsProps'
-  | 'getViewSwitchingButtonText'
-  | 'leftArrowButtonText'
-  | 'rightArrowButtonText'
+  'getViewSwitchingButtonText' | 'leftArrowButtonText' | 'rightArrowButtonText'
 >;
 
+export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
+  SwitchViewButton: React.ElementType;
+  SwitchViewIcon: React.ElementType;
+}
+
+// We keep the interface to allow module augmentation
 export interface PickersCalendarHeaderComponentsPropsOverrides {}
+
+export interface PickersCalendarHeaderSlotsComponentsProps
+  extends PickersArrowSwitcherSlotsComponentsProps {
+  switchViewButton: React.ComponentPropsWithRef<typeof IconButton> &
+    PickersCalendarHeaderComponentsPropsOverrides;
+}
 
 export interface PickersCalendarHeaderProps<TDate>
   extends ExportedArrowSwitcherProps,
@@ -36,18 +46,12 @@ export interface PickersCalendarHeaderProps<TDate>
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: ExportedArrowSwitcherProps['components'] & {
-    SwitchViewButton?: React.ElementType;
-    SwitchViewIcon?: React.ElementType;
-  };
+  components?: Partial<PickersCalendarHeaderSlotsComponent>;
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: ExportedArrowSwitcherProps['componentsProps'] & {
-    switchViewButton?: React.ComponentPropsWithRef<typeof IconButton> &
-      PickersCalendarHeaderComponentsPropsOverrides;
-  };
+  componentsProps?: Partial<PickersCalendarHeaderSlotsComponentsProps>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly CalendarPickerView[];
@@ -186,26 +190,14 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
       >
         <PickersFadeTransitionGroup
           reduceAnimations={reduceAnimations}
-          transKey={utils.format(month, 'month')}
+          transKey={utils.format(month, 'monthAndYear')}
         >
           <PickersCalendarHeaderLabelItem
             aria-live="polite"
-            data-mui-test="calendar-month-text"
+            data-mui-test="calendar-month-and-year-text"
             ownerState={ownerState}
           >
-            {utils.format(month, 'month')}
-          </PickersCalendarHeaderLabelItem>
-        </PickersFadeTransitionGroup>
-        <PickersFadeTransitionGroup
-          reduceAnimations={reduceAnimations}
-          transKey={utils.format(month, 'year')}
-        >
-          <PickersCalendarHeaderLabelItem
-            aria-live="polite"
-            data-mui-test="calendar-year-text"
-            ownerState={ownerState}
-          >
-            {utils.format(month, 'year')}
+            {utils.format(month, 'monthAndYear')}
           </PickersCalendarHeaderLabelItem>
         </PickersFadeTransitionGroup>
         {views.length > 1 && !disabled && (

@@ -31,6 +31,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'エクスポート',
   toolbarExportCSV: 'CSVダウンロード',
   // toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '列検索',
@@ -128,6 +129,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

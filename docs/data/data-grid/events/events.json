@@ -48,6 +48,12 @@
     "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
+    "name": "cellModesModelChange",
+    "description": "Fired when the model that controls the cell modes changes.",
+    "params": "GridCellModesModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "cellMouseDown",
     "description": "Fired when a <code>mousedown</code> event happens in a cell.",
     "params": "GridCellParams",
@@ -175,13 +181,13 @@
   },
   {
     "name": "preferencePanelClose",
-    "description": "Fired when the preferences panel is closed.",
+    "description": "Fired when the preference panel is closed.",
     "params": "GridPreferencePanelParams",
     "event": "MuiEvent<{}>"
   },
   {
     "name": "preferencePanelOpen",
-    "description": "Fired when the preferences panel is opened.",
+    "description": "Fired when the preference panel is opened.",
     "params": "GridPreferencePanelParams",
     "event": "MuiEvent<{}>"
   },
@@ -228,6 +234,12 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "name": "rowModesModelChange",
+    "description": "Fired when the model that controls the row modes changes.",
+    "params": "GridRowModesModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "rowMouseEnter",
     "description": "Fired when the mouse enters the row. Called with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
     "params": "GridRowParams",
@@ -238,6 +250,12 @@
     "description": "Fired when the mouse leaves the row. Called with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
+  },
+  {
+    "name": "rowOrderChange",
+    "description": "Fired when the user ends reordering a row.",
+    "params": "GridRowOrderChangeParams",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "rowSelectionCheckboxChange",

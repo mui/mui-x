@@ -48,7 +48,7 @@ Set it to `true` to block the default handling of an event and implement your ow
 ```
 
 Usually, double clicking a cell will put it into [edit mode](/x/react-data-grid/editing/).
-The following example changes this behavior by also requiring <kbd class="key">CTRL</kbd> to be pressed.
+The following example changes this behavior by also requiring <kbd class="key">Ctrl</kbd> to be pressed.
 
 {{"demo": "DoubleClickWithCtrlToEdit.js", "bg": "inline"}}
 

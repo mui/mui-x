@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { parseISO } from 'date-fns';
-import { createRenderer, fireEvent, screen, RenderOptions } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  screen,
+  RenderOptions,
+  fireEvent,
+  userEvent,
+} from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -74,6 +80,93 @@ export function createPickerRenderer({
   };
 }
 
-export function openMobilePicker() {
-  fireEvent.click(screen.getByRole('textbox'));
-}
+type OpenPickerParams =
+  | {
+      type: 'date' | 'date-time' | 'time';
+      variant: 'mobile' | 'desktop';
+    }
+  | {
+      type: 'date-range';
+      variant: 'mobile' | 'desktop';
+      initialFocus: 'start' | 'end';
+    };
+
+export const openPicker = (params: OpenPickerParams) => {
+  if (params.type === 'date-range') {
+    const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
+    if (params.variant === 'mobile') {
+      return userEvent.mousePress(target);
+    }
+
+    return fireEvent.focus(target);
+  }
+
+  if (params.variant === 'mobile') {
+    return userEvent.mousePress(screen.getByRole('textbox'));
+  }
+
+  const target =
+    params.type === 'time'
+      ? screen.getByLabelText(/choose time/i)
+      : screen.getByLabelText(/choose date/i);
+  return userEvent.mousePress(target);
+};
+
+// TODO: Handle dynamic values
+export const getClockMouseEvent = (type: 'mousedown' | 'mousemove' | 'mouseup') => {
+  const offsetX = 20;
+  const offsetY = 15;
+
+  const event = new window.MouseEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    buttons: 1,
+  });
+
+  Object.defineProperty(event, 'offsetX', { get: () => offsetX });
+  Object.defineProperty(event, 'offsetY', { get: () => offsetY });
+
+  return event;
+};
+
+// TODO: Handle dynamic values
+export const getClockTouchEvent = () => {
+  return {
+    changedTouches: [
+      {
+        clientX: 20,
+        clientY: 15,
+      },
+    ],
+  };
+};
+
+export const withPickerControls =
+  <TValue, Props extends { value: TValue; onChange: Function }>(
+    Component: React.ComponentType<Props>,
+  ) =>
+  <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
+    return (
+      props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
+        Partial<DefaultProps> & {
+          initialValue: TValue;
+          onChange?: any;
+        },
+    ) => {
+      const { initialValue, onChange, ...other } = props;
+
+      const [value, setValue] = React.useState<TValue>(initialValue);
+
+      const handleChange = React.useCallback(
+        (newValue: TValue, keyboardInputValue?: string) => {
+          setValue(newValue);
+          onChange?.(newValue, keyboardInputValue);
+        },
+        [onChange],
+      );
+
+      return (
+        <Component {...defaultProps} {...(other as any)} value={value} onChange={handleChange} />
+      );
+    };
+  };

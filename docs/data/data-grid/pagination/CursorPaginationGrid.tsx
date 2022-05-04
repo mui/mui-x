@@ -1,92 +1,70 @@
 import * as React from 'react';
-import { GridRowsProp, DataGrid, GridRowId, GridRowModel } from '@mui/x-data-grid';
-import { useDemoData, GridDemoData } from '@mui/x-data-grid-generator';
-
-interface ServerBasedGridResponse {
-  rows: GridRowModel[];
-  nextCursor: GridRowId | null | undefined;
-}
+import { DataGrid, GridRowId } from '@mui/x-data-grid';
+import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const PAGE_SIZE = 5;
 
-function loadServerRows(
-  cursor: GridRowId | null | undefined,
-  data: GridDemoData,
-): Promise<ServerBasedGridResponse> {
-  return new Promise<ServerBasedGridResponse>((resolve) => {
-    setTimeout(() => {
-      const start = cursor ? data.rows.findIndex((row) => row.id === cursor) : 0;
-      const end = start + PAGE_SIZE;
-      const rows = data.rows.slice(start, end);
+const SERVER_OPTIONS = {
+  useCursorPagination: true,
+};
 
-      resolve({ rows, nextCursor: data.rows[end]?.id });
-    }, Math.random() * 200 + 100); // simulate network latency
-  });
-}
+const { columns, initialState, useQuery } = createFakeServer({}, SERVER_OPTIONS);
 
 export default function CursorPaginationGrid() {
-  const { data } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 100,
-    maxColumns: 6,
-  });
+  const mapPageToNextCursor = React.useRef<{ [page: number]: GridRowId }>({});
 
-  const pagesNextCursor = React.useRef<{ [page: number]: GridRowId }>({});
-
-  const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [page, setPage] = React.useState(0);
-  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const queryOptions = React.useMemo(
+    () => ({
+      cursor: mapPageToNextCursor.current[page - 1],
+      pageSize: PAGE_SIZE,
+    }),
+    [page],
+  );
+  const { isLoading, data, pageInfo } = useQuery(queryOptions);
 
   const handlePageChange = (newPage: number) => {
     // We have the cursor, we can allow the page transition.
-    if (newPage === 0 || pagesNextCursor.current[newPage - 1]) {
+    if (newPage === 0 || mapPageToNextCursor.current[newPage - 1]) {
       setPage(newPage);
     }
   };
 
   React.useEffect(() => {
-    let active = true;
+    if (!isLoading && pageInfo?.nextCursor) {
+      // We add nextCursor when available
+      mapPageToNextCursor.current[page] = pageInfo?.nextCursor;
+    }
+  }, [page, isLoading, pageInfo?.nextCursor]);
 
-    (async () => {
-      const nextCursor = pagesNextCursor.current[page - 1];
-
-      if (!nextCursor && page > 0) {
-        return;
-      }
-
-      setLoading(true);
-      const response = await loadServerRows(nextCursor, data);
-
-      if (response.nextCursor) {
-        pagesNextCursor.current[page] = response.nextCursor;
-      }
-
-      if (!active) {
-        return;
-      }
-
-      setRows(response.rows);
-      setLoading(false);
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [page, data]);
+  // Some API clients return undefined while loading
+  // Following lines are here to prevent `rowCountState` from being undefined during the loading
+  const [rowCountState, setRowCountState] = React.useState(
+    pageInfo?.totalRowCount || 0,
+  );
+  React.useEffect(() => {
+    setRowCountState((prevRowCountState) =>
+      pageInfo?.totalRowCount !== undefined
+        ? pageInfo?.totalRowCount
+        : prevRowCountState,
+    );
+  }, [pageInfo?.totalRowCount, setRowCountState]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={rows}
-        columns={data.columns}
+        rows={data}
+        columns={columns}
+        initialState={initialState}
         pagination
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        rowCount={100}
+        pageSize={PAGE_SIZE}
+        rowsPerPageOptions={[PAGE_SIZE]}
+        rowCount={rowCountState}
         paginationMode="server"
         onPageChange={handlePageChange}
         page={page}
-        loading={loading}
+        loading={isLoading}
       />
     </div>
   );

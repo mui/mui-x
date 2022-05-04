@@ -98,6 +98,10 @@ const config: StorybookConfig = {
           __dirname,
           '../../../packages/grid/x-data-grid-pro/src',
         ),
+        '@mui/x-data-grid-premium': path.resolve(
+          __dirname,
+          '../../../packages/grid/x-data-grid-premium/src',
+        ),
         '@mui/x-license-pro': path.resolve(__dirname, '../../../packages/x-license-pro/src'),
       },
     };

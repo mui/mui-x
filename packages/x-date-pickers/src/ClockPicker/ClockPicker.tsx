@@ -5,7 +5,6 @@ import { unstable_useId as useId } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Clock } from './Clock';
-import { pipe } from '../internals/utils/utils';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
@@ -17,8 +16,6 @@ import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-
-export interface ClockPickerComponentsPropsOverrides {}
 
 const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
   const { classes } = ownerState;
@@ -36,11 +33,6 @@ export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationP
    * @default false
    */
   ampm?: boolean;
-  /**
-   * Step over minutes.
-   * @default 1
-   */
-  minutesStep?: number;
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default false
@@ -69,6 +61,21 @@ export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationP
   ) => string;
 }
 
+export interface ClockPickerSlotsComponent {
+  LeftArrowButton: React.ElementType;
+  LeftArrowIcon: React.ElementType;
+  RightArrowButton: React.ElementType;
+  RightArrowIcon: React.ElementType;
+}
+
+// We keep the interface to allow module augmentation
+export interface ClockPickerComponentsPropsOverrides {}
+
+export interface ClockPickerSlotsComponentsProps {
+  leftArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
+  rightArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
+}
+
 export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate> {
   className?: string;
   /**
@@ -83,21 +90,11 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    */
-  components?: {
-    LeftArrowButton?: React.ElementType;
-    LeftArrowIcon?: React.ElementType;
-    RightArrowButton?: React.ElementType;
-    RightArrowIcon?: React.ElementType;
-  };
-
+  components?: Partial<ClockPickerSlotsComponent>;
   /**
    * The props used for each slot inside.
    */
-  componentsProps?: {
-    leftArrowButton?: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
-    rightArrowButton?: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
-  };
-
+  componentsProps?: Partial<ClockPickerSlotsComponentsProps>;
   /**
    * Selected date @DateIOType.
    */
@@ -219,7 +216,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     components,
     componentsProps,
     date,
-    disableIgnoringDatePartForTimeValidation = false,
+    disableIgnoringDatePartForTimeValidation,
     getClockLabelText = defaultGetClockLabelText,
     getHoursClockNumberText = defaultGetHoursClockNumberText,
     getMinutesClockNumberText = defaultGetMinutesClockNumberText,
@@ -260,48 +257,70 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
   const isTimeDisabled = React.useCallback(
     (rawValue: number, viewType: ClockPickerView) => {
-      if (date === null) {
-        return false;
-      }
+      const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
 
-      const validateTimeValue = (
-        value: number,
-        getRequestedTimePoint: (when: 'start' | 'end') => TDate,
-      ) => {
-        const isAfterComparingFn = createIsAfterIgnoreDatePart(
-          disableIgnoringDatePartForTimeValidation,
-          utils,
-        );
+      const containsValidTime = ({ start, end }: { start: TDate; end: TDate }) => {
+        if (minTime && isAfter(minTime, end)) {
+          return false;
+        }
 
-        return Boolean(
-          (minTime && isAfterComparingFn(minTime, getRequestedTimePoint('end'))) ||
-            (maxTime && isAfterComparingFn(getRequestedTimePoint('start'), maxTime)) ||
-            (shouldDisableTime && shouldDisableTime(value, viewType)),
-        );
+        if (maxTime && isAfter(start, maxTime)) {
+          return false;
+        }
+
+        return true;
+      };
+
+      const isValidValue = (value: number, step = 1) => {
+        if (value % step !== 0) {
+          return false;
+        }
+
+        if (shouldDisableTime) {
+          return !shouldDisableTime(value, viewType);
+        }
+
+        return true;
       };
 
       switch (viewType) {
         case 'hours': {
-          const hoursWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-          return validateTimeValue(hoursWithMeridiem, (when: 'start' | 'end') =>
-            pipe(
-              (currentDate) => utils.setHours(currentDate, hoursWithMeridiem),
-              (dateWithHours) => utils.setMinutes(dateWithHours, when === 'start' ? 0 : 59),
-              (dateWithMinutes) => utils.setSeconds(dateWithMinutes, when === 'start' ? 0 : 59),
-            )(date),
-          );
+          const value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
+
+          if (date == null) {
+            return !isValidValue(value);
+          }
+
+          const dateWithNewHours = utils.setHours(date, value);
+          const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
+          const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
+
+          return !containsValidTime({ start, end }) || !isValidValue(value);
         }
 
-        case 'minutes':
-          return validateTimeValue(rawValue, (when: 'start' | 'end') =>
-            pipe(
-              (currentDate) => utils.setMinutes(currentDate, rawValue),
-              (dateWithMinutes) => utils.setSeconds(dateWithMinutes, when === 'start' ? 0 : 59),
-            )(date),
-          );
+        case 'minutes': {
+          if (date == null) {
+            return !isValidValue(rawValue, minutesStep);
+          }
 
-        case 'seconds':
-          return validateTimeValue(rawValue, () => utils.setSeconds(date, rawValue));
+          const dateWithNewMinutes = utils.setMinutes(date, rawValue);
+          const start = utils.setSeconds(dateWithNewMinutes, 0);
+          const end = utils.setSeconds(dateWithNewMinutes, 59);
+
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue, minutesStep);
+        }
+
+        case 'seconds': {
+          if (date == null) {
+            return !isValidValue(rawValue);
+          }
+
+          const dateWithNewSeconds = utils.setSeconds(date, rawValue);
+          const start = dateWithNewSeconds;
+          const end = dateWithNewSeconds;
+
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
+        }
 
         default:
           throw new Error('not supported');
@@ -314,6 +333,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
       maxTime,
       meridiemMode,
       minTime,
+      minutesStep,
       shouldDisableTime,
       utils,
     ],

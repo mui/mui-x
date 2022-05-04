@@ -249,11 +249,15 @@ describe('<DataGrid /> - Rows', () => {
       );
       expect(screen.queryAllByRole('menu')).to.have.length(2);
 
-      fireEvent.click(screen.getAllByRole('menuitem', { name: 'more' })[0]);
+      const more1 = screen.getAllByRole('menuitem', { name: 'more' })[0];
+      fireEvent.mouseDown(more1);
+      fireEvent.click(more1);
       clock.runToLast();
       expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
 
-      fireEvent.click(screen.getAllByRole('menuitem', { name: 'more' })[1]);
+      const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
+      fireEvent.mouseDown(more2);
+      fireEvent.click(more2);
       clock.runToLast();
       expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
     });

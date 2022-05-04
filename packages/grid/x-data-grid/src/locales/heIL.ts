@@ -32,6 +32,7 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'ייצוא',
   toolbarExportCSV: 'הורדה כ- CSV',
   toolbarExportPrint: 'הדפסה',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'חפש עמודה',
@@ -131,6 +132,9 @@ const heILGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

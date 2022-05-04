@@ -31,6 +31,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Dışa aktar',
   toolbarExportCSV: 'CSV olarak aktar',
   toolbarExportPrint: 'Yazdır',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Sütun ara',
@@ -128,6 +129,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Genişlet',
   collapseDetailPanel: 'Gizle',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);

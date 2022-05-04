@@ -3,7 +3,6 @@ import {
   DataGridPro,
   GridRenderCellParams,
   useGridApiContext,
-  GridEvents,
   GridColumns,
   GridRowsProp,
   DataGridProProps,
@@ -35,7 +34,7 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
       event.stopPropagation();
     }
     if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
     }
   };
 

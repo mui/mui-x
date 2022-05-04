@@ -21,12 +21,12 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rows: GridRowsProp = [
-  { id: 0, category1: 'Cat A' },
-  { id: 1, category1: 'Cat A' },
-  { id: 2, category1: 'Cat A' },
-  { id: 3, category1: 'Cat B' },
-  { id: 4, category1: 'Cat B' },
-  { id: 5, category1: 'Cat B' },
+  { id: 0, category: 'Cat A' },
+  { id: 1, category: 'Cat A' },
+  { id: 2, category: 'Cat A' },
+  { id: 3, category: 'Cat B' },
+  { id: 4, category: 'Cat B' },
+  { id: 5, category: 'Cat B' },
 ];
 
 const columns: GridColDef[] = [
@@ -35,21 +35,21 @@ const columns: GridColDef[] = [
     type: 'number',
   },
   {
-    field: 'category1',
-  },
-  {
     field: 'idBis',
     type: 'number',
     valueGetter: (params) => params.row.id,
+  },
+  {
+    field: 'category',
   },
 ];
 
 const FULL_INITIAL_STATE: GridInitialState = {
   columns: {
-    columnVisibilityModel: { category1: false },
-    orderedFields: ['id', '__row_group_by_columns_group__', 'idBis', 'category1'],
+    columnVisibilityModel: { idBis: false },
+    orderedFields: ['id', 'category', 'idBis'],
     dimensions: {
-      idBis: {
+      category: {
         width: 75,
         maxWidth: -1,
         minWidth: 50,
@@ -64,7 +64,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
   pagination: {
     page: 1,
-    pageSize: 1,
+    pageSize: 2,
   },
   pinnedColumns: {
     left: ['id'],
@@ -75,9 +75,6 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
   sorting: {
     sortModel: [{ field: 'id', sort: 'desc' }],
-  },
-  rowGrouping: {
-    model: ['category1'],
   },
 };
 
@@ -98,8 +95,7 @@ describe('<DataGridPro /> - State Persistence', () => {
           autoHeight={isJSDOM}
           apiRef={apiRef}
           disableVirtualization
-          rowsPerPageOptions={[100, 1]}
-          experimentalFeatures={{ rowGrouping: true }} // To enable the `rowGroupingModel in export / restore
+          rowsPerPageOptions={[100, 2]}
           {...props}
           initialState={{
             ...props.initialState,
@@ -110,8 +106,6 @@ describe('<DataGridPro /> - State Persistence', () => {
               }, // To enable the `columnVisibilityModel` in export / restore
             },
           }}
-          defaultGroupingExpansionDepth={-1}
-          groupingColDef={{ headerName: 'Group' }}
         />
       </div>
     );
@@ -124,7 +118,7 @@ describe('<DataGridPro /> - State Persistence', () => {
       render(<TestCase />);
       expect(apiRef.current.exportState()).to.deep.equal({
         columns: {
-          orderedFields: ['id', 'category1', 'idBis'],
+          orderedFields: ['id', 'idBis', 'category'],
         },
       });
     });
@@ -136,7 +130,7 @@ describe('<DataGridPro /> - State Persistence', () => {
 
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
-      apiRef.current.setPageSize(1);
+      apiRef.current.setPageSize(2);
       apiRef.current.setPage(1);
       apiRef.current.setPinnedColumns({ left: ['id'] });
       apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
@@ -144,11 +138,9 @@ describe('<DataGridPro /> - State Persistence', () => {
       apiRef.current.setFilterModel({
         items: [{ columnField: 'id', operatorValue: '<', value: '5' }],
       });
-      apiRef.current.setRowGroupingModel(['category1']);
-      apiRef.current.setColumnIndex('idBis', 2);
-      apiRef.current.setColumnWidth('idBis', 75);
-      apiRef.current.setColumnVisibilityModel({ category1: false });
-
+      apiRef.current.setColumnIndex('category', 1);
+      apiRef.current.setColumnWidth('category', 75);
+      apiRef.current.setColumnVisibilityModel({ idBis: false });
       expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });
   });
@@ -159,20 +151,17 @@ describe('<DataGridPro /> - State Persistence', () => {
 
       apiRef.current.restoreState(FULL_INITIAL_STATE);
 
-      // Pinning sorting and filtering
-      expect(getColumnValues(0)).to.deep.equal(['', '4', '3']);
-
-      // Pagination and row grouping
-      expect(getColumnValues(1)).to.deep.equal(['Cat B (2)', '', '']);
+      // Pinning, pagination, sorting and filtering
+      expect(getColumnValues(0)).to.deep.equal(['2', '1']);
 
       // Preference panel
       expect(screen.getByRole('button', { name: /Add Filter/i })).to.not.equal(null);
 
       // Columns visibility
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Group', 'idBis']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'category']);
 
       // Columns dimensions
-      expect(getColumnHeaderCell(2)).toHaveInlineStyle({ width: '75px' });
+      expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '75px' });
     });
 
     it('should restore partial exportable state', () => {
@@ -181,11 +170,11 @@ describe('<DataGridPro /> - State Persistence', () => {
       apiRef.current.restoreState({
         pagination: {
           page: 1,
-          pageSize: 1,
+          pageSize: 2,
         },
       });
 
-      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
 
     it('should restore controlled sub-state', () => {
@@ -206,11 +195,11 @@ describe('<DataGridPro /> - State Persistence', () => {
       apiRef.current.restoreState({
         pagination: {
           page: 1,
-          pageSize: 1,
+          pageSize: 2,
         },
       });
       clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
 
     it('should not restore the column visibility model when using the legacy column visibility', () => {
@@ -227,7 +216,7 @@ describe('<DataGridPro /> - State Persistence', () => {
                   hide: true,
                 },
                 {
-                  field: 'category1',
+                  field: 'category',
                 },
               ]}
               autoHeight={isJSDOM}
@@ -243,12 +232,12 @@ describe('<DataGridPro /> - State Persistence', () => {
       apiRef.current.restoreState({
         columns: {
           columnVisibilityModel: {
-            category1: false,
+            category: false,
           },
         },
       });
 
-      expect(getColumnHeadersTextContent()).to.deep.equal(['category1']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['category']);
     });
   });
 });

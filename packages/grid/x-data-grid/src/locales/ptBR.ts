@@ -32,6 +32,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Baixar como CSV',
   toolbarExportPrint: 'Print',
+  toolbarExportExcel: 'Baixar como Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Localizar coluna',
@@ -133,6 +134,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Esconder',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

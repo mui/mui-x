@@ -31,6 +31,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exportálás',
   toolbarExportCSV: 'Mentés CSV fájlként',
   toolbarExportPrint: 'Nyomtatás',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Oszlop keresése',
@@ -128,6 +129,9 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Kibontás',
   collapseDetailPanel: 'Összecsukás',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const huHU: Localization = getGridLocalization(huHUGrid, huHUCore);
