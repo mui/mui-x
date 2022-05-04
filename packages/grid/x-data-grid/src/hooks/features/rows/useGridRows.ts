@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
@@ -58,12 +58,14 @@ const convertGridRowsPropToState = ({
   if (rows) {
     value = {
       idRowsLookup: {},
+      idToIdLookup: {},
       ids: [],
     };
     for (let i = 0; i < rows.length; i += 1) {
       const row = rows[i];
       const id = getGridRowId(row, getRowId);
       value.idRowsLookup[id] = row;
+      value.idToIdLookup[id] = id;
       value.ids.push(id);
     }
   } else {
@@ -114,6 +116,7 @@ export const rowsStateInitializer: GridStateInitializer<
       prevState: {
         value: {
           idRowsLookup: {},
+          idToIdLookup: {},
           ids: [],
         },
         rowsBeforePartialUpdates: [],
@@ -182,7 +185,7 @@ export const useGridRows = (
             props.loading,
           ),
         }));
-        apiRef.current.publishEvent(GridEvents.rowsSet);
+        apiRef.current.publishEvent('rowsSet');
         apiRef.current.forceUpdate();
       };
 
@@ -261,6 +264,7 @@ export const useGridRows = (
 
       const newStateValue: GridRowInternalCacheValue = {
         idRowsLookup: { ...rowsCache.current.state.value.idRowsLookup },
+        idToIdLookup: { ...rowsCache.current.state.value.idToIdLookup },
         ids: [...rowsCache.current.state.value.ids],
       };
 
@@ -268,6 +272,7 @@ export const useGridRows = (
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
           delete newStateValue.idRowsLookup[id];
+          delete newStateValue.idToIdLookup[id];
           deletedRowIds.push(id);
           return;
         }
@@ -275,6 +280,7 @@ export const useGridRows = (
         const oldRow = apiRef.current.getRow(id);
         if (!oldRow) {
           newStateValue.idRowsLookup[id] = partialRow;
+          newStateValue.idToIdLookup[id] = id;
           newStateValue.ids.push(id);
           return;
         }
@@ -332,7 +338,7 @@ export const useGridRows = (
         };
       });
       apiRef.current.forceUpdate();
-      apiRef.current.publishEvent(GridEvents.rowExpansionChange, newNode);
+      apiRef.current.publishEvent('rowExpansionChange', newNode);
     },
     [apiRef],
   );
@@ -386,7 +392,7 @@ export const useGridRows = (
     (rowId, targetIndex) => {
       const allRows = gridRowIdsSelector(apiRef);
       const oldIndex = allRows.findIndex((row) => row === rowId);
-      if (oldIndex === targetIndex) {
+      if (oldIndex === -1 || oldIndex === targetIndex) {
         return;
       }
 
@@ -449,7 +455,7 @@ export const useGridRows = (
   }, [logger, throttledRowsChange, props.getRowId, props.rows]);
 
   const handleStrategyProcessorChange = React.useCallback<
-    GridEventListener<GridEvents.activeStrategyProcessorChange>
+    GridEventListener<'activeStrategyProcessorChange'>
   >(
     (methodName) => {
       if (methodName === 'rowTreeCreation') {
@@ -460,7 +466,7 @@ export const useGridRows = (
   );
 
   const handleStrategyActivityChange = React.useCallback<
-    GridEventListener<GridEvents.strategyAvailabilityChange>
+    GridEventListener<'strategyAvailabilityChange'>
   >(() => {
     // `rowTreeCreation` is the only processor ran when `strategyAvailabilityChange` is fired.
     // All the other processors listen to `rowsSet` which will be published by the `groupRows` method below.
@@ -471,16 +477,8 @@ export const useGridRows = (
     }
   }, [apiRef, groupRows]);
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.activeStrategyProcessorChange,
-    handleStrategyProcessorChange,
-  );
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.strategyAvailabilityChange,
-    handleStrategyActivityChange,
-  );
+  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+  useGridApiEventHandler(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 
@@ -505,7 +503,7 @@ export const useGridRows = (
       return;
     }
 
-    // The new rows have already been applied (most likely in the `GridEvents.rowGroupsPreProcessingChange` listener)
+    // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
     if (rowsCache.current.state.rowsBeforePartialUpdates === props.rows) {
       return;
     }

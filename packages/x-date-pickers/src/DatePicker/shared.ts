@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { ParseableDate } from '../internals/models/parseableDate';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
 import {
@@ -15,16 +14,18 @@ import {
 } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
 
 export interface DatePickerSlotsComponent
   extends CalendarPickerSlotsComponent,
     DateInputSlotsComponent {}
 
-export interface BaseDatePickerProps<TDate>
+export interface BaseDatePickerProps<TInputDate, TDate>
   extends ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<ParseableDate<TDate>, TDate | null>,
-    ValidationProps<DateValidationError, ParseableDate<TDate>>,
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
+    BasePickerProps<TInputDate | null, TDate, TDate | null>,
+    ValidationProps<DateValidationError, TInputDate | null>,
+    ExportedDateInputProps<TInputDate, TDate> {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
@@ -44,7 +45,7 @@ export interface BaseDatePickerProps<TDate>
    * Component that will replace default toolbar renderer.
    * @default DatePickerToolbar
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate | null>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate>>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date'
@@ -91,10 +92,15 @@ const getFormatAndMaskByViews = <TDate>(
 
 export type DefaultizedProps<Props> = Props & { inputFormat: string };
 
-export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePickerProps<TDate>>(
+export function useDatePickerDefaultizedProps<
+  TInputDate,
+  TDate,
+  Props extends BaseDatePickerProps<TInputDate, TDate>,
+>(
   props: Props,
   name: string,
-): DefaultizedProps<Props> & Required<Pick<BaseDatePickerProps<unknown>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props> &
+  Required<Pick<BaseDatePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates();
 
@@ -116,3 +122,10 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     views,
   };
 }
+
+export const datePickerValueManager: PickerStateValueManager<any, any, any> = {
+  emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
+  parseInput: parsePickerInputValue,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+};

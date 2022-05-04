@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   buildDeprecatedPropsWarning,
   DateInputSlotsComponent,
+  PickerStateValueManager,
   useDefaultDates,
   useLocaleText,
   useUtils,
@@ -13,17 +14,18 @@ import {
   ExportedDateRangePickerViewProps,
 } from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
-import { DateRange, RangeInput } from '../internal/models';
+import { DateRange } from '../internal/models';
+import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 
 interface DateRangePickerSlotsComponent
   extends DateRangePickerViewSlotsComponent,
     DateInputSlotsComponent {}
 
-export interface BaseDateRangePickerProps<TDate>
-  extends ExportedDateRangePickerViewProps<TDate>,
-    ValidationProps<DateRangeValidationError, RangeInput<TDate>>,
-    ExportedDateRangePickerInputProps {
+export interface BaseDateRangePickerProps<TInputDate, TDate>
+  extends ExportedDateRangePickerViewProps<TInputDate, TDate>,
+    ValidationProps<DateRangeValidationError, DateRange<TInputDate>>,
+    ExportedDateRangePickerInputProps<TInputDate, TDate> {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
@@ -40,17 +42,7 @@ export interface BaseDateRangePickerProps<TDate>
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
    */
-  mask?: ExportedDateRangePickerInputProps['mask'];
-  /**
-   * Min selectable date. @DateIOType
-   * @default defaultMinDate
-   */
-  minDate?: TDate;
-  /**
-   * Max selectable date. @DateIOType
-   * @default defaultMaxDate
-   */
-  maxDate?: TDate;
+  mask?: ExportedDateRangePickerInputProps<TInputDate, TDate>['mask'];
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
    * @template TDate
@@ -64,10 +56,6 @@ export interface BaseDateRangePickerProps<TDate>
    * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   startText?: React.ReactNode;
-  /**
-   * The value of the date range picker.
-   */
-  value: RangeInput<TDate>;
 }
 
 export type DefaultizedProps<Props> = Props & { inputFormat: string };
@@ -77,14 +65,18 @@ const deprecatedPropsWarning = buildDeprecatedPropsWarning(
 );
 
 export function useDateRangePickerDefaultizedProps<
+  TInputDate,
   TDate,
-  Props extends BaseDateRangePickerProps<TDate>,
+  Props extends BaseDateRangePickerProps<TInputDate, TDate>,
 >(
   props: Props,
   name: string,
 ): DefaultizedProps<Props> &
   Required<
-    Pick<BaseDateRangePickerProps<unknown>, 'calendars' | 'mask' | 'startText' | 'endText'>
+    Pick<
+      BaseDateRangePickerProps<TInputDate, TDate>,
+      'calendars' | 'mask' | 'startText' | 'endText'
+    >
   > {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates();
@@ -117,3 +109,10 @@ export function useDateRangePickerDefaultizedProps<
     startText,
   };
 }
+
+export const dateRangePickerValueManager: PickerStateValueManager<[any, any], [any, any], any> = {
+  emptyValue: [null, null],
+  getTodayValue: (utils) => [utils.date()!, utils.date()!],
+  parseInput: parseRangeInputValue,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
+};

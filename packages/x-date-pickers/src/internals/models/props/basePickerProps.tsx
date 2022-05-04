@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BaseToolbarProps } from './baseToolbarProps';
 
-export interface BasePickerProps<TInputValue, TDateValue> {
+export interface BasePickerProps<TInputValue, TDate, TValue> {
   /**
    * className applied to the root component.
    */
@@ -21,17 +21,17 @@ export interface BasePickerProps<TInputValue, TDateValue> {
   inputFormat?: string;
   /**
    * Callback fired when date is accepted @DateIOType.
-   * @template TDateValue
-   * @param {TDateValue} date The date that was just accepted.
+   * @template TValue
+   * @param {TValue} value The value that was just accepted.
    */
-  onAccept?: (date: TDateValue) => void;
+  onAccept?: (value: TValue) => void;
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
-   * @template TDate
-   * @param {DateRange<TDate>} date The new parsed date.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
-  onChange: (date: TDateValue, keyboardInputValue?: string) => void;
+  onChange: (value: TValue, keyboardInputValue?: string) => void;
   /**
    * Callback fired when the popup requests to be closed.
    * Use in controlled mode (see open).
@@ -61,7 +61,7 @@ export interface BasePickerProps<TInputValue, TDateValue> {
   /**
    * Component that will replace default toolbar renderer.
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDateValue>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate>>;
   /**
    * Date format, that is displaying in toolbar.
    */

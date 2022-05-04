@@ -15,7 +15,7 @@ describe('<DatePicker />', () => {
           inputRef={inputRef}
           value={null}
           onChange={() => {}}
-          renderInput={(params) => <TextField id="test-focusing-picker" {...params} />}
+          renderInput={(params) => <TextField {...params} />}
         />,
       );
 

@@ -37,7 +37,6 @@ export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-hel
 
 export type { BasePickerProps } from './models/props/basePickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
-export type { ParseableDate } from './models/parseableDate';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 
 export { executeInTheNextEventLoopTick } from './utils/utils';

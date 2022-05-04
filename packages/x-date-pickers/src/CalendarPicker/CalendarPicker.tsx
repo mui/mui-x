@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { MonthPicker } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
@@ -181,11 +181,11 @@ type CalendarPickerComponent = (<TDate>(
  *
  * - [CalendarPicker API](https://mui.com/x/api/date-pickers/calendar-picker/)
  */
-const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends unknown>(
+const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   inProps: CalendarPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps<Theme, CalendarPickerProps<TDate>, 'MuiCalendarPicker'>({
+  const props = useThemeProps({
     props: inProps,
     name: 'MuiCalendarPicker',
   });
@@ -234,7 +234,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
     isDateDisabled,
     handleChangeMonth,
     onMonthSwitchingAnimationEnd,
-  } = useCalendarState<TDate>({
+  } = useCalendarState({
     date,
     defaultCalendarMonth,
     reduceAnimations,

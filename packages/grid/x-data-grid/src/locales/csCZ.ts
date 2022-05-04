@@ -41,6 +41,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stáhnout jako CSV',
   toolbarExportPrint: 'Vytisknout',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Najít sloupec',
