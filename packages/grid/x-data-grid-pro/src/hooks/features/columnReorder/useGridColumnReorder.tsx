@@ -4,7 +4,6 @@ import {
   CursorCoordinates,
   useGridApiEventHandler,
   getDataGridUtilityClass,
-  GridEvents,
   GridEventListener,
   useGridLogger,
 } from '@mui/x-data-grid';
@@ -73,7 +72,7 @@ export const useGridColumnReorder = (
     };
   }, []);
 
-  const handleDragStart = React.useCallback<GridEventListener<GridEvents.columnHeaderDragStart>>(
+  const handleDragStart = React.useCallback<GridEventListener<'columnHeaderDragStart'>>(
     (params, event) => {
       if (props.disableColumnReorder || params.colDef.disableReorder) {
         return;
@@ -103,7 +102,7 @@ export const useGridColumnReorder = (
   );
 
   const handleDragEnter = React.useCallback<
-    GridEventListener<GridEvents.cellDragEnter | GridEvents.columnHeaderDragEnter>
+    GridEventListener<'cellDragEnter' | 'columnHeaderDragEnter'>
   >((params, event) => {
     event.preventDefault();
     // Prevent drag events propagation.
@@ -112,7 +111,7 @@ export const useGridColumnReorder = (
   }, []);
 
   const handleDragOver = React.useCallback<
-    GridEventListener<GridEvents.cellDragOver | GridEvents.columnHeaderDragOver>
+    GridEventListener<'cellDragOver' | 'columnHeaderDragOver'>
   >(
     (params, event) => {
       const dragColField = gridColumnReorderDragColSelector(apiRef);
@@ -174,7 +173,7 @@ export const useGridColumnReorder = (
     [apiRef, logger],
   );
 
-  const handleDragEnd = React.useCallback<GridEventListener<GridEvents.columnHeaderDragEnd>>(
+  const handleDragEnd = React.useCallback<GridEventListener<'columnHeaderDragEnd'>>(
     (params, event): void => {
       const dragColField = gridColumnReorderDragColSelector(apiRef);
       if (props.disableColumnReorder || !dragColField) {
@@ -206,10 +205,10 @@ export const useGridColumnReorder = (
     [props.disableColumnReorder, logger, apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleDragStart);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnter, handleDragEnter);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragOver, handleDragOver);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, handleDragEnd);
-  useGridApiEventHandler(apiRef, GridEvents.cellDragEnter, handleDragEnter);
-  useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
+  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleDragStart);
+  useGridApiEventHandler(apiRef, 'columnHeaderDragEnter', handleDragEnter);
+  useGridApiEventHandler(apiRef, 'columnHeaderDragOver', handleDragOver);
+  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleDragEnd);
+  useGridApiEventHandler(apiRef, 'cellDragEnter', handleDragEnter);
+  useGridApiEventHandler(apiRef, 'cellDragOver', handleDragOver);
 };

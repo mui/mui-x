@@ -41,8 +41,8 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 
 ### Single grouping column
 
-By default, the grid will display a single column holding all grouped columns.
-If you have multiple grouped columns, this column name will be set to "Group".
+By default, the grid will display a single column holding all grouping columns.
+If you have multiple grouping criteria, this column name will be set to "Group".
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -79,6 +79,73 @@ If you want to display some value, you can provide a `leafField` property to the
 Use the `hideDescendantCount` property of the `groupingColDef` to hide the number of descendants of a grouping row.
 
 {{"demo": "RowGroupingHideDescendantCount.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Hide the grouped columns
+
+By default, the columns used to group the rows remains visible.
+For instance if you group by `"director"`, you will have two columns titled _Director_:
+
+- The grouped column (the column from which you grouped the rows)
+- The grouping column on which you can toggle the groups
+
+To automatically hide the grouped columns, use the `useKeepGroupedColumnsHidden` utility hook.
+The hook will automatically hide the columns when added to the model and show them back when removed from it.
+
+```tsx
+// Usage with the initial state
+const apiRef = useGridApiRef();
+
+const initialState = useKeepGroupedColumnsHidden({
+  apiRef,
+  initialState: {
+    rowGrouping: {
+      model: ['company'],
+    },
+    columns: {
+      // Other hidden columns
+      columnVisibilityModel: { gross: false },
+    },
+  },
+});
+
+return <DataGridPremium {...data} apiRef={apiRef} initialState={initialState} />;
+```
+
+```tsx
+// Usage with the controlled model
+const apiRef = useGridApiRef();
+
+const [rowGroupingModel, setRowGroupingModel] = React.useState([
+  'company',
+  'director',
+]);
+
+const initialState = useKeepGroupedColumnsHidden({
+  apiRef,
+  rowGroupingModel,
+  initialState: {
+    columns: {
+      // Other hidden columns
+      columnVisibilityModel: { gross: false },
+    },
+  },
+});
+
+return (
+  <DataGridPremium
+    {...data}
+    apiRef={apiRef}
+    initialState={initialState}
+    rowGroupingModel={rowGroupingModel}
+  />
+);
+```
+
+> ⚠️ This hook is only compatible with the deprecated column property `hide` or with the controlled `columnVisibilityModel` prop.
+>
+> You must use the `columnVisibilityModel` in the `initialState` instead.
+
+{{"demo": "RowGroupingUseKeepGroupedColumnsHidden.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Disable the row grouping
 

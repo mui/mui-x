@@ -32,6 +32,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'تصدير',
   toolbarExportCSV: 'تنزيل كملف CSV',
   // toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'البحث عن العمود',

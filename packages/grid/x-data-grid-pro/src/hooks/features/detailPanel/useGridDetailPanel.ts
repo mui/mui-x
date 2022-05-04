@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GridEvents,
   GridEventListener,
   GridRowId,
   useGridSelector,
@@ -51,7 +50,7 @@ export const useGridDetailPanel = (
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
 
-  const handleCellClick = React.useCallback<GridEventListener<GridEvents.cellClick>>(
+  const handleCellClick = React.useCallback<GridEventListener<'cellClick'>>(
     (params: GridCellParams, event: React.MouseEvent) => {
       if (params.field !== GRID_DETAIL_PANEL_TOGGLE_FIELD || props.getDetailPanelContent == null) {
         return;
@@ -72,7 +71,7 @@ export const useGridDetailPanel = (
     [apiRef, contentCache, props.getDetailPanelContent],
   );
 
-  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (props.getDetailPanelContent == null) {
         return;
@@ -91,8 +90,8 @@ export const useGridDetailPanel = (
     [apiRef, props.getDetailPanelContent],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, 'cellClick', handleCellClick);
+  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 
   const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
     (initialValue, row) => {
@@ -115,7 +114,7 @@ export const useGridDetailPanel = (
     propModel: props.detailPanelExpandedRowIds,
     propOnChange: props.onDetailPanelExpandedRowIdsChange,
     stateSelector: gridDetailPanelExpandedRowIdsSelector,
-    changeEvent: GridEvents.detailPanelsExpandedRowIdsChange,
+    changeEvent: 'detailPanelsExpandedRowIdsChange',
   });
 
   const toggleDetailPanel = React.useCallback<GridDetailPanelApi['toggleDetailPanel']>(

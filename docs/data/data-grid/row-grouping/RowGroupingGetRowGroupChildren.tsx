@@ -5,7 +5,6 @@ import {
   GridColumns,
   gridColumnVisibilityModelSelector,
   GridEventListener,
-  GridEvents,
   GridRowGroupingModel,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
@@ -23,7 +22,7 @@ const useKeepGroupingColumnsHidden = (
   const prevModel = React.useRef(initialModel);
 
   React.useEffect(() => {
-    apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
+    apiRef.current.subscribeEvent('rowGroupingModelChange', (newModel) => {
       const columnVisibilityModel = {
         ...gridColumnVisibilityModelSelector(apiRef),
       };
@@ -68,7 +67,7 @@ export default function RowGroupingGetRowGroupChildren() {
     INITIAL_GROUPING_COLUMN_MODEL,
   );
 
-  const handleRowClick = React.useCallback<GridEventListener<GridEvents.rowClick>>(
+  const handleRowClick = React.useCallback<GridEventListener<'rowClick'>>(
     (params) => {
       // Only log groups
       if (!apiRef.current.getRowNode(params.id)?.children) {

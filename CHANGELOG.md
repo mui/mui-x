@@ -2404,7 +2404,7 @@ _July 1, 2021_
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 As a focus of Q2, we have kept fixing bugs
-- 💅 End users are now allowed to copy the selected rows to the clipboard with <kbd>CTRL</kbd> + <kbd>c</kbd> (#1929) @m4theushw
+- 💅 End users are now allowed to copy the selected rows to the clipboard with <kbd>Ctrl</kbd> + <kbd>c</kbd> (#1929) @m4theushw
 - 🐛 We have fixed the `Select all` checkbox. When triggered, it should only select the filtered rows (#1879) @ZeeshanTamboli
 - ⚡️ We have added a new `singleSelect` column type (#1956) @DanailH
 
@@ -2604,7 +2604,7 @@ _June 9, 2021_
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 💅 Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
-- 🐛 Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
+- 🐛 Allow to deselect rows with <kbd>Ctrl</kbd> + click (#1813) @ZeeshanTamboli
 - ⚡️ Refactor scroll size detector (#1703) @dtassone
 - 📖 Add [documentation](https://mui.com/x/api/data-grid/) for interfaces and events (#1529) @m4theushw
 - 🐞 Bugfixes
@@ -2631,7 +2631,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add `valueParser` to parse values entered by the user (#1785) @m4theushw
 - [DataGrid] Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
-- [DataGrid] Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
+- [DataGrid] Allow to deselect rows with <kbd>Ctrl</kbd> + click (#1813) @ZeeshanTamboli
 - [DataGrid] Improve general architecture to better isolate hooks (#1720) @dtassone
 - [DataGrid] Fix cell height after changing grid density (#1819) @DanailH
 - [DataGrid] Fix fluid columns width when available `viewportWidth` < 0 (#1816) @DanailH

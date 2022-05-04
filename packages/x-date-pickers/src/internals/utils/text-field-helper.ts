@@ -1,8 +1,7 @@
-import { ParseableDate } from '../models/parseableDate';
 import { MuiPickersAdapter } from '../models';
 
-export function getTextFieldAriaText<TDate>(
-  rawValue: ParseableDate<TDate>,
+export function getTextFieldAriaText<TInputDate, TDate>(
+  rawValue: TInputDate,
   utils: MuiPickersAdapter<TDate>,
 ) {
   // TODO: should `isValid` narrow `TDate | null` to `NonNullable<TDate>`?
@@ -15,11 +14,11 @@ export function getTextFieldAriaText<TDate>(
 
 export const getDisplayDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  value: ParseableDate<TDate>,
+  rawValue: any,
   inputFormat: string,
 ) => {
-  const date = utils.date(value);
-  const isEmpty = value === null;
+  const date = utils.date(rawValue);
+  const isEmpty = rawValue === null;
 
   if (isEmpty) {
     return '';
@@ -63,9 +62,33 @@ export function checkMaskIsValidForCurrentFormat(
     inferredFormatPatternWith2Digits === mask && inferredFormatPatternWith1Digits === mask;
 
   if (!isMaskValid && utils.lib !== 'luxon' && process.env.NODE_ENV !== 'production') {
-    console.warn(
-      `The mask "${mask}" you passed is not valid for the format used ${format}. Falling down to uncontrolled not-masked input.`,
-    );
+    const defaultWarning = [
+      `The mask "${mask}" you passed is not valid for the format used ${format}.`,
+      `Falling down to uncontrolled no-mask input.`,
+    ];
+
+    if (format.includes('MMM')) {
+      console.warn(
+        [
+          ...defaultWarning,
+          `Mask does not support literals such as 'MMM'.`,
+          `Either use numbers with fix length or disable mask feature with 'disableMaskedInput' prop`,
+        ].join('\n'),
+      );
+    } else if (
+      inferredFormatPatternWith2Digits !== mask &&
+      inferredFormatPatternWith1Digits === mask
+    ) {
+      console.warn(
+        [
+          ...defaultWarning,
+          `Mask does not support numbers with variable length such as 'M'.`,
+          `Either use numbers with fix length or disable mask feature with 'disableMaskedInput' prop`,
+        ].join('\n'),
+      );
+    } else {
+      console.warn(defaultWarning.join('\n'));
+    }
   }
 
   return isMaskValid;

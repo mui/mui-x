@@ -6,8 +6,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
-import pages from 'docsx/src/pages'; // DO NOT REMOVE
-import newPages from 'docsx/data/pages'; // DO NOT REMOVE
+import pages from 'docsx/data/pages'; // DO NOT REMOVE
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
@@ -56,6 +55,9 @@ ponyfillGlobal.muiDocConfig = {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
+      // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
+      // use `import 'exceljs'` in demonstrations instead
+      newDeps.exceljs = versions.exceljs;
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
@@ -87,6 +89,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       'date-fns': 'latest',
+      exceljs: 'latest',
     };
     return output;
   },
@@ -237,13 +240,7 @@ function AppWrapper(props) {
     }
   }, []);
 
-  const asPathWithoutLang = router.asPath.replace(/^\/[a-z]{2}\//, '/');
-  let productPages = pages;
-  if (asPathWithoutLang.startsWith('/x')) {
-    productPages = newPages;
-  }
-
-  const activePage = findActivePage(productPages, router.pathname);
+  const activePage = findActivePage(pages, router.pathname);
 
   let fonts = [];
   if (router.pathname.match(/onepirate/)) {
@@ -262,7 +259,7 @@ function AppWrapper(props) {
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
         <CodeCopyProvider>
           <CodeVariantProvider>
-            <PageContext.Provider value={{ activePage, pages: productPages }}>
+            <PageContext.Provider value={{ activePage, pages }}>
               <ThemeProvider>
                 <DocsStyledEngineProvider cacheLtr={emotionCache}>
                   {children}
