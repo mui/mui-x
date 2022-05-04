@@ -343,6 +343,21 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(handleSelectionModelChange.callCount).to.equal(0);
   });
 
+  // See https://github.com/mui/mui-x/issues/4607
+  it('should make detail panel to take full width of the content', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    render(
+      <TestCase
+        getDetailPanelContent={() => <div>Detail</div>}
+        columns={[{ field: 'id', width: 400 }]}
+      />,
+    );
+    fireEvent.click(getCell(1, 0).querySelector('button'));
+    expect(screen.queryByText('Detail').offsetWidth).to.equal(50 + 400);
+  });
+
   describe('prop: onDetailPanelsExpandedRowIds', () => {
     it('shoull call when a row is expanded or closed', () => {
       const handleDetailPanelsExpandedRowIdsChange = spy();
