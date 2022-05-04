@@ -42,7 +42,7 @@ const baselineProps: DataGridPremiumProps = {
   ],
 };
 
-describe.only('<DataGridPremium /> - Aggregation', () => {
+describe('<DataGridPremium /> - Aggregation', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
