@@ -76,7 +76,7 @@
     "recast": "^0.21.1",
     "rimraf": "^3.0.2",
     "styled-components": "^5.3.5",
-    "stylis": "^4.1.0",
+    "stylis": "^4.1.1",
     "stylis-plugin-rtl": "^2.1.1",
     "stylis-plugin-rtl-sc": "npm:stylis-plugin-rtl@^2.1.1",
     "webpack-bundle-analyzer": "^4.5.0"
