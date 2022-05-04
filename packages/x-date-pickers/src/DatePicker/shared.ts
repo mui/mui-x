@@ -15,6 +15,7 @@ import {
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
 export interface DatePickerSlotsComponent
   extends CalendarPickerSlotsComponent,
@@ -22,7 +23,7 @@ export interface DatePickerSlotsComponent
 
 export interface BaseDatePickerProps<TInputDate, TDate>
   extends ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate, TDate | null>,
+    BasePickerProps<TInputDate | null, TDate | null>,
     ValidationProps<DateValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
   /**
@@ -40,6 +41,20 @@ export interface BaseDatePickerProps<TInputDate, TDate>
    * First view to show.
    */
   openTo?: CalendarPickerView;
+  /**
+   * Component that will replace default toolbar renderer.
+   * @default DatePickerToolbar
+   */
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  /**
+   * Mobile picker date value placeholder, displaying if `value` === `null`.
+   * @default '–'
+   */
+  toolbarPlaceholder?: React.ReactNode;
+  /**
+   * Date format, that is displaying in toolbar.
+   */
+  toolbarFormat?: string;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date'

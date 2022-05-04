@@ -36,11 +36,7 @@ export interface DateRangePickerViewSlotsComponentsProps
 
 export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<
-      ExportedCalendarPickerProps<TDate>,
-      | 'onYearChange'
-      | 'renderDay'
-        > {
+    Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'> {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
@@ -63,13 +59,13 @@ export interface ExportedDateRangePickerViewProps<TDate>
    */
   toolbarTitle?: React.ReactNode;
   /**
-   * If `true`, show the toolbar even in desktop mode.
-   */
-  showToolbar?: boolean;
-  /**
    * Date format, that is displaying in toolbar.
    */
   toolbarFormat?: string;
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   */
+  showToolbar?: boolean;
   /**
    * className applied to the root component.
    */
@@ -88,7 +84,7 @@ interface DateRangePickerViewProps<TInputDate, TDate>
 }
 
 type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
-    props: DateRangePickerViewProps<TInputDate, TDate>
+  props: DateRangePickerViewProps<TInputDate, TDate>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -277,7 +273,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   );
 }
 
-export const DateRangePickerView = DateRangePickerViewRaw as DateRangePickerViewComponent
+export const DateRangePickerView = DateRangePickerViewRaw as DateRangePickerViewComponent;
 
 DateRangePickerViewRaw.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),

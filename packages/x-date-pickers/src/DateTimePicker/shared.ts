@@ -16,6 +16,7 @@ import {
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
 export interface DateTimePickerSlotsComponent
   extends CalendarPickerSlotsComponent,
@@ -24,7 +25,7 @@ export interface DateTimePickerSlotsComponent
 export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
     ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate, TDate | null>,
+    BasePickerProps<TInputDate | null, TDate | null>,
     ValidationProps<DateTimeValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
   /**
@@ -63,6 +64,11 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    */
   openTo?: CalendarOrClockPickerView;
   /**
+   * Component that will replace default toolbar renderer.
+   * @default DateTimePickerToolbar
+   */
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date & time'
    */
@@ -71,6 +77,11 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    * Date format, that is displaying in toolbar.
    */
   toolbarFormat?: string;
+  /**
+   * Mobile picker date value placeholder, displaying if `value` === `null`.
+   * @default '–'
+   */
+  toolbarPlaceholder?: React.ReactNode;
   /**
    * Array of views to show.
    */

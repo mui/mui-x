@@ -395,20 +395,12 @@ DesktopDateRangePicker.propTypes = {
    */
   startText: PropTypes.node,
   /**
-   * Component that will replace default toolbar renderer.
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
    * Date format, that is displaying in toolbar.
    */
   toolbarFormat: PropTypes.string,
   /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Prop forwarded to the ToolbarComponent.
+   * Mobile picker title, displaying in the toolbar.
+   * @default 'Select date range'
    */
   toolbarTitle: PropTypes.node,
   /**

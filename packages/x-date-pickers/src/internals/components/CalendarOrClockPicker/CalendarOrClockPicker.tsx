@@ -16,6 +16,7 @@ import { PickerStatePickerProps } from '../../hooks/usePickerState';
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { PickerViewRoot } from '../PickerViewRoot';
 import { CalendarOrClockPickerView, CalendarPickerView, ClockPickerView } from '../../models';
+import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 
 export interface CalendarOrClockPickerSlotsComponent extends CalendarPickerSlotsComponent {}
 
@@ -23,7 +24,7 @@ export interface CalendarOrClockPickerSlotsComponentsProps
   extends CalendarPickerSlotsComponentsProps {}
 
 export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
-  extends Omit<BasePickerProps<any, TDate, TDate | null>, 'value' | 'onChange'>,
+  extends Omit<BasePickerProps<any, TDate | null>, 'value' | 'onChange'>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
     ExportedClockPickerProps<TDate> {
   dateRangeIcon?: React.ReactNode;
@@ -53,6 +54,9 @@ export interface ExportedCalendarOrClockPickerProps<TDate, View extends Calendar
    * @default {}
    */
   componentsProps?: Partial<CalendarOrClockPickerSlotsComponentsProps>;
+  toolbarFormat?: string;
+  toolbarPlaceholder?: React.ReactNode;
+  toolbarTitle?: React.ReactNode;
 }
 
 export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
@@ -60,6 +64,7 @@ export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockP
     PickerStatePickerProps<TDate | null> {
   autoFocus?: boolean;
   DateInputProps: DateInputPropsLike;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
 }
 
 export const MobileKeyboardInputView = styled('div')({

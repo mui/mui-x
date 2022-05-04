@@ -1,7 +1,7 @@
 import { BasePickerProps } from './basePickerProps';
 import { PickerStaticWrapperProps } from '../../components/PickerStaticWrapper';
 
-export type StaticPickerProps<BaseProps extends BasePickerProps<any, any, any>> = Omit<
+export type StaticPickerProps<BaseProps extends BasePickerProps<any, any>> = Omit<
   BaseProps,
   'open' | 'onOpen' | 'onClose'
 > & {
