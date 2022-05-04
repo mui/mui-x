@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { generateLicense } from './generateLicense';
 
 describe('License: generateLicense', () => {
+  // TODO: Remove
   it('should generate pro license properly when "scope" is not provided', () => {
     expect(
       generateLicense({
@@ -40,7 +41,8 @@ describe('License: generateLicense', () => {
     );
   });
 
-  it('should generate subscription license when "salesModel" is not provided', () => {
+  // TODO: Remove
+  it('should generate perpetual license when "salesModel" is not provided', () => {
     expect(
       generateLicense({
         expiryDate: new Date(1591723879062),

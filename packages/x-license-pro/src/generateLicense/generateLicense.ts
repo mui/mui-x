@@ -25,7 +25,7 @@ function getClearLicenseString(details: LicenseDetails) {
 
   return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${
     details.scope ?? 'pro'
-  },SM=${details.salesModel ?? 'subscription'},KV=${licenseVersion}`;
+  },SM=${details.salesModel ?? 'perpetual'},KV=${licenseVersion}`;
 }
 
 export function generateLicense(details: LicenseDetails) {
