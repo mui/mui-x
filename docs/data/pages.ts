@@ -1,7 +1,7 @@
 const pages = [
   {
     pathname: '/x/getting-started/overview',
-    scopePathnames: ['/x/getting-started/overview'],
+    scopePathnames: ['/x/getting-started/'],
     title: 'Getting started',
     icon: 'DescriptionIcon',
     children: [
