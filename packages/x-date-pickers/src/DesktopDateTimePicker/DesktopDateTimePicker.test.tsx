@@ -101,6 +101,32 @@ describe('<DesktopDateTimePicker />', () => {
     expect(screen.getByLabelText('11 hours')).to.have.class('Mui-disabled');
   });
 
+  [true, false].forEach((ampm) =>
+    it(`prop: ampm - should set working default mask/inputFormat when ampm=${ampm}`, () => {
+      const onChange = spy();
+      render(
+        <DesktopDateTimePicker
+          ampm={ampm}
+          renderInput={(params) => <TextField {...params} />}
+          onChange={onChange}
+          value={null}
+        />,
+      );
+
+      // Call `onChange` with a 24h date-time
+      fireEvent.change(screen.getByRole('textbox'), {
+        target: { value: '12/01/1999 10:12' },
+      });
+      expect(adapterToUse.isValid(onChange.lastCall.args[0])).to.equal(!ampm);
+
+      // Call `onChange` with a 12h date-time. The mask will remove the am/pm
+      fireEvent.change(screen.getByRole('textbox'), {
+        target: { value: '12/01/1999 10:12 am' },
+      });
+      expect(adapterToUse.isValid(onChange.lastCall.args[0])).to.equal(true);
+    }),
+  );
+
   it('shows ArrowSwitcher on ClockView disabled and not allows to return back to the date', () => {
     render(
       <DesktopDateTimePicker
