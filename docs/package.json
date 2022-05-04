@@ -35,7 +35,7 @@
     "@types/react-dom": "^18.0.3",
     "@types/react-router-dom": "^5.3.3",
     "accept-language": "^3.0.18",
-    "address": "^1.1.2",
+    "address": "^1.2.0",
     "ast-types": "^0.14.2",
     "autoprefixer": "^10.4.7",
     "babel-plugin-module-resolver": "^4.1.0",
