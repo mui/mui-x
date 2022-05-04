@@ -119,8 +119,9 @@ const getGroupAggregatedValue = ({
       });
     }
 
-    groupAggregationLookup[aggregatedField] = columnAggregationRules;
+    groupAggregationLookup[aggregatedField] = columnAggregationLookup;
   }
+
   return groupAggregationLookup;
 };
 
