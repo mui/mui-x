@@ -62,7 +62,7 @@
     "next": "^12.0.7",
     "nprogress": "^0.2.0",
     "postcss": "^8.4.13",
-    "prismjs": "^1.27.0",
+    "prismjs": "^1.28.0",
     "prop-types": "^15.8.1",
     "raw-loader": "^1.0.0",
     "react": "^17.0.2",
