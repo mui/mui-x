@@ -59,7 +59,7 @@
     "lz-string": "^1.4.4",
     "markdown-to-jsx": "^7.1.7",
     "marked": "^4.0.14",
-    "next": "^12.0.7",
+    "next": "^12.1.6",
     "nprogress": "^0.2.0",
     "postcss": "^8.4.13",
     "prismjs": "^1.27.0",
