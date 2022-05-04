@@ -3,7 +3,7 @@ import * as yargs from 'yargs';
 import { generateLicense } from '../generateLicense/generateLicense';
 import { base64Decode } from '../encoding/base64';
 import { LicenseScope } from '../utils/licenseScope';
-import { LicenseTerm } from '../utils/licenseTerm';
+import { LicenseSalesModel } from '../utils/licenseSalesModel';
 
 const oneDayInMs = 1000 * 60 * 60 * 24;
 
@@ -70,10 +70,9 @@ export function licenseGenCli() {
             describe: 'The license scope.',
             type: 'string',
           })
-          .option('term', {
+          .option('salesModel', {
             default: 'subscription',
-            alias: 't',
-            describe: 'The license term.',
+            describe: 'The license sales model.',
             type: 'string',
           });
       },
@@ -86,7 +85,7 @@ export function licenseGenCli() {
           expiryDate: new Date(new Date().getTime() + parseInt(argv.expiry, 10) * oneDayInMs),
           orderNumber: argv.order,
           scope: argv.scope as LicenseScope | undefined,
-          term: argv.term as LicenseTerm | undefined,
+          salesModel: argv.salesModel as LicenseSalesModel | undefined,
         };
 
         console.log(

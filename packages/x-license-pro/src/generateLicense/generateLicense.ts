@@ -1,7 +1,7 @@
 import { md5 } from '../encoding/md5';
 import { base64Encode } from '../encoding/base64';
 import { LICENSE_SCOPES, LicenseScope } from '../utils/licenseScope';
-import { LICENSE_TERMS, LicenseTerm } from '../utils/licenseTerm';
+import { LICENSE_SALES_MODELS, LicenseSalesModel } from '../utils/licenseSalesModel';
 
 const licenseVersion = '2';
 
@@ -11,7 +11,7 @@ export interface LicenseDetails {
   // TODO: to be made required once the store is updated
   scope?: LicenseScope;
   // TODO: to be made required once the store is updated
-  term?: LicenseTerm;
+  salesModel?: LicenseSalesModel;
 }
 
 function getClearLicenseString(details: LicenseDetails) {
@@ -19,13 +19,13 @@ function getClearLicenseString(details: LicenseDetails) {
     throw new Error('MUI: Invalid scope');
   }
 
-  if (details.term && !LICENSE_TERMS.includes(details.term)) {
-    throw new Error('MUI: Invalid term');
+  if (details.salesModel && !LICENSE_SALES_MODELS.includes(details.salesModel)) {
+    throw new Error('MUI: Invalid sales model');
   }
 
   return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${
     details.scope ?? 'pro'
-  },T=${details.term ?? 'subscription'},KV=${licenseVersion}`;
+  },SM=${details.salesModel ?? 'subscription'},KV=${licenseVersion}`;
 }
 
 export function generateLicense(details: LicenseDetails) {

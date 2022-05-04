@@ -55,7 +55,7 @@ You must set the license key before rendering the first component.
 import { LicenseInfo } from '@mui/x-license-pro';
 
 LicenseInfo.setLicenseKey(
-  'x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e',
+  '2c6a4286139cb4477e737e425029e8baTz1NVUktU3Rvcnlib29rLEU9MTY4MzI4OTk4MTc2NCxTPXByZW1pdW0sU009c3Vic2NyaXB0aW9uLEtWPTI=',
 );
 ```
 

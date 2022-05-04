@@ -1,4 +1,4 @@
-export const LICENSE_TERMS = [
+export const LICENSE_SALES_MODELS = [
   /**
    * A license is outdated if the current version of the software was released after the expiry date of the license.
    * But the license can be used indefinitely with an older version of the software.
@@ -11,4 +11,4 @@ export const LICENSE_TERMS = [
   'subscription',
 ] as const;
 
-export type LicenseTerm = typeof LICENSE_TERMS[number];
+export type LicenseSalesModel = typeof LICENSE_SALES_MODELS[number];
