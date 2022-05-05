@@ -12,7 +12,7 @@ import {
   getColumnAggregationRules,
 } from '../hooks/features/aggregation/gridAggregationUtils';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
-import { GridAggregationPosition } from '@mui/x-data-grid-premium';
+import { GridAggregationPosition } from '../hooks/features/aggregation/gridAggregationInterfaces';
 
 interface GridAggregationColumnMenuItemsProps {
   column?: GridColDef;
