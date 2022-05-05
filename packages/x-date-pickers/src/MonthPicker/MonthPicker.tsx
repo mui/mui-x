@@ -116,7 +116,19 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
     );
 
-    const isBeforeFirstEnabled = utils.isBefore(month, firstEnabledMonth);
+    if (utils.isBefore(month, firstEnabledMonth)) {
+      return true
+    }
+    
+    if (utils.isAfter(month, lastEnabledMonth)) {
+      return true
+    }
+    
+    if (!shouldDisableMonth) {
+      return false
+    }
+    
+    return shouldDisableMonth(month);
     const isAfterLastEnabled = utils.isAfter(month, lastEnabledMonth);
 
     return (
