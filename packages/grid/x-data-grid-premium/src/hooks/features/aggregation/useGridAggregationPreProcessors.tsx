@@ -1,12 +1,17 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid-pro/internals';
+import {
+  GridPipeProcessor,
+  GridRestoreStatePreProcessingContext,
+  useGridRegisterPipeProcessor,
+} from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   getAvailableAggregationFunctions,
   addFooterRows,
   getAggregationRules,
+  mergeStateWithAggregationModel,
 } from './gridAggregationUtils';
 import {
   wrapColumnWithAggregation,
@@ -15,6 +20,7 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationColumnMenuItems } from '../../../components/GridAggregationColumnMenuItems';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
+import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -132,7 +138,57 @@ export const useGridAggregationPreProcessors = (
     [props.aggregationFunctions, props.disableAggregation],
   );
 
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
+    (prevState) => {
+      if (props.disableAggregation) {
+        return prevState;
+      }
+
+      const aggregationModelToExport = gridAggregationModelSelector(apiRef);
+      const isModelEmpty = Object.values(aggregationModelToExport).every((item) => {
+        if (item == null) {
+          return true;
+        }
+
+        if (typeof item === 'string') {
+          return false;
+        }
+
+        return item.inline == null && item.footer == null;
+      });
+
+      if (isModelEmpty) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        aggregation: {
+          model: aggregationModelToExport,
+        },
+      };
+    },
+    [apiRef, props.disableAggregation],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
+    (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePremium>) => {
+      if (props.disableAggregation) {
+        return params;
+      }
+
+      const aggregationModel = context.stateToRestore.aggregation?.model;
+      if (aggregationModel != null) {
+        apiRef.current.setState(mergeStateWithAggregationModel(aggregationModel));
+      }
+      return params;
+    },
+    [apiRef, props.disableAggregation],
+  );
+
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateAggregatedColumns);
   useGridRegisterPipeProcessor(apiRef, 'hydrateRows', addGroupFooterRows);
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 };
