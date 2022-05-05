@@ -106,6 +106,10 @@ const serializeRow = (
         // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
         // About Date.UTC(): https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
         const date = api.getCellParams(id, column.field).value;
+        // value may be `undefined` in auto-generated grouping rows
+        if (!date) {
+          break;
+        }
         const utcDate = new Date(
           Date.UTC(
             date.getFullYear(),
