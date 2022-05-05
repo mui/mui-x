@@ -97,7 +97,7 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
 
   return (
     <React.Fragment>
-      <ListSubheader>Aggregation</ListSubheader>
+      <ListSubheader disableSticky>Aggregation</ListSubheader>
       {renderPosition('inline')}
       {renderPosition('footer')}
     </React.Fragment>
