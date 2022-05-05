@@ -6,7 +6,7 @@ import {
   useUtils,
   ExportedDateValidationProps,
   DayPicker,
-  PickersCalendarProps,
+  DayPickerProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
@@ -27,7 +27,7 @@ export interface ExportedMobileDateRangeCalendarProps<TDate>
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,
-    Omit<PickersCalendarProps<TDate>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate, DateRange<TDate>>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   /**
@@ -84,7 +84,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         views={onlyDayView}
         {...other}
       />
-      <DayPicker<TDate>
+      <DayPicker<TDate, DateRange<TDate>>
         {...other}
         date={date}
         onChange={onChange}

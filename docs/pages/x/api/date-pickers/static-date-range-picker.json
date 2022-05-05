@@ -2,6 +2,7 @@
   "props": {
     "onChange": { "type": { "name": "func" }, "required": true },
     "renderInput": { "type": { "name": "func" }, "required": true },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" }, "required": true },
     "acceptRegex": {
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
@@ -45,12 +46,9 @@
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
     "onAccept": { "type": { "name": "func" } },
-    "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
-    "onOpen": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
-    "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
@@ -69,9 +67,7 @@
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
     "startText": { "type": { "name": "node" }, "default": "'Start'" },
-    "ToolbarComponent": { "type": { "name": "elementType" } },
     "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" }
   },
   "slots": {},
