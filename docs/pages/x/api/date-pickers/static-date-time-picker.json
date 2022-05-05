@@ -53,13 +53,10 @@
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onAccept": { "type": { "name": "func" } },
-    "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
-    "onOpen": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
     "onYearChange": { "type": { "name": "func" } },
-    "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
     "openTo": {
       "type": {

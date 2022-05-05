@@ -15,7 +15,7 @@ import {
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
 
-export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate> {
+export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
   classes?: Partial<TimePickerToolbarClasses>;
 }
 
@@ -86,7 +86,9 @@ const TimePickerToolbarAmPmSelection = styled('div')<{
 /**
  * @ignore - internal component.
  */
-export const TimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps<TDate>) => {
+export const TimePickerToolbar = <TDate extends unknown>(
+  props: BaseToolbarProps<TDate, TDate | null>,
+) => {
   const {
     ampm,
     ampmInClock,
