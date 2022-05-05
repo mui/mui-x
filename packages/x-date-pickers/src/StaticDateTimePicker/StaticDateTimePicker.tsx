@@ -6,22 +6,15 @@ import {
   dateTimePickerValueManager,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
-import {
-  PickerStaticWrapper,
-  PickerStaticWrapperProps,
-} from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
+import { PickerStaticWrapper } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 
-export interface StaticDateTimePickerProps<TInputDate, TDate>
-  extends BaseDateTimePickerProps<TInputDate, TDate> {
-  /**
-   * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
-   */
-  displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
-}
+export type StaticDateTimePickerProps<TInputDate, TDate> = StaticPickerProps<
+  BaseDateTimePickerProps<TInputDate, TDate>
+>;
 
 type StaticDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -282,11 +275,6 @@ StaticDateTimePicker.propTypes = {
    */
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   */
-  onClose: PropTypes.func,
-  /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
    * This can be used to render appropriate form error.
@@ -306,11 +294,6 @@ StaticDateTimePicker.propTypes = {
    */
   onMonthChange: PropTypes.func,
   /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   */
-  onOpen: PropTypes.func,
-  /**
    * Callback fired on view change.
    * @param {CalendarOrClockPickerView} view The new view.
    */
@@ -321,10 +304,6 @@ StaticDateTimePicker.propTypes = {
    * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
-  /**
-   * Control the popup or dialog open state.
-   */
-  open: PropTypes.bool,
   /**
    * Props to pass to keyboard adornment button.
    */

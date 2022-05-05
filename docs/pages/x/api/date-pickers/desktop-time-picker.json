@@ -60,8 +60,6 @@
     "shouldDisableTime": { "type": { "name": "func" } },
     "showToolbar": { "type": { "name": "bool" } },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
     "TransitionComponent": { "type": { "name": "elementType" } },
     "value": { "type": { "name": "any" } },

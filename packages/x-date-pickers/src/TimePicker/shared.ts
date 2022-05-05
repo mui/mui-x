@@ -6,15 +6,15 @@ import { useUtils } from '../internals/hooks/useUtils';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
 export interface BaseTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate, TDate | null>,
+    BasePickerProps<TInputDate | null, TDate | null>,
     ValidationProps<TimeValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
   /**
@@ -30,7 +30,7 @@ export interface BaseTimePickerProps<TInputDate, TDate>
    * Component that will replace default toolbar renderer.
    * @default TimePickerToolbar
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select time'

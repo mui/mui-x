@@ -8,9 +8,9 @@ import { generateUtilityClasses } from '@mui/material';
 import { Pen, Calendar, Clock } from './icons';
 import { BaseToolbarProps } from '../models/props/baseToolbarProps';
 
-export interface PickersToolbarProps<TDate>
+export interface PickersToolbarProps<TDate, TValue>
   extends Pick<
-    BaseToolbarProps<TDate>,
+    BaseToolbarProps<TDate, TValue>,
     'getMobileKeyboardInputViewButtonText' | 'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView'
   > {
   className?: string;
@@ -24,7 +24,7 @@ export interface PickersToolbarProps<TDate>
 const classes = generateUtilityClasses('PrivatePickersToolbar', ['root', 'dateTitleContainer']);
 
 const PickersToolbarRoot = styled('div')<{
-  ownerState: PickersToolbarProps<any>;
+  ownerState: PickersToolbarProps<any, any>;
 }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -56,12 +56,13 @@ function defaultGetKeyboardInputSwitchingButtonText(
     : `${viewType} view is open, go to text input view`;
 }
 
-type PickersToolbarComponent = (<TDate>(
-  props: React.PropsWithChildren<PickersToolbarProps<TDate>> & React.RefAttributes<HTMLDivElement>,
+type PickersToolbarComponent = (<TDate, TValue>(
+  props: React.PropsWithChildren<PickersToolbarProps<TDate, TValue>> &
+    React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate>(
-  props: React.PropsWithChildren<PickersToolbarProps<TDate>>,
+export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TValue>(
+  props: React.PropsWithChildren<PickersToolbarProps<TDate, TValue>>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
