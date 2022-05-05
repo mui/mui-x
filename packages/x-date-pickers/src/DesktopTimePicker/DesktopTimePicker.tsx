@@ -1,6 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { BaseTimePickerProps, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import {
+  BaseTimePickerProps,
+  useTimePickerDefaultizedProps,
+  timePickerValueManager,
+} from '../TimePicker/shared';
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import {
   DesktopWrapper,
@@ -8,23 +12,8 @@ import {
 } from '../internals/components/wrappers/DesktopWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
-import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
-
-const valueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: null,
-  parseInput: parsePickerInputValue,
-  getTodayValue: (utils) => utils.date()!,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-  valueReducer: (utils, prevValue, newValue) => {
-    if (prevValue == null || newValue == null) {
-      return newValue;
-    }
-
-    return utils.mergeDateAndTime(prevValue, newValue);
-  },
-};
+import { usePickerState } from '../internals/hooks/usePickerState';
 
 export interface DesktopTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate>,
@@ -55,7 +44,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   >(inProps, 'MuiDesktopTimePicker');
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
 
   const {
     onChange,
@@ -141,6 +130,7 @@ DesktopTimePicker.propTypes = {
   components: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -290,6 +280,7 @@ DesktopTimePicker.propTypes = {
   PopperProps: PropTypes.object,
   /**
    * Make picker read only.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**
@@ -326,15 +317,6 @@ DesktopTimePicker.propTypes = {
    * @default TimePickerToolbar
    */
   ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select time'

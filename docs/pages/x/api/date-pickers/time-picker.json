@@ -69,8 +69,6 @@
     "showToolbar": { "type": { "name": "bool" } },
     "todayText": { "type": { "name": "node" }, "default": "'Today'" },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
     "TransitionComponent": { "type": { "name": "elementType" } },
     "value": { "type": { "name": "any" } },
