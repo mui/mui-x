@@ -1,31 +1,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { BaseTimePickerProps, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import {
-  PickerStaticWrapper,
-  PickerStaticWrapperProps,
-} from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
+  BaseTimePickerProps,
+  useTimePickerDefaultizedProps,
+  timePickerValueManager,
+} from '../TimePicker/shared';
+import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
+import { PickerStaticWrapper } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
-import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { usePickerState } from '../internals/hooks/usePickerState';
+import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 
-const valueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};
-
-export interface StaticTimePickerProps<TInputDate, TDate>
-  extends BaseTimePickerProps<TInputDate, TDate> {
-  /**
-   * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
-   */
-  displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
-}
+export type StaticTimePickerProps<TInputDate, TDate> = StaticPickerProps<
+  BaseTimePickerProps<TInputDate, TDate>
+>;
 
 type StaticTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -60,7 +49,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
   } = props;
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps } = usePickerState(props, valueManager);
+  const { pickerProps, inputProps } = usePickerState(props, timePickerValueManager);
 
   const DateInputProps = { ...inputProps, ...other, ref, validationError };
 
@@ -114,6 +103,7 @@ StaticTimePicker.propTypes = {
   components: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -215,11 +205,6 @@ StaticTimePicker.propTypes = {
    */
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   */
-  onClose: PropTypes.func,
-  /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
    * This can be used to render appropriate form error.
@@ -233,19 +218,10 @@ StaticTimePicker.propTypes = {
    */
   onError: PropTypes.func,
   /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   */
-  onOpen: PropTypes.func,
-  /**
    * Callback fired on view change.
    * @param {ClockPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
-  /**
-   * Control the popup or dialog open state.
-   */
-  open: PropTypes.bool,
   /**
    * Props to pass to keyboard adornment button.
    */
@@ -260,6 +236,7 @@ StaticTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
    * Make picker read only.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**
@@ -296,15 +273,6 @@ StaticTimePicker.propTypes = {
    * @default TimePickerToolbar
    */
   ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select time'

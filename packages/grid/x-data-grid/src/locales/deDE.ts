@@ -32,7 +32,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exportieren',
   toolbarExportCSV: 'Download als CSV',
   toolbarExportPrint: 'Drucken',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Download als Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Finde Spalte',

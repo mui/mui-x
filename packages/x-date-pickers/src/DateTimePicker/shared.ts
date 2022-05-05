@@ -9,12 +9,14 @@ import {
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import {
   DateInputSlotsComponent,
   ExportedDateInputProps,
 } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
+import { PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
 export interface DateTimePickerSlotsComponent
   extends CalendarPickerSlotsComponent,
@@ -23,7 +25,7 @@ export interface DateTimePickerSlotsComponent
 export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
     ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate, TDate | null>,
+    BasePickerProps<TInputDate | null, TDate | null>,
     ValidationProps<DateTimeValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
   /**
@@ -65,7 +67,7 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    * Component that will replace default toolbar renderer.
    * @default DateTimePickerToolbar
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date & time'
@@ -75,6 +77,11 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    * Date format, that is displaying in toolbar.
    */
   toolbarFormat?: string;
+  /**
+   * Mobile picker date value placeholder, displaying if `value` === `null`.
+   * @default '–'
+   */
+  toolbarPlaceholder?: React.ReactNode;
   /**
    * Array of views to show.
    */
@@ -115,9 +122,9 @@ export function useDateTimePickerDefaultizedProps<
     ampmInClock: true,
     showToolbar: false,
     allowSameDateSelection: true,
-    mask: '__/__/____ __:__',
+    mask: ampm ? '__/__/____ __:__ _m' : '__/__/____ __:__',
     acceptRegex: ampm ? /[\dap]/gi : /\d/gi,
-    disableMaskedInput: ampm,
+    disableMaskedInput: false,
     inputFormat: ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h,
     disableIgnoringDatePartForTimeValidation: Boolean(
       themeProps.minDateTime || themeProps.maxDateTime,
@@ -129,3 +136,10 @@ export function useDateTimePickerDefaultizedProps<
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
   };
 }
+
+export const dateTimePickerValueManager: PickerStateValueManager<any, any, any> = {
+  emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
+  parseInput: parsePickerInputValue,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+};

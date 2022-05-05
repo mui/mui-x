@@ -3,21 +3,14 @@ import PropTypes from 'prop-types';
 import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
+  dateTimePickerValueManager,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { PureDateInput } from '../internals/components/PureDateInput';
-import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
-
-const valueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};
+import { usePickerState } from '../internals/hooks/usePickerState';
 
 export interface MobileDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate>,
@@ -48,7 +41,10 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
   >(inProps, 'MuiMobileDateTimePicker');
 
   const validationError = useDateTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(
+    props,
+    dateTimePickerValueManager,
+  );
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.

@@ -181,6 +181,32 @@ describe('<DesktopTimePicker />', () => {
   });
 
   describe('input validation', () => {
+    [true, false].forEach((ampm) =>
+      it(`prop: ampm - should set working default mask/inputFormat when ampm=${ampm}`, () => {
+        const onChange = spy();
+        render(
+          <DesktopTimePicker
+            ampm={ampm}
+            renderInput={(params) => <TextField {...params} />}
+            onChange={onChange}
+            value={null}
+          />,
+        );
+
+        // Call `onChange` with a 24h time
+        fireEvent.change(screen.getByRole('textbox'), {
+          target: { value: '10:12' },
+        });
+        expect(adapterToUse.isValid(onChange.lastCall.args[0])).to.equal(!ampm);
+
+        // Call `onChange` with a 12h time. The mask will remove the am/pm
+        fireEvent.change(screen.getByRole('textbox'), {
+          target: { value: '10:12 am' },
+        });
+        expect(adapterToUse.isValid(onChange.lastCall.args[0])).to.equal(true);
+      }),
+    );
+
     const shouldDisableTime: TimePickerProps<any, any>['shouldDisableTime'] = (value) =>
       value === 10;
 

@@ -23,6 +23,11 @@ export const gridRowsLookupSelector = createSelector(
   (rows) => rows.idRowsLookup,
 );
 
+export const gridRowsIdToIdLookupSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows.idToIdLookup,
+);
+
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
 
 export const gridRowGroupingNameSelector = createSelector(

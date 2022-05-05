@@ -1,6 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { BaseDatePickerProps, useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import {
+  BaseDatePickerProps,
+  useDatePickerDefaultizedProps,
+  datePickerValueManager,
+} from '../DatePicker/shared';
 import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   DesktopWrapper,
@@ -8,16 +12,8 @@ import {
 } from '../internals/components/wrappers/DesktopWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
-import { usePickerState, PickerStateValueManager } from '../internals/hooks/usePickerState';
-
-const valueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};
+import { usePickerState } from '../internals/hooks/usePickerState';
 
 export interface DesktopDatePickerProps<TInputDate, TDate>
   extends BaseDatePickerProps<TInputDate, TDate>,
@@ -48,7 +44,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   >(inProps, 'MuiDesktopDatePicker');
 
   const validationError = useDateValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, valueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, datePickerValueManager);
 
   const {
     onChange,

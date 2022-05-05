@@ -29,6 +29,7 @@ import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionMod
 import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 
 export interface GridExperimentalFeatures {
   /**
@@ -614,6 +615,29 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onEditRowsModelChange?: (editRowsModel: GridEditRowsModel, details: GridCallbackDetails) => void;
+  /**
+   * Controls the modes of the cells.
+   */
+  cellModesModel?: GridCellModesModel;
+  /**
+   * Callback fired when the `cellModesModel` prop changes.
+   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellModesModelChange?: (
+    cellModesModel: GridCellModesModel,
+    details: GridCallbackDetails,
+  ) => void;
+  /**
+   * Controls the modes of the rows.
+   */
+  rowModesModel?: GridRowModesModel;
+  /**
+   * Callback fired when the `rowModesModel` prop changes.
+   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowModesModelChange?: (rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void;
   /**
    * Set the filter model of the grid.
    */

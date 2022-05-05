@@ -308,10 +308,6 @@ DateRangePicker.propTypes = {
    */
   OpenPickerButtonProps: PropTypes.object,
   /**
-   * Force rendering in particular orientation.
-   */
-  orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  /**
    * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
   PaperProps: PropTypes.object,
@@ -424,18 +420,9 @@ DateRangePicker.propTypes = {
    */
   todayText: PropTypes.node,
   /**
-   * Component that will replace default toolbar renderer.
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
    * Date format, that is displaying in toolbar.
    */
   toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date range'
@@ -445,5 +432,8 @@ DateRangePicker.propTypes = {
    * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
   TransitionComponent: PropTypes.elementType,
+  /**
+   * The value of the picker.
+   */
   value: PropTypes.arrayOf(PropTypes.any).isRequired,
 } as any;

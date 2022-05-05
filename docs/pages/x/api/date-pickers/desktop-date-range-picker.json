@@ -2,6 +2,7 @@
   "props": {
     "onChange": { "type": { "name": "func" }, "required": true },
     "renderInput": { "type": { "name": "func" }, "required": true },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" }, "required": true },
     "acceptRegex": {
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
@@ -50,9 +51,6 @@
     "onViewChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
-    "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
-    },
     "PaperProps": { "type": { "name": "object" } },
     "PopperProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
@@ -73,9 +71,7 @@
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
     "startText": { "type": { "name": "node" }, "default": "'Start'" },
-    "ToolbarComponent": { "type": { "name": "elementType" } },
     "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" },
     "TransitionComponent": { "type": { "name": "elementType" } }
   },
