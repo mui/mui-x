@@ -117,9 +117,9 @@ export function useDateTimePickerDefaultizedProps<
     ampmInClock: true,
     showToolbar: false,
     allowSameDateSelection: true,
-    mask: '__/__/____ __:__',
+    mask: ampm ? '__/__/____ __:__ _m' : '__/__/____ __:__',
     acceptRegex: ampm ? /[\dap]/gi : /\d/gi,
-    disableMaskedInput: ampm,
+    disableMaskedInput: false,
     inputFormat: ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h,
     disableIgnoringDatePartForTimeValidation: Boolean(
       themeProps.minDateTime || themeProps.maxDateTime,
