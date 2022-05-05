@@ -50,7 +50,7 @@ describe('License: generateLicense', () => {
         scope: 'pro',
       }),
     ).to.equal(
-      '3a55ceb4fe74634bfe7ca47f877ccd93Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxTTT1zdWJzY3JpcHRpb24sS1Y9Mg==',
+      'e15ecb11b201864ea67930bf5899d917Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxTTT1wZXJwZXR1YWwsS1Y9Mg==',
     );
   });
 
