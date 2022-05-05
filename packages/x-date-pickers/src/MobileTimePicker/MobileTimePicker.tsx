@@ -124,6 +124,7 @@ MobileTimePicker.propTypes = {
   DialogProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -270,6 +271,7 @@ MobileTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
    * Make picker read only.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**

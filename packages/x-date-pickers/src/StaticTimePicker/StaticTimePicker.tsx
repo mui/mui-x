@@ -103,6 +103,7 @@ StaticTimePicker.propTypes = {
   components: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -235,6 +236,7 @@ StaticTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
    * Make picker read only.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**

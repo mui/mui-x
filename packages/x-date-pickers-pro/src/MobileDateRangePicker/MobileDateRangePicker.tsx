@@ -172,6 +172,7 @@ MobileDateRangePicker.propTypes = {
   disableAutoMonthSwitching: PropTypes.bool,
   /**
    * If `true`, the picker and text field are disabled.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -322,6 +323,7 @@ MobileDateRangePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * Make picker read only.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**

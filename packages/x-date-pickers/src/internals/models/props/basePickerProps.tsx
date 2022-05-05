@@ -8,6 +8,7 @@ export interface BasePickerProps<TInputValue, TValue>
   className?: string;
   /**
    * If `true`, the picker and text field are disabled.
+   * @default false
    */
   disabled?: boolean;
   /**
@@ -20,6 +21,7 @@ export interface BasePickerProps<TInputValue, TValue>
   orientation?: 'portrait' | 'landscape';
   /**
    * Make picker read only.
+   * @default false
    */
   readOnly?: boolean;
   /**
