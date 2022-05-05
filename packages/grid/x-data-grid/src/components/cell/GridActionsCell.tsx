@@ -64,10 +64,16 @@ const GridActionsCell = (props: GridActionsCellProps) => {
   }, [hasFocus]);
 
   React.useEffect(() => {
-    if (focusedButtonIndex >= 0) {
-      const child = rootRef.current?.children[focusedButtonIndex] as HTMLElement;
-      child.focus();
+    if (focusedButtonIndex < 0 || !rootRef.current) {
+      return;
     }
+
+    if (focusedButtonIndex >= rootRef.current.children.length) {
+      return;
+    }
+
+    const child = rootRef.current.children[focusedButtonIndex] as HTMLElement;
+    child.focus();
   }, [focusedButtonIndex]);
 
   React.useEffect(() => {
@@ -98,6 +104,12 @@ const GridActionsCell = (props: GridActionsCellProps) => {
   const iconButtons = options.filter((option) => !option.props.showInMenu);
   const menuButtons = options.filter((option) => option.props.showInMenu);
   const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
+
+  React.useEffect(() => {
+    if (focusedButtonIndex >= numberOfButtons) {
+      setFocusedButtonIndex(numberOfButtons - 1);
+    }
+  }, [focusedButtonIndex, numberOfButtons]);
 
   const showMenu = () => {
     setOpen(true);
