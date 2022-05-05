@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColDef, useGridSelector } from '@mui/x-data-grid-pro';
+import { GridColDef, gridRowTreeDepthSelector, useGridSelector } from '@mui/x-data-grid-pro';
 import MenuItem from '@mui/material/MenuItem';
 import ListSubheader from '@mui/material/ListSubheader';
 import FormControl from '@mui/material/FormControl';
@@ -12,6 +12,7 @@ import {
   getColumnAggregationRules,
 } from '../hooks/features/aggregation/gridAggregationUtils';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
+import { GridAggregationPosition } from '@mui/x-data-grid-premium';
 
 interface GridAggregationColumnMenuItemsProps {
   column?: GridColDef;
@@ -22,6 +23,7 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
+  const rowTreeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
 
   const availableAggregationFunctions = column
     ? getAvailableAggregationFunctions({
@@ -38,13 +40,16 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
       })
     : {};
 
-  const renderPosition = (position: 'inline' | 'footer') => {
+  const aggregationPositions: GridAggregationPosition[] =
+    rowTreeDepth > 1 ? ['inline', 'footer'] : ['footer'];
+
+  const renderPosition = (position: GridAggregationPosition) => {
     if (!column) {
       return null;
     }
 
     const idPrefix = `mui-data-grid-column-menu-aggregation-${column.field}-${position}`;
-    const label = position;
+    const label = aggregationPositions.length > 1 ? position : 'Aggregation';
 
     const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
       const newPositionValue = event.target.value || undefined;
@@ -91,9 +96,8 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
 
   return (
     <React.Fragment>
-      <ListSubheader disableSticky>Aggregation</ListSubheader>
-      {renderPosition('inline')}
-      {renderPosition('footer')}
+      {aggregationPositions.length > 1 && <ListSubheader disableSticky>Aggregation</ListSubheader>}
+      {aggregationPositions.map((aggregationPosition) => renderPosition(aggregationPosition))}
     </React.Fragment>
   );
 };

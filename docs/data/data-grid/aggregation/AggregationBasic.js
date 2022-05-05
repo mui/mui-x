@@ -19,7 +19,7 @@ const COLUMNS = [
   },
 ];
 
-export default function AggregationInitialState() {
+export default function AggregationBasic() {
   const data = useMovieData();
 
   return (
@@ -28,13 +28,6 @@ export default function AggregationInitialState() {
       rows={data.rows.slice(0, 3)}
       autoHeight
       columns={COLUMNS}
-      initialState={{
-        aggregation: {
-          model: {
-            gross: 'sum',
-          },
-        },
-      }}
     />
   );
 }

@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridColDef,
+  useGridApiRef,
+  useKeepGroupedColumnsHidden,
+} from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const COLUMNS: GridColDef[] = [
@@ -31,32 +36,35 @@ const COLUMNS: GridColDef[] = [
 
 export default function AggregationIsGroupAggregated() {
   const data = useMovieData();
+  const apiRef = useGridApiRef();
+
+  const initialState = useKeepGroupedColumnsHidden({
+    apiRef,
+    initialState: {
+      rowGrouping: {
+        model: ['company', 'director'],
+      },
+      aggregation: {
+        model: {
+          gross: {
+            footer: 'sum',
+          },
+        },
+      },
+    },
+  });
 
   return (
-    <div style={{ height: 318, width: '100%' }}>
+    <div style={{ height: 371, width: '100%' }}>
       <DataGridPremium
         {...data}
+        apiRef={apiRef}
         columns={COLUMNS}
         disableSelectionOnClick
-        initialState={{
-          rowGrouping: {
-            model: ['company', 'director'],
-          },
-          aggregation: {
-            model: {
-              gross: {
-                footer: 'sum',
-              },
-            },
-          },
-          columns: {
-            columnVisibilityModel: {
-              company: false,
-              director: false,
-            },
-          },
-        }}
-        isGroupAggregated={(groupNode) => groupNode?.groupingField === 'director'}
+        initialState={initialState}
+        isGroupAggregated={(groupNode, position) =>
+          position === 'inline' || groupNode == null
+        }
       />
     </div>
   );

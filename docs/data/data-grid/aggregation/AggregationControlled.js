@@ -23,20 +23,17 @@ export default function AggregationControlled() {
   const data = useMovieData();
 
   const [aggregationModel, setAggregationModel] = React.useState({
-    gross: {
-      footer: 'sum',
-    },
+    gross: 'sum',
   });
 
   return (
-    <div style={{ height: 318, width: '100%' }}>
-      <DataGridPremium
-        // The following prop is here to avoid scroll in the demo while we don't have pinned rows
-        rows={data.rows.slice(0, 3)}
-        columns={COLUMNS}
-        aggregationModel={aggregationModel}
-        onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
-      />
-    </div>
+    <DataGridPremium
+      // The 2 following props are here to avoid scroll in the demo while we don't have pinned rows
+      rows={data.rows.slice(0, 3)}
+      autoHeight
+      columns={COLUMNS}
+      aggregationModel={aggregationModel}
+      onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
+    />
   );
 }

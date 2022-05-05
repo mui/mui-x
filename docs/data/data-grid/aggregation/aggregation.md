@@ -4,37 +4,71 @@ title: Data Grid - Aggregation
 
 # Data Grid - Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-<p class="description">Apply aggregation function to populate the group row with values.</p>
+<p class="description">Use aggregation functions to aggregate your row values.</p>
 
-## Set aggregation
+The aggregation can be modified through the grid interface by opening the column menu and selecting an item on the _Aggregation_ select.
+
+The aggregated values will be rendered in a footer row at the bottom of the grid.
+
+> ⚠️ The footer row will be fixed at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
+
+{{"demo": "AggregationBasic.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Pass aggregation to the grid
 
 ### Initialize the aggregation
+
+To initialize the aggregation without controlling it, provide the model to the `initialState` prop.
 
 {{"demo": "AggregationInitialState.js", "bg": "inline"}}
 
 ### Controlled aggregation
 
-If you need to control the state of the aggregation model, use the `aggregationModel` prop.
-You can use the `onAggregationModelChange` prop to listen to changes to the model and update the prop accordingly.
+Use the `filterModel` prop to control the aggregation passed to the grid.
+
+You can use the `onFilterModelChange` prop to listen to changes to the filters and update the prop accordingly.
 
 {{"demo": "AggregationControlled.js", "bg": "inline"}}
 
 ## Usage with row grouping
 
-When using aggregation with row grouping, all the groups will contain the aggregated value
+When the row grouping is enabled, the aggregation can be displayed on two positions:
 
-{{"demo": "AggregationRowGroupingFooter.js", "bg": "inline", "defaultCodeOpen": false}}
+1. On the footer (the grid will add a top level footer to aggregate all the rows and one footer per group to aggregate its rows)
 
-### Render aggregated values on the group rows
+2. On the grouping row
 
-When using the aggregation with row grouping, you can aggregate the values both on the footer and on the group row itself.
+Both positions can be used simultaneously with different aggregation function as shown in the example below:
 
-{{"demo": "AggregationRowGroupingInline.js", "bg": "inline"}}
+```tsx
+<DataGridPremium
+  initialState={{
+    rowGrouping: {
+      model: ['company'],
+    },
+    aggregation: {
+      model: {
+        gross: {
+          // Aggregation displayed on the footers
+          footer: 'sum',
+          // Aggregation displayed on the grouping rows
+          inline: 'max',
+        },
+      },
+    },
+  }}
+/>
+```
+
+{{"demo": "AggregationRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Only aggregate some groups
 
 You can limit the aggregation to some groups with the `isGroupAggregated` prop.
-This function receives the group from which the grid is trying to aggregate or `null` if trying to aggregate the root group.
+This function receives two parameters:
+
+1. The group from which the grid is trying to aggregate or `null` if trying to aggregate the root group.
+2. The position on which the grid is trying to aggregate.
 
 ```tsx
 // Will aggregate all the groups but not the root
@@ -49,9 +83,12 @@ isGroupAggregated={(groupNode) =>
   groupNode?.groupingField === 'company' &&
   groupNode?.groupingKey === 'Universal Pictures'
 }
+
+// Will aggregate on the grouping rows and on the top level footee
+isGroupAggregated={(groupNode, position) => position === 'inline' || groupNode == null}
 ```
 
-The demo below only aggregates the director groups.
+The demo below shows the _sum_ aggregation on both the grouping rows and the top level footer.
 
 {{"demo": "AggregationIsGroupAggregated.js", "bg": "inline"}}
 

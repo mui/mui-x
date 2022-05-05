@@ -1,0 +1,10 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  columns={COLUMNS}
+  disableSelectionOnClick
+  initialState={initialState}
+  isGroupAggregated={(groupNode, position) =>
+    position === 'inline' || groupNode == null
+  }
+/>

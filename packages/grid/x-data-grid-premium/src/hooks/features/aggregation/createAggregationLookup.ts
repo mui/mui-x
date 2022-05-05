@@ -166,17 +166,15 @@ export const createAggregationLookup = ({
     }
   }
 
-  if (!isGroupAggregated) {
-    // TODO: Add custom root id
-    aggregationLookup[''] = getGroupAggregatedValue({
-      id: '',
-      apiRef,
-      aggregatedFields,
-      aggregatedRows,
-      aggregationRules,
-      isGroupAggregated,
-    });
-  }
+  // TODO: Add custom root id
+  aggregationLookup[''] = getGroupAggregatedValue({
+    id: '',
+    apiRef,
+    aggregatedFields,
+    aggregatedRows,
+    aggregationRules,
+    isGroupAggregated,
+  });
 
   return aggregationLookup;
 };

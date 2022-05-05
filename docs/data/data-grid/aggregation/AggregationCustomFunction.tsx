@@ -60,26 +60,25 @@ export default function AggregationCustomFunction() {
   const data = useMovieData();
 
   return (
-    <div style={{ height: 318, width: '100%' }}>
-      <DataGridPremium
-        // The following prop is here to avoid scroll in the demo while we don't have pinned rows
-        rows={data.rows.slice(0, 3)}
-        columns={COLUMNS}
-        aggregationFunctions={{
-          ...GRID_AGGREGATION_FUNCTIONS,
-          firstAlphabetical: firstAlphabeticalAggregation,
-          lastAlphabetical: lastAlphabeticalAggregation,
-        }}
-        initialState={{
-          aggregation: {
-            model: {
-              director: {
-                footer: 'firstAlphabetical',
-              },
+    <DataGridPremium
+      // The 2 following props are here to avoid scroll in the demo while we don't have pinned rows
+      rows={data.rows.slice(0, 3)}
+      autoHeight
+      columns={COLUMNS}
+      aggregationFunctions={{
+        ...GRID_AGGREGATION_FUNCTIONS,
+        firstAlphabetical: firstAlphabeticalAggregation,
+        lastAlphabetical: lastAlphabeticalAggregation,
+      }}
+      initialState={{
+        aggregation: {
+          model: {
+            director: {
+              footer: 'firstAlphabetical',
             },
           },
-        }}
-      />
-    </div>
+        },
+      }}
+    />
   );
 }

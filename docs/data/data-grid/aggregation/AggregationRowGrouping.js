@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  useGridApiRef,
+  useKeepGroupedColumnsHidden,
+} from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const COLUMNS: GridColDef[] = [
+const COLUMNS = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
     field: 'company',
@@ -24,32 +28,37 @@ const COLUMNS: GridColDef[] = [
   },
 ];
 
-export default function AggregationRowGroupingFooter() {
+export default function AggregationRowGrouping() {
   const data = useMovieData();
+  const apiRef = useGridApiRef();
+
+  const initialState = useKeepGroupedColumnsHidden({
+    apiRef,
+    initialState: {
+      rowGrouping: {
+        model: ['company'],
+      },
+      aggregation: {
+        model: {
+          gross: {
+            // Aggregation displayed on the footers
+            footer: 'sum',
+            // Aggregation displayed on the grouping rows
+            inline: 'max',
+          },
+        },
+      },
+    },
+  });
 
   return (
     <div style={{ height: 370, width: '100%' }}>
       <DataGridPremium
         {...data}
+        apiRef={apiRef}
         columns={COLUMNS}
         disableSelectionOnClick
-        initialState={{
-          rowGrouping: {
-            model: ['company'],
-          },
-          aggregation: {
-            model: {
-              gross: {
-                footer: 'sum',
-              },
-            },
-          },
-          columns: {
-            columnVisibilityModel: {
-              company: false,
-            },
-          },
-        }}
+        initialState={initialState}
       />
     </div>
   );

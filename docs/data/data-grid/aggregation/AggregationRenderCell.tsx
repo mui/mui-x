@@ -40,20 +40,20 @@ export default function AggregationRenderCell() {
   }, [data.rows]);
 
   return (
-    <div style={{ height: 318, width: '100%' }}>
-      <DataGridPremium
-        rows={rows}
-        columns={COLUMNS}
-        initialState={{
-          aggregation: {
-            model: {
-              imdbRating: {
-                footer: 'avg',
-              },
+    <DataGridPremium
+      // The 2 following props are here to avoid scroll in the demo while we don't have pinned rows
+      rows={rows}
+      autoHeight
+      columns={COLUMNS}
+      initialState={{
+        aggregation: {
+          model: {
+            imdbRating: {
+              footer: 'avg',
             },
           },
-        }}
-      />
-    </div>
+        },
+      }}
+    />
   );
 }
