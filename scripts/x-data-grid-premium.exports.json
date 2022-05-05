@@ -69,6 +69,7 @@
   { "name": "GridAggregationLookup", "kind": "TypeAlias" },
   { "name": "gridAggregationLookupSelector", "kind": "Variable" },
   { "name": "GridAggregationModel", "kind": "TypeAlias" },
+  { "name": "GridAggregationModelItem", "kind": "TypeAlias" },
   { "name": "gridAggregationModelSelector", "kind": "Variable" },
   { "name": "GridAggregationPosition", "kind": "TypeAlias" },
   { "name": "GridAggregationRule", "kind": "Interface" },

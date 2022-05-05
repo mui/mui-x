@@ -7,7 +7,10 @@ export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHe
 export type { GridCaches } from '../hooks/core/caches';
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
-export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
+export {
+  useGridRegisterStrategyProcessor,
+  GRID_DEFAULT_STRATEGY,
+} from '../hooks/core/strategyProcessing';
 export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
 

@@ -12,7 +12,6 @@ import {
   getColumnAggregationRules,
 } from '../hooks/features/aggregation/gridAggregationUtils';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
-import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregationInterfaces';
 
 interface GridAggregationColumnMenuItemsProps {
   column?: GridColDef;
@@ -48,26 +47,21 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
     const label = position;
 
     const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
-      const item = event.target.value || undefined;
+      const newPositionValue = event.target.value || undefined;
       const currentModel = gridAggregationModelSelector(apiRef);
-      let newModel: GridAggregationModel;
-      if (item === undefined) {
-        const {
-          [column.field]: { [position]: functionToRemove, ...restColumn },
-          ...rest
-        } = currentModel;
-        newModel = { ...rest, [column.field]: restColumn };
-      } else {
-        newModel = {
-          ...currentModel,
-          [column.field]: {
-            ...currentModel[column.field],
-            [position]: item,
-          },
-        };
-      }
 
-      apiRef.current.setAggregationModel(newModel);
+      const { [column.field]: columnItem, ...otherColumnItems } = currentModel;
+
+      const newColumnItem = {
+        footer: aggregationRules.footer?.aggregationFunctionName ?? null,
+        inline: aggregationRules.inline?.aggregationFunctionName ?? null,
+        [position]: newPositionValue,
+      };
+
+      apiRef.current.setAggregationModel({
+        ...otherColumnItems,
+        [column.field]: newColumnItem,
+      });
       apiRef.current.hideColumnMenu();
     };
 

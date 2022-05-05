@@ -36,7 +36,20 @@ export type GridAggregationFunction<V = any, AV = V, F = V> = {
   hasCellUnit?: boolean;
 };
 
+/**
+ * Describes which aggregation function should be applied on the footer and on the grouping row of each group.
+ * If a string is passed, it will be used on the top level footer
+ */
+export type GridAggregationModelItem =
+  | string
+  | null
+  | { footer?: string | null; inline?: string | null };
+
 export type GridAggregationModel = {
+  [field: string]: GridAggregationModelItem;
+};
+
+type GridAggregationParsedModel = {
   [field: string]: { footer?: string | null; inline?: string | null };
 };
 
@@ -51,6 +64,7 @@ export type GridAggregationLookup = {
 
 export interface GridAggregationState {
   model: GridAggregationModel;
+  parsedModel: GridAggregationParsedModel;
   lookup: GridAggregationLookup;
 }
 export interface GridAggregationInitialState {
