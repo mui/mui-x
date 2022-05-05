@@ -71,7 +71,7 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
     };
 
     return (
-      <MenuItem>
+      <MenuItem key={position}>
         <FormControl fullWidth>
           <InputLabel id={`${idPrefix}-label`}>{label}</InputLabel>
           <Select

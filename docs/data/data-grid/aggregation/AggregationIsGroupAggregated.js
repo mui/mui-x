@@ -54,7 +54,7 @@ export default function AggregationIsGroupAggregated() {
   });
 
   return (
-    <div style={{ height: 371, width: '100%' }}>
+    <div style={{ height: 370, width: '100%' }}>
       <DataGridPremium
         {...data}
         apiRef={apiRef}
