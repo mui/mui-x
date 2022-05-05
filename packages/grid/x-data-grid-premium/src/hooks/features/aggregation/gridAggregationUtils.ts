@@ -14,7 +14,7 @@ import {
 import {
   GridAggregationFunction,
   GridAggregationModel,
-  GridAggregationModelItem,
+  GridAggregationItem,
   GridAggregationRule,
   GridAggregationRules,
   GridColumnAggregationRules,
@@ -97,7 +97,7 @@ export const getColumnAggregationRules = ({
   column,
   aggregationFunctions,
 }: {
-  columnItem: GridAggregationModelItem | undefined;
+  columnItem: GridAggregationItem | undefined;
   column: GridColDef | undefined;
   aggregationFunctions: Record<string, GridAggregationFunction>;
 }) => {

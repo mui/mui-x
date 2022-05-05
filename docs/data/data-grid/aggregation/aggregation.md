@@ -10,11 +10,31 @@ The aggregation can be modified through the grid interface by opening the column
 
 The aggregated values will be rendered in a footer row at the bottom of the grid.
 
-> ⚠️ The footer row will be fixed at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
+:::warning
+⚠️ The footer row will be fixed at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
+:::
 
 {{"demo": "AggregationBasic.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Pass aggregation to the grid
+
+### Structure of the model
+
+The aggregation model is a lookup where the keys are the field of the columns to aggregate and the values are aggregation items describing how those columns should be aggregated.
+
+An aggregation item is an object where `item.footer` contains the name of the aggregation function to apply on the footers
+and `item.inline` contains the name of the aggregation function to apply on the grouping rows.
+
+:::info
+If you only want to aggregate on the footer, you can use the short notation
+
+```ts
+const model: GridAggregationModel = { gross: { footer: 'sum' } };
+// can be replaced by
+const model: GridAggregationModel = { gross: 'sum' };
+```
+
+:::
 
 ### Initialize the aggregation
 

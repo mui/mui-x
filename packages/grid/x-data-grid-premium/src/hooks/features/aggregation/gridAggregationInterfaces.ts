@@ -4,7 +4,7 @@ interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
 }
 
-export type GridAggregationFunction<V = any, AV = V, F = V> = {
+export type GridAggregationFunction<V = any, AV = V, FAV = AV> = {
   /**
    * Function that takes the current cell values and generates the aggregated value.
    * @template V, AV
@@ -26,7 +26,7 @@ export type GridAggregationFunction<V = any, AV = V, F = V> = {
    * @param {GridValueFormatterParams<AV>} params Object containing parameters for the formatter.
    * @returns {F} The formatted value.
    */
-  valueFormatter?: (params: GridValueFormatterParams<AV>) => F;
+  valueFormatter?: (params: GridValueFormatterParams<AV>) => FAV;
 
   /**
    * Indicates if the aggregated value have the same unit as the cells used to generate it.
@@ -40,17 +40,13 @@ export type GridAggregationFunction<V = any, AV = V, F = V> = {
  * Describes which aggregation function should be applied on the footer and on the grouping row of each group.
  * If a string is passed, it will be used on the top level footer
  */
-export type GridAggregationModelItem =
+export type GridAggregationItem =
   | string
   | null
   | { footer?: string | null; inline?: string | null };
 
 export type GridAggregationModel = {
-  [field: string]: GridAggregationModelItem;
-};
-
-type GridAggregationParsedModel = {
-  [field: string]: { footer?: string | null; inline?: string | null };
+  [field: string]: GridAggregationItem;
 };
 
 export type GridAggregationLookup = {
@@ -64,7 +60,6 @@ export type GridAggregationLookup = {
 
 export interface GridAggregationState {
   model: GridAggregationModel;
-  parsedModel: GridAggregationParsedModel;
   lookup: GridAggregationLookup;
 }
 export interface GridAggregationInitialState {
