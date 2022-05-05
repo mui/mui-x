@@ -253,7 +253,7 @@ DesktopDatePicker.propTypes = {
    * Callback firing on month change @DateIOType.
    * @template TDate
    * @param {TDate} month The new year.
-   * @returns {void|Promise}
+   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
