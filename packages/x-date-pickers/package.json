@@ -44,6 +44,7 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
+    "@babel/runtime": "^7.17.2",
     "@date-io/date-fns": "^2.13.1",
     "@date-io/dayjs": "^2.13.1",
     "@date-io/luxon": "^2.13.1",
@@ -55,7 +56,6 @@
     "rifm": "^0.12.1"
   },
   "peerDependencies": {
-    "@babel/runtime": "^7.16.3",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.2.3",
@@ -72,6 +72,12 @@
       "optional": true
     },
     "dayjs": {
+      "optional": true
+    },
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
       "optional": true
     },
     "luxon": {
