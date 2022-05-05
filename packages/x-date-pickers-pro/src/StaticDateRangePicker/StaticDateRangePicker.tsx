@@ -271,9 +271,10 @@ StaticDateRangePicker.propTypes = {
    */
   onError: PropTypes.func,
   /**
-   * Callback firing on month change. @DateIOType
+   * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new month.
+   * @param {TDate} month The new year.
+   * @returns {void|Promise}
    */
   onMonthChange: PropTypes.func,
   /**
@@ -374,8 +375,8 @@ StaticDateRangePicker.propTypes = {
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
-   * @param {TDate} year The year to check.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @param {TDate} year The year to test.
+   * @returns {boolean} Return `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**

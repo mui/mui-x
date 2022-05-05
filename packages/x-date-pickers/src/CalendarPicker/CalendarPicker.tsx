@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { MonthPicker } from '../MonthPicker/MonthPicker';
+import { ExportedMonthPickerProps, MonthPicker } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
@@ -30,6 +30,7 @@ export interface CalendarPickerSlotsComponentsProps
 export interface CalendarPickerProps<TDate>
   extends ExportedCalendarProps<TDate>,
     ExportedYearPickerProps<TDate>,
+    ExportedMonthPickerProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
@@ -79,12 +80,7 @@ export interface CalendarPickerProps<TDate>
    * Callback fired on date change
    */
   onChange: PickerOnChangeFn<TDate>;
-  /**
-   * Callback firing on month change. @DateIOType
-   * @template TDate
-   * @param {TDate} month The new month.
-   */
-  onMonthChange?: (month: TDate) => void;
+
   /**
    * Initially open view.
    * @default 'day'
@@ -114,22 +110,6 @@ export interface CalendarPickerProps<TDate>
    */
   shouldDisableDate?: (day: TDate) => boolean;
 
-  /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
-   * @template TDate
-   * @param {TDate} month The month to check.
-   * @returns {boolean} If `true` the month will be disabled.
-   */
-  shouldDisableMonth?: (month: TDate) => boolean;
-  /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
-   * @template TDate
-   * @param {TDate} year The year to check.
-   * @returns {boolean} If `true` the year will be disabled.
-   */
-  shouldDisableYear?: (year: TDate) => boolean;
   /**
    * Controlled open view.
    */
@@ -442,9 +422,10 @@ CalendarPicker.propTypes = {
    */
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback firing on month change. @DateIOType
+   * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new month.
+   * @param {TDate} month The new year.
+   * @returns {void|Promise}
    */
   onMonthChange: PropTypes.func,
   /**
@@ -511,8 +492,8 @@ CalendarPicker.propTypes = {
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
-   * @param {TDate} year The year to check.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @param {TDate} year The year to test.
+   * @returns {boolean} Return `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
