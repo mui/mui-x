@@ -5,6 +5,7 @@
   { "name": "LicenseInfo", "kind": "Class" },
   { "name": "LicenseScope", "kind": "TypeAlias" },
   { "name": "LicenseStatus", "kind": "Enum" },
+  { "name": "LicensingModel", "kind": "TypeAlias" },
   { "name": "MuiCommercialPackageName", "kind": "TypeAlias" },
   { "name": "showExpiredLicenseError", "kind": "Function" },
   { "name": "showInvalidLicenseError", "kind": "Function" },
