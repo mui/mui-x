@@ -97,7 +97,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     calendars,
     className,
     currentlySelectingRangeEnd,
-    date,
+    parsedValue,
     DateInputProps,
     defaultCalendarMonth,
     disableAutoMonthSwitching = false,
@@ -125,7 +125,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const utils = useUtils<TDate>();
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
-  const [start, end] = date;
+  const [start, end] = parsedValue;
   const {
     changeMonth,
     calendarState,
@@ -183,14 +183,14 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     }
 
     scrollToDayIfNeeded(currentlySelectingRangeEnd === 'start' ? start : end);
-  }, [currentlySelectingRangeEnd, date]); // eslint-disable-line
+  }, [currentlySelectingRangeEnd, parsedValue]); // eslint-disable-line
 
   const handleChange = React.useCallback(
     (newDate: TDate | null) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
         utils,
-        range: date,
+        range: parsedValue,
         currentlySelectingRangeEnd,
       });
 
@@ -207,7 +207,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     },
     [
       currentlySelectingRangeEnd,
-      date,
+      parsedValue,
       onDateChange,
       setCurrentlySelectingRangeEnd,
       utils,
@@ -217,7 +217,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
 
   const renderView = () => {
     const sharedCalendarProps = {
-      date,
+      parsedValue,
       isDateDisabled,
       changeFocusedDay,
       onChange: handleChange,
@@ -250,7 +250,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {toShowToolbar && (
         <DateRangePickerToolbar
-          date={date}
+          parsedValue={parsedValue}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
           currentlySelectingRangeEnd={currentlySelectingRangeEnd}
