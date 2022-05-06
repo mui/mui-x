@@ -13,12 +13,12 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
 })(({ theme }) => ({
   width: 'auto',
+  paddingBottom: theme.spacing(0.5),
   '& .MuiSvgIcon-root': {
     marginRight: theme.spacing(0.5),
   },
   '& .MuiInput-underline:before': {
-    borderBottom: 1,
-    borderColor: 'divider',
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
 }));
 
