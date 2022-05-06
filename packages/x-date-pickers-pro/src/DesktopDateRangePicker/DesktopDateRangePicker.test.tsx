@@ -487,6 +487,8 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
+      clock.runToLast();
+
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
@@ -517,6 +519,8 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
+      clock.runToLast();
+
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
