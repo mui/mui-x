@@ -6,7 +6,7 @@ import {
   useUtils,
   ExportedDateValidationProps,
   DayPicker,
-  PickersCalendarProps,
+  DayPickerProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
@@ -27,7 +27,7 @@ export interface ExportedMobileDateRangeCalendarProps<TDate>
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,
-    Omit<PickersCalendarProps<TDate>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate, DateRange<TDate>>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   /**
@@ -41,7 +41,7 @@ interface DesktopDateRangeCalendarProps<TDate>
    * @default {}
    */
   componentsProps?: Partial<DateRangePickerViewMobileSlotsComponentsProps>;
-  date: DateRange<TDate>;
+  parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
 }
 
@@ -55,7 +55,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     changeMonth,
     components,
     componentsProps,
-    date,
+    parsedValue,
     leftArrowButtonText,
     maxDate: maxDateProp,
     minDate: minDateProp,
@@ -84,9 +84,9 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         views={onlyDayView}
         {...other}
       />
-      <DayPicker<TDate>
+      <DayPicker<TDate, DateRange<TDate>>
         {...other}
-        date={date}
+        date={parsedValue}
         onChange={onChange}
         onFocusedDayChange={doNothing}
         renderDay={(day, _, DayProps) =>
@@ -94,9 +94,9 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
             isPreviewing: false,
             isStartOfPreviewing: false,
             isEndOfPreviewing: false,
-            isHighlighting: isWithinRange(utils, day, date),
-            isStartOfHighlighting: isStartOfRange(utils, day, date),
-            isEndOfHighlighting: isEndOfRange(utils, day, date),
+            isHighlighting: isWithinRange(utils, day, parsedValue),
+            isStartOfHighlighting: isStartOfRange(utils, day, parsedValue),
+            isEndOfHighlighting: isEndOfRange(utils, day, parsedValue),
             ...DayProps,
           })
         }

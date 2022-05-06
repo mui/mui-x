@@ -83,6 +83,11 @@ GridToolbar.propTypes = {
    * @default false
    */
   showQuickFilter: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { GridToolbar };
