@@ -68,14 +68,14 @@ describe('License: verifyLicense', () => {
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
       scope: 'pro',
-      salesModel: 'subscription',
+      licensingModel: 'subscription',
     });
 
     const licenseKeyPremium = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
       scope: 'premium',
-      salesModel: 'subscription',
+      licensingModel: 'subscription',
     });
 
     it('should log an error when ReleaseInfo is not valid', () => {
@@ -129,7 +129,7 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: 'MUI-123',
-          salesModel: 'subscription',
+          licensingModel: 'subscription',
         });
 
         expect(
@@ -146,7 +146,7 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: 'MUI-123',
-          salesModel: 'subscription',
+          licensingModel: 'subscription',
         });
 
         expect(
@@ -163,7 +163,7 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: 'MUI-123',
-          salesModel: 'perpetual',
+          licensingModel: 'perpetual',
         });
 
         expect(

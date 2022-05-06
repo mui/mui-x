@@ -2,7 +2,7 @@ import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
 import { LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope, LICENSE_SCOPES } from '../utils/licenseScope';
-import { LicenseSalesModel, LICENSE_SALES_MODELS } from '../utils/licenseSalesModel';
+import { LicensingModel, LICENSING_MODELS } from '../utils/licensingModel';
 
 const getDefaultReleaseDate = () => {
   const today = new Date();
@@ -18,7 +18,7 @@ export function generateReleaseInfo(releaseDate = getDefaultReleaseDate()) {
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
 interface MuiLicense {
-  salesModel: LicenseSalesModel | null;
+  licensingModel: LicensingModel | null;
   scope: LicenseScope | null;
   expiryTimestamp: number | null;
 }
@@ -39,18 +39,18 @@ const decodeLicenseVersion1 = (license: string): MuiLicense => {
 
   return {
     scope: 'pro',
-    salesModel: 'perpetual',
+    licensingModel: 'perpetual',
     expiryTimestamp,
   };
 };
 
 /**
- * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},SM=${salesModel},KV=2`;
+ * Format: O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},KV=2`;
  */
 const decodeLicenseVersion2 = (license: string): MuiLicense => {
   const licenseInfo: MuiLicense = {
     scope: null,
-    salesModel: null,
+    licensingModel: null,
     expiryTimestamp: null,
   };
 
@@ -63,8 +63,8 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
         licenseInfo.scope = value as LicenseScope;
       }
 
-      if (key === 'SM') {
-        licenseInfo.salesModel = value as LicenseSalesModel;
+      if (key === 'LM') {
+        licenseInfo.licensingModel = value as LicensingModel;
       }
 
       if (key === 'E') {
@@ -128,7 +128,7 @@ export function verifyLicense({
     return LicenseStatus.Invalid;
   }
 
-  if (license.salesModel == null || !LICENSE_SALES_MODELS.includes(license.salesModel)) {
+  if (license.licensingModel == null || !LICENSING_MODELS.includes(license.licensingModel)) {
     console.error('Error checking license. Sales model not found or invalid!');
     return LicenseStatus.Invalid;
   }
@@ -138,7 +138,7 @@ export function verifyLicense({
     return LicenseStatus.Invalid;
   }
 
-  if (license.salesModel === 'perpetual' || isProduction) {
+  if (license.licensingModel === 'perpetual' || isProduction) {
     const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
     if (Number.isNaN(pkgTimestamp)) {
       throw new Error('MUI: The release information is invalid. Not able to validate license.');
@@ -147,7 +147,7 @@ export function verifyLicense({
     if (license.expiryTimestamp < pkgTimestamp) {
       return LicenseStatus.Expired;
     }
-  } else if (license.salesModel === 'subscription') {
+  } else if (license.licensingModel === 'subscription') {
     if (license.expiryTimestamp < new Date().getTime()) {
       return LicenseStatus.Expired;
     }
