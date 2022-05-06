@@ -24,14 +24,14 @@ const DatePickerToolbarTitle = styled(Typography)<{ ownerState: any }>(({ ownerS
 }));
 
 type DatePickerToolbarComponent = (<TDate>(
-  props: BaseToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+  props: BaseToolbarProps<TDate, TDate | null> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
 export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
-  props: BaseToolbarProps<TDate>,
+  props: BaseToolbarProps<TDate, TDate | null>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {

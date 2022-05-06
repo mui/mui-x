@@ -9,7 +9,7 @@ import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
   DayPicker,
-  PickersCalendarProps,
+  DayPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
@@ -36,7 +36,7 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<PickersCalendarProps<TDate>, 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate, DateRange<TDate>>, 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
@@ -174,7 +174,7 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
             >
               {utils.format(monthOnIteration, 'monthAndYear')}
             </DateRangePickerViewDesktopArrowSwitcher>
-            <DateRangePickerViewDesktopCalendar<TDate>
+            <DateRangePickerViewDesktopCalendar<TDate, DateRange<TDate>>
               {...other}
               key={index}
               date={date}

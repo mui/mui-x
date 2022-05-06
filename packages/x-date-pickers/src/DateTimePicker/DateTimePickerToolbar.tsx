@@ -40,7 +40,9 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText)({
 /**
  * @ignore - internal component.
  */
-export const DateTimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps<TDate>) => {
+export const DateTimePickerToolbar = <TDate extends unknown>(
+  props: BaseToolbarProps<TDate, TDate | null>,
+) => {
   const {
     ampm,
     date,

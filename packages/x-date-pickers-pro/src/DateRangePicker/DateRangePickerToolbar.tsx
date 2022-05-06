@@ -15,10 +15,13 @@ const classes = generateUtilityClasses('PrivateDateRangePickerToolbar', ['penIco
 interface DateRangePickerToolbarProps<TDate>
   extends CurrentlySelectingRangeEndProps,
     Pick<
-      BaseToolbarProps<TDate>,
-      'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'toolbarTitle' | 'toolbarFormat'
+      BaseToolbarProps<TDate, DateRange<TDate>>,
+      | 'isMobileKeyboardViewOpen'
+      | 'toggleMobileKeyboardView'
+      | 'toolbarTitle'
+      | 'toolbarFormat'
+      | 'date'
     > {
-  date: DateRange<TDate>;
   startText: React.ReactNode;
   endText: React.ReactNode;
 }

@@ -282,6 +282,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridRowsIdToIdLookupSelector",
+    "returnType": "Record<string, GridRowId>",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridRowsLoadingSelector",
     "returnType": "boolean | undefined",
     "description": "",
