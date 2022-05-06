@@ -337,9 +337,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
       onChange: handleInputChange,
       open: isOpen,
       rawValue: value,
-      openPicker: () => {
-        setIsOpen(true);
-      },
+      openPicker: () => setIsOpen(true),
     }),
     [handleInputChange, isOpen, value, setIsOpen],
   );
