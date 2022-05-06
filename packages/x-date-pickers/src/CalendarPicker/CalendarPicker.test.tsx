@@ -146,12 +146,12 @@ describe('<CalendarPicker />', () => {
     const onChange = spy();
 
     render(
-        <CalendarPicker
-            date={null}
-            onChange={onChange}
-            defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
-            view='day'
-        />,
+      <CalendarPicker
+        date={null}
+        onChange={onChange}
+        defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
+        view="day"
+      />,
     );
 
     userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
@@ -163,12 +163,12 @@ describe('<CalendarPicker />', () => {
     const onChange = spy();
 
     render(
-        <CalendarPicker
-            date={adapterToUse.date('2018-01-03T11:11:11.111')}
-            onChange={onChange}
-            defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
-            view='day'
-        />,
+      <CalendarPicker
+        date={adapterToUse.date('2018-01-03T11:11:11.111')}
+        onChange={onChange}
+        defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
+        view="day"
+      />,
     );
 
     userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));

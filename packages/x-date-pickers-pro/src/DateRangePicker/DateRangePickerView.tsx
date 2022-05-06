@@ -8,7 +8,8 @@ import {
   defaultReduceAnimations,
   ExportedCalendarPickerProps,
   useCalendarState,
-  PickerStatePickerProps, DayPickerProps,
+  PickerStatePickerProps,
+  DayPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
