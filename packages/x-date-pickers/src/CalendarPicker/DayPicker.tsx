@@ -108,7 +108,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
   const {
     allowSameDateSelection,
     autoFocus,
-    onFocusedDayChange: changeFocusedDay,
+    onFocusedDayChange,
     className,
     currentMonth,
     selectedDays,
@@ -196,7 +196,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
                     ),
                     disableHighlightToday,
                     showDaysOutsideCurrentMonth,
-                    onDayFocus: changeFocusedDay,
+                    onDayFocus: onFocusedDayChange,
                     onDaySelect: handleDaySelect,
                   };
 
