@@ -152,6 +152,7 @@ module.exports = {
     return [
       { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
       { source: '/api/:rest*', destination: '/api-docs/:rest*' },
+      { source: `/static/:rest*`, destination: 'http://0.0.0.0:3000/static/:rest*' },
     ];
   },
   // redirects only take effect in the development, not production (because of `next export`).
