@@ -34,6 +34,7 @@
     },
     "rightArrowButtonText": { "type": { "name": "string" } },
     "shouldDisableDate": { "type": { "name": "func" } },
+    "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "view": {

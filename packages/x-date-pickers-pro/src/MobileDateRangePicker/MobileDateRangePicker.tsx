@@ -298,9 +298,10 @@ MobileDateRangePicker.propTypes = {
    */
   onError: PropTypes.func,
   /**
-   * Callback firing on month change. @DateIOType
+   * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new month.
+   * @param {TDate} month The new year.
+   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -386,6 +387,14 @@ MobileDateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
+   * Disable specific months dynamically.
+   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
+   */
+  shouldDisableMonth: PropTypes.func,
+  /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
@@ -418,22 +427,16 @@ MobileDateRangePicker.propTypes = {
    */
   todayText: PropTypes.node,
   /**
-   * Component that will replace default toolbar renderer.
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
    * Date format, that is displaying in toolbar.
    */
   toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date range'
    */
   toolbarTitle: PropTypes.node,
+  /**
+   * The value of the picker.
+   */
   value: PropTypes.arrayOf(PropTypes.any).isRequired,
 } as any;

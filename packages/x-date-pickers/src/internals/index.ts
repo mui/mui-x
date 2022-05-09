@@ -6,7 +6,6 @@ export { MobileKeyboardInputView } from './components/CalendarOrClockPicker/Cale
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
 export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
-export type { PickerStaticWrapperProps } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export { PickersToolbar } from './components/PickersToolbar';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 export type {
@@ -23,6 +22,7 @@ export { DAY_MARGIN } from './constants/dimensions';
 
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
+export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
 export { useDefaultDates, useUtils } from './hooks/useUtils';
 export { useValidation } from './hooks/validation/useValidation';
@@ -36,6 +36,7 @@ export type {
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BasePickerProps } from './models/props/basePickerProps';
+export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 
@@ -50,7 +51,7 @@ export type {
 } from '../CalendarPicker/PickersCalendarHeader';
 
 export { DayPicker } from '../CalendarPicker/DayPicker';
-export type { PickersCalendarProps } from '../CalendarPicker/DayPicker';
+export type { DayPickerProps } from '../CalendarPicker/DayPicker';
 
 export { areDayPropsEqual } from '../PickersDay/PickersDay';
 

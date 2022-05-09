@@ -80,11 +80,11 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 - [Excel export](/x/react-data-grid/export/) <span class="plan-premium"></span>
 - [Tree data](/x/react-data-grid/tree-data) <span class="plan-pro"></span>
 - [Master detail](/x/react-data-grid/master-detail) <span class="plan-pro"></span>
-- [Resizable columns](/x/react-data-grid/columns/#resizing) <span class="plan-pro"></span>
+- [Resizable columns](/x/react-data-grid/column-dimensions/#resizing) <span class="plan-pro"></span>
 - [100% customizable](/x/react-data-grid/style/)
 - Server-side data
-- [Column hiding](/x/react-data-grid/columns/#column-visibility)
-- [Column pinning](/x/react-data-grid/columns/#column-pinning) <span class="plan-pro"></span>
+- [Column hiding](/x/react-data-grid/column-visibility/)
+- [Column pinning](/x/react-data-grid/column-pinning/) <span class="plan-pro"></span>
 - [Accessible](/x/react-data-grid/accessibility/)
 - [Localization](/x/react-data-grid/localization/)
 

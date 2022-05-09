@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -13,7 +13,10 @@ interface RowCountProps {
   visibleRowCount: number;
 }
 
-type GridRowCountProps = React.HTMLAttributes<HTMLDivElement> & RowCountProps;
+type GridRowCountProps = React.HTMLAttributes<HTMLDivElement> &
+  RowCountProps & {
+    sx?: SxProps<Theme>;
+  };
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -69,6 +72,11 @@ GridRowCount.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   rowCount: PropTypes.number.isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   visibleRowCount: PropTypes.number.isRequired,
 } as any;
 

@@ -15,7 +15,7 @@ import {
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
 
-export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate> {
+export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
   classes?: Partial<TimePickerToolbarClasses>;
 }
 
@@ -86,11 +86,13 @@ const TimePickerToolbarAmPmSelection = styled('div')<{
 /**
  * @ignore - internal component.
  */
-export const TimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps<TDate>) => {
+export const TimePickerToolbar = <TDate extends unknown>(
+  props: BaseToolbarProps<TDate, TDate | null>,
+) => {
   const {
     ampm,
     ampmInClock,
-    date,
+    parsedValue,
     isLandscape,
     isMobileKeyboardViewOpen,
     onChange,
@@ -99,12 +101,14 @@ export const TimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps
     toggleMobileKeyboardView,
     toolbarTitle = 'Select time',
     views,
+    disabled,
+    readOnly,
     ...other
   } = props;
   const utils = useUtils<TDate>();
   const theme = useTheme();
   const showAmPmControl = Boolean(ampm && !ampmInClock);
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(date, ampm, onChange);
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(parsedValue, ampm, onChange);
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -142,7 +146,7 @@ export const TimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps
             variant="h3"
             onClick={() => setOpenView('hours')}
             selected={openView === 'hours'}
-            value={date ? formatHours(date) : '--'}
+            value={parsedValue ? formatHours(parsedValue) : '--'}
           />
         )}
         {arrayIncludes(views, ['hours', 'minutes']) && separator}
@@ -153,7 +157,7 @@ export const TimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps
             variant="h3"
             onClick={() => setOpenView('minutes')}
             selected={openView === 'minutes'}
-            value={date ? utils.format(date, 'minutes') : '--'}
+            value={parsedValue ? utils.format(parsedValue, 'minutes') : '--'}
           />
         )}
         {arrayIncludes(views, ['minutes', 'seconds']) && separator}
@@ -163,7 +167,7 @@ export const TimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps
             variant="h3"
             onClick={() => setOpenView('seconds')}
             selected={openView === 'seconds'}
-            value={date ? utils.format(date, 'seconds') : '--'}
+            value={parsedValue ? utils.format(parsedValue, 'seconds') : '--'}
           />
         )}
       </TimePickerToolbarHourMinuteLabel>
@@ -176,7 +180,8 @@ export const TimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps
             selected={meridiemMode === 'am'}
             typographyClassName={classes.ampmLabel}
             value={utils.getMeridiemText('am')}
-            onClick={() => handleMeridiemChange('am')}
+            onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
+            disabled={disabled}
           />
           <PickersToolbarButton
             disableRipple
@@ -185,7 +190,8 @@ export const TimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps
             selected={meridiemMode === 'pm'}
             typographyClassName={classes.ampmLabel}
             value={utils.getMeridiemText('pm')}
-            onClick={() => handleMeridiemChange('pm')}
+            onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
+            disabled={disabled}
           />
         </TimePickerToolbarAmPmSelection>
       )}
