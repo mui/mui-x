@@ -21,7 +21,6 @@ const pages = [
           '/x/react-data-grid/column-definition',
           '/x/react-data-grid/column-dimensions',
           '/x/react-data-grid/column-visibility',
-          '/x/react-data-grid/column-visibility',
           '/x/react-data-grid/column-header',
           '/x/react-data-grid/column-ordering',
           '/x/react-data-grid/column-pinning',
