@@ -10,7 +10,9 @@
     "maxDate": "Maximal selectable date.",
     "minDate": "Minimal selectable date.",
     "onChange": "Callback fired on date change.",
+    "onMonthChange": "Callback firing on month change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void | Promise</code><br><em>month:</em> The new year.<br> <em>returns</em> (void | Promise): -",
     "readOnly": "If <code>true</code> picker is readonly",
+    "shouldDisableMonth": "Disable specific months dynamically. Works like <code>shouldDisableDate</code> but for month selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; boolean</code><br><em>month:</em> The month to check.<br> <em>returns</em> (boolean): If <code>true</code> the month will be disabled.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/the-sx-prop/\">`sx` page</a> for more details."
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },

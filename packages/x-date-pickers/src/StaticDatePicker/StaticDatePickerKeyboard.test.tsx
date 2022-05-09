@@ -86,8 +86,6 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         render(
           <StaticDatePicker
             autoFocus
-            // TODO: This prop does not make sense on the static variant
-            open
             openTo="year"
             reduceAnimations
             displayStaticWrapperAs="desktop"

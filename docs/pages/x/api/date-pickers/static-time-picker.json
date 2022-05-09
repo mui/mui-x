@@ -40,11 +40,8 @@
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onAccept": { "type": { "name": "func" } },
-    "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
-    "onOpen": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
-    "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
     "openTo": {
       "type": {
@@ -60,8 +57,6 @@
     "shouldDisableTime": { "type": { "name": "func" } },
     "showToolbar": { "type": { "name": "bool" } },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
     "value": { "type": { "name": "any" } },
     "views": {

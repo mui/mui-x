@@ -96,23 +96,19 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleEditClick = (id) => (event) => {
-    event.stopPropagation();
+  const handleEditClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id) => (event) => {
-    event.stopPropagation();
+  const handleSaveClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id) => (event) => {
-    event.stopPropagation();
+  const handleDeleteClick = (id) => () => {
     setRows(rows.filter((row) => row.id !== id));
   };
 
-  const handleCancelClick = (id) => (event) => {
-    event.stopPropagation();
+  const handleCancelClick = (id) => () => {
     setRowModesModel({
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
