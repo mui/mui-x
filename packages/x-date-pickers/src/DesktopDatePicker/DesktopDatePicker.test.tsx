@@ -497,7 +497,7 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it.only('should not call onAccept when selecting the same date', () => {
+    it('should not call onAccept when selecting the same date', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
