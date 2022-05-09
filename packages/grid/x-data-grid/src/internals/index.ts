@@ -4,7 +4,6 @@ export { GridVirtualScrollerRenderZone } from '../components/virtualization/Grid
 export { GridColumnHeaders } from '../components/columnHeaders/GridColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 
-export type { GridCaches } from '../hooks/core/caches';
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
 export {
@@ -93,3 +92,4 @@ export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
+export type { GridApiCaches } from '../models/api/gridCoreApi';

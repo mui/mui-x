@@ -84,10 +84,8 @@ export const useGridAggregation = (
    * EVENTS
    */
   const checkAggregationRulesDiff = React.useCallback(() => {
-    const aggregationRulesOnLastRowHydration =
-      apiRef.current.unstable_getCache('aggregation')?.aggregationRulesOnLastRowHydration;
-    const aggregationRulesOnLastColumnHydration =
-      apiRef.current.unstable_getCache('aggregation')?.aggregationRulesOnLastColumnHydration;
+    const { aggregationRulesOnLastRowHydration, aggregationRulesOnLastColumnHydration } =
+      apiRef.current.unstable_caches.aggregation ?? {};
 
     const aggregationRules = getAggregationRules({
       columnsLookup: gridColumnLookupSelector(apiRef),

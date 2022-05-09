@@ -34,8 +34,7 @@ export const useGridAggregationPreProcessors = (
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       const lastAppliedAggregationRules =
-        apiRef.current.unstable_getCache('aggregation')?.aggregationRulesOnLastColumnHydration ??
-        {};
+        apiRef.current.unstable_caches.aggregation?.aggregationRulesOnLastColumnHydration ?? {};
 
       const aggregationRules = getAggregationRules({
         columnsLookup: columnsState.lookup,
@@ -66,10 +65,10 @@ export const useGridAggregationPreProcessors = (
         columnsState.lookup[field] = column;
       });
 
-      apiRef.current.unstable_setCache('aggregation', (prev) => ({
-        ...prev,
+      apiRef.current.unstable_caches.aggregation = {
+        ...apiRef.current.unstable_caches.aggregation,
         aggregationRulesOnLastColumnHydration: aggregationRules,
-      }));
+      };
 
       return columnsState;
     },
@@ -79,10 +78,10 @@ export const useGridAggregationPreProcessors = (
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       if (props.disableAggregation) {
-        apiRef.current.unstable_setCache('aggregation', (prev) => ({
-          ...prev,
+        apiRef.current.unstable_caches.aggregation = {
+          ...apiRef.current.unstable_caches.aggregation,
           aggregationRulesOnLastRowHydration: {},
-        }));
+        };
 
         return groupingParams;
       }
@@ -109,10 +108,10 @@ export const useGridAggregationPreProcessors = (
         isGroupAggregated: props.isGroupAggregated,
       });
 
-      apiRef.current.unstable_setCache('aggregation', (prev) => ({
-        ...prev,
+      apiRef.current.unstable_caches.aggregation = {
+        ...apiRef.current.unstable_caches.aggregation,
         aggregationRulesOnLastRowHydration: aggregationRules,
-      }));
+      };
 
       return groupingParamsWithFooterRows;
     },

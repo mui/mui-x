@@ -41,8 +41,8 @@ export interface GridRenderCellParamsPremium<V = any, R = any, F = V> {
   aggregation?: GridAggregationCellMeta;
 }
 
-export interface GridCachesPremium {
-  aggregation: {
+export interface GridApiCachesPremium {
+  aggregation?: {
     aggregationRulesOnLastColumnHydration?: GridAggregationRules;
     aggregationRulesOnLastRowHydration?: GridAggregationRules;
   };
@@ -62,5 +62,5 @@ declare module '@mui/x-data-grid-pro' {
 }
 
 declare module '@mui/x-data-grid/internals' {
-  interface GridCaches extends GridCachesPremium {}
+  interface GridApiCaches extends GridApiCachesPremium {}
 }
