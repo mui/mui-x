@@ -18,7 +18,10 @@ function QuickSearchToolbar() {
     >
       <GridToolbarQuickFilter
         quickFilterParser={(searchInput: string) =>
-          searchInput.split(',').map((value) => value.trim())
+          searchInput
+            .split(',')
+            .map((value) => value.trim())
+            .filter((value) => value !== '')
         }
       />
     </Box>
