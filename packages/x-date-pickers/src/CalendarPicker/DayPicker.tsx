@@ -13,10 +13,7 @@ import {
 } from './PickersSlideTransition';
 
 export interface ExportedDayPickerProps<TDate>
-  extends Pick<
-    PickersDayProps<TDate>,
-    'disableHighlightToday' | 'showDaysOutsideCurrentMonth'
-  > {
+  extends Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
   autoFocus?: boolean;
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
