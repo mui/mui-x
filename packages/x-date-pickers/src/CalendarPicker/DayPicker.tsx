@@ -12,7 +12,7 @@ import {
   SlideTransitionProps,
 } from './PickersSlideTransition';
 
-export interface ExportedCalendarProps<TDate>
+export interface ExportedDayPickerProps<TDate>
   extends Pick<
     PickersDayProps<TDate>,
     'disableHighlightToday' | 'showDaysOutsideCurrentMonth' | 'allowSameDateSelection'
@@ -49,11 +49,11 @@ export interface ExportedCalendarProps<TDate>
   renderLoading?: () => React.ReactNode;
 }
 
-export interface PickersCalendarProps<TDate> extends ExportedCalendarProps<TDate> {
+export interface DayPickerProps<TDate, TValue> extends ExportedDayPickerProps<TDate> {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;
-  date: TDate | [TDate | null, TDate | null] | null;
+  date: TValue;
   disabled?: boolean;
   focusedDay: TDate | null;
   isDateDisabled: (day: TDate) => boolean;
@@ -107,7 +107,7 @@ const PickersCalendarWeek = styled('div')({
 /**
  * @ignore - do not document.
  */
-export function DayPicker<TDate>(props: PickersCalendarProps<TDate>) {
+export function DayPicker<TDate, TValue>(props: DayPickerProps<TDate, TValue>) {
   const {
     allowSameDateSelection,
     autoFocus,
@@ -139,12 +139,20 @@ export function DayPicker<TDate>(props: PickersCalendarProps<TDate>) {
       if (readOnly) {
         return;
       }
+
       // TODO possibly buggy line figure out and add tests
-      const finalDate = Array.isArray(date) ? day : utils.mergeDateAndTime(day, date || now);
+      let finalDate: TDate;
+      if (date && !Array.isArray(date)) {
+        // If we are selecting a single date (not a range) and there is a date already selected
+        // Then we want to keep the time from this date
+        finalDate = utils.mergeDateAndTime(day, date as any as TDate);
+      } else {
+        finalDate = day;
+      }
 
       onChange(finalDate, isFinish);
     },
-    [date, now, onChange, readOnly, utils],
+    [date, onChange, readOnly, utils],
   );
 
   const currentMonthNumber = utils.getMonth(currentMonth);

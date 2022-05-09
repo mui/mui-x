@@ -77,6 +77,7 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowTreeCreationVal
 
   const ids = [...params.ids];
   const idRowsLookup = { ...params.idRowsLookup };
+  const idToIdLookup = { ...params.idToIdLookup };
 
   const groupingCriteriaToIdTree: GridGroupingCriteriaToIdTree = {};
 
@@ -207,6 +208,7 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowTreeCreationVal
     treeDepth,
     ids,
     idRowsLookup,
+    idToIdLookup,
     groupingName: params.groupingName,
   };
 };

@@ -27,6 +27,11 @@ function scrollIntoView(dimensions: {
   const { clientHeight, scrollTop, offsetHeight, offsetTop } = dimensions;
 
   const elementBottom = offsetTop + offsetHeight;
+  // Always scroll to top when cell is higher than viewport to avoid scroll jump
+  // See https://github.com/mui/mui-x/issues/4513 and https://github.com/mui/mui-x/issues/4514
+  if (offsetHeight > clientHeight) {
+    return offsetTop;
+  }
   if (elementBottom - clientHeight > scrollTop) {
     return elementBottom - clientHeight;
   }

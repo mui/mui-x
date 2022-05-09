@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { MonthPicker } from '../MonthPicker/MonthPicker';
+import { ExportedMonthPickerProps, MonthPicker } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DayPicker, ExportedCalendarProps } from './DayPicker';
+import { DayPicker, ExportedDayPickerProps } from './DayPicker';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import {
   PickersCalendarHeader,
@@ -28,8 +28,9 @@ export interface CalendarPickerSlotsComponentsProps
   extends PickersCalendarHeaderSlotsComponentsProps {}
 
 export interface CalendarPickerProps<TDate>
-  extends ExportedCalendarProps<TDate>,
+  extends ExportedDayPickerProps<TDate>,
     ExportedYearPickerProps<TDate>,
+    ExportedMonthPickerProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
@@ -79,12 +80,7 @@ export interface CalendarPickerProps<TDate>
    * Callback fired on date change
    */
   onChange: PickerOnChangeFn<TDate>;
-  /**
-   * Callback firing on month change. @DateIOType
-   * @template TDate
-   * @param {TDate} month The new month.
-   */
-  onMonthChange?: (month: TDate) => void;
+
   /**
    * Initially open view.
    * @default 'day'
@@ -113,6 +109,7 @@ export interface CalendarPickerProps<TDate>
    * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate?: (day: TDate) => boolean;
+
   /**
    * Controlled open view.
    */
@@ -205,6 +202,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     reduceAnimations = defaultReduceAnimations,
     renderLoading = () => <span data-mui-test="loading-progress">...</span>,
     shouldDisableDate,
+    shouldDisableMonth,
     shouldDisableYear,
     view,
     views = ['year', 'day'],
@@ -284,6 +282,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     onChange,
     minDate,
     maxDate,
+    shouldDisableMonth,
     onMonthChange,
     readOnly,
   };
@@ -434,9 +433,10 @@ CalendarPicker.propTypes = {
    */
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback firing on month change. @DateIOType
+   * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new month.
+   * @param {TDate} month The new year.
+   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -491,6 +491,14 @@ CalendarPicker.propTypes = {
    * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate: PropTypes.func,
+  /**
+   * Disable specific months dynamically.
+   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
+   */
+  shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.

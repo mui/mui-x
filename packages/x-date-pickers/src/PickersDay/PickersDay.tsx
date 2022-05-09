@@ -28,7 +28,6 @@ export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickersDayClasses>;
-
   /**
    * The date to show.
    */
