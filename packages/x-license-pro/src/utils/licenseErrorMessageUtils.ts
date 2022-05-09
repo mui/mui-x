@@ -17,7 +17,7 @@ export function showInvalidLicenseError() {
     'MUI: Invalid license.',
     '',
     'Your license for MUI X is not valid, please visit',
-    'https://mui.com/r/x-license to get a valid license.',
+    'https://mui.com/r/x-get-license to get a valid license.',
   ]);
 }
 
@@ -30,7 +30,7 @@ export function showNotFoundLicenseError() {
     'development use on projects intended for production.',
     '',
     'To purchase a license, please visit',
-    'https://mui.com/r/x-license to get a valid license.',
+    'https://mui.com/r/x-get-license to get a valid license.',
   ]);
 }
 
@@ -38,7 +38,7 @@ export function showExpiredLicenseError() {
   showError([
     'MUI: License key expired.',
     '',
-    'Please visit https://mui.com/r/x-license to renew',
+    'Please visit https://mui.com/r/x-get-license to renew',
     'your subscription and get the latest version of MUI X.',
   ]);
 }

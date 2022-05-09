@@ -1,5 +1,10 @@
 import { GridCellMode, GridRowMode } from '../gridCell';
-import { GridEditRowsModel, GridEditCellProps } from '../gridEditRowModel';
+import {
+  GridEditRowsModel,
+  GridEditCellProps,
+  GridCellModes,
+  GridRowModes,
+} from '../gridEditRowModel';
 import { GridRowId, GridRowModel } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import {
@@ -8,6 +13,18 @@ import {
   GridEditCellPropsParams,
 } from '../params/gridEditCellParams';
 import { MuiBaseEvent } from '../muiEvent';
+
+export type GridCellModesModelProps =
+  | ({ mode: GridCellModes.View } & Omit<GridStopCellEditModeParams, 'id' | 'field'>)
+  | ({ mode: GridCellModes.Edit } & Omit<GridStartCellEditModeParams, 'id' | 'field'>);
+
+export type GridCellModesModel = Record<GridRowId, Record<string, GridCellModesModelProps>>;
+
+export type GridRowModesModelProps =
+  | ({ mode: GridRowModes.View } & Omit<GridStopRowEditModeParams, 'id' | 'field'>)
+  | ({ mode: GridRowModes.Edit } & Omit<GridStartRowEditModeParams, 'id' | 'field'>);
+
+export type GridRowModesModel = Record<GridRowId, GridRowModesModelProps>;
 
 export interface GridNewEditingSharedApi {
   /**
@@ -166,7 +183,7 @@ export interface GridCellEditingApi extends GridEditingSharedApi {
 /**
  * Params passed to `apiRef.current.startCellEditMode`.
  */
-interface GridStartCellEditModeParams {
+export interface GridStartCellEditModeParams {
   /**
    * The row id.
    */
@@ -175,6 +192,10 @@ interface GridStartCellEditModeParams {
    * The field.
    */
   field: string;
+  /**
+   * If `true`, the value will be deleted before entering the edit mode.
+   */
+  deleteValue?: boolean;
 }
 
 /**
@@ -204,7 +225,7 @@ export interface GridStopCellEditModeParams {
 /**
  * Params passed to `apiRef.current.startRowEditMode`.
  */
-interface GridStartRowEditModeParams {
+export interface GridStartRowEditModeParams {
   /**
    * The row id.
    */
@@ -213,6 +234,10 @@ interface GridStartRowEditModeParams {
    * The field to put focus.
    */
   fieldToFocus?: string;
+  /**
+   * If `true`, the value in `fieldToFocus` will be deleted before entering the edit mode.
+   */
+  deleteValue?: boolean;
 }
 
 /**

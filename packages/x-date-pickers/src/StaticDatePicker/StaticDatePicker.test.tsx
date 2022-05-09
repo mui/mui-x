@@ -17,8 +17,7 @@ describe('<StaticDatePicker />', () => {
       />,
     );
 
-    expect(screen.getByText('January')).toBeVisible();
-    expect(screen.getByText('2019')).toBeVisible();
+    expect(screen.getByText('January 2019')).toBeVisible();
     expect(screen.getAllByMuiTest('day')).to.have.length(31);
   });
 
@@ -32,7 +31,7 @@ describe('<StaticDatePicker />', () => {
       />,
     );
 
-    expect(screen.getByMuiTest('calendar-month-text')).to.have.text('January');
+    expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2019');
 
     const nextMonth = screen.getByLabelText('Next month');
     const previousMonth = screen.getByLabelText('Previous month');
@@ -43,7 +42,7 @@ describe('<StaticDatePicker />', () => {
     fireEvent.click(previousMonth);
     fireEvent.click(previousMonth);
 
-    expect(screen.getByMuiTest('calendar-month-text')).to.have.text('December');
+    expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('December 2018');
   });
 
   it('prop `shouldDisableYear` – disables years dynamically', () => {
@@ -66,5 +65,28 @@ describe('<StaticDatePicker />', () => {
     expect(getYearButton(2029)).not.to.have.attribute('disabled');
     expect(getYearButton(2030)).to.have.attribute('disabled');
     expect(getYearButton(2031)).not.to.have.attribute('disabled');
+  });
+
+  it('prop `shouldDisableMonth` – disables months dynamically', () => {
+    render(
+      <StaticDatePicker
+        renderInput={(params) => <TextField {...params} />}
+        views={['year', 'month']}
+        openTo="month"
+        onChange={() => {}}
+        minDate={adapterToUse.date('2021-01-01T00:00:00.000')}
+        maxDate={adapterToUse.date('2022-01-01T00:00:00.000')}
+        value={adapterToUse.date('2021-05-01T00:00:00.000')}
+        shouldDisableMonth={(month) => {
+          return adapterToUse.getYear(month) === 2021 && adapterToUse.getMonth(month) === 2;
+        }}
+      />,
+    );
+
+    const getMonthButton = (month: string) => screen.getByText(month, { selector: 'button' });
+
+    expect(getMonthButton('Feb')).not.to.have.attribute('disabled');
+    expect(getMonthButton('Mar')).to.have.attribute('disabled');
+    expect(getMonthButton('Apr')).not.to.have.attribute('disabled');
   });
 });

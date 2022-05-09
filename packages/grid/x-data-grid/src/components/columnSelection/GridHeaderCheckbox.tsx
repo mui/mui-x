@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridEvents } from '../../models/events';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
@@ -95,7 +94,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
         value: event.target.checked,
       };
 
-      apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, params);
+      apiRef.current.publishEvent('headerSelectionCheckboxChange', params);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
@@ -110,13 +109,13 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       (event) => {
         if (event.key === ' ') {
           // imperative toggle the checkbox because Space is disable by some preventDefault
-          apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, {
+          apiRef.current.publishEvent('headerSelectionCheckboxChange', {
             value: !isChecked,
           });
         }
         // TODO v6 remove columnHeaderNavigationKeyDown events which are not used internally anymore
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
+          apiRef.current.publishEvent('columnHeaderNavigationKeyDown', props, event);
         }
       },
       [apiRef, props, isChecked],
@@ -127,7 +126,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     }, []);
 
     React.useEffect(() => {
-      return apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
+      return apiRef.current.subscribeEvent('selectionChange', handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
     const label = apiRef.current.getLocaleText(

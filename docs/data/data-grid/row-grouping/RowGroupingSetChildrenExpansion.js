@@ -1,62 +1,26 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  gridColumnVisibilityModelSelector,
-  GridEvents,
   gridVisibleSortedRowIdsSelector,
   useGridApiRef,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-const INITIAL_GROUPING_COLUMN_MODEL = ['company'];
-
-const useKeepGroupingColumnsHidden = (apiRef, columns, initialModel, leafField) => {
-  const prevModel = React.useRef(initialModel);
-
-  React.useEffect(() => {
-    apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
-      const columnVisibilityModel = {
-        ...gridColumnVisibilityModelSelector(apiRef),
-      };
-
-      newModel.forEach((field) => {
-        if (!prevModel.current.includes(field)) {
-          columnVisibilityModel[field] = false;
-        }
-      });
-      prevModel.current.forEach((field) => {
-        if (!newModel.includes(field)) {
-          columnVisibilityModel[field] = true;
-        }
-      });
-      apiRef.current.setColumnVisibilityModel(columnVisibilityModel);
-      prevModel.current = newModel;
-    });
-  }, [apiRef]);
-
-  return React.useMemo(
-    () =>
-      columns.map((colDef) =>
-        initialModel.includes(colDef.field) ||
-        (leafField && colDef.field === leafField)
-          ? { ...colDef, hide: true }
-          : colDef,
-      ),
-    [columns, initialModel, leafField],
-  );
-};
-
 export default function RowGroupingSetChildrenExpansion() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
-  const columns = useKeepGroupingColumnsHidden(
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
-    data.columns,
-    INITIAL_GROUPING_COLUMN_MODEL,
-  );
+    initialState: {
+      rowGrouping: {
+        model: ['company'],
+      },
+    },
+  });
 
   const toggleSecondRow = () => {
     const rowIds = gridVisibleSortedRowIdsSelector(apiRef);
@@ -77,13 +41,8 @@ export default function RowGroupingSetChildrenExpansion() {
         <DataGridPremium
           {...data}
           apiRef={apiRef}
-          columns={columns}
           disableSelectionOnClick
-          initialState={{
-            rowGrouping: {
-              model: INITIAL_GROUPING_COLUMN_MODEL,
-            },
-          }}
+          initialState={initialState}
         />
       </div>
     </Stack>

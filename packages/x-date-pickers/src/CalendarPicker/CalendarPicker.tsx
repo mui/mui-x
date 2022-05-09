@@ -1,13 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { MonthPicker } from '../MonthPicker/MonthPicker';
+import { ExportedMonthPickerProps, MonthPicker } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DayPicker, ExportedCalendarProps } from './DayPicker';
+import { DayPicker, ExportedDayPickerProps } from './DayPicker';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import {
   PickersCalendarHeader,
@@ -28,8 +28,9 @@ export interface CalendarPickerSlotsComponentsProps
   extends PickersCalendarHeaderSlotsComponentsProps {}
 
 export interface CalendarPickerProps<TDate>
-  extends ExportedCalendarProps<TDate>,
+  extends ExportedDayPickerProps<TDate>,
     ExportedYearPickerProps<TDate>,
+    ExportedMonthPickerProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
@@ -79,12 +80,7 @@ export interface CalendarPickerProps<TDate>
    * Callback fired on date change
    */
   onChange: PickerOnChangeFn<TDate>;
-  /**
-   * Callback firing on month change. @DateIOType
-   * @template TDate
-   * @param {TDate} month The new month.
-   */
-  onMonthChange?: (month: TDate) => void;
+
   /**
    * Initially open view.
    * @default 'day'
@@ -113,6 +109,7 @@ export interface CalendarPickerProps<TDate>
    * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate?: (day: TDate) => boolean;
+
   /**
    * Controlled open view.
    */
@@ -181,11 +178,11 @@ type CalendarPickerComponent = (<TDate>(
  *
  * - [CalendarPicker API](https://mui.com/x/api/date-pickers/calendar-picker/)
  */
-const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends unknown>(
+const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   inProps: CalendarPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps<Theme, CalendarPickerProps<TDate>, 'MuiCalendarPicker'>({
+  const props = useThemeProps({
     props: inProps,
     name: 'MuiCalendarPicker',
   });
@@ -205,11 +202,14 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
     reduceAnimations = defaultReduceAnimations,
     renderLoading = () => <span data-mui-test="loading-progress">...</span>,
     shouldDisableDate,
+    shouldDisableMonth,
     shouldDisableYear,
     view,
     views = ['year', 'day'],
     openTo = 'day',
     className,
+    disabled,
+    readOnly,
     ...other
   } = props;
 
@@ -234,7 +234,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
     isDateDisabled,
     handleChangeMonth,
     onMonthSwitchingAnimationEnd,
-  } = useCalendarState<TDate>({
+  } = useCalendarState({
     date,
     defaultCalendarMonth,
     reduceAnimations,
@@ -276,15 +276,20 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
   const monthPickerProps = {
     className,
     date,
-    disabled: other.disabled,
+    disabled,
     disablePast,
     disableFuture,
     onChange,
     minDate,
     maxDate,
+    shouldDisableMonth,
     onMonthChange,
-    readOnly: other.readOnly,
+    readOnly,
   };
+
+  // When disable, limit the view to the selected date
+  const minDateWithDisabled = (disabled && date) || minDate;
+  const maxDateWithDisabled = (disabled && date) || maxDate;
 
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
@@ -295,8 +300,9 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
         currentMonth={calendarState.currentMonth}
         onViewChange={setOpenView}
         onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
-        minDate={minDate}
-        maxDate={maxDate}
+        minDate={minDateWithDisabled}
+        maxDate={maxDateWithDisabled}
+        disabled={disabled}
         disablePast={disablePast}
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
@@ -321,6 +327,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
               isDateDisabled={isDateDisabled}
               shouldDisableYear={shouldDisableYear}
               onFocusedDayChange={changeFocusedDay}
+              disabled={disabled}
+              readOnly={readOnly}
             />
           )}
 
@@ -339,6 +347,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends un
               isDateDisabled={isDateDisabled}
               loading={loading}
               renderLoading={renderLoading}
+              disabled={disabled}
+              readOnly={readOnly}
             />
           )}
         </div>
@@ -423,9 +433,10 @@ CalendarPicker.propTypes = {
    */
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback firing on month change. @DateIOType
+   * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new month.
+   * @param {TDate} month The new year.
+   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -480,6 +491,14 @@ CalendarPicker.propTypes = {
    * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate: PropTypes.func,
+  /**
+   * Disable specific months dynamically.
+   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
+   */
+  shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.

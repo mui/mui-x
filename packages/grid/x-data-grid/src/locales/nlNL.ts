@@ -32,6 +32,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exporteren',
   toolbarExportCSV: 'Exporteer naar CSV',
   toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Zoek kolom',

@@ -44,6 +44,25 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 
+  it('should always set correct `aria-sort` attribute', () => {
+    const cols = [{ field: 'id' }];
+    const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={cols} rows={rows} />
+      </div>,
+    );
+    const header = getColumnHeaderCell(0);
+    expect(header.getAttribute('aria-sort')).to.equal('none');
+
+    fireEvent.click(header);
+    expect(header.getAttribute('aria-sort')).to.equal('ascending');
+
+    fireEvent.click(header);
+    expect(header.getAttribute('aria-sort')).to.equal('descending');
+  });
+
   it('should update the order server side', () => {
     const cols = [{ field: 'id' }];
     const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];

@@ -7,6 +7,7 @@ import {
   showNotFoundLicenseError,
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
+import { LicenseScope } from '../utils/licenseScope';
 
 export type MuiCommercialPackageName =
   | 'x-data-grid-pro'
@@ -27,7 +28,16 @@ export function useLicenseVerifier(
       return sharedLicenseStatuses[packageName]!.status;
     }
 
-    const licenseStatus = verifyLicense(releaseInfo, licenseKey);
+    const acceptedScopes: LicenseScope[] = packageName.includes('premium')
+      ? ['premium']
+      : ['pro', 'premium'];
+
+    const licenseStatus = verifyLicense({
+      releaseInfo,
+      licenseKey,
+      acceptedScopes,
+      isProduction: process.env.NODE_ENV === 'production',
+    });
 
     sharedLicenseStatuses[packageName] = { key: licenseStatus, status: licenseStatus };
 

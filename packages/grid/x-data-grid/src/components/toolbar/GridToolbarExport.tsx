@@ -6,7 +6,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridCsvExportOptions, GridPrintExportOptions } from '../../models/gridExport';
 import { GridToolbarExportContainer } from './GridToolbarExportContainer';
 
-interface GridExportDisplayOptions {
+export interface GridExportDisplayOptions {
   /**
    * If `true`, this export option will be removed from the GridToolbarExport menu.
    * @default false
@@ -26,15 +26,13 @@ export type GridPrintExportMenuItemProps = GridExportMenuItemProps<GridPrintExpo
 export interface GridToolbarExportProps extends ButtonProps {
   csvOptions?: GridCsvExportOptions & GridExportDisplayOptions;
   printOptions?: GridPrintExportOptions & GridExportDisplayOptions;
+  [key: string]: any;
 }
 
 export const GridCsvExportMenuItem = (props: GridCsvExportMenuItemProps) => {
   const apiRef = useGridApiContext();
   const { hideMenu, options } = props;
 
-  if (options?.disableToolbarButton) {
-    return null;
-  }
   return (
     <MenuItem
       onClick={() => {
@@ -51,9 +49,6 @@ export const GridPrintExportMenuItem = (props: GridPrintExportMenuItemProps) => 
   const apiRef = useGridApiContext();
   const { hideMenu, options } = props;
 
-  if (options?.disableToolbarButton) {
-    return null;
-  }
   return (
     <MenuItem
       onClick={() => {
@@ -68,16 +63,23 @@ export const GridPrintExportMenuItem = (props: GridPrintExportMenuItemProps) => 
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
-    const { csvOptions = {}, printOptions = {}, ...other } = props;
+    const { csvOptions = {}, printOptions = {}, excelOptions, ...other } = props;
 
-    if (csvOptions?.disableToolbarButton && printOptions?.disableToolbarButton) {
+    const apiRef = useGridApiContext();
+
+    const preProcessedButtons = apiRef.current
+      .unstable_applyPipeProcessors('exportMenu', [], { excelOptions, csvOptions, printOptions })
+      .sort((a, b) => (a.componentName > b.componentName ? 1 : -1));
+
+    if (preProcessedButtons.length === 0) {
       return null;
     }
 
     return (
       <GridToolbarExportContainer {...other} ref={ref}>
-        <GridCsvExportMenuItem options={csvOptions} />
-        <GridPrintExportMenuItem options={printOptions} />
+        {preProcessedButtons.map((button, index) =>
+          React.cloneElement(button.component, { key: index }),
+        )}
       </GridToolbarExportContainer>
     );
   },

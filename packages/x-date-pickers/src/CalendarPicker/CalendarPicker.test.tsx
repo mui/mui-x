@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
+import { fireEvent, screen, describeConformance, getAllByRole } from '@mui/monorepo/test/utils';
 import {
   CalendarPicker,
   calendarPickerClasses as classes,
 } from '@mui/x-date-pickers/CalendarPicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
+  AdapterClassToUse,
   adapterToUse,
   wrapPickerMount,
   createPickerRenderer,
@@ -39,8 +41,7 @@ describe('<CalendarPicker />', () => {
       <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
     );
 
-    expect(screen.getByText('January')).toBeVisible();
-    expect(screen.getByText('2019')).toBeVisible();
+    expect(screen.getByText('January 2019')).toBeVisible();
     expect(screen.getAllByMuiTest('day')).to.have.length(31);
     // It should follow https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
     expect(
@@ -77,7 +78,7 @@ describe('<CalendarPicker />', () => {
     expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
-  it('allows month and view changing, but not selection when readOnly prop is passed', () => {
+  it('should allow month and view changing, but not selection when readOnly prop is passed', () => {
     const onChangeMock = spy();
     const onMonthChangeMock = spy();
     render(
@@ -98,11 +99,11 @@ describe('<CalendarPicker />', () => {
     fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
     expect(onChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByText('January'));
+    fireEvent.click(screen.getByText('January 2019'));
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
-  it('does not allow interaction when disabled prop is passed', () => {
+  it('should not allow interaction when disabled prop is passed', () => {
     const onChangeMock = spy();
     const onMonthChangeMock = spy();
     render(
@@ -114,17 +115,51 @@ describe('<CalendarPicker />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByText('January'));
-    expect(screen.queryByText('January')).toBeVisible();
+    fireEvent.click(screen.getByText('January 2019'));
+    expect(screen.queryByText('January 2019')).toBeVisible();
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).to.equal(null);
 
     fireEvent.click(screen.getByTitle('Previous month'));
-    expect(onMonthChangeMock.callCount).to.equal(1);
+    expect(onMonthChangeMock.callCount).to.equal(0);
 
     fireEvent.click(screen.getByTitle('Next month'));
-    expect(onMonthChangeMock.callCount).to.equal(1);
+    expect(onMonthChangeMock.callCount).to.equal(0);
 
     fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
     expect(onChangeMock.callCount).to.equal(0);
+  });
+
+  it('should display disabled days when disabled prop is passed', () => {
+    const onChangeMock = spy();
+    const onMonthChangeMock = spy();
+    render(
+      <CalendarPicker
+        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        onChange={onChangeMock}
+        onMonthChange={onMonthChangeMock}
+        disabled
+      />,
+    );
+
+    // days are disabled
+    const daysContainer = screen.getByRole('grid');
+    const days = getAllByRole(daysContainer, 'button');
+    const disabledDays = days.filter((day) => day.getAttribute('disabled') !== null);
+
+    expect(days.length).to.equal(31);
+    expect(disabledDays.length).to.equal(31);
+  });
+
+  it('renders header label text according to monthAndYear format', () => {
+    render(
+      <LocalizationProvider
+        dateAdapter={AdapterClassToUse}
+        dateFormats={{ monthAndYear: 'yyyy/MM' }}
+      >
+        <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
+      </LocalizationProvider>,
+    );
+
+    expect(screen.getByText('2019/01')).toBeVisible();
   });
 });
