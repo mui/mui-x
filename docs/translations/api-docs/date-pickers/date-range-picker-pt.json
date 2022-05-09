@@ -2,7 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "acceptRegex": "Regular expression to detect &quot;accepted&quot; symbols.",
-    "allowSameDateSelection": "If <code>true</code>, <code>onChange</code> is fired on click even if the same date is selected.",
     "calendars": "The number of calendars that render on <strong>desktop</strong>.",
     "cancelText": "Cancel text message.",
     "className": "className applied to the root component.",

@@ -15,7 +15,7 @@ import {
 export interface ExportedDayPickerProps<TDate>
   extends Pick<
     PickersDayProps<TDate>,
-    'disableHighlightToday' | 'showDaysOutsideCurrentMonth' | 'allowSameDateSelection'
+    'disableHighlightToday' | 'showDaysOutsideCurrentMonth'
   > {
   autoFocus?: boolean;
   /**
@@ -109,7 +109,6 @@ const PickersCalendarWeek = styled('div')({
  */
 export function DayPicker<TDate, TValue>(props: DayPickerProps<TDate, TValue>) {
   const {
-    allowSameDateSelection,
     autoFocus,
     onFocusedDayChange: changeFocusedDay,
     className,
@@ -200,7 +199,6 @@ export function DayPicker<TDate, TValue>(props: DayPickerProps<TDate, TValue>) {
                     day,
                     isAnimating: isMonthSwitchingAnimating,
                     disabled: disabled || isDateDisabled(day),
-                    allowSameDateSelection,
                     autoFocus: autoFocus && focusedDay !== null && utils.isSameDay(day, focusedDay),
                     today: utils.isSameDay(day, now),
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,
