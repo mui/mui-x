@@ -208,6 +208,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     views = ['year', 'day'],
     openTo = 'day',
     className,
+    disabled,
+    readOnly,
     ...other
   } = props;
 
@@ -274,7 +276,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const monthPickerProps = {
     className,
     date,
-    disabled: other.disabled,
+    disabled,
     disablePast,
     disableFuture,
     onChange,
@@ -282,8 +284,12 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     maxDate,
     shouldDisableMonth,
     onMonthChange,
-    readOnly: other.readOnly,
+    readOnly,
   };
+
+  // When disable, limit the view to the selected date
+  const minDateWithDisabled = (disabled && date) || minDate;
+  const maxDateWithDisabled = (disabled && date) || maxDate;
 
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
@@ -294,8 +300,9 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         currentMonth={calendarState.currentMonth}
         onViewChange={setOpenView}
         onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
-        minDate={minDate}
-        maxDate={maxDate}
+        minDate={minDateWithDisabled}
+        maxDate={maxDateWithDisabled}
+        disabled={disabled}
         disablePast={disablePast}
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
@@ -320,6 +327,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               isDateDisabled={isDateDisabled}
               shouldDisableYear={shouldDisableYear}
               onFocusedDayChange={changeFocusedDay}
+              disabled={disabled}
+              readOnly={readOnly}
             />
           )}
 
@@ -338,6 +347,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               isDateDisabled={isDateDisabled}
               loading={loading}
               renderLoading={renderLoading}
+              disabled={disabled}
+              readOnly={readOnly}
             />
           )}
         </div>
