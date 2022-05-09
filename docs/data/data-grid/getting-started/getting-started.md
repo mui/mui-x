@@ -162,11 +162,11 @@ The enterprise components come in two plans: Pro and Premium.
 | Features                                                                               | Community | Pro <span class="plan-pro"></span> | Premium <span class="plan-premium"></span> |
 | :------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
 | **Column**                                                                             |           |                                    |
-| [Column groups](/x/react-data-grid/columns/#column-groups)                             |    🚧     |                 🚧                 |                     🚧                     |
-| [Column spanning](/x/react-data-grid/columns/#column-spanning)                         |    ✅     |                 ✅                 |                     ✅                     |
-| [Column resizing](/x/react-data-grid/columns/#resizing)                                |    ❌     |                 ✅                 |                     ✅                     |
-| [Column reorder](/x/react-data-grid/columns/#column-reorder)                           |    ❌     |                 ✅                 |                     ✅                     |
-| [Column pinning](/x/react-data-grid/columns/#column-pinning)                           |    ❌     |                 ✅                 |                     ✅                     |
+| [Column groups](/x/react-data-grid/column-groups/)                                     |    🚧     |                 🚧                 |                     🚧                     |
+| [Column spanning](/x/react-data-grid/column-spanning/)                                 |    ✅     |                 ✅                 |                     ✅                     |
+| [Column resizing](/x/react-data-grid/column-dimensions/#resizing)                      |    ❌     |                 ✅                 |                     ✅                     |
+| [Column reorder](/x/react-data-grid/column-ordering/)                                  |    ❌     |                 ✅                 |                     ✅                     |
+| [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                |           |                                    |                                            |
 | [Row height](/x/react-data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |
 | [Row spanning](/x/react-data-grid/rows/#row-spanning)                                  |    🚧     |                 🚧                 |                     🚧                     |
