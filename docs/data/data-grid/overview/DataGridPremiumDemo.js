@@ -11,7 +11,19 @@ export default function DataGridPremiumDemo() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
-    maxColumns: 25,
+    visibleFields: [
+      'commodity',
+      'quantity',
+      'filledQuantity',
+      'status',
+      'isFilled',
+      'unitPrice',
+      'unitPriceCurrency',
+      'subTotal',
+      'feeRate',
+      'feeAmount',
+      'incoTerm',
+    ],
   });
 
   const apiRef = useGridApiRef();
@@ -38,9 +50,6 @@ export default function DataGridPremiumDemo() {
         loading={loading}
         disableSelectionOnClick
         initialState={initialState}
-        groupingColDef={{
-          leafField: 'traderEmail',
-        }}
         components={{ Toolbar: GridToolbar }}
       />
     </div>

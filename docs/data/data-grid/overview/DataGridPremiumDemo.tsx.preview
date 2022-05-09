@@ -4,8 +4,5 @@
   loading={loading}
   disableSelectionOnClick
   initialState={initialState}
-  groupingColDef={{
-    leafField: 'traderEmail',
-  }}
   components={{ Toolbar: GridToolbar }}
 />

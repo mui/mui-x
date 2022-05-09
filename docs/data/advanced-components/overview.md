@@ -47,8 +47,7 @@ The MUI X Pro Plan expands on the limitations of the Community Plan with more ad
 
 The Pro Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
 This plan contains the features that are at the limit of what the open-source model can sustain.
-For instance, providing a very comprehensive set of components.
-The price of the plan is designed to be accessible to most professionals.
+For instance, providing support for handling massive amounts of data, in a flexible data grid integrated with a comprehensive set of components.
 
 Pro Plan packages:
 

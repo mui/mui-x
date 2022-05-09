@@ -37,7 +37,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 The commercial version is available in the form of two plans: Pro and Premium.
 
-#### Pro Plan [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+#### Pro Plan [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 The Pro version extends the features available in the MIT version, by allowing to sort and filter multiple columns at the same time.
 It also brings new features, e.g. column groups, column pinning, tree data, row and column reordering, etc.
@@ -50,11 +50,13 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 {{"demo": "DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
-#### Premium Plan [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-premium/)
+#### Premium Plan [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 The Premium version contains all features from Pro, as well as exclusive features for data-rich applications.
-The features already available in this version are Row grouping and Excel export, with more coming.
-In the following demo, you can experiment with them.
+The features available on the initial release are row grouping and the ability to export to Excel files.
+Aggregation is coming right next.
+In the following demo, the rows are grouped by commodity name, but you can experiment grouping other columns in the column menu.
+And since you're here, you may want to export the different views of your data to an Excel file.
 
 ```js
 import { DataGridPremium } from '@mui/x-data-grid-premium';
