@@ -13,11 +13,11 @@ export interface BaseDateValidationProps<TDate> {
    */
   disableFuture?: boolean;
   /**
-   * Max selectable date. @DateIOType
+   * Maximal selectable date. @DateIOType
    */
   maxDate?: TDate;
   /**
-   * Min selectable date. @DateIOType
+   * Minimal selectable date. @DateIOType
    */
   minDate?: TDate;
 }
