@@ -37,7 +37,7 @@ const initialRows: GridRowsProp = [
 ];
 
 interface CustomTypeEditComponentProps extends GridEditSingleSelectCellProps {
-  setRows: (newRows: (prevRows: any[]) => any[]) => void;
+  setRows: React.Dispatch<React.SetStateAction<readonly any[]>>;
 }
 
 const CustomTypeEditComponent = (props: CustomTypeEditComponentProps) => {
