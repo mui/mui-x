@@ -29,7 +29,7 @@ export const useGridPreferencesPanel = (apiRef: React.MutableRefObject<GridApiCo
    */
   const hidePreferences = React.useCallback(() => {
     logger.debug('Hiding Preferences Panel');
-    const preferencePanelState = gridPreferencePanelStateSelector(apiRef.current.state)
+    const preferencePanelState = gridPreferencePanelStateSelector(apiRef.current.state);
     if (preferencePanelState.openedPanelValue) {
       apiRef.current.publishEvent('preferencePanelClose', {
         openedPanelValue: preferencePanelState.openedPanelValue,
