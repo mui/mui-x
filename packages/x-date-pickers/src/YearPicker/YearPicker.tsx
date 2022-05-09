@@ -106,6 +106,28 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const selectedYearRef = React.useRef<HTMLButtonElement>(null);
   const [focusedYear, setFocusedYear] = React.useState<number | null>(currentYear);
 
+  const isYearDisabled = React.useCallback(
+    (dateToValidate: TDate) => {
+      if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
+        return true;
+      }
+      if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
+        return true;
+      }
+      if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
+        return true;
+      }
+      if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
+        return true;
+      }
+      if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
+        return true;
+      }
+      return false;
+    },
+    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableYear, utils],
+  );
+
   const handleYearSelection = (
     event: React.SyntheticEvent,
     year: number,
@@ -147,11 +169,11 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
 
   const focusYear = React.useCallback(
     (year: number) => {
-      if (!isDateDisabled(utils.setYear(selectedDate, year))) {
+      if (!isYearDisabled(utils.setYear(selectedDate, year))) {
         setFocusedYear(year);
       }
     },
-    [selectedDate, isDateDisabled, utils],
+    [selectedDate, isYearDisabled, utils],
   );
 
   const yearsInRow = wrapperVariant === 'desktop' ? 4 : 3;
@@ -194,12 +216,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
             onKeyDown={handleKeyDown}
             autoFocus={autoFocus && yearNumber === focusedYear}
             ref={selected ? selectedYearRef : undefined}
-            disabled={
-              disabled ||
-              (disablePast && utils.isBeforeYear(year, now)) ||
-              (disableFuture && utils.isAfterYear(year, now)) ||
-              (shouldDisableYear && shouldDisableYear(year))
-            }
+            disabled={disabled || isYearDisabled(year)}
           >
             {utils.format(year, 'year')}
           </PickersYear>
