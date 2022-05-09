@@ -497,6 +497,29 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
+    it.only('should not call onAccept when selecting the same date', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={adapterToUse.date('2018-01-01T00:00:00.000')}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      // Change the date (same value)
+      userEvent.mousePress(screen.getByLabelText('Jan 1, 2018'));
+      expect(onChange.callCount).to.equal(0); // Don't call onChange since the value did not change
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(1);
+    });
+
     it('should call onAccept when selecting the same date after changing the year', () => {
       const onChange = spy();
       const onAccept = spy();
