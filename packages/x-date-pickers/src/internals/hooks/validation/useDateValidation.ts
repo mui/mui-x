@@ -73,7 +73,16 @@ export const useIsDayDisabled = <TDate>({
         disableFuture,
         disablePast,
       }) !== null,
-    [utils, shouldDisableDate, minDate, defaultDates.minDate, defaultDates.maxDate, maxDate, disableFuture, disablePast],
+    [
+      utils,
+      shouldDisableDate,
+      minDate,
+      defaultDates.minDate,
+      defaultDates.maxDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    ],
   );
 };
 
