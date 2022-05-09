@@ -23,7 +23,6 @@ import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
 import type { GridPipeProcessingApi } from '../../hooks/core/pipeProcessing';
 import { GridColumnSpanningApi } from './gridColumnSpanning';
 import type { GridStrategyProcessingApi } from '../../hooks/core/strategyProcessing';
-import type { GridCachesApi } from '../../hooks/core/caches';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
@@ -37,7 +36,6 @@ export interface GridApiCommon
     GridLoggerApi,
     GridPipeProcessingApi,
     GridStrategyProcessingApi,
-    GridCachesApi,
     GridDensityApi,
     GridDimensionsApi,
     GridRowApi,

@@ -59,8 +59,6 @@ declare module '@mui/x-data-grid-pro' {
 
   interface GridRenderCellParams<V = any, R = any, F = V>
     extends GridRenderCellParamsPremium<V, R, F> {}
-}
 
-declare module '@mui/x-data-grid/internals' {
   interface GridApiCaches extends GridApiCachesPremium {}
 }
