@@ -429,6 +429,18 @@ The user can [start](#start-editing) and [stop](#stop-editing) editing a row usi
 > This lets you apply conditional validation where the value of a cell impacts the validation status of another cell in the same row.
 > If you only want to run validation when the value has changed, check if the `hasChanged` param is `true`.
 
+### Full-featured CRUD component
+
+Row editing makes it possible to create a full-featured CRUD (Create, Read, Update, Delete) component similar to those found in enterprise applications.
+In the following demo, the typical ways to start and stop editing are all disabled.
+Instead, use the buttons available in each row or in the toolbar.
+
+{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Advanced use cases
+
+In the next sections, there examples of how the props provided by editing API can be used to implement complex use cases commonly found in applications.
+
 ### Conditional validation
 
 When all cells in a row are in edit mode, you can validate fields by comparing their values against one another.
@@ -507,13 +519,11 @@ The **Account** column is automatically updated with the correct options.
 > };
 > ```
 
-### Full-featured CRUD component
+A similar behavior can be reproduced with cell editing.
+Instead of `apiRef.current.setEditCellValue`, the `rows` prop must be updated or `apiRef.current.updateRows` be used.
+Note that the `onCellEditStart` and `onCellEditStop` props also have to be used to revert the value of the cell changed, in case the user cancels the edit.
 
-Row editing makes it possible to create a full-featured CRUD (Create, Read, Update, Delete) component similar to those found in enterprise applications.
-In the following demo, the typical ways to start and stop editing are all disabled.
-Instead, use the buttons available in each row or in the toolbar.
-
-{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
