@@ -17,16 +17,7 @@ const pages = [
       { pathname: '/x/react-data-grid/layout' },
       {
         pathname: '/x/react-data-grid/columns',
-        scopePathnames: [
-          '/x/react-data-grid/column-definition',
-          '/x/react-data-grid/column-dimensions',
-          '/x/react-data-grid/column-visibility',
-          '/x/react-data-grid/column-header',
-          '/x/react-data-grid/column-ordering',
-          '/x/react-data-grid/column-pinning',
-          '/x/react-data-grid/column-spanning',
-          '/x/react-data-grid/column-groups',
-        ],
+        scopePathnames: ['/x/react-data-grid/column-'],
         children: [
           { pathname: '/x/react-data-grid/column-definition' },
           { pathname: '/x/react-data-grid/column-dimensions' },
