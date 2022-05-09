@@ -129,7 +129,7 @@
     "eslint-plugin-mocha": "^9.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
-    "eslint-plugin-react-hooks": "^4.4.0",
+    "eslint-plugin-react-hooks": "^4.5.0",
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
     "jsdom": "^19.0.0",
@@ -157,7 +157,7 @@
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
     "yargs": "^17.4.1",
-    "yarn-deduplicate": "^4.0.0"
+    "yarn-deduplicate": "^5.0.0"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

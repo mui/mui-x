@@ -119,7 +119,7 @@ When using [Row grouping](/x/react-data-grid/row-grouping), it can be useful to 
 ### Exported cells
 
 When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.
-You can provide a [`valueFormatter`](/x/react-data-grid/columns/#value-formatter) with a string representation to be used.
+You can provide a [`valueFormatter`](/x/react-data-grid/cells/#value-formatter) with a string representation to be used.
 
 ```jsx
 <DataGrid
