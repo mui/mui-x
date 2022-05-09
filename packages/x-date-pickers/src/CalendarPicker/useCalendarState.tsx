@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SlideDirection } from './PickersSlideTransition';
-import { validateDate } from '../internals/hooks/validation/useDateValidation';
+import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter } from '../internals/models';
 import type { CalendarPickerProps } from './CalendarPicker';
@@ -152,17 +152,13 @@ export const useCalendarState = <TDate extends unknown>({
     [calendarState.currentMonth, handleChangeMonth, now, utils],
   );
 
-  const isDateDisabled = React.useCallback(
-    (day: TDate | null) =>
-      validateDate(utils, day, {
-        disablePast,
-        disableFuture,
-        minDate,
-        maxDate,
-        shouldDisableDate,
-      }) !== null,
-    [disableFuture, disablePast, maxDate, minDate, shouldDisableDate, utils],
-  );
+  const isDayDisabled = useIsDayDisabled({
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+  });
 
   const onMonthSwitchingAnimationEnd = React.useCallback(() => {
     dispatch({ type: 'finishMonthSwitchingAnimation' });
@@ -170,18 +166,18 @@ export const useCalendarState = <TDate extends unknown>({
 
   const changeFocusedDay = React.useCallback(
     (newFocusedDate: TDate) => {
-      if (!isDateDisabled(newFocusedDate)) {
+      if (!isDayDisabled(newFocusedDate)) {
         dispatch({ type: 'changeFocusedDay', focusedDay: newFocusedDate });
       }
     },
-    [isDateDisabled],
+    [isDayDisabled],
   );
 
   return {
     calendarState,
     changeMonth,
     changeFocusedDay,
-    isDateDisabled,
+    isDayDisabled,
     onMonthSwitchingAnimationEnd,
     handleChangeMonth,
   };

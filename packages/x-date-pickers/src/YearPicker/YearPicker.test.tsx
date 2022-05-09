@@ -16,7 +16,6 @@ describe('<YearPicker />', () => {
     <YearPicker
       minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
       maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-      isDateDisabled={() => false}
       date={adapterToUse.date()}
       onChange={() => {}}
     />,
@@ -45,7 +44,6 @@ describe('<YearPicker />', () => {
       <YearPicker
         minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
         maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-        isDateDisabled={() => false}
         date={adapterToUse.date('2019-02-02T00:00:00.000')}
         onChange={onChangeMock}
       />,
@@ -71,7 +69,6 @@ describe('<YearPicker />', () => {
       <YearPicker
         minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
         maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-        isDateDisabled={() => false}
         date={adapterToUse.date('2019-02-02T00:00:00.000')}
         onChange={onChangeMock}
         readOnly
@@ -91,7 +88,6 @@ describe('<YearPicker />', () => {
       <YearPicker
         minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
         maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-        isDateDisabled={() => false}
         date={adapterToUse.date('2019-02-02T00:00:00.000')}
         onChange={onChangeMock}
         disabled

@@ -1,32 +1,9 @@
+import * as React from 'react';
 import { useValidation, ValidationProps, Validator } from './useValidation';
+import { DayValidationProps } from './models';
+import { useDefaultDates, useUtils } from '../useUtils';
 
-export interface ExportedDateValidationProps<TDate> {
-  /**
-   * Disable past dates.
-   * @default false
-   */
-  disablePast?: boolean;
-  /**
-   * Disable future dates.
-   * @default false
-   */
-  disableFuture?: boolean;
-  /**
-   * Max selectable date. @DateIOType
-   */
-  maxDate?: TDate;
-  /**
-   * Min selectable date. @DateIOType
-   */
-  minDate?: TDate;
-  /**
-   * Disable specific date. @DateIOType
-   * @template TDate
-   * @param {TDate} day The date to test.
-   * @returns {boolean} Return `true` if the date should be disabled.
-   */
-  shouldDisableDate?: (day: TDate) => boolean;
-}
+export interface ExportedDateValidationProps<TDate> extends DayValidationProps<TDate> {}
 
 export interface DateValidationProps<TInputDate, TDate>
   extends ValidationProps<DateValidationError, TInputDate | null>,
@@ -75,6 +52,29 @@ export const validateDate: Validator<any, DateValidationProps<any, any>> = (
     default:
       return null;
   }
+};
+
+export const useIsDayDisabled = <TDate>({
+  shouldDisableDate,
+  minDate,
+  maxDate,
+  disableFuture,
+  disablePast,
+}: DayValidationProps<TDate>) => {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+
+  return React.useCallback(
+    (day: TDate | null) =>
+      validateDate(utils, day, {
+        shouldDisableDate,
+        minDate: minDate ?? defaultDates.minDate,
+        maxDate: maxDate ?? defaultDates.maxDate,
+        disableFuture,
+        disablePast,
+      }) !== null,
+    [utils, shouldDisableDate, minDate, defaultDates.minDate, defaultDates.maxDate, maxDate, disableFuture, disablePast],
+  );
 };
 
 const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;

@@ -1,12 +1,13 @@
 import { MuiPickersAdapter } from '../models';
+import { DayValidationProps } from '../hooks/validation/models';
 
-interface FindClosestDateParams<TDate> {
+interface FindClosestDateParams<TDate> extends DayValidationProps<TDate> {
   date: TDate;
-  disableFuture: boolean;
-  disablePast: boolean;
+  disableFuture?: boolean;
+  disablePast?: boolean;
   maxDate: TDate;
   minDate: TDate;
-  shouldDisableDate: (date: TDate) => boolean;
+  isDayDisabled: (date: TDate) => boolean;
   utils: MuiPickersAdapter<TDate>;
 }
 
@@ -16,7 +17,7 @@ export const findClosestEnabledDate = <TDate>({
   disablePast,
   maxDate,
   minDate,
-  shouldDisableDate,
+  isDayDisabled,
   utils,
 }: FindClosestDateParams<TDate>) => {
   const today = utils.startOfDay(utils.date()!);
@@ -53,14 +54,14 @@ export const findClosestEnabledDate = <TDate>({
     }
 
     if (forward) {
-      if (!shouldDisableDate(forward)) {
+      if (!isDayDisabled(forward)) {
         return forward;
       }
       forward = utils.addDays(forward, 1);
     }
 
     if (backward) {
-      if (!shouldDisableDate(backward)) {
+      if (!isDayDisabled(backward)) {
         return backward;
       }
       backward = utils.addDays(backward, -1);

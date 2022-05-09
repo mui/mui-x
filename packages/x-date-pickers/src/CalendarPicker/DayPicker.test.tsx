@@ -17,7 +17,6 @@ describe('<DayPicker />', () => {
         focusedDay={null}
         onFocusedDayChange={() => {}}
         onMonthSwitchingAnimationEnd={() => {}}
-        isDateDisabled={() => false}
         isMonthSwitchingAnimating={false}
         slideDirection="right"
         reduceAnimations={false}
@@ -40,7 +39,6 @@ describe('<DayPicker />', () => {
         focusedDay={null}
         onFocusedDayChange={() => {}}
         onMonthSwitchingAnimationEnd={() => {}}
-        isDateDisabled={() => false}
         isMonthSwitchingAnimating={false}
         slideDirection="right"
         reduceAnimations={false}

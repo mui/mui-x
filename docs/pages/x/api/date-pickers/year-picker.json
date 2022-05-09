@@ -1,6 +1,9 @@
 {
   "props": {
-    "onYearChange": { "type": { "name": "func" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "maxDate": { "type": { "name": "any" } },
+    "minDate": { "type": { "name": "any" } },
     "shouldDisableYear": { "type": { "name": "func" } }
   },
   "slots": {},

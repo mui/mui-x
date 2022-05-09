@@ -129,7 +129,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const {
     changeMonth,
     calendarState,
-    isDateDisabled,
+    isDayDisabled,
     onMonthSwitchingAnimationEnd,
     changeFocusedDay,
   } = useCalendarState({
@@ -148,7 +148,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
 
   const scrollToDayIfNeeded = (day: TDate | null) => {
-    if (!day || !utils.isValid(day) || isDateDisabled(day)) {
+    if (!day || !utils.isValid(day) || isDayDisabled(day)) {
       return;
     }
 
@@ -218,7 +218,6 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const renderView = () => {
     const sharedCalendarProps = {
       parsedValue,
-      isDateDisabled,
       changeFocusedDay,
       onChange: handleChange,
       reduceAnimations,
