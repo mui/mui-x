@@ -673,5 +673,58 @@ describe('<DesktopDateRangePicker />', () => {
     // TODO: Write test
     // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
     // })
+    it('should not close picker when switching focus from start to end input', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={[
+            adapterToUse.date('2018-01-01T00:00:00.000'),
+            adapterToUse.date('2018-01-06T00:00:00.000'),
+          ]}
+        />,
+      );
+
+      // Open the picker (already tested)
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      // Switch to end date
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
+
+    it('should not close picker when switching focus from end to start input', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+
+      render(
+        <WrappedDesktopDateRangePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={[
+            adapterToUse.date('2018-01-01T00:00:00.000'),
+            adapterToUse.date('2018-01-06T00:00:00.000'),
+          ]}
+        />,
+      );
+
+      // Open the picker (already tested)
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+
+      // Switch to start date
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
   });
 });
