@@ -37,7 +37,7 @@ export const useGridFocus = (
   const setCellFocus = React.useCallback<GridFocusApi['setCellFocus']>(
     (id, field) => {
       const focusedCell = gridFocusCellSelector(apiRef);
-      if (focusedCell?.id === id && focusedCell.field === field) {
+      if (focusedCell?.id === id && focusedCell?.field === field) {
         return;
       }
 
