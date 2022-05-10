@@ -6,7 +6,6 @@
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "allowSameDateSelection": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "clearable": { "type": { "name": "bool" } },
     "clearText": { "type": { "name": "node" }, "default": "'Clear'" },

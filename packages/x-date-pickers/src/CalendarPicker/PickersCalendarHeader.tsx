@@ -152,11 +152,11 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
   const selectPreviousMonth = () => onMonthChange(utils.getPreviousMonth(month), 'right');
 
   const isNextMonthDisabled = useNextMonthDisabled(month, {
-    disableFuture: disableFuture || disabled,
+    disableFuture,
     maxDate,
   });
   const isPreviousMonthDisabled = usePreviousMonthDisabled(month, {
-    disablePast: disablePast || disabled,
+    disablePast,
     minDate,
   });
 
