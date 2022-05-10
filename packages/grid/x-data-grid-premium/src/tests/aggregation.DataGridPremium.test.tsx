@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
@@ -43,7 +43,7 @@ const baselineProps: DataGridPremiumProps = {
 };
 
 describe('<DataGridPremium /> - Aggregation', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -216,7 +216,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         ]);
       });
 
-      it('should react to props.isGroupAggregated update', () => {
+      it('should react to props.isGroupAggregated update for footer aggregation', () => {
         const { setProps } = render(
           <Test
             initialState={{
@@ -275,6 +275,87 @@ describe('<DataGridPremium /> - Aggregation', () => {
         setProps({ isGroupAggregated: () => false });
         expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '3', '4', '', '5']);
       });
+
+      it('should react to props.isGroupAggregated update for inline aggregation', () => {
+        const { setProps } = render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              aggregation: { model: { id: { inline: 'max' } } },
+            }}
+            defaultGroupingExpansionDepth={-1}
+            // Only group "Cat A" aggregated
+            isGroupAggregated={(group) => group?.groupingKey === 'Cat A'}
+          />,
+        );
+        expect(getColumnValues(1)).to.deep.equal([
+          '4' /* Agg "Cat A" */,
+          '0',
+          '1',
+          '2',
+          '3',
+          '4',
+          '',
+          '5',
+        ]);
+
+        // All groups aggregated
+        setProps({ isGroupAggregated: undefined });
+        expect(getColumnValues(1)).to.deep.equal([
+          '4' /* Agg "Cat A" */,
+          '0',
+          '1',
+          '2',
+          '3',
+          '4',
+          '5' /* Agg "Cat B" */,
+          '5',
+        ]);
+
+        // 0 group aggregated
+        setProps({ isGroupAggregated: () => false });
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '3', '4', '', '5']);
+      });
+    });
+  });
+
+  describe('Column Menu', () => {
+    it('should render footer select on aggregable column', () => {
+      render(<Test />);
+
+      apiRef.current.showColumnMenu('id');
+      clock.runToLast();
+
+      const footerSelect = document.querySelector<HTMLDivElement>(
+        '#mui-data-grid-column-menu-aggregation-id-footer-input',
+      );
+      const inlineSelect = document.querySelector<HTMLDivElement>(
+        '#mui-data-grid-column-menu-aggregation-id-inline-input',
+      );
+      expect(footerSelect).not.to.equal(null);
+      expect(inlineSelect).to.equal(null);
+    });
+
+    it('should render footer and inline select on aggregable column with row grouping', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+          }}
+        />,
+      );
+
+      apiRef.current.showColumnMenu('id');
+      clock.runToLast();
+
+      const footerSelect = document.querySelector<HTMLDivElement>(
+        '#mui-data-grid-column-menu-aggregation-id-footer-input',
+      );
+      const inlineSelect = document.querySelector<HTMLDivElement>(
+        '#mui-data-grid-column-menu-aggregation-id-inline-input',
+      );
+      expect(footerSelect).not.to.equal(null);
+      expect(inlineSelect).not.to.equal(null);
     });
   });
 
@@ -366,6 +447,44 @@ describe('<DataGridPremium /> - Aggregation', () => {
       setProps({ aggregationFunctions: { min: GRID_AGGREGATION_FUNCTIONS.min, max: customMax } });
       // 'max' is in props.aggregationFunctions but has changed
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', 'Agg: 5' /* Agg */]);
+    });
+  });
+
+  describe('colDef: aggregable', () => {
+    it('should not aggregate if colDef.aggregable = false', () => {
+      render(
+        <Test
+          initialState={{ aggregation: { model: { id: { footer: 'max' } } } }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              aggregable: false,
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+    });
+
+    it('should not render column menu select if colDef.aggregable = false', () => {
+      render(
+        <Test
+          initialState={{ aggregation: { model: { id: { footer: 'max' } } } }}
+          columns={[
+            {
+              field: 'id',
+              type: 'number',
+              aggregable: false,
+            },
+          ]}
+        />,
+      );
+
+      apiRef.current.showColumnMenu('id');
+      clock.runToLast();
+
+      expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
     });
   });
 
@@ -552,6 +671,70 @@ describe('<DataGridPremium /> - Aggregation', () => {
         .getCalls()
         .find((call) => call.firstArg.rowNode.position === 'footer');
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
+    });
+  });
+
+  describe('filter', () => {
+    it('should not filter-out the aggregated cells', () => {
+      render(
+        <Test
+          initialState={{
+            aggregation: { model: { id: { footer: 'sum' } } },
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'id', operatorValue: '!=', value: 15 }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '15' /* Agg */]);
+    });
+  });
+
+  describe('sorting', () => {
+    it('should always render top level footer below the other rows', () => {
+      render(
+        <Test
+          initialState={{
+            aggregation: { model: { id: { footer: 'sum' } } },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'desc' }],
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['5', '4', '3', '2', '1', '0', '15' /* Agg */]);
+    });
+
+    it('should always render group footers below the other rows', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+            aggregation: { model: { id: { footer: 'max' } } },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'desc' }],
+            },
+          }}
+          defaultGroupingExpansionDepth={-1}
+          isGroupAggregated={(group) => group != null}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal([
+        '',
+        '4',
+        '3',
+        '2',
+        '1',
+        '0',
+        '4' /* Agg "Cat A" */,
+        '',
+        '5',
+        '5' /* Agg "Cat B" */,
+      ]);
     });
   });
 });

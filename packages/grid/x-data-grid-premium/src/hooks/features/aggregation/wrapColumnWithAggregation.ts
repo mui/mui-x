@@ -149,14 +149,17 @@ const getWrappedRenderCell = ({
   return wrappedRenderCell;
 };
 
+/**
+ * Skips the filtering for aggregated rows
+ */
 const getWrappedFilterOperators = ({
   filterOperators,
   getCellAggregationPosition,
 }: {
   filterOperators: GridColDef['filterOperators'];
   getCellAggregationPosition: (id: GridRowId) => GridAggregationPosition | null;
-}): AggregationWrappedColDefProperty<'filterOperators'> => {
-  return filterOperators!.map((operator) => {
+}): AggregationWrappedColDefProperty<'filterOperators'> =>
+  filterOperators!.map((operator) => {
     return {
       ...operator,
       getApplyFilterFn: (filterItem, column) => {
@@ -175,7 +178,6 @@ const getWrappedFilterOperators = ({
       },
     };
   });
-};
 
 /**
  * Add a wrapper around each wrappable property of the column to customize the behavior of the aggregation cells.

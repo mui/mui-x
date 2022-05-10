@@ -81,6 +81,10 @@ const pages = [
           },
           { pathname: '/x/api/data-grid/grid-row-params', title: 'GridRowParams' },
           { pathname: '/x/api/data-grid/grid-row-spacing-params', title: 'GridRowSpacingParams' },
+          {
+            pathname: '/x/api/data-grid/grid-aggregation-function',
+            title: 'GridAggregationFunction',
+          },
           { pathname: '/x/api/data-grid/grid-csv-export-options', title: 'GridCsvExportOptions' },
           {
             pathname: '/x/api/data-grid/grid-print-export-options',

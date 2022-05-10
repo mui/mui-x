@@ -4,7 +4,7 @@ interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
 }
 
-export type GridAggregationFunction<V = any, AV = V, FAV = AV> = {
+export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
   /**
    * Function that takes the current cell values and generates the aggregated value.
    * @template V, AV
@@ -34,7 +34,7 @@ export type GridAggregationFunction<V = any, AV = V, FAV = AV> = {
    * @default `true`
    */
   hasCellUnit?: boolean;
-};
+}
 
 /**
  * Describes which aggregation function should be applied on the footer and on the grouping row of each group.

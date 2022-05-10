@@ -11,7 +11,7 @@ The aggregation can be modified through the grid interface by opening the column
 The aggregated values will be rendered in a footer row at the bottom of the grid.
 
 :::warning
-⚠️ The footer row will be fixed at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
+⚠️ The footer row will be pinned at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
 :::
 
 {{"demo": "AggregationBasic.js", "bg": "inline", "defaultCodeOpen": false}}

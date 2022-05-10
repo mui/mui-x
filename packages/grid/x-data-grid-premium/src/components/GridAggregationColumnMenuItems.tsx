@@ -79,6 +79,7 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
             id={`${idPrefix}-input`}
             size="small"
             value={aggregationRules[position]?.aggregationFunctionName ?? ''}
+            aria-label={label}
             label={label}
             onChange={handleAggregationItemChange}
             onBlur={(e) => e.stopPropagation()}
