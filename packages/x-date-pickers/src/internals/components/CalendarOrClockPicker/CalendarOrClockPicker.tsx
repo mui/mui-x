@@ -93,7 +93,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
   const {
     autoFocus,
     className,
-    date,
+    parsedValue,
     DateInputProps,
     isMobileKeyboardViewOpen,
     onDateChange,
@@ -149,7 +149,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
           {...other}
           views={views}
           isLandscape={isLandscape}
-          date={date}
+          parsedValue={parsedValue}
           onChange={handleDateChange}
           setOpenView={setOpenView as (view: CalendarOrClockPickerView) => void}
           openView={openView}
@@ -176,7 +176,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
             {isDatePickerView(openView) && (
               <CalendarPicker
                 autoFocus={autoFocus}
-                date={date}
+                date={parsedValue}
                 onViewChange={setOpenView as (view: CalendarPickerView) => void}
                 onChange={handleChangeAndOpenNext}
                 view={openView}
@@ -190,7 +190,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
               <ClockPicker
                 {...other}
                 autoFocus={autoFocus}
-                date={date}
+                date={parsedValue}
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isTimePickerView) as ClockPickerView[]}

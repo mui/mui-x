@@ -41,7 +41,7 @@ interface DesktopDateRangeCalendarProps<TDate>
    * @default {}
    */
   componentsProps?: Partial<DateRangePickerViewMobileSlotsComponentsProps>;
-  date: DateRange<TDate>;
+  parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
 }
 
@@ -55,13 +55,15 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     changeMonth,
     components,
     componentsProps,
-    date,
+    parsedValue,
     leftArrowButtonText,
     maxDate: maxDateProp,
     minDate: minDateProp,
     onChange,
     renderDay = (_, dayProps) => <DateRangePickerDay<TDate> {...dayProps} />,
     rightArrowButtonText,
+    disabled,
+    readOnly,
     ...other
   } = props;
 
@@ -70,23 +72,31 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const minDate = minDateProp ?? defaultDates.minDate;
   const maxDate = maxDateProp ?? defaultDates.maxDate;
 
+  // When disable, limit the view to the selected range
+  const [start, end] = parsedValue;
+  const minDateWithDisabled = (disabled && start) || minDate;
+  const maxDateWithDisabled = (disabled && end) || maxDate;
+
   return (
     <React.Fragment>
       <PickersCalendarHeader
         components={components}
         componentsProps={componentsProps}
         leftArrowButtonText={leftArrowButtonText}
-        maxDate={maxDate}
-        minDate={minDate}
+        maxDate={maxDateWithDisabled}
+        minDate={minDateWithDisabled}
         onMonthChange={changeMonth as any}
         openView="day"
         rightArrowButtonText={rightArrowButtonText}
         views={onlyDayView}
+        disabled={disabled}
         {...other}
       />
       <DayPicker<TDate, DateRange<TDate>>
         {...other}
-        date={date}
+        disabled={disabled}
+        readOnly={readOnly}
+        date={parsedValue}
         onChange={onChange}
         onFocusedDayChange={doNothing}
         renderDay={(day, _, DayProps) =>
@@ -94,9 +104,9 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
             isPreviewing: false,
             isStartOfPreviewing: false,
             isEndOfPreviewing: false,
-            isHighlighting: isWithinRange(utils, day, date),
-            isStartOfHighlighting: isStartOfRange(utils, day, date),
-            isEndOfHighlighting: isEndOfRange(utils, day, date),
+            isHighlighting: isWithinRange(utils, day, parsedValue),
+            isStartOfHighlighting: isStartOfRange(utils, day, parsedValue),
+            isEndOfHighlighting: isEndOfRange(utils, day, parsedValue),
             ...DayProps,
           })
         }

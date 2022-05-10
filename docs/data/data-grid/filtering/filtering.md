@@ -152,7 +152,7 @@ You can get them by importing the following functions:
 | `dateTime`     | `getGridDateOperators(true)`     |
 | `singleSelect` | `getGridSingleSelectOperators()` |
 
-You can find more information about the supported column types in the [columns section](/x/react-data-grid/columns/#column-types).
+You can find more information about the supported column types in the [columns section](/x/react-data-grid/column-definition/#column-types).
 
 ### Create a custom operator
 
@@ -182,9 +182,9 @@ const operator: GridFilterOperator = {
 };
 ```
 
-**Note**: The [`valueFormatter`](/x/react-data-grid/columns/#value-formatter) is only used for rendering purposes.
+**Note**: The [`valueFormatter`](/x/react-data-grid/cells/#value-formatter) is only used for rendering purposes.
 
-**Note**: If the column has a [`valueGetter`](/x/react-data-grid/columns/#value-getter), then `params.value` will be the resolved value.
+**Note**: If the column has a [`valueGetter`](/x/react-data-grid/cells/#value-getter), then `params.value` will be the resolved value.
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
 
@@ -254,7 +254,7 @@ In the demo below, the `rating` column reuses the numeric operators but the rati
 
 ### Custom column types
 
-When defining a [custom column type](/x/react-data-grid/columns/#custom-column-types), by default the grid will reuse the operators from the type that was extended.
+When defining a [custom column type](/x/react-data-grid/column-definition/#custom-column-types), by default the grid will reuse the operators from the type that was extended.
 The filter operators can then be edited just like on a regular column.
 
 ```ts

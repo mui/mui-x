@@ -36,11 +36,11 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate, DateRange<TDate>>, 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate, DateRange<TDate>>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
-  date: DateRange<TDate | null>;
+  parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
   currentlySelectingRangeEnd: 'start' | 'end';
 }
@@ -93,7 +93,7 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     componentsProps,
     currentlySelectingRangeEnd,
     currentMonth,
-    date,
+    parsedValue,
     disableFuture,
     disablePast,
     leftArrowButtonText = 'Previous month',
@@ -117,7 +117,7 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
 
   const previewingRange = calculateRangePreview({
     utils,
-    range: date,
+    range: parsedValue,
     newDate: rangePreviewDay,
     currentlySelectingRangeEnd,
   });
@@ -131,7 +131,7 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
   );
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
-    if (!isWithinRange(utils, newPreviewRequest, date)) {
+    if (!isWithinRange(utils, newPreviewRequest, parsedValue)) {
       setRangePreviewDay(newPreviewRequest);
     } else {
       setRangePreviewDay(null);
@@ -177,7 +177,7 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
             <DateRangePickerViewDesktopCalendar<TDate, DateRange<TDate>>
               {...other}
               key={index}
-              date={date}
+              date={parsedValue}
               onFocusedDayChange={doNothing}
               onChange={handleDayChange}
               currentMonth={monthOnIteration}
@@ -187,9 +187,9 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
                   isPreviewing: isWithinRange(utils, day, previewingRange),
                   isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
                   isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
-                  isHighlighting: isWithinRange(utils, day, date),
-                  isStartOfHighlighting: isStartOfRange(utils, day, date),
-                  isEndOfHighlighting: isEndOfRange(utils, day, date),
+                  isHighlighting: isWithinRange(utils, day, parsedValue),
+                  isStartOfHighlighting: isStartOfRange(utils, day, parsedValue),
+                  isEndOfHighlighting: isEndOfRange(utils, day, parsedValue),
                   onMouseEnter: () => handlePreviewDayChange(day),
                   ...DayProps,
                 })
