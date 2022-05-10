@@ -224,7 +224,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     changeFocusedDay,
     changeMonth,
     handleChangeMonth,
-    isDayDisabled,
+    isDateDisabled,
     onMonthSwitchingAnimationEnd,
   } = useCalendarState({
     date,
@@ -241,7 +241,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const handleDateMonthChange = React.useCallback<MonthPickerProps<TDate>['onChange']>(
     (newDate, selectionState) => {
       let cleanNewDate: TDate | null;
-      if (isDayDisabled(newDate)) {
+      if (isDateDisabled(newDate)) {
         cleanNewDate =
           findClosestEnabledDate({
             utils,
@@ -250,7 +250,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
             maxDate,
             disablePast,
             disableFuture,
-            isDayDisabled,
+            isDateDisabled,
           }) || now;
       } else {
         cleanNewDate = newDate;
@@ -267,7 +267,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
       changeFocusedDay,
       disableFuture,
       disablePast,
-      isDayDisabled,
+      isDateDisabled,
       maxDate,
       minDate,
       now,
@@ -280,7 +280,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const handleDateYearChange = React.useCallback<YearPickerProps<TDate>['onChange']>(
     (newDate, selectionState) => {
       let cleanNewDate: TDate | null;
-      if (isDayDisabled(newDate)) {
+      if (isDateDisabled(newDate)) {
         cleanNewDate =
           findClosestEnabledDate({
             utils,
@@ -289,7 +289,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
             maxDate,
             disablePast,
             disableFuture,
-            isDayDisabled,
+            isDateDisabled,
           }) || now;
       } else {
         cleanNewDate = newDate;
@@ -306,7 +306,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
       changeFocusedDay,
       disableFuture,
       disablePast,
-      isDayDisabled,
+      isDateDisabled,
       maxDate,
       minDate,
       now,
@@ -317,7 +317,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   );
 
   React.useEffect(() => {
-    if (date && isDayDisabled(date)) {
+    if (date && isDateDisabled(date)) {
       const closestEnabledDate = findClosestEnabledDate<TDate>({
         utils,
         date,
@@ -325,7 +325,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         maxDate: maxDate ?? defaultDates.maxDate,
         disablePast,
         disableFuture,
-        isDayDisabled,
+        isDateDisabled,
       });
 
       onChange(closestEnabledDate, 'partial');
@@ -554,7 +554,7 @@ CalendarPicker.propTypes = {
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
-   * @returns {boolean} Return `true` if the date should be disabled.
+   * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
@@ -570,7 +570,7 @@ CalendarPicker.propTypes = {
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Return `true` if the year should be disabled.
+   * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**

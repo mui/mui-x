@@ -137,7 +137,7 @@ export function DayPicker<TDate, TValue>(props: DayPickerProps<TDate, TValue>) {
     shouldDisableDate,
   } = props;
 
-  const isDayDisabled = useIsDayDisabled({
+  const isDateDisabled = useIsDayDisabled({
     shouldDisableDate,
     minDate,
     maxDate,
@@ -210,7 +210,7 @@ export function DayPicker<TDate, TValue>(props: DayPickerProps<TDate, TValue>) {
                     key: (day as any)?.toString(),
                     day,
                     isAnimating: isMonthSwitchingAnimating,
-                    disabled: disabled || isDayDisabled(day),
+                    disabled: disabled || isDateDisabled(day),
                     autoFocus: autoFocus && focusedDay !== null && utils.isSameDay(day, focusedDay),
                     today: utils.isSameDay(day, now),
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,

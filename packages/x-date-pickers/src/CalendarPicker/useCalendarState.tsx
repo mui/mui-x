@@ -152,7 +152,7 @@ export const useCalendarState = <TDate extends unknown>({
     [calendarState.currentMonth, handleChangeMonth, now, utils],
   );
 
-  const isDayDisabled = useIsDayDisabled({
+  const isDateDisabled = useIsDayDisabled({
     shouldDisableDate,
     minDate,
     maxDate,
@@ -166,18 +166,18 @@ export const useCalendarState = <TDate extends unknown>({
 
   const changeFocusedDay = React.useCallback(
     (newFocusedDate: TDate) => {
-      if (!isDayDisabled(newFocusedDate)) {
+      if (!isDateDisabled(newFocusedDate)) {
         dispatch({ type: 'changeFocusedDay', focusedDay: newFocusedDate });
       }
     },
-    [isDayDisabled],
+    [isDateDisabled],
   );
 
   return {
     calendarState,
     changeMonth,
     changeFocusedDay,
-    isDayDisabled,
+    isDateDisabled,
     onMonthSwitchingAnimationEnd,
     handleChangeMonth,
   };

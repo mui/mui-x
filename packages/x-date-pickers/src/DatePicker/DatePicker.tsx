@@ -355,7 +355,7 @@ DatePicker.propTypes = {
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
-   * @returns {boolean} Return `true` if the date should be disabled.
+   * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
@@ -371,7 +371,7 @@ DatePicker.propTypes = {
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Return `true` if the year should be disabled.
+   * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
