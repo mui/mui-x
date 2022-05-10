@@ -25,7 +25,7 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
    * This function can return `null` to skip filtering for this item and column.
    * @param {GridFilterItem} filterItem The filter item with which we want to filter the column.
    * @param {GridStateColDef} column The column from which we want to filter the rows.
-   * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row poss this filter item or not.
+   * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row pass this filter item or not.
    */
   getApplyFilterFn: (
     filterItem: GridFilterItem,
