@@ -606,6 +606,20 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onPreferencePanelOpen?: GridEventListener<'preferencePanelOpen'>;
   /**
+   * Callback fired when the grid menu is opened.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onGridMenuOpen?: GridEventListener<'gridMenuOpen'>;
+  /**
+   * Callback fired when the preferences panel is closed.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onGridMenuClose?: GridEventListener<'gridMenuClose'>;
+  /**
    * Set the edit rows model of the grid.
    */
   editRowsModel?: GridEditRowsModel;

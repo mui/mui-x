@@ -82,6 +82,8 @@ enum GridEvents {
   virtualScrollerTouchMove = 'virtualScrollerTouchMove',
   preferencePanelClose = 'preferencePanelClose',
   preferencePanelOpen = 'preferencePanelOpen',
+  gridMenuOpen = 'gridMenuOpen',
+  gridMenuClose = 'gridMenuClose',
 }
 
 export type GridEventsStr = keyof GridEventLookup;

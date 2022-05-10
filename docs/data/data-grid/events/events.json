@@ -162,6 +162,18 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "name": "gridMenuClose",
+    "description": "Fired when the grid menu is closed.",
+    "params": "GridMenuParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "gridMenuOpen",
+    "description": "Fired when the grid menu is opened.",
+    "params": "GridMenuParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "headerSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of the header is changed",
     "params": "GridHeaderSelectionCheckboxParams",
