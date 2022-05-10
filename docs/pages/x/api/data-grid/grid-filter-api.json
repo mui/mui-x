@@ -24,6 +24,11 @@
       "type": "(model: GridFilterModel) => void"
     },
     {
+      "name": "setQuickFilterValues",
+      "description": "Set the quick filter values ot the one given by <code>values</code>",
+      "type": "(values: any[]) => void"
+    },
+    {
       "name": "showFilterPanel",
       "description": "Shows the filter panel. If <code>targetColumnField</code> is given, a filter for this field is also added.",
       "type": "(targetColumnField?: string) => void"

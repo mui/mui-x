@@ -3,11 +3,11 @@ import { styled } from '@mui/material/styles';
 import {
   useUtils,
   executeInTheNextEventLoopTick,
-  WrapperVariantContext,
   DateInputProps,
   ExportedDateInputProps,
   MuiTextFieldProps,
   useMaskedInput,
+  onSpaceOrEnter,
 } from '@mui/x-date-pickers/internals';
 import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/dateRange';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
@@ -94,7 +94,6 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
   const utils = useUtils<TDate>();
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
-  const wrapperVariant = React.useContext(WrapperVariantContext);
 
   React.useEffect(() => {
     if (!open) {
@@ -142,7 +141,17 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     }
   };
 
-  const openOnFocus = wrapperVariant === 'desktop';
+  const focusOnRangeEnd = () => {
+    if (open && setCurrentlySelectingRangeEnd) {
+      setCurrentlySelectingRangeEnd('end');
+    }
+  };
+
+  const focusOnRangeStart = () => {
+    if (open && setCurrentlySelectingRangeEnd) {
+      setCurrentlySelectingRangeEnd('start');
+    }
+  };
   const startInputProps = useMaskedInput({
     ...other,
     readOnly,
@@ -156,8 +165,9 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
       focused: open && currentlySelectingRangeEnd === 'start',
     },
     inputProps: {
-      onClick: !openOnFocus ? openRangeStartSelection : undefined,
-      onFocus: openOnFocus ? openRangeStartSelection : undefined,
+      onClick: openRangeStartSelection,
+      onKeyDown: onSpaceOrEnter(openRangeStartSelection),
+      onFocus: focusOnRangeStart,
     },
   });
 
@@ -174,8 +184,9 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
       focused: open && currentlySelectingRangeEnd === 'end',
     },
     inputProps: {
-      onClick: !openOnFocus ? openRangeEndSelection : undefined,
-      onFocus: openOnFocus ? openRangeEndSelection : undefined,
+      onClick: openRangeEndSelection,
+      onKeyDown: onSpaceOrEnter(openRangeEndSelection),
+      onFocus: focusOnRangeEnd,
     },
   });
 

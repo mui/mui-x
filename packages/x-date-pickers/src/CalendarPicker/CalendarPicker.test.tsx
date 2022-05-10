@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen, describeConformance, getAllByRole } from '@mui/monorepo/test/utils';
+import {
+  fireEvent,
+  userEvent,
+  screen,
+  describeConformance,
+  getAllByRole,
+} from '@mui/monorepo/test/utils';
 import {
   CalendarPicker,
   calendarPickerClasses as classes,
@@ -161,5 +167,39 @@ describe('<CalendarPicker />', () => {
     );
 
     expect(screen.getByText('2019/01')).toBeVisible();
+  });
+
+  it('should set time to be midnight when selecting a date without a previous date', () => {
+    const onChange = spy();
+
+    render(
+      <CalendarPicker
+        date={null}
+        onChange={onChange}
+        defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
+        view="day"
+      />,
+    );
+
+    userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-02T00:00:00.000'));
+  });
+
+  it('should keep the time of the currently provided date', () => {
+    const onChange = spy();
+
+    render(
+      <CalendarPicker
+        date={adapterToUse.date('2018-01-03T11:11:11.111')}
+        onChange={onChange}
+        defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
+        view="day"
+      />,
+    );
+
+    userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-02T11:11:11.000'));
   });
 });

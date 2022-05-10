@@ -27,7 +27,7 @@ export interface ExportedMobileDateRangeCalendarProps<TDate>
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate, DateRange<TDate>>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   /**
@@ -59,7 +59,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     leftArrowButtonText,
     maxDate: maxDateProp,
     minDate: minDateProp,
-    onChange,
+    onSelectedDaysChange,
     renderDay = (_, dayProps) => <DateRangePickerDay<TDate> {...dayProps} />,
     rightArrowButtonText,
     disabled,
@@ -92,12 +92,12 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         disabled={disabled}
         {...other}
       />
-      <DayPicker<TDate, DateRange<TDate>>
+      <DayPicker<TDate>
         {...other}
         disabled={disabled}
         readOnly={readOnly}
-        date={parsedValue}
-        onChange={onChange}
+        selectedDays={parsedValue}
+        onSelectedDaysChange={onSelectedDaysChange}
         onFocusedDayChange={doNothing}
         renderDay={(day, _, DayProps) =>
           renderDay(day, {

@@ -2,7 +2,6 @@
   "props": {
     "day": { "type": { "name": "any" }, "required": true },
     "outsideCurrentMonth": { "type": { "name": "bool" }, "required": true },
-    "allowSameDateSelection": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
