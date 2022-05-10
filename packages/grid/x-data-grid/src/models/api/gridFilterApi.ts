@@ -45,4 +45,9 @@ export interface GridFilterApi {
    * @returns {Map<GridRowId, GridRowModel>} The sorted `Map`.
    */
   getVisibleRowModels: () => Map<GridRowId, GridRowModel>;
+  /**
+   * Set the quick filter values ot the one given by `values`
+   * @param {any[]} values The list of element to quick filter
+   */
+  setQuickFilterValues: (values: any[]) => void;
 }

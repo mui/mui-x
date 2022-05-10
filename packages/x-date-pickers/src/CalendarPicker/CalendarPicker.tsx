@@ -7,7 +7,7 @@ import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useNow, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DayPicker, ExportedDayPickerProps } from './DayPicker';
+import { DayPicker, DayPickerProps, ExportedDayPickerProps } from './DayPicker';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import {
   PickersCalendarHeader,
@@ -316,6 +316,18 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     ],
   );
 
+  const onSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+    (day, isFinish) => {
+      if (date && day) {
+        // If there is a date already selected, then we want to keep its time
+        return onChange(utils.mergeDateAndTime(day, date), isFinish);
+      }
+
+      return onChange(day, isFinish);
+    },
+    [utils, date, onChange],
+  );
+
   React.useEffect(() => {
     if (date && isDateDisabled(date)) {
       const closestEnabledDate = findClosestEnabledDate<TDate>({
@@ -411,8 +423,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               onFocusedDayChange={changeFocusedDay}
               reduceAnimations={reduceAnimations}
-              date={date}
-              onChange={onChange}
+              selectedDays={[date]}
+              onSelectedDaysChange={onSelectedDayChange}
               loading={loading}
               renderLoading={renderLoading}
               disabled={disabled}
@@ -535,7 +547,7 @@ CalendarPicker.propTypes = {
    * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
    * @template TDate
    * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDates The dates currently selected.
+   * @param {Array<TDate | null>} selectedDays The days currently selected.
    * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
    * @returns {JSX.Element} The element representing the day.
    */

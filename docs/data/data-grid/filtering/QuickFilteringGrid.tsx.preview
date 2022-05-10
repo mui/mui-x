@@ -1,13 +1,14 @@
 <DataGrid
-  components={{ Toolbar: QuickSearchToolbar }}
-  rows={rows}
-  columns={data.columns}
+  {...data}
+  disableColumnFilter
+  disableColumnSelector
+  disableDensitySelector
+  columns={columns}
+  components={{ Toolbar: GridToolbar }}
   componentsProps={{
     toolbar: {
-      value: searchText,
-      onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
-        requestSearch(event.target.value),
-      clearSearch: () => requestSearch(''),
+      showQuickFilter: true,
+      quickFilterProps: { debounceMs: 500 },
     },
   }}
 />

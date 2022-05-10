@@ -36,7 +36,7 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate, DateRange<TDate>>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
@@ -99,7 +99,7 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     leftArrowButtonText = 'Previous month',
     maxDate: maxDateProp,
     minDate: minDateProp,
-    onChange,
+    onSelectedDaysChange,
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
     rightArrowButtonText = 'Next month',
     ...other
@@ -122,12 +122,12 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     currentlySelectingRangeEnd,
   });
 
-  const handleDayChange = React.useCallback(
-    (day: TDate | null) => {
+  const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+    (day) => {
       setRangePreviewDay(null);
-      onChange(day);
+      onSelectedDaysChange(day);
     },
-    [onChange],
+    [onSelectedDaysChange],
   );
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
@@ -174,12 +174,12 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
             >
               {utils.format(monthOnIteration, 'monthAndYear')}
             </DateRangePickerViewDesktopArrowSwitcher>
-            <DateRangePickerViewDesktopCalendar<TDate, DateRange<TDate>>
+            <DateRangePickerViewDesktopCalendar<TDate>
               {...other}
               key={index}
-              date={parsedValue}
+              selectedDays={parsedValue}
               onFocusedDayChange={doNothing}
-              onChange={handleDayChange}
+              onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
               TransitionProps={CalendarTransitionProps}
               renderDay={(day, __, DayProps) =>

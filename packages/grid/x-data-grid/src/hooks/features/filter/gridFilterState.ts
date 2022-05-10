@@ -1,10 +1,12 @@
-import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridRowId } from '../../../models/gridRows';
 
 export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
   items: [],
   linkOperator: GridLinkOperator.And,
+  quickFilterValues: [],
+  quickFilterLogicOperator: GridLinkOperator.And,
 });
 
 export interface GridFilterState {
@@ -44,7 +46,7 @@ export interface GridFilterInitialState {
  */
 export type GridAggregatedFilterItemApplier = (
   rowId: GridRowId,
-  shouldApplyItem?: (filterItem: GridFilterItem) => boolean,
+  shouldApplyItem?: (columnField: string) => boolean,
 ) => boolean;
 
 export interface GridFilteringMethodParams {

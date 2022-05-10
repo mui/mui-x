@@ -9,6 +9,7 @@ import {
   ExportedCalendarPickerProps,
   useCalendarState,
   PickerStatePickerProps,
+  DayPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
@@ -185,8 +186,8 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     scrollToDayIfNeeded(currentlySelectingRangeEnd === 'start' ? start : end);
   }, [currentlySelectingRangeEnd, parsedValue]); // eslint-disable-line
 
-  const handleChange = React.useCallback(
-    (newDate: TDate | null) => {
+  const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+    (newDate) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
         utils,
@@ -219,7 +220,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     const sharedCalendarProps = {
       parsedValue,
       changeFocusedDay,
-      onChange: handleChange,
+      onSelectedDaysChange: handleSelectedDayChange,
       reduceAnimations,
       disableHighlightToday,
       onMonthSwitchingAnimationEnd,
