@@ -8,7 +8,6 @@ import {
   wrapPickerMount,
   createPickerRenderer,
 } from '../../../../test/utils/pickers-utils';
-import {MonthPicker} from "@mui/x-date-pickers";
 
 describe('<YearPicker />', () => {
   const { render } = createPickerRenderer();
@@ -83,91 +82,85 @@ describe('<YearPicker />', () => {
     expect(onChangeMock.callCount).to.equal(0);
   });
 
-  describe.only('Disabled', () => {
-    it.only('should disable all years if props.disabled = true', () => {
-      const handleChange = spy();
+  describe('Disabled', () => {
+    it('should disable all years if props.disabled = true', () => {
+      const onChange = spy();
       render(
-          <MonthPicker
-              date={adapterToUse.date('2019-02-15T00:00:00.000')}
-              onChange={handleChange}
-              disabled
-          />,
+        <YearPicker
+          date={adapterToUse.date('2017-02-15T00:00:00.000')}
+          onChange={onChange}
+          disabled
+        />,
       );
 
-      screen.getAllByRole('button').forEach(monthButton => {
+      screen.getAllByRole('button').forEach((monthButton) => {
         expect(monthButton).to.have.attribute('disabled');
         fireEvent.click(monthButton);
-        expect(handleChange.callCount).to.equal(0);
-      })
-    })
+        expect(onChange.callCount).to.equal(0);
+      });
+    });
 
-    it('should disable years before props.minDate but not the year in which props.minDate is', () => {
-      const handleChange = spy();
+    it('should not render years before props.minDate but should render and not disable the year in which props.minDate is', () => {
+      const onChange = spy();
       render(
-          <MonthPicker
-              date={adapterToUse.date('2019-02-15T00:00:00.000')}
-              onChange={handleChange}
-              minDate={adapterToUse.date('2018-02-12T00:00:00.000')}
-          />,
+        <YearPicker
+          date={adapterToUse.date('2017-02-15T00:00:00.000')}
+          onChange={onChange}
+          minDate={adapterToUse.date('2018-02-12T00:00:00.000')}
+        />,
       );
 
-      const year2017 = screen.getByText('Jan', { selector: 'button' })
-      const year2018 = screen.getByText('Feb', { selector: 'button' })
+      const year2017 = screen.queryByText('2017', { selector: 'button' });
+      const year2018 = screen.getByText('2018', { selector: 'button' });
 
-      expect(year2017).to.have.attribute('disabled');
+      expect(year2017).to.equal(null);
       expect(year2018).not.to.have.attribute('disabled');
 
-      fireEvent.click(year2017);
-      expect(handleChange.callCount).to.equal(0);
-
       fireEvent.click(year2018);
-      expect(handleChange.callCount).to.equal(1);
-    })
-
-    it('should disable months after props.maxDate but not the month in which props.maxDate is', () => {
-      const handleChange = spy();
-      render(
-          <MonthPicker
-              date={adapterToUse.date('2019-02-15T00:00:00.000')}
-              onChange={handleChange}
-              maxDate={adapterToUse.date('2019-04-12T00:00:00.000')}
-          />,
-      );
-
-      const may = screen.getByText('May', { selector: 'button' })
-      const april = screen.getByText('Apr', { selector: 'button' })
-
-      expect(may).to.have.attribute('disabled');
-      expect(april).not.to.have.attribute('disabled');
-
-      fireEvent.click(may);
-      expect(handleChange.callCount).to.equal(0);
-
-      fireEvent.click(april);
-      expect(handleChange.callCount).to.equal(1);
-    })
-
-    it('should disable months if props.shouldDisableMonth returns false', () => {
-      const handleChange = spy();
-      render(
-          <MonthPicker
-              date={adapterToUse.date('2019-02-02T00:00:00.000')}
-              onChange={handleChange}
-              shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 3}
-          />,
-      );
-
-      const april = screen.getByText('Apr', { selector: 'button' })
-      const jun = screen.getByText('Jun', { selector: 'button' })
-
-      expect(april).to.have.attribute('disabled');
-      expect(jun).not.to.have.attribute('disabled');
-
-      fireEvent.click(april);
-      expect(handleChange.callCount).to.equal(0);
-
-      fireEvent.click(jun);
-      expect(handleChange.callCount).to.equal(1);
+      expect(onChange.callCount).to.equal(1);
     });
-  })
+
+    it('should not render years after props.maxDate but should render and not disable the year in which props.maxDate is', () => {
+      const onChange = spy();
+      render(
+        <YearPicker
+          date={adapterToUse.date('2019-02-15T00:00:00.000')}
+          onChange={onChange}
+          maxDate={adapterToUse.date('2025-04-12T00:00:00.000')}
+        />,
+      );
+
+      const year2026 = screen.queryByText('2026', { selector: 'button' });
+      const year2025 = screen.getByText('2025', { selector: 'button' });
+
+      expect(year2026).to.equal(null);
+      expect(year2025).not.to.have.attribute('disabled');
+
+      fireEvent.click(year2025);
+      expect(onChange.callCount).to.equal(1);
+    });
+
+    it('should disable years if props.shouldDisableYear returns true', () => {
+      const onChange = spy();
+      render(
+        <YearPicker
+          date={adapterToUse.date('2019-02-02T00:00:00.000')}
+          onChange={onChange}
+          shouldDisableYear={(month) => adapterToUse.getYear(month) === 2024}
+        />,
+      );
+
+      const year2024 = screen.getByText('2024', { selector: 'button' });
+      const year2025 = screen.getByText('2025', { selector: 'button' });
+
+      expect(year2024).to.have.attribute('disabled');
+      expect(year2025).not.to.have.attribute('disabled');
+
+      fireEvent.click(year2024);
+      expect(onChange.callCount).to.equal(0);
+
+      fireEvent.click(year2025);
+      expect(onChange.callCount).to.equal(1);
+    });
+  });
 });

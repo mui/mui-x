@@ -93,89 +93,89 @@ describe('<MonthPicker />', () => {
 
   describe('Disabled', () => {
     it('should disable all months if props.disabled = true', () => {
-      const handleChange = spy();
+      const onChange = spy();
       render(
-          <MonthPicker
-              date={adapterToUse.date('2019-02-15T00:00:00.000')}
-              onChange={handleChange}
-              disabled
-          />,
+        <MonthPicker
+          date={adapterToUse.date('2019-02-15T00:00:00.000')}
+          onChange={onChange}
+          disabled
+        />,
       );
 
-      screen.getAllByRole('button').forEach(monthButton => {
+      screen.getAllByRole('button').forEach((monthButton) => {
         expect(monthButton).to.have.attribute('disabled');
         fireEvent.click(monthButton);
-        expect(handleChange.callCount).to.equal(0);
-      })
-    })
+        expect(onChange.callCount).to.equal(0);
+      });
+    });
 
     it('should disable months before props.minDate but not the month in which props.minDate is', () => {
-      const handleChange = spy();
+      const onChange = spy();
       render(
-          <MonthPicker
-              date={adapterToUse.date('2019-02-15T00:00:00.000')}
-              onChange={handleChange}
-              minDate={adapterToUse.date('2019-02-12T00:00:00.000')}
-          />,
+        <MonthPicker
+          date={adapterToUse.date('2019-02-15T00:00:00.000')}
+          onChange={onChange}
+          minDate={adapterToUse.date('2019-02-12T00:00:00.000')}
+        />,
       );
 
-      const january = screen.getByText('Jan', { selector: 'button' })
-      const february = screen.getByText('Feb', { selector: 'button' })
+      const january = screen.getByText('Jan', { selector: 'button' });
+      const february = screen.getByText('Feb', { selector: 'button' });
 
       expect(january).to.have.attribute('disabled');
       expect(february).not.to.have.attribute('disabled');
 
       fireEvent.click(january);
-      expect(handleChange.callCount).to.equal(0);
+      expect(onChange.callCount).to.equal(0);
 
       fireEvent.click(february);
-      expect(handleChange.callCount).to.equal(1);
-    })
+      expect(onChange.callCount).to.equal(1);
+    });
 
     it('should disable months after props.maxDate but not the month in which props.maxDate is', () => {
-      const handleChange = spy();
+      const onChange = spy();
       render(
-          <MonthPicker
-              date={adapterToUse.date('2019-02-15T00:00:00.000')}
-              onChange={handleChange}
-              maxDate={adapterToUse.date('2019-04-12T00:00:00.000')}
-          />,
+        <MonthPicker
+          date={adapterToUse.date('2019-02-15T00:00:00.000')}
+          onChange={onChange}
+          maxDate={adapterToUse.date('2019-04-12T00:00:00.000')}
+        />,
       );
 
-      const may = screen.getByText('May', { selector: 'button' })
-      const april = screen.getByText('Apr', { selector: 'button' })
+      const may = screen.getByText('May', { selector: 'button' });
+      const april = screen.getByText('Apr', { selector: 'button' });
 
       expect(may).to.have.attribute('disabled');
       expect(april).not.to.have.attribute('disabled');
 
       fireEvent.click(may);
-      expect(handleChange.callCount).to.equal(0);
+      expect(onChange.callCount).to.equal(0);
 
       fireEvent.click(april);
-      expect(handleChange.callCount).to.equal(1);
-    })
+      expect(onChange.callCount).to.equal(1);
+    });
 
-    it('should disable months if props.shouldDisableMonth returns false', () => {
-      const handleChange = spy();
+    it('should disable months if props.shouldDisableMonth returns true', () => {
+      const onChange = spy();
       render(
-          <MonthPicker
-              date={adapterToUse.date('2019-02-02T00:00:00.000')}
-              onChange={handleChange}
-              shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 3}
-          />,
+        <MonthPicker
+          date={adapterToUse.date('2019-02-02T00:00:00.000')}
+          onChange={onChange}
+          shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 3}
+        />,
       );
 
-      const april = screen.getByText('Apr', { selector: 'button' })
-      const jun = screen.getByText('Jun', { selector: 'button' })
+      const april = screen.getByText('Apr', { selector: 'button' });
+      const jun = screen.getByText('Jun', { selector: 'button' });
 
       expect(april).to.have.attribute('disabled');
       expect(jun).not.to.have.attribute('disabled');
 
       fireEvent.click(april);
-      expect(handleChange.callCount).to.equal(0);
+      expect(onChange.callCount).to.equal(0);
 
       fireEvent.click(jun);
-      expect(handleChange.callCount).to.equal(1);
+      expect(onChange.callCount).to.equal(1);
     });
-  })
+  });
 });
