@@ -1,7 +1,7 @@
 import { renderEditInputCell } from '../components/cell/GridEditInputCell';
 import { gridStringOrNumberComparator } from '../hooks/features/sorting/gridSortingUtils';
 import { GridColTypeDef } from '../models/colDef/gridColDef';
-import { getGridStringOperators } from './gridStringOperators';
+import { getGridStringOperators, getGridStringQuickFilterFn } from './gridStringOperators';
 
 /**
  * TODO: Move pro and premium properties outside of this Community file
@@ -25,4 +25,5 @@ export const GRID_STRING_COL_DEF: GridColTypeDef<any, any> = {
   align: 'left',
   filterOperators: getGridStringOperators(),
   renderEditCell: renderEditInputCell,
+  getApplyQuickFilterFn: getGridStringQuickFilterFn,
 };
