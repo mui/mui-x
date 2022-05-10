@@ -164,18 +164,16 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 ### Professional support
 
 When purchasing an MUI X Pro or Premium license you get access to professional support for a limited duration.
-Support is available on multiple channels, but the recommended channel is GitHub issues.
-You can also reach us by email at x@mui.com if you need to share private information.
+Support is available on multiple channels, but the recommended channels are:
+  - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
+  - Email (only to share private information): You can [open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to x@mui.com.
 
-- **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
-  - GitHub: [Open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID.
-  - Email (only to share private information): [Open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
-- **MUI X Premium**: Same as MUI X Pro, but with priority over Pro, and a 48 hour SLA for the first answer.
-  - GitHub: this plan is not available yet
-  - Emails: this plan is not available yet
-- **MUI X Premium Priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer.
-  - GitHub: this plan is not available yet
-  - Emails: this plan is not available yet
+- **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan.
+
+- **MUI X Premium**: Same as MUI X Pro, but with priority over Pro.
+
+- **MUI X Premium Priority (Enterprise support Add-on)**: Same as MUI X Premium but with a provided SLA and 24h for the first answer.
+  - This Add-On is not available yet.
 
 ## Roadmap
 
