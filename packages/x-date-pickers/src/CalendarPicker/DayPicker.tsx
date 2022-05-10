@@ -16,10 +16,7 @@ import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidatio
 
 export interface ExportedDayPickerProps<TDate>
   extends DayValidationProps<TDate>,
-    Pick<
-      PickersDayProps<TDate>,
-      'disableHighlightToday' | 'showDaysOutsideCurrentMonth'
-    > {
+    Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
   autoFocus?: boolean;
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
