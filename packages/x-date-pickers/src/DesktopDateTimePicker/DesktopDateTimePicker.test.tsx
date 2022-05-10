@@ -482,7 +482,54 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    // TODO: Write test once the `allowSameDateSelection` behavior is cleaned
-    // it('should not (?) call onChange and onAccept if same date selected', () => {});
+    it('should call onAccept when selecting the same date and time after changing the year', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+
+      render(
+        <WrappedDesktopDateTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={adapterToUse.date('2018-01-01T11:53:00.000')}
+          openTo="year"
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      // Select year
+      userEvent.mousePress(screen.getByRole('button', { name: '2025' }));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2025-01-01T11:53:00.000'),
+      );
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the date (same value)
+      userEvent.mousePress(screen.getByLabelText('Jan 1, 2025'));
+      expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the hours (same value)
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+      expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Change the minutes (same value)
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+      expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2025-01-01T11:53:00.000'),
+      );
+      expect(onClose.callCount).to.equal(1);
+    });
   });
 });

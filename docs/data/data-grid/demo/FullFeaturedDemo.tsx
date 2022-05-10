@@ -326,6 +326,9 @@ export default function FullFeaturedDemo() {
         components={{
           Toolbar: GridToolbar,
         }}
+        componentsProps={{
+          toolbar: { showQuickFilter: true },
+        }}
         loading={loading}
         checkboxSelection
         disableSelectionOnClick

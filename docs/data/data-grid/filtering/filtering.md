@@ -152,7 +152,7 @@ You can get them by importing the following functions:
 | `dateTime`     | `getGridDateOperators(true)`     |
 | `singleSelect` | `getGridSingleSelectOperators()` |
 
-You can find more information about the supported column types in the [columns section](/x/react-data-grid/columns/#column-types).
+You can find more information about the supported column types in the [columns section](/x/react-data-grid/column-definition/#column-types).
 
 ### Create a custom operator
 
@@ -182,9 +182,9 @@ const operator: GridFilterOperator = {
 };
 ```
 
-**Note**: The [`valueFormatter`](/x/react-data-grid/columns/#value-formatter) is only used for rendering purposes.
+**Note**: The [`valueFormatter`](/x/react-data-grid/cells/#value-formatter) is only used for rendering purposes.
 
-**Note**: If the column has a [`valueGetter`](/x/react-data-grid/columns/#value-getter), then `params.value` will be the resolved value.
+**Note**: If the column has a [`valueGetter`](/x/react-data-grid/cells/#value-getter), then `params.value` will be the resolved value.
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
 
@@ -254,7 +254,7 @@ In the demo below, the `rating` column reuses the numeric operators but the rati
 
 ### Custom column types
 
-When defining a [custom column type](/x/react-data-grid/columns/#custom-column-types), by default the grid will reuse the operators from the type that was extended.
+When defining a [custom column type](/x/react-data-grid/column-definition/#custom-column-types), by default the grid will reuse the operators from the type that was extended.
 The filter operators can then be edited just like on a regular column.
 
 ```ts
@@ -309,14 +309,79 @@ The example below demonstrates how to achieve server-side filtering.
 
 ## Quick filter
 
-The grid does not natively include quick filtering.
-However, it can be implemented as in the demo below.
+Quick filter allows filtering rows by multiple columns with a single text input.
+To enable it, you can add the `<GridToolbarQuickFilter />` component to your custom toolbar or pass `showQuickFilter` to the default `<GridToolbar />`.
+
+By default, the quick filter considers the input as a list of values separated by space and keeps only rows that contain all the values.
 
 {{"demo": "QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠️ This feature isn't natively implemented in the grid package. It's coming.
->
-> 👍 Upvote [issue #2842](https://github.com/mui/mui-x/issues/2842) if you want to see it land faster.
+### Custom filtering logic
+
+The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
+To do so, set `quickFilterLogicOperator` to `GridLinkOperator.Or` as follow:
+
+```js
+initialState={{
+  filter: {
+    filterModel: {
+      items: [],
+      quickFilterLogicOperator: GridLinkOperator.Or,
+    },
+  },
+}}
+```
+
+With the default settings, quick filter will only consider columns with types `'string'`,`'number'`, and `'singleSelect'`.
+
+- For `'string'` columns, the cell must **contain** the value
+- For `'number'` columns, the cell must **equal** the value
+- For `'singleSelect'` columns, the cell must **start with** the value
+
+To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.
+This function is quite similar to `getApplyFilterFn`.
+This function takes as an input a value of the quick filter and returns another function that takes the cell value as an input and returns `true` if it satisfies the operator condition.
+
+In the example below, a custom filter is created for the `date` column to check if it contains the correct year.
+
+```ts
+getApplyFilterFn: (value: string) => {
+  if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
+    // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
+    return null;
+  }
+  return (params: GridCellParams): boolean => {
+    return params.value.getFullYear() === Number(value);
+  };
+};
+```
+
+To remove the quick filtering on a given column set `getApplyFilterFn: undefined`.
+
+In the demo bellow, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on".
+
+{{"demo": "QuickFilteringCustomLogic.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Parsing values
+
+The values used by the quick filter are obtained by splitting with space.
+If you want to implement a more advanced logic, the `<GridToolbarQuickFilter/>` component accepts a prop `quickFilterParser`.
+This function takes the string from the search text field and returns an array of values.
+
+For example, the following parser allows to search words containing a space by using the `','` to split values.
+
+```jsx
+<GridToolbarQuickFilter
+  quickFilterParser={(searchInput) =>
+    searchInput.split(',').map((value) => value.trim())
+  }
+  debounceMs={200} // time before applying the new quick filter value
+/>
+```
+
+In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will return rows with country is Saint Martin or Saint Lucia.
+
+{{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

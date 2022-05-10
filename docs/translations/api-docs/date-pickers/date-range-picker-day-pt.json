@@ -1,7 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "allowSameDateSelection": "If <code>true</code>, <code>onChange</code> is fired on click even if the same date is selected.",
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "day": "The date to show.",
     "disabled": "If <code>true</code>, renders as disabled.",

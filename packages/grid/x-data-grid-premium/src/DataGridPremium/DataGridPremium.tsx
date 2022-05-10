@@ -289,6 +289,8 @@ DataGridPremiumRaw.propTypes = {
       }),
     ).isRequired,
     linkOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterValues: PropTypes.array,
   }),
   /**
    * Function that applies CSS classes dynamically on cells.

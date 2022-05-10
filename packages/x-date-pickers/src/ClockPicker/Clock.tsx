@@ -32,6 +32,8 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   selectedId: string | undefined;
   type: ClockPickerView;
   value: number;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
 const ClockRoot = styled('div')(({ theme }) => ({
@@ -51,23 +53,33 @@ const ClockClock = styled('div')({
   pointerEvents: 'none',
 });
 
-const ClockSquareMask = styled('div')({
-  width: '100%',
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'auto',
-  outline: 0,
-  // Disable scroll capabilities.
-  touchAction: 'none',
-  userSelect: 'none',
-  '@media (pointer: fine)': {
-    cursor: 'pointer',
-    borderRadius: '50%',
-  },
-  '&:active': {
-    cursor: 'move',
-  },
-});
+type ClockSquareMaskOwnerState = {
+  disabled?: ClockProps<any>['disabled'];
+};
+
+const ClockSquareMask = styled('div')<{ ownerState: ClockSquareMaskOwnerState }>(
+  ({ ownerState }) => ({
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'auto',
+    outline: 0,
+    // Disable scroll capabilities.
+    touchAction: 'none',
+    userSelect: 'none',
+    ...(ownerState.disabled
+      ? {}
+      : {
+          '@media (pointer: fine)': {
+            cursor: 'pointer',
+            borderRadius: '50%',
+          },
+          '&:active': {
+            cursor: 'move',
+          },
+        }),
+  }),
+);
 
 const ClockPin = styled('div')(({ theme }) => ({
   width: 6,
@@ -131,6 +143,8 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
     selectedId,
     type,
     value,
+    disabled,
+    readOnly,
   } = props;
 
   const ownerState = props;
@@ -143,6 +157,9 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
   const isPointerInner = !ampm && type === 'hours' && (value < 1 || value > 12);
 
   const handleValueChange = (newValue: number, isFinish: PickerSelectionState) => {
+    if (disabled || readOnly) {
+      return;
+    }
     if (isTimeDisabled(newValue, type)) {
       return;
     }
@@ -253,6 +270,7 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
           onTouchEnd={handleTouchEnd}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
+          ownerState={{ disabled }}
         />
         {!isSelectedTimeDisabled && (
           <React.Fragment>
@@ -282,16 +300,16 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
         <React.Fragment>
           <ClockAmButton
             data-mui-test="in-clock-am-btn"
-            onClick={() => handleMeridiemChange('am')}
-            disabled={meridiemMode === null}
+            onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
+            disabled={disabled || meridiemMode === null}
             ownerState={ownerState}
           >
             <Typography variant="caption">AM</Typography>
           </ClockAmButton>
           <ClockPmButton
-            disabled={meridiemMode === null}
+            disabled={disabled || meridiemMode === null}
             data-mui-test="in-clock-pm-btn"
-            onClick={() => handleMeridiemChange('pm')}
+            onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             ownerState={ownerState}
           >
             <Typography variant="caption">PM</Typography>
