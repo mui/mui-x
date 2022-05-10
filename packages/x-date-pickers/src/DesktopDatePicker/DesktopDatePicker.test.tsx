@@ -446,6 +446,30 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
 
+    it('should not call onClose or onAccept when pressing escape when picker is not opened', () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          initialValue={initialValue}
+          closeOnSelect={false}
+        />,
+      );
+
+      // Dismiss the picker
+      userEvent.mousePress(document.body);
+      fireEvent.keyDown(document.body, { key: 'Escape' });
+      expect(onChange.callCount).to.equal(0);
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+    });
+
     it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
       const onChange = spy();
       const onAccept = spy();
