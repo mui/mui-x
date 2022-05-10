@@ -165,10 +165,12 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 
 When purchasing an MUI X Pro or Premium license you get access to professional support for a limited duration.
 Support is available on multiple channels, but the recommended channels are:
+
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
 - Email (only to share private information): You can [open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to x@mui.com.
 
 Your OrderId on the issue helps us prioritize the issues based on the following support levels:
+
 1. **MUI X Pro**: MUI's maintainers give these issues more attention than the ones from the Community plan.
 2. **MUI X Premium**: Same as MUI X Pro, but with priority over Pro.
 3. **MUI X Enterprise support Add-on (not available yet)**: A provided SLA with 24h for the first answer.
