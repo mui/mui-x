@@ -362,11 +362,6 @@ CalendarPicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
   autoFocus: PropTypes.bool,
   classes: PropTypes.object,
   className: PropTypes.string,
