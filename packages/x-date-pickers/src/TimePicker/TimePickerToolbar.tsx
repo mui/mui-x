@@ -101,6 +101,8 @@ export const TimePickerToolbar = <TDate extends unknown>(
     toggleMobileKeyboardView,
     toolbarTitle = 'Select time',
     views,
+    disabled,
+    readOnly,
     ...other
   } = props;
   const utils = useUtils<TDate>();
@@ -178,7 +180,8 @@ export const TimePickerToolbar = <TDate extends unknown>(
             selected={meridiemMode === 'am'}
             typographyClassName={classes.ampmLabel}
             value={utils.getMeridiemText('am')}
-            onClick={() => handleMeridiemChange('am')}
+            onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
+            disabled={disabled}
           />
           <PickersToolbarButton
             disableRipple
@@ -187,7 +190,8 @@ export const TimePickerToolbar = <TDate extends unknown>(
             selected={meridiemMode === 'pm'}
             typographyClassName={classes.ampmLabel}
             value={utils.getMeridiemText('pm')}
-            onClick={() => handleMeridiemChange('pm')}
+            onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
+            disabled={disabled}
           />
         </TimePickerToolbarAmPmSelection>
       )}
