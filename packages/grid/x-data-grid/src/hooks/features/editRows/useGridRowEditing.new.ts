@@ -140,6 +140,11 @@ export const useGridRowEditing = (
       focusTimeout.current = setTimeout(() => {
         focusTimeout.current = null;
         if (nextFocusedCell.current?.id !== params.id) {
+          // The row might have been deleted during the click
+          if (!apiRef.current.getRow(params.id)) {
+            return;
+          }
+
           const rowParams = apiRef.current.getRowParams(params.id);
           const newParams = {
             ...rowParams,
