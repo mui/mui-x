@@ -1,7 +1,6 @@
 {
   "props": {
     "onChange": { "type": { "name": "func" }, "required": true },
-    "allowSameDateSelection": { "type": { "name": "bool" } },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "defaultCalendarMonth": { "type": { "name": "any" } },

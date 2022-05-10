@@ -18,7 +18,7 @@ export interface ExportedDayPickerProps<TDate>
   extends DayValidationProps<TDate>,
     Pick<
       PickersDayProps<TDate>,
-      'disableHighlightToday' | 'showDaysOutsideCurrentMonth' | 'allowSameDateSelection'
+      'disableHighlightToday' | 'showDaysOutsideCurrentMonth'
     > {
   autoFocus?: boolean;
   /**
@@ -114,7 +114,6 @@ export function DayPicker<TDate, TValue>(props: DayPickerProps<TDate, TValue>) {
   const utils = useUtils<TDate>();
 
   const {
-    allowSameDateSelection,
     autoFocus,
     onFocusedDayChange: changeFocusedDay,
     className,
@@ -215,7 +214,6 @@ export function DayPicker<TDate, TValue>(props: DayPickerProps<TDate, TValue>) {
                     day,
                     isAnimating: isMonthSwitchingAnimating,
                     disabled: disabled || isDayDisabled(day),
-                    allowSameDateSelection,
                     autoFocus: autoFocus && focusedDay !== null && utils.isSameDay(day, focusedDay),
                     today: utils.isSameDay(day, now),
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,

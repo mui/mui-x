@@ -1,7 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "allowSameDateSelection": "If <code>true</code>, <code>onChange</code> is fired on click even if the same date is selected.",
     "components": "The components used for each slot. Either a string to use an HTML element or a component.",
     "componentsProps": "The props used for each slot inside.",
     "defaultCalendarMonth": "Default calendar month displayed when <code>value={null}</code>.",

@@ -81,11 +81,6 @@ MobileDateTimePicker.propTypes = {
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
   /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
-  /**
    * 12h/24h view for hour selection clock.
    * @default false
    */

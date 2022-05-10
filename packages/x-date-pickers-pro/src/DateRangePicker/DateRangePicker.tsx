@@ -89,11 +89,6 @@ DateRangePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars that render on **desktop**.

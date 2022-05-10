@@ -2,7 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "acceptRegex": "Regular expression to detect &quot;accepted&quot; symbols.",
-    "allowSameDateSelection": "If <code>true</code>, <code>onChange</code> is fired on click even if the same date is selected.",
     "className": "className applied to the root component.",
     "closeOnSelect": "If <code>true</code> the popup or dialog will immediately close after submitting full date.",
     "components": "The components used for each slot. Either a string to use an HTML element or a component.",
