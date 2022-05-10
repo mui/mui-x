@@ -2,7 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "acceptRegex": "Regular expression to detect &quot;accepted&quot; symbols.",
-    "allowSameDateSelection": "If <code>true</code>, <code>onChange</code> is fired on click even if the same date is selected.",
     "ampm": "12h/24h view for hour selection clock.",
     "ampmInClock": "Display ampm controls under the clock (instead of in the toolbar).",
     "cancelText": "Cancel text message.",

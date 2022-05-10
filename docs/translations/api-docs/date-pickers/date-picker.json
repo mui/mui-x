@@ -2,7 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "acceptRegex": "Regular expression to detect &quot;accepted&quot; symbols.",
-    "allowSameDateSelection": "If <code>true</code>, <code>onChange</code> is fired on click even if the same date is selected.",
     "cancelText": "Cancel text message.",
     "className": "className applied to the root component.",
     "clearable": "If <code>true</code>, it shows the clear action in the picker dialog.",
