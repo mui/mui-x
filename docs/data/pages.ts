@@ -81,10 +81,20 @@ const pages = [
       { pathname: '/x/react-date-pickers/date-picker' },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
+        plan: 'pro',
       },
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
-      { pathname: '/x/react-date-pickers/time-range-picker', title: 'Time range picker 🚧' },
+      {
+        pathname: '/x/react-date-pickers/time-range-picker',
+        title: 'Date Time range picker 🚧',
+        plan: 'pro',
+      },
+      {
+        pathname: '/x/react-date-pickers/time-range-picker',
+        title: 'Time range picker 🚧',
+        plan: 'pro',
+      },
       {
         pathname: '/x/api/date-pickers',
         title: ' • API Reference',
