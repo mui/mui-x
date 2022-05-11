@@ -44,6 +44,13 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
 ### `@mui/x-data-grid@v5.11.0` / `@mui/x-data-grid-pro@v5.11.0` / `@mui/x-data-grid-premium@v5.11.0`
 
+#### Breaking changes
+
+- Moving row grouping to premium package
+  
+  The experimental feature `rowGrouping` is deprecated, and will be removed in the next version.
+  To continue using it, you should move to the `@mui/x-data-grid-premium` package.
+
 #### Changes
 
 - [DataGrid] Add TypeScript support to the `sx` prop in inner components (#4743) @lindapaiste
