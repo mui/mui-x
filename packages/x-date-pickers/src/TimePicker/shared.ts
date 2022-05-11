@@ -87,11 +87,11 @@ export const timePickerValueManager: PickerStateValueManager<any, any, any> = {
   parseInput: parsePickerInputValue,
   getTodayValue: (utils) => utils.date()!,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-  valueReducer: (utils, prevValue, newValue) => {
-    if (prevValue == null || newValue == null) {
+  valueReducer: (utils, lastValidValue, newValue) => {
+    if (!lastValidValue || !utils.isValid(newValue)) {
       return newValue;
     }
 
-    return utils.mergeDateAndTime(prevValue, newValue);
+    return utils.mergeDateAndTime(lastValidValue, newValue);
   },
 };
