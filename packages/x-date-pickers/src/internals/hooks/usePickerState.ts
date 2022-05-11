@@ -262,6 +262,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
       onDismiss: () => {
         // Set all dates in state to equal the last committed date.
         // e.g. Reset the state to the last committed value.
+        console.log(dateState)
         setDate({ value: dateState.committed, action: 'acceptAndClose' });
       },
       onCancel: () => {
