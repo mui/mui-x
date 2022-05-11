@@ -298,48 +298,46 @@ export const PickersPopper = (props: PickerPopperProps) => {
       ownerState={ownerState}
       {...PopperProps}
     >
-      {({ TransitionProps, placement }) => {
-        return (
-          <TrapFocus
-            open={open}
-            disableAutoFocus
-            disableEnforceFocus={role === 'tooltip'}
-            isEnabled={isTrapFocusEnabled}
-            {...TrapFocusProps}
-          >
-            <TransitionComponent {...TransitionProps}>
-              <PickersPopperPaper
-                tabIndex={-1}
-                elevation={8}
-                ref={handlePaperRef}
-                onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-                  onPaperClick(event);
-                  if (onPaperClickProp) {
-                    onPaperClickProp(event);
-                  }
-                }}
-                onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {
-                  onPaperTouchStart(event);
-                  if (onPaperTouchStartProp) {
-                    onPaperTouchStartProp(event);
-                  }
-                }}
-                ownerState={{ ...ownerState, placement }}
-                {...otherPaperProps}
-              >
-                {children}
-                <PickersPopperAction ownerState={ownerState}>
-                  {clearable && (
-                    <Button data-mui-test="clear-action-button" onClick={onClear}>
-                      {clearText}
-                    </Button>
-                  )}
-                </PickersPopperAction>
-              </PickersPopperPaper>
-            </TransitionComponent>
-          </TrapFocus>
-        );
-      }}
+      {({ TransitionProps, placement }) => (
+        <TrapFocus
+          open={open}
+          disableAutoFocus
+          disableEnforceFocus={role === 'tooltip'}
+          isEnabled={isTrapFocusEnabled}
+          {...TrapFocusProps}
+        >
+          <TransitionComponent {...TransitionProps}>
+            <PickersPopperPaper
+              tabIndex={-1}
+              elevation={8}
+              ref={handlePaperRef}
+              onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                onPaperClick(event);
+                if (onPaperClickProp) {
+                  onPaperClickProp(event);
+                }
+              }}
+              onTouchStart={(event: React.TouchEvent<HTMLDivElement>) => {
+                onPaperTouchStart(event);
+                if (onPaperTouchStartProp) {
+                  onPaperTouchStartProp(event);
+                }
+              }}
+              ownerState={{ ...ownerState, placement }}
+              {...otherPaperProps}
+            >
+              {children}
+              <PickersPopperAction ownerState={ownerState}>
+                {clearable && (
+                  <Button data-mui-test="clear-action-button" onClick={onClear}>
+                    {clearText}
+                  </Button>
+                )}
+              </PickersPopperAction>
+            </PickersPopperPaper>
+          </TransitionComponent>
+        </TrapFocus>
+      )}
     </PickersPopperRoot>
   );
 };
