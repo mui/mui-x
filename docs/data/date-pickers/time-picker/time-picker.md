@@ -47,7 +47,8 @@ The time picker component can be disabled or read-only.
 ## Localization
 
 Use `LocalizationProvider` to change the date-engine locale that is used to render the time picker.
-The time picker will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format. This can be controlled with `ampm` prop.
+The time picker will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
+This can be overridden with `ampm` prop.
 
 {{"demo": "LocalizedTimePicker.js"}}
 
