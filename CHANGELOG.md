@@ -54,6 +54,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DataGrid] Fix scroll jump when using keyboard navigation (#4515) @cherniavskii
 - [DataGrid] Improve sorting accessibility (#4379) @cherniavskii
 - [DataGrid] New `getRowGroupChildren` API method (#4304) @flaviendelangle
+- [DataGrid] Publish `preferencePanelClose` event only once when clicking on another panel button (#4810) @flaviendelangle
 - [DataGrid] Update focused action if the currently focused one is removed (#4694) @m4theushw
 - [DataGridPro] Fix detail panel not taking full width (#4610) @cherniavskii
 - [DataGridPremium] Add Excel export (#3981) @alexfauquette
@@ -87,8 +88,10 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DateRangePicker] Open view on click, Enter or Space instead of focus (#4747) @alexfauquette
 - [DateRangePicker] Refacto tests (#4745) @flaviendelangle
 - [DateRangePicker] Remove `orientation` prop (#4665) @m4theushw
+- [DateTimePicker] `Toolbar` should be visible by default on mobile (#4833) @flaviendelangle
 - [MonthPicker] New prop `shouldDisableMonth` (#4708) @someone635
 - [TimePicker] Disable and invalidate date with minutes not matching `minutesStep` (#4726) @flaviendelangle
+- [TimePicker] Don't merge with previous value when new value is not valid (#4847) @flaviendelangle
 - [TimePicker] Refacto `isTimeDisabled` method (#4688) @flaviendelangle
 - [pickers] Add details in invalid mask error (#4501) @alexfauquette
 - [pickers] Add explicit interfaces for components slots and components slots props (#4589) @flaviendelangle
@@ -109,6 +112,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [docs] Add `scopePathNames` property to column page (#4811) @flaviendelangle
 - [docs] Add label to each demo (#4667) @m4theushw
 - [docs] Correctly capitalize <kbd>Ctrl</kbd> (#4707) @oliviertassinari
+- [docs] Fix documentation on `ampm` prop (#4846) @alexfauquette
 - [docs] Generate the event documentation from `GridEventLookup` (#4725) @flaviendelangle
 - [docs] Keep columns section expanded when switching between pages (#4816) @cherniavskii
 - [docs] Move `useKeepGroupingColumnsHidden` on `@mui/x-data-grid-premium` (#4319) @flaviendelangle
