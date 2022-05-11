@@ -45,7 +45,11 @@ export interface PickerStateValueManager<TInputValue, TValue, TDate> {
    * @param {TValue} value The proposed value.
    * @returns {TValue} The new value.
    */
-  valueReducer?: (utils: MuiPickersAdapter<TDate>, lastValidDateValue: TValue, value: TValue) => TValue;
+  valueReducer?: (
+    utils: MuiPickersAdapter<TDate>,
+    lastValidDateValue: TValue,
+    value: TValue,
+  ) => TValue;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';

@@ -91,7 +91,7 @@ export const timePickerValueManager: PickerStateValueManager<any, any, any> = {
     if (!lastValidValue || !utils.isValid(newValue)) {
       return newValue;
     }
-    
+
     return utils.mergeDateAndTime(lastValidValue, newValue);
   },
 };
