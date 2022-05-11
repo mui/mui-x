@@ -14,20 +14,20 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
   We’re happy to announce that the Premium plan is [finally out](https://mui.com/pricing/)!
   With it, MUI X officially steps up to the next level, supporting the most advanced use cases for UI components.
 
-  This plan is available by using the new package `@mui/x-data-grid-premium` which is now containing the row grouping end the excel export.
+  This plan is available by using the new `@mui/x-data-grid-premium` package,  which contains the row grouping and the Excel export.
 
-  If you were already using the row grouping feature, you can upgrade by installing `@mui/x-data-grid-premium`, replace `DataGridPro` by `DataGridPremium` as follow.
-  Notice that the experimental flag is not required anymore
+  If you were already using the row grouping feature, you can upgrade by [installing](https://mui.com/x/react-data-grid/getting-started/#installation) `@mui/x-data-grid-premium` and replace `DataGridPro` with `DataGridPremium`, as follow.
+  Note that the experimental flag is not required anymore to use the row grouping.
 
   ```diff
-  -import { DataGridPro } from '@mui/x-data-grid-pro'
-  +import { DataGridPremium } from '@mui/x-data-grid-premium'
+  -import { DataGridPro } from '@mui/x-data-grid-pro';
+  +import { DataGridPremium } from '@mui/x-data-grid-premium';
 
   -<DataGridPro experimentalFeatures={{ rowGrouping: true }} />
   +<DataGridPremium />
   ```
 
-  For more informations about the new pricing model, please have a look at the blog post.
+  For more informations about the new pricing model please have a look at the [blog post](https://mui.com/blog/premium-plan-release).
 
 - 👔 Add Excel export
 
@@ -38,7 +38,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
   More information about how to customize the filtering logic in the [documentation](https://mui.com/x/react-data-grid/filtering/#quick-filter)
 
-  ![image](https://user-images.githubusercontent.com/45398769/167364837-6d7b232c-50c9-49a9-9366-26c6d2952716.png)
+  ![image](https://user-images.githubusercontent.com/13808724/167700105-5a5acc7c-5463-4871-8514-3d09e2f365ae.png)
 
 - 🐞 Bugs fixes
 
@@ -50,10 +50,10 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DataGrid] Add props to control cell mode (#4210) @m4theushw
 - [DataGrid] Add quick filtering engine (#4317) @alexfauquette
 - [DataGrid] Check focus validity whenever the rows in state changes (#4683) @flaviendelangle
-- [DataGrid] Fix columnHeaderDrag uses cellDragOver and cellDragOver run infinite scroll (#4735) @DjoSmer
+- [DataGrid] Fix infinite scroll when dragging column header cell over row cell (#4735) @DjoSmer
 - [DataGrid] Fix scroll jump when using keyboard navigation (#4515) @cherniavskii
 - [DataGrid] Improve sorting accessibility (#4379) @cherniavskii
-- [DataGrid] New api method: `getRowGroupChildren` (#4304) @flaviendelangle
+- [DataGrid] New `getRowGroupChildren` API method (#4304) @flaviendelangle
 - [DataGrid] Update focused action if the currently focused one is removed (#4694) @m4theushw
 - [DataGridPro] Fix detail panel not taking full width (#4610) @cherniavskii
 - [DataGridPremium] Add Excel export (#3981) @alexfauquette
