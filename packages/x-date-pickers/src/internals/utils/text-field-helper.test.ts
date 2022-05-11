@@ -14,6 +14,7 @@ describe('text-field-helper', () => {
     expect(formatterFn('21/12/2010')).to.equal('21/12/2010');
     expect(formatterFn('21-12-2010')).to.equal('21/12/2010');
     expect(formatterFn('2f')).to.equal('2');
+    expect(formatterFn('21/1g2/2010')).to.equal('21/12/2010');
   });
 
   it('maskedDateFormatter for time', () => {
