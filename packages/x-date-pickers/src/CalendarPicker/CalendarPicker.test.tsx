@@ -203,23 +203,25 @@ describe('<CalendarPicker />', () => {
     expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-02T11:11:11.000'));
   });
 
-  it('should select the closest enabled date if selected date is disabled', () => {
-    const onChange = spy();
-
-    render(
-      <CalendarPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={onChange}
-        maxDate={adapterToUse.date('2018-01-01T00:00:00.000')}
-      />,
-    );
-
-    // onChange must be dispatched with newly selected date
-    expect(onChange.callCount).to.equal(React.version.startsWith('18') ? 2 : 1); // Strict Effects run mount effects twice
-    expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T00:00:00.000'));
-  });
-
   describe('closest valid date', () => {
+    it('should select the closest enabled date if the prop.date contains a disabled date', () => {
+      const onChange = spy();
+
+      render(
+        <CalendarPicker
+          date={adapterToUse.date('2019-01-01T00:00:00.000')}
+          onChange={onChange}
+          maxDate={adapterToUse.date('2018-01-01T00:00:00.000')}
+        />,
+      );
+
+      // onChange must be dispatched with newly selected date
+      expect(onChange.callCount).to.equal(React.version.startsWith('18') ? 2 : 1); // Strict Effects run mount effects twice
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-01T00:00:00.000'),
+      );
+    });
+
     it('should select the closest enabled date in the month when selecting a month but the current date is disabled', () => {
       const onChange = spy();
 
