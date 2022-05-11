@@ -79,7 +79,7 @@ The features exclusive to the Premium Plan are marked with the <span class="plan
 
 ## Evaluation (trial) licenses
 
-In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use our Pro and Premium components without a commercial license as long as they are not used for the **development** of a feature intended for production.
+In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#30-days-evaluation-trial), you can use our Pro and Premium components without a commercial license as long as they are not used for the **development** of a feature intended for production.
 You do not need to contact us to use these components for evaluation purposes.
 
 You will need to purchase a commercial license in order to remove the watermarks and console warnings.
