@@ -85,7 +85,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 #### Changes
 
 - [DatePicker] Make month year order changeable in header (#4695) @gky360
-- [DateRangePicker] Open view on click, Enter or Space instead of focus (#4747) @alexfauquette
+- [DateRangePicker] Open view on click, <kbd>Enter</kbd> or <kbd>Space</kbd> instead of focus (#4747) @alexfauquette
 - [DateRangePicker] Refacto tests (#4745) @flaviendelangle
 - [DateRangePicker] Remove `orientation` prop (#4665) @m4theushw
 - [DateTimePicker] `Toolbar` should be visible by default on mobile (#4833) @flaviendelangle
@@ -96,7 +96,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [pickers] Add details in invalid mask error (#4501) @alexfauquette
 - [pickers] Add explicit interfaces for components slots and components slots props (#4589) @flaviendelangle
 - [pickers] Add missing `peerDependencies` for `yarn pnp` users (#4763) @nate-summercook
-- [pickers] Add overrides to PickersArrowSwitcher (#4672) @m4theushw
+- [pickers] Add overrides to `PickersArrowSwitcher` (#4672) @m4theushw
 - [pickers] Clean component interfaces and remove non-implemented props (#4758) @flaviendelangle
 - [pickers] Do not apply the current time when no date provided in `DayPicker` (#4649) @flaviendelangle
 - [pickers] Document and refacto the value manager (#4701) @flaviendelangle
