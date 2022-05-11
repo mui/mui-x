@@ -232,7 +232,6 @@ export const usePickerState = <TInputValue, TValue, TDate>(
 
   React.useEffect(() => {
     if (utils.isValid(parsedDateValue)) {
-      console.log('VALID', parsedDateValue)
       setLastValidDateValue(parsedDateValue);
     }
   }, [utils, parsedDateValue]);
