@@ -9,7 +9,10 @@ import type {
   GridColumnResizeState,
   GridColumnPinningState,
 } from '../hooks';
-import { GridRowGroupingState, GridRowGroupingInitialState } from '../hooks/features/rowGrouping';
+import type {
+  GridRowGroupingState,
+  GridRowGroupingInitialState,
+} from '../hooks/features/rowGrouping';
 
 /**
  * The state of `DataGridPro`.
