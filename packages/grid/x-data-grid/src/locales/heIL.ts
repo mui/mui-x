@@ -27,11 +27,17 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} מסננים פעילים` : `מסנן אחד פעיל`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'ייצוא',
   toolbarExportLabel: 'ייצוא',
   toolbarExportCSV: 'הורדה כ- CSV',
   toolbarExportPrint: 'הדפסה',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'חפש עמודה',
@@ -131,6 +137,9 @@ const heILGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

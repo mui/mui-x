@@ -36,11 +36,17 @@ const skSKGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stiahnuť ako CSV',
   toolbarExportPrint: 'Vytlačiť',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Nájsť stĺpec',
@@ -165,6 +171,9 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

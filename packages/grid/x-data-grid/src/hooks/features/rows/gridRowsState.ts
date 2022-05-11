@@ -8,6 +8,7 @@ import {
 export interface GridRowTreeCreationParams {
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
+  idToIdLookup: Record<string, GridRowId>;
   previousTree: GridRowTreeConfig | null;
 }
 
@@ -21,23 +22,18 @@ export interface GridRowTreeCreationValue {
   treeDepth: number;
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
+  idToIdLookup: Record<string, GridRowId>;
 }
 
 export type GridRowInternalCacheValue = Omit<GridRowTreeCreationParams, 'previousTree'>;
 
-export interface GridRowsInternalCacheState {
+export interface GridRowsInternalCache {
   value: GridRowInternalCacheValue;
   /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
    */
   rowsBeforePartialUpdates: GridRowsProp;
-}
-
-export interface GridRowsInternalCache {
-  state: GridRowsInternalCacheState;
-  timeout: NodeJS.Timeout | null;
-  lastUpdateMs: number;
 }
 
 export interface GridRowsState extends GridRowTreeCreationValue {

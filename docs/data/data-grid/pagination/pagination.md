@@ -77,7 +77,7 @@ To initialize the page without controlling it, provide the page to the `initialS
 
 Use the `page` prop to control the size of the pages.
 
-You can use the `onPageChange` prop to listen to changes to the page size and update the prop accordingly.
+You can use the `onPageChange` prop to listen to changes to the page and update the prop accordingly.
 
 {{"demo": "PageControlled.js", "bg": "inline"}}
 
@@ -116,7 +116,7 @@ React.useEffect(() => {
 You can also handle servers with cursor-based pagination.
 To do so, you just have to keep track of the next cursor associated with each page you fetched.
 
-{{"demo": "CursorPaginationGrid.js", "bg": "inline"}}
+{{"demo": "CursorPaginationGrid.js", "bg": "inline", "defaultCodeOpen": false }}
 
 ## Custom pagination UI
 
@@ -126,7 +126,7 @@ You can customize the rendering of the pagination in the footer following [the c
 
 > ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
-{{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}
 
 ## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

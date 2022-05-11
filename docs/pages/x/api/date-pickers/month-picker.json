@@ -9,7 +9,9 @@
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "onMonthChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
+    "shouldDisableMonth": { "type": { "name": "func" } },
     "sx": {
       "type": {
         "name": "union",

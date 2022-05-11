@@ -1,16 +1,25 @@
+/ /x/advanced-components/
+
+# For links that we can't edit later on, e.g. hosted in the code published on npm or sent by email
+# should all be prefixed with x-
+/r/x-get-license scope=pro https://mui.com/store/items/material-ui-pro/ 302
+/r/x-get-license scope=premium https://mui.com/store/items/mui-x-premium/ 302
+/r/x-get-license https://mui.com/pricing/ 302
+/r/x-license-eula https://mui.com/store/legal/mui-x-eula/ 302
+/r/x-license-key-installation https://mui.com/x/advanced-components/#license-key-installation 302
+
+# Legacy redirection
+# 2021
+/fr/* /:splat 200
+/de/* /:splat 200
+/ja/* /:splat 200
+# 2022
+/x/license/ https://mui.com/store/legal/mui-x-eula/ 301
+/x/react-data-grid/group-pivot/ /x/react-data-grid/tree-data/ 301
+/:lang/x/react-data-grid/group-pivot/ /:lang/x/react-data-grid/tree-data/ 301
+# 2023
+
 # Proxies
 
 ## mui-x is configured to be hosted at the root.
 /static/* https://material-ui-docs.netlify.app/static/:splat 200
-
-## Localization
-/fr/* /:splat 200
-/de/* /:splat 200
-/ja/* /:splat 200
-
-# Redirections
-
-/ /x/react-data-grid/
-
-## Redirections have to be done in the core repository, it owns the domain name.
-## e.g. https://github.com/mui/material-ui/blob/HEAD/docs/public/_redirects#L31

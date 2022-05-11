@@ -1,27 +1,37 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { ParseableDate } from '../internals/models/parseableDate';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import {
+  CalendarPickerSlotsComponent,
+  ExportedCalendarPickerProps,
+} from '../CalendarPicker/CalendarPicker';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
-import { ExportedDateInputProps } from '../internals/components/PureDateInput';
+import {
+  DateInputSlotsComponent,
+  ExportedDateInputProps,
+} from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
+import { PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
-export interface BaseDatePickerProps<TDate>
+export interface DatePickerSlotsComponent
+  extends CalendarPickerSlotsComponent,
+    DateInputSlotsComponent {}
+
+export interface BaseDatePickerProps<TInputDate, TDate>
   extends ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<ParseableDate<TDate>, TDate | null>,
-    ValidationProps<DateValidationError, ParseableDate<TDate>>,
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
+    BasePickerProps<TInputDate | null, TDate | null>,
+    ValidationProps<DateValidationError, TInputDate | null>,
+    ExportedDateInputProps<TInputDate, TDate> {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: ExportedCalendarPickerProps<TDate>['components'] &
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null>['components'];
+  components?: Partial<DatePickerSlotsComponent>;
   /**
    * Callback fired on view change.
    * @param {CalendarPickerView} view The new view.
@@ -35,7 +45,16 @@ export interface BaseDatePickerProps<TDate>
    * Component that will replace default toolbar renderer.
    * @default DatePickerToolbar
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate | null>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  /**
+   * Mobile picker date value placeholder, displaying if `value` === `null`.
+   * @default '–'
+   */
+  toolbarPlaceholder?: React.ReactNode;
+  /**
+   * Date format, that is displaying in toolbar.
+   */
+  toolbarFormat?: string;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date'
@@ -82,10 +101,15 @@ const getFormatAndMaskByViews = <TDate>(
 
 export type DefaultizedProps<Props> = Props & { inputFormat: string };
 
-export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePickerProps<TDate>>(
+export function useDatePickerDefaultizedProps<
+  TInputDate,
+  TDate,
+  Props extends BaseDatePickerProps<TInputDate, TDate>,
+>(
   props: Props,
   name: string,
-): DefaultizedProps<Props> & Required<Pick<BaseDatePickerProps<unknown>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props> &
+  Required<Pick<BaseDatePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates();
 
@@ -107,3 +131,10 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     views,
   };
 }
+
+export const datePickerValueManager: PickerStateValueManager<any, any, any> = {
+  emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
+  parseInput: parsePickerInputValue,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+};

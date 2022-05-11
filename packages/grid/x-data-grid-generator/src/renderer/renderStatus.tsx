@@ -4,7 +4,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
 import Chip from '@mui/material/Chip';
-import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 import { styled } from '@mui/material/styles';
 
 const StyledChip = styled(Chip)(({ theme }) => ({
