@@ -1,1 +1,1 @@
-export * from './modules';
+import '@mui/x-data-grid-pro/typeOverloads';
