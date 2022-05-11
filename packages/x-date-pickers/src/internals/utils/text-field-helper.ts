@@ -109,7 +109,6 @@ export const maskedDateFormatter = (mask: string, acceptRegexp: RegExp) => (valu
       const nextMaskChar = mask[outputCharIndex + 1];
 
       const acceptedChar = acceptRegexp.test(char) ? char : '';
-
       const formattedChar =
         maskChar === MASK_USER_INPUT_SYMBOL ? acceptedChar : maskChar + acceptedChar;
 

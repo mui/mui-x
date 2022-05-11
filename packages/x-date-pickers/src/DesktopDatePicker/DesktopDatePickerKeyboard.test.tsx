@@ -142,7 +142,7 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
 
   describe('input validaiton', () => {
     [
-      { expectedError: 'invalidDate', props: {}, input: 'invalidText' },
+      { expectedError: 'invalidDate', props: { disableMaskedInput: true }, input: 'invalidText' },
       { expectedError: 'disablePast', props: { disablePast: true }, input: '01/01/1900' },
       { expectedError: 'disableFuture', props: { disableFuture: true }, input: '01/01/2050' },
       {
