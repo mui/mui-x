@@ -240,16 +240,17 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const handleDateMonthChange = React.useCallback<MonthPickerProps<TDate>['onChange']>(
     (newDate, selectionState) => {
-      let cleanNewDate: TDate | null;
+      let cleanNewDate: TDate;
       if (isDateDisabled(newDate)) {
         const startOfMonth = utils.startOfMonth(newDate);
         const endOfMonth = utils.endOfMonth(newDate);
+
         cleanNewDate =
           findClosestEnabledDate({
             utils,
             date: newDate,
-            minDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
-            maxDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+            minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+            maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
             disablePast,
             disableFuture,
             isDateDisabled,
@@ -283,7 +284,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   // Needs startOfYear / endOfYear methods in adapter.
   const handleDateYearChange = React.useCallback<YearPickerProps<TDate>['onChange']>(
     (newDate, selectionState) => {
-      let cleanNewDate: TDate | null;
+      let cleanNewDate: TDate;
       if (isDateDisabled(newDate)) {
         cleanNewDate =
           findClosestEnabledDate({

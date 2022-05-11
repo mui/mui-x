@@ -219,55 +219,121 @@ describe('<CalendarPicker />', () => {
     expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T00:00:00.000'));
   });
 
-  it('should select the closest enabled date in the month when selecting a month but the current date is disabled', () => {
-    const onChange = spy();
+  describe('closest valid date', () => {
+    it('should select the closest enabled date in the month when selecting a month but the current date is disabled', () => {
+      const onChange = spy();
 
-    render(
-      <CalendarPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={onChange}
-        shouldDisableDate={(date) => {
-          // Missing `getDate` in adapters
-          // The following disable from Apr 1st to Apr 5th
-          return (
-            adapterToUse.getMonth(date) === 3 &&
-            adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') < 5
-          );
-        }}
-        views={['month', 'day']}
-        openTo="month"
-      />,
-    );
+      render(
+        <CalendarPicker
+          date={adapterToUse.date('2019-01-01T00:00:00.000')}
+          onChange={onChange}
+          shouldDisableDate={(date) => {
+            // Missing `getDate` in adapters
+            // The following disable from Apr 1st to Apr 5th
+            return (
+              adapterToUse.getMonth(date) === 3 &&
+              adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') < 5
+            );
+          }}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
 
-    const april = screen.getByText('Apr', { selector: 'button' });
-    fireEvent.click(april);
+      const april = screen.getByText('Apr', { selector: 'button' });
+      fireEvent.click(april);
 
-    expect(onChange.callCount).to.equal(1);
-    expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2019-04-06T00:00:00.000'));
-  });
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2019-04-06T00:00:00.000'),
+      );
+    });
 
-  // TODO: Enable when the adapter will support startOfYear / endOfYear and the behavior of handleDateYearChange will match the one of handleDateMonthChange
-  // eslint-disable-next-line mocha/no-skipped-tests
-  it.skip('should select the closest enabled date in the year when selecting a year but the current date is disabled', () => {
-    const onChange = spy();
+    it('should respect minDate when selecting closest enabled date on month change', () => {
+      const onChange = spy();
 
-    render(
-      <CalendarPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={onChange}
-        shouldDisableDate={(date) => {
-          // The following disable from Jan 1st to Match 31st
-          return adapterToUse.getYear(date) === 2024 && adapterToUse.getMonth(date) < 4;
-        }}
-        views={['year', 'day']}
-        openTo="year"
-      />,
-    );
+      render(
+        <CalendarPicker
+          date={adapterToUse.date('2019-06-01T00:00:00.000')}
+          minDate={adapterToUse.date('2019-04-07T00:00:00.000')}
+          onChange={onChange}
+          shouldDisableDate={(date) => {
+            // Missing `getDate` in adapters
+            // The following disable from Apr 1st to Apr 5th
+            return (
+              adapterToUse.getMonth(date) === 3 &&
+              adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') < 5
+            );
+          }}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
 
-    const year2024 = screen.getByText('2024', { selector: 'button' });
-    fireEvent.click(year2024);
+      const april = screen.getByText('Apr', { selector: 'button' });
+      fireEvent.click(april);
 
-    expect(onChange.callCount).to.equal(1);
-    expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2024-04-01T00:00:00.000'));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2019-04-07T00:00:00.000'),
+      );
+    });
+
+    it('should respect maxDate when selecting closest enabled date on month change', () => {
+      const onChange = spy();
+
+      render(
+        <CalendarPicker
+          date={adapterToUse.date('2019-01-29T00:00:00.000')}
+          maxDate={adapterToUse.date('2019-04-22T00:00:00.000')}
+          onChange={onChange}
+          shouldDisableDate={(date) => {
+            // Missing `getDate` in adapters
+            // The following disable from Apr 26th to Apr 30th
+            return (
+              adapterToUse.getMonth(date) === 3 &&
+              adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') > 25
+            );
+          }}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      fireEvent.click(april);
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2019-04-22T00:00:00.000'),
+      );
+    });
+
+    // TODO: Enable when the adapter will support startOfYear / endOfYear and the behavior of handleDateYearChange will match the one of handleDateMonthChange
+    // eslint-disable-next-line mocha/no-skipped-tests
+    it.skip('should select the closest enabled date in the year when selecting a year but the current date is disabled', () => {
+      const onChange = spy();
+
+      render(
+        <CalendarPicker
+          date={adapterToUse.date('2019-01-01T00:00:00.000')}
+          onChange={onChange}
+          shouldDisableDate={(date) => {
+            // The following disable from Jan 1st to Match 31st
+            return adapterToUse.getYear(date) === 2024 && adapterToUse.getMonth(date) < 4;
+          }}
+          views={['year', 'day']}
+          openTo="year"
+        />,
+      );
+
+      const year2024 = screen.getByText('2024', { selector: 'button' });
+      fireEvent.click(year2024);
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2024-04-01T00:00:00.000'),
+      );
+    });
   });
 });
