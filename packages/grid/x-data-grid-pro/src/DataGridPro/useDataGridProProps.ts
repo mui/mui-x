@@ -34,7 +34,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
 const rowGroupingWarning = buildWarning(
   [
     'MUI: The row grouping has been moved to the new `@mui/x-data-grid-premium` package.',
-    'It will soon be removed from `@mui/x-data-grid-pro`.',
+    'The feature is deprecated in `@mui/x-data-grid-pro`, and it will soon be removed from this package.',
   ],
   'error',
 );
