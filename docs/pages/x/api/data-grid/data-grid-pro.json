@@ -47,6 +47,7 @@
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleSelection": { "type": { "name": "bool" } },
+    "disableRowGrouping": { "type": { "name": "bool" } },
     "disableSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
@@ -58,7 +59,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -153,6 +154,7 @@
     "onRowEditCommit": { "type": { "name": "func" } },
     "onRowEditStart": { "type": { "name": "func" } },
     "onRowEditStop": { "type": { "name": "func" } },
+    "onRowGroupingModelChange": { "type": { "name": "func" } },
     "onRowModesModelChange": { "type": { "name": "func" } },
     "onRowOrderChange": { "type": { "name": "func" } },
     "onRowsScrollEnd": { "type": { "name": "func" } },
@@ -175,6 +177,11 @@
     "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
+    "rowGroupingColumnMode": {
+      "type": { "name": "enum", "description": "'multiple'<br>&#124;&nbsp;'single'" },
+      "default": "'single'"
+    },
+    "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
     "rowReordering": { "type": { "name": "bool" } },
