@@ -1,6 +1,6 @@
 import { ComponentsProps, ComponentsOverrides, ComponentsVariants } from '@mui/material/styles';
 
-export interface PickerComponents {
+export interface PickersProComponents {
   MuiDateRangePickerDay?: {
     defaultProps?: ComponentsProps['MuiDateRangePickerDay'];
     styleOverrides?: ComponentsOverrides['MuiDateRangePickerDay'];
@@ -9,5 +9,5 @@ export interface PickerComponents {
 }
 
 declare module '@mui/material/styles' {
-  interface Components extends PickerComponents {}
+  interface Components extends PickersProComponents {}
 }
