@@ -11,10 +11,10 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
 - 🚀 Premium plan release
 
-  We’re happy to announce that the Premium plan is [finally out](https://mui.com/pricing/)!
+  We’re happy to announce that the Premium plan is [finally out](https://mui.com/blog/premium-plan-release/)!
   With it, MUI X officially steps up to the next level, supporting the most advanced use cases for UI components.
 
-  This plan is available by using the new `@mui/x-data-grid-premium` package,  which contains the row grouping and the Excel export.
+  This plan is available by using the new `@mui/x-data-grid-premium` package, which contains the row grouping and the Excel export features.
 
   If you were already using the row grouping feature, you can upgrade by [installing](https://mui.com/x/react-data-grid/getting-started/#installation) `@mui/x-data-grid-premium` and replace `DataGridPro` with `DataGridPremium`, as follow.
   Note that the experimental flag is not required anymore to use the row grouping.
@@ -27,7 +27,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
   +<DataGridPremium />
   ```
 
-  For more informations about the new pricing model please have a look at the [blog post](https://mui.com/blog/premium-plan-release).
+  For more information about the new pricing model please have a look at the [blog post](https://mui.com/blog/premium-plan-release/#the-new-licensing-model).
 
 - 👔 Add Excel export
 
@@ -80,11 +80,11 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
   The default behavior remains the same (close after the last step on desktop but not on mobile).
 
   ```diff
-  // If you don't want to close after the last step
+   // If you don't want to close after the last step
   -<DatePicker disableCloseOnSelect={false} />
   +<DatePicker closeOnSelect />
 
-  // If you want to close after the last step
+   // If you want to close after the last step
   -<DatePicker disableCloseOnSelect />
   +<DatePicker closeOnSelect={false} />
   ```
