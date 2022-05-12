@@ -136,6 +136,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [docs] Stop using `GridEvents` enum in documentation (#4699) @flaviendelangle
 - [docs] Update mono repo to get copy code block (#4691) @siriwatknp
 - [docs] Update the feature table in the Getting Started page of the data grid (#4619) @flaviendelangle
+- [docs] Add demo for Premium (#4750) @m4theushw
 
 ### Core
 
