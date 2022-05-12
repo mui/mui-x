@@ -148,6 +148,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [core] Update monorepo & version (#4789) @oliviertassinari
 - [core] Update monorepo (#4772) @flaviendelangle
 - [core] Stop using `GridEvents` enum (#4698, #4696, #4685) @flaviendelangle
+- [core] Update monorepo (#4854) @cherniavskii 
 - [license] Allow to limit some packages to a specific license plan (#4651) @flaviendelangle
 - [test] Fix path to detect `DataGrid` tests (#4752) @m4theushw
 - [test] Reset cleanup tracking on Karma tests (#4679) @m4theushw
