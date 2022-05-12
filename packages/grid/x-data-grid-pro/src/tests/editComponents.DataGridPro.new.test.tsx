@@ -1,11 +1,20 @@
 import * as React from 'react';
-import { GridApi, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import {
+  GridApi,
+  DataGridProProps,
+  useGridApiRef,
+  DataGridPro,
+  GridEditCellValueParams,
+  renderEditBooleanCell,
+  renderEditDateCell,
+  renderEditInputCell,
+  renderEditSingleSelectCell,
+} from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
 import { act, createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
-import { GridEditCellValueParams } from '@mui/x-data-grid';
 
 /**
  * Creates a date that is compatible with years before 1901
@@ -115,6 +124,25 @@ describe('<DataGridPro /> - Edit Components', () => {
       clock.tick(500);
       await new Promise((resolve) => nativeSetTimeout(resolve));
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+    });
+
+    it('should call onValueChange if defined', async () => {
+      const onValueChange = spy();
+
+      defaultData.columns[0].renderEditCell = (params) =>
+        renderEditInputCell({ ...params, onValueChange });
+
+      render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 'Puma' } });
+      await new Promise((resolve) => nativeSetTimeout(resolve));
+
+      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.lastCall.args[1]).to.equal('Puma');
     });
   });
 
@@ -296,6 +324,27 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.change(input, { target: { value: '1999-01-01' } });
       expect(spiedSetEditCellValue.lastCall.args[0].value!.getTime()).to.equal(
         generateDate(1999, 0, 1),
+      );
+    });
+
+    it('should call onValueChange if defined', async () => {
+      const onValueChange = spy();
+
+      defaultData.columns[0].renderEditCell = (params) =>
+        renderEditDateCell({ ...params, onValueChange });
+
+      render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '2022-02-10' } });
+      await new Promise((resolve) => nativeSetTimeout(resolve));
+
+      expect(onValueChange.callCount).to.equal(1);
+      expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
+        new Date(2022, 1, 10).toISOString(),
       );
     });
   });
@@ -509,6 +558,23 @@ describe('<DataGridPro /> - Edit Components', () => {
       apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' });
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
     });
+
+    it('should call onValueChange if defined', async () => {
+      const onValueChange = spy();
+
+      defaultData.columns[0].renderEditCell = (params) =>
+        renderEditSingleSelectCell({ ...params, onValueChange });
+
+      render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+      await new Promise((resolve) => nativeSetTimeout(resolve));
+
+      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
+    });
   });
 
   describe('column type: boolean', () => {
@@ -533,6 +599,25 @@ describe('<DataGridPro /> - Edit Components', () => {
         field: 'isAdmin',
         value: true,
       });
+    });
+
+    it('should call onValueChange if defined', async () => {
+      const onValueChange = spy();
+
+      defaultData.columns[0].renderEditCell = (params) =>
+        renderEditBooleanCell({ ...params, onValueChange });
+
+      render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+
+      const input = cell.querySelector('input')!;
+      fireEvent.click(input);
+      await new Promise((resolve) => nativeSetTimeout(resolve));
+
+      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.lastCall.args[1]).to.equal(true);
     });
   });
 });
