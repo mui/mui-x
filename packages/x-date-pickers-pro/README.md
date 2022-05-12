@@ -61,11 +61,7 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 function App({ children }) {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      {children}
-    </LocalizationProvider>
-  );
+  return <LocalizationProvider dateAdapter={AdapterDateFns}>{children}</LocalizationProvider>;
 }
 ```
 
