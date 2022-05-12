@@ -79,7 +79,7 @@ The features exclusive to the Premium Plan are marked with the <span class="plan
 
 ## Evaluation (trial) licenses
 
-In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#30-days-evaluation-trial), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
+In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
 You do not need to contact us to use these components for evaluation purposes.
 
 You will need to purchase a commercial license in order to remove the watermarks and console warnings, or after the given 30 days period of evaluation.
@@ -167,7 +167,7 @@ When purchasing an MUI X Pro or Premium license you get access to professional s
 Support is available on multiple channels, but the recommended channels are:
 
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
-- Email (only to share private information): You can [open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to x@mui.com.
+- Email (**only if your issue requires sharing private information**): You can [open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to x@mui.com.
 
 Your OrderId on the issue helps us prioritize the issues based on the following support levels:
 

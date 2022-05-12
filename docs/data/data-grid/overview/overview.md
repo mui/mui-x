@@ -52,7 +52,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 #### Premium Plan [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
-The Premium version contains all features from Pro, as well as exclusive features for data-rich applications.
+The Premium version contains all features from Pro, as well as features for analyzing large datasets.
 The features available on the initial release are row grouping and the ability to export to Excel files.
 Aggregation is coming right next.
 In the following demo, the rows are grouped by commodity name, but you can experiment grouping other columns in the column menu.
@@ -79,7 +79,7 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 - [Selection](/x/react-data-grid/selection/)
 - [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization) and [rows virtualization](/x/react-data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
 - [Row grouping](/x/react-data-grid/row-grouping) <span class="plan-premium"></span>
-- [Excel export](/x/react-data-grid/export/) <span class="plan-premium"></span>
+- [Excel export](/x/react-data-grid/export/#excel-export) <span class="plan-premium"></span>
 - [Tree data](/x/react-data-grid/tree-data) <span class="plan-pro"></span>
 - [Master detail](/x/react-data-grid/master-detail) <span class="plan-pro"></span>
 - [Resizable columns](/x/react-data-grid/column-dimensions/#resizing) <span class="plan-pro"></span>
