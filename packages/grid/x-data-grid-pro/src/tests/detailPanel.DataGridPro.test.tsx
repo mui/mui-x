@@ -73,7 +73,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     expect(getColumnValues(1)[0]).to.equal('0');
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    virtualScroller.scrollTop = 250;
+    virtualScroller.scrollTop = 250; // 50 + 50 (detail panel) + 50 + 100 (detail panel * 2)
     virtualScroller.dispatchEvent(new Event('scroll'));
     expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
   });
