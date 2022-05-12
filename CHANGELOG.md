@@ -14,9 +14,9 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   We’re happy to announce that the Premium plan is [finally out](https://mui.com/blog/premium-plan-release/)!
   With it, MUI X officially steps up to the next level, supporting the most advanced use cases for UI components.
 
-  This plan is available by using the new `@mui/x-data-grid-premium` package, which contains the row grouping and the Excel export features.
+  This plan is available through the new `@mui/x-data-grid-premium` package, which contains the row grouping and the Excel export features.
 
-  If you were already using the row grouping feature, you can upgrade by [installing](https://mui.com/x/react-data-grid/getting-started/#installation) `@mui/x-data-grid-premium` and replace `DataGridPro` with `DataGridPremium`, as follow.
+  If you were already using the row grouping feature, you can upgrade by [installing](https://mui.com/x/react-data-grid/getting-started/#installation) `@mui/x-data-grid-premium` and replace `DataGridPro` with `DataGridPremium`, as follows.
   Note that the experimental flag is not required anymore to use the row grouping.
 
   ```diff
@@ -27,7 +27,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   +<DataGridPremium />
   ```
 
-  For more information about the new pricing model please have a look at the [blog post](https://mui.com/blog/premium-plan-release/#the-new-licensing-model).
+  For more information about the revised pricing model please have a look at the [blog post](https://mui.com/blog/premium-plan-release/#the-new-licensing-model).
 
 - 👔 Add Excel export
 
@@ -36,7 +36,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   You can now add a quick filtering search bar to your grid.
   To do so, either pass `showQuickFilter` prop to the `<GridToolbar />` or use the `<GridToolbarQuickFilter />` component in your custom toolbar.
 
-  More information about how to customize the filtering logic in the [documentation](https://mui.com/x/react-data-grid/filtering/#quick-filter)
+  More information about how to customize the filtering logic is in the [documentation](https://mui.com/x/react-data-grid/filtering/#quick-filter)
 
   ![image](https://user-images.githubusercontent.com/13808724/167700105-5a5acc7c-5463-4871-8514-3d09e2f365ae.png)
 
@@ -49,7 +49,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - Moving row grouping to premium package
   
   The experimental feature `rowGrouping` is deprecated, and will be removed in the next version.
-  To continue using it, you should move to the `@mui/x-data-grid-premium` package.
+  To continue using it, we encourage you to upgrade the `@mui/x-data-grid-premium` package.
 
 #### Changes
 
