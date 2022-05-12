@@ -432,6 +432,21 @@
       "nodeName": "the right pinned column headers"
     },
     "root": { "description": "Styles applied to the root element." },
+    "root--densityStandard": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "density is \"standard\" (default)"
+    },
+    "root--densityComfortable": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "density is \"comfortable\""
+    },
+    "root--densityCompact": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "density is \"compact\""
+    },
     "row--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row element",

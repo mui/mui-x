@@ -322,6 +322,18 @@ export interface GridClasses {
    */
   root: string;
   /**
+   * Styles applied to the root element if density is "standard" (default).
+   */
+  'root--densityStandard': string;
+  /**
+   * Styles applied to the root element if density is "comfortable".
+   */
+  'root--densityComfortable': string;
+  /**
+   * Styles applied to the root element if density is "compact".
+   */
+  'root--densityCompact': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -484,6 +496,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'menuList',
   'overlay',
   'root',
+  'root--densityStandard',
+  'root--densityComfortable',
+  'root--densityCompact',
   'row',
   'row--editable',
   'row--editing',
