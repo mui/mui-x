@@ -242,7 +242,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
       // IE11, Edge (prior to using Bink?) use 'Esc'
-      if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
+      if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
         onClose();
       }
     }
@@ -252,7 +252,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onClose]);
+  }, [onClose, open]);
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
   React.useEffect(() => {
