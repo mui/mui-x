@@ -6,7 +6,7 @@ export { MobileKeyboardInputView } from './components/CalendarOrClockPicker/Cale
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
 export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
-export { PickersToolbar } from './components/PickersToolbar';
+export { PickersToolbar, pickersToolbarClasses } from './components/PickersToolbar';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 export type {
   DateInputProps,
