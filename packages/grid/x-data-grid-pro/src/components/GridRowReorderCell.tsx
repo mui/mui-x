@@ -39,11 +39,15 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   const cellValue = params.row.__reorder__ || params.id;
 
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
-  const isDraggable =
-    !!(rootProps as DataGridProProcessedProps).rowReordering &&
-    !sortModel.length &&
-    treeDepth === 1 &&
-    Object.keys(editRowsState).length === 0;
+  const isDraggable = React.useMemo(
+    () =>
+      !!(rootProps as DataGridProProcessedProps).rowReordering &&
+      !sortModel.length &&
+      treeDepth === 1 &&
+      Object.keys(editRowsState).length === 0,
+    // eslint-disable-next-line
+    [rootProps.rowReordering, sortModel, treeDepth, editRowsState],
+  );
 
   const ownerState = { isDraggable, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -85,7 +89,7 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   };
 
   return (
-    <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
+    <div className={classes.root} draggable={isDraggable} {...(isDraggable && draggableEventHandlers)}>
       <rootProps.components.RowReorderIcon />
       <div className={classes.placeholder}>{cellValue}</div>
     </div>

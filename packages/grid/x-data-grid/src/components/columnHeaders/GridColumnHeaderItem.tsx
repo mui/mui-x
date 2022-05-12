@@ -100,6 +100,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     hasScrollX: false,
     hasScrollY: false,
   };
+  const isDraggable = React.useMemo(
+    () => !rootProps.disableColumnReorder && !disableReorder && !column.disableReorder,
+    [rootProps.disableColumnReorder, disableReorder, column.disableReorder],
+  );
 
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader) {
@@ -236,8 +240,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     >
       <div
         className={classes.draggableContainer}
-        draggable={!rootProps.disableColumnReorder && !disableReorder && !column.disableReorder}
-        {...draggableEventHandlers}
+        draggable={isDraggable}
+        {...(isDraggable && draggableEventHandlers)}
       >
         <div className={classes.titleContainer}>
           <div className={classes.titleContainerContent}>
