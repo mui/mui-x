@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _May 12, 2022_
 
-We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Premium plan release
 
@@ -91,6 +91,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
 #### Changes
 
+- [DatePicker] Ignore <kbd>Escape</kbd> when the picker is already closed (#4770) @mikewolfd
 - [DatePicker] Make month year order changeable in header (#4695) @gky360
 - [DateRangePicker] Open view on click, <kbd>Enter</kbd> or <kbd>Space</kbd> instead of focus (#4747) @alexfauquette
 - [DateRangePicker] Refacto tests (#4745) @flaviendelangle
