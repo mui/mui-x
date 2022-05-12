@@ -173,7 +173,7 @@ Your OrderId on the issue helps us prioritize the issues based on the following 
 
 1. **MUI X Pro**: MUI's maintainers give these issues more attention than the ones from the Community plan.
 2. **MUI X Premium**: Same as MUI X Pro, but with priority over Pro.
-3. **MUI X Enterprise support Add-on (not available yet)**: A provided SLA with 24h for the first answer.
+3. **MUI X Priority support add-on (not available yet)**: A provided SLA with 24h for the first answer.
 
 ## Roadmap
 
