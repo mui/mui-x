@@ -47,7 +47,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 #### Breaking changes
 
 - Moving row grouping to premium package
-  
+
   The experimental feature `rowGrouping` is deprecated, and will be removed in the next version.
   To continue using it, we encourage you to upgrade the `@mui/x-data-grid-premium` package.
 
@@ -77,7 +77,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 #### Breaking changes
 
 - Rework the auto-closing behavior of the pickers.
-  
+
   The `disableCloseOnSelect` prop has been replaced by a new `closeOnSelect` prop which has the opposite behavior.
   The default behavior remains the same (close after the last step on desktop but not on mobile).
 
@@ -115,7 +115,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [pickers] Fix `disabled` and `readOnly` behavior on calendar and clock (#4645) @alexfauquette
 - [pickers] Rename prop `date` into `parsedValue` when it can contain a range (#4736) @flaviendelangle
 - [pickers] Rework `TDate`, `TInputDate`, `TValue` and `TInputValue` generics (#4617) @flaviendelangle
-- [pickers] Rework the date lifecycle in `usePickerState`  (#4408) @flaviendelangle
+- [pickers] Rework the date lifecycle in `usePickerState` (#4408) @flaviendelangle
 
 ### Docs
 
@@ -148,7 +148,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [core] Update monorepo & version (#4789) @oliviertassinari
 - [core] Update monorepo (#4772) @flaviendelangle
 - [core] Stop using `GridEvents` enum (#4698, #4696, #4685) @flaviendelangle
-- [core] Update monorepo (#4854) @cherniavskii 
+- [core] Update monorepo (#4854) @cherniavskii
 - [license] Allow to limit some packages to a specific license plan (#4651) @flaviendelangle
 - [test] Fix path to detect `DataGrid` tests (#4752) @m4theushw
 - [test] Reset cleanup tracking on Karma tests (#4679) @m4theushw
