@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { SxProps } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { PickersMonth } from './PickersMonth';
+import { MonthButton } from './MonthButton';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { MonthPickerClasses, getMonthPickerUtilityClass } from './monthPickerClasses';
@@ -165,7 +165,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
         const monthText = utils.format(month, 'monthShort');
 
         return (
-          <PickersMonth
+          <MonthButton
             key={monthText}
             value={monthNumber}
             selected={monthNumber === currentMonth}
@@ -173,7 +173,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
             disabled={disabled || isMonthDisabled(month)}
           >
             {monthText}
-          </PickersMonth>
+          </MonthButton>
         );
       })}
     </MonthPickerRoot>
