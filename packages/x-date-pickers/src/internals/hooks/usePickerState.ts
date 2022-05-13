@@ -41,11 +41,15 @@ export interface PickerStateValueManager<TInputValue, TValue, TDate> {
    * Generates the new value, given the previous value and the new proposed value.
    * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
-   * @param {TValue} prevValue The previous value.
+   * @param {TValue} lastValidDateValue The last valid value.
    * @param {TValue} value The proposed value.
    * @returns {TValue} The new value.
    */
-  valueReducer?: (utils: MuiPickersAdapter<TDate>, prevValue: TValue, value: TValue) => TValue;
+  valueReducer?: (
+    utils: MuiPickersAdapter<TDate>,
+    lastValidDateValue: TValue,
+    value: TValue,
+  ) => TValue;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
@@ -231,10 +235,10 @@ export const usePickerState = <TInputValue, TValue, TDate>(
   );
 
   React.useEffect(() => {
-    if (parsedDateValue != null) {
+    if (utils.isValid(parsedDateValue)) {
       setLastValidDateValue(parsedDateValue);
     }
-  }, [parsedDateValue]);
+  }, [utils, parsedDateValue]);
 
   React.useEffect(() => {
     if (isOpen) {

@@ -658,12 +658,12 @@ describe('<DataGridPro /> - Rows', () => {
   describe('Cell focus', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const TestCase = ({ rows }: Pick<DataGridProProps, 'rows'>) => {
+    const TestCase = (props: Partial<DataGridProProps>) => {
       apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} {...baselineProps} rows={rows} />
+          <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
         </div>
       );
     };
@@ -781,11 +781,17 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should not crash when the row is removed during the click', () => {
       expect(() => {
-        render(<TestCase rows={baselineProps.rows} />);
+        render(
+          <TestCase
+            rows={baselineProps.rows}
+            onCellClick={() => {
+              apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
+            }}
+          />,
+        );
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
-        apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
       }).not.to.throw();
     });
 

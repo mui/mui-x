@@ -1,5 +1,5 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
+// @ts-expect-error Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridInputSelectionModel, GridRowId } from '@mui/x-data-grid';
@@ -570,6 +570,30 @@ describe('<DataGrid /> - Selection', () => {
         rows: data.rows.slice(0, 1),
       });
       expect(getSelectedRowIds()).to.deep.equal([0]);
+    });
+
+    it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
+      const data = getData(10, 2);
+      const onSelectionModelChange = spy();
+
+      const { setProps } = render(
+        <TestDataGridSelection
+          selectionModel={[0, 1, 2]}
+          checkboxSelection
+          keepNonExistentRowsSelected
+          onSelectionModelChange={onSelectionModelChange}
+          {...data}
+        />,
+      );
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+
+      setProps({ rows: data.rows.slice(0, 1) });
+      // This expectation is around visible rows
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      // Check number of selected rows in the footer
+      expect(() => screen.getByText('3 rows selected')).not.to.throw();
+      // The callback should not be called when the selection changes
+      expect(onSelectionModelChange.getCalls()).to.have.length(0);
     });
   });
 

@@ -18,6 +18,11 @@ export interface BaseTimePickerProps<TInputDate, TDate>
     ValidationProps<TimeValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
   /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm?: boolean;
+  /**
    * Callback fired on view change.
    * @param {ClockPickerView} view The new view.
    */
@@ -87,11 +92,11 @@ export const timePickerValueManager: PickerStateValueManager<any, any, any> = {
   parseInput: parsePickerInputValue,
   getTodayValue: (utils) => utils.date()!,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-  valueReducer: (utils, prevValue, newValue) => {
-    if (prevValue == null || newValue == null) {
+  valueReducer: (utils, lastValidValue, newValue) => {
+    if (!lastValidValue || !utils.isValid(newValue)) {
       return newValue;
     }
 
-    return utils.mergeDateAndTime(prevValue, newValue);
+    return utils.mergeDateAndTime(lastValidValue, newValue);
   },
 };

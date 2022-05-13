@@ -9,6 +9,10 @@ import type {
   GridColumnResizeState,
   GridColumnPinningState,
 } from '../hooks';
+import type {
+  GridRowGroupingState,
+  GridRowGroupingInitialState,
+} from '../hooks/features/rowGrouping';
 
 /**
  * The state of `DataGridPro`.
@@ -18,6 +22,7 @@ export interface GridStatePro extends GridStateCommunity {
   columnResize: GridColumnResizeState;
   pinnedColumns: GridColumnPinningState;
   detailPanel: GridDetailPanelState;
+  rowGrouping: GridRowGroupingState;
 }
 
 /**
@@ -26,4 +31,5 @@ export interface GridStatePro extends GridStateCommunity {
 export interface GridInitialStatePro extends GridInitialStateCommunity {
   pinnedColumns?: GridColumnPinningState;
   detailPanel?: GridDetailPanelInitialState;
+  rowGrouping?: GridRowGroupingInitialState;
 }
