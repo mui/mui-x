@@ -9,7 +9,25 @@ import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { MonthPickerClasses, getMonthPickerUtilityClass } from './monthPickerClasses';
 
-export interface MonthPickerProps<TDate> {
+export interface ExportedMonthPickerProps<TDate> {
+  /**
+   * Callback firing on month change @DateIOType.
+   * @template TDate
+   * @param {TDate} month The new year.
+   * @returns {void|Promise} -
+   */
+  onMonthChange?: (month: TDate) => void | Promise<void>;
+  /**
+   * Disable specific months dynamically.
+   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
+   */
+  shouldDisableMonth?: (month: TDate) => boolean;
+}
+
+export interface MonthPickerProps<TDate> extends ExportedMonthPickerProps<TDate> {
   /**
    * className applied to the root element.
    */
@@ -33,7 +51,7 @@ export interface MonthPickerProps<TDate> {
   maxDate: TDate;
   /** Callback fired on date change. */
   onChange: PickerOnChangeFn<TDate>;
-  onMonthChange?: (date: TDate) => void | Promise<void>;
+
   /** If `true` picker is readonly */
   readOnly?: boolean;
   /**
@@ -87,6 +105,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     minDate,
     onChange,
     onMonthChange,
+    shouldDisableMonth,
     readOnly,
     ...other
   } = props;
@@ -97,7 +116,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
   const now = useNow<TDate>();
   const currentMonth = utils.getMonth(date || now);
 
-  const shouldDisableMonth = (month: TDate) => {
+  const isMonthDisabled = (month: TDate) => {
     const firstEnabledMonth = utils.startOfMonth(
       disablePast && utils.isAfter(now, minDate) ? now : minDate,
     );
@@ -106,10 +125,19 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
     );
 
-    const isBeforeFirstEnabled = utils.isBefore(month, firstEnabledMonth);
-    const isAfterLastEnabled = utils.isAfter(month, lastEnabledMonth);
+    if (utils.isBefore(month, firstEnabledMonth)) {
+      return true;
+    }
 
-    return isBeforeFirstEnabled || isAfterLastEnabled;
+    if (utils.isAfter(month, lastEnabledMonth)) {
+      return true;
+    }
+
+    if (!shouldDisableMonth) {
+      return false;
+    }
+
+    return shouldDisableMonth(month);
   };
 
   const onMonthSelect = (month: number) => {
@@ -142,7 +170,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
             value={monthNumber}
             selected={monthNumber === currentMonth}
             onSelect={onMonthSelect}
-            disabled={disabled || shouldDisableMonth(month)}
+            disabled={disabled || isMonthDisabled(month)}
           >
             {monthText}
           </PickersMonth>
@@ -193,11 +221,25 @@ MonthPicker.propTypes = {
    * Callback fired on date change.
    */
   onChange: PropTypes.func.isRequired,
+  /**
+   * Callback firing on month change @DateIOType.
+   * @template TDate
+   * @param {TDate} month The new year.
+   * @returns {void|Promise} -
+   */
   onMonthChange: PropTypes.func,
   /**
    * If `true` picker is readonly
    */
   readOnly: PropTypes.bool,
+  /**
+   * Disable specific months dynamically.
+   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
+   */
+  shouldDisableMonth: PropTypes.func,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

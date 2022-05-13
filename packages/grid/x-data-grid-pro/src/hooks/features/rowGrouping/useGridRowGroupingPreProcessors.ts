@@ -17,6 +17,8 @@ import {
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '@mui/x-data-grid/internals';
+import { sortRowTree } from '../../../utils/tree/sortRowTree';
+import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   gridRowGroupingModelSelector,
@@ -35,8 +37,6 @@ import {
 } from './gridRowGroupingUtils';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridGroupingValueGetterParams } from '../../../models/gridGroupingValueGetterParams';
-import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
-import { sortRowTree } from '../../../utils/tree/sortRowTree';
 
 export const useGridRowGroupingPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,

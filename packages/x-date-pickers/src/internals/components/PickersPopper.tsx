@@ -47,6 +47,7 @@ export interface PickerPopperProps extends ExportedPickerPopperProps, ExportedPi
   onClose: () => void;
   onBlur?: () => void;
   onClear?: () => void;
+  onCancel?: () => void;
 }
 
 const PickersPopperRoot = styled(Popper)<{ ownerState: PickerPopperProps }>(({ theme }) => ({
@@ -225,6 +226,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
     anchorEl,
     children,
     containerRef = null,
+    onBlur,
     onClose,
     onClear,
     clearable = false,
@@ -240,7 +242,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
       // IE11, Edge (prior to using Bink?) use 'Esc'
-      if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
+      if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
         onClose();
       }
     }
@@ -250,7 +252,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onClose]);
+  }, [onClose, open]);
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
   React.useEffect(() => {
@@ -268,7 +270,10 @@ export const PickersPopper = (props: PickerPopperProps) => {
     }
   }, [open, role]);
 
-  const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(open, onClose);
+  const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(
+    open,
+    onBlur ?? onClose,
+  );
   const paperRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(paperRef, containerRef);
   const handlePaperRef = useForkRef(handleRef, clickAwayRef as React.Ref<HTMLDivElement>);

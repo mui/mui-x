@@ -3,22 +3,21 @@ import { CalendarOrClockPickerView } from '../views';
 import type { PickerOnChangeFn } from '../../hooks/useViews';
 import type { ExportedCalendarPickerProps } from '../../../CalendarPicker/CalendarPicker';
 import type { ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
+import { PickerStatePickerProps } from '../../hooks/usePickerState';
 
-export interface BaseToolbarProps<TDate>
+export interface BaseToolbarProps<TDate, TValue>
   extends ExportedCalendarPickerProps<TDate>,
-    ExportedClockPickerProps<TDate> {
+    ExportedClockPickerProps<TDate>,
+    Omit<PickerStatePickerProps<TValue>, 'onDateChange'> {
   ampmInClock?: boolean;
-  date: TDate | null;
   dateRangeIcon?: React.ReactNode;
   getMobileKeyboardInputViewButtonText?: () => string;
   hideTabs?: boolean;
   isLandscape: boolean;
-  isMobileKeyboardViewOpen: boolean;
   onChange: PickerOnChangeFn<TDate>;
   openView: CalendarOrClockPickerView;
   setOpenView: (view: CalendarOrClockPickerView) => void;
   timeIcon?: React.ReactNode;
-  toggleMobileKeyboardView: () => void;
   toolbarFormat?: string;
   toolbarPlaceholder?: React.ReactNode;
   toolbarTitle?: React.ReactNode;

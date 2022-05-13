@@ -37,11 +37,17 @@ const ruRUGrid: Partial<GridLocaleText> = {
     return `${count} ${pluralForm}`;
   },
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Поиск...',
+  toolbarQuickFilterLabel: 'Поиск',
+  toolbarQuickFilterDeleteIconLabel: 'Очистить',
+
   // Export selector toolbar button text
   toolbarExport: 'Экспорт',
   toolbarExportLabel: 'Экспорт',
   toolbarExportCSV: 'Скачать в формате CSV',
   toolbarExportPrint: 'Печать',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Найти столбец',
@@ -161,6 +167,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Master/detail
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

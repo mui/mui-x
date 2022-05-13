@@ -3,14 +3,16 @@ import {
   GridState as GridStateCommunity,
 } from '@mui/x-data-grid';
 import type {
-  GridRowGroupingState,
   GridDetailPanelState,
   GridDetailPanelInitialState,
   GridColumnReorderState,
   GridColumnResizeState,
   GridColumnPinningState,
-  GridRowGroupingInitialState,
 } from '../hooks';
+import type {
+  GridRowGroupingState,
+  GridRowGroupingInitialState,
+} from '../hooks/features/rowGrouping';
 
 /**
  * The state of `DataGridPro`.
@@ -19,15 +21,15 @@ export interface GridStatePro extends GridStateCommunity {
   columnReorder: GridColumnReorderState;
   columnResize: GridColumnResizeState;
   pinnedColumns: GridColumnPinningState;
-  rowGrouping: GridRowGroupingState;
   detailPanel: GridDetailPanelState;
+  rowGrouping: GridRowGroupingState;
 }
 
 /**
  * The initial state of `DataGridPro`.
  */
 export interface GridInitialStatePro extends GridInitialStateCommunity {
-  rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
   detailPanel?: GridDetailPanelInitialState;
+  rowGrouping?: GridRowGroupingInitialState;
 }

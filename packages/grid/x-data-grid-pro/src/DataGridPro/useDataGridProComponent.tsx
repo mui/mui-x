@@ -58,11 +58,6 @@ import {
 import { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 import { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 import {
-  useGridRowGrouping,
-  rowGroupingStateInitializer,
-} from '../hooks/features/rowGrouping/useGridRowGrouping';
-import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
-import {
   useGridColumnPinning,
   columnPinningStateInitializer,
 } from '../hooks/features/columnPinning/useGridColumnPinning';
@@ -73,6 +68,13 @@ import {
 } from '../hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelCache } from '../hooks/features/detailPanel/useGridDetailPanelCache';
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
+import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
+import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+import {
+  useGridRowGrouping,
+  rowGroupingStateInitializer,
+} from '../hooks/features/rowGrouping/useGridRowGrouping';
+import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -84,6 +86,7 @@ export const useDataGridProComponent = (
    * Register all pre-processors called during state initialization here.
    */
   useGridSelectionPreProcessors(apiRef, props);
+  useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
@@ -145,6 +148,7 @@ export const useDataGridProComponent = (
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
+  useGridRowReorder(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);

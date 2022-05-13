@@ -7,7 +7,7 @@ import { ownerDocument, capitalize } from '@mui/material/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import {
   GridCellEventLookup,
-  GridEvents,
+  GridEventsStr,
   GridCellMode,
   GridCellModes,
   GridRowId,
@@ -123,7 +123,7 @@ function GridCell(props: GridCellProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
-    (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+    (eventName: GridEventsStr) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName as any, params as any, event);
 
@@ -241,13 +241,13 @@ function GridCell(props: GridCellProps) {
       aria-colspan={colSpan}
       style={style}
       tabIndex={(cellMode === 'view' || !isEditable) && !managesOwnFocus ? tabIndex : -1}
-      onClick={publish(GridEvents.cellClick, onClick)}
-      onDoubleClick={publish(GridEvents.cellDoubleClick, onDoubleClick)}
-      onMouseDown={publish(GridEvents.cellMouseDown, onMouseDown)}
-      onMouseUp={publishMouseUp(GridEvents.cellMouseUp)}
-      onKeyDown={publish(GridEvents.cellKeyDown, onKeyDown)}
-      onDragEnter={publish(GridEvents.cellDragEnter, onDragEnter)}
-      onDragOver={publish(GridEvents.cellDragOver, onDragOver)}
+      onClick={publish('cellClick', onClick)}
+      onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
+      onMouseDown={publish('cellMouseDown', onMouseDown)}
+      onMouseUp={publishMouseUp('cellMouseUp')}
+      onKeyDown={publish('cellKeyDown', onKeyDown)}
+      onDragEnter={publish('cellDragEnter', onDragEnter)}
+      onDragOver={publish('cellDragOver', onDragOver)}
       {...other}
       onFocus={handleFocus}
     >

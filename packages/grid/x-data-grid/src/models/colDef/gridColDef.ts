@@ -19,6 +19,7 @@ import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridEditCellProps } from '../gridEditRowModel';
 import type { GridValidRowModel } from '../gridRows';
+import { GridApiCommunity } from '../api/gridApiCommunity';
 
 /**
  * Alignment used in position elements in Cells.
@@ -99,12 +100,15 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   editable?: boolean;
   /**
    * If `true`, the rows can be grouped based on this column values (pro-plan only).
+   * Only available in DataGridPremium.
+   * TODO: Use module augmentation to move it to `@mui/x-data-grid-premium` (need to modify how we handle column types default values).
    * @default true
    */
   groupable?: boolean;
   /**
    * If `false`, the menu items for column pinning menu will not be rendered.
    * Only available in DataGridPro.
+   * TODO: Use module augmentation to move it to `@mui/x-data-grid-pro` (need to modify how we handle column types default values).
    * @default true
    */
   pinnable?: boolean;
@@ -215,6 +219,19 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    * Allows setting the filter operators for this column.
    */
   filterOperators?: GridFilterOperator<R, V, F>[];
+  /**
+   * The callback that generates a filtering function for a given quick filter value.
+   * This function can return `null` to skip filtering for this value and column.
+   * @param {any} value The value with which we want to filter the column.
+   * @param {GridStateColDef} colDef The column from which we want to filter the rows.
+   * @param {React.MutableRefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
+   * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row pass this filter value or not.
+   */
+  getApplyQuickFilterFn?: (
+    value: any,
+    colDef: GridStateColDef,
+    apiRef: React.MutableRefObject<GridApiCommunity>,
+  ) => null | ((params: GridCellParams<V, R, F>) => boolean);
   /**
    * If `true`, this column cannot be reordered.
    * @default false

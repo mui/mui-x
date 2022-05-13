@@ -1,12 +1,13 @@
 <DataGrid
-  rows={rows}
-  columns={data.columns}
+  rows={data}
+  columns={columns}
+  initialState={initialState}
   pagination
-  pageSize={5}
-  rowsPerPageOptions={[5]}
-  rowCount={100}
+  pageSize={PAGE_SIZE}
+  rowsPerPageOptions={[PAGE_SIZE]}
+  rowCount={rowCountState}
   paginationMode="server"
   onPageChange={handlePageChange}
   page={page}
-  loading={loading}
+  loading={isLoading}
 />

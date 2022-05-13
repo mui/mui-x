@@ -8,24 +8,46 @@ title: MUI X - Overview
 
 ## Licenses
 
-> While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
+> While [MUI Core](/core/) is entirely licensed under MIT, [MUI X](/x/) serves a part of its components as MIT and the rest under a commercial license.
 > You will need to purchase a license to access features that are only available with the Pro and Premium Plans.
 > See [Pricing](https://mui.com/pricing/) for details.
 
+### MIT vs. commercial
+
+_How do we decide if a feature is MIT or commercial?_
+
+We have been building MIT React components since 2014,
+and have learned much about the strengths and weaknesses of the MIT license model.
+The health of this model is improving every day.
+As the community grows, it increases the probability that developers contribute improvements to the project.
+You can find our pledge to nurture the MIT licensed content on [this Stewardship page](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+
+However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward.
+We have seen too many MIT licensed components moving slowly or getting abandoned.
+The community isn't contributing improvements as fast as the problems deserved to be solved.
+
+We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
+A feature should only be commercial if it has no great MIT alternatives.
+
+The detailed feature comparison is available on the [Pricing](https://mui.com/pricing/) page.
+
 ### Community Plan
 
-MUI X's Community Plan is published under [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+MUI X's Community Plan is published under [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
+This plan contains features we believe are sustainable by the contributions of the open-source community.
 
 Community Plan packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 
-### Pro Plan
+### Pro Plan <span class="plan-pro"></span>
 
 The MUI X Pro Plan expands on the limitations of the Community Plan with more advanced features such as multi-filtering, multi-sorting, column resizing and column pinning.
 
 The Pro Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+This plan contains the features that are at the limit of what the open-source model can sustain.
+For instance, providing support for handling massive amounts of data, in a flexible data grid integrated with a comprehensive set of components.
 
 Pro Plan packages:
 
@@ -41,49 +63,49 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
   <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
 </div>
 
-### 🚧 Premium Plan
+### Premium Plan <span class="plan-premium"></span>
 
-The MUI X Premium Plan contains the most advanced features such as row grouping, Excel export, aggregation (🚧), as well as everything that's included in the Pro Plan.
+The MUI X Premium Plan contains the most advanced features such as Row grouping, Excel export, Aggregation (🚧), as well as everything that's included in the Pro Plan.
+
+The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+This plan contains highly complex features that can be useful to analyze and group data without the use of an external application.
+The price of the plan targets small to medium-size teams.
+
+Premium Plan package:
+
+- [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
 The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
 
-The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
-
-## MIT vs. commercial
-
-_How do we decide if a feature is MIT or commercial?_
-
-We have been building MIT React components since 2014,
-and have learned much about the strengths and weaknesses of the MIT license model.
-The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
-However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT licensed components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
-
-We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
-A solution to a problem should only be commercial if it has no MIT alternatives.
-
-The detailed feature comparison is available on the [Pricing](https://mui.com/pricing/) page.
-
 ## Evaluation (trial) licenses
 
-In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use our Pro and Premium components without a commercial license as long as they are not used for the development of a feature intended for production.
+In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
 You do not need to contact us to use these components for evaluation purposes.
 
-You will need to purchase a commercial license in order to remove the watermarks and console warnings.
+You will need to purchase a commercial license in order to remove the watermarks and console warnings, or after the given 30 days period of evaluation.
 
-### License key installation
+## License key installation
 
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
-You must set the license key before rendering the first component.
-You only need to install the key once in your application.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
 
 LicenseInfo.setLicenseKey(
-  'x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e',
+  '61628ce74db2c1b62783a6d438593bc5Tz1NVUktRG9jLEU9MTY4MzQ0NzgyMTI4NCxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
 );
 ```
+
+### Where to install the key?
+
+You must call `setLicenseKey` before React renders the first component.
+You only need to install the key once in your application.
+
+### Does each developer need its own key?
+
+No. The license key is meant to help you get compliant with the [EULA](https://mui.com/store/legal/mui-x-eula/) of the commercial licenses.
+While each developer needs to be licensed, the license key is set once, where the components are used.
 
 ### Security
 
@@ -142,18 +164,16 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 ### Professional support
 
 When purchasing an MUI X Pro or Premium license you get access to professional support for a limited duration.
-Support is available on multiple channels, but the recommended channel is GitHub issues.
-You can also reach us by email at x@mui.com if you need to share private information.
+Support is available on multiple channels, but the recommended channels are:
 
-- **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
-  - GitHub: [Open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID.
-  - Email (only to share private information): [Open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
-- **MUI X Premium**: Same as MUI X Pro, but with priority over Pro, and a 48 hour SLA for the first answer.
-  - GitHub: this plan is not available yet
-  - Emails: this plan is not available yet
-- **MUI X Premium Priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer.
-  - GitHub: this plan is not available yet
-  - Emails: this plan is not available yet
+- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
+- Email (**only if your issue requires sharing private information**): You can [open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to x@mui.com.
+
+Your OrderId on the issue helps us prioritize the issues based on the following support levels:
+
+1. **MUI X Pro**: MUI's maintainers give these issues more attention than the ones from the Community plan.
+2. **MUI X Premium**: Same as MUI X Pro, but with priority over Pro.
+3. **MUI X Priority support add-on (not available yet)**: A provided SLA with 24h for the first answer.
 
 ## Roadmap
 

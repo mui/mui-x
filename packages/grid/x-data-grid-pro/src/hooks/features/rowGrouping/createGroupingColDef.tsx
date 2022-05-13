@@ -7,7 +7,7 @@ import {
   GridRenderCellParams,
 } from '@mui/x-data-grid';
 import { GridColumnRawLookup } from '@mui/x-data-grid/internals';
-import { GridGroupingColDefOverride } from '../../../models';
+import { GridGroupingColDefOverride } from '../../../models/gridGroupingColDefOverride';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColumnLeafCell';

@@ -28,9 +28,9 @@ describe('useGridApiEventHandler', () => {
         this.skip();
       }
 
-      const useGridApiEventHandler = createUseGridApiEventHandler(
-        new FinalizationRegistryBasedCleanupTracking(),
-      );
+      const useGridApiEventHandler = createUseGridApiEventHandler({
+        registry: new FinalizationRegistryBasedCleanupTracking(),
+      });
       const unsubscribe = spy();
       const apiRef = {
         current: { subscribeEvent: spy(() => unsubscribe) },
@@ -60,9 +60,9 @@ describe('useGridApiEventHandler', () => {
 
   describe('Timer-based implementation', () => {
     it('should unsubscribe event listeners registered by uncommitted components', async () => {
-      const useGridApiEventHandler = createUseGridApiEventHandler(
-        new TimerBasedCleanupTracking(50),
-      );
+      const useGridApiEventHandler = createUseGridApiEventHandler({
+        registry: new TimerBasedCleanupTracking(50),
+      });
       const unsubscribe = spy();
       const apiRef = {
         current: { subscribeEvent: spy(() => unsubscribe) },

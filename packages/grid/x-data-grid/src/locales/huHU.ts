@@ -26,11 +26,17 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Szűrők megjelenítése',
   toolbarFiltersTooltipActive: (count) => `${count} aktív szűrő`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportálás',
   toolbarExportLabel: 'Exportálás',
   toolbarExportCSV: 'Mentés CSV fájlként',
   toolbarExportPrint: 'Nyomtatás',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Oszlop keresése',
@@ -128,6 +134,9 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Kibontás',
   collapseDetailPanel: 'Összecsukás',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const huHU: Localization = getGridLocalization(huHUGrid, huHUCore);
