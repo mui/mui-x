@@ -20,7 +20,7 @@ describe('findClosestEnabledDate', () => {
       disablePast: false,
     });
 
-    expect(result).toEqualDateTime(adapterToUse.startOfDay(adapterToUse.date()));
+    expect(result).to.equal(null);
   });
 
   it('should return given date if it is enabled', () => {
@@ -192,6 +192,6 @@ describe('findClosestEnabledDate', () => {
       disablePast: false,
     })!;
 
-    expect(result).toEqualDateTime(adapterToUse.startOfDay(adapterToUse.date()));
+    expect(result).to.equal(null);
   });
 });
