@@ -35,9 +35,9 @@ Um exemplo de seletor de data nativo com `type="date"`.
 // date-fns
 npm install @date-io/date-fns
 // or for Day.js
-npm install -s @date-io/dayjs
+npm install @date-io/dayjs
 // or for Luxon
-npm install -s @date-io/luxon
+npm install @date-io/luxon
 // or for Moment.js
 npm install @date-io/moment
 ```
