@@ -65,6 +65,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Update focused action if the currently focused one is removed (#4694) @m4theushw
 - [DataGrid] Add `onChange` callback to edit components (#4621) @m4theushw
 - [DataGrid] Add `keepNonExistentRowsSelected` prop (#4786) @willsoto
+- [DataGrid] Prevent crash if row is removed with click (#4831) @m4theushw
 - [DataGridPro] Fix detail panel not taking full width (#4610) @cherniavskii
 - [DataGridPremium] Add Excel export (#3981) @alexfauquette
 - [DataGridPremium] Bootstrap `@mui/x-data-grid-premium` (#4223) @flaviendelangle
