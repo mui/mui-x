@@ -5,7 +5,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
-import { useDefaultDates, useNow, useUtils } from '../internals/hooks/useUtils';
+import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DayPicker, DayPickerProps, ExportedDayPickerProps } from './DayPicker';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
@@ -176,7 +176,6 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils<TDate>();
-  const now = useNow<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
   const props = useThemeProps({
@@ -241,42 +240,32 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const handleDateMonthChange = React.useCallback<MonthPickerProps<TDate>['onChange']>(
     (newDate, selectionState) => {
       const startOfMonth = utils.startOfMonth(newDate);
-
-      if (onMonthChange) {
-        onMonthChange(startOfMonth);
-      }
-
-      if (!isDateDisabled(newDate)) {
-        onChange(newDate, selectionState);
-        changeFocusedDay(newDate);
-        return;
-      }
-
       const endOfMonth = utils.endOfMonth(newDate);
-      const closestEnabledDate = findClosestEnabledDate({
-        utils,
-        date: newDate,
-        minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
-        maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
-        disablePast,
-        disableFuture,
-        isDateDisabled,
-      });
+
+      const closestEnabledDate = isDateDisabled(newDate)
+        ? findClosestEnabledDate({
+            utils,
+            date: newDate,
+            minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+            maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+            disablePast,
+            disableFuture,
+            isDateDisabled,
+          })
+        : newDate;
 
       if (closestEnabledDate) {
         onChange(closestEnabledDate, selectionState);
-        changeFocusedDay(closestEnabledDate);
-        return;
+        onMonthChange?.(startOfMonth);
+      } else {
+        openNext();
       }
 
-      changeFocusedDay(null);
+      changeFocusedDay(closestEnabledDate);
       changeMonth(startOfMonth);
-      openNext();
     },
     [
       changeFocusedDay,
-      changeMonth,
-      openNext,
       disableFuture,
       disablePast,
       isDateDisabled,
@@ -284,6 +273,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
       minDate,
       onChange,
       onMonthChange,
+      changeMonth,
+      openNext,
       utils,
     ],
   );
@@ -292,10 +283,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   // Needs startOfYear / endOfYear methods in adapter.
   const handleDateYearChange = React.useCallback<YearPickerProps<TDate>['onChange']>(
     (newDate, selectionState) => {
-      let cleanNewDate: TDate;
-      if (isDateDisabled(newDate)) {
-        cleanNewDate =
-          findClosestEnabledDate({
+      const closestEnabledDate = isDateDisabled(newDate)
+        ? findClosestEnabledDate({
             utils,
             date: newDate,
             minDate,
@@ -303,17 +292,17 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
             disablePast,
             disableFuture,
             isDateDisabled,
-          }) || now;
+          })
+        : newDate;
+
+      if (closestEnabledDate) {
+        onChange(closestEnabledDate, selectionState);
+        onYearChange?.(closestEnabledDate);
       } else {
-        cleanNewDate = newDate;
+        openNext();
       }
 
-      onChange(cleanNewDate, selectionState);
-      changeFocusedDay(cleanNewDate);
-
-      if (onYearChange) {
-        onYearChange(cleanNewDate);
-      }
+      changeFocusedDay(closestEnabledDate);
     },
     [
       changeFocusedDay,
@@ -322,9 +311,9 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
       isDateDisabled,
       maxDate,
       minDate,
-      now,
       onChange,
       onYearChange,
+      openNext,
       utils,
     ],
   );
