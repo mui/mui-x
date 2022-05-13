@@ -14,7 +14,7 @@
     "maxDate": "Maximal selectable date. @DateIOType",
     "minDate": "Minimal selectable date. @DateIOType",
     "onChange": "Callback fired on date change",
-    "onMonthChange": "Callback firing on month change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void | Promise</code><br><em>month:</em> The new year.<br> <em>returns</em> (void | Promise): -",
+    "onMonthChange": "Callback firing on month change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void | Promise</code><br><em>month:</em> The new month.<br> <em>returns</em> (void | Promise): -",
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: CalendarPickerView) =&gt; void</code><br><em>view:</em> The new view.",
     "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
     "openTo": "Initially open view.",

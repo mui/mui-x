@@ -74,7 +74,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 
   const {
     className,
-    date,
+    date: propDate,
     disabled,
     disableFuture,
     disablePast,
@@ -88,7 +88,8 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const currentMonth = utils.getMonth(date || now);
+  const currentDate = propDate ?? now;
+  const currentMonth = utils.getMonth(currentDate);
 
   const isMonthDisabled = (month: TDate) => {
     const firstEnabledMonth = utils.startOfMonth(
@@ -119,7 +120,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       return;
     }
 
-    const newDate = utils.setMonth(date || now, month);
+    const newDate = utils.setMonth(currentDate, month);
     onChange(newDate, 'finish');
   };
 
@@ -130,7 +131,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       ownerState={ownerState}
       {...other}
     >
-      {utils.getMonthArray(date || now).map((month) => {
+      {utils.getMonthArray(currentDate).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
 

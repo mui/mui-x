@@ -248,7 +248,7 @@ MobileDatePicker.propTypes = {
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new year.
+   * @param {TDate} month The new month.
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
