@@ -9,7 +9,7 @@ import {
   checkMaskIsValidForCurrentFormat,
 } from '../utils/text-field-helper';
 
-type MaskedInputProps<TInputDate, TDate> = Omit<
+export type MaskedInputProps<TInputDate, TDate> = Omit<
   DateInputProps<TInputDate, TDate>,
   | 'adornmentPosition'
   | 'disableOpenPicker'
@@ -65,13 +65,14 @@ export const useMaskedInput = <TInputDate, TDate>({
   React.useEffect(() => {
     previousInputValueRef.current = currentInputValue;
   }, [currentInputValue]);
-  const notTyping = !isFocused;
-  const valueChanged = previousInputValueRef.current !== currentInputValue;
+
   // Update the input value only if the value changed outside of typing
-  if (notTyping && valueChanged && (rawValue === null || utils.isValid(rawValue))) {
-    if (currentInputValue !== innerInputValue) {
-      setInnerInputValue(currentInputValue);
-    }
+  if (
+    !isFocused &&
+    currentInputValue !== innerInputValue &&
+    (rawValue === null || utils.isValid(rawValue))
+  ) {
+    setInnerInputValue(currentInputValue);
   }
 
   const handleChange = (text: string) => {

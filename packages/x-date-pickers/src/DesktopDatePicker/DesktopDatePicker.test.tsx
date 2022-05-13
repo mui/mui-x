@@ -13,6 +13,7 @@ import {
   withPickerControls,
   openPicker,
 } from '../../../../test/utils/pickers-utils';
+import { DatePickerProps } from '@mui/x-date-pickers';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -89,6 +90,38 @@ describe('<DesktopDatePicker />', () => {
 
     expect(screen.getByRole('textbox')).to.have.value('10/11/2018');
     expect(onChangeMock.callCount).to.equal(1);
+  });
+
+  it('should allow to switch from invalid date to null date in the input', () => {
+    const Test = () => {
+      const [value, setValue] = React.useState(null);
+
+      return (
+        <React.Fragment>
+          <DesktopDatePicker
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            renderInput={(inputProps) => <TextField {...inputProps} />}
+            inputFormat="dd/MM/yyyy"
+          />
+          <button data-mui-test="reset" onClick={() => setValue(null)}>
+            Clear
+          </button>
+        </React.Fragment>
+      );
+    };
+
+    render(<Test />);
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: {
+        value: '33/33/2022',
+      },
+    });
+    expect(screen.getByRole('textbox')).to.have.value('33/33/2022');
+
+    fireEvent.click(screen.getByMuiTest('reset'));
+    expect(screen.getByRole('textbox')).to.have.value('');
   });
 
   it('prop `showToolbar` – renders toolbar in desktop mode', () => {

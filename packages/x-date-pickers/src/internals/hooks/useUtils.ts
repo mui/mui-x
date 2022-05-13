@@ -4,7 +4,7 @@ import {
   MuiPickersAdapterContextValue,
 } from '../../LocalizationProvider/LocalizationProvider';
 
-const useLocalizationContext = <T>() => {
+const useLocalizationContext = <TDate>() => {
   const localization = React.useContext(MuiPickersAdapterContext);
   if (localization === null) {
     throw new Error(
@@ -12,12 +12,12 @@ const useLocalizationContext = <T>() => {
     );
   }
 
-  return localization as MuiPickersAdapterContextValue<T>;
+  return localization as MuiPickersAdapterContextValue<TDate>;
 };
 
-export const useUtils = <T>() => useLocalizationContext<T>().utils;
+export const useUtils = <TDate>() => useLocalizationContext<TDate>().utils;
 
-export const useDefaultDates = <T>() => useLocalizationContext<T>().defaultDates;
+export const useDefaultDates = <TDate>() => useLocalizationContext<TDate>().defaultDates;
 
 export const useNow = <TDate>(): TDate => {
   const utils = useUtils<TDate>();
