@@ -259,7 +259,10 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
 
-  const dateOrMidnight = date || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0);
+  const dateOrMidnight = React.useMemo(
+    () => date || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
+    [date, now, utils],
+  );
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
     dateOrMidnight,
