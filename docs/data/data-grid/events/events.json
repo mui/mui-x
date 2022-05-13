@@ -181,13 +181,13 @@
   },
   {
     "name": "preferencePanelClose",
-    "description": "Fired when the preferences panel is closed.",
+    "description": "Fired when the preference panel is closed.",
     "params": "GridPreferencePanelParams",
     "event": "MuiEvent<{}>"
   },
   {
     "name": "preferencePanelOpen",
-    "description": "Fired when the preferences panel is opened.",
+    "description": "Fired when the preference panel is opened.",
     "params": "GridPreferencePanelParams",
     "event": "MuiEvent<{}>"
   },

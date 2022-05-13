@@ -362,6 +362,48 @@ describe('<DataGrid /> - Rows', () => {
       expect(printButton).to.have.property('tabIndex', -1);
       expect(menuButton).to.have.property('tabIndex', 0);
     });
+
+    it('should focus the last button if the clicked button removes itself', () => {
+      let canDelete = true;
+      const Test = () => {
+        return (
+          <TestCase
+            getActions={() =>
+              canDelete
+                ? [
+                    <GridActionsCellItem icon={<span />} label="print" />,
+                    <GridActionsCellItem
+                      icon={<span />}
+                      label="delete"
+                      onClick={() => {
+                        canDelete = false;
+                      }}
+                    />,
+                  ]
+                : [<GridActionsCellItem icon={<span />} label="print" />]
+            }
+          />
+        );
+      };
+      render(<Test />);
+      fireEvent.click(screen.getByRole('menuitem', { name: 'delete' }));
+      expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+    });
+
+    it('should focus the last button if the currently focused button is removed', () => {
+      const { setProps } = render(
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem icon={<span />} label="print" />,
+            <GridActionsCellItem icon={<span />} label="delete" />,
+          ]}
+        />,
+      );
+      fireEvent.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
+      expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
+      setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+      expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+    });
   });
 
   describe('prop: getRowHeight', () => {

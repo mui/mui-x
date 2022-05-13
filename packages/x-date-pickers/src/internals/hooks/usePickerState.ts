@@ -41,11 +41,15 @@ export interface PickerStateValueManager<TInputValue, TValue, TDate> {
    * Generates the new value, given the previous value and the new proposed value.
    * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
-   * @param {TValue} prevValue The previous value.
+   * @param {TValue} lastValidDateValue The last valid value.
    * @param {TValue} value The proposed value.
    * @returns {TValue} The new value.
    */
-  valueReducer?: (utils: MuiPickersAdapter<TDate>, prevValue: TValue, value: TValue) => TValue;
+  valueReducer?: (
+    utils: MuiPickersAdapter<TDate>,
+    lastValidDateValue: TValue,
+    value: TValue,
+  ) => TValue;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
@@ -96,26 +100,54 @@ interface DateStateAction<DraftValue> {
   skipOnChangeCall?: boolean;
 }
 
-interface PickerStateProps<TInputValue, TValue> {
+export interface PickerStateProps<TInputValue, TValue> {
+  /**
+   * If `true` the popup or dialog will immediately close after submitting full date.
+   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   */
   closeOnSelect?: boolean;
+  /**
+   * Control the popup or dialog open state.
+   */
   open?: boolean;
-  onAccept?: (date: TValue) => void;
-  onChange: (date: TValue, keyboardInputValue?: string) => void;
+  /**
+   * Callback fired when date is accepted @DateIOType.
+   * @template TValue
+   * @param {TValue} value The value that was just accepted.
+   */
+  onAccept?: (value: TValue) => void;
+  /**
+   * Callback fired when the value (the selected date) changes @DateIOType.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
+   * @param {string} keyboardInputValue The current value of the keyboard input.
+   */
+  onChange: (value: TValue, keyboardInputValue?: string) => void;
+  /**
+   * Callback fired when the popup requests to be closed.
+   * Use in controlled mode (see open).
+   */
   onClose?: () => void;
+  /**
+   * Callback fired when the popup requests to be opened.
+   * Use in controlled mode (see open).
+   */
   onOpen?: () => void;
+  /**
+   * The value of the picker.
+   */
   value: TInputValue;
 }
 
 interface PickerStateInputProps<TInputValue, TValue> {
-  onChange: (date: TValue, keyboardInputValue?: string) => void;
+  onChange: (value: TValue, keyboardInputValue?: string) => void;
   open: boolean;
   rawValue: TInputValue;
   openPicker: () => void;
 }
 
-interface PickerStatePickerProps<TValue> {
-  // TODO: Rename `value`, for the date range it make no sense to call it `date`
-  date: TValue;
+export interface PickerStatePickerProps<TValue> {
+  parsedValue: TValue;
   isMobileKeyboardViewOpen: boolean;
   toggleMobileKeyboardView: () => void;
   onDateChange: (
@@ -203,10 +235,10 @@ export const usePickerState = <TInputValue, TValue, TDate>(
   );
 
   React.useEffect(() => {
-    if (parsedDateValue != null) {
+    if (utils.isValid(parsedDateValue)) {
       setLastValidDateValue(parsedDateValue);
     }
-  }, [parsedDateValue]);
+  }, [utils, parsedDateValue]);
 
   React.useEffect(() => {
     if (isOpen) {
@@ -255,7 +287,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
 
   const pickerProps = React.useMemo<PickerStatePickerProps<TValue>>(
     () => ({
-      date: dateState.draft,
+      parsedValue: dateState.draft,
       isMobileKeyboardViewOpen,
       toggleMobileKeyboardView: () => setMobileKeyboardViewOpen(!isMobileKeyboardViewOpen),
       onDateChange: (
@@ -294,11 +326,11 @@ export const usePickerState = <TInputValue, TValue, TDate>(
   );
 
   const handleInputChange = React.useCallback(
-    (date: TValue, keyboardInputValue?: string) => {
-      const cleanDate = valueManager.valueReducer
-        ? valueManager.valueReducer(utils, lastValidDateValue, date)
-        : date;
-      onChange(cleanDate, keyboardInputValue);
+    (newParsedValue: TValue, keyboardInputValue?: string) => {
+      const cleanParsedValue = valueManager.valueReducer
+        ? valueManager.valueReducer(utils, lastValidDateValue, newParsedValue)
+        : newParsedValue;
+      onChange(cleanParsedValue, keyboardInputValue);
     },
     [onChange, valueManager, lastValidDateValue, utils],
   );

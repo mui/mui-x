@@ -7,6 +7,7 @@ import {
   fireTouchChangedEvent,
   screen,
   within,
+  getAllByRole,
 } from '@mui/monorepo/test/utils';
 import { ClockPicker, clockPickerClasses as classes } from '@mui/x-date-pickers/ClockPicker';
 import {
@@ -193,6 +194,66 @@ describe('<ClockPicker />', () => {
     expect(Math.max(...hours)).to.equal(23);
   });
 
+  it('should display options, but not update value when readOnly prop is passed', () => {
+    const selectEvent = {
+      changedTouches: [
+        {
+          clientX: 150,
+          clientY: 60,
+        },
+      ],
+    };
+    const onChangeMock = spy();
+    render(
+      <ClockPicker
+        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        onChange={onChangeMock}
+        readOnly
+      />,
+    );
+
+    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    expect(onChangeMock.callCount).to.equal(0);
+
+    // hours are not disabled
+    const hoursContainer = screen.getByRole('listbox');
+    const hours = getAllByRole(hoursContainer, 'option');
+    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+
+    expect(hours.length).to.equal(24);
+    expect(disabledHours.length).to.equal(0);
+  });
+
+  it('should display disabled options when disabled prop is passed', () => {
+    const selectEvent = {
+      changedTouches: [
+        {
+          clientX: 150,
+          clientY: 60,
+        },
+      ],
+    };
+    const onChangeMock = spy();
+    render(
+      <ClockPicker
+        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        onChange={onChangeMock}
+        disabled
+      />,
+    );
+
+    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    expect(onChangeMock.callCount).to.equal(0);
+
+    // hours are disabled
+    const hoursContainer = screen.getByRole('listbox');
+    const hours = getAllByRole(hoursContainer, 'option');
+    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+
+    expect(hours.length).to.equal(24);
+    expect(disabledHours.length).to.equal(24);
+  });
+
   describe('Time validation on touch ', () => {
     before(function beforeHook() {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
@@ -316,6 +377,21 @@ describe('<ClockPicker />', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['20:--']);
 
       expect(handleChange.callCount).to.equal(0);
+    });
+
+    it('should visually disable the dates not matching minutesStep', () => {
+      render(
+        <ClockPicker
+          ampm={false}
+          date={adapterToUse.date('2018-01-01T13:20:00.000')}
+          minutesStep={15}
+          onChange={() => {}}
+          view="minutes"
+        />,
+      );
+
+      expect(screen.getByLabelText('25 minutes')).to.have.class('Mui-disabled');
+      expect(screen.getByLabelText('30 minutes')).not.to.have.class('Mui-disabled');
     });
 
     it('should select enabled second', () => {
