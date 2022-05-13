@@ -95,23 +95,27 @@ export function checkMaskIsValidForCurrentFormat(
 }
 
 export const maskedDateFormatter = (mask: string, acceptRegexp: RegExp) => (value: string) => {
+  let outputCharIndex = 0;
   return value
     .split('')
-    .map((char, i) => {
+    .map((char, inputCharIndex) => {
       acceptRegexp.lastIndex = 0;
 
-      if (i > mask.length - 1) {
+      if (outputCharIndex > mask.length - 1) {
         return '';
       }
 
-      const maskChar = mask[i];
-      const nextMaskChar = mask[i + 1];
+      const maskChar = mask[outputCharIndex];
+      const nextMaskChar = mask[outputCharIndex + 1];
 
       const acceptedChar = acceptRegexp.test(char) ? char : '';
       const formattedChar =
         maskChar === MASK_USER_INPUT_SYMBOL ? acceptedChar : maskChar + acceptedChar;
 
-      if (i === value.length - 1 && nextMaskChar && nextMaskChar !== MASK_USER_INPUT_SYMBOL) {
+      outputCharIndex += formattedChar.length;
+
+      const isLastCharacter = inputCharIndex === value.length - 1;
+      if (isLastCharacter && nextMaskChar && nextMaskChar !== MASK_USER_INPUT_SYMBOL) {
         // when cursor at the end of mask part (e.g. month) prerender next symbol "21" -> "21/"
         return formattedChar ? formattedChar + nextMaskChar : '';
       }

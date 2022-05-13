@@ -21,7 +21,6 @@ export default function ControlledSelectionServerPaginationGrid() {
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [selectionModel, setSelectionModel] = React.useState([]);
-  const prevSelectionModel = React.useRef(selectionModel);
 
   React.useEffect(() => {
     let active = true;
@@ -36,9 +35,6 @@ export default function ControlledSelectionServerPaginationGrid() {
 
       setRows(newRows);
       setLoading(false);
-      setTimeout(() => {
-        setSelectionModel(prevSelectionModel.current);
-      });
     })();
 
     return () => {
@@ -58,7 +54,6 @@ export default function ControlledSelectionServerPaginationGrid() {
         rowCount={100}
         paginationMode="server"
         onPageChange={(newPage) => {
-          prevSelectionModel.current = selectionModel;
           setPage(newPage);
         }}
         onSelectionModelChange={(newSelectionModel) => {
@@ -66,6 +61,7 @@ export default function ControlledSelectionServerPaginationGrid() {
         }}
         selectionModel={selectionModel}
         loading={loading}
+        keepNonExistentRowsSelected
       />
     </div>
   );
