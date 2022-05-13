@@ -48,8 +48,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - Moving row grouping to premium package
 
-  The experimental feature `rowGrouping` is deprecated, and will be removed in the next version.
-  To continue using it, we encourage you to upgrade the `@mui/x-data-grid-premium` package.
+  The use of `rowGrouping` in the `@mui/x-data-grid-pro` package is deprecated. The experimental flag will be removed in an upcoming release.
 
 #### Changes
 
@@ -97,13 +96,13 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DatePicker] Ignore <kbd>Escape</kbd> when the picker is already closed (#4770) @mikewolfd
 - [DatePicker] Make month year order changeable in header (#4695) @gky360
 - [DateRangePicker] Open view on click, <kbd>Enter</kbd> or <kbd>Space</kbd> instead of focus (#4747) @alexfauquette
-- [DateRangePicker] Refacto tests (#4745) @flaviendelangle
+- [DateRangePicker] Refactor tests (#4745) @flaviendelangle
 - [DateRangePicker] Remove `orientation` prop (#4665) @m4theushw
 - [DateTimePicker] `Toolbar` should be visible by default on mobile (#4833) @flaviendelangle
 - [MonthPicker] New prop `shouldDisableMonth` (#4708) @someone635
 - [TimePicker] Disable and invalidate date with minutes not matching `minutesStep` (#4726) @flaviendelangle
 - [TimePicker] Don't merge with previous value when new value is not valid (#4847) @flaviendelangle
-- [TimePicker] Refacto `isTimeDisabled` method (#4688) @flaviendelangle
+- [TimePicker] Refactor `isTimeDisabled` method (#4688) @flaviendelangle
 - [pickers] Add details in invalid mask error (#4501) @alexfauquette
 - [pickers] Add explicit interfaces for components slots and components slots props (#4589) @flaviendelangle
 - [pickers] Add missing `peerDependencies` for `yarn pnp` users (#4763) @nate-summercook
