@@ -114,6 +114,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [pickers] Drop `allowSameDateSelection` prop (#4808) @flaviendelangle
 - [pickers] Enable mask by default when using `ampm=true` (#4731) @alexfauquette
 - [pickers] Fix `disabled` and `readOnly` behavior on calendar and clock (#4645) @alexfauquette
+- [pickers] Invalid character does not delete last digit (#4839) @alexfauquette
 - [pickers] Rename prop `date` into `parsedValue` when it can contain a range (#4736) @flaviendelangle
 - [pickers] Rework `TDate`, `TInputDate`, `TValue` and `TInputValue` generics (#4617) @flaviendelangle
 - [pickers] Rework the date lifecycle in `usePickerState` (#4408) @flaviendelangle
@@ -142,6 +143,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 ### Core
 
 - [core] Check if `process` is available (#4193) @m4theushw
+- [core] Fix naming collision (#4853) @alexfauquette
 - [core] Prevent out-of-memory when type-checking in CI (#4697) @flaviendelangle
 - [core] Remove `rowsCache` from state (#4480) @m4theushw
 - [core] Rework `DayPicker` api (#4783) @flaviendelangle
