@@ -1,11 +1,11 @@
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
 
-export interface LabComponentsPropsList {
+export interface PickersProComponentsPropsList {
   MuiDateRangePickerDay: DateRangePickerDayProps<unknown>;
 }
 
 declare module '@mui/material/styles' {
-  interface ComponentsPropsList extends LabComponentsPropsList {}
+  interface ComponentsPropsList extends PickersProComponentsPropsList {}
 }
 
 // disable automatic export

@@ -46,8 +46,8 @@ Community Plan packages:
 The MUI X Pro Plan expands on the limitations of the Community Plan with more advanced features such as multi-filtering, multi-sorting, column resizing and column pinning.
 
 The Pro Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
-This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components.
-The price of the plan is designed to be accessible to most professionals.
+This plan contains the features that are at the limit of what the open-source model can sustain.
+For instance, providing support for handling massive amounts of data, in a flexible data grid integrated with a comprehensive set of components.
 
 Pro Plan packages:
 
@@ -65,19 +65,24 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
 
 ### Premium Plan <span class="plan-premium"></span>
 
-The MUI X Premium Plan contains the most advanced features such as Row grouping, Excel export, Aggregation, as well as everything that's included in the Pro Plan.
+The MUI X Premium Plan contains the most advanced features such as Row grouping, Excel export, Aggregation (🚧), as well as everything that's included in the Pro Plan.
+
+The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+This plan contains highly complex features that can be useful to analyze and group data without the use of an external application.
+The price of the plan targets small to medium-size teams.
+
+Premium Plan package:
+
+- [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
 The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
-This plan contains the most advanced features, ones that we haven't seen any open-source libraries able to deliver well.
-
-The Premium Plan is not available yet (🚧) but will soon be available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
 
 ## Evaluation (trial) licenses
 
-In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use our Pro and Premium components without a commercial license as long as they are not used for the **development** of a feature intended for production.
+In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
 You do not need to contact us to use these components for evaluation purposes.
 
-You will need to purchase a commercial license in order to remove the watermarks and console warnings.
+You will need to purchase a commercial license in order to remove the watermarks and console warnings, or after the given 30 days period of evaluation.
 
 ## License key installation
 
@@ -159,18 +164,16 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 ### Professional support
 
 When purchasing an MUI X Pro or Premium license you get access to professional support for a limited duration.
-Support is available on multiple channels, but the recommended channel is GitHub issues.
-You can also reach us by email at x@mui.com if you need to share private information.
+Support is available on multiple channels, but the recommended channels are:
 
-- **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
-  - GitHub: [Open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID.
-  - Email (only to share private information): [Open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
-- **MUI X Premium**: Same as MUI X Pro, but with priority over Pro, and a 48 hour SLA for the first answer.
-  - GitHub: this plan is not available yet
-  - Emails: this plan is not available yet
-- **MUI X Premium Priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer.
-  - GitHub: this plan is not available yet
-  - Emails: this plan is not available yet
+- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
+- Email (**only if your issue requires sharing private information**): You can [open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to x@mui.com.
+
+Your OrderId on the issue helps us prioritize the issues based on the following support levels:
+
+1. **MUI X Pro**: MUI's maintainers give these issues more attention than the ones from the Community plan.
+2. **MUI X Premium**: Same as MUI X Pro, but with priority over Pro.
+3. **MUI X Priority support add-on (not available yet)**: A provided SLA with 24h for the first answer.
 
 ## Roadmap
 

@@ -1,4 +1,6 @@
-const pages = [
+import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+
+const pages: MuiPage[] = [
   {
     pathname: '/x/advanced-components',
     title: 'Overview',

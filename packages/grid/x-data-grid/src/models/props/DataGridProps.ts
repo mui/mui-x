@@ -248,6 +248,13 @@ export interface DataGridPropsWithDefaultValues {
    */
   hideFooterSelectedRowCount: boolean;
   /**
+   * If `true`, the selection model will retain selected rows that do not exist.
+   * Useful when using server side pagination and row selections need to be retained
+   * when changing pages.
+   * @default false
+   */
+  keepNonExistentRowsSelected: boolean;
+  /**
    * Pass a custom logger in the components that implements the [[Logger]] interface.
    * @default console
    */

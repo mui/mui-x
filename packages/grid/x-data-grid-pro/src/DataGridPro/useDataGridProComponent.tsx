@@ -70,6 +70,11 @@ import { useGridDetailPanelCache } from '../hooks/features/detailPanel/useGridDe
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+import {
+  useGridRowGrouping,
+  rowGroupingStateInitializer,
+} from '../hooks/features/rowGrouping/useGridRowGrouping';
+import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -82,6 +87,7 @@ export const useDataGridProComponent = (
    */
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
+  useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
@@ -92,6 +98,7 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
   useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
@@ -115,6 +122,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
 
+  useGridRowGrouping(apiRef, props);
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
