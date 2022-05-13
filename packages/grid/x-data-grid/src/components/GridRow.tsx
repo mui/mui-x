@@ -134,7 +134,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const classes = useUtilityClasses(ownerState);
 
   React.useLayoutEffect(() => {
-    if (ref.current && typeof ResizeObserver === 'undefined') {
+    if (rowHeight === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
       // Fallback for IE
       apiRef.current.unstable_storeRowHeightMeasurement(rowId, ref.current.clientHeight);
     }
