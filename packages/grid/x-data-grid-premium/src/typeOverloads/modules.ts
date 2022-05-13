@@ -42,7 +42,6 @@ export interface GridApiCachesPremium {
   };
 }
 declare module '@mui/x-data-grid-pro' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface GridColDef<R, V, F> extends GridColDefPro<R, V, F>, GridColDefPremium<R, V, F> {}
 
   interface GridControlledStateEventLookup

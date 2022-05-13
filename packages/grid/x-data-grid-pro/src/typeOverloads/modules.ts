@@ -57,7 +57,6 @@ export interface GridPipeProcessingLookupPro {
 declare module '@mui/x-data-grid' {
   interface GridEventLookup extends GridEventLookupPro {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface GridColDef<R, V, F> extends GridColDefPro<R, V, F> {}
 
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
