@@ -146,7 +146,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     }
 
     const rootElement = ref.current;
-    const hasFixedHeight = !apiRef.current.unstable_rowHasAutoHeight(rowId);
+    const hasFixedHeight = rowHeight !== 'auto';
     if (!rootElement || hasFixedHeight || typeof ResizeObserver === 'undefined') {
       return () => {};
     }
@@ -159,7 +159,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     resizeObserver.observe(rootElement);
 
     return () => resizeObserver.disconnect();
-  }, [apiRef, currentPage.range, index, rowId]);
+  }, [apiRef, currentPage.range, index, rowHeight, rowId]);
 
   const publish = React.useCallback(
     (

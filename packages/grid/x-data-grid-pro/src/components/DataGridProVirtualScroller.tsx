@@ -293,6 +293,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: leftRenderContext.firstColumnIndex,
               maxLastColumn: leftRenderContext.lastColumnIndex,
               availableSpace: 0,
+              ignoreAutoHeight: true,
             })}
           </VirtualScrollerPinnedColumns>
         )}
@@ -311,6 +312,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
               availableSpace: 0,
+              ignoreAutoHeight: true,
             })}
           </VirtualScrollerPinnedColumns>
         )}
