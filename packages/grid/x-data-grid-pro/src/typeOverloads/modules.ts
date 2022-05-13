@@ -23,11 +23,11 @@ export interface GridControlledStateEventLookupPro {
   rowGroupingModelChange: { params: GridRowGroupingModel };
 }
 
-// TODO: Add back on premium when removing it from pro
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface GridColDefPro<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * Function that transforms a complex cell value into a key that be used for grouping the rows.
+   * TODO: Add back on premium when removing it from pro
    * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
@@ -57,8 +57,8 @@ export interface GridPipeProcessingLookupPro {
 declare module '@mui/x-data-grid' {
   interface GridEventLookup extends GridEventLookupPro {}
 
-  export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V>
-    extends GridColDefPro<R, V, F> {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface GridColDef<R, V, F> extends GridColDefPro<R, V, F> {}
 
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
 

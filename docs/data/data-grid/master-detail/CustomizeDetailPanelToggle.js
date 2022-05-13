@@ -75,8 +75,14 @@ function CustomDetailPanelToggle(props) {
 }
 
 CustomDetailPanelToggle.propTypes = {
-  id: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.any,
 };
 
 const columns = [
