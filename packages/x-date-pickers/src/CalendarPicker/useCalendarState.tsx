@@ -30,7 +30,7 @@ export const createCalendarStateReducer =
     action:
       | ReducerAction<'finishMonthSwitchingAnimation'>
       | ReducerAction<'changeMonth', ChangeMonthPayload<TDate>>
-      | ReducerAction<'changeFocusedDay', { focusedDay: TDate }>,
+      | ReducerAction<'changeFocusedDay', { focusedDay: TDate | null }>,
   ): CalendarState<TDate> => {
     switch (action.type) {
       case 'changeMonth':
@@ -48,12 +48,16 @@ export const createCalendarStateReducer =
         };
 
       case 'changeFocusedDay': {
-        if (state.focusedDay !== null && utils.isSameDay(action.focusedDay, state.focusedDay)) {
+        if (
+          state.focusedDay != null &&
+          action.focusedDay != null &&
+          utils.isSameDay(action.focusedDay, state.focusedDay)
+        ) {
           return state;
         }
 
         const needMonthSwitch =
-          Boolean(action.focusedDay) &&
+          action.focusedDay != null &&
           !disableSwitchToMonthOnDayFocus &&
           !utils.isSameMonth(state.currentMonth, action.focusedDay);
 
@@ -62,11 +66,12 @@ export const createCalendarStateReducer =
           focusedDay: action.focusedDay,
           isMonthSwitchingAnimating: needMonthSwitch && !reduceAnimations,
           currentMonth: needMonthSwitch
-            ? utils.startOfMonth(action.focusedDay)
+            ? utils.startOfMonth(action.focusedDay!)
             : state.currentMonth,
-          slideDirection: utils.isAfterDay(action.focusedDay, state.currentMonth)
-            ? 'left'
-            : 'right',
+          slideDirection:
+            action.focusedDay != null && utils.isAfterDay(action.focusedDay, state.currentMonth)
+              ? 'left'
+              : 'right',
         };
       }
 
@@ -165,7 +170,7 @@ export const useCalendarState = <TDate extends unknown>({
   }, []);
 
   const changeFocusedDay = React.useCallback(
-    (newFocusedDate: TDate) => {
+    (newFocusedDate: TDate | null) => {
       if (!isDateDisabled(newFocusedDate)) {
         dispatch({ type: 'changeFocusedDay', focusedDay: newFocusedDate });
       }

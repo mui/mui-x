@@ -21,7 +21,7 @@ import {
 } from '../../../../test/utils/pickers-utils';
 
 describe('<CalendarPicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(<CalendarPicker date={adapterToUse.date()} onChange={() => {}} />, () => ({
     classes,
@@ -309,6 +309,27 @@ describe('<CalendarPicker />', () => {
       expect(onChange.lastCall.args[0]).toEqualDateTime(
         adapterToUse.date('2019-04-22T00:00:00.000'),
       );
+    });
+
+    it('should go to next view without changing the date when no date of the new month is enabled', () => {
+      const onChange = spy();
+
+      render(
+        <CalendarPicker
+          date={adapterToUse.date('2019-01-29T00:00:00.000')}
+          onChange={onChange}
+          shouldDisableDate={(date) => adapterToUse.getMonth(date) === 3}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      fireEvent.click(april);
+      clock.runToLast();
+
+      expect(onChange.callCount).to.equal(0);
+      expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('April 2019');
     });
 
     // TODO: Enable when the adapter will support startOfYear / endOfYear and the behavior of handleDateYearChange will match the one of handleDateMonthChange

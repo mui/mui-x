@@ -67,7 +67,7 @@ export const findClosestEnabledDate = <TDate>({
     }
   }
 
-  return today;
+  return null;
 };
 
 export const parsePickerInputValue = <TDate>(
