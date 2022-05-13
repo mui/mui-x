@@ -8,12 +8,12 @@ import { onSpaceOrEnter } from '../internals/utils/utils';
 
 const classes = generateUtilityClasses('PrivatePickersMonth', ['root', 'selected']);
 
-export interface MonthButtonProps<TDate> {
+export interface MonthButtonProps {
   children: React.ReactNode;
   disabled?: boolean;
-  onSelect: (value: TDate) => void;
+  onSelect: (value: number) => void;
   selected?: boolean;
-  value: TDate;
+  value: number;
 }
 
 export type PickersMonthClassKey = keyof typeof classes;
@@ -53,7 +53,7 @@ const PickersMonthRoot = styled<
 /**
  * @ignore - do not document.
  */
-export const MonthButton = <TDate extends unknown>(props: MonthButtonProps<TDate>) => {
+export const MonthButton = (props: MonthButtonProps) => {
   const { disabled, onSelect, selected, value, ...other } = props;
 
   const handleSelection = () => {
