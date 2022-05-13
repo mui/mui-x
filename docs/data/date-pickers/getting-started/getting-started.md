@@ -30,6 +30,8 @@ We currently support 4 different date-libraries:
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
 
+If you need to use `js-joda`, `date-fns-jalali`, `jalaali`, or `hijri` library, you should be able to find the corresponding date-library from [`@date-io`](https://github.com/dmtrKovalenko/date-io#projects).
+
 First you have to install the adapter package for the date-library you want to use:
 
 ```sh
