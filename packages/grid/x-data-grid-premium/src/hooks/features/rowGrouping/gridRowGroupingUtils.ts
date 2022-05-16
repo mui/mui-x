@@ -174,22 +174,3 @@ export const setStrategyAvailability = (
 
   apiRef.current.unstable_setStrategyAvailability('rowTree', ROW_GROUPING_STRATEGY, isAvailable);
 };
-
-export const getRowGroupingFieldsFromRowGroupingModel = (
-  model: GridRowGroupingModel,
-  groupingColumnMode: DataGridPremiumProcessedProps['rowGroupingColumnMode'],
-) => {
-  if (groupingColumnMode === 'single') {
-    return [
-      {
-        groupingCriteria: model,
-        groupingColumnField: getRowGroupingFieldFromGroupingCriteria(null),
-      },
-    ];
-  }
-
-  return model.map((groupingCriterion) => ({
-    groupingCriteria: [groupingCriterion],
-    groupingColumnField: getRowGroupingFieldFromGroupingCriteria(groupingCriterion),
-  }));
-};

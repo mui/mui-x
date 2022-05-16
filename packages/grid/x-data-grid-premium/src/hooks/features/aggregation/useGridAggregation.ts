@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   gridColumnLookupSelector,
-  gridRowGroupingModelSelector,
   useGridApiEventHandler,
   useGridApiMethod,
 } from '@mui/x-data-grid-pro';
@@ -14,9 +13,9 @@ import {
   getAggregationRules,
   mergeStateWithAggregationModel,
   hasAggregationRulesChanged,
+  getGroupingColumns,
 } from './gridAggregationUtils';
 import { createAggregationLookup } from './createAggregationLookup';
-import { getRowGroupingFieldsFromRowGroupingModel } from '../rowGrouping/gridRowGroupingUtils';
 
 export const aggregationStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'aggregationModel' | 'initialState'>,
@@ -101,13 +100,14 @@ export const useGridAggregation = (
       aggregationFunctions: props.aggregationFunctions,
     });
 
-    const groupingColumnFields = getRowGroupingFieldsFromRowGroupingModel(
-      gridRowGroupingModelSelector(apiRef),
-      props.rowGroupingColumnMode,
-    );
+    const groupingColumnFields = getGroupingColumns({
+      apiRef,
+      columnsLookup: gridColumnLookupSelector(apiRef),
+    });
 
     // Re-apply the row hydration to add / remove the aggregation footers
     if (hasAggregationRulesChanged(aggregationRulesOnLastRowHydration, aggregationRules)) {
+      console.log(aggregationRulesOnLastRowHydration, aggregationRules);
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
       applyAggregation();
     }
@@ -119,7 +119,7 @@ export const useGridAggregation = (
     ) {
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
     }
-  }, [apiRef, applyAggregation, props.aggregationFunctions, props.rowGroupingColumnMode]);
+  }, [apiRef, applyAggregation, props.aggregationFunctions]);
 
   useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);

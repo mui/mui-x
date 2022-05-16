@@ -40,7 +40,7 @@ export interface GridApiCachesPremium {
     aggregationRulesOnLastColumnHydration?: GridAggregationRules;
     aggregationRulesOnLastRowHydration?: GridAggregationRules;
     groupingColumnFieldsOnLastColumnHydration?: {
-      groupingCriteria: string[];
+      groupingCriteria?: string[];
       groupingColumnField: string;
     }[];
   };

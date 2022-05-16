@@ -3,7 +3,6 @@ import { GridEventPublisher, GridEventListener, GridEventsStr } from '../events'
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridRowsInternalCache } from '../../hooks/features/rows/gridRowsState';
 
-// TODO: Export and make it augmentable
 export interface GridApiCaches {
   rows?: GridRowsInternalCache;
 }
