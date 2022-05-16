@@ -59,7 +59,7 @@ export const useMaskedInput = <TInputDate, TDate>({
   // TODO: Implement with controlled vs uncontrolled `rawValue`
   const parsedValue = rawValue === null ? null : utils.date(rawValue);
 
-  // Track the value of the input 
+  // Track the value of the input
   const [innerInputValue, setInnerInputValue] = React.useState(parsedValue);
   // control the input text
   const [innerDisplayedInputValue, setInnerDisplayedInputValue] = React.useState(
@@ -96,11 +96,11 @@ export const useMaskedInput = <TInputDate, TDate>({
   const inputStateArgs = shouldUseMaskedInput
     ? rifmProps
     : {
-      value: innerDisplayedInputValue,
-      onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-        handleChange(event.currentTarget.value);
-      },
-    };
+        value: innerDisplayedInputValue,
+        onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+          handleChange(event.currentTarget.value);
+        },
+      };
 
   return {
     label,
