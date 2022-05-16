@@ -17,7 +17,7 @@ export function showInvalidLicenseError() {
     'MUI: Invalid license key.',
     '',
     'Your MUI X license key isn't valid. Please check',
-    'your license key, or visit
+    'your license key, or visit',
     'https://mui.com/r/x-get-license to get a valid license.',
   ]);
 }
