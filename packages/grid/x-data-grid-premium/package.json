@@ -55,7 +55,7 @@
     "@mui/material": "^5.2.8",
     "@mui/system": "^5.2.8",
     "exceljs": "^4.3.0",
-    "react": "^17.0.2"
+    "react": "^17.0.2 || ^18.0.0"
   },
   "peerDependenciesMeta": {
     "exceljs": {
