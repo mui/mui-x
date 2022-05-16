@@ -7,7 +7,7 @@ const sumAgg: GridAggregationFunction<number> = {
     let sum = 0;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
-      if (value !== undefined) {
+      if (value != null) {
         sum += value;
       }
     }
@@ -38,7 +38,7 @@ const minAgg: GridAggregationFunction<number | Date> = {
     let min: number | Date = +Infinity;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
-      if (value !== undefined && value < min) {
+      if (value != null && value < min) {
         min = value;
       }
     }
@@ -57,7 +57,7 @@ const maxAgg: GridAggregationFunction<number | Date> = {
     let max: number | Date = -Infinity;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
-      if (value !== undefined && value > max) {
+      if (value != null && value > max) {
         max = value;
       }
     }

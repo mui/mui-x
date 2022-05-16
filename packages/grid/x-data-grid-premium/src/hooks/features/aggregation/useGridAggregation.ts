@@ -101,8 +101,7 @@ export const useGridAggregation = (
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
     if (!isDeepEqual(aggregationRulesOnLastColumnHydration, aggregationRules)) {
-      // TODO: Add a clean way to re-run a pipe processing without faking a change
-      apiRef.current.updateColumns([]);
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
     }
   }, [apiRef, applyAggregation, props.aggregationFunctions]);
 
