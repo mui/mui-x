@@ -45,6 +45,7 @@ export const useGridRowsMeta = (
     };
   }>({});
 
+  // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
   const lastMeasuredRowIndex = React.useRef(0);
   const hasRowWithAutoHeight = React.useRef(false);
   const rowHeightFromDensity = useGridSelector(apiRef, gridDensityRowHeightSelector);
