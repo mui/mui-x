@@ -14,9 +14,10 @@ function showError(message: string[]) {
 
 export function showInvalidLicenseError() {
   showError([
-    'MUI: Invalid license.',
+    'MUI: Invalid license key.',
     '',
-    'Your license for MUI X is not valid, please visit',
+    'Your MUI X license key isn't valid. Please check',
+    'your license key, or visit
     'https://mui.com/r/x-get-license to get a valid license.',
   ]);
 }
@@ -27,10 +28,10 @@ export function showNotFoundLicenseError() {
     '',
     'This is a trial-only version of MUI X.',
     'While all the features are unlocked, it is not licensed for',
-    'development use on projects intended for production.',
+    'development use in projects intended for production.',
     '',
     'To purchase a license, please visit',
-    'https://mui.com/r/x-get-license to get a valid license.',
+    'https://mui.com/r/x-get-license.',
   ]);
 }
 
