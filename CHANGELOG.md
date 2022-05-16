@@ -37,7 +37,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 #### Breaking changes
 
-- Move row grouping to the premium package (#3981) @alexfauquette
+- Move row grouping to the premium package (#4223) @flaviendelangle
 
   The use of `rowGrouping` in the `@mui/x-data-grid-pro` package is deprecated. The experimental flag will be removed in an upcoming release.
 
