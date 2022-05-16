@@ -57,6 +57,7 @@ const run = async (argv: yargs.ArgumentsCamelCase<{ path: string }>) => {
     nodes.push(...childNodes);
   }
 
+  // eslint-disable-next-line no-console
   console.log(JSON.stringify(nodes, null, 2));
 };
 
