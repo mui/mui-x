@@ -26,7 +26,6 @@ export const useMaskedInput = <TInputDate, TDate>({
   disabled,
   disableMaskedInput,
   ignoreInvalidInputs,
-  acceptInconsistentFormat,
   inputFormat,
   inputProps,
   label,
@@ -58,15 +57,21 @@ export const useMaskedInput = <TInputDate, TDate>({
   );
 
   // TODO: Implement with controlled vs uncontrolled `rawValue`
-  const currentInputValue = getDisplayDate(utils, rawValue, inputFormat);
-  const [innerInputValue, setInnerInputValue] = React.useState(currentInputValue);
-  // TODO: allows to control this value
-  const [innerDisplayedInputValue, setInnerDisplayedInputValue] = React.useState(currentInputValue);
+  const parsedValue = rawValue === null ? null : utils.date(rawValue);
 
-  const isAcceptedValue = rawValue === null || utils.isValid(rawValue)
-  if (isAcceptedValue && currentInputValue !== innerInputValue) {
-    setInnerInputValue(currentInputValue);
-    setInnerDisplayedInputValue(currentInputValue);
+  // Track the value of the input 
+  const [innerInputValue, setInnerInputValue] = React.useState(parsedValue);
+  // control the input text
+  const [innerDisplayedInputValue, setInnerDisplayedInputValue] = React.useState(
+    getDisplayDate(utils, rawValue, inputFormat),
+  );
+
+  const isAcceptedValue = rawValue === null || utils.isValid(parsedValue);
+  if (isAcceptedValue && !utils.isEqual(innerInputValue, parsedValue)) {
+    // When dev set a new valid value, we trust them
+    const newDisplayDate = getDisplayDate(utils, rawValue, inputFormat);
+    setInnerInputValue(parsedValue);
+    setInnerDisplayedInputValue(newDisplayDate);
   }
 
   const handleChange = (text: string) => {
@@ -77,15 +82,8 @@ export const useMaskedInput = <TInputDate, TDate>({
     if (ignoreInvalidInputs && !utils.isValid(date)) {
       return;
     }
-    if (
-      !acceptInconsistentFormat &&
-      date !== null &&
-      getDisplayDate(utils, date, inputFormat) !== finalString
-    ) {
-      // Update the input value only if the value changed outside of typing
-      // Because library formatters can change inputs from 12/12/2 to 12/12/0002
-      return;
-    }
+
+    setInnerInputValue(date);
     onChange(date, finalString || undefined);
   };
 
@@ -107,7 +105,7 @@ export const useMaskedInput = <TInputDate, TDate>({
   return {
     label,
     disabled,
-    error: validationError || innerInputValue !== innerDisplayedInputValue,
+    error: validationError,
     inputProps: {
       ...inputStateArgs,
       disabled,

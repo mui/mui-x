@@ -48,16 +48,22 @@ describe('<DesktopDateTimePicker />', () => {
   });
 
   it('prop: mask – should take the mask prop into account', () => {
-    render(
-      <DesktopDateTimePicker
-        renderInput={(params) => <TextField autoFocus {...params} />}
-        ampm={false}
-        inputFormat="mm.dd.yyyy hh:mm"
-        mask="__.__.____ __:__"
-        onChange={() => {}}
-        value={null}
-      />,
-    );
+    const Test = () => {
+      const [value, setValue] = React.useState(null);
+
+      return (
+        <DesktopDateTimePicker
+          renderInput={(params) => <TextField autoFocus {...params} />}
+          ampm={false}
+          inputFormat="mm.dd.yyyy hh:mm"
+          mask="__.__.____ __:__"
+          value={value}
+          onChange={setValue}
+        />
+      );
+    };
+
+    render(<Test />);
 
     const textbox = screen.getByRole('textbox') as HTMLInputElement;
     fireEvent.change(textbox, {
@@ -117,6 +123,7 @@ describe('<DesktopDateTimePicker />', () => {
       fireEvent.change(screen.getByRole('textbox'), {
         target: { value: '12/01/1999 10:12' },
       });
+      expect(onChange.callCount).to.equal(1);
       expect(adapterToUse.isValid(onChange.lastCall.args[0])).to.equal(!ampm);
 
       // Call `onChange` with a 12h date-time. The mask will remove the am/pm
