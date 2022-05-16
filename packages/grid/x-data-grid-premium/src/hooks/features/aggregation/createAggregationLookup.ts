@@ -149,12 +149,15 @@ export const createAggregationLookup = ({
 
   const aggregationLookup: GridAggregationLookup = {};
   const rowIds = gridRowIdsSelector(apiRef);
+  const rowTree = gridRowTreeSelector(apiRef);
 
   for (let i = 0; i < rowIds.length; i += 1) {
     const rowId = rowIds[i];
-    const isGroup = rowId.toString().startsWith('auto-generated-row-');
+    const hasChildren = rowTree[rowId].children?.some(
+      (childId) => (rowTree[childId].position ?? 'body') === 'body',
+    );
 
-    if (isGroup) {
+    if (hasChildren) {
       aggregationLookup[rowId] = getGroupAggregatedValue({
         id: rowId,
         apiRef,

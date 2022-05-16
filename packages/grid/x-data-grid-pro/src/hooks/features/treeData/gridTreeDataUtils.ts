@@ -79,6 +79,11 @@ export const filterRowTreeFromTreeData = (
     }
 
     filteredDescendantCountLookup[node.id] = filteredDescendantCount;
+
+    if (node.position === 'footer') {
+      return filteredDescendantCount;
+    }
+
     return filteredDescendantCount + 1;
   };
 

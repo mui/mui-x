@@ -1,6 +1,6 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
-import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, gridRowGroupingModelSelector } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
@@ -14,13 +14,15 @@ import {
   mergeStateWithAggregationModel,
 } from './gridAggregationUtils';
 import {
-  wrapColumnWithAggregation,
+  wrapColumnWithAggregationValue,
   unwrapColumnFromAggregation,
+  wrapColumnWithAggregationLabel,
 } from './wrapColumnWithAggregation';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationColumnMenuItems } from '../../../components/GridAggregationColumnMenuItems';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
+import { getRowGroupingFieldsFromRowGroupingModel } from '../rowGrouping/gridRowGroupingUtils';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -28,13 +30,19 @@ export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'aggregationFunctions' | 'isGroupAggregated' | 'disableAggregation'
+    | 'aggregationFunctions'
+    | 'isGroupAggregated'
+    | 'disableAggregation'
+    | 'aggregationFooterLabel'
+    | 'rowGroupingColumnMode'
   >,
 ) => {
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      const lastAppliedAggregationRules =
-        apiRef.current.unstable_caches.aggregation?.aggregationRulesOnLastColumnHydration ?? {};
+      const {
+        aggregationRulesOnLastColumnHydration = {},
+        groupingColumnFieldsOnLastColumnHydration,
+      } = apiRef.current.unstable_caches.aggregation ?? {};
 
       const aggregationRules = getAggregationRules({
         columnsLookup: columnsState.lookup,
@@ -42,19 +50,25 @@ export const useGridAggregationPreProcessors = (
         aggregationFunctions: props.aggregationFunctions,
       });
 
+      const groupingColumnFields = getRowGroupingFieldsFromRowGroupingModel(
+        gridRowGroupingModelSelector(apiRef),
+        props.rowGroupingColumnMode,
+      );
+
       columnsState.all.forEach((field) => {
-        const shouldHaveAggregation = !props.disableAggregation && !!aggregationRules[field];
-        const haveAggregationColumn = !!lastAppliedAggregationRules[field];
+        const shouldHaveAggregationValue = !props.disableAggregation && !!aggregationRules[field];
+        const haveAggregationColumnValue = !!aggregationRulesOnLastColumnHydration[field];
+
         let column = columnsState.lookup[field];
 
-        if (haveAggregationColumn) {
+        if (haveAggregationColumnValue) {
           column = unwrapColumnFromAggregation({
             column,
           });
         }
 
-        if (shouldHaveAggregation) {
-          column = wrapColumnWithAggregation({
+        if (shouldHaveAggregationValue) {
+          column = wrapColumnWithAggregationValue({
             column,
             columnAggregationRules: aggregationRules[field],
             apiRef,
@@ -65,14 +79,51 @@ export const useGridAggregationPreProcessors = (
         columnsState.lookup[field] = column;
       });
 
+      groupingColumnFieldsOnLastColumnHydration?.forEach(({ groupingColumnField }) => {
+        columnsState.lookup[groupingColumnField] = unwrapColumnFromAggregation({
+          column: columnsState.lookup[groupingColumnField],
+        });
+      });
+
+      groupingColumnFields.forEach(
+        ({ groupingColumnField, groupingCriteria }, groupingColumnIndex) => {
+          const column = columnsState.lookup[groupingColumnField];
+          if (!column) {
+            return;
+          }
+
+          columnsState.lookup[groupingColumnField] = wrapColumnWithAggregationLabel({
+            column: columnsState.lookup[groupingColumnField],
+            aggregationFooterLabel: props.aggregationFooterLabel,
+            apiRef,
+            isGroupAggregated: props.isGroupAggregated,
+            shouldRenderLabel: (groupNode) => {
+              if (groupNode?.groupingField == null) {
+                return groupingColumnIndex === 0;
+              }
+
+              return groupingCriteria.includes(groupNode.groupingField);
+            },
+          });
+        },
+      );
+
       apiRef.current.unstable_caches.aggregation = {
         ...apiRef.current.unstable_caches.aggregation,
         aggregationRulesOnLastColumnHydration: aggregationRules,
+        groupingColumnFieldsOnLastColumnHydration: groupingColumnFields,
       };
 
       return columnsState;
     },
-    [apiRef, props.aggregationFunctions, props.disableAggregation, props.isGroupAggregated],
+    [
+      apiRef,
+      props.aggregationFunctions,
+      props.disableAggregation,
+      props.isGroupAggregated,
+      props.aggregationFooterLabel,
+      props.rowGroupingColumnMode,
+    ],
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(

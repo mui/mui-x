@@ -39,6 +39,10 @@ export interface GridApiCachesPremium {
   aggregation?: {
     aggregationRulesOnLastColumnHydration?: GridAggregationRules;
     aggregationRulesOnLastRowHydration?: GridAggregationRules;
+    groupingColumnFieldsOnLastColumnHydration?: {
+      groupingCriteria: string[];
+      groupingColumnField: string;
+    }[];
   };
 }
 declare module '@mui/x-data-grid-pro' {

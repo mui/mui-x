@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
+import { GridColDef, GridRowId, GridRowTreeNodeConfig } from '@mui/x-data-grid-pro';
+import { isFunction } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -30,7 +31,7 @@ type AggregationWrappedVariable<M extends Function | object[]> = M extends Funct
 type AggregationWrappedColDefProperty<M extends typeof AGGREGATION_WRAPPABLE_PROPERTIES[number]> =
   AggregationWrappedVariable<NonNullable<GridColDef[M]>>;
 
-const getWrappedValueGetter = ({
+const getAggregationValueWrappedValueGetter = ({
   apiRef,
   valueGetter,
   getCellAggregationPosition,
@@ -65,7 +66,7 @@ const getWrappedValueGetter = ({
   return wrappedValueGetter;
 };
 
-const getWrappedValueFormatter = ({
+const getAggregationValueWrappedValueFormatter = ({
   valueFormatter,
   columnAggregationRules,
   getCellAggregationPosition,
@@ -115,7 +116,7 @@ const getWrappedValueFormatter = ({
   return wrappedValueFormatter;
 };
 
-const getWrappedRenderCell = ({
+const getAggregationValueWrappedRenderCell = ({
   renderCell,
   columnAggregationRules,
   getCellAggregationPosition,
@@ -179,10 +180,53 @@ const getWrappedFilterOperators = ({
     };
   });
 
+const getAggregationLabelWrappedValueGetter = ({
+  apiRef,
+  valueGetter,
+  getCellAggregationPosition,
+  aggregationFooterLabel,
+  shouldRenderLabel,
+}: {
+  apiRef: React.MutableRefObject<GridApiPremium>;
+  valueGetter: GridColDef['valueGetter'];
+  getCellAggregationPosition: (id: GridRowId) => GridAggregationPosition | null;
+  aggregationFooterLabel: DataGridPremiumProcessedProps['aggregationFooterLabel'];
+  shouldRenderLabel: (groupNode: GridRowTreeNodeConfig | null) => boolean;
+}): AggregationWrappedColDefProperty<'valueGetter'> => {
+  const wrappedValueGetter: AggregationWrappedColDefProperty<'valueGetter'> = (params) => {
+    const cellAggregationPosition = getCellAggregationPosition(params.id);
+    if (cellAggregationPosition === 'footer') {
+      const groupNode =
+        params.rowNode.parent == null ? null : apiRef.current.getRowNode(params.rowNode.parent);
+
+      if (!shouldRenderLabel(groupNode)) {
+        return '';
+      }
+
+      if (isFunction(aggregationFooterLabel)) {
+        return aggregationFooterLabel(groupNode);
+      }
+
+      return aggregationFooterLabel ?? '';
+    }
+
+    if (valueGetter) {
+      return valueGetter(params);
+    }
+
+    return params.row[params.field];
+  };
+
+  wrappedValueGetter.isWrappedWithAggregation = true;
+  wrappedValueGetter.originalMethod = valueGetter;
+
+  return wrappedValueGetter;
+};
+
 /**
  * Add a wrapper around each wrappable property of the column to customize the behavior of the aggregation cells.
  */
-export const wrapColumnWithAggregation = ({
+export const wrapColumnWithAggregationValue = ({
   column,
   apiRef,
   columnAggregationRules,
@@ -226,20 +270,73 @@ export const wrapColumnWithAggregation = ({
 
   return {
     ...column,
-    valueGetter: getWrappedValueGetter({
+    valueGetter: getAggregationValueWrappedValueGetter({
       apiRef,
       valueGetter: column.valueGetter,
       getCellAggregationPosition,
     }),
-    valueFormatter: getWrappedValueFormatter({
+    valueFormatter: getAggregationValueWrappedValueFormatter({
       valueFormatter: column.valueFormatter,
       columnAggregationRules,
       getCellAggregationPosition,
     }),
-    renderCell: getWrappedRenderCell({
+    renderCell: getAggregationValueWrappedRenderCell({
       renderCell: column.renderCell,
       columnAggregationRules,
       getCellAggregationPosition,
+    }),
+    filterOperators: getWrappedFilterOperators({
+      filterOperators: column.filterOperators,
+      getCellAggregationPosition,
+    }),
+  };
+};
+
+/**
+ * Add a wrapper around each wrappable property of the column to customize the behavior of the aggregation label cells.
+ */
+export const wrapColumnWithAggregationLabel = ({
+  column,
+  apiRef,
+  isGroupAggregated,
+  aggregationFooterLabel,
+  shouldRenderLabel,
+}: {
+  column: GridColDef;
+  apiRef: React.MutableRefObject<GridApiPremium>;
+  isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
+  aggregationFooterLabel: DataGridPremiumProcessedProps['aggregationFooterLabel'];
+  shouldRenderLabel: (groupNode: GridRowTreeNodeConfig | null) => boolean;
+}): GridColDef => {
+  const getCellAggregationPosition = (id: GridRowId): GridAggregationPosition | null => {
+    const isFooter = id.toString().startsWith('auto-generated-group-footer-');
+    if (isFooter) {
+      if (!isGroupAggregated) {
+        return 'footer';
+      }
+
+      const rowNode = apiRef.current.getRowNode(id)!;
+      const parentRowNode =
+        rowNode.parent == null ? null : apiRef.current.getRowNode(rowNode.parent);
+
+      if (!isGroupAggregated(parentRowNode, 'footer')) {
+        return null;
+      }
+
+      return 'footer';
+    }
+
+    return null;
+  };
+
+  return {
+    ...column,
+    valueGetter: getAggregationLabelWrappedValueGetter({
+      apiRef,
+      valueGetter: column.valueGetter,
+      getCellAggregationPosition,
+      shouldRenderLabel,
+      aggregationFooterLabel,
     }),
     filterOperators: getWrappedFilterOperators({
       filterOperators: column.filterOperators,

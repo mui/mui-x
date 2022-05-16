@@ -115,12 +115,19 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
   /**
    * Determines in a group of rows should be aggregated.
-   * @param {GridRowTreeNodeConfig | null} rowNode The current group (`null` being the top level group).
+   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
    * @param {GridAggregationPosition} position The position on which the aggregation has to be done.
    * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
    */
   isGroupAggregated?: (
-    rowNode: GridRowTreeNodeConfig | null,
+    groupNode: GridRowTreeNodeConfig | null,
     position: GridAggregationPosition,
   ) => boolean;
+  /**
+   * Returns the aggregation label of a group.
+   * This label will be rendered on the 1st grouping column.
+   */
+  aggregationFooterLabel?:
+    | React.ReactNode
+    | ((groupNode: GridRowTreeNodeConfig | null) => React.ReactNode);
 }

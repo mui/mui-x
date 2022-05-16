@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   gridColumnLookupSelector,
+  gridRowGroupingModelSelector,
   useGridApiEventHandler,
   useGridApiMethod,
 } from '@mui/x-data-grid-pro';
@@ -15,6 +16,7 @@ import {
   hasAggregationRulesChanged,
 } from './gridAggregationUtils';
 import { createAggregationLookup } from './createAggregationLookup';
+import { getRowGroupingFieldsFromRowGroupingModel } from '../rowGrouping/gridRowGroupingUtils';
 
 export const aggregationStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'aggregationModel' | 'initialState'>,
@@ -36,6 +38,9 @@ export const useGridAggregation = (
     | 'isGroupAggregated'
     | 'aggregationFunctions'
     | 'aggregatedRows'
+    | 'aggregationFooterLabel'
+    | 'disableAggregation'
+    | 'rowGroupingColumnMode'
   >,
 ) => {
   apiRef.current.unstable_updateControlState({
@@ -84,14 +89,22 @@ export const useGridAggregation = (
    * EVENTS
    */
   const checkAggregationRulesDiff = React.useCallback(() => {
-    const { aggregationRulesOnLastRowHydration, aggregationRulesOnLastColumnHydration } =
-      apiRef.current.unstable_caches.aggregation ?? {};
+    const {
+      aggregationRulesOnLastRowHydration,
+      aggregationRulesOnLastColumnHydration,
+      groupingColumnFieldsOnLastColumnHydration,
+    } = apiRef.current.unstable_caches.aggregation ?? {};
 
     const aggregationRules = getAggregationRules({
       columnsLookup: gridColumnLookupSelector(apiRef),
       aggregationModel: gridAggregationModelSelector(apiRef),
       aggregationFunctions: props.aggregationFunctions,
     });
+
+    const groupingColumnFields = getRowGroupingFieldsFromRowGroupingModel(
+      gridRowGroupingModelSelector(apiRef),
+      props.rowGroupingColumnMode,
+    );
 
     // Re-apply the row hydration to add / remove the aggregation footers
     if (hasAggregationRulesChanged(aggregationRulesOnLastRowHydration, aggregationRules)) {
@@ -100,10 +113,13 @@ export const useGridAggregation = (
     }
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
-    if (!isDeepEqual(aggregationRulesOnLastColumnHydration, aggregationRules)) {
+    if (
+      hasAggregationRulesChanged(aggregationRulesOnLastColumnHydration, aggregationRules) ||
+      !isDeepEqual(groupingColumnFieldsOnLastColumnHydration, groupingColumnFields)
+    ) {
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
     }
-  }, [apiRef, applyAggregation, props.aggregationFunctions]);
+  }, [apiRef, applyAggregation, props.aggregationFunctions, props.rowGroupingColumnMode]);
 
   useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);
