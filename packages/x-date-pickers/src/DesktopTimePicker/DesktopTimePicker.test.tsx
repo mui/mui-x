@@ -211,7 +211,7 @@ describe('<DesktopTimePicker />', () => {
       value === 10;
 
     [
-      { expectedError: 'invalidDate', props: {}, input: 'invalidText' },
+      { expectedError: 'invalidDate', props: { disableMaskedInput: true }, input: 'invalidText' },
       {
         expectedError: 'minTime',
         props: { minTime: adapterToUse.date(`2000-01-01T08:00:00.000`) },

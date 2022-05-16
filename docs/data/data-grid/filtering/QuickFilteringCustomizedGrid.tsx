@@ -5,7 +5,6 @@ import {
   GridToolbarQuickFilter,
   GridLinkOperator,
 } from '@mui/x-data-grid';
-
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function QuickSearchToolbar() {

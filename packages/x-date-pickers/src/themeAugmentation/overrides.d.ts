@@ -7,7 +7,7 @@ import { YearPickerClassKey } from '../YearPicker';
 import { PickerStaticWrapperClassKey } from '../internals/components/PickerStaticWrapper';
 
 // prettier-ignore
-export interface LabComponentNameToClassKey {
+export interface PickersComponentNameToClassKey {
   MuiCalendarPicker: CalendarPickerClassKey;
   MuiCalendarPickerSkeleton: CalendarPickerSkeletonClassKey;
   MuiClockPicker: ClockPickerClassKey;
@@ -20,7 +20,7 @@ export interface LabComponentNameToClassKey {
 }
 
 declare module '@mui/material/styles' {
-  interface ComponentNameToClassKey extends LabComponentNameToClassKey {}
+  interface ComponentNameToClassKey extends PickersComponentNameToClassKey {}
 }
 
 // disable automatic export

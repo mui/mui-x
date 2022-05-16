@@ -113,7 +113,11 @@ function LanguageNegotiation() {
       acceptLanguage.get(navigator.language) ||
       userLanguage;
 
-    if (userLanguageUrl === 'en' && userLanguage !== preferedLanguage) {
+    if (
+      userLanguageUrl === 'en' &&
+      userLanguage !== preferedLanguage &&
+      !process.env.PULL_REQUEST
+    ) {
       window.location =
         preferedLanguage === 'en' ? canonicalAs : `/${preferedLanguage}${canonicalAs}`;
     } else if (userLanguage !== userLanguageUrl) {
