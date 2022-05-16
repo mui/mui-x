@@ -51,4 +51,8 @@ export interface GridRowsState extends GridRowTreeCreationValue {
    * It does not count the expanded children rows.
    */
   totalTopLevelRowCount: number;
+
+  groupingResponseBeforeRowHydration: GridRowTreeCreationValue;
 }
+
+export type GridHydrateRowsValue = GridRowTreeCreationValue;
