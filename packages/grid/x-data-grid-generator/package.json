@@ -30,7 +30,7 @@
     "directory": "packages/grid/x-data-grid-generator"
   },
   "dependencies": {
-    "@mui/base": "^5.0.0-alpha.79",
+    "@mui/base": "^5.0.0-alpha.80",
     "@mui/x-data-grid-premium": "5.11.0",
     "chance": "^1.1.8",
     "clsx": "^1.1.1",
