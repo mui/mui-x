@@ -23,6 +23,12 @@ const getSubTree = async (nodePath: string, parentHierarchy: string[] = []) => {
   const stats = await fs.lstat(nodePath);
 
   if (stats.isDirectory()) {
+    if (
+      ['node_modules', 'build', '.idea', '.vscode', 'coverage'].includes(path.basename(nodePath))
+    ) {
+      return nodes;
+    }
+
     const children = await fs.readdir(nodePath);
     const directory = path.basename(nodePath);
 
@@ -44,13 +50,11 @@ const getSubTree = async (nodePath: string, parentHierarchy: string[] = []) => {
 };
 
 const run = async (argv: yargs.ArgumentsCamelCase<{ path: string }>) => {
-  const fullPath = path.join(__dirname, '..', argv.path);
-
-  const children = await fs.readdir(fullPath);
+  const children = await fs.readdir(argv.path);
 
   const nodes: Node[] = [];
   for (let i = 0; i < children.length; i += 1) {
-    const childPath = path.join(fullPath, children[i]);
+    const childPath = path.join(argv.path, children[i]);
 
     // eslint-disable-next-line no-await-in-loop
     const childNodes = await getSubTree(childPath);
@@ -67,8 +71,9 @@ yargs
     describe: 'Generate tree data rows from a folder.',
     builder: (command) =>
       command.option('path', {
-        describe: 'Root of the hierarchy to generate',
+        describe: 'Folder from which we want to extract the tree',
         type: 'string',
+        default: process.cwd(),
       }),
     handler: run,
   })
