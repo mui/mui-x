@@ -7,7 +7,7 @@
     "disabled": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "getViewSwitchingButtonText": { "type": { "name": "func" } },
-    "leftArrowButtonText": { "type": { "name": "string" } },
+    "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
@@ -31,7 +31,7 @@
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
     },
-    "rightArrowButtonText": { "type": { "name": "string" } },
+    "rightArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
