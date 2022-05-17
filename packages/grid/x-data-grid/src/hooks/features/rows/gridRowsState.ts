@@ -51,4 +51,11 @@ export interface GridRowsState extends GridRowTreeCreationValue {
    * It does not count the expanded children rows.
    */
   totalTopLevelRowCount: number;
+  /**
+   * Tree returned by the `rowTreeCreation` strategy processor.
+   * It is used to re-apply the `hydrateRows` pipe processor without having to recreate the tree.
+   */
+  groupingResponseBeforeRowHydration: GridRowTreeCreationValue;
 }
+
+export type GridHydrateRowsValue = GridRowTreeCreationValue;
