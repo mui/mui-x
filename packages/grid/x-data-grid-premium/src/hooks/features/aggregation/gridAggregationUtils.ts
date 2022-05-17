@@ -304,10 +304,6 @@ export const getGroupingColumns = ({
     return [{ groupingColumnField: GRID_TREE_DATA_GROUPING_FIELD }];
   }
 
-  const rowGroupingModel = gridRowGroupingModelSelector(apiRef).filter(
-    (field) => !!columnsLookup[field] && columnsLookup[field].groupable,
-  );
-
   if (columnsLookup[GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD]) {
     return [
       {
@@ -316,8 +312,8 @@ export const getGroupingColumns = ({
     ];
   }
 
-  return rowGroupingModel.map((groupingCriterion) => ({
+  return gridRowGroupingModelSelector(apiRef).map((groupingCriterion) => ({
     groupingCriteria: [groupingCriterion],
     groupingColumnField: getRowGroupingFieldFromGroupingCriteria(groupingCriterion),
-  }));
+  })).filter(({ groupingColumnField }) => !!columnsLookup[groupingColumnField])
 };
