@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
-
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function QuickSearchToolbar() {

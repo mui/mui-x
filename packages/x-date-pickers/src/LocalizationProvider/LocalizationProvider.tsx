@@ -1,7 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DateIOFormats } from '@date-io/core/IUtils';
+import { useThemeProps } from '@mui/material/styles';
 import { MuiPickersAdapter } from '../internals/models';
+import { DEFAULT_LOCALE, PickersLocaleText } from '../locales';
 
 export interface MuiPickersAdapterContextValue<TDate> {
   defaultDates: {
@@ -10,6 +12,7 @@ export interface MuiPickersAdapterContextValue<TDate> {
   };
 
   utils: MuiPickersAdapter<TDate>;
+  localeText: PickersLocaleText;
 }
 
 export const MuiPickersAdapterContext =
@@ -31,18 +34,54 @@ export interface LocalizationProviderProps {
    * ```
    */
   dateLibInstance?: any;
-  /** Locale for the date library you are using */
+  /** Locale for the date library you are using
+   * @deprecated Use `adapterLocale` instead
+   */
   locale?: string | object;
+  /** Locale for the date library you are using
+   */
+  adapterLocale?: string | object;
+  /**
+   * Locale for components texts
+   */
+  localeText?: Partial<PickersLocaleText>;
 }
+
+let warnedOnce = false;
 
 /**
  * @ignore - do not document.
  */
-export function LocalizationProvider(props: LocalizationProviderProps) {
-  const { children, dateAdapter: Utils, dateFormats, dateLibInstance, locale } = props;
+export function LocalizationProvider(inProps: LocalizationProviderProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiLocalizationProvider' });
+
+  const {
+    children,
+    dateAdapter: Utils,
+    dateFormats,
+    dateLibInstance,
+    locale,
+    adapterLocale,
+    localeText,
+  } = props;
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (!warnedOnce && locale !== undefined) {
+      warnedOnce = true;
+      console.warn(
+        "LocalizationProvider's prop `locale` is deprecated and replaced by `adapterLocale`",
+      );
+    }
+  }
+
   const utils = React.useMemo(
-    () => new Utils({ locale, formats: dateFormats, instance: dateLibInstance }),
-    [Utils, locale, dateFormats, dateLibInstance],
+    () =>
+      new Utils({
+        locale: adapterLocale ?? locale,
+        formats: dateFormats,
+        instance: dateLibInstance,
+      }),
+    [Utils, locale, adapterLocale, dateFormats, dateLibInstance],
   );
 
   const defaultDates: MuiPickersAdapterContextValue<unknown>['defaultDates'] = React.useMemo(() => {
@@ -53,8 +92,15 @@ export function LocalizationProvider(props: LocalizationProviderProps) {
   }, [utils]);
 
   const contextValue: MuiPickersAdapterContextValue<unknown> = React.useMemo(() => {
-    return { utils, defaultDates };
-  }, [defaultDates, utils]);
+    return {
+      utils,
+      defaultDates,
+      localeText: {
+        ...DEFAULT_LOCALE,
+        ...(localeText ?? {}),
+      },
+    };
+  }, [defaultDates, utils, localeText]);
 
   return (
     <MuiPickersAdapterContext.Provider value={contextValue}>
@@ -68,6 +114,10 @@ LocalizationProvider.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Locale for the date library you are using
+   */
+  adapterLocale: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   children: PropTypes.node,
   /**
    * DateIO adapter class function
@@ -114,6 +164,11 @@ LocalizationProvider.propTypes = {
   dateLibInstance: PropTypes.any,
   /**
    * Locale for the date library you are using
+   * @deprecated Use `adapterLocale` instead
    */
   locale: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
 } as any;

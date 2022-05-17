@@ -20,6 +20,3 @@
 # 2023
 
 # Proxies
-
-## mui-x is configured to be hosted at the root.
-/static/* https://material-ui-docs.netlify.app/static/:splat 200
