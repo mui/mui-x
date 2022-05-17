@@ -89,6 +89,7 @@ export const GridAggregationColumnMenuItems = (props: GridAggregationColumnMenuI
                 {aggFunc}
               </MenuItem>
             ))}
+            <MenuItem value="">...</MenuItem>
           </Select>
         </FormControl>
       </MenuItem>

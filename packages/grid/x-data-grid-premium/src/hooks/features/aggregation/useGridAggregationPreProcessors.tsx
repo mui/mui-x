@@ -99,6 +99,7 @@ export const useGridAggregationPreProcessors = (
             aggregationFooterLabel: props.aggregationFooterLabel,
             apiRef,
             isGroupAggregated: props.isGroupAggregated,
+            aggregationRules,
             shouldRenderLabel: (groupNode) => {
               if (!groupingCriteria) {
                 return true;
@@ -130,8 +131,6 @@ export const useGridAggregationPreProcessors = (
       props.aggregationFooterLabel,
     ],
   );
-
-  // console.log(apiRef.current.state.rows?.tree?.['auto-generated-row-null/src']?.childrenExpanded)
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {

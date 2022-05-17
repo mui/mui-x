@@ -1,4 +1,6 @@
+import * as React from 'react';
 import { ComponentsPropsList } from '@mui/material/styles';
+import { GridKeyValue } from '../colDef/gridColDef';
 
 /**
  * Set the types of the texts in the grid.
@@ -133,14 +135,22 @@ export interface GridLocaleText {
   expandDetailPanel: string;
   collapseDetailPanel: string;
 
+  // Row reordering text
+  rowReorderingHeaderName: string;
+
+  // Aggregation
+  aggregationMultiFunctionLabel: string;
+  aggregationFunctionLabelSum: (groupingKey: GridKeyValue | null) => string;
+  aggregationFunctionLabelAvg: (groupingKey: GridKeyValue | null) => string;
+  aggregationFunctionLabelMin: (groupingKey: GridKeyValue | null) => string;
+  aggregationFunctionLabelMax: (groupingKey: GridKeyValue | null) => string;
+  aggregationFunctionLabelSize: (groupingKey: GridKeyValue | null) => string;
+
   // Used core components translation keys
   MuiTablePagination: Omit<
     ComponentsPropsList['MuiTablePagination'],
     'page' | 'count' | 'onChangePage' | 'rowsPerPage' | 'onPageChange'
   >;
-
-  // Row reordering text
-  rowReorderingHeaderName: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

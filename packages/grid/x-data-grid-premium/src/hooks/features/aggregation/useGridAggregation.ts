@@ -107,7 +107,6 @@ export const useGridAggregation = (
 
     // Re-apply the row hydration to add / remove the aggregation footers
     if (hasAggregationRulesChanged(aggregationRulesOnLastRowHydration, aggregationRules)) {
-      console.log(aggregationRulesOnLastRowHydration, aggregationRules);
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
       applyAggregation();
     }
