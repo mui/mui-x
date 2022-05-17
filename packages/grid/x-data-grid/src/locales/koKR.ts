@@ -137,6 +137,14 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMultiFunctionLabel: 'Aggregation',
+  // aggregationFunctionLabelSum: groupingKey => groupingKey == null ? 'Total' : `Total ${groupingKey}`,
+  // aggregationFunctionLabelAvg: groupingKey => groupingKey == null ? 'Average' : `Average ${groupingKey}`,
+  // aggregationFunctionLabelMin: groupingKey => groupingKey == null ? 'Minimum' : `Minimum ${groupingKey}`,
+  // aggregationFunctionLabelMax: groupingKey => groupingKey == null ? 'Maximum' : `Maximum ${groupingKey}`,
+  // aggregationFunctionLabelSize: groupingKey => groupingKey == null ? 'Size' : `Size ${groupingKey}`,
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);
