@@ -8,18 +8,18 @@ export interface TimePickerToolbarClasses {
   ampmSelection: string;
   ampmLandscape: string;
   ampmLabel: string;
-  penIconLandscape: string;
 }
 
 export type TimePickerToolbarClassKey = keyof TimePickerToolbarClasses;
 
 export function getTimePickerToolbarUtilityClass(slot: string) {
-  return generateUtilityClass('PrivateTimePickerToolbar', slot);
+  return generateUtilityClass('MuiTimePickerToolbar', slot);
 }
 
 export const timePickerToolbarClasses: TimePickerToolbarClasses = generateUtilityClasses(
-  'PrivateTimePickerToolbar',
+  'MuiTimePickerToolbar',
   [
+    'root',
     'separator',
     'hourMinuteLabel',
     'hourMinuteLabelLandscape',
@@ -27,6 +27,5 @@ export const timePickerToolbarClasses: TimePickerToolbarClasses = generateUtilit
     'ampmSelection',
     'ampmLandscape',
     'ampmLabel',
-    'penIconLandscape',
   ],
 );

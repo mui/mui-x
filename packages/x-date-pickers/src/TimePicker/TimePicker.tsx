@@ -86,7 +86,7 @@ TimePicker.propTypes = {
   acceptRegex: PropTypes.instanceOf(RegExp),
   /**
    * 12h/24h view for hour selection clock.
-   * @default false
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
   /**
@@ -138,6 +138,7 @@ TimePicker.propTypes = {
   DialogProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -293,6 +294,7 @@ TimePicker.propTypes = {
   PopperProps: PropTypes.object,
   /**
    * Make picker read only.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**
@@ -340,15 +342,6 @@ TimePicker.propTypes = {
    * @default TimePickerToolbar
    */
   ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select time'

@@ -2,11 +2,11 @@
   "props": {
     "onChange": { "type": { "name": "func" }, "required": true },
     "renderInput": { "type": { "name": "func" }, "required": true },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" }, "required": true },
     "acceptRegex": {
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "allowSameDateSelection": { "type": { "name": "bool" } },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
@@ -86,6 +86,7 @@
     "rifmFormatter": { "type": { "name": "func" } },
     "rightArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "shouldDisableDate": { "type": { "name": "func" } },
+    "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showTodayButton": { "type": { "name": "bool" } },
@@ -102,9 +103,7 @@
       "deprecated": true,
       "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
     },
-    "ToolbarComponent": { "type": { "name": "elementType" } },
     "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" }
   },
   "slots": {},

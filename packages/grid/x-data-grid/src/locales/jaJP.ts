@@ -26,6 +26,11 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'フィルター表示',
   toolbarFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'エクスポート',
   toolbarExportLabel: 'エクスポート',

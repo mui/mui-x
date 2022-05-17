@@ -6,7 +6,6 @@
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "allowSameDateSelection": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
@@ -39,13 +38,10 @@
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
     "onAccept": { "type": { "name": "func" } },
-    "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
-    "onOpen": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
     "onYearChange": { "type": { "name": "func" } },
-    "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
     "openTo": {
       "type": {
@@ -69,6 +65,7 @@
     "rifmFormatter": { "type": { "name": "func" } },
     "rightArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "shouldDisableDate": { "type": { "name": "func" } },
+    "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   buildDeprecatedPropsWarning,
+  BasePickerProps,
   DateInputSlotsComponent,
   PickerStateValueManager,
   useDefaultDates,
@@ -23,7 +24,8 @@ interface DateRangePickerSlotsComponent
     DateInputSlotsComponent {}
 
 export interface BaseDateRangePickerProps<TInputDate, TDate>
-  extends ExportedDateRangePickerViewProps<TInputDate, TDate>,
+  extends Omit<BasePickerProps<DateRange<TInputDate>, DateRange<TDate>>, 'orientation'>,
+    ExportedDateRangePickerViewProps<TDate>,
     ValidationProps<DateRangeValidationError, DateRange<TInputDate>>,
     ExportedDateRangePickerInputProps<TInputDate, TDate> {
   /**

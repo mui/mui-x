@@ -27,6 +27,11 @@ export interface GridLocaleText {
   toolbarFiltersTooltipShow: React.ReactNode;
   toolbarFiltersTooltipActive: (count: number) => React.ReactNode;
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: string;
+  toolbarQuickFilterLabel: string;
+  toolbarQuickFilterDeleteIconLabel: string;
+
   // Export selector toolbar button text
   toolbarExport: React.ReactNode;
   toolbarExportLabel: string;

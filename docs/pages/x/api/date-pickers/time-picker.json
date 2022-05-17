@@ -6,7 +6,7 @@
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "ampm": { "type": { "name": "bool" } },
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" } },
     "cancelText": {
       "type": { "name": "node" },
@@ -89,8 +89,6 @@
       "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
     },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
     "TransitionComponent": { "type": { "name": "elementType" } },
     "value": { "type": { "name": "any" } },

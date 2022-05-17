@@ -20,11 +20,6 @@ import {
 
 export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
   /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection?: boolean;
-  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickersDayClasses>;
@@ -200,7 +195,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   });
 
   const {
-    allowSameDateSelection = false,
     autoFocus = false,
     className,
     day,
@@ -223,7 +217,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   } = props;
   const ownerState = {
     ...props,
-    allowSameDateSelection,
     autoFocus,
     disabled,
     disableHighlightToday,
@@ -259,10 +252,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!allowSameDateSelection && selected) {
-      return;
-    }
-
     if (!disabled) {
       onDaySelect(day, 'finish');
     }
@@ -371,11 +360,6 @@ PickersDayRaw.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */

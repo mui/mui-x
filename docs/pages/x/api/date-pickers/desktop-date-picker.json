@@ -6,7 +6,6 @@
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "allowSameDateSelection": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "clearable": { "type": { "name": "bool" } },
     "clearText": {
@@ -74,6 +73,7 @@
     "rifmFormatter": { "type": { "name": "func" } },
     "rightArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "shouldDisableDate": { "type": { "name": "func" } },
+    "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },

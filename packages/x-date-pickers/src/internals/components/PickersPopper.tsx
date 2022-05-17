@@ -233,6 +233,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
     anchorEl,
     children,
     containerRef = null,
+    onBlur,
     onClose,
     onClear,
     clearable = false,
@@ -256,7 +257,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
       // IE11, Edge (prior to using Bink?) use 'Esc'
-      if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
+      if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
         onClose();
       }
     }
@@ -266,7 +267,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onClose]);
+  }, [onClose, open]);
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
   React.useEffect(() => {
@@ -284,7 +285,10 @@ export const PickersPopper = (props: PickerPopperProps) => {
     }
   }, [open, role]);
 
-  const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(open, onClose);
+  const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(
+    open,
+    onBlur ?? onClose,
+  );
   const paperRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(paperRef, containerRef);
   const handlePaperRef = useForkRef(handleRef, clickAwayRef as React.Ref<HTMLDivElement>);
@@ -296,6 +300,14 @@ export const PickersPopper = (props: PickerPopperProps) => {
     ...otherPaperProps
   } = PaperProps;
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      // stop the propagation to avoid closing parent modal
+      event.stopPropagation();
+      onClose();
+    }
+  };
+
   return (
     <PickersPopperRoot
       transition
@@ -303,6 +315,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
       open={open}
       anchorEl={anchorEl}
       ownerState={ownerState}
+      onKeyDown={handleKeyDown}
       {...PopperProps}
     >
       {({ TransitionProps, placement }) => (

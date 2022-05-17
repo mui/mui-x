@@ -27,6 +27,11 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     `${count} ${count !== 1 ? 'filtros' : 'filtro'} ${count !== 1 ? 'ativos' : 'ativo'}`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',

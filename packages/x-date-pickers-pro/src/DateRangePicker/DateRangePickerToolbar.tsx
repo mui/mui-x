@@ -5,26 +5,38 @@ import { generateUtilityClasses } from '@mui/material';
 import {
   PickersToolbar,
   PickersToolbarButton,
+  pickersToolbarClasses,
   useUtils,
   BaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models';
 
-const classes = generateUtilityClasses('PrivateDateRangePickerToolbar', ['penIcon']);
+export const dateRangePickerToolbarClasses = generateUtilityClasses('MuiDateRangePickerToolbar', [
+  'root',
+]);
 
 interface DateRangePickerToolbarProps<TDate>
   extends CurrentlySelectingRangeEndProps,
     Pick<
-      BaseToolbarProps<TDate>,
-      'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'toolbarTitle' | 'toolbarFormat'
+      BaseToolbarProps<TDate, DateRange<TDate>>,
+      | 'isMobileKeyboardViewOpen'
+      | 'toggleMobileKeyboardView'
+      | 'toolbarTitle'
+      | 'toolbarFormat'
+      | 'parsedValue'
     > {
-  date: DateRange<TDate>;
   startText: React.ReactNode;
   endText: React.ReactNode;
 }
 
-const DateRangePickerToolbarRoot = styled(PickersToolbar)({
-  [`& .${classes.penIcon}`]: {
+const DateRangePickerToolbarRoot = styled(PickersToolbar, {
+  name: 'MuiDateRangePickerToolbar',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{
+  ownerState: DateRangePickerToolbarProps<any>;
+}>({
+  [`& .${pickersToolbarClasses.penIconButton}`]: {
     position: 'relative',
     top: 4,
   },
@@ -37,18 +49,22 @@ const DateRangePickerToolbarContainer = styled('div')({
 /**
  * @ignore - internal component.
  */
-export const DateRangePickerToolbar = <TDate extends unknown>({
-  currentlySelectingRangeEnd,
-  date: [start, end],
-  endText,
-  isMobileKeyboardViewOpen,
-  setCurrentlySelectingRangeEnd,
-  startText,
-  toggleMobileKeyboardView,
-  toolbarFormat,
-  toolbarTitle = 'Select date range',
-}: DateRangePickerToolbarProps<TDate>) => {
+export const DateRangePickerToolbar = <TDate extends unknown>(
+  props: DateRangePickerToolbarProps<TDate>,
+) => {
   const utils = useUtils<TDate>();
+
+  const {
+    currentlySelectingRangeEnd,
+    parsedValue: [start, end],
+    endText,
+    isMobileKeyboardViewOpen,
+    setCurrentlySelectingRangeEnd,
+    startText,
+    toggleMobileKeyboardView,
+    toolbarFormat,
+    toolbarTitle = 'Select date range',
+  } = props;
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
@@ -58,13 +74,16 @@ export const DateRangePickerToolbar = <TDate extends unknown>({
     ? utils.formatByString(end, toolbarFormat || utils.formats.shortDate)
     : endText;
 
+  const ownerState = props;
+
   return (
     <DateRangePickerToolbarRoot
       toolbarTitle={toolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={false}
-      penIconClassName={classes.penIcon}
+      className={dateRangePickerToolbarClasses.root}
+      ownerState={ownerState}
     >
       <DateRangePickerToolbarContainer>
         <PickersToolbarButton
