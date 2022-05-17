@@ -32,10 +32,12 @@ export interface ExportedArrowSwitcherProps {
   componentsProps?: Partial<PickersArrowSwitcherSlotsComponentsProps>;
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText?: string;
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText?: string;
 }

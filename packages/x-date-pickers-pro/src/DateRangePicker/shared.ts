@@ -1,9 +1,11 @@
 import * as React from 'react';
 import {
+  buildDeprecatedPropsWarning,
   BasePickerProps,
   DateInputSlotsComponent,
   PickerStateValueManager,
   useDefaultDates,
+  useLocaleText,
   useUtils,
   ValidationProps,
 } from '@mui/x-date-pickers/internals';
@@ -35,6 +37,7 @@ export interface BaseDateRangePickerProps<TInputDate, TDate>
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   endText?: React.ReactNode;
   /**
@@ -52,11 +55,16 @@ export interface BaseDateRangePickerProps<TInputDate, TDate>
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   startText?: React.ReactNode;
 }
 
 export type DefaultizedProps<Props> = Props & { inputFormat: string };
+
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
 
 export function useDateRangePickerDefaultizedProps<
   TInputDate,
@@ -82,15 +90,25 @@ export function useDateRangePickerDefaultizedProps<
     name,
   });
 
+  deprecatedPropsWarning({
+    startText: themeProps.startText,
+    endText: themeProps.endText,
+  });
+
+  const localeText = useLocaleText();
+
+  const startText = themeProps.startText ?? localeText.start;
+  const endText = themeProps.endText ?? localeText.end;
+
   return {
     calendars: 2,
     mask: '__/__/____',
-    startText: 'Start',
-    endText: 'End',
     inputFormat: utils.formats.keyboardDate,
     minDate: defaultDates.minDate,
     maxDate: defaultDates.maxDate,
     ...themeProps,
+    endText,
+    startText,
   };
 }
 
