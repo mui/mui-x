@@ -20,7 +20,7 @@ import {
   createPickerRenderer,
 } from '../../../../test/utils/pickers-utils';
 
-describe.only('<CalendarPicker />', () => {
+describe('<CalendarPicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(<CalendarPicker date={adapterToUse.date()} onChange={() => {}} />, () => ({
@@ -144,36 +144,33 @@ describe.only('<CalendarPicker />', () => {
     expect(screen.getByText('2019/01')).toBeVisible();
   });
 
-
   it('should select the closest enabled date if the prop.date contains a disabled date', () => {
     const onChange = spy();
 
     render(
-        <CalendarPicker
-            date={adapterToUse.date('2019-01-01T00:00:00.000')}
-            onChange={onChange}
-            maxDate={adapterToUse.date('2018-01-01T00:00:00.000')}
-        />,
+      <CalendarPicker
+        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        onChange={onChange}
+        maxDate={adapterToUse.date('2018-01-01T00:00:00.000')}
+      />,
     );
 
     // onChange must be dispatched with newly selected date
     expect(onChange.callCount).to.equal(React.version.startsWith('18') ? 2 : 1); // Strict Effects run mount effects twice
-    expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-    );
+    expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T00:00:00.000'));
   });
 
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
       render(
-          <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
+        <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
       );
 
       expect(screen.getByText('January 2019')).toBeVisible();
       expect(screen.getAllByMuiTest('day')).to.have.length(31);
       // It should follow https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
       expect(
-          document.querySelector('[role="grid"] > [role="row"] > [role="cell"] > button'),
+        document.querySelector('[role="grid"] > [role="row"] > [role="cell"] > button'),
       ).to.have.text('1');
     });
 
@@ -181,37 +178,40 @@ describe.only('<CalendarPicker />', () => {
       const onChange = spy();
 
       render(
-          <CalendarPicker
-              date={null}
-              onChange={onChange}
-              defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
-              view="day"
-          />,
+        <CalendarPicker
+          date={null}
+          onChange={onChange}
+          defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
+          view="day"
+        />,
       );
 
       userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-02T00:00:00.000'));
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-02T00:00:00.000'),
+      );
     });
 
     it('should keep the time of the currently provided date', () => {
       const onChange = spy();
 
       render(
-          <CalendarPicker
-              date={adapterToUse.date('2018-01-03T11:11:11.111')}
-              onChange={onChange}
-              defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
-              view="day"
-          />,
+        <CalendarPicker
+          date={adapterToUse.date('2018-01-03T11:11:11.111')}
+          onChange={onChange}
+          defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
+          view="day"
+        />,
       );
 
       userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-02T11:11:11.000'));
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date('2018-01-02T11:11:11.000'),
+      );
     });
-
-  })
+  });
 
   describe('view: month', () => {
     it('should select the closest enabled date in the month if the current date is disabled', () => {
@@ -251,14 +251,6 @@ describe.only('<CalendarPicker />', () => {
           date={adapterToUse.date('2019-06-01T00:00:00.000')}
           minDate={adapterToUse.date('2019-04-07T00:00:00.000')}
           onChange={onChange}
-          shouldDisableDate={(date) => {
-            // Missing `getDate` in adapters
-            // The following disable from Apr 1st to Apr 5th
-            return (
-              adapterToUse.getMonth(date) === 3 &&
-              adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') < 5
-            );
-          }}
           views={['month', 'day']}
           openTo="month"
         />,
@@ -281,14 +273,6 @@ describe.only('<CalendarPicker />', () => {
           date={adapterToUse.date('2019-01-29T00:00:00.000')}
           maxDate={adapterToUse.date('2019-04-22T00:00:00.000')}
           onChange={onChange}
-          shouldDisableDate={(date) => {
-            // Missing `getDate` in adapters
-            // The following disable from Apr 26th to Apr 30th
-            return (
-              adapterToUse.getMonth(date) === 3 &&
-              adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') > 25
-            );
-          }}
           views={['month', 'day']}
           openTo="month"
         />,
@@ -328,11 +312,11 @@ describe.only('<CalendarPicker />', () => {
   describe('view: year', () => {
     it('renders year selection standalone', () => {
       render(
-          <CalendarPicker
-              date={adapterToUse.date('2019-01-01T00:00:00.000')}
-              openTo="year"
-              onChange={() => {}}
-          />,
+        <CalendarPicker
+          date={adapterToUse.date('2019-01-01T00:00:00.000')}
+          openTo="year"
+          onChange={() => {}}
+        />,
       );
 
       expect(screen.getAllByMuiTest('year')).to.have.length(200);
@@ -342,28 +326,23 @@ describe.only('<CalendarPicker />', () => {
       const onChange = spy();
 
       render(
-          <CalendarPicker
-              date={adapterToUse.date('2019-01-01T00:00:00.000')}
-              onChange={onChange}
-              shouldDisableDate={(date) => {
-                // Missing `getDate` in adapters
-                // The following disable from Apr 1st to Apr 5th
-                return (
-                    adapterToUse.getMonth(date) === 3 &&
-                    adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') < 5
-                );
-              }}
-              views={['month', 'day']}
-              openTo="month"
-          />,
+        <CalendarPicker
+          date={adapterToUse.date('2019-04-29T00:00:00.000')}
+          onChange={onChange}
+          shouldDisableDate={(date) =>
+            adapterToUse.getYear(date) === 2022 && adapterToUse.getMonth(date) === 3
+          }
+          views={['year', 'day']}
+          openTo="year"
+        />,
       );
 
-      const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
+      const year2022 = screen.getByText('2022', { selector: 'button' });
+      fireEvent.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
-          adapterToUse.date('2019-04-06T00:00:00.000'),
+        adapterToUse.date('2022-05-01T00:00:00.000'),
       );
     });
 
@@ -371,29 +350,21 @@ describe.only('<CalendarPicker />', () => {
       const onChange = spy();
 
       render(
-          <CalendarPicker
-              date={adapterToUse.date('2019-06-01T00:00:00.000')}
-              minDate={adapterToUse.date('2019-04-07T00:00:00.000')}
-              onChange={onChange}
-              shouldDisableDate={(date) => {
-                // Missing `getDate` in adapters
-                // The following disable from Apr 1st to Apr 5th
-                return (
-                    adapterToUse.getMonth(date) === 3 &&
-                    adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') < 5
-                );
-              }}
-              views={['month', 'day']}
-              openTo="month"
-          />,
+        <CalendarPicker
+          date={adapterToUse.date('2019-04-29T00:00:00.000')}
+          minDate={adapterToUse.date('2017-05-12T00:00:00.000')}
+          onChange={onChange}
+          views={['year', 'day']}
+          openTo="year"
+        />,
       );
 
-      const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
+      const year2017 = screen.getByText('2017', { selector: 'button' });
+      fireEvent.click(year2017);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
-          adapterToUse.date('2019-04-07T00:00:00.000'),
+        adapterToUse.date('2017-05-12T00:00:00.000'),
       );
     });
 
@@ -401,51 +372,43 @@ describe.only('<CalendarPicker />', () => {
       const onChange = spy();
 
       render(
-          <CalendarPicker
-              date={adapterToUse.date('2019-01-29T00:00:00.000')}
-              maxDate={adapterToUse.date('2019-04-22T00:00:00.000')}
-              onChange={onChange}
-              shouldDisableDate={(date) => {
-                // Missing `getDate` in adapters
-                // The following disable from Apr 26th to Apr 30th
-                return (
-                    adapterToUse.getMonth(date) === 3 &&
-                    adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') > 25
-                );
-              }}
-              views={['month', 'day']}
-              openTo="month"
-          />,
+        <CalendarPicker
+          date={adapterToUse.date('2019-04-29T00:00:00.000')}
+          maxDate={adapterToUse.date('2022-03-31T00:00:00.000')}
+          onChange={onChange}
+          views={['year', 'day']}
+          openTo="year"
+        />,
       );
 
-      const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
+      const year2022 = screen.getByText('2022', { selector: 'button' });
+      fireEvent.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
-          adapterToUse.date('2019-04-22T00:00:00.000'),
+        adapterToUse.date('2022-03-31T00:00:00.000'),
       );
     });
 
-    it.only('should go to next view without changing the date when no date of the new year is enabled', () => {
+    it('should go to next view without changing the date when no date of the new year is enabled', () => {
       const onChange = spy();
 
       render(
-          <CalendarPicker
-              date={adapterToUse.date('2019-01-29T00:00:00.000')}
-              onChange={onChange}
-              shouldDisableDate={(date) => adapterToUse.getYear(date) === 2022}
-              views={['year', 'day']}
-              openTo="year"
-          />,
+        <CalendarPicker
+          date={adapterToUse.date('2019-04-29T00:00:00.000')}
+          onChange={onChange}
+          shouldDisableDate={(date) => adapterToUse.getYear(date) === 2022}
+          views={['year', 'day']}
+          openTo="year"
+        />,
       );
 
-      const april = screen.getByText('2022', { selector: 'button' });
-      fireEvent.click(april);
+      const year2022 = screen.getByText('2022', { selector: 'button' });
+      fireEvent.click(year2022);
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
-      expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2019');
+      expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2022');
     });
-  })
+  });
 });

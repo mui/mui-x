@@ -298,8 +298,6 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
           })
         : newDate;
 
-      console.log(closestEnabledDate);
-
       if (closestEnabledDate) {
         onChange(closestEnabledDate, selectionState);
         onYearChange?.(closestEnabledDate);
@@ -321,6 +319,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
       onYearChange,
       openNext,
       utils,
+      changeMonth,
     ],
   );
 
