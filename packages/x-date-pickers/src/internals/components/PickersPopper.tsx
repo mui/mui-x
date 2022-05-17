@@ -8,6 +8,8 @@ import { styled } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
+import { useLocaleText } from '../hooks/useUtils';
+import { buildDeprecatedPropsWarning } from '../utils/warning';
 
 export interface ExportedPickerPaperProps {
   /**
@@ -18,6 +20,7 @@ export interface ExportedPickerPaperProps {
   /**
    * Clear text message.
    * @default 'Clear'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   clearText?: React.ReactNode;
   /**
@@ -221,6 +224,10 @@ function useClickAwayListener(
   return [nodeRef, handleSynthetic, handleSynthetic];
 }
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 export const PickersPopper = (props: PickerPopperProps) => {
   const {
     anchorEl,
@@ -230,7 +237,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
     onClose,
     onClear,
     clearable = false,
-    clearText = 'Clear',
+    clearText: clearTextProp,
     open,
     PopperProps,
     role,
@@ -238,6 +245,14 @@ export const PickersPopper = (props: PickerPopperProps) => {
     TrapFocusProps,
     PaperProps = {},
   } = props;
+
+  deprecatedPropsWarning({
+    clearText: clearTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const clearText = clearTextProp ?? localeText.clearButtonLabel;
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {

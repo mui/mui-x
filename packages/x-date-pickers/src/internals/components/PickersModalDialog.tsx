@@ -5,26 +5,32 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
+import { buildDeprecatedPropsWarning } from '../utils/warning';
+import { useLocaleText } from '../hooks/useUtils';
 
 export interface ExportedPickerModalProps {
   /**
    * Ok button text.
    * @default 'OK'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   okText?: React.ReactNode;
   /**
    * Cancel text message.
    * @default 'Cancel'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   cancelText?: React.ReactNode;
   /**
    * Clear text message.
    * @default 'Clear'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   clearText?: React.ReactNode;
   /**
    * Today text message.
    * @default 'Today'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   todayText?: React.ReactNode;
   /**
@@ -81,14 +87,18 @@ const PickersModalDialogActions = styled(DialogActions)<{
   }),
 }));
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDialogProps>) => {
   const {
-    cancelText = 'Cancel',
+    cancelText: cancelTextProp,
     children,
     clearable = false,
-    clearText = 'Clear',
+    clearText: clearTextProp,
     DialogProps = {},
-    okText = 'OK',
+    okText: okTextProp,
     onAccept,
     onClear,
     onDismiss,
@@ -96,8 +106,22 @@ export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDi
     onSetToday,
     open,
     showTodayButton = false,
-    todayText = 'Today',
+    todayText: todayTextProp,
   } = props;
+
+  deprecatedPropsWarning({
+    cancelText: cancelTextProp,
+    clearText: clearTextProp,
+    okText: okTextProp,
+    todayText: todayTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const cancelText = cancelTextProp ?? localeText.cancelButtonLabel;
+  const clearText = clearTextProp ?? localeText.clearButtonLabel;
+  const okText = okTextProp ?? localeText.okButtonLabel;
+  const todayText = todayTextProp ?? localeText.todayButtonLabel;
 
   const ownerState = props;
 

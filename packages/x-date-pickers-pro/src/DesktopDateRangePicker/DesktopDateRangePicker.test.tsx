@@ -3,12 +3,15 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import {
   wrapPickerMount,
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
+  AdapterClassToUse,
   withPickerControls,
   openPicker,
 } from '../../../../test/utils/pickers-utils';
@@ -213,6 +216,39 @@ describe('<DesktopDateRangePicker />', () => {
 
     openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
     expect(screen.getByRole('tooltip')).toBeVisible();
+  });
+
+  it('respect localeText', () => {
+    const theme = createTheme({
+      components: {
+        MuiLocalizationProvider: {
+          defaultProps: {
+            localeText: { start: 'Início', end: 'Fim' },
+          },
+        },
+      } as any,
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <LocalizationProvider dateAdapter={AdapterClassToUse}>
+          <DesktopDateRangePicker
+            renderInput={(startProps, endProps) => (
+              <React.Fragment>
+                <TextField {...startProps} variant="standard" />
+                <TextField {...endProps} variant="standard" />
+              </React.Fragment>
+            )}
+            onChange={() => {}}
+            TransitionComponent={FakeTransitionComponent}
+            value={[null, null]}
+          />
+        </LocalizationProvider>
+      </ThemeProvider>,
+    );
+
+    expect(screen.queryByText('Início')).not.to.equal(null);
+    expect(screen.queryByText('Fim')).not.to.equal(null);
   });
 
   it('prop: renderDay - should be called and render days', async () => {
