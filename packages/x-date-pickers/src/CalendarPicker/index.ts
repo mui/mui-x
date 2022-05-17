@@ -1,5 +1,9 @@
 export { CalendarPicker } from './CalendarPicker';
-export type { CalendarPickerProps } from './CalendarPicker';
+export type {
+  CalendarPickerProps,
+  CalendarPickerSlotsComponent,
+  CalendarPickerSlotsComponentsProps,
+} from './CalendarPicker';
 
 export { getCalendarPickerUtilityClass, calendarPickerClasses } from './calendarPickerClasses';
 export type { CalendarPickerClassKey, CalendarPickerClasses } from './calendarPickerClasses';

@@ -9,15 +9,32 @@ import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
+  DesktopWrapperSlotsComponent,
+  DesktopWrapperSlotsComponentProps,
 } from '../internals/components/wrappers/DesktopWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
+import {
+  CalendarOrClockPicker,
+  CalendarOrClockPickerSlotsComponent,
+  CalendarOrClockPickerSlotsComponentsProps,
+} from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 
+export interface DesktopTimePickerSlotsComponent
+  extends DesktopWrapperSlotsComponent,
+    CalendarOrClockPickerSlotsComponent {}
+
+export interface DesktopTimePickerSlotsComponentProps
+  extends DesktopWrapperSlotsComponentProps,
+    CalendarOrClockPickerSlotsComponentsProps {}
+
 export interface DesktopTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate>,
-    DesktopWrapperProps {}
+    DesktopWrapperProps {
+  components?: Partial<DesktopTimePickerSlotsComponent>;
+  componentsProps?: Partial<DesktopTimePickerSlotsComponentProps>;
+}
 
 type DesktopTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: DesktopTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -53,8 +70,8 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     ToolbarComponent = TimePickerToolbar,
     TransitionComponent,
     value,
-    clearable,
-    clearText,
+    components,
+    componentsProps,
     ...other
   } = props;
   const DateInputProps = { ...inputProps, ...other, ref, validationError };
@@ -67,8 +84,8 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
       PopperProps={PopperProps}
       PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
-      clearable={clearable}
-      clearText={clearText}
+      components={components}
+      componentsProps={componentsProps}
     >
       {/* @ts-ignore time picker has no component slot for the calendar header */}
       <CalendarOrClockPicker
@@ -77,6 +94,8 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </DesktopWrapper>
@@ -109,17 +128,6 @@ DesktopTimePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  clearText: PropTypes.node,
-  /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
@@ -129,6 +137,7 @@ DesktopTimePicker.propTypes = {
    * Either a string to use an HTML element or a component.
    */
   components: PropTypes.object,
+  componentsProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false

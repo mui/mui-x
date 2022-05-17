@@ -37,13 +37,9 @@ export const DatePicker = React.forwardRef(function DatePicker<TInputDate, TDate
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePicker' });
   const {
-    cancelText,
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
-    okText,
     PopperProps,
-    showTodayButton,
-    todayText,
     TransitionComponent,
     ...other
   } = props;
@@ -61,17 +57,7 @@ export const DatePicker = React.forwardRef(function DatePicker<TInputDate, TDate
     );
   }
 
-  return (
-    <MobileDatePicker
-      ref={ref}
-      cancelText={cancelText}
-      DialogProps={DialogProps}
-      okText={okText}
-      showTodayButton={showTodayButton}
-      todayText={todayText}
-      {...other}
-    />
-  );
+  return <MobileDatePicker ref={ref} DialogProps={DialogProps} {...other} />;
 }) as DatePickerComponent;
 
 DatePicker.propTypes = {
@@ -85,28 +71,11 @@ DatePicker.propTypes = {
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
   autoFocus: PropTypes.bool,
-  /**
-   * Cancel text message.
-   * @default 'Cancel'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  cancelText: PropTypes.node,
   children: PropTypes.node,
   /**
    * className applied to the root component.
    */
   className: PropTypes.string,
-  /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  clearText: PropTypes.node,
   /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
@@ -115,12 +84,10 @@ DatePicker.propTypes = {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
-   * @default {}
    */
   components: PropTypes.object,
   /**
    * The props used for each slot inside.
-   * @default {}
    */
   componentsProps: PropTypes.object,
   /**
@@ -223,12 +190,6 @@ DatePicker.propTypes = {
    * Min selectable date. @DateIOType
    */
   minDate: PropTypes.any,
-  /**
-   * Ok button text.
-   * @default 'OK'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
@@ -383,20 +344,9 @@ DatePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the today button is displayed. **Note** that `showClearButton` has a higher priority.
-   * @default false
-   */
-  showTodayButton: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Today text message.
-   * @default 'Today'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  todayText: PropTypes.node,
   /**
    * Component that will replace default toolbar renderer.
    * @default DatePickerToolbar

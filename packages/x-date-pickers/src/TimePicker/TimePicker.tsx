@@ -37,13 +37,9 @@ export const TimePicker = React.forwardRef(function TimePicker<TInputDate, TDate
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
   const {
-    cancelText,
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
-    okText,
     PopperProps,
-    showTodayButton,
-    todayText,
     TransitionComponent,
     ...other
   } = props;
@@ -61,17 +57,7 @@ export const TimePicker = React.forwardRef(function TimePicker<TInputDate, TDate
     );
   }
 
-  return (
-    <MobileTimePicker
-      ref={ref}
-      cancelText={cancelText}
-      DialogProps={DialogProps}
-      okText={okText}
-      showTodayButton={showTodayButton}
-      todayText={todayText}
-      {...other}
-    />
-  );
+  return <MobileTimePicker ref={ref} DialogProps={DialogProps} {...other} />;
 }) as TimePickerComponent;
 
 TimePicker.propTypes = {
@@ -94,28 +80,11 @@ TimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
-  /**
-   * Cancel text message.
-   * @default 'Cancel'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  cancelText: PropTypes.node,
   children: PropTypes.node,
   /**
    * className applied to the root component.
    */
   className: PropTypes.string,
-  /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  clearText: PropTypes.node,
   /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
@@ -126,6 +95,7 @@ TimePicker.propTypes = {
    * Either a string to use an HTML element or a component.
    */
   components: PropTypes.object,
+  componentsProps: PropTypes.object,
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -222,12 +192,6 @@ TimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * Ok button text.
-   * @default 'OK'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  okText: PropTypes.node,
-  /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
@@ -323,20 +287,9 @@ TimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the today button is displayed. **Note** that `showClearButton` has a higher priority.
-   * @default false
-   */
-  showTodayButton: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Today text message.
-   * @default 'Today'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  todayText: PropTypes.node,
   /**
    * Component that will replace default toolbar renderer.
    * @default TimePickerToolbar
