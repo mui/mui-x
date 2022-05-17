@@ -62,7 +62,7 @@ const run = async (argv: yargs.ArgumentsCamelCase<{ path: string }>) => {
   }
 
   return fs.writeFile(
-    './treeDataFromFileTreeResponse.txt',
+    path.join(__dirname, '../treeDataFromFileTreeResponse.json'),
     JSON.stringify(nodes, null, 2),
     'utf-8',
   );
