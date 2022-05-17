@@ -561,6 +561,7 @@
     "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
     "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
     "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
-    "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row."
+    "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
+    "QuickFilterIcon": "Icon displayed on the quick filter input."
   }
 }

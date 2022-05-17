@@ -243,6 +243,7 @@
     "Pagination": { "default": "Pagination", "type": { "name": "elementType | null" } },
     "Panel": { "default": "GridPanel", "type": { "name": "elementType" } },
     "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
+    "QuickFilterIcon": { "default": "GridSearchIcon", "type": { "name": "elementType" } },
     "Row": { "default": "GridRow", "type": { "name": "elementType" } },
     "RowReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
