@@ -18,7 +18,15 @@ export interface GridControlledStateEventLookupPremium {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {
+  /**
+   * If `true`, the cells of the column can be aggregated based.
+   * @default true
+   */
   aggregable?: boolean;
+  /**
+   * Limit the aggregation function usable on this column.
+   * By default, the column will have all the aggregation functions that are compatible with its type.
+   */
   availableAggregationFunctions?: string[];
   // /**
   //  * Function that transforms a complex cell value into a key that be used for grouping the rows.
@@ -45,6 +53,7 @@ export interface GridApiCachesPremium {
     }[];
   };
 }
+
 declare module '@mui/x-data-grid-pro' {
   interface GridColDef<R, V, F> extends GridColDefPro<R, V, F>, GridColDefPremium<R, V, F> {}
 

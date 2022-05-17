@@ -1,6 +1,7 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
-import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
+import ListSubheader from '@mui/material/ListSubheader';
+import { gridColumnLookupSelector, gridRowTreeDepthSelector } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
@@ -21,10 +22,10 @@ import {
   wrapColumnWithAggregationLabel,
 } from './wrapColumnWithAggregation';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridAggregationColumnMenuItems } from '../../../components/GridAggregationColumnMenuItems';
+import { GridAggregationColumnMenuItem } from '../../../components/GridAggregationColumnMenuItem';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { GridAggregationRules } from './gridAggregationInterfaces';
+import { GridAggregationPosition, GridAggregationRules } from './gridAggregationInterfaces';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -186,13 +187,31 @@ export const useGridAggregationPreProcessors = (
         aggregationFunctions: props.aggregationFunctions,
         column,
       });
+
       if (availableAggregationFunction.length === 0) {
         return initialValue;
       }
 
-      return [...initialValue, <Divider />, <GridAggregationColumnMenuItems />];
+      const aggregationPositions: GridAggregationPosition[] =
+        gridRowTreeDepthSelector(apiRef) > 1 ? ['inline', 'footer'] : ['footer'];
+
+      return [
+        ...initialValue,
+        <Divider />,
+        <React.Fragment>
+          {aggregationPositions.length > 1 && (
+            <ListSubheader disableSticky>Aggregation</ListSubheader>
+          )}
+          {aggregationPositions.map((aggregationPosition) => (
+            <GridAggregationColumnMenuItem
+              position={aggregationPosition}
+              label={aggregationPositions.length > 1 ? aggregationPosition : 'Aggregation'}
+            />
+          ))}
+        </React.Fragment>,
+      ];
     },
-    [props.aggregationFunctions, props.disableAggregation],
+    [apiRef, props.aggregationFunctions, props.disableAggregation],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

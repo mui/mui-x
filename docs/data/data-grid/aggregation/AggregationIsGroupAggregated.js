@@ -47,6 +47,7 @@ export default function AggregationIsGroupAggregated() {
         model: {
           gross: {
             footer: 'sum',
+            inline: 'sum',
           },
         },
       },
