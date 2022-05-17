@@ -102,7 +102,7 @@ If you need some rows to have different row heights this can be achieved using t
 
 ### Dynamic row height
 
-Instead of a fixed row height, you can let the grid to calculate the height of each row based on its content.
+Instead of a fixed row height, you can let the grid calculate the height of each row based on its content.
 To do so, return `"auto`" on the function passed to the `getRowHeight` prop.
 
 ```tsx
