@@ -1,4 +1,4 @@
-import { GridValueFormatterParams, GridRowId } from '@mui/x-data-grid-pro';
+import { GridValueFormatterParams, GridRowId, GridRowTreeNodeConfig } from '@mui/x-data-grid-pro';
 
 interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
@@ -12,6 +12,13 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
    * @returns {AV} The aggregated value.
    */
   apply: (params: GridAggregationParams<V>) => AV | null | undefined;
+
+  /**
+   * Label of the aggregation function.
+   * Will be used to add a label on the footer of the grouping column when this aggregation function is the only one being used.
+   * @default `apiRef.current.getLocaleText(`aggregationFunctionLabel${capitalize(aggregationFunctionName)}`)`
+   */
+  label?: string;
 
   /**
    * Column types supported by this aggregation function.
@@ -84,6 +91,9 @@ export interface GridAggregationCellMeta {
    * For instance, "size" aggregation has no unit.
    */
   hasCellUnit: boolean;
+  /**
+   * Name of the aggregation function currently applied on this cell.
+   */
   aggregationFunctionName: string;
 }
 
@@ -106,3 +116,8 @@ export interface GridColumnAggregationRules {
  * - items for non-available aggregation function on the column (GridColDef.availableAggregationFunctions)
  */
 export type GridAggregationRules = { [field: string]: GridColumnAggregationRules };
+
+export interface GridAggregationFooterLabelParams {
+  groupNode: GridRowTreeNodeConfig | null;
+  aggregationFunctions: { field: string; aggregationFunctionName: string }[];
+}

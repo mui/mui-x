@@ -16,6 +16,7 @@ import type {
   GridAggregationModel,
   GridAggregationFunction,
   GridAggregationPosition,
+  GridAggregationFooterLabelParams,
 } from '../hooks/features/aggregation';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
@@ -126,8 +127,9 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * Returns the aggregation label of a group.
    * This label will be rendered on the 1st grouping column.
+   *
    */
   aggregationFooterLabel?:
     | React.ReactNode
-    | ((groupNode: GridRowTreeNodeConfig | null) => React.ReactNode);
+    | ((params: GridAggregationFooterLabelParams) => React.ReactNode);
 }

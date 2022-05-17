@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { GridColDef, GridRowId, GridRowTreeNodeConfig } from '@mui/x-data-grid-pro';
-import { isFunction } from '@mui/x-data-grid-pro/internals';
-import { capitalize } from '@mui/material';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -11,6 +9,7 @@ import {
 } from './gridAggregationInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
+import { getAggregationFooterLabel } from './gridAggregationUtils';
 
 const AGGREGATION_WRAPPABLE_PROPERTIES = [
   'valueGetter',
@@ -200,46 +199,13 @@ const getAggregationLabelWrappedValueGetter = ({
   const wrappedValueGetter: AggregationWrappedColDefProperty<'valueGetter'> = (params) => {
     const cellAggregationPosition = getCellAggregationPosition(params.id);
     if (cellAggregationPosition === 'footer') {
-      const groupNode =
-        params.rowNode.parent == null ? null : apiRef.current.getRowNode(params.rowNode.parent);
-
-      if (!shouldRenderLabel(groupNode)) {
-        return '';
-      }
-
-      if (aggregationFooterLabel != null) {
-        return isFunction(aggregationFooterLabel)
-          ? aggregationFooterLabel(groupNode)
-          : aggregationFooterLabel;
-      }
-
-      const aggregationLookup = gridAggregationLookupSelector(apiRef);
-
-      const groupAggregatedValues = aggregationLookup[groupNode?.id ?? ''];
-
-      const keys = Object.keys(groupAggregatedValues).filter(
-        (key) => !!groupAggregatedValues[key].footer,
-      );
-
-      if (keys.length > 1) {
-        return apiRef.current.getLocaleText('aggregationMultiFunctionLabel');
-      }
-
-      const aggregationFunctionName = aggregationRules[keys[0]].footer!.aggregationFunctionName;
-
-      // TODO: Remove try / catch
-      try {
-        const locale = apiRef.current.getLocaleText(
-          `aggregationFunctionLabel${capitalize(
-            aggregationFunctionName,
-          )}` as 'aggregationFunctionLabelSum',
-        );
-        if (locale) {
-          return locale(groupNode?.groupingKey ?? null);
-        }
-      } catch {
-        return '';
-      }
+      return getAggregationFooterLabel({
+        footerNode: params.rowNode,
+        apiRef,
+        aggregationRules,
+        aggregationFooterLabel,
+        shouldRenderLabel,
+      });
     }
 
     if (valueGetter) {

@@ -67,6 +67,7 @@
   { "name": "GridAddIcon", "kind": "Variable" },
   { "name": "GridAggregationApi", "kind": "Interface" },
   { "name": "GridAggregationCellMeta", "kind": "Interface" },
+  { "name": "GridAggregationFooterLabelParams", "kind": "Interface" },
   { "name": "GridAggregationFunction", "kind": "Interface" },
   { "name": "GridAggregationInitialState", "kind": "Interface" },
   { "name": "GridAggregationItem", "kind": "TypeAlias" },

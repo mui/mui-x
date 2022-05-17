@@ -68,6 +68,21 @@ DataGridPremiumRaw.propTypes = {
    */
   aggregatedRows: PropTypes.oneOf(['all', 'filtered']),
   /**
+   * Returns the aggregation label of a group.
+   * This label will be rendered on the 1st grouping column.
+   */
+  aggregationFooterLabel: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func,
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.shape({
+      '__@iterator@35370': PropTypes.func.isRequired,
+    }),
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
+  /**
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: PropTypes.object,
@@ -411,7 +426,7 @@ DataGridPremiumRaw.propTypes = {
   isCellEditable: PropTypes.func,
   /**
    * Determines in a group of rows should be aggregated.
-   * @param {GridRowTreeNodeConfig | null} rowNode The current group (`null` being the top level group).
+   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
    * @param {GridAggregationPosition} position The position on which the aggregation has to be done.
    * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
    */
