@@ -61,7 +61,11 @@ const run = async (argv: yargs.ArgumentsCamelCase<{ path: string }>) => {
     nodes.push(...childNodes);
   }
 
-  return fs.writeFile('./treeDataFromFileTreeResponse.txt', JSON.stringify(nodes, null, 2), 'utf-8');
+  return fs.writeFile(
+    './treeDataFromFileTreeResponse.txt',
+    JSON.stringify(nodes, null, 2),
+    'utf-8',
+  );
 };
 
 yargs
