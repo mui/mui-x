@@ -1,10 +1,9 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { useTheme, styled, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { PickersToolbar } from '../internals/components/PickersToolbar';
+import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
 import { arrayIncludes } from '../internals/utils/utils';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
@@ -23,7 +22,7 @@ const useUtilityClasses = (ownerState: TimePickerToolbarProps<any> & { theme: Th
   const { theme, isLandscape, classes } = ownerState;
 
   const slots = {
-    penIconLandscape: ['penIconLandscape'],
+    root: ['root'],
     separator: ['separator'],
     hourMinuteLabel: [
       'hourMinuteLabel',
@@ -37,21 +36,33 @@ const useUtilityClasses = (ownerState: TimePickerToolbarProps<any> & { theme: Th
   return composeClasses(slots, getTimePickerToolbarUtilityClass, classes);
 };
 
-const TimePickerToolbarRoot = styled(PickersToolbar)<{
+const TimePickerToolbarRoot = styled(PickersToolbar, {
+  name: 'MuiTimePickerToolbar',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{
   ownerState: TimePickerToolbarProps<any>;
 }>({
-  [`& .${timePickerToolbarClasses.penIconLandscape}`]: {
+  [`& .${pickersToolbarClasses.penIconButtonLandscape}`]: {
     marginTop: 'auto',
   },
 });
 
-const TimePickerToolbarSeparator = styled(PickersToolbarText)({
+const TimePickerToolbarSeparator = styled(PickersToolbarText, {
+  name: 'MuiTimePickerToolbar',
+  slot: 'Separator',
+  overridesResolver: (props, styles) => styles.separator,
+})({
   outline: 0,
   margin: '0 4px 0 2px',
   cursor: 'default',
 });
 
-const TimePickerToolbarHourMinuteLabel = styled('div')<{
+const TimePickerToolbarHourMinuteLabel = styled('div', {
+  name: 'MuiTimePickerToolbar',
+  slot: 'HourMinuteLabel',
+  overridesResolver: (props, styles) => styles.hourMinuteLabel,
+})<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ theme, ownerState }) => ({
   display: 'flex',
@@ -65,7 +76,11 @@ const TimePickerToolbarHourMinuteLabel = styled('div')<{
   }),
 }));
 
-const TimePickerToolbarAmPmSelection = styled('div')<{
+const TimePickerToolbarAmPmSelection = styled('div', {
+  name: 'MuiTimePickerToolbar',
+  slot: 'AmPmSelection',
+  overridesResolver: (props, styles) => styles.ampmSelection,
+})<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ ownerState }) => ({
   display: 'flex',
@@ -135,7 +150,7 @@ export const TimePickerToolbar = <TDate extends unknown>(
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       ownerState={ownerState}
-      penIconClassName={clsx({ [classes.penIconLandscape]: isLandscape })}
+      className={classes.root}
       {...other}
     >
       <TimePickerToolbarHourMinuteLabel className={classes.hourMinuteLabel} ownerState={ownerState}>
