@@ -41,7 +41,7 @@ const firstAlphabeticalAggregation = {
   valueFormatter: (params) => `Agg: ${params.value}`,
 };
 
-export default function AggregationCustomFunction() {
+export default function AggregationValueFormatter() {
   const data = useMovieData();
 
   return (
