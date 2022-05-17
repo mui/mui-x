@@ -1,10 +1,10 @@
 ---
-title: Pickers - Localization
+title: Date and time pickers - Localization
 ---
 
-# Pickers - Localization
+# Date and time pickers - Localization
 
-<p class="description">Pickers allow to support users from different locales, with formatting, RTL, and localized strings.</p>
+<p class="description">Date and time pickers allow to support users from different locales, with formatting, RTL, and localized strings.</p>
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
