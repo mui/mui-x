@@ -285,6 +285,9 @@ describe('<DesktopDateRangePicker />', () => {
       );
     }
     render(<DesktopDateRangePickerClearable />);
+
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
     expect(screen.getAllByRole('textbox')[0]).to.have.value('01/01/2018');
     expect(screen.getAllByRole('textbox')[1]).to.have.value('01/31/2018');
 

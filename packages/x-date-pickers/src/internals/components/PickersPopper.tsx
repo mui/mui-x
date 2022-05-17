@@ -208,7 +208,6 @@ function useClickAwayListener(
   return [nodeRef, handleSynthetic, handleSynthetic];
 }
 
-
 export const PickersPopper = (props: PickerPopperProps) => {
   const {
     anchorEl,
