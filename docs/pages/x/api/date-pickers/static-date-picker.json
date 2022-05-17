@@ -32,7 +32,7 @@
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
-    "leftArrowButtonText": { "type": { "name": "string" } },
+    "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
     "mask": { "type": { "name": "string" } },
     "maxDate": { "type": { "name": "any" } },
@@ -63,7 +63,7 @@
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
     },
     "rifmFormatter": { "type": { "name": "func" } },
-    "rightArrowButtonText": { "type": { "name": "string" } },
+    "rightArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
