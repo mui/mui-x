@@ -8,7 +8,13 @@ import {
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const COLUMNS: GridColDef[] = [
-  { field: 'title', headerName: 'Title', width: 200, groupable: false },
+  {
+    field: 'title',
+    headerName: 'Title',
+    width: 200,
+    groupable: false,
+    aggregable: false,
+  },
   {
     field: 'director',
     headerName: 'Director',
@@ -40,6 +46,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
 
       return sortedValue[0];
     },
+    label: 'First in alphabet',
     types: ['string'],
   };
 
@@ -53,6 +60,7 @@ const lastAlphabeticalAggregation: GridAggregationFunction<string, string | null
 
     return sortedValue[sortedValue.length - 1];
   },
+  label: 'Last in alphabet',
   types: ['string'],
 };
 
@@ -70,6 +78,7 @@ export default function AggregationCustomFunction() {
         firstAlphabetical: firstAlphabeticalAggregation,
         lastAlphabetical: lastAlphabeticalAggregation,
       }}
+      aggregationFooterLabelField="title"
       initialState={{
         aggregation: {
           model: {

@@ -4,6 +4,7 @@ import type {
   GridColDefPro,
 } from '@mui/x-data-grid-pro/typeOverloads';
 import type { GridAggregationModel, GridAggregationCellMeta, GridAggregationRules } from '../hooks';
+import { AggregationFooterLabelColumn } from '../hooks/features/aggregation/gridAggregationUtils';
 
 export interface GridControlledStateEventLookupPremium {
   /**
@@ -45,12 +46,9 @@ export interface GridRenderCellParamsPremium<V = any, R extends GridValidRowMode
 
 export interface GridApiCachesPremium {
   aggregation?: {
-    aggregationRulesOnLastColumnHydration?: GridAggregationRules;
-    aggregationRulesOnLastRowHydration?: GridAggregationRules;
-    groupingColumnFieldsOnLastColumnHydration?: {
-      groupingCriteria?: string[];
-      groupingColumnField: string;
-    }[];
+    rulesOnLastColumnHydration?: GridAggregationRules;
+    rulesOnLastRowHydration?: GridAggregationRules;
+    footerLabelColumnOnLastColumnHydration?: AggregationFooterLabelColumn[];
   };
 }
 

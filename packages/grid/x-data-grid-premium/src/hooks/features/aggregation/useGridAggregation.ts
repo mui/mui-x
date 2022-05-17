@@ -13,7 +13,7 @@ import {
   getAggregationRules,
   mergeStateWithAggregationModel,
   hasAggregationRulesChanged,
-  getGroupingColumns,
+  getAggregationFooterLabelColumns,
 } from './gridAggregationUtils';
 import { createAggregationLookup } from './createAggregationLookup';
 
@@ -40,6 +40,7 @@ export const useGridAggregation = (
     | 'aggregationFooterLabel'
     | 'disableAggregation'
     | 'rowGroupingColumnMode'
+    | 'aggregationFooterLabelField'
   >,
 ) => {
   apiRef.current.unstable_updateControlState({
@@ -89,9 +90,9 @@ export const useGridAggregation = (
    */
   const checkAggregationRulesDiff = React.useCallback(() => {
     const {
-      aggregationRulesOnLastRowHydration,
-      aggregationRulesOnLastColumnHydration,
-      groupingColumnFieldsOnLastColumnHydration,
+      rulesOnLastRowHydration,
+      rulesOnLastColumnHydration,
+      footerLabelColumnOnLastColumnHydration,
     } = apiRef.current.unstable_caches.aggregation ?? {};
 
     const aggregationRules = getAggregationRules({
@@ -100,25 +101,26 @@ export const useGridAggregation = (
       aggregationFunctions: props.aggregationFunctions,
     });
 
-    const groupingColumnFields = getGroupingColumns({
+    const footerLabelColumns = getAggregationFooterLabelColumns({
       apiRef,
       columnsLookup: gridColumnLookupSelector(apiRef),
+      aggregationFooterLabelField: props.aggregationFooterLabelField,
     });
 
     // Re-apply the row hydration to add / remove the aggregation footers
-    if (hasAggregationRulesChanged(aggregationRulesOnLastRowHydration, aggregationRules)) {
+    if (hasAggregationRulesChanged(rulesOnLastRowHydration, aggregationRules)) {
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
       applyAggregation();
     }
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
     if (
-      hasAggregationRulesChanged(aggregationRulesOnLastColumnHydration, aggregationRules) ||
-      !isDeepEqual(groupingColumnFieldsOnLastColumnHydration, groupingColumnFields)
+      hasAggregationRulesChanged(rulesOnLastColumnHydration, aggregationRules) ||
+      !isDeepEqual(footerLabelColumnOnLastColumnHydration, footerLabelColumns)
     ) {
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
     }
-  }, [apiRef, applyAggregation, props.aggregationFunctions]);
+  }, [apiRef, applyAggregation, props.aggregationFunctions, props.aggregationFooterLabelField]);
 
   useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);

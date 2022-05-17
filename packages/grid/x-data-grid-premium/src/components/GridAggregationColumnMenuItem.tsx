@@ -15,7 +15,7 @@ import { gridAggregationModelSelector } from '../hooks/features/aggregation/grid
 import { GridAggregationPosition } from '../hooks/features/aggregation/gridAggregationInterfaces';
 
 interface GridAggregationColumnMenuItemsProps {
-  column?: GridColDef;
+  column: GridColDef;
   position: GridAggregationPosition;
   label: string;
 }
@@ -42,10 +42,6 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
       })
     : {};
 
-  if (!column) {
-    return null;
-  }
-
   const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
     const newPositionValue = event.target.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
@@ -66,7 +62,7 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
   };
 
   return (
-    <MenuItem key={position}>
+    <MenuItem>
       <FormControl fullWidth>
         <InputLabel id={`${id}-label`}>{label}</InputLabel>
         <Select

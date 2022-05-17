@@ -14,7 +14,7 @@ import {
   addFooterRows,
   getAggregationRules,
   mergeStateWithAggregationModel,
-  getGroupingColumns,
+  getAggregationFooterLabelColumns,
 } from './gridAggregationUtils';
 import {
   wrapColumnWithAggregationValue,
@@ -25,7 +25,7 @@ import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumPr
 import { GridAggregationColumnMenuItem } from '../../../components/GridAggregationColumnMenuItem';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { GridAggregationPosition, GridAggregationRules } from './gridAggregationInterfaces';
+import { GridAggregationRules } from './gridAggregationInterfaces';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -37,15 +37,14 @@ export const useGridAggregationPreProcessors = (
     | 'isGroupAggregated'
     | 'disableAggregation'
     | 'aggregationFooterLabel'
+    | 'aggregationFooterLabelField'
     | 'rowGroupingColumnMode'
   >,
 ) => {
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      const {
-        aggregationRulesOnLastColumnHydration = {},
-        groupingColumnFieldsOnLastColumnHydration,
-      } = apiRef.current.unstable_caches.aggregation ?? {};
+      const { rulesOnLastColumnHydration = {}, footerLabelColumnOnLastColumnHydration } =
+        apiRef.current.unstable_caches.aggregation ?? {};
 
       const aggregationRules = getAggregationRules({
         columnsLookup: columnsState.lookup,
@@ -53,14 +52,15 @@ export const useGridAggregationPreProcessors = (
         aggregationFunctions: props.aggregationFunctions,
       });
 
-      const groupingColumnFields = getGroupingColumns({
+      const footerLabelColumns = getAggregationFooterLabelColumns({
         apiRef,
         columnsLookup: columnsState.lookup,
+        aggregationFooterLabelField: props.aggregationFooterLabelField,
       });
 
       columnsState.all.forEach((field) => {
         const shouldHaveAggregationValue = !props.disableAggregation && !!aggregationRules[field];
-        const haveAggregationColumnValue = !!aggregationRulesOnLastColumnHydration[field];
+        const haveAggregationColumnValue = !!rulesOnLastColumnHydration[field];
 
         let column = columnsState.lookup[field];
 
@@ -82,44 +82,37 @@ export const useGridAggregationPreProcessors = (
         columnsState.lookup[field] = column;
       });
 
-      groupingColumnFieldsOnLastColumnHydration?.forEach(({ groupingColumnField }) => {
-        columnsState.lookup[groupingColumnField] = unwrapColumnFromAggregation({
-          column: columnsState.lookup[groupingColumnField],
+      footerLabelColumnOnLastColumnHydration?.forEach((footerLabelColumn) => {
+        columnsState.lookup[footerLabelColumn.field] = unwrapColumnFromAggregation({
+          column: columnsState.lookup[footerLabelColumn.field],
         });
       });
 
-      groupingColumnFields.forEach(
-        ({ groupingColumnField, groupingCriteria }, groupingColumnIndex) => {
-          const column = columnsState.lookup[groupingColumnField];
-          if (!column) {
-            return;
-          }
+      footerLabelColumns.forEach((footerLabelColumn, footerLabelColumnIndex) => {
+        columnsState.lookup[footerLabelColumn.field] = wrapColumnWithAggregationLabel({
+          column: columnsState.lookup[footerLabelColumn.field],
+          aggregationFooterLabel: props.aggregationFooterLabel,
+          apiRef,
+          isGroupAggregated: props.isGroupAggregated,
+          aggregationRules,
+          shouldRenderLabel: (groupNode) => {
+            if (!footerLabelColumn.groupingCriteria) {
+              return true;
+            }
 
-          columnsState.lookup[groupingColumnField] = wrapColumnWithAggregationLabel({
-            column: columnsState.lookup[groupingColumnField],
-            aggregationFooterLabel: props.aggregationFooterLabel,
-            apiRef,
-            isGroupAggregated: props.isGroupAggregated,
-            aggregationRules,
-            shouldRenderLabel: (groupNode) => {
-              if (!groupingCriteria) {
-                return true;
-              }
+            if (groupNode?.groupingField == null) {
+              return footerLabelColumnIndex === 0;
+            }
 
-              if (groupNode?.groupingField == null) {
-                return groupingColumnIndex === 0;
-              }
-
-              return groupingCriteria.includes(groupNode.groupingField);
-            },
-          });
-        },
-      );
+            return footerLabelColumn.groupingCriteria.includes(groupNode.groupingField);
+          },
+        });
+      });
 
       apiRef.current.unstable_caches.aggregation = {
         ...apiRef.current.unstable_caches.aggregation,
-        aggregationRulesOnLastColumnHydration: aggregationRules,
-        groupingColumnFieldsOnLastColumnHydration: groupingColumnFields,
+        rulesOnLastColumnHydration: aggregationRules,
+        footerLabelColumnOnLastColumnHydration: footerLabelColumns,
       };
 
       return columnsState;
@@ -130,17 +123,18 @@ export const useGridAggregationPreProcessors = (
       props.disableAggregation,
       props.isGroupAggregated,
       props.aggregationFooterLabel,
+      props.aggregationFooterLabelField,
     ],
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       let newGroupingParams: GridRowTreeCreationValue;
-      let aggregationRulesOnLastRowHydration: GridAggregationRules;
+      let rulesOnLastRowHydration: GridAggregationRules;
 
       if (props.disableAggregation) {
         newGroupingParams = groupingParams;
-        aggregationRulesOnLastRowHydration = {};
+        rulesOnLastRowHydration = {};
       } else {
         const aggregationRules = getAggregationRules({
           columnsLookup: gridColumnLookupSelector(apiRef),
@@ -148,7 +142,7 @@ export const useGridAggregationPreProcessors = (
           aggregationFunctions: props.aggregationFunctions,
         });
 
-        aggregationRulesOnLastRowHydration = aggregationRules;
+        rulesOnLastRowHydration = aggregationRules;
 
         // If no column have a footer aggregation rule
         // Then don't create the footer rows
@@ -169,7 +163,7 @@ export const useGridAggregationPreProcessors = (
 
       apiRef.current.unstable_caches.aggregation = {
         ...apiRef.current.unstable_caches.aggregation,
-        aggregationRulesOnLastRowHydration,
+        rulesOnLastRowHydration,
       };
 
       return newGroupingParams;
@@ -192,24 +186,37 @@ export const useGridAggregationPreProcessors = (
         return initialValue;
       }
 
-      const aggregationPositions: GridAggregationPosition[] =
-        gridRowTreeDepthSelector(apiRef) > 1 ? ['inline', 'footer'] : ['footer'];
+      const treeDepth = gridRowTreeDepthSelector(apiRef);
+      const items: React.ReactNode[] = [<Divider />];
 
-      return [
-        ...initialValue,
-        <Divider />,
-        <React.Fragment>
-          {aggregationPositions.length > 1 && (
-            <ListSubheader disableSticky>Aggregation</ListSubheader>
-          )}
-          {aggregationPositions.map((aggregationPosition) => (
-            <GridAggregationColumnMenuItem
-              position={aggregationPosition}
-              label={aggregationPositions.length > 1 ? aggregationPosition : 'Aggregation'}
-            />
-          ))}
-        </React.Fragment>,
-      ];
+      if (treeDepth > 1) {
+        items.push(
+          <ListSubheader disableSticky>
+            {apiRef.current.getLocaleText('aggregationMenuItemHeader')}
+          </ListSubheader>,
+        );
+        items.push(
+          <GridAggregationColumnMenuItem
+            column={column}
+            position="inline"
+            label={apiRef.current.getLocaleText('aggregationMenuItemInlineLabel')}
+          />,
+        );
+      }
+
+      items.push(
+        <GridAggregationColumnMenuItem
+          column={column}
+          position="footer"
+          label={
+            treeDepth > 1
+              ? apiRef.current.getLocaleText('aggregationMenuItemFooterLabel')
+              : apiRef.current.getLocaleText('aggregationMenuItemHeader')
+          }
+        />,
+      );
+
+      return [...initialValue, ...items];
     },
     [apiRef, props.aggregationFunctions, props.disableAggregation],
   );

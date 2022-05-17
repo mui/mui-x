@@ -272,34 +272,42 @@ export const hasAggregationRulesChanged = (
   });
 };
 
-export const getGroupingColumns = ({
+export interface AggregationFooterLabelColumn {
+  groupingCriteria?: string[];
+  field: string;
+}
+
+export const getAggregationFooterLabelColumns = ({
   apiRef,
   columnsLookup,
+  aggregationFooterLabelField,
 }: {
   apiRef: React.MutableRefObject<GridApiPremium>;
   columnsLookup: GridColumnRawLookup;
-}): {
-  groupingCriteria?: string[];
-  groupingColumnField: string;
-}[] => {
+  aggregationFooterLabelField: DataGridPremiumProcessedProps['aggregationFooterLabelField'];
+}): AggregationFooterLabelColumn[] => {
+  if (aggregationFooterLabelField != null && columnsLookup[aggregationFooterLabelField]) {
+    return [{ field: aggregationFooterLabelField }];
+  }
+
   if (columnsLookup[GRID_TREE_DATA_GROUPING_FIELD]) {
-    return [{ groupingColumnField: GRID_TREE_DATA_GROUPING_FIELD }];
+    return [{ field: GRID_TREE_DATA_GROUPING_FIELD }];
   }
 
   if (columnsLookup[GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD]) {
     return [
       {
-        groupingColumnField: getRowGroupingFieldFromGroupingCriteria(null),
+        field: getRowGroupingFieldFromGroupingCriteria(null),
       },
     ];
   }
 
   return gridRowGroupingModelSelector(apiRef)
     .map((groupingCriterion) => ({
+      field: getRowGroupingFieldFromGroupingCriteria(groupingCriterion),
       groupingCriteria: [groupingCriterion],
-      groupingColumnField: getRowGroupingFieldFromGroupingCriteria(groupingCriterion),
     }))
-    .filter(({ groupingColumnField }) => !!columnsLookup[groupingColumnField]);
+    .filter(({ field }) => !!columnsLookup[field]);
 };
 
 /**

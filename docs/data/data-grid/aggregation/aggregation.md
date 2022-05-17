@@ -50,6 +50,18 @@ You can use the `onFilterModelChange` prop to listen to changes to the filters a
 
 {{"demo": "AggregationControlled.js", "bg": "inline"}}
 
+## Aggregation label
+
+### Choose the column for the label
+
+Use the `aggregationFooterLabelField` to choose on which column the label of the aggregation should be rendered.
+
+{{"demo": "AggregationLabelColumn.js", "bg": "inline"}}
+
+### Customize the content of the label
+
+TODO
+
 ## Usage with row grouping
 
 When the row grouping is enabled, the aggregation can be displayed on two positions:
@@ -188,6 +200,8 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
 
       return sortedValue[0];
     },
+    // The `label` property defined the label rendered when this aggregation function is the only one being used.
+    label: 'First in alphabet',
     // The `types` property defines which type of columns can use this aggregation function.
     // Here, we only want to propose this aggregation function for `string` columns.
     // If not defined, the aggregation will be available for all column types.

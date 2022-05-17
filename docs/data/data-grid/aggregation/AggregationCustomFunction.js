@@ -37,6 +37,7 @@ const firstAlphabeticalAggregation = {
 
     return sortedValue[0];
   },
+  label: 'First in alphabet',
   types: ['string'],
 };
 
@@ -50,6 +51,7 @@ const lastAlphabeticalAggregation = {
 
     return sortedValue[sortedValue.length - 1];
   },
+  label: 'Last in alphabet',
   types: ['string'],
 };
 

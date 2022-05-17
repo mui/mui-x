@@ -139,6 +139,9 @@ export interface GridLocaleText {
   rowReorderingHeaderName: string;
 
   // Aggregation
+  aggregationMenuItemHeader: string;
+  aggregationMenuItemFooterLabel: string;
+  aggregationMenuItemInlineLabel: string;
   aggregationMultiFunctionLabel: string;
   aggregationFunctionLabelSum: (groupingKey: GridKeyValue | null) => string;
   aggregationFunctionLabelAvg: (groupingKey: GridKeyValue | null) => string;

@@ -139,6 +139,9 @@ const huHUGrid: Partial<GridLocaleText> = {
   // rowReorderingHeaderName: 'Row reordering',
 
   // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationMenuItemFooterLabel: 'Footer',
+  // aggregationMenuItemInlineLabel: 'Inline',
   // aggregationMultiFunctionLabel: 'Aggregation',
   // aggregationFunctionLabelSum: groupingKey => groupingKey == null ? 'Total' : `Total ${groupingKey}`,
   // aggregationFunctionLabelAvg: groupingKey => groupingKey == null ? 'Average' : `Average ${groupingKey}`,

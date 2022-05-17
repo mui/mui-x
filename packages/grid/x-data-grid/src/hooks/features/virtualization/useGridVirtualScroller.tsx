@@ -371,6 +371,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         isSelected = true;
       }
 
+      console.log('HEY');
+
       rows.push(
         <rootProps.components.Row
           key={id}
