@@ -61,8 +61,7 @@ const run = async (argv: yargs.ArgumentsCamelCase<{ path: string }>) => {
     nodes.push(...childNodes);
   }
 
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify(nodes, null, 2));
+  return fs.writeFile('./treeDataFromFileTreeResponse.txt', JSON.stringify(nodes, null, 2), 'utf-8');
 };
 
 yargs
