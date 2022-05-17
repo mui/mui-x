@@ -69,7 +69,7 @@ describe('<MobileDatePicker />', () => {
         open
         reduceAnimations
         value={null}
-        onChange={() => {}}
+        onChange={() => { }}
         openTo="year"
         minDate={adapterToUse.date('2000-01-01T00:00:00.000')}
         maxDate={adapterToUse.date('2010-01-01T00:00:00.000')}
@@ -88,7 +88,7 @@ describe('<MobileDatePicker />', () => {
         open
         toolbarTitle="test"
         label="something"
-        onChange={() => {}}
+        onChange={() => { }}
         value={adapterToUse.date('2018-01-01T00:00:00.000')}
       />,
     );
@@ -101,7 +101,7 @@ describe('<MobileDatePicker />', () => {
       <MobileDatePicker
         open
         label="Default label"
-        onChange={() => {}}
+        onChange={() => { }}
         renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date('2018-01-01T00:00:00.000')}
       />,
@@ -115,7 +115,7 @@ describe('<MobileDatePicker />', () => {
       <MobileDatePicker
         renderInput={(params) => <TextField {...params} />}
         open
-        onChange={() => {}}
+        onChange={() => { }}
         toolbarFormat="MMMM"
         value={adapterToUse.date('2018-01-01T00:00:00.000')}
       />,
@@ -130,7 +130,7 @@ describe('<MobileDatePicker />', () => {
       <MobileDatePicker
         open
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
+        onChange={() => { }}
         onMonthChange={onMonthChangeMock}
         value={adapterToUse.date('2018-01-01T00:00:00.000')}
       />,
@@ -146,7 +146,7 @@ describe('<MobileDatePicker />', () => {
         open
         loading
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
+        onChange={() => { }}
         value={adapterToUse.date('2018-01-01T00:00:00.000')}
       />,
     );
@@ -161,7 +161,7 @@ describe('<MobileDatePicker />', () => {
         loading
         renderLoading={() => <CalendarPickerSkeleton data-testid="custom-loading" />}
         open
-        onChange={() => {}}
+        onChange={() => { }}
         renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date('2018-01-01T00:00:00.000')}
       />,
@@ -177,7 +177,7 @@ describe('<MobileDatePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         open
         value={adapterToUse.date()}
-        onChange={() => {}}
+        onChange={() => { }}
         ToolbarComponent={() => <div data-testid="custom-toolbar" />}
       />,
     );
@@ -191,7 +191,7 @@ describe('<MobileDatePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         open
         value={adapterToUse.date('2018-01-01T00:00:00.000')}
-        onChange={() => {}}
+        onChange={() => { }}
         renderDay={(day, _selected, pickersDayProps) => (
           <PickersDay {...pickersDayProps} data-testid="test-day" />
         )}
@@ -207,7 +207,7 @@ describe('<MobileDatePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         open
         value={null}
-        onChange={() => {}}
+        onChange={() => { }}
         defaultCalendarMonth={adapterToUse.date('2018-07-01T00:00:00.000')}
       />,
     );
@@ -243,7 +243,7 @@ describe('<MobileDatePicker />', () => {
       <MobileDatePicker
         open
         showToolbar
-        onChange={() => {}}
+        onChange={() => { }}
         value={null}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -259,7 +259,7 @@ describe('<MobileDatePicker />', () => {
         <MobileDatePicker
           value={adapterToUse.date('2019-01-01T00:00:00.000')}
           {...{ [prop]: true }}
-          onChange={() => {}}
+          onChange={() => { }}
           onOpen={handleOpen}
           open={false}
           renderInput={(params) => <TextField {...params} />}
