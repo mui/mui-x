@@ -361,12 +361,48 @@ describe('<ClockPicker />', () => {
       expect(handleChange.callCount).to.equal(0);
     });
 
+    it('should not select minute when time is disabled (no current value)', () => {
+      const handleChange = spy();
+      render(
+        <ClockPicker
+          ampm={false}
+          date={null}
+          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          onChange={handleChange}
+          view="minutes"
+        />,
+      );
+
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:20']);
+
+      expect(handleChange.callCount).to.equal(0);
+    });
+
     it('should not select disabled hour', () => {
       const handleChange = spy();
       render(
         <ClockPicker
           ampm={false}
           date={adapterToUse.date('2018-01-01T13:00:00.000')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          onChange={handleChange}
+          view="hours"
+        />,
+      );
+
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['20:--']);
+
+      expect(handleChange.callCount).to.equal(0);
+    });
+
+    it('should not select disabled hour (no current value)', () => {
+      const handleChange = spy();
+      render(
+        <ClockPicker
+          ampm={false}
+          date={null}
           minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
           maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
           onChange={handleChange}
@@ -424,6 +460,24 @@ describe('<ClockPicker />', () => {
         <ClockPicker
           ampm={false}
           date={adapterToUse.date('2018-01-01T00:00:00.000')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          onChange={handleChange}
+          view="seconds"
+        />,
+      );
+
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:20']);
+
+      expect(handleChange.callCount).to.equal(0);
+    });
+
+    it('should not select second when time is disabled (no current value)', () => {
+      const handleChange = spy();
+      render(
+        <ClockPicker
+          ampm={false}
+          date={null}
           minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
           maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
           onChange={handleChange}
