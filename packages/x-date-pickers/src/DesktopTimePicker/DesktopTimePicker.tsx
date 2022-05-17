@@ -74,7 +74,14 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     componentsProps,
     ...other
   } = props;
-  const DateInputProps = { ...inputProps, ...other, ref, validationError };
+  const DateInputProps = {
+    ...inputProps,
+    ...other,
+    components,
+    componentsProps,
+    ref,
+    validationError,
+  };
 
   return (
     <DesktopWrapper

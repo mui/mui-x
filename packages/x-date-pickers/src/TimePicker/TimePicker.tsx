@@ -2,18 +2,38 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
-import { DesktopTimePicker, DesktopTimePickerProps } from '../DesktopTimePicker';
-import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
+import {
+  DesktopTimePicker,
+  DesktopTimePickerProps,
+  DesktopTimePickerSlotsComponent,
+  DesktopTimePickerSlotsComponentProps,
+} from '../DesktopTimePicker';
+import {
+  MobileTimePicker,
+  MobileTimePickerProps,
+  MobileTimePickerSlotsComponent,
+  MobileTimePickerSlotsComponentProps,
+} from '../MobileTimePicker';
+
+export interface TimePickerSlotsComponent
+  extends MobileTimePickerSlotsComponent,
+    DesktopTimePickerSlotsComponent {}
+
+export interface TimePickerSlotsComponentProps
+  extends MobileTimePickerSlotsComponentProps,
+    DesktopTimePickerSlotsComponentProps {}
 
 export interface TimePickerProps<TInputDate, TDate>
-  extends DesktopTimePickerProps<TInputDate, TDate>,
-    MobileTimePickerProps<TInputDate, TDate> {
+  extends Omit<DesktopTimePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileTimePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery?: string;
+  components?: Partial<TimePickerSlotsComponent>;
+  componentProps?: Partial<TimePickerSlotsComponentProps>;
 }
 
 type TimePickerComponent = (<TInputDate, TDate = TInputDate>(

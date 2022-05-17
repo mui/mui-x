@@ -2,18 +2,38 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
-import { DesktopDatePicker, DesktopDatePickerProps } from '../DesktopDatePicker';
-import { MobileDatePicker, MobileDatePickerProps } from '../MobileDatePicker';
+import {
+  DesktopDatePicker,
+  DesktopDatePickerProps,
+  DesktopDatePickerSlotsComponent,
+  DesktopDatePickerSlotsComponentProps,
+} from '../DesktopDatePicker';
+import {
+  MobileDatePicker,
+  MobileDatePickerProps,
+  MobileDatePickerSlotsComponent,
+  MobileDatePickerSlotsComponentProps,
+} from '../MobileDatePicker';
+
+export interface DatePickerSlotsComponent
+  extends MobileDatePickerSlotsComponent,
+    DesktopDatePickerSlotsComponent {}
+
+export interface DatePickerSlotsComponentProps
+  extends MobileDatePickerSlotsComponentProps,
+    DesktopDatePickerSlotsComponentProps {}
 
 export interface DatePickerProps<TInputDate, TDate>
-  extends DesktopDatePickerProps<TInputDate, TDate>,
-    MobileDatePickerProps<TInputDate, TDate> {
+  extends Omit<DesktopDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery?: string;
+  components?: Partial<DatePickerSlotsComponent>;
+  componentProps?: Partial<DatePickerSlotsComponentProps>;
 }
 
 type DatePickerComponent = (<TInputDate, TDate = TInputDate>(
