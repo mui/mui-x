@@ -8,7 +8,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 interface GridPipeGroupCache {
-  processors: Map<string, GridPipeProcessor<any> | null>
+  processors: Map<string, GridPipeProcessor<any> | null>;
   appliers: {
     [applierId: string]: () => void;
   };
@@ -77,7 +77,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
       }
 
       return () => {
-        processorsCache.current[group]!.processors.set(id, null)
+        processorsCache.current[group]!.processors.set(id, null);
       };
     },
     [runAppliers],
@@ -123,7 +123,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
     const preProcessors = Array.from(processorsCache.current[group]!.processors.values());
     return preProcessors.reduce((acc, preProcessor) => {
       if (!preProcessor) {
-        return acc
+        return acc;
       }
 
       return preProcessor(acc, context);
