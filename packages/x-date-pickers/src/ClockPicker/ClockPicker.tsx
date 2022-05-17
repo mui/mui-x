@@ -258,8 +258,11 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
-  const midnight = utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0);
-  const dateOrMidnight = date || midnight;
+
+  const dateOrMidnight = React.useMemo(
+    () => date || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
+    [date, now, utils],
+  );
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
     dateOrMidnight,
@@ -298,12 +301,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
       switch (viewType) {
         case 'hours': {
           const value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-
-          if (date == null) {
-            return !isValidValue(value);
-          }
-
-          const dateWithNewHours = utils.setHours(date, value);
+          const dateWithNewHours = utils.setHours(dateOrMidnight, value);
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
@@ -311,11 +309,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         }
 
         case 'minutes': {
-          if (date == null) {
-            return !isValidValue(rawValue, minutesStep);
-          }
-
-          const dateWithNewMinutes = utils.setMinutes(date, rawValue);
+          const dateWithNewMinutes = utils.setMinutes(dateOrMidnight, rawValue);
           const start = utils.setSeconds(dateWithNewMinutes, 0);
           const end = utils.setSeconds(dateWithNewMinutes, 59);
 
@@ -323,11 +317,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         }
 
         case 'seconds': {
-          if (date == null) {
-            return !isValidValue(rawValue);
-          }
-
-          const dateWithNewSeconds = utils.setSeconds(date, rawValue);
+          const dateWithNewSeconds = utils.setSeconds(dateOrMidnight, rawValue);
           const start = dateWithNewSeconds;
           const end = dateWithNewSeconds;
 
@@ -340,7 +330,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     },
     [
       ampm,
-      date,
+      dateOrMidnight,
       disableIgnoringDatePartForTimeValidation,
       maxTime,
       meridiemMode,
