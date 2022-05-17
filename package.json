@@ -17,6 +17,7 @@
     "storybook:build": "yarn workspace storybook build",
     "storybook:export": "yarn workspace storybook export",
     "deduplicate": "node scripts/deduplicate.js",
+    "dataset:file-tree": "babel-node -x .ts ./scripts/treeDataFromFileTree.ts",
     "l10n": "babel-node -x .ts ./scripts/l10n.ts",
     "jsonlint": "node ./scripts/jsonlint.js",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
