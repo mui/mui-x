@@ -2,6 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "aggregationFooterLabel": "Returns the aggregation label of a group. This label will be rendered on the 1st grouping column.",
+    "aggregationFooterLabelField": "Field of the column on which we want to render the footer aggregation labels.",
     "aggregationModel": "Set the aggregation model of the grid.",
     "apiRef": "The ref object that allows grid manipulation. Can be instantiated with useGridApiRef().",
     "aria-label": "The label of the grid.",

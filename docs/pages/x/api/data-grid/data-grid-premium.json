@@ -8,8 +8,12 @@
     "aggregationFooterLabel": {
       "type": {
         "name": "union",
-        "description": "element<br>&#124;&nbsp;func<br>&#124;&nbsp;number<br>&#124;&nbsp;object<br>&#124;&nbsp;{ __@iterator@35370: func }<br>&#124;&nbsp;string<br>&#124;&nbsp;bool"
+        "description": "element<br>&#124;&nbsp;func<br>&#124;&nbsp;number<br>&#124;&nbsp;object<br>&#124;&nbsp;{ __@iterator@35379: func }<br>&#124;&nbsp;string<br>&#124;&nbsp;bool"
       }
+    },
+    "aggregationFooterLabelField": {
+      "type": { "name": "string" },
+      "default": "If tree data or row grouping are enabled, use their grouping column, if not then do not render any label."
     },
     "aggregationModel": { "type": { "name": "object" } },
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },

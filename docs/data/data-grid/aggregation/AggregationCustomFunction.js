@@ -6,7 +6,13 @@ import {
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const COLUMNS = [
-  { field: 'title', headerName: 'Title', width: 200, groupable: false },
+  {
+    field: 'title',
+    headerName: 'Title',
+    width: 200,
+    groupable: false,
+    aggregable: false,
+  },
   {
     field: 'director',
     headerName: 'Director',
@@ -69,6 +75,7 @@ export default function AggregationCustomFunction() {
         firstAlphabetical: firstAlphabeticalAggregation,
         lastAlphabetical: lastAlphabeticalAggregation,
       }}
+      aggregationFooterLabelField="title"
       initialState={{
         aggregation: {
           model: {
