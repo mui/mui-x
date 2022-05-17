@@ -298,7 +298,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
           })
         : newDate;
 
-      console.log(closestEnabledDate)
+      console.log(closestEnabledDate);
 
       if (closestEnabledDate) {
         onChange(closestEnabledDate, selectionState);
@@ -498,6 +498,7 @@ CalendarPicker.propTypes = {
   getViewSwitchingButtonText: PropTypes.func,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -568,6 +569,7 @@ CalendarPicker.propTypes = {
   renderLoading: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**

@@ -112,6 +112,7 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
+      { pathname: '/x/react-date-pickers/localization' },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',

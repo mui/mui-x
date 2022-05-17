@@ -5,7 +5,8 @@ import { unstable_useId as useId } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Clock } from './Clock';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
@@ -123,6 +124,7 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   /**
    * Left arrow icon aria-label text.
    * @default 'open previous view'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   leftArrowButtonText?: string;
   /**
@@ -132,6 +134,7 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   /**
    * Right arrow icon aria-label text.
    * @default 'open next view'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   rightArrowButtonText?: string;
   showViewSwitcher?: boolean;
@@ -204,6 +207,10 @@ type ClockPickerComponent = (<TDate>(
   props: ClockPickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 /**
  *
  * API:
@@ -231,11 +238,11 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     getHoursClockNumberText = defaultGetHoursClockNumberText,
     getMinutesClockNumberText = defaultGetMinutesClockNumberText,
     getSecondsClockNumberText = defaultGetSecondsClockNumberText,
-    leftArrowButtonText = 'open previous view',
+    leftArrowButtonText: leftArrowButtonTextProp,
     maxTime,
     minTime,
     minutesStep = 1,
-    rightArrowButtonText = 'open next view',
+    rightArrowButtonText: rightArrowButtonTextProp,
     shouldDisableTime,
     showViewSwitcher,
     onChange,
@@ -247,6 +254,16 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     disabled,
     readOnly,
   } = props;
+
+  deprecatedPropsWarning({
+    leftArrowButtonText: leftArrowButtonTextProp,
+    rightArrowButtonText: rightArrowButtonTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.openPreviousView;
+  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.openNextView;
 
   const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
     view,
@@ -553,6 +570,7 @@ ClockPicker.propTypes = {
   /**
    * Left arrow icon aria-label text.
    * @default 'open previous view'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -592,6 +610,7 @@ ClockPicker.propTypes = {
   /**
    * Right arrow icon aria-label text.
    * @default 'open next view'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   rightArrowButtonText: PropTypes.string,
   /**

@@ -81,6 +81,7 @@ MobileDatePicker.propTypes = {
   /**
    * Cancel text message.
    * @default 'Cancel'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   cancelText: PropTypes.node,
   children: PropTypes.node,
@@ -96,6 +97,7 @@ MobileDatePicker.propTypes = {
   /**
    * Clear text message.
    * @default 'Clear'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   clearText: PropTypes.node,
   /**
@@ -189,6 +191,7 @@ MobileDatePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -212,6 +215,7 @@ MobileDatePicker.propTypes = {
   /**
    * Ok button text.
    * @default 'OK'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   okText: PropTypes.node,
   /**
@@ -328,6 +332,7 @@ MobileDatePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
@@ -370,6 +375,7 @@ MobileDatePicker.propTypes = {
   /**
    * Today text message.
    * @default 'Today'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   todayText: PropTypes.node,
   /**

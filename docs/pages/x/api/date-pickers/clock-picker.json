@@ -26,7 +26,12 @@
       "type": { "name": "func" },
       "default": "(seconds: string) => `${seconds} seconds`"
     },
-    "leftArrowButtonText": { "type": { "name": "string" }, "default": "'open previous view'" },
+    "leftArrowButtonText": {
+      "type": { "name": "string" },
+      "default": "'open previous view'",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
@@ -39,7 +44,12 @@
       "default": "'hours'"
     },
     "readOnly": { "type": { "name": "bool" } },
-    "rightArrowButtonText": { "type": { "name": "string" }, "default": "'open next view'" },
+    "rightArrowButtonText": {
+      "type": { "name": "string" },
+      "default": "'open next view'",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "shouldDisableTime": { "type": { "name": "func" } },
     "view": {
       "type": {
