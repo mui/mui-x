@@ -101,15 +101,17 @@ DatePicker.propTypes = {
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
-  /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
-   */
+  componentProps: PropTypes.shape({
+    actionBar: PropTypes.shape({
+      actions: PropTypes.arrayOf(
+        PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired,
+      ),
+    }),
+    leftArrowButton: PropTypes.object,
+    rightArrowButton: PropTypes.object,
+    switchViewButton: PropTypes.object.isRequired,
+  }),
   components: PropTypes.object,
-  /**
-   * The props used for each slot inside.
-   */
-  componentsProps: PropTypes.object,
   /**
    * Default calendar month displayed when `value={null}`.
    */
