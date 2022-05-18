@@ -215,11 +215,13 @@ async function generateReport(
     if (info.missingKeys.length === 0) {
       return;
     }
+    lines.push('');
     lines.push(`### ${countryToFlag(code.slice(2))} ${code.slice(0, 2)}-${code.slice(2)}`);
     lines.push('<details>');
     lines.push(
       ` <summary>DataGrid, DataGridPro and DataGridPremium (${info.missingKeys.length} remaining)</summary>`,
     );
+    lines.push('');
     info.missingKeys.forEach((missingKey) => {
       const permalink = `${SOURCE_CODE_REPO}/blob/${lastCommitRef}/${info.path}#L${missingKey.lineIndex}`;
       let lineContent = missingKey.currentLineContent;
