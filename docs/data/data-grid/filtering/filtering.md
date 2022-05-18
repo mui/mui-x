@@ -135,7 +135,7 @@ In the example below, the _rating_ column can not be filtered.
 
 ## Customize the operators
 
-The full typing details can be found on the [GridFilterOperator api page](/x/api/data-grid/grid-filter-operator/).
+The full typing details can be found on the [GridFilterOperator API page](/x/api/data-grid/grid-filter-operator/).
 
 An operator determines if a cell value should be considered as a valid filtered value.
 The candidate value used by the operator is the one corresponding to the `field` attribute or the value returned by the `valueGetter` of the `GridColDef`.
@@ -272,7 +272,7 @@ You can customize the rendering of the filter panel as shown in [the component s
 
 ### Customize the filter panel content
 
-The customization of the filter panel content can be performed by passing props to the default `<GridFilterPanel />` component.
+The customization of the filter panel content can be performed by passing props to the default [`<GridFilterPanel />`](/x/api/data-grid/grid-filter-panel) component.
 The available props allow overriding:
 
 - The `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
@@ -399,6 +399,8 @@ More information about the selectors and how to use them on the [dedicated page]
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
-- [GridFilterModel](/x/api/data-grid/grid-filter-model/)
+- [GridFilterForm](/x/api/data-grid/grid-filter-form/)
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
+- [GridFilterModel](/x/api/data-grid/grid-filter-model/)
 - [GridFilterOperator](/x/api/data-grid/grid-filter-operator/)
+- [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)

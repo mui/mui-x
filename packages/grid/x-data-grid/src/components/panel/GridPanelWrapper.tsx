@@ -39,17 +39,24 @@ export interface GridPanelWrapperProps
   extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
     MUIStyledCommonProps<Theme> {}
 
-function GridPanelWrapper(props: GridPanelWrapperProps) {
-  const { className, ...other } = props;
-  const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>(
+  function GridPanelWrapper(props, ref) {
+    const { className, ...other } = props;
+    const rootProps = useGridRootProps();
+    const ownerState = { classes: rootProps.classes };
+    const classes = useUtilityClasses(ownerState);
 
-  return (
-    <TrapFocus open disableEnforceFocus isEnabled={isEnabled}>
-      <GridPanelWrapperRoot tabIndex={-1} className={clsx(className, classes.root)} {...other} />
-    </TrapFocus>
-  );
-}
+    return (
+      <TrapFocus open disableEnforceFocus isEnabled={isEnabled}>
+        <GridPanelWrapperRoot
+          ref={ref}
+          tabIndex={-1}
+          className={clsx(className, classes.root)}
+          {...other}
+        />
+      </TrapFocus>
+    );
+  },
+);
 
 export { GridPanelWrapper };
