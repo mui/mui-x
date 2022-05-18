@@ -285,6 +285,13 @@ DataGridRaw.propTypes = {
    */
   isRowSelectable: PropTypes.func,
   /**
+   * If `true`, the selection model will retain selected rows that do not exist.
+   * Useful when using server side pagination and row selections need to be retained
+   * when changing pages.
+   * @default false
+   */
+  keepNonExistentRowsSelected: PropTypes.bool,
+  /**
    * If `true`, a  loading overlay is displayed.
    */
   loading: PropTypes.bool,

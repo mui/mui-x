@@ -10,6 +10,7 @@ import {
   DataGridProps,
   ptBR,
   GridColumns,
+  gridClasses,
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -830,6 +831,15 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const errorOverlayElement = document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!;
         expect(errorOverlayElement.textContent).to.equal(error.message);
         expect(errorOverlayElement.offsetHeight).to.equal(2 * rowHeight);
+      });
+
+      it('should apply the autoHeight class to the root element', () => {
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid {...baselineProps} autoHeight />
+          </div>,
+        );
+        expect(screen.getByRole('grid')).to.have.class(gridClasses.autoHeight);
       });
     });
 

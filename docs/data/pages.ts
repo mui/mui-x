@@ -1,4 +1,6 @@
-const pages = [
+import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+
+const pages: MuiPage[] = [
   {
     pathname: '/x/advanced-components',
     title: 'Overview',
@@ -110,6 +112,7 @@ const pages = [
       },
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
+      { pathname: '/x/react-date-pickers/localization' },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',
