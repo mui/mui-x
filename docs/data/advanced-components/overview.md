@@ -92,9 +92,7 @@ This key removes all watermarks and console warnings.
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
 
-LicenseInfo.setLicenseKey(
-  '61628ce74db2c1b62783a6d438593bc5Tz1NVUktRG9jLEU9MTY4MzQ0NzgyMTI4NCxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
-);
+LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
 ### Where to install the key?
@@ -169,7 +167,7 @@ Support is available on multiple channels, but the recommended channels are:
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
 - Email (**only if your issue requires sharing private information**): You can [open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to x@mui.com.
 
-Your OrderId on the issue helps us prioritize the issues based on the following support levels:
+Your Order ID on the issue helps us prioritize the issues based on the following support levels:
 
 1. **MUI X Pro**: MUI's maintainers give these issues more attention than the ones from the Community plan.
 2. **MUI X Premium**: Same as MUI X Pro, but with priority over Pro.

@@ -1,6 +1,7 @@
 {
   "props": {
     "dateAdapter": { "type": { "name": "func" }, "required": true },
+    "adapterLocale": { "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" } },
     "dateFormats": {
       "type": {
         "name": "shape",
@@ -8,7 +9,12 @@
       }
     },
     "dateLibInstance": { "type": { "name": "any" } },
-    "locale": { "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" } }
+    "locale": {
+      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>adapterLocale</code> instead"
+    },
+    "localeText": { "type": { "name": "object" } }
   },
   "slots": {},
   "name": "LocalizationProvider",

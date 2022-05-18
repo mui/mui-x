@@ -1,12 +1,12 @@
 import { DateRangePickerDayClassKey } from '../DateRangePickerDay';
 
 // prettier-ignore
-export interface LabComponentNameToClassKey {
+export interface PickersProComponentNameToClassKey {
   MuiDateRangePickerDay: DateRangePickerDayClassKey;
 }
 
 declare module '@mui/material/styles' {
-  interface ComponentNameToClassKey extends LabComponentNameToClassKey {}
+  interface ComponentNameToClassKey extends PickersProComponentNameToClassKey {}
 }
 
 // disable automatic export

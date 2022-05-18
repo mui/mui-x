@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "5.0.0-alpha.2",
+  "version": "5.0.0-alpha.3",
   "description": "The community edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -45,11 +45,11 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.2",
-    "@date-io/date-fns": "^2.13.1",
-    "@date-io/dayjs": "^2.13.1",
-    "@date-io/luxon": "^2.13.1",
-    "@date-io/moment": "^2.13.1",
-    "@mui/utils": "^5.6.1",
+    "@date-io/date-fns": "^2.14.0",
+    "@date-io/dayjs": "^2.14.0",
+    "@date-io/luxon": "^2.14.0",
+    "@date-io/moment": "^2.14.0",
+    "@mui/utils": "^5.7.0",
     "clsx": "^1.1.1",
     "prop-types": "^15.7.2",
     "react-transition-group": "^4.4.2",
@@ -64,8 +64,7 @@
     "dayjs": "^1.10.7",
     "luxon": "^1.28.0 || ^2.0.0",
     "moment": "^2.29.1",
-    "react": "^17.0.2 || ^18.0.0",
-    "react-dom": "^17.0.2 || ^18.0.0"
+    "react": "^17.0.2 || ^18.0.0"
   },
   "peerDependenciesMeta": {
     "date-fns": {
@@ -88,9 +87,9 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^2.3.1",
+    "@types/luxon": "^2.3.2",
     "date-fns": "^2.28.0",
-    "dayjs": "^1.11.1",
+    "dayjs": "^1.11.2",
     "luxon": "^1.21.3 || ^2.x",
     "moment": "^2.29.3"
   },
