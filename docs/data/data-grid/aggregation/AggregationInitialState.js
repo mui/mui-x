@@ -17,12 +17,6 @@ const COLUMNS = [
       return `${value.toLocaleString()}$`;
     },
   },
-  {
-    field: 'year',
-    headerName: 'Year',
-    type: 'number',
-    aggregable: false,
-  },
 ];
 
 export default function AggregationInitialState() {
