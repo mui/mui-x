@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { MUIStyledCommonProps } from '@mui/system';
-import { styled, Theme } from '@mui/material/styles';
+import { MUIStyledCommonProps, styled, Theme } from '@mui/material/styles';
 import { generateUtilityClasses, InternalStandardProps as StandardProps } from '@mui/material';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';

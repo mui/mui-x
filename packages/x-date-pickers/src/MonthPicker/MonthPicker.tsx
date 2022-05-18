@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps } from '@mui/system';
-import { styled, useThemeProps, Theme } from '@mui/material/styles';
+import { SxProps, styled, useThemeProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow } from '../internals/hooks/useUtils';

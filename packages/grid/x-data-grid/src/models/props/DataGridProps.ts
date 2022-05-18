@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import { SxProps, Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
 import { GridDensity } from '../gridDensity';
 import { GridEditMode, GridEditRowsModel } from '../gridEditRowModel';

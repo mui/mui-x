@@ -59,7 +59,6 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.2.3",
-    "@mui/system": "^5.2.3",
     "date-fns": "^2.25.0",
     "dayjs": "^1.10.7",
     "luxon": "^1.28.0 || ^2.0.0",
