@@ -71,17 +71,7 @@ DataGridPremiumRaw.propTypes = {
    * Returns the aggregation label of a group.
    * This label will be rendered on the 1st grouping column.
    */
-  aggregationFooterLabel: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.func,
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.shape({
-      '__@iterator@35379': PropTypes.func.isRequired,
-    }),
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  aggregationFooterLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * Field of the column on which we want to render the footer aggregation labels.
    * @default If tree data or row grouping are enabled, use their grouping column, if not then do not render any label.

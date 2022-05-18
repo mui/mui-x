@@ -6,10 +6,7 @@
     },
     "rows": { "type": { "name": "array" }, "required": true },
     "aggregationFooterLabel": {
-      "type": {
-        "name": "union",
-        "description": "element<br>&#124;&nbsp;func<br>&#124;&nbsp;number<br>&#124;&nbsp;object<br>&#124;&nbsp;{ __@iterator@35379: func }<br>&#124;&nbsp;string<br>&#124;&nbsp;bool"
-      }
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" }
     },
     "aggregationFooterLabelField": {
       "type": { "name": "string" },
