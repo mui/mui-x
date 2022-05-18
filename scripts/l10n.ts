@@ -201,20 +201,35 @@ function countryToFlag(isoCode: string) {
     : isoCode;
 }
 
+interface MissingKey {
+  currentLineContent: string;
+  lineIndex: number;
+}
+
 async function generateReport(
-  missingTranslations: Record<string, { path: string; locations: number[] }>,
+  missingTranslations: Record<string, { path: string; missingKeys: MissingKey[] }>,
 ) {
   const lastCommitRef = await git('log -n 1 --pretty="format:%H"');
   const lines: string[] = [];
   Object.entries(missingTranslations).forEach(([code, info]) => {
-    if (info.locations.length === 0) {
+    if (info.missingKeys.length === 0) {
       return;
     }
     lines.push(`### ${countryToFlag(code.slice(2))} ${code.slice(0, 2)}-${code.slice(2)}`);
-    info.locations.forEach((location) => {
-      const permalink = `${SOURCE_CODE_REPO}/blob/${lastCommitRef}/${info.path}#L${location}`;
-      lines.push(permalink);
+    lines.push('<details>');
+    lines.push(
+      ` <summary>DataGrid, DataGridPro and DataGridPremium (${info.missingKeys.length} remaining)</summary>`,
+    );
+    info.missingKeys.forEach((missingKey) => {
+      const permalink = `${SOURCE_CODE_REPO}/blob/${lastCommitRef}/${info.path}#L${missingKey.lineIndex}`;
+      let lineContent = missingKey.currentLineContent;
+
+      if (lineContent[lineContent.length - 1] === ',') {
+        lineContent = lineContent.slice(0, lineContent.length - 1);
+      }
+      lines.push(` - [\`${lineContent}\`](${permalink})`);
     });
+    lines.push('</details>');
   });
   return lines.join('\n');
 }
@@ -229,7 +244,6 @@ async function updateIssue(githubToken, newMessage) {
 
 Run \`yarn l10n --report\` to update the list below ⬇️
   
-## DataGrid / DataGridPro
 ${newMessage}
 `;
   await octokit
@@ -298,13 +312,16 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
         if (!missingTranslations[localeCode]) {
           missingTranslations[localeCode] = {
             path: localePath.replace(workspaceRoot, '').slice(1), // Remove leading slash
-            locations: [],
+            missingKeys: [],
           };
         }
         const location = lines.findIndex((line) => line.trim().startsWith(`// ${key}:`));
         // Ignore when both the translation and the placeholder are missing
         if (location >= 0) {
-          missingTranslations[localeCode].locations.push(location + 1);
+          missingTranslations[localeCode].missingKeys.push({
+            currentLineContent: lines[location].trim().slice(3),
+            lineIndex: location + 1,
+          });
         }
       }
     });
