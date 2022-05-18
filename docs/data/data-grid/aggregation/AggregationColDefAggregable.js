@@ -3,7 +3,13 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const COLUMNS = [
-  { field: 'title', headerName: 'Title', width: 200, groupable: false },
+  {
+    field: 'title',
+    headerName: 'Title',
+    width: 200,
+    groupable: false,
+    aggregable: false,
+  },
   {
     field: 'gross',
     headerName: 'Gross',
@@ -17,15 +23,9 @@ const COLUMNS = [
       return `${value.toLocaleString()}$`;
     },
   },
-  {
-    field: 'year',
-    headerName: 'Year',
-    type: 'number',
-    aggregable: false,
-  },
 ];
 
-export default function AggregationInitialState() {
+export default function AggregationColDefAggregable() {
   const data = useMovieData();
 
   return (
@@ -34,13 +34,6 @@ export default function AggregationInitialState() {
       rows={data.rows.slice(0, 3)}
       autoHeight
       columns={COLUMNS}
-      initialState={{
-        aggregation: {
-          model: {
-            gross: 'sum',
-          },
-        },
-      }}
     />
   );
 }

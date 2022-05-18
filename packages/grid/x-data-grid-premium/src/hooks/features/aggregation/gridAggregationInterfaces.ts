@@ -4,6 +4,9 @@ interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
 }
 
+/**
+ * Grid aggregation function definition interface.
+ */
 export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
   /**
    * Function that takes the current cell values and generates the aggregated value.
@@ -16,7 +19,7 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
   /**
    * Label of the aggregation function.
    * Will be used to add a label on the footer of the grouping column when this aggregation function is the only one being used.
-   * @default `apiRef.current.getLocaleText(`aggregationFunctionLabel${capitalize(aggregationFunctionName)}`)`
+   * @default `apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})`
    */
   label?: string;
 
@@ -45,7 +48,7 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
 
 /**
  * Describes which aggregation function should be applied on the footer and on the grouping row of each group.
- * If a string is passed, it will be used on the top level footer
+ * If a string is passed, it will be used on the top level footer.
  */
 export type GridAggregationItem =
   | string

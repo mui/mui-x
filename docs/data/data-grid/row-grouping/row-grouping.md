@@ -151,7 +151,7 @@ return (
 
 ### For all columns
 
-You can disable row grouping by setting `disableRowGrouping` prop to true.
+You can disable the row grouping by setting the `disableRowGrouping` prop to true.
 
 It will disable all the features related to the row grouping, even if a model is provided.
 

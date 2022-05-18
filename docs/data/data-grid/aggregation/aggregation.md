@@ -50,6 +50,23 @@ You can use the `onFilterModelChange` prop to listen to changes to the filters a
 
 {{"demo": "AggregationControlled.js", "bg": "inline"}}
 
+## Disable the aggregation
+
+### For all columns
+
+You can disable the aggregation by setting the `disableAggregation` prop to true.
+
+It will disable all features related to the aggregation, even if a model is provided.
+
+{{"demo": "AggregationDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### For some columns
+
+In case you need to disable the aggregation on specific column(s), set the `aggregable` property on the respective column definition (`GridColDef`) to `false`.
+In the example below, the `title` and `year`' columns can not be aggregated.
+
+{{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Aggregation label
 
 ### Choose the column for the label
@@ -260,3 +277,4 @@ In the example below, you can see that all the aggregation function are rendered
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [GridAggregationFunction](/x/api/data-grid/grid-aggregation-function/)
