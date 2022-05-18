@@ -12,9 +12,9 @@ const GridGroupingColumnFooterCell = (props: GridRenderCellParams) => {
   if (rowNode.parent == null) {
     marginLeft = 0;
   } else if (rootProps.rowGroupingColumnMode === 'multiple') {
-    marginLeft = 1;
+    marginLeft = 2;
   } else {
-    marginLeft = (rowNode.depth + 1) * 2;
+    marginLeft = rowNode.depth * 2;
   }
 
   return <Box sx={{ ml: marginLeft }}>{props.formattedValue ?? props.value}</Box>;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, userEvent, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
@@ -309,7 +309,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
           '3',
           '4',
           '5' /* Agg "Cat B" */,
-          '5',
+          '5' /* Agg root */,
         ]);
 
         // 0 group aggregated
@@ -326,14 +326,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
       apiRef.current.showColumnMenu('id');
       clock.runToLast();
 
-      const footerSelect = document.querySelector<HTMLDivElement>(
-        '#mui-data-grid-column-menu-aggregation-id-footer-input',
-      );
-      const inlineSelect = document.querySelector<HTMLDivElement>(
-        '#mui-data-grid-column-menu-aggregation-id-inline-input',
-      );
-      expect(footerSelect).not.to.equal(null);
-      expect(inlineSelect).to.equal(null);
+      expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
+      expect(screen.queryByLabelText('Footer')).to.equal(null);
+      expect(screen.queryByLabelText('Inline')).to.equal(null);
     });
 
     it('should render footer and inline select on aggregable column with row grouping', () => {
@@ -348,14 +343,91 @@ describe('<DataGridPremium /> - Aggregation', () => {
       apiRef.current.showColumnMenu('id');
       clock.runToLast();
 
-      const footerSelect = document.querySelector<HTMLDivElement>(
-        '#mui-data-grid-column-menu-aggregation-id-footer-input',
+      expect(screen.queryByLabelText('Aggregation')).to.equal(null);
+      expect(screen.queryByLabelText('Footer')).not.to.equal(null);
+      expect(screen.queryByLabelText('Inline')).not.to.equal(null);
+    });
+
+    it('should update footer aggregation when changing "Aggregation" select value', () => {
+      render(<Test />);
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+
+      apiRef.current.showColumnMenu('id');
+      clock.runToLast();
+      userEvent.mousePress(screen.queryByLabelText('Aggregation'));
+      userEvent.mousePress(
+        within(
+          screen.getByRole('listbox', {
+            name: 'Aggregation',
+          }),
+        ).getByText('max'),
       );
-      const inlineSelect = document.querySelector<HTMLDivElement>(
-        '#mui-data-grid-column-menu-aggregation-id-inline-input',
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+    });
+
+    it('should update aggregation when changing "Footer" and "Inline" select value', () => {
+      render(
+        <Test
+          defaultGroupingExpansionDepth={-1}
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+          }}
+        />,
       );
-      expect(footerSelect).not.to.equal(null);
-      expect(inlineSelect).not.to.equal(null);
+
+      expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '3', '4', '', '5']);
+
+      apiRef.current.showColumnMenu('id');
+      clock.runToLast();
+      userEvent.mousePress(screen.queryByLabelText('Footer'));
+      userEvent.mousePress(
+        within(
+          screen.getByRole('listbox', {
+            name: 'Footer',
+          }),
+        ).getByText('max'),
+      );
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '',
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '4' /* Agg "Cat A" */,
+        '',
+        '5',
+        '5' /* Agg "Cat B" */,
+        '5' /* Agg root */,
+      ]);
+
+      apiRef.current.showColumnMenu('id');
+      clock.runToLast();
+      userEvent.mousePress(screen.queryByLabelText('Inline'));
+      userEvent.mousePress(
+        within(
+          screen.getByRole('listbox', {
+            name: 'Inline',
+          }),
+        ).getByText('min'),
+      );
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '0' /* Agg "Cat A" */,
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '4' /* Agg "Cat A" */,
+        '5' /* Agg "Cat B" */,
+        '5',
+        '5' /* Agg "Cat B" */,
+        '5' /* Agg root */,
+      ]);
     });
   });
 
