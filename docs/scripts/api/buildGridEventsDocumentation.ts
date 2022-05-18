@@ -7,7 +7,6 @@ import {
   getSymbolDescription,
   getSymbolJSDocTags,
   linkify,
-  resolveExportSpecifier,
   stringifySymbol,
   writePrettifiedFile,
 } from './utils';
@@ -21,9 +20,6 @@ interface BuildEventsDocumentationOptions {
 export default function buildGridEventsDocumentation(options: BuildEventsDocumentationOptions) {
   const { project, documentedInterfaces } = options;
 
-  const gridEventsSymbol = resolveExportSpecifier(project.exports.GridEvents, project);
-  const gridEventsDeclaration = gridEventsSymbol.declarations![0] as ts.EnumDeclaration;
-
   const gridEventLookupSymbol = project.exports.GridEventLookup;
   const gridEventLookupType = project.checker.getTypeAtLocation(
     (gridEventLookupSymbol.declarations![0] as ts.InterfaceDeclaration).name,
@@ -33,38 +29,31 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
   const eventLookup: { [eventName: string]: any } = {};
 
   gridEventLookupType.getProperties().forEach((event) => {
-    const eventParams = {};
-    const declaration = event.declarations?.find(ts.isPropertySignature);
-    if (declaration) {
-      const symbol = project.checker.getTypeAtLocation(declaration.name).symbol;
-      symbol.members?.forEach((member, memberName) => {
-        eventParams[memberName.toString()] = stringifySymbol(member, project);
-      });
-    }
-    eventLookup[event.name] = eventParams;
-  });
-
-  gridEventsDeclaration.members.forEach((member) => {
-    const eventSymbol = project.checker.getTypeAtLocation(member).symbol;
-    const tags = getSymbolJSDocTags(eventSymbol);
+    const tags = getSymbolJSDocTags(event);
 
     if (tags.ignore) {
       return;
     }
 
-    const name = member.name.getText();
-    const description = linkify(
-      getSymbolDescription(eventSymbol, project),
-      documentedInterfaces,
-      'html',
-    );
-    const eventProperties = eventLookup[name];
+    const declaration = event.declarations?.find(ts.isPropertySignature);
+    if (!declaration) {
+      return;
+    }
+
+    const description = linkify(getSymbolDescription(event, project), documentedInterfaces, 'html');
+
+    const eventParams: { [key: string]: any } = {};
+    const symbol = project.checker.getTypeAtLocation(declaration.name).symbol;
+    symbol.members?.forEach((member, memberName) => {
+      eventParams[memberName.toString()] = stringifySymbol(member, project);
+    });
+    eventLookup[event.name] = eventParams;
 
     events.push({
-      name,
+      name: event.name,
       description: renderMarkdownInline(description),
-      params: linkify(eventProperties.params, documentedInterfaces, 'html'),
-      event: `MuiEvent<${eventProperties.event ?? '{}'}>`,
+      params: linkify(eventParams.params, documentedInterfaces, 'html'),
+      event: `MuiEvent<${eventParams.event ?? '{}'}>`,
     });
   });
 

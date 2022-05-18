@@ -80,7 +80,7 @@ MobileTimePicker.propTypes = {
   acceptRegex: PropTypes.instanceOf(RegExp),
   /**
    * 12h/24h view for hour selection clock.
-   * @default false
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
   /**
@@ -91,6 +91,7 @@ MobileTimePicker.propTypes = {
   /**
    * Cancel text message.
    * @default 'Cancel'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   cancelText: PropTypes.node,
   children: PropTypes.node,
@@ -106,6 +107,7 @@ MobileTimePicker.propTypes = {
   /**
    * Clear text message.
    * @default 'Clear'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   clearText: PropTypes.node,
   /**
@@ -124,6 +126,7 @@ MobileTimePicker.propTypes = {
   DialogProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -209,6 +212,7 @@ MobileTimePicker.propTypes = {
   /**
    * Ok button text.
    * @default 'OK'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   okText: PropTypes.node,
   /**
@@ -270,6 +274,7 @@ MobileTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
    * Make picker read only.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**
@@ -309,6 +314,7 @@ MobileTimePicker.propTypes = {
   /**
    * Today text message.
    * @default 'Today'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   todayText: PropTypes.node,
   /**
@@ -316,15 +322,6 @@ MobileTimePicker.propTypes = {
    * @default TimePickerToolbar
    */
   ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select time'

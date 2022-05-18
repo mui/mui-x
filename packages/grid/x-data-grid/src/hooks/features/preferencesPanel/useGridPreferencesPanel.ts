@@ -7,7 +7,6 @@ import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipe
 import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
 import { GridPreferencesPanelApi } from '../../../models/api/gridPreferencesPanelApi';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { useGridSelector } from '../../utils/useGridSelector';
 
 export const preferencePanelStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'initialState'>
@@ -22,8 +21,6 @@ export const preferencePanelStateInitializer: GridStateInitializer<
 export const useGridPreferencesPanel = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 
-  const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
-
   const hideTimeout = React.useRef<any>();
   const immediateTimeout = React.useRef<any>();
 
@@ -32,6 +29,7 @@ export const useGridPreferencesPanel = (apiRef: React.MutableRefObject<GridApiCo
    */
   const hidePreferences = React.useCallback(() => {
     logger.debug('Hiding Preferences Panel');
+    const preferencePanelState = gridPreferencePanelStateSelector(apiRef.current.state);
     if (preferencePanelState.openedPanelValue) {
       apiRef.current.publishEvent('preferencePanelClose', {
         openedPanelValue: preferencePanelState.openedPanelValue,
@@ -39,7 +37,7 @@ export const useGridPreferencesPanel = (apiRef: React.MutableRefObject<GridApiCo
     }
     apiRef.current.setState((state) => ({ ...state, preferencePanel: { open: false } }));
     apiRef.current.forceUpdate();
-  }, [apiRef, logger, preferencePanelState.openedPanelValue]);
+  }, [apiRef, logger]);
 
   // This is to prevent the preferences from closing when you open a select box or another panel,
   // The issue is in MUI core V4 => Fixed in V5

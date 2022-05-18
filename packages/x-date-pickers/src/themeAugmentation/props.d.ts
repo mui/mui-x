@@ -17,7 +17,7 @@ import { TimePickerProps } from '../TimePicker';
 import { YearPickerProps } from '../YearPicker';
 import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWrapper';
 
-export interface LabComponentsPropsList {
+export interface PickersComponentsPropsList {
   MuiCalendarPicker: CalendarPickerProps<unknown>;
   MuiCalendarPickerSkeleton: CalendarPickerSkeletonProps;
   MuiClockPicker: ClockPickerProps<unknown>;
@@ -39,7 +39,7 @@ export interface LabComponentsPropsList {
 }
 
 declare module '@mui/material/styles' {
-  interface ComponentsPropsList extends LabComponentsPropsList {}
+  interface ComponentsPropsList extends PickersComponentsPropsList {}
 }
 
 // disable automatic export

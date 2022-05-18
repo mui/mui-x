@@ -6,22 +6,15 @@ import {
   dateTimePickerValueManager,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
-import {
-  PickerStaticWrapper,
-  PickerStaticWrapperProps,
-} from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
+import { PickerStaticWrapper } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 
-export interface StaticDateTimePickerProps<TInputDate, TDate>
-  extends BaseDateTimePickerProps<TInputDate, TDate> {
-  /**
-   * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
-   */
-  displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
-}
+export type StaticDateTimePickerProps<TInputDate, TDate> = StaticPickerProps<
+  BaseDateTimePickerProps<TInputDate, TDate>
+>;
 
 type StaticDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -86,13 +79,8 @@ StaticDateTimePicker.propTypes = {
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
   /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
-  /**
    * 12h/24h view for hour selection clock.
-   * @default false
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
   /**
@@ -225,6 +213,7 @@ StaticDateTimePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -282,11 +271,6 @@ StaticDateTimePicker.propTypes = {
    */
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   */
-  onClose: PropTypes.func,
-  /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
    * This can be used to render appropriate form error.
@@ -300,16 +284,12 @@ StaticDateTimePicker.propTypes = {
    */
   onError: PropTypes.func,
   /**
-   * Callback firing on month change. @DateIOType
+   * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new month.
+   * @param {TDate} month The new year.
+   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   */
-  onOpen: PropTypes.func,
   /**
    * Callback fired on view change.
    * @param {CalendarOrClockPickerView} view The new view.
@@ -321,10 +301,6 @@ StaticDateTimePicker.propTypes = {
    * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
-  /**
-   * Control the popup or dialog open state.
-   */
-  open: PropTypes.bool,
   /**
    * Props to pass to keyboard adornment button.
    */
@@ -351,7 +327,7 @@ StaticDateTimePicker.propTypes = {
    * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
    * @template TDate
    * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDates The dates currently selected.
+   * @param {Array<TDate | null>} selectedDays The days currently selected.
    * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
    * @returns {JSX.Element} The element representing the day.
    */
@@ -381,6 +357,7 @@ StaticDateTimePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
@@ -390,6 +367,14 @@ StaticDateTimePicker.propTypes = {
    * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate: PropTypes.func,
+  /**
+   * Disable specific months dynamically.
+   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
+   */
+  shouldDisableMonth: PropTypes.func,
   /**
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.

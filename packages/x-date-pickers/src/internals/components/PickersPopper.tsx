@@ -8,6 +8,8 @@ import { styled } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
+import { useLocaleText } from '../hooks/useUtils';
+import { buildDeprecatedPropsWarning } from '../utils/warning';
 
 export interface ExportedPickerPaperProps {
   /**
@@ -18,6 +20,7 @@ export interface ExportedPickerPaperProps {
   /**
    * Clear text message.
    * @default 'Clear'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   clearText?: React.ReactNode;
   /**
@@ -221,15 +224,20 @@ function useClickAwayListener(
   return [nodeRef, handleSynthetic, handleSynthetic];
 }
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 export const PickersPopper = (props: PickerPopperProps) => {
   const {
     anchorEl,
     children,
     containerRef = null,
+    onBlur,
     onClose,
     onClear,
     clearable = false,
-    clearText = 'Clear',
+    clearText: clearTextProp,
     open,
     PopperProps,
     role,
@@ -238,10 +246,18 @@ export const PickersPopper = (props: PickerPopperProps) => {
     PaperProps = {},
   } = props;
 
+  deprecatedPropsWarning({
+    clearText: clearTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const clearText = clearTextProp ?? localeText.clearButtonLabel;
+
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
       // IE11, Edge (prior to using Bink?) use 'Esc'
-      if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
+      if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
         onClose();
       }
     }
@@ -251,7 +267,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onClose]);
+  }, [onClose, open]);
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
   React.useEffect(() => {
@@ -269,7 +285,10 @@ export const PickersPopper = (props: PickerPopperProps) => {
     }
   }, [open, role]);
 
-  const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(open, onClose);
+  const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(
+    open,
+    onBlur ?? onClose,
+  );
   const paperRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(paperRef, containerRef);
   const handlePaperRef = useForkRef(handleRef, clickAwayRef as React.Ref<HTMLDivElement>);
@@ -281,6 +300,14 @@ export const PickersPopper = (props: PickerPopperProps) => {
     ...otherPaperProps
   } = PaperProps;
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      // stop the propagation to avoid closing parent modal
+      event.stopPropagation();
+      onClose();
+    }
+  };
+
   return (
     <PickersPopperRoot
       transition
@@ -288,6 +315,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
       open={open}
       anchorEl={anchorEl}
       ownerState={ownerState}
+      onKeyDown={handleKeyDown}
       {...PopperProps}
     >
       {({ TransitionProps, placement }) => (

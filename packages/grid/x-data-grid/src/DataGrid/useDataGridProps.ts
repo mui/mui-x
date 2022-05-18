@@ -76,6 +76,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   throttleRowsMs: 0,
   disableColumnReorder: false,
   disableColumnResize: false,
+  keepNonExistentRowsSelected: false,
 };
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {

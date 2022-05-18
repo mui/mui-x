@@ -27,12 +27,17 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} aktive Filter` : `${count} aktiver Filter`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
   toolbarExportCSV: 'Download als CSV',
   toolbarExportPrint: 'Drucken',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Download als Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Finde Spalte',

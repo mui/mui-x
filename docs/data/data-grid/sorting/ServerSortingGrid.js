@@ -1,79 +1,35 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-function loadServerRows(sortModel, data) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (sortModel.length === 0) {
-        resolve(data.rows);
-        return;
-      }
+const DATASET_OPTION = {
+  dataSet: 'Employee',
+  visibleFields: VISIBLE_FIELDS,
+  rowLength: 100,
+};
 
-      const sortedColumn = sortModel[0];
-
-      let sortedRows = [...data.rows].sort((a, b) =>
-        String(a[sortedColumn.field]).localeCompare(String(b[sortedColumn.field])),
-      );
-
-      if (sortModel[0].sort === 'desc') {
-        sortedRows = sortedRows.reverse();
-      }
-
-      resolve(sortedRows);
-    }, Math.random() * 500 + 100); // simulate network latency
-  });
-}
+const { columns, useQuery } = createFakeServer(DATASET_OPTION);
 
 export default function ServerSortingGrid() {
-  const { data } = useDemoData({
-    dataSet: 'Employee',
-    visibleFields: VISIBLE_FIELDS,
-    rowLength: 100,
-  });
+  const [queryOptions, setQueryOptions] = React.useState({});
 
-  const [sortModel, setSortModel] = React.useState([
-    { field: 'rating', sort: 'asc' },
-  ]);
+  const handleSortModelChange = React.useCallback((sortModel) => {
+    // Here you save the data you need from the sort model
+    setQueryOptions({ sortModel: [...sortModel] });
+  }, []);
 
-  const [rows, setRows] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-
-  const handleSortModelChange = (newModel) => {
-    setSortModel(newModel);
-  };
-
-  React.useEffect(() => {
-    let active = true;
-
-    (async () => {
-      setLoading(true);
-      const newRows = await loadServerRows(sortModel, data);
-
-      if (!active) {
-        return;
-      }
-
-      setRows(newRows);
-      setLoading(false);
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [sortModel, data]);
+  const { isLoading, data } = useQuery(queryOptions);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={rows}
-        columns={data.columns}
+        rows={data}
+        columns={columns}
         sortingMode="server"
-        sortModel={sortModel}
         onSortModelChange={handleSortModelChange}
-        loading={loading}
+        loading={isLoading}
       />
     </div>
   );

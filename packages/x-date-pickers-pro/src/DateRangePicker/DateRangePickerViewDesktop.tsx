@@ -3,13 +3,15 @@ import { styled } from '@mui/material/styles';
 import {
   useDefaultDates,
   useUtils,
+  useLocaleText,
   ExportedDateValidationProps,
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
   DayPicker,
-  PickersCalendarProps,
+  buildDeprecatedPropsWarning,
+  DayPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
@@ -36,11 +38,11 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<PickersCalendarProps<TDate>, 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
-  date: DateRange<TDate | null>;
+  parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
   currentlySelectingRangeEnd: 'start' | 'end';
 }
@@ -82,6 +84,10 @@ function getCalendarsArray(calendars: ExportedDesktopDateRangeCalendarProps<unkn
   }
 }
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 /**
  * @ignore - internal component.
  */
@@ -93,17 +99,27 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     componentsProps,
     currentlySelectingRangeEnd,
     currentMonth,
-    date,
+    parsedValue,
     disableFuture,
     disablePast,
-    leftArrowButtonText = 'Previous month',
+    leftArrowButtonText: leftArrowButtonTextProp,
     maxDate: maxDateProp,
     minDate: minDateProp,
-    onChange,
+    onSelectedDaysChange,
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
-    rightArrowButtonText = 'Next month',
+    rightArrowButtonText: rightArrowButtonTextProp,
     ...other
   } = props;
+
+  deprecatedPropsWarning({
+    leftArrowButtonText: leftArrowButtonTextProp,
+    rightArrowButtonText: rightArrowButtonTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
+  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
 
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -117,21 +133,21 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
 
   const previewingRange = calculateRangePreview({
     utils,
-    range: date,
+    range: parsedValue,
     newDate: rangePreviewDay,
     currentlySelectingRangeEnd,
   });
 
-  const handleDayChange = React.useCallback(
-    (day: TDate | null) => {
+  const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+    (day) => {
       setRangePreviewDay(null);
-      onChange(day);
+      onSelectedDaysChange(day);
     },
-    [onChange],
+    [onSelectedDaysChange],
   );
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
-    if (!isWithinRange(utils, newPreviewRequest, date)) {
+    if (!isWithinRange(utils, newPreviewRequest, parsedValue)) {
       setRangePreviewDay(newPreviewRequest);
     } else {
       setRangePreviewDay(null);
@@ -177,9 +193,9 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
             <DateRangePickerViewDesktopCalendar<TDate>
               {...other}
               key={index}
-              date={date}
+              selectedDays={parsedValue}
               onFocusedDayChange={doNothing}
-              onChange={handleDayChange}
+              onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
               TransitionProps={CalendarTransitionProps}
               renderDay={(day, __, DayProps) =>
@@ -187,9 +203,9 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
                   isPreviewing: isWithinRange(utils, day, previewingRange),
                   isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
                   isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
-                  isHighlighting: isWithinRange(utils, day, date),
-                  isStartOfHighlighting: isStartOfRange(utils, day, date),
-                  isEndOfHighlighting: isEndOfRange(utils, day, date),
+                  isHighlighting: isWithinRange(utils, day, parsedValue),
+                  isStartOfHighlighting: isStartOfRange(utils, day, parsedValue),
+                  isEndOfHighlighting: isEndOfRange(utils, day, parsedValue),
                   onMouseEnter: () => handlePreviewDayChange(day),
                   ...DayProps,
                 })

@@ -47,6 +47,7 @@
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleSelection": { "type": { "name": "bool" } },
+    "disableRowGrouping": { "type": { "name": "bool" } },
     "disableSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
@@ -58,7 +59,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -68,7 +69,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or' }"
+        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
     },
     "getCellClassName": { "type": { "name": "func" } },
@@ -92,6 +93,7 @@
     "isCellEditable": { "type": { "name": "func" } },
     "isGroupExpandedByDefault": { "type": { "name": "func" } },
     "isRowSelectable": { "type": { "name": "func" } },
+    "keepNonExistentRowsSelected": { "type": { "name": "bool" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -153,6 +155,7 @@
     "onRowEditCommit": { "type": { "name": "func" } },
     "onRowEditStart": { "type": { "name": "func" } },
     "onRowEditStop": { "type": { "name": "func" } },
+    "onRowGroupingModelChange": { "type": { "name": "func" } },
     "onRowModesModelChange": { "type": { "name": "func" } },
     "onRowOrderChange": { "type": { "name": "func" } },
     "onRowsScrollEnd": { "type": { "name": "func" } },
@@ -175,6 +178,11 @@
     "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
+    "rowGroupingColumnMode": {
+      "type": { "name": "enum", "description": "'multiple'<br>&#124;&nbsp;'single'" },
+      "default": "'single'"
+    },
+    "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
     "rowReordering": { "type": { "name": "bool" } },
@@ -287,6 +295,7 @@
     "Pagination": { "default": "Pagination", "type": { "name": "elementType | null" } },
     "Panel": { "default": "GridPanel", "type": { "name": "elementType" } },
     "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
+    "QuickFilterIcon": { "default": "GridSearchIcon", "type": { "name": "elementType" } },
     "Row": { "default": "GridRow", "type": { "name": "elementType" } },
     "RowReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
@@ -376,6 +385,9 @@
       "pinnedColumnHeaders--left",
       "pinnedColumnHeaders--right",
       "root",
+      "root--densityStandard",
+      "root--densityComfortable",
+      "root--densityCompact",
       "row--editable",
       "row--editing",
       "row--dragging",

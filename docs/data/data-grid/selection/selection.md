@@ -8,20 +8,6 @@ title: Data Grid - Selection
 
 ## Row selection
 
-<!--
-- https://ag-grid.com/javascript-grid-selection/
-- https://ej2.syncfusion.com/react/demos/#/material/grid/selection
-- https://ant.design/components/table/#components-table-demo-row-selection
-- https://demos.telerik.com/kendo-ui/grid/selection
-- https://www.telerik.com/kendo-react-ui/components/grid/selection/
-- https://js.devexpress.com/Demos/WidgetsGallery/Demo/DataGrid/RowSelection/React/Light/
-- https://www.jqwidgets.com/react/react-grid/#https://www.jqwidgets.com/react/react-grid/react-grid-rowselection.htm
-- http://tabulator.info/docs/4.5/select#setup-range
-- https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/selection/
-- https://ej2.syncfusion.com/react/demos/#/material/grid/checkbox-selection
-- https://demos.telerik.com/kendo-ui/grid/checkbox-selection
--->
-
 Row selection can be performed with a simple mouse click, or using the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection). The grid supports single and multiple row selection.
 
 ### Single row selection
@@ -75,12 +61,15 @@ Each time this prop changes, the `onSelectionModelChange` callback is called wit
 Using the controlled selection with `paginationMode="server"` may result in selected rows being lost when the page is changed.
 This happens because the grid cross-checks with the `rows` prop and only calls `onSelectionModelChange` with existing row IDs.
 Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the grid will call `onSelectionModelChange` with an empty value.
-To prevent this unwanted behavior, there are two ways:
+To prevent this, enable the `keepNonExistentRowsSelected` prop to keep the rows selected even if they do not exist.
 
-- Save the `selectionModel` **before the page is changed** and restore it later
-- Append the newly loaded rows to the existing rows
+```tsx
+<DataGrid keepNonExistentRowsSelected />
+```
 
-The following demo shows how to implement the first solution:
+By using this approach, clicking in the **Select All** checkbox may still leave some rows selected.
+It is up to you to clean the selection model, using the `selectionModel` prop.
+The following demo shows the prop in action:
 
 {{"demo": "ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
 

@@ -2,6 +2,7 @@ import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilter
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { wrapWithWarningOnCall } from '../utils/warning';
+import { GridCellParams } from '../models';
 
 const parseNumericValue = (value: string | number | null | undefined) => {
   if (value == null) {
@@ -9,6 +10,16 @@ const parseNumericValue = (value: string | number | null | undefined) => {
   }
 
   return Number(value);
+};
+
+export const getGridNumericQuickFilterFn = (value: any) => {
+  if (value == null || Number.isNaN(value) || value === '') {
+    return null;
+  }
+
+  return ({ value: columnValue }: GridCellParams): boolean => {
+    return parseNumericValue(columnValue) === parseNumericValue(value);
+  };
 };
 
 export const getGridNumericOperators = (): GridFilterOperator<

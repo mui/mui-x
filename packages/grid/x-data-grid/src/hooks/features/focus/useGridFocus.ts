@@ -36,13 +36,8 @@ export const useGridFocus = (
 
   const setCellFocus = React.useCallback<GridFocusApi['setCellFocus']>(
     (id, field) => {
-      // The row might have been deleted
-      if (!apiRef.current.getRow(id)) {
-        return;
-      }
-
       const focusedCell = gridFocusCellSelector(apiRef);
-      if (focusedCell?.id === id && focusedCell.field === field) {
+      if (focusedCell?.id === id && focusedCell?.field === field) {
         return;
       }
 
@@ -55,6 +50,12 @@ export const useGridFocus = (
         };
       });
       apiRef.current.forceUpdate();
+
+      // The row might have been deleted
+      if (!apiRef.current.getRow(id)) {
+        return;
+      }
+
       apiRef.current.publishEvent('cellFocusIn', apiRef.current.getCellParams(id, field));
     },
     [apiRef, logger],

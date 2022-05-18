@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import {
   PickerStaticWrapper,
-  PickerStaticWrapperProps,
   usePickerState,
+  StaticPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
@@ -17,14 +17,9 @@ import {
 
 const releaseInfo = getReleaseInfo();
 
-export interface StaticDateRangePickerProps<TInputDate, TDate>
-  extends BaseDateRangePickerProps<TInputDate, TDate> {
-  /**
-   * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
-   */
-  displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
-}
+export type StaticDateRangePickerProps<TInputDate, TDate> = StaticPickerProps<
+  BaseDateRangePickerProps<TInputDate, TDate>
+>;
 
 type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -98,11 +93,6 @@ StaticDateRangePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars that render on **desktop**.
@@ -174,6 +164,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   endText: PropTypes.node,
   /**
@@ -213,6 +204,7 @@ StaticDateRangePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -248,11 +240,6 @@ StaticDateRangePicker.propTypes = {
    */
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   */
-  onClose: PropTypes.func,
-  /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
    * This can be used to render appropriate form error.
@@ -266,25 +253,17 @@ StaticDateRangePicker.propTypes = {
    */
   onError: PropTypes.func,
   /**
-   * Callback firing on month change. @DateIOType
+   * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new month.
+   * @param {TDate} month The new year.
+   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   */
-  onOpen: PropTypes.func,
   /**
    * Callback fired on view change.
    * @param {CalendarPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
-  /**
-   * Control the popup or dialog open state.
-   */
-  open: PropTypes.bool,
   /**
    * Props to pass to keyboard adornment button.
    */
@@ -344,6 +323,7 @@ StaticDateRangePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
@@ -353,6 +333,14 @@ StaticDateRangePicker.propTypes = {
    * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate: PropTypes.func,
+  /**
+   * Disable specific months dynamically.
+   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
+   */
+  shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
@@ -373,25 +361,20 @@ StaticDateRangePicker.propTypes = {
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   startText: PropTypes.node,
-  /**
-   * Component that will replace default toolbar renderer.
-   */
-  ToolbarComponent: PropTypes.elementType,
   /**
    * Date format, that is displaying in toolbar.
    */
   toolbarFormat: PropTypes.string,
   /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date range'
    */
   toolbarTitle: PropTypes.node,
+  /**
+   * The value of the picker.
+   */
   value: PropTypes.arrayOf(PropTypes.any).isRequired,
 } as any;
