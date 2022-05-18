@@ -64,7 +64,7 @@ TODO
 
 ## Usage with row grouping
 
-When the row grouping is enabled, the aggregation can be displayed on two positions:
+When the row grouping is enabled, the aggregated values can be displayed on two positions:
 
 1. On the footer (the grid will add a top level footer to aggregate all the rows and one footer per group to aggregate its rows)
 
@@ -123,6 +123,19 @@ isGroupAggregated={(groupNode, position) => position === 'inline' || groupNode =
 The demo below shows the _sum_ aggregation on both the grouping rows and the top level footer.
 
 {{"demo": "AggregationIsGroupAggregated.js", "bg": "inline"}}
+
+## Usage with tree data
+
+Like for row grouping, you can display the aggregated values either on the footer or on the grouping row.
+
+:::info
+If the aggregated values is displayed on the grouping row, it will always have priority over the row data.
+This means the data from groups explicitly provided in your dataset will be ignored in favour of their aggregated values.  
+:::
+
+The demo below shows the _sum_ aggregation on the "Size" column and the _max_ aggregation on the "Last modification" column.
+
+{{"demo": "AggregationTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Filtering
 
