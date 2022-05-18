@@ -128,9 +128,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * Returns the aggregation label of a group.
    * This label will be rendered on the 1st grouping column.
    */
-  aggregationFooterLabel?:
-    | string
-    | ((params: GridAggregationFooterLabelParams) => string);
+  aggregationFooterLabel?: string | ((params: GridAggregationFooterLabelParams) => string);
   /**
    * Field of the column on which we want to render the footer aggregation labels.
    * @default If tree data or row grouping are enabled, use their grouping column, if not then do not render any label.
