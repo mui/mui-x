@@ -138,12 +138,14 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     onBlur: publish('columnHeaderBlur'),
   };
 
-  const draggableEventHandlers = {
-    onDragStart: publish('columnHeaderDragStart'),
-    onDragEnter: publish('columnHeaderDragEnter'),
-    onDragOver: publish('columnHeaderDragOver'),
-    onDragEnd: publish('columnHeaderDragEnd'),
-  };
+  const draggableEventHandlers = isDraggable
+    ? {
+        onDragStart: publish('columnHeaderDragStart'),
+        onDragEnter: publish('columnHeaderDragEnter'),
+        onDragOver: publish('columnHeaderDragOver'),
+        onDragEnd: publish('columnHeaderDragEnd'),
+      }
+    : null;
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
@@ -241,7 +243,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       <div
         className={classes.draggableContainer}
         draggable={isDraggable}
-        {...(isDraggable && draggableEventHandlers)}
+        {...draggableEventHandlers}
       >
         <div className={classes.titleContainer}>
           <div className={classes.titleContainerContent}>
