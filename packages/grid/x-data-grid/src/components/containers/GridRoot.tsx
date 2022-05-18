@@ -1,7 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useForkRef, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import {
+  useForkRef,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+  capitalize,
+} from '@mui/material/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
@@ -34,11 +38,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { autoHeight, density, classes } = ownerState;
 
   const slots = {
-    root: [
-      'root',
-      autoHeight && 'autoHeight',
-      `root--density${density[0].toUpperCase()}${density.slice(1)}`,
-    ],
+    root: ['root', autoHeight && 'autoHeight', `root--density${capitalize(density)}`],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
