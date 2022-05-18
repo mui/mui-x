@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
 import { debounce } from '@mui/material/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -78,7 +77,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       type="search"
       InputProps={{
-        startAdornment: <SearchIcon fontSize="small" />,
+        startAdornment: <rootProps.components.QuickFilterIcon fontSize="small" />,
       }}
       {...other}
       {...rootProps.componentsProps?.baseTextField}

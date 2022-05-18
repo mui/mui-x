@@ -7,5 +7,5 @@ import {
 } from 'docsx/data/data-grid/column-pinning/column-pinning.md?@mui/markdown';
 
 export default function Page() {
-  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
+  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} disableAd />;
 }

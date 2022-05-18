@@ -70,6 +70,7 @@ export const useGridSelection = (
     | 'pagination'
     | 'paginationMode'
     | 'classes'
+    | 'keepNonExistentRowsSelected'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
@@ -265,6 +266,9 @@ export const useGridSelection = (
    * EVENTS
    */
   const removeOutdatedSelection = React.useCallback(() => {
+    if (props.keepNonExistentRowsSelected) {
+      return;
+    }
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
     const rowsLookup = gridRowsLookupSelector(apiRef);
 
@@ -282,7 +286,7 @@ export const useGridSelection = (
     if (hasChanged) {
       apiRef.current.setSelectionModel(Object.values(selectionLookup));
     }
-  }, [apiRef]);
+  }, [apiRef, props.keepNonExistentRowsSelected]);
 
   const handleSingleRowSelection = React.useCallback(
     (id: GridRowId, event: React.MouseEvent | React.KeyboardEvent) => {

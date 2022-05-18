@@ -27,6 +27,7 @@ import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { GridRowInternalCacheValue, GridRowsInternalCache, GridRowsState } from './gridRowsState';
 import { checkGridRowIdIsValid, getTreeNodeDescendants } from './gridRowsUtils';
+import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 
 interface ConvertRowsPropToStateParams {
   prevCache: GridRowsInternalCache;
@@ -88,15 +89,21 @@ const getRowsStateFromCache = (
     previousTree,
   });
 
+  const processedGroupingResponse = apiRef.current.unstable_applyPipeProcessors(
+    'hydrateRows',
+    groupingResponse,
+  );
+
   const dataTopLevelRowCount =
-    groupingResponse.treeDepth === 1
-      ? groupingResponse.ids.length
-      : Object.values(groupingResponse.tree).filter((node) => node.parent == null).length;
+    processedGroupingResponse.treeDepth === 1
+      ? processedGroupingResponse.ids.length
+      : Object.values(processedGroupingResponse.tree).filter((node) => node.parent == null).length;
 
   return {
-    ...groupingResponse,
+    ...processedGroupingResponse,
+    groupingResponseBeforeRowHydration: groupingResponse,
     loading: loadingProp,
-    totalRowCount: Math.max(rowCount, groupingResponse.ids.length),
+    totalRowCount: Math.max(rowCount, processedGroupingResponse.ids.length),
     totalTopLevelRowCount: Math.max(rowCount, dataTopLevelRowCount),
   };
 };
@@ -476,6 +483,26 @@ export const useGridRows = (
 
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
   useGridApiEventHandler(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
+
+  /**
+   * APPLIERS
+   */
+  const applyHydrateRowsProcessor = React.useCallback(() => {
+    apiRef.current.setState((state) => ({
+      ...state,
+      rows: {
+        ...state.rows,
+        ...apiRef.current.unstable_applyPipeProcessors(
+          'hydrateRows',
+          state.rows.groupingResponseBeforeRowHydration,
+        ),
+      },
+    }));
+    apiRef.current.publishEvent('rowsSet');
+    apiRef.current.forceUpdate();
+  }, [apiRef]);
+
+  useGridRegisterPipeApplier(apiRef, 'hydrateRows', applyHydrateRowsProcessor);
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 

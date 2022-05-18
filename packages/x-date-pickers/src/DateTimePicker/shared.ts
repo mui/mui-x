@@ -29,6 +29,11 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
     ValidationProps<DateTimeValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
   /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm?: boolean;
+  /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    * @default {}
@@ -120,7 +125,6 @@ export function useDateTimePickerDefaultizedProps<
     openTo: 'day',
     views: ['year', 'day', 'hours', 'minutes'],
     ampmInClock: true,
-    showToolbar: false,
     mask: ampm ? '__/__/____ __:__ _m' : '__/__/____ __:__',
     acceptRegex: ampm ? /[\dap]/gi : /\d/gi,
     disableMaskedInput: false,

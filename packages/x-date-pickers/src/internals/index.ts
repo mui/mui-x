@@ -6,7 +6,7 @@ export { MobileKeyboardInputView } from './components/CalendarOrClockPicker/Cale
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
 export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
-export { PickersToolbar } from './components/PickersToolbar';
+export { PickersToolbar, pickersToolbarClasses } from './components/PickersToolbar';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 export type {
   DateInputProps,
@@ -24,7 +24,7 @@ export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
-export { useDefaultDates, useUtils } from './hooks/useUtils';
+export { useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export { useValidation } from './hooks/validation/useValidation';
 export type { ValidationProps, Validator } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
@@ -40,8 +40,9 @@ export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 
-export { executeInTheNextEventLoopTick } from './utils/utils';
+export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
+export { buildDeprecatedPropsWarning } from './utils/warning';
 
 export { PickersCalendarHeader } from '../CalendarPicker/PickersCalendarHeader';
 export type {
