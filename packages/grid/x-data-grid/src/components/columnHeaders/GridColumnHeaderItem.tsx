@@ -100,6 +100,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     hasScrollX: false,
     hasScrollY: false,
   };
+
   const isDraggable = React.useMemo(
     () => !rootProps.disableColumnReorder && !disableReorder && !column.disableReorder,
     [rootProps.disableColumnReorder, disableReorder, column.disableReorder],
