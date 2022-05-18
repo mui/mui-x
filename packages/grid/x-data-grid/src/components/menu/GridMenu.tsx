@@ -79,9 +79,9 @@ const GridMenu = (props: GridMenuProps) => {
     }
 
     if (open) {
-      apiRef.current.publishEvent('gridMenuOpen', { open });
+      apiRef.current.publishEvent('menuOpen', { open });
     } else {
-      apiRef.current.publishEvent('gridMenuClose', { open });
+      apiRef.current.publishEvent('menuClose', { open });
     }
 
     prevOpen.current = open;

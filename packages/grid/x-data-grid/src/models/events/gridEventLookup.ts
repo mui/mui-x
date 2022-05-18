@@ -504,13 +504,13 @@ export interface GridEventLookup
    */
   preferencePanelOpen: { params: GridPreferencePanelParams };
 
-  // GridMenu
+  // Menu
   /**
-   * Fired when the grid menu is opened.
+   * Fired when the menu is opened.
    */
-  gridMenuOpen: { params: GridMenuParams };
+  menuOpen: { params: GridMenuParams };
   /**
    * Fired when the grid menu is closed.
    */
-  gridMenuClose: { params: GridMenuParams };
+  menuClose: { params: GridMenuParams };
 }
