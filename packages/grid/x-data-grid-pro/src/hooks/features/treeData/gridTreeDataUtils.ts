@@ -1,9 +1,4 @@
-import {
-  GridRowId,
-  GridRowTreeConfig,
-  GridRowTreeNodeConfig,
-  GridFilterState,
-} from '@mui/x-data-grid';
+import { GridRowId, GridRowTreeConfig, GridFilterState, GridTreeNode } from '@mui/x-data-grid';
 import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals';
 
 interface FilterRowTreeFromTreeDataParams {
@@ -28,7 +23,7 @@ export const filterRowTreeFromTreeData = (
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
   const filterTreeNode = (
-    node: GridRowTreeNodeConfig,
+    node: GridTreeNode,
     isParentMatchingFilters: boolean,
     areAncestorsExpanded: boolean,
   ): number => {
@@ -44,16 +39,18 @@ export const filterRowTreeFromTreeData = (
     }
 
     let filteredDescendantCount = 0;
-    node.children?.forEach((childId) => {
-      const childNode = rowTree[childId];
-      const childSubTreeSize = filterTreeNode(
-        childNode,
-        isMatchingFilters ?? isParentMatchingFilters,
-        areAncestorsExpanded && !!node.childrenExpanded,
-      );
+    if (node.type === 'group') {
+      node.children.forEach((childId) => {
+        const childNode = rowTree[childId];
+        const childSubTreeSize = filterTreeNode(
+          childNode,
+          isMatchingFilters ?? isParentMatchingFilters,
+          areAncestorsExpanded && !!node.childrenExpanded,
+        );
 
-      filteredDescendantCount += childSubTreeSize;
-    });
+        filteredDescendantCount += childSubTreeSize;
+      });
+    }
 
     let shouldPassFilters: boolean;
     switch (isMatchingFilters) {
@@ -80,7 +77,7 @@ export const filterRowTreeFromTreeData = (
 
     filteredDescendantCountLookup[node.id] = filteredDescendantCount;
 
-    if (node.position === 'footer') {
+    if (node.type === 'footer') {
       return filteredDescendantCount;
     }
 

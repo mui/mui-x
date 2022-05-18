@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridRowTreeNodeConfig,
+  TempGridGroupNode,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) =>
+const isGroupExpandedByDefault = (node: TempGridGroupNode) =>
   node.groupingField === 'company' && node.groupingKey === '20th Century Fox';
 
 export default function RowGroupingIsGroupExpandedByDefault() {

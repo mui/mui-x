@@ -5,7 +5,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
-import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
+import { GridGroupNode, GridLeafNode, GridRowId } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
 import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -264,7 +264,7 @@ export const useGridSorting = (
         const footerRowIds: GridRowId[] = [];
 
         gridRowIdsSelector(apiRef).forEach((rowId) => {
-          if (rowTree[rowId].position === 'footer') {
+          if (rowTree[rowId].type === 'footer') {
             footerRowIds.push(rowId);
           } else {
             bodyRowIds.push(rowId);
@@ -274,13 +274,14 @@ export const useGridSorting = (
         return [...bodyRowIds, ...footerRowIds];
       }
 
-      const bodyRows: GridRowTreeNodeConfig[] = [];
+      const bodyRows: (GridGroupNode | GridLeafNode)[] = [];
       const footerRowIds: GridRowId[] = [];
 
+      // TODO: We probably do not want to loop over the tree
       Object.values(rowTree).forEach((rowNode) => {
-        if (rowNode.position === 'footer') {
+        if (rowNode.type === 'footer') {
           footerRowIds.push(rowNode.id);
-        } else {
+        } else if (rowNode.parent != null) {
           bodyRows.push(rowNode);
         }
       });

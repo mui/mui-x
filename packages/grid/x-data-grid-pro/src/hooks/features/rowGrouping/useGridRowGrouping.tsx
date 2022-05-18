@@ -1,11 +1,6 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-import {
-  GridEventListener,
-  useGridApiEventHandler,
-  useGridApiMethod,
-  gridFilteredDescendantCountLookupSelector,
-} from '@mui/x-data-grid';
+import { GridEventListener, useGridApiEventHandler, useGridApiMethod } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
   GridPipeProcessor,
@@ -222,13 +217,14 @@ export const useGridRowGrouping = (
         event.stopPropagation();
         event.preventDefault();
 
-        const filteredDescendantCount =
-          gridFilteredDescendantCountLookupSelector(apiRef)[params.id] ?? 0;
+        if (params.rowNode.type !== 'group') {
+          return;
+        }
 
         const isOnGroupingCell =
           props.rowGroupingColumnMode === 'single' ||
           getRowGroupingFieldFromGroupingCriteria(params.rowNode.groupingField) === params.field;
-        if (!isOnGroupingCell || filteredDescendantCount === 0) {
+        if (!isOnGroupingCell) {
           return;
         }
 

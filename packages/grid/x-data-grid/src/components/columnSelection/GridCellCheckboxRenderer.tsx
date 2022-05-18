@@ -87,7 +87,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       [apiRef, props],
     );
 
-    if (rowNode.position === 'footer') {
+    if (rowNode.type === 'footer') {
       return null;
     }
 

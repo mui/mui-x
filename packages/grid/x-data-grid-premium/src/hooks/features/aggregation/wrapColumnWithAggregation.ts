@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColDef, GridRowId, GridRowTreeNodeConfig } from '@mui/x-data-grid-pro';
+import { GridColDef, GridFooterNode, GridGroupNode, GridRowId } from '@mui/x-data-grid-pro';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -47,10 +47,10 @@ const getAggregationValueWrappedValueGetter = ({
       return gridAggregationLookupSelector(apiRef)[params.id]?.[params.field]?.inline ?? null;
     }
     if (cellAggregationPosition === 'footer') {
-      // TODO: Add custom root id
       return (
-        gridAggregationLookupSelector(apiRef)[params.rowNode.parent ?? '']?.[params.field]
-          ?.footer ?? null
+        gridAggregationLookupSelector(apiRef)[(params.rowNode as GridFooterNode).parent]?.[
+          params.field
+        ]?.footer ?? null
       );
     }
 
@@ -194,13 +194,13 @@ const getAggregationLabelWrappedValueGetter = ({
   getCellAggregationPosition: (id: GridRowId) => GridAggregationPosition | null;
   aggregationRules: GridAggregationRules;
   aggregationFooterLabel: DataGridPremiumProcessedProps['aggregationFooterLabel'];
-  shouldRenderLabel: (groupNode: GridRowTreeNodeConfig | null) => boolean;
+  shouldRenderLabel: (groupNode: GridGroupNode) => boolean;
 }): AggregationWrappedColDefProperty<'valueGetter'> => {
   const wrappedValueGetter: AggregationWrappedColDefProperty<'valueGetter'> = (params) => {
     const cellAggregationPosition = getCellAggregationPosition(params.id);
     if (cellAggregationPosition === 'footer') {
       return getAggregationFooterLabel({
-        footerNode: params.rowNode,
+        footerNode: params.rowNode as GridFooterNode,
         apiRef,
         aggregationRules,
         aggregationFooterLabel,
@@ -239,7 +239,10 @@ export const wrapColumnWithAggregationValue = ({
     const isGroup = id.toString().startsWith('auto-generated-row-');
 
     if (isGroup) {
-      if (isGroupAggregated && !isGroupAggregated(apiRef.current.getRowNode(id), 'inline')) {
+      if (
+        isGroupAggregated &&
+        !isGroupAggregated(apiRef.current.getRowNode(id) as GridGroupNode, 'inline')
+      ) {
         return null;
       }
 
@@ -252,9 +255,8 @@ export const wrapColumnWithAggregationValue = ({
         return 'footer';
       }
 
-      const rowNode = apiRef.current.getRowNode(id)!;
-      const parentRowNode =
-        rowNode.parent == null ? null : apiRef.current.getRowNode(rowNode.parent);
+      const rowNode = apiRef.current.getRowNode(id) as GridFooterNode;
+      const parentRowNode = apiRef.current.getRowNode(rowNode.parent) as GridGroupNode;
 
       if (!isGroupAggregated(parentRowNode, 'footer')) {
         return null;
@@ -306,7 +308,7 @@ export const wrapColumnWithAggregationLabel = ({
   aggregationRules: GridAggregationRules;
   isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
   aggregationFooterLabel: DataGridPremiumProcessedProps['aggregationFooterLabel'];
-  shouldRenderLabel: (groupNode: GridRowTreeNodeConfig | null) => boolean;
+  shouldRenderLabel: (groupNode: GridGroupNode) => boolean;
 }): GridColDef => {
   const getCellAggregationPosition = (id: GridRowId): GridAggregationPosition | null => {
     const isFooter = id.toString().startsWith('auto-generated-group-footer-');
@@ -315,10 +317,7 @@ export const wrapColumnWithAggregationLabel = ({
         return 'footer';
       }
 
-      const rowNode = apiRef.current.getRowNode(id)!;
-      const parentRowNode =
-        rowNode.parent == null ? null : apiRef.current.getRowNode(rowNode.parent);
-
+      const parentRowNode = apiRef.current.getRowNode<GridGroupNode>(id)!;
       if (!isGroupAggregated(parentRowNode, 'footer')) {
         return null;
       }

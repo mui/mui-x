@@ -10,8 +10,8 @@ import {
   GRID_AGGREGATION_FUNCTIONS,
   GridAggregationFunction,
   GridApi,
+  GridGroupNode,
   GridRenderCellParams,
-  GridRowTreeNodeConfig,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 
@@ -225,7 +225,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             }}
             defaultGroupingExpansionDepth={-1}
             // Only group "Cat A" aggregated
-            isGroupAggregated={(group) => group?.groupingKey === 'Cat A'}
+            isGroupAggregated={(group) => group.groupingKey === 'Cat A'}
           />,
         );
         expect(getColumnValues(1)).to.deep.equal([
@@ -241,7 +241,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         ]);
 
         // All groups aggregated except the root
-        setProps({ isGroupAggregated: (group: GridRowTreeNodeConfig | null) => group != null });
+        setProps({ isGroupAggregated: (group: GridGroupNode) => group.depth >= 0 });
         expect(getColumnValues(1)).to.deep.equal([
           '',
           '0',
@@ -285,7 +285,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             }}
             defaultGroupingExpansionDepth={-1}
             // Only group "Cat A" aggregated
-            isGroupAggregated={(group) => group?.groupingKey === 'Cat A'}
+            isGroupAggregated={(group) => group.groupingKey === 'Cat A'}
           />,
         );
         expect(getColumnValues(1)).to.deep.equal([
@@ -713,7 +713,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       const callForAggCell = renderCell
         .getCalls()
-        .find((call) => call.firstArg.rowNode.position === 'footer');
+        .find((call) => call.firstArg.rowNode.type === 'footer');
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
     });
 
@@ -741,7 +741,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       const callForAggCell = renderCell
         .getCalls()
-        .find((call) => call.firstArg.rowNode.position === 'footer');
+        .find((call) => call.firstArg.rowNode.type === 'footer');
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
     });
   });
@@ -792,7 +792,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             },
           }}
           defaultGroupingExpansionDepth={-1}
-          isGroupAggregated={(group) => group != null}
+          isGroupAggregated={(group) => group.depth >= 0}
         />,
       );
       expect(getColumnValues(1)).to.deep.equal([

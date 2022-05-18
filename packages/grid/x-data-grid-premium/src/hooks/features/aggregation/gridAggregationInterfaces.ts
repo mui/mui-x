@@ -1,4 +1,4 @@
-import { GridValueFormatterParams, GridRowId, GridRowTreeNodeConfig } from '@mui/x-data-grid-pro';
+import { GridValueFormatterParams, GridRowId, GridGroupNode } from '@mui/x-data-grid-pro';
 
 interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
@@ -121,6 +121,6 @@ export interface GridColumnAggregationRules {
 export type GridAggregationRules = { [field: string]: GridColumnAggregationRules };
 
 export interface GridAggregationFooterLabelParams {
-  groupNode: GridRowTreeNodeConfig | null;
+  groupNode: GridGroupNode;
   aggregationFunctions: { field: string; aggregationFunctionName: string }[];
 }

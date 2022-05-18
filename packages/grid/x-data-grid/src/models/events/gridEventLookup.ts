@@ -20,7 +20,7 @@ import type { GridEditRowsModel } from '../gridEditRowModel';
 import type { GridSelectionModel } from '../gridSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
-import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
+import type { GridGroupNode, GridRowId } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
@@ -366,10 +366,10 @@ export interface GridEventLookup
    */
   sortedRowsSet: {};
   /**
-   * Fired when the expansion of a row is changed. Called with a [[GridRowTreeNodeConfig]] object.
+   * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
    * @ignore - do not document.
    */
-  rowExpansionChange: { params: GridRowTreeNodeConfig };
+  rowExpansionChange: { params: GridGroupNode };
 
   // Edit
   /**

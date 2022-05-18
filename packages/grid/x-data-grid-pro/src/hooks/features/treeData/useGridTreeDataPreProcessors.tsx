@@ -4,6 +4,8 @@ import {
   gridRowTreeSelector,
   useFirstRender,
   GridColDef,
+  GridRenderCellParams,
+  GridGroupNode,
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
@@ -67,7 +69,10 @@ export const useGridTreeDataPreProcessors = (
     const commonProperties: Omit<GridColDef, 'field' | 'editable'> = {
       ...GRID_TREE_DATA_GROUPING_COL_DEF,
       renderCell: (params) => (
-        <GridTreeDataGroupingCell {...params} hideDescendantCount={hideDescendantCount} />
+        <GridTreeDataGroupingCell
+          {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
+          hideDescendantCount={hideDescendantCount}
+        />
       ),
       headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
     };

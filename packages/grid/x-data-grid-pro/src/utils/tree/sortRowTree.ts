@@ -1,4 +1,11 @@
-import { GridRowId, GridRowTreeConfig, GridRowTreeNodeConfig } from '@mui/x-data-grid';
+import {
+  GRID_ROOT_GROUP_ID,
+  GridFooterNode,
+  GridGroupNode,
+  GridLeafNode,
+  GridRowId,
+  GridRowTreeConfig,
+} from '@mui/x-data-grid';
 import { GridSortingModelApplier } from '@mui/x-data-grid/internals';
 
 interface SortRowTreeParams {
@@ -14,27 +21,30 @@ export const sortRowTree = (params: SortRowTreeParams) => {
 
   // Group the rows by parent
   const groupedByParentRows = new Map<
-    GridRowId | null,
-    { body: GridRowTreeNodeConfig[]; footer: GridRowTreeNodeConfig[] }
-  >([[null, { body: [], footer: [] }]]);
+    GridRowId,
+    { body: (GridGroupNode | GridLeafNode)[]; footer: GridFooterNode[] }
+  >([[GRID_ROOT_GROUP_ID, { body: [], footer: [] }]]);
   for (let i = 0; i < rowIds.length; i += 1) {
     const rowId = rowIds[i];
     const node = rowTree[rowId];
-    let group = groupedByParentRows.get(node.parent);
-    if (!group) {
-      group = { body: [], footer: [] };
-      groupedByParentRows.set(node.parent, group);
-    }
 
-    if (node.position === 'footer') {
-      group.footer.push(node);
-    } else {
-      group.body.push(node);
+    if (node.parent != null) {
+      let group = groupedByParentRows.get(node.parent);
+      if (!group) {
+        group = { body: [], footer: [] };
+        groupedByParentRows.set(node.parent, group);
+      }
+
+      if (node.type === 'footer') {
+        group.footer.push(node);
+      } else {
+        group.body.push(node);
+      }
     }
   }
 
   // Apply the sorting to each list of children
-  const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>();
+  const sortedGroupedByParentRows = new Map<GridRowId, GridRowId[]>();
   groupedByParentRows.forEach((group, parent) => {
     if (group.body.length === 0) {
       sortedGroupedByParentRows.set(parent, []);
@@ -70,7 +80,7 @@ export const sortRowTree = (params: SortRowTreeParams) => {
     return treeSize;
   };
 
-  insertRowListIntoSortedRows(0, sortedGroupedByParentRows.get(null)!);
+  insertRowListIntoSortedRows(0, sortedGroupedByParentRows.get(GRID_ROOT_GROUP_ID)!);
 
   return sortedRows;
 };

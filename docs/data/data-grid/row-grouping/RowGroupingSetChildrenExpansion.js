@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  gridVisibleSortedRowIdsSelector,
+  GRID_ROOT_GROUP_ID,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -22,21 +22,21 @@ export default function RowGroupingSetChildrenExpansion() {
     },
   });
 
-  const toggleSecondRow = () => {
-    const rowIds = gridVisibleSortedRowIdsSelector(apiRef);
+  const toggle2ndGroup = () => {
+    const groups = apiRef.current.getRowNode(GRID_ROOT_GROUP_ID).children;
 
-    if (rowIds.length > 1) {
-      const rowId = rowIds[1];
+    if (groups.length > 1) {
+      const groupId = groups[1];
       apiRef.current.setRowChildrenExpansion(
-        rowId,
-        !apiRef.current.getRowNode(rowId)?.childrenExpanded,
+        groupId,
+        !apiRef.current.getRowNode(groupId).childrenExpanded,
       );
     }
   };
 
   return (
     <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
-      <Button onClick={toggleSecondRow}>Toggle 2nd row expansion</Button>
+      <Button onClick={toggle2ndGroup}>Toggle 2nd group expansion</Button>
       <div style={{ height: 400, width: '100%' }}>
         <DataGridPremium
           {...data}

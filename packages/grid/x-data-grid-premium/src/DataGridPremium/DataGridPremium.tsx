@@ -421,7 +421,7 @@ DataGridPremiumRaw.propTypes = {
   isCellEditable: PropTypes.func,
   /**
    * Determines in a group of rows should be aggregated.
-   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
+   * @param {GridGroupNode} groupNode The current group.
    * @param {GridAggregationPosition} position The position on which the aggregation has to be done.
    * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
    */
@@ -429,7 +429,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @param {TempGridGroupNode} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
   isGroupExpandedByDefault: PropTypes.func,

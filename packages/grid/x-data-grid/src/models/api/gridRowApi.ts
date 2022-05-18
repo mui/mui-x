@@ -2,8 +2,8 @@ import {
   GridRowModel,
   GridRowId,
   GridRowModelUpdate,
-  GridRowTreeNodeConfig,
   GridValidRowModel,
+  GridTreeNode,
 } from '../gridRows';
 
 export interface GridRowGroupChildrenGetterParams {
@@ -71,10 +71,11 @@ export interface GridRowApi {
   getRow: <R extends GridValidRowModel = any>(id: GridRowId) => R | null;
   /**
    * Gets the row node from the internal tree structure.
+   * TODO: Rename `getTreeNode`
    * @param {GridRowId} id The id of the row.
-   * @returns {GridRowTreeNodeConfig} The row data.
+   * @returns {GridTreeNode} The tree node.
    */
-  getRowNode: (id: GridRowId) => GridRowTreeNodeConfig | null;
+  getRowNode: <N extends GridTreeNode>(id: GridRowId) => N | null;
   /**
    * Expand or collapse a row children.
    * @param {GridRowId} id the ID of the row to expand or collapse.

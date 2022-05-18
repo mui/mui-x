@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  GridCallbackDetails,
-  GridValidRowModel,
-  GridRowTreeNodeConfig,
-} from '@mui/x-data-grid-pro';
+import { GridCallbackDetails, GridValidRowModel, GridGroupNode } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
   DataGridProPropsWithDefaultValue,
@@ -116,14 +112,11 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
   /**
    * Determines in a group of rows should be aggregated.
-   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
+   * @param {GridGroupNode} groupNode The current group.
    * @param {GridAggregationPosition} position The position on which the aggregation has to be done.
    * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
    */
-  isGroupAggregated?: (
-    groupNode: GridRowTreeNodeConfig | null,
-    position: GridAggregationPosition,
-  ) => boolean;
+  isGroupAggregated?: (groupNode: GridGroupNode, position: GridAggregationPosition) => boolean;
   /**
    * Returns the aggregation label of a group.
    * This label will be rendered on the 1st grouping column.

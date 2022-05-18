@@ -16,12 +16,13 @@ import {
   GridGroupingValueGetterParams,
   GridPreferencePanelsValue,
   GridRowsProp,
-  GridRowTreeNodeConfig,
   useGridApiRef,
   GridGroupingColDefOverrideParams,
   getGroupRowIdFromPath,
+  GridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
+import { TempGridGroupNode } from '@mui/x-data-grid-pro/utils/tree/buildRowTree';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -613,7 +614,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   describe('prop: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
       const isGroupExpandedByDefault = spy(
-        (node: GridRowTreeNodeConfig) =>
+        (node: TempGridGroupNode) =>
           node.groupingKey === 'Cat A' && node.groupingField === 'category1',
       );
 
@@ -624,7 +625,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         />,
       );
       expect(isGroupExpandedByDefault.callCount).to.equal(12); // Should not be called on leaves
-      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A;
+      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault
         .getCalls()
         .find(
@@ -641,7 +642,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
 
     it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
-      const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) =>
+      const isGroupExpandedByDefault = (node: TempGridGroupNode) =>
         node.groupingKey === 'Cat A' && node.groupingField === 'category1';
 
       render(
@@ -877,6 +878,10 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             groupingColDef={{
               valueFormatter: (params) => {
                 const node = apiRef.current.getRowNode(params.id!)!;
+                if (node.type !== 'group') {
+                  return '';
+                }
+
                 return `${node.groupingField} / ${node.groupingKey}`;
               },
             }}
@@ -902,6 +907,10 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             groupingColDef={() => ({
               valueFormatter: (params) => {
                 const node = apiRef.current.getRowNode(params.id!)!;
+                if (node.type !== 'group') {
+                  return '';
+                }
+
                 return `${node.groupingField} / ${node.groupingKey}`;
               },
             })}
@@ -1283,6 +1292,10 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             groupingColDef={{
               valueFormatter: (params) => {
                 const node = apiRef.current.getRowNode(params.id!)!;
+                if (node.type !== 'group') {
+                  return '';
+                }
+
                 return `${node.groupingField} / ${node.groupingKey}`;
               },
             }}
@@ -1321,6 +1334,10 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               return {
                 valueFormatter: (params) => {
                   const node = apiRef.current.getRowNode(params.id!)!;
+                  if (node.type !== 'group') {
+                    return '';
+                  }
+
                   return `${node.groupingField} / ${node.groupingKey}`;
                 },
               };

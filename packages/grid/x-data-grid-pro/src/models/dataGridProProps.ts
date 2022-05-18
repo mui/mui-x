@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GridRowTreeNodeConfig,
   GridEventListener,
   GridCallbackDetails,
   GridRowParams,
@@ -22,6 +21,7 @@ import {
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
+import { TempGridGroupNode } from '../utils/tree/buildRowTree';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -82,10 +82,10 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @param {TempGridGroupNode} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
-  isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
+  isGroupExpandedByDefault?: (node: TempGridGroupNode) => boolean;
   /**
    * If `true`, the column pinning is disabled.
    * @default false

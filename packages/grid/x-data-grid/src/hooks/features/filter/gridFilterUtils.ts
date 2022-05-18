@@ -191,7 +191,7 @@ export const buildAggregatedFilterItemsApplier = (
   }
 
   return (rowId, shouldApplyFilter) => {
-    if (tree[rowId].position === 'footer') {
+    if (tree[rowId].type === 'footer') {
       return true;
     }
 

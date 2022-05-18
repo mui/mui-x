@@ -61,7 +61,7 @@ export default function RowGroupingGetRowGroupChildren() {
   const handleRowClick = React.useCallback(
     (params) => {
       // Only log groups
-      if (!apiRef.current.getRowNode(params.id)?.children) {
+      if (apiRef.current.getRowNode(params.id)?.type !== 'group') {
         return;
       }
 
