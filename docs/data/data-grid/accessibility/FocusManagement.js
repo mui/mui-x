@@ -37,6 +37,12 @@ export default function FocusManagement() {
   return (
     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
       <div style={{ flexGrow: 1, flexShrink: 0 }}>
+        <p>Without focus management</p>
+        <div style={{ height: 300, width: '100%' }}>
+          <DataGrid rows={rows} columns={wrongColumns} hideFooterSelectedRowCount />
+        </div>
+      </div>
+      <div style={{ flexGrow: 1, flexShrink: 0 }}>
         <p>Correct focus management</p>
         <div style={{ height: 300, width: '100%' }}>
           <DataGrid
@@ -44,12 +50,6 @@ export default function FocusManagement() {
             columns={correctColumns}
             hideFooterSelectedRowCount
           />
-        </div>
-      </div>
-      <div style={{ flexGrow: 1, flexShrink: 0 }}>
-        <p>Without focus management</p>
-        <div style={{ height: 300, width: '100%' }}>
-          <DataGrid rows={rows} columns={wrongColumns} hideFooterSelectedRowCount />
         </div>
       </div>
     </div>
