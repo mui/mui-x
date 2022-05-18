@@ -6,17 +6,22 @@ import { useUtils } from '../internals/hooks/useUtils';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
 export interface BaseTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate, TDate | null>,
+    BasePickerProps<TInputDate | null, TDate | null>,
     ValidationProps<TimeValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
+  /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm?: boolean;
   /**
    * Callback fired on view change.
    * @param {ClockPickerView} view The new view.
@@ -30,7 +35,7 @@ export interface BaseTimePickerProps<TInputDate, TDate>
    * Component that will replace default toolbar renderer.
    * @default TimePickerToolbar
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select time'
@@ -87,11 +92,11 @@ export const timePickerValueManager: PickerStateValueManager<any, any, any> = {
   parseInput: parsePickerInputValue,
   getTodayValue: (utils) => utils.date()!,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-  valueReducer: (utils, prevValue, newValue) => {
-    if (prevValue == null || newValue == null) {
+  valueReducer: (utils, lastValidValue, newValue) => {
+    if (!lastValidValue || !utils.isValid(newValue)) {
       return newValue;
     }
 
-    return utils.mergeDateAndTime(prevValue, newValue);
+    return utils.mergeDateAndTime(lastValidValue, newValue);
   },
 };

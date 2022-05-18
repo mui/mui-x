@@ -27,12 +27,14 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   disableChildrenSorting: false,
   rowReordering: false,
   getDetailPanelHeight: () => 500,
+  disableRowGrouping: false,
+  rowGroupingColumnMode: 'single',
 };
 
 const rowGroupingWarning = buildWarning(
   [
     'MUI: The row grouping has been moved to the new `@mui/x-data-grid-premium` package.',
-    'Your application should continue to work with `@mui/x-data-grid-pro` but all the row-grouping related features will not be present.',
+    'The feature is deprecated in `@mui/x-data-grid-pro`, and it will soon be removed from this package.',
   ],
   'error',
 );
@@ -66,11 +68,7 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
   if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useEffect(() => {
-      const legacyExperimentalFeatures = themedProps.experimentalFeatures as {
-        rowGrouping?: boolean;
-      };
-
-      if (legacyExperimentalFeatures?.rowGrouping) {
+      if (themedProps.experimentalFeatures?.rowGrouping) {
         rowGroupingWarning();
       }
     }, [themedProps.experimentalFeatures]);
@@ -80,6 +78,8 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
     () => ({
       ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
       ...themedProps,
+      disableRowGrouping:
+        themedProps.disableRowGrouping || !themedProps.experimentalFeatures?.rowGrouping,
       localeText,
       components,
       signature: 'DataGridPro',

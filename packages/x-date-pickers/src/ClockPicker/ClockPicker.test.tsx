@@ -7,6 +7,7 @@ import {
   fireTouchChangedEvent,
   screen,
   within,
+  getAllByRole,
 } from '@mui/monorepo/test/utils';
 import { ClockPicker, clockPickerClasses as classes } from '@mui/x-date-pickers/ClockPicker';
 import {
@@ -193,6 +194,66 @@ describe('<ClockPicker />', () => {
     expect(Math.max(...hours)).to.equal(23);
   });
 
+  it('should display options, but not update value when readOnly prop is passed', () => {
+    const selectEvent = {
+      changedTouches: [
+        {
+          clientX: 150,
+          clientY: 60,
+        },
+      ],
+    };
+    const onChangeMock = spy();
+    render(
+      <ClockPicker
+        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        onChange={onChangeMock}
+        readOnly
+      />,
+    );
+
+    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    expect(onChangeMock.callCount).to.equal(0);
+
+    // hours are not disabled
+    const hoursContainer = screen.getByRole('listbox');
+    const hours = getAllByRole(hoursContainer, 'option');
+    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+
+    expect(hours.length).to.equal(24);
+    expect(disabledHours.length).to.equal(0);
+  });
+
+  it('should display disabled options when disabled prop is passed', () => {
+    const selectEvent = {
+      changedTouches: [
+        {
+          clientX: 150,
+          clientY: 60,
+        },
+      ],
+    };
+    const onChangeMock = spy();
+    render(
+      <ClockPicker
+        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        onChange={onChangeMock}
+        disabled
+      />,
+    );
+
+    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    expect(onChangeMock.callCount).to.equal(0);
+
+    // hours are disabled
+    const hoursContainer = screen.getByRole('listbox');
+    const hours = getAllByRole(hoursContainer, 'option');
+    const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
+
+    expect(hours.length).to.equal(24);
+    expect(disabledHours.length).to.equal(24);
+  });
+
   describe('Time validation on touch ', () => {
     before(function beforeHook() {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
@@ -300,12 +361,48 @@ describe('<ClockPicker />', () => {
       expect(handleChange.callCount).to.equal(0);
     });
 
+    it('should not select minute when time is disabled (no current value)', () => {
+      const handleChange = spy();
+      render(
+        <ClockPicker
+          ampm={false}
+          date={null}
+          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          onChange={handleChange}
+          view="minutes"
+        />,
+      );
+
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:20']);
+
+      expect(handleChange.callCount).to.equal(0);
+    });
+
     it('should not select disabled hour', () => {
       const handleChange = spy();
       render(
         <ClockPicker
           ampm={false}
           date={adapterToUse.date('2018-01-01T13:00:00.000')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          onChange={handleChange}
+          view="hours"
+        />,
+      );
+
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['20:--']);
+
+      expect(handleChange.callCount).to.equal(0);
+    });
+
+    it('should not select disabled hour (no current value)', () => {
+      const handleChange = spy();
+      render(
+        <ClockPicker
+          ampm={false}
+          date={null}
           minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
           maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
           onChange={handleChange}
@@ -363,6 +460,24 @@ describe('<ClockPicker />', () => {
         <ClockPicker
           ampm={false}
           date={adapterToUse.date('2018-01-01T00:00:00.000')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          onChange={handleChange}
+          view="seconds"
+        />,
+      );
+
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:20']);
+
+      expect(handleChange.callCount).to.equal(0);
+    });
+
+    it('should not select second when time is disabled (no current value)', () => {
+      const handleChange = spy();
+      render(
+        <ClockPicker
+          ampm={false}
+          date={null}
           minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
           maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
           onChange={handleChange}

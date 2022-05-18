@@ -209,6 +209,8 @@ DataGridRaw.propTypes = {
       }),
     ).isRequired,
     linkOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterValues: PropTypes.array,
   }),
   /**
    * Function that applies CSS classes dynamically on cells.
@@ -282,6 +284,13 @@ DataGridRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * If `true`, the selection model will retain selected rows that do not exist.
+   * Useful when using server side pagination and row selections need to be retained
+   * when changing pages.
+   * @default false
+   */
+  keepNonExistentRowsSelected: PropTypes.bool,
   /**
    * If `true`, a  loading overlay is displayed.
    */

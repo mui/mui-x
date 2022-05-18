@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -31,15 +31,16 @@ const VirtualScrollerRoot = styled('div', {
   },
 });
 
-const GridVirtualScroller = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  function GridVirtualScroller(props, ref) {
-    const { className, ...other } = props;
-    const rootProps = useGridRootProps();
-    const ownerState = { classes: rootProps.classes };
-    const classes = useUtilityClasses(ownerState);
+const GridVirtualScroller = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
+>(function GridVirtualScroller(props, ref) {
+  const { className, ...other } = props;
+  const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
-    return <VirtualScrollerRoot ref={ref} className={clsx(classes.root, className)} {...other} />;
-  },
-);
+  return <VirtualScrollerRoot ref={ref} className={clsx(classes.root, className)} {...other} />;
+});
 
 export { GridVirtualScroller };

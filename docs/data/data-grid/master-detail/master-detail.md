@@ -81,7 +81,7 @@ To change the icon used for the toggle, you can provide a different component fo
 If this is not sufficient, the entire toggle component can be overridden.
 To fully customize it, add another column with `field: GRID_DETAIL_PANEL_TOGGLE_FIELD` to your set of columns.
 The grid will detect that there is already a toggle column defined and it will not add another toggle in the default position.
-The new toggle component can be provided via [`renderCell`](/x/react-data-grid/columns/#render-cell) in the same as any other column.
+The new toggle component can be provided via [`renderCell`](/x/react-data-grid/cells/#render-cell) in the same as any other column.
 By only setting the `field`, is up to you to configure the remaining options (e.g. disable the column menu, filtering, sorting).
 To already start with a few suggested options configured, spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column.
 

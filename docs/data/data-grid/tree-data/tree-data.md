@@ -1,12 +1,12 @@
 ---
-title: Data Grid - Tree Data
+title: Data Grid - Tree data
 ---
 
-# Data Grid - Tree Data [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data Grid - Tree data [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-<p class="description">Use Tree Data to handle rows with parent / child relationship.</p>
+<p class="description">Use Tree data to handle rows with parent / child relationship.</p>
 
-To enable the Tree Data, you simply have to use the `treeData` prop as well as provide a `getTreeDataPath` prop.
+To enable the Tree data, you simply have to use the `treeData` prop as well as provide a `getTreeDataPath` prop.
 The `getTreeDataPath` function returns an array of strings which represents the path to a given row.
 
 ```tsx
@@ -53,7 +53,7 @@ const rows: GridRowsProp = [
 
 ## Custom grouping column
 
-Same behavior as for the [Row grouping](#grouping-columns) except for the `leafField` and `mainGroupingCriteria` which are not applicable for the Tree Data.
+Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#grouping-columns) except for the `leafField` and `mainGroupingCriteria` which are not applicable for the Tree data.
 
 {{"demo": "TreeDataCustomGroupingColumn.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -75,7 +75,7 @@ If you want to access the grouping column field, for instance, to use it with co
 
 ## Group expansion
 
-Same behavior as for the [Row grouping](#group-expansion).
+Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion).
 
 ## Gaps in the tree
 

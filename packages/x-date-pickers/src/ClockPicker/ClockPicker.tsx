@@ -5,7 +5,8 @@ import { unstable_useId as useId } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Clock } from './Clock';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
@@ -123,6 +124,7 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   /**
    * Left arrow icon aria-label text.
    * @default 'open previous view'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   leftArrowButtonText?: string;
   /**
@@ -132,6 +134,7 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   /**
    * Right arrow icon aria-label text.
    * @default 'open next view'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   rightArrowButtonText?: string;
   showViewSwitcher?: boolean;
@@ -154,6 +157,16 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    * @default 'hours'
    */
   openTo?: ClockPickerView;
+  /**
+   * If `true`, the picker and text field are disabled.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
+   * Make picker read only.
+   * @default false
+   */
+  readOnly?: boolean;
 }
 
 const ClockPickerRoot = styled(PickerViewRoot, {
@@ -194,6 +207,10 @@ type ClockPickerComponent = (<TDate>(
   props: ClockPickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 /**
  *
  * API:
@@ -221,11 +238,11 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     getHoursClockNumberText = defaultGetHoursClockNumberText,
     getMinutesClockNumberText = defaultGetMinutesClockNumberText,
     getSecondsClockNumberText = defaultGetSecondsClockNumberText,
-    leftArrowButtonText = 'open previous view',
+    leftArrowButtonText: leftArrowButtonTextProp,
     maxTime,
     minTime,
     minutesStep = 1,
-    rightArrowButtonText = 'open next view',
+    rightArrowButtonText: rightArrowButtonTextProp,
     shouldDisableTime,
     showViewSwitcher,
     onChange,
@@ -234,7 +251,19 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     openTo,
     onViewChange,
     className,
+    disabled,
+    readOnly,
   } = props;
+
+  deprecatedPropsWarning({
+    leftArrowButtonText: leftArrowButtonTextProp,
+    rightArrowButtonText: rightArrowButtonTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.openPreviousView;
+  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.openNextView;
 
   const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
     view,
@@ -246,8 +275,11 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
-  const midnight = utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0);
-  const dateOrMidnight = date || midnight;
+
+  const dateOrMidnight = React.useMemo(
+    () => date || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
+    [date, now, utils],
+  );
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
     dateOrMidnight,
@@ -286,12 +318,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
       switch (viewType) {
         case 'hours': {
           const value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-
-          if (date == null) {
-            return !isValidValue(value);
-          }
-
-          const dateWithNewHours = utils.setHours(date, value);
+          const dateWithNewHours = utils.setHours(dateOrMidnight, value);
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
@@ -299,11 +326,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         }
 
         case 'minutes': {
-          if (date == null) {
-            return !isValidValue(rawValue, minutesStep);
-          }
-
-          const dateWithNewMinutes = utils.setMinutes(date, rawValue);
+          const dateWithNewMinutes = utils.setMinutes(dateOrMidnight, rawValue);
           const start = utils.setSeconds(dateWithNewMinutes, 0);
           const end = utils.setSeconds(dateWithNewMinutes, 59);
 
@@ -311,11 +334,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         }
 
         case 'seconds': {
-          if (date == null) {
-            return !isValidValue(rawValue);
-          }
-
-          const dateWithNewSeconds = utils.setSeconds(date, rawValue);
+          const dateWithNewSeconds = utils.setSeconds(dateOrMidnight, rawValue);
           const start = dateWithNewSeconds;
           const end = dateWithNewSeconds;
 
@@ -328,7 +347,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     },
     [
       ampm,
-      date,
+      dateOrMidnight,
       disableIgnoringDatePartForTimeValidation,
       maxTime,
       meridiemMode,
@@ -358,7 +377,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
             ampm,
             onChange: handleHoursChange,
             getClockNumberText: getHoursClockNumberText,
-            isDisabled: (value) => isTimeDisabled(value, 'hours'),
+            isDisabled: (value) => disabled || isTimeDisabled(value, 'hours'),
             selectedId,
           }),
         };
@@ -378,7 +397,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
             value: minutesValue,
             onChange: handleMinutesChange,
             getClockNumberText: getMinutesClockNumberText,
-            isDisabled: (value) => isTimeDisabled(value, 'minutes'),
+            isDisabled: (value) => disabled || isTimeDisabled(value, 'minutes'),
             selectedId,
           }),
         };
@@ -398,7 +417,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
             value: secondsValue,
             onChange: handleSecondsChange,
             getClockNumberText: getSecondsClockNumberText,
-            isDisabled: (value) => isTimeDisabled(value, 'seconds'),
+            isDisabled: (value) => disabled || isTimeDisabled(value, 'seconds'),
             selectedId,
           }),
         };
@@ -420,6 +439,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     dateOrMidnight,
     isTimeDisabled,
     selectedId,
+    disabled,
   ]);
 
   const ownerState = props;
@@ -454,6 +474,8 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         meridiemMode={meridiemMode}
         handleMeridiemChange={handleMeridiemChange}
         selectedId={selectedId}
+        disabled={disabled}
+        readOnly={readOnly}
         {...viewProps}
       />
     </ClockPickerRoot>
@@ -497,6 +519,11 @@ ClockPicker.propTypes = {
    * Selected date @DateIOType.
    */
   date: PropTypes.any,
+  /**
+   * If `true`, the picker and text field are disabled.
+   * @default false
+   */
+  disabled: PropTypes.bool,
   /**
    * Do not ignore date part when validating min/max time.
    * @default false
@@ -543,6 +570,7 @@ ClockPicker.propTypes = {
   /**
    * Left arrow icon aria-label text.
    * @default 'open previous view'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -575,8 +603,14 @@ ClockPicker.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
+   * Make picker read only.
+   * @default false
+   */
+  readOnly: PropTypes.bool,
+  /**
    * Right arrow icon aria-label text.
    * @default 'open next view'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   rightArrowButtonText: PropTypes.string,
   /**
