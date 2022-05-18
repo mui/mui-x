@@ -8,9 +8,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 interface GridPipeGroupCache {
-  processors: {
-    [processorId: string]: GridPipeProcessor<any>;
-  };
+  processors: Map<string, GridPipeProcessor<any> | null>;
   appliers: {
     [applierId: string]: () => void;
   };
@@ -66,22 +64,20 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
     (group, id, processor) => {
       if (!processorsCache.current[group]) {
         processorsCache.current[group] = {
-          processors: {},
+          processors: new Map(),
           appliers: {},
         };
       }
 
       const groupCache = processorsCache.current[group]!;
-      const oldProcessor = groupCache.processors[id];
+      const oldProcessor = groupCache.processors.get(id);
       if (oldProcessor !== processor) {
-        groupCache.processors[id] = processor;
+        groupCache.processors.set(id, processor);
         runAppliers(groupCache);
       }
 
       return () => {
-        const { [id]: removedGroupProcessor, ...otherProcessors } =
-          processorsCache.current[group]!.processors;
-        processorsCache.current[group]!.processors = otherProcessors;
+        processorsCache.current[group]!.processors.set(id, null);
       };
     },
     [runAppliers],
@@ -92,7 +88,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
   >((group, id, applier) => {
     if (!processorsCache.current[group]) {
       processorsCache.current[group] = {
-        processors: {},
+        processors: new Map(),
         appliers: {},
       };
     }
@@ -124,8 +120,12 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
       return value;
     }
 
-    const preProcessors = Object.values(processorsCache.current[group]!.processors);
+    const preProcessors = Array.from(processorsCache.current[group]!.processors.values());
     return preProcessors.reduce((acc, preProcessor) => {
+      if (!preProcessor) {
+        return acc;
+      }
+
       return preProcessor(acc, context);
     }, value);
   }, []);
