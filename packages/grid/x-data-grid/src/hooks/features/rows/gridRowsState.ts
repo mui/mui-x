@@ -31,6 +31,10 @@ export interface GridRowsInternalCache extends Omit<GridRowTreeCreationParams, '
    * It is used to avoid processing several time the same set of rows
    */
   rowsBeforePartialUpdates: GridRowsProp;
+  /**
+   * The value of the `loading` prop since the last time that the rows state was updated.
+   */
+  loadingPropBeforePartialUpdates?: boolean;
 }
 
 export interface GridRowsState extends GridRowTreeCreationValue {

@@ -73,7 +73,7 @@ export function GridOverlays() {
     );
   }
 
-  if (rootProps.loading) {
+  if (loading) {
     overlay = (
       <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />
     );

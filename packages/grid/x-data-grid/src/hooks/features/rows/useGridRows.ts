@@ -33,6 +33,7 @@ export const rowsStateInitializer: GridStateInitializer<
   apiRef.current.unstable_caches.rows = createRowsInternalCache({
     rows: props.rows,
     getRowId: props.getRowId,
+    loadingProp: props.loading,
   });
 
   return {
@@ -136,11 +137,12 @@ export const useGridRows = (
         createRowsInternalCache({
           rows,
           getRowId: props.getRowId,
+          loadingProp: props.loading,
         }),
         true,
       );
     },
-    [logger, props.getRowId, throttledRowsChange],
+    [logger, props.getRowId, props.loading, throttledRowsChange],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
@@ -354,10 +356,11 @@ export const useGridRows = (
       cache = createRowsInternalCache({
         rows: props.rows,
         getRowId: props.getRowId,
+        loadingProp: props.loading,
       });
     }
     throttledRowsChange(cache, false);
-  }, [logger, apiRef, props.rows, props.getRowId, throttledRowsChange]);
+  }, [logger, apiRef, props.rows, props.getRowId, props.loading, throttledRowsChange]);
 
   const handleStrategyProcessorChange = React.useCallback<
     GridEventListener<'activeStrategyProcessorChange'>
@@ -428,7 +431,10 @@ export const useGridRows = (
     }
 
     // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
-    if (apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows) {
+    if (
+      apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows &&
+      apiRef.current.unstable_caches.rows!.loadingPropBeforePartialUpdates === props.loading
+    ) {
       return;
     }
 
@@ -437,8 +443,17 @@ export const useGridRows = (
       createRowsInternalCache({
         rows: props.rows,
         getRowId: props.getRowId,
+        loadingProp: props.loading,
       }),
       false,
     );
-  }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange, apiRef]);
+  }, [
+    props.rows,
+    props.rowCount,
+    props.getRowId,
+    props.loading,
+    logger,
+    throttledRowsChange,
+    apiRef,
+  ]);
 };
