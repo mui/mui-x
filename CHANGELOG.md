@@ -5,8 +5,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 ## v5.11.1
-<!-- generated comparing v5.11.0..master -->
-_May 19, 2022_
+
+_May 29, 2022_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
