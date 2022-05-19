@@ -86,7 +86,7 @@ export const useGridRows = (
   );
 
   const throttledRowsChange = React.useCallback(
-    (newCache: GridRowsInternalCache, throttle: boolean) => {
+    ({ cache, throttle }: { cache: GridRowsInternalCache, throttle: boolean, updatedRows?: GridRowsClassifiedUpdates }) => {
       const run = () => {
         timeout.current = null;
         lastUpdateMs.current = Date.now();
@@ -94,6 +94,7 @@ export const useGridRows = (
           ...state,
           rows: getRowsStateFromCache({
             apiRef,
+            updatedRows,
             previousTree: gridRowTreeSelector(apiRef),
             rowCountProp: props.rowCount,
             loadingProp: props.loading,
@@ -108,7 +109,7 @@ export const useGridRows = (
         timeout.current = null;
       }
 
-      apiRef.current.unstable_caches.rows = newCache;
+      apiRef.current.unstable_caches.rows = cache;
 
       if (!throttle) {
         run();
@@ -132,13 +133,13 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
-      throttledRowsChange(
-        createRowsInternalCache({
-          rows,
-          getRowId: props.getRowId,
-        }),
-        true,
-      );
+      throttledRowsChange({
+          cache: createRowsInternalCache({
+              rows,
+              getRowId: props.getRowId,
+          }),
+          throttle: true,
+      });
     },
     [logger, props.getRowId, throttledRowsChange],
   );
@@ -178,49 +179,42 @@ export const useGridRows = (
         update: [],
       };
 
+        const deletedRowIdLookup: Record<GridRowId, true> = {};
+
+        const prevCache = apiRef.current.unstable_caches.rows;
+        const newCache: GridRowsInternalCache = {
+            rowsBeforePartialUpdates: prevCache.rowsBeforePartialUpdates,
+            idRowsLookup: { ...prevCache.idRowsLookup },
+            idToIdLookup: { ...prevCache.idToIdLookup },
+            ids: [...prevCache.ids],
+        };
+
       uniqUpdates.forEach((partialRow, id) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
-          classifiedUpdates.delete.push({ id, model: partialRow });
+            classifiedUpdates.delete.push(id)
+            deletedRowIdLookup[id] = true
+            delete newCache.idRowsLookup[id];
+            delete newCache.idToIdLookup[id];
         } else {
           const oldRow = apiRef.current.getRow(id);
-          if (!oldRow) {
-            classifiedUpdates.insert.push({ id, model: partialRow });
+          if (oldRow) {
+              classifiedUpdates.update.push(id)
+              newCache.idRowsLookup[id] = { ...oldRow, ...partialRow };
           } else {
-            classifiedUpdates.update.push({ id, model: partialRow });
+              classifiedUpdates.insert.push(id)
+              newCache.idRowsLookup[id] = partialRow;
+              newCache.idToIdLookup[id] = id;
+              newCache.ids.push(id);
           }
         }
       });
 
-      const prevCache = apiRef.current.unstable_caches.rows;
-      const newCache: GridRowsInternalCache = {
-        rowsBeforePartialUpdates: prevCache.rowsBeforePartialUpdates,
-        idRowsLookup: { ...prevCache.idRowsLookup },
-        idToIdLookup: { ...prevCache.idToIdLookup },
-        ids: [...prevCache.ids],
-      };
-
-      classifiedUpdates.insert.forEach(({ id, model }) => {
-        newCache.idRowsLookup[id] = model;
-        newCache.idToIdLookup[id] = id;
-        newCache.ids.push(id);
-      });
-
-      classifiedUpdates.update.forEach(({ id, model }) => {
-        newCache.idRowsLookup[id] = { ...apiRef.current.getRow(id), ...model };
-      });
-
-      if (classifiedUpdates.delete.length > 0) {
-        const deletedRowIdLookup: Record<GridRowId, true> = {};
-        classifiedUpdates.delete.forEach(({ id }) => {
-          delete newCache.idRowsLookup[id];
-          delete newCache.idToIdLookup[id];
-          deletedRowIdLookup[id] = true;
-        });
+      if (Object.keys(deletedRowIdLookup).length > 0) {
         newCache.ids = newCache.ids.filter((id) => !deletedRowIdLookup[id]);
       }
 
-      throttledRowsChange(newCache, true);
+      throttledRowsChange({ cache: newCache, throttle: true, updatedRows: classifiedUpdates });
     },
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
   );
@@ -379,7 +373,7 @@ export const useGridRows = (
         getRowId: props.getRowId,
       });
     }
-    throttledRowsChange(cache, false);
+    throttledRowsChange({ cache, throttle: false });
   }, [logger, apiRef, props.rows, props.getRowId, throttledRowsChange]);
 
   const handleStrategyProcessorChange = React.useCallback<
@@ -456,12 +450,12 @@ export const useGridRows = (
     }
 
     logger.debug(`Updating all rows, new length ${props.rows.length}`);
-    throttledRowsChange(
-      createRowsInternalCache({
-        rows: props.rows,
-        getRowId: props.getRowId,
-      }),
-      false,
-    );
+    throttledRowsChange({
+        cache: createRowsInternalCache({
+            rows: props.rows,
+            getRowId: props.getRowId,
+        }),
+        throttle: false,
+    });
   }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange, apiRef]);
 };

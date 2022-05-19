@@ -8,7 +8,7 @@ import {
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridRowsInternalCache, GridRowsState } from './gridRowsState';
+import {GridRowsClassifiedUpdates, GridRowsInternalCache, GridRowsState} from './gridRowsInterfaces';
 
 export const GRID_ROOT_GROUP_ID = `auto-generated-group-node-root`;
 
@@ -74,11 +74,13 @@ export const createRowsInternalCache = ({
 
 export const getRowsStateFromCache = ({
   apiRef,
+  updatedRows,
   previousTree,
   rowCountProp,
   loadingProp,
 }: {
   apiRef: React.MutableRefObject<GridApiCommunity>;
+  updatedRows: GridRowsClassifiedUpdates,
   previousTree: GridRowTreeConfig | null;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
