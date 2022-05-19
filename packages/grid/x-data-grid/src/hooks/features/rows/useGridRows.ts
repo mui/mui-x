@@ -32,6 +32,7 @@ import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 interface ConvertRowsPropToStateParams {
   prevCache: GridRowsInternalCache;
   getRowId: DataGridProcessedProps['getRowId'];
+  loadingProp: DataGridProcessedProps['loading'];
   rows?: GridRowsProp;
 }
 
@@ -49,6 +50,7 @@ const convertRowsPropToState = ({
   prevCache: prevState,
   rows,
   getRowId,
+  loadingProp,
 }: ConvertRowsPropToStateParams): GridRowsInternalCache => {
   let value: GridRowInternalCacheValue;
   if (rows) {
@@ -70,6 +72,7 @@ const convertRowsPropToState = ({
 
   return {
     value,
+    loadingPropBeforePartialUpdates: loadingProp,
     rowsBeforePartialUpdates: rows ?? prevState.rowsBeforePartialUpdates,
   };
 };
@@ -114,6 +117,7 @@ export const rowsStateInitializer: GridStateInitializer<
   apiRef.current.unstable_caches.rows = convertRowsPropToState({
     rows: props.rows,
     getRowId: props.getRowId,
+    loadingProp: props.loading,
     prevCache: {
       value: {
         idRowsLookup: {},
@@ -228,11 +232,12 @@ export const useGridRows = (
           rows,
           prevCache: apiRef.current.unstable_caches.rows!,
           getRowId: props.getRowId,
+          loadingProp: props.loading,
         }),
         true,
       );
     },
-    [apiRef, logger, props.getRowId, throttledRowsChange],
+    [apiRef, logger, props.getRowId, props.loading, throttledRowsChange],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
@@ -452,11 +457,12 @@ export const useGridRows = (
       convertRowsPropToState({
         rows,
         getRowId: props.getRowId,
+        loadingProp: props.loading,
         prevCache: apiRef.current.unstable_caches.rows!,
       }),
       false,
     );
-  }, [logger, apiRef, props.rows, props.getRowId, throttledRowsChange]);
+  }, [logger, apiRef, props.rows, props.getRowId, props.loading, throttledRowsChange]);
 
   const handleStrategyProcessorChange = React.useCallback<
     GridEventListener<'activeStrategyProcessorChange'>
@@ -527,7 +533,10 @@ export const useGridRows = (
     }
 
     // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
-    if (apiRef.current.unstable_caches.rows!.rowsBeforePartialUpdates === props.rows) {
+    if (
+      apiRef.current.unstable_caches.rows!.rowsBeforePartialUpdates === props.rows &&
+      apiRef.current.unstable_caches.rows!.loadingPropBeforePartialUpdates === props.loading
+    ) {
       return;
     }
 
@@ -536,9 +545,18 @@ export const useGridRows = (
       convertRowsPropToState({
         rows: props.rows,
         getRowId: props.getRowId,
+        loadingProp: props.loading,
         prevCache: apiRef.current.unstable_caches.rows!,
       }),
       false,
     );
-  }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange, apiRef]);
+  }, [
+    props.rows,
+    props.rowCount,
+    props.getRowId,
+    logger,
+    throttledRowsChange,
+    apiRef,
+    props.loading,
+  ]);
 };
