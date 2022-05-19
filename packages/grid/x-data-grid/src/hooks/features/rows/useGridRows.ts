@@ -343,10 +343,10 @@ export const useGridRows = (
     logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
 
     let cache: GridRowsInternalCache;
-    if (apiRef.current.unstable_caches.rows!.rowsBeforePartialUpdates === props.rows) {
-      // The `props.rows` has not changed since the last row grouping
-      // We can keep the potential updates stored in `inputRowsAfterUpdates` on the new grouping
-      cache = apiRef.current.unstable_caches.rows!;
+    if (apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows) {
+      // The `props.rows` did not change since the last row grouping
+      // We can use the current rows cache which contains the partial updates done recently.
+      cache = apiRef.current.unstable_caches.rows;
     } else {
       // The `props.rows` has changed since the last row grouping
       // We must use the new `props.rows` on the new grouping
@@ -428,7 +428,7 @@ export const useGridRows = (
     }
 
     // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
-    if (apiRef.current.unstable_caches.rows!.rowsBeforePartialUpdates === props.rows) {
+    if (apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows) {
       return;
     }
 
