@@ -273,7 +273,7 @@ export interface GridControlledStateEventLookup {
 
 export interface GridControlledStateReasonLookup {
   filter:
-    | 'addFilterItem' // TODO: Merge with upsertFilterItem
+    | 'addFilterItem' // TODO v6: Merge with upsertFilterItem
     | 'upsertFilterItem'
     | 'deleteFilterItem'
     | 'changeLogicOperator'
