@@ -28,8 +28,8 @@ export function useGridEvents(
     | 'onRowClick'
     | 'onError'
     | 'onStateChange'
-    | 'onGridMenuOpen'
-    | 'onGridMenuClose'
+    | 'onMenuOpen'
+    | 'onMenuClose'
   >,
 ): void {
   useGridApiOptionHandler(apiRef, 'columnHeaderClick', props.onColumnHeaderClick);
