@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+
+## v5.11.1
+<!-- generated comparing v5.11.0..master -->
+_May 19, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Support localization on the date and time picker components (#4517) @alexfauquette
+- 🐞 Bugs fixes
+
+### `@mui/x-data-grid@v5.11.1` / `@mui/x-data-grid-pro@v5.11.1` / `@mui/x-data-grid-premium@v5.11.1`
+
+#### Changes
+
+- [DataGrid] Add class corresponding to current density (#4858) @m4theushw
+- [DataGrid] Execute the pipe-processors in their initialization order (#4913) @flaviendelangle
+- [DataGridPremium] Support column spanning in Excel export (#4830) @cherniavskii
+- [l10n] Improve Russian (ru-RU) locale (#4864) @arvkonstantin
+
+### `@mui/x-date-pickers@5.0.0-alpha.4` / `@mui/x-date-pickers-pro@5.0.0-alpha.4`
+
+#### Changes
+
+- [DatePicker] Fix keyboard accessibility for first and last year (#4807) @alexfauquette
+- [pickers] Add l10n support (#4517) @alexfauquette
+- [pickers] Close Popper when pressing <kbd>Esc</kbd> inside a modal (#4499) @alexfauquette
+- [pickers] Support class slots on toolbar components (#4855) @flaviendelangle
+- [TimePicker] Fix time validation when current date is null (#4867) @flaviendelangle
+
+### Docs
+
+- [docs] Avoid confusion with license key installation (#4891) @oliviertassinari
+- [docs] Complete the instructions for pickers installation in readme (#4852) @alexfauquette
+- [docs] Disable ads on paid-only pages (#4842) @flaviendelangle
+- [docs] Don't redirect on deploy preview (#4818) @m4theushw
+- [docs] Limit `LICENSE` file to 80 char per line (#4873) @oliviertassinari
+- [docs] Typo on OrderId @oliviertassinari
+- [docs] Update feature comparison table (#4918) @cherniavskii
+
+### Core
+
+- [core] Add new script to generate tree data rows from file tree (#4902) @flaviendelangle
+- [core] Code style edit (#4874) @oliviertassinari
+- [core] Fix React 18 peer dependency (#4908) @oliviertassinari
+- [core] Fix link to the LICENSE file (#4875) @oliviertassinari
+- [core] Fix transitive babel dependency (#4793) @oliviertassinari
+- [core] New pipe processing `rowHydration` (#4896) @flaviendelangle
+- [core] Remove dead code for the docs (#4791) @oliviertassinari
+- [core] Run `yarn prettier` @oliviertassinari
+- [core] Polishes on `CHANGELOG.md` (#4876) @oliviertassinari
+- [core] Use internal icons for quick filter (#4912) @alexfauquette
+
 ## v5.11.0
 
 _May 13, 2022_
