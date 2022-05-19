@@ -25,10 +25,7 @@ export interface GridRowTreeCreationValue {
   idToIdLookup: Record<string, GridRowId>;
 }
 
-export type GridRowInternalCacheValue = Omit<GridRowTreeCreationParams, 'previousTree'>;
-
-export interface GridRowsInternalCache {
-  value: GridRowInternalCacheValue;
+export interface GridRowsInternalCache extends Omit<GridRowTreeCreationParams, 'previousTree'> {
   /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
