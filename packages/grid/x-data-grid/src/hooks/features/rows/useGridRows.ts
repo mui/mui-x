@@ -25,8 +25,13 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
-import { GridRowInternalCacheValue, GridRowsInternalCache, GridRowsState } from './gridRowsState';
-import { checkGridRowIdIsValid, getTreeNodeDescendants } from './gridRowsUtils';
+import {
+  GridRowInternalCacheValue,
+  GridRowsInternalCache,
+  GridRowsState,
+  GridRowsClassifiedUpdates,
+} from './gridRowsInterfaces';
+import { checkGridRowIdIsValid, getTreeNodeDescendants, GRID_ROOT_GROUP_ID } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 
 interface ConvertRowsPropToStateParams {
@@ -97,7 +102,9 @@ const getRowsStateFromCache = (
   const dataTopLevelRowCount =
     processedGroupingResponse.treeDepth === 1
       ? processedGroupingResponse.ids.length
-      : Object.values(processedGroupingResponse.tree).filter((node) => node.parent == null).length;
+      : Object.values(processedGroupingResponse.tree).filter(
+          (node) => node.parent === GRID_ROOT_GROUP_ID,
+        ).length;
 
   return {
     ...processedGroupingResponse,
@@ -264,7 +271,25 @@ export const useGridRows = (
         }
       });
 
-      const deletedRowIds: GridRowId[] = [];
+      const classifiedUpdates: GridRowsClassifiedUpdates = {
+        delete: [],
+        insert: [],
+        update: [],
+      };
+
+      uniqUpdates.forEach((partialRow, id) => {
+        // eslint-disable-next-line no-underscore-dangle
+        if (partialRow._action === 'delete') {
+          classifiedUpdates.delete.push({ id, model: partialRow });
+        } else {
+          const oldRow = apiRef.current.getRow(id);
+          if (!oldRow) {
+            classifiedUpdates.insert.push({ id, model: partialRow });
+          } else {
+            classifiedUpdates.update.push({ id, model: partialRow });
+          }
+        }
+      });
 
       const newStateValue: GridRowInternalCacheValue = {
         idRowsLookup: { ...apiRef.current.unstable_caches.rows!.value.idRowsLookup },
@@ -272,28 +297,24 @@ export const useGridRows = (
         ids: [...apiRef.current.unstable_caches.rows!.value.ids],
       };
 
-      uniqUpdates.forEach((partialRow, id) => {
-        // eslint-disable-next-line no-underscore-dangle
-        if (partialRow._action === 'delete') {
-          delete newStateValue.idRowsLookup[id];
-          delete newStateValue.idToIdLookup[id];
-          deletedRowIds.push(id);
-          return;
-        }
-
-        const oldRow = apiRef.current.getRow(id);
-        if (!oldRow) {
-          newStateValue.idRowsLookup[id] = partialRow;
-          newStateValue.idToIdLookup[id] = id;
-          newStateValue.ids.push(id);
-          return;
-        }
-
-        newStateValue.idRowsLookup[id] = { ...apiRef.current.getRow(id), ...partialRow };
+      classifiedUpdates.insert.forEach(({ id, model }) => {
+        newStateValue.idRowsLookup[id] = model;
+        newStateValue.idToIdLookup[id] = id;
+        newStateValue.ids.push(id);
       });
 
-      if (deletedRowIds.length > 0) {
-        newStateValue.ids = newStateValue.ids.filter((id) => !deletedRowIds.includes(id));
+      classifiedUpdates.update.forEach(({ id, model }) => {
+        newStateValue.idRowsLookup[id] = { ...apiRef.current.getRow(id), ...model };
+      });
+
+      if (classifiedUpdates.delete.length > 0) {
+        const deletedRowIdLookup: Record<GridRowId, true> = {};
+        classifiedUpdates.delete.forEach(({ id }) => {
+          delete newStateValue.idRowsLookup[id];
+          delete newStateValue.idToIdLookup[id];
+          deletedRowIdLookup[id] = true;
+        });
+        newStateValue.ids = newStateValue.ids.filter((id) => !deletedRowIdLookup[id]);
       }
 
       const state: GridRowsInternalCache = {

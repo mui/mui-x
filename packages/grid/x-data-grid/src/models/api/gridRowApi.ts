@@ -59,7 +59,7 @@ export interface GridRowApi {
    */
   setRowIndex: (rowId: GridRowId, targetIndex: number) => void;
   /**
-   * Allows to updates, insert and delete rows in a single call.
+   * Allows to update, insert and delete rows.
    * @param {GridRowModelUpdate[]} updates An array of rows with an `action` specifying what to do.
    */
   updateRows: (updates: GridRowModelUpdate[]) => void;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventPublisher, GridEventListener, GridEventsStr } from '../events';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
-import { GridRowsInternalCache } from '../../hooks/features/rows/gridRowsState';
+import { GridRowsInternalCache } from '../../hooks/features/rows/gridRowsInterfaces';
 
 export interface GridApiCaches {
   rows?: GridRowsInternalCache;

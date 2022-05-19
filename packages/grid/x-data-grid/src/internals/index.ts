@@ -54,7 +54,7 @@ export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreP
 export type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
-} from '../hooks/features/rows/gridRowsState';
+} from '../hooks/features/rows/gridRowsInterfaces';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export {

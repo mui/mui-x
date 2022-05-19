@@ -1,8 +1,10 @@
 import {
+  GridRowEntry,
   GridRowId,
   GridRowsLookup,
   GridRowsProp,
   GridRowTreeConfig,
+  GridValidRowModel,
 } from '../../../models/gridRows';
 
 export interface GridRowTreeCreationParams {
@@ -59,3 +61,7 @@ export interface GridRowsState extends GridRowTreeCreationValue {
 }
 
 export type GridHydrateRowsValue = GridRowTreeCreationValue;
+
+export type GridRowsClassifiedUpdates<R extends GridValidRowModel = any> = {
+  [type in 'delete' | 'insert' | 'update']: GridRowEntry<R>[];
+};
