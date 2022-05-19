@@ -105,7 +105,7 @@ export function useGridColumns(
     !!props.columnVisibilityModel || !!props.initialState?.columns?.columnVisibilityModel,
   );
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'visibleColumns',
     propModel: props.columnVisibilityModel,
     propOnChange: props.onColumnVisibilityModelChange,

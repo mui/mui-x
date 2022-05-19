@@ -65,7 +65,7 @@ export const useGridFilter = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
@@ -114,7 +114,7 @@ export const useGridFilter = (
       } else {
         items[itemIndex] = item;
       }
-      apiRef.current.setFilterModel({ ...filterModel, items });
+      apiRef.current.setFilterModel({ ...filterModel, items }, 'upsertFilterItem');
     },
     [apiRef],
   );
@@ -128,7 +128,7 @@ export const useGridFilter = (
         return;
       }
 
-      apiRef.current.setFilterModel({ ...filterModel, items });
+      apiRef.current.setFilterModel({ ...filterModel, items }, 'deleteFilterItem');
     },
     [apiRef],
   );
@@ -174,10 +174,13 @@ export const useGridFilter = (
       if (filterModel.linkOperator === linkOperator) {
         return;
       }
-      apiRef.current.setFilterModel({
-        ...filterModel,
-        linkOperator,
-      });
+      apiRef.current.setFilterModel(
+        {
+          ...filterModel,
+          linkOperator,
+        },
+        'changeLogicOperator',
+      );
     },
     [apiRef],
   );
@@ -197,12 +200,14 @@ export const useGridFilter = (
   );
 
   const setFilterModel = React.useCallback<GridFilterApi['setFilterModel']>(
-    (model) => {
+    (model, reason) => {
       const currentModel = gridFilterModelSelector(apiRef);
       if (currentModel !== model) {
         logger.debug('Setting filter model');
-        apiRef.current.setState(
+        apiRef.current.unstable_updateControlState(
+          'filter',
           mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering, apiRef),
+          reason,
         );
         apiRef.current.unstable_applyFilters();
       }
@@ -258,8 +263,10 @@ export const useGridFilter = (
       if (filterModel == null) {
         return params;
       }
-      apiRef.current.setState(
+      apiRef.current.unstable_updateControlState(
+        'filter',
         mergeStateWithFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
+        'restoreState',
       );
 
       return {

@@ -271,6 +271,15 @@ export interface GridControlledStateEventLookup {
   columnVisibilityModelChange: { params: GridColumnVisibilityModel };
 }
 
+export interface GridControlledStateReasonLookup {
+  filter:
+    | 'addFilterItem' // TODO: Merge with upsertFilterItem
+    | 'upsertFilterItem'
+    | 'deleteFilterItem'
+    | 'changeLogicOperator'
+    | 'restoreState';
+}
+
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,

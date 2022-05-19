@@ -84,7 +84,7 @@ export const useGridSelection = (
 
   const lastRowToggled = React.useRef<GridRowId | null>(null);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'selection',
     propModel: propSelectionModel,
     propOnChange: props.onSelectionModelChange,

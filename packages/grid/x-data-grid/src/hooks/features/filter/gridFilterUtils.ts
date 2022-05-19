@@ -111,12 +111,9 @@ export const mergeStateWithFilterModel =
     disableMultipleColumnsFiltering: boolean,
     apiRef: React.MutableRefObject<GridApiCommunity>,
   ) =>
-  (state: GridStateCommunity): GridStateCommunity => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
-    },
+  (filteringState: GridStateCommunity['filter']): GridStateCommunity['filter'] => ({
+    ...filteringState,
+    filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
   });
 
 /**

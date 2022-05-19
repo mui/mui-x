@@ -88,7 +88,10 @@ function GridFilterPanel(props: GridFilterPanelProps) {
     if (!defaultItem) {
       return;
     }
-    apiRef.current.setFilterModel({ ...filterModel, items: [...items, defaultItem] });
+    apiRef.current.setFilterModel(
+      { ...filterModel, items: [...items, defaultItem] },
+      'addFilterItem',
+    );
   };
 
   const deleteFilter = React.useCallback(
