@@ -178,7 +178,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Multiple row selection](/x/react-data-grid/selection/#multiple-row-selection)         |    ❌     |                 ✅                 |                     ✅                     |
 | [Cell range selection](/x/react-data-grid/selection/#range-selection)                  |    ❌     |                 ❌                 |                     🚧                     |
 | **Filtering**                                                                          |           |                                    |                                            |
-| [Quick filter](/x/react-data-grid/filtering/#quick-filter)                             |    🚧     |                 🚧                 |                     🚧                     |
+| [Quick filter](/x/react-data-grid/filtering/#quick-filter)                             |    ✅     |                 ✅                 |                     ✅                     |
 | [Column filters](/x/react-data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |
 | [Multi-column filtering](/x/react-data-grid/filtering/#multi-filtering)                |    ❌     |                 ✅                 |                     ✅                     |
 | **Sorting**                                                                            |           |                                    |                                            |
@@ -194,7 +194,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [CSV export](/x/react-data-grid/export/#csv-export)                                    |    ✅     |                 ✅                 |                     ✅                     |
 | [Print](/x/react-data-grid/export/#print-export)                                       |    ✅     |                 ✅                 |                     ✅                     |
 | [Clipboard](/x/react-data-grid/export/#clipboard)                                      |    ❌     |                 🚧                 |                     🚧                     |
-| [Excel export](/x/react-data-grid/export/#excel-export)                                |    ❌     |                 ❌                 |                     🚧                     |
+| [Excel export](/x/react-data-grid/export/#excel-export)                                |    ❌     |                 ❌                 |                     ✅                     |
 | **Rendering**                                                                          |           |                                    |                                            |
 | [Customizable components](/x/react-data-grid/components/)                              |    ✅     |                 ✅                 |                     ✅                     |
 | [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization)      |    ✅     |                 ✅                 |                     ✅                     |

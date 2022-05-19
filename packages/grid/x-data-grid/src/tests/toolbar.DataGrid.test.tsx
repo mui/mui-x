@@ -3,7 +3,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridToolbar, gridClasses } from '@mui/x-data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
@@ -125,6 +125,20 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
+    });
+
+    it('should apply to the root element a class corresponding to the current density', () => {
+      const Test = (props: Partial<DataGridProps>) => (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} {...props} />
+        </div>
+      );
+      const { setProps } = render(<Test />);
+      expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityStandard']);
+      setProps({ density: 'compact' });
+      expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityCompact']);
+      setProps({ density: 'comfortable' });
+      expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityComfortable']);
     });
   });
 
