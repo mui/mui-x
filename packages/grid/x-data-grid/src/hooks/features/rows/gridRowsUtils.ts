@@ -43,17 +43,15 @@ export const getRowIdFromRowModel = (
   return id;
 };
 
-interface ConvertRowsPropToStateParams {
-  getRowId: DataGridProcessedProps['getRowId'];
-  loadingProp: DataGridProcessedProps['loading'];
-  rows: GridRowsProp;
-}
-
 export const createRowsInternalCache = ({
   rows,
   getRowId,
   loadingProp,
-}: ConvertRowsPropToStateParams): GridRowsInternalCache => {
+}: {
+  getRowId: DataGridProcessedProps['getRowId'];
+  loadingProp: DataGridProcessedProps['loading'];
+  rows: GridRowsProp;
+}): GridRowsInternalCache => {
   const cache: GridRowsInternalCache = {
     rowsBeforePartialUpdates: rows,
     loadingPropBeforePartialUpdates: loadingProp,
