@@ -34,30 +34,34 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 #### Breaking changes
 
-The following props have been removed: `clearable`, `showTodayButton`, `cancelText`, `okText`.
-To control the presence of action buttons, you can pass props to the `ActionBar` as follow
+- The props related to the action bar buttons have been removed (`clearable`, `showTodayButton`, `cancelText`, `okText`)
 
-```jsx
-<DatePicker
-  componentsProps={{ actionBar: { actions: ['clear'] } }}
-/>
-```
+  To decide which button must be displayed and in which order, you can now use the `actions` prop of the `actionBar` component slot props.
 
-The default `ActionBar` accept a prop `actions` which indicates buttons to display and their order.
-Default values are `['cancel', 'accept']` for mobile and `[]` for desktop.
+   ```jsx
+   <DatePicker
+     componentsProps={{ 
+       actionBar: { 
+         // The actions will be the same between desktop and mobile
+         actions: ['clear'],
 
-If you want to have a different set of actions for mobile and desktop components, `actions` can be a callback.
-It takes as an input the component variant and returns the array of actions to display.
+         // The actions will be different between desktop and mobile
+         actions: (variant) => variant === 'desktop' ? [] : ['clear'],
+       }
+     }}
+   />
+   ```
 
-```jsx
-<DatePicker
-  // This example show no action on desktop, and 'clear' action otherwise
-  componentsProps={{ actionBar: { actions: (variant) => variant === 'desktop' ? [] : ['clear'] } }}
-/>
-```
+  The build-in `ActionBar` component supports 4 different actions: `'clear'`, `'cancel'`, `'accept'`, and `'today'`.
+  By default, the pickers will render the cancel and accept button on mobile and no action on desktop.
 
-Available actions are `'clear'`, `'cancel'`, `'accept'`, and `'today'`.
-You can add other ones by overriding the `ActionBar` slot.
+  If you need other actions, you can provide your own component to the `ActionBar` component slot
+
+   ```jsx
+   <DatePicker
+     components={{ ActionBar: CustomActionBar }}
+   />
+   ```
 
 #### Changes
 
