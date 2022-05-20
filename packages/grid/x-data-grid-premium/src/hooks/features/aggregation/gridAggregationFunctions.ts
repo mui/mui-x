@@ -14,7 +14,7 @@ const sumAgg: GridAggregationFunction<number> = {
 
     return sum;
   },
-  types: ['number'],
+  columnTypes: ['number'],
 };
 
 const avgAgg: GridAggregationFunction<number> = {
@@ -26,7 +26,7 @@ const avgAgg: GridAggregationFunction<number> = {
     const sum = sumAgg.apply(params) as number;
     return sum / params.values.length;
   },
-  types: ['number'],
+  columnTypes: ['number'],
 };
 
 const minAgg: GridAggregationFunction<number | Date> = {
@@ -45,7 +45,7 @@ const minAgg: GridAggregationFunction<number | Date> = {
 
     return min;
   },
-  types: ['number', 'date', 'dateTime'],
+  columnTypes: ['number', 'date', 'dateTime'],
 };
 
 const maxAgg: GridAggregationFunction<number | Date> = {
@@ -64,7 +64,7 @@ const maxAgg: GridAggregationFunction<number | Date> = {
 
     return max;
   },
-  types: ['number', 'date', 'dateTime'],
+  columnTypes: ['number', 'date', 'dateTime'],
 };
 
 const sizeAgg: GridAggregationFunction<number> = {

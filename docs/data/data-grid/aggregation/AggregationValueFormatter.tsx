@@ -40,7 +40,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
 
       return sortedValue[0];
     },
-    types: ['string'],
+    columnTypes: ['string'],
     valueFormatter: (params) => `Agg: ${params.value}`,
   };
 

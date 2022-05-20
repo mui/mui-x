@@ -62,7 +62,7 @@ It will disable all features related to the aggregation, even if a model is prov
 
 ### For some columns
 
-In case you need to disable the aggregation on specific column(s), set the `aggregable` property on the respective column definition (`GridColDef`) to `false`.
+In case you need to disable the aggregation on specific column(s), set the `aggregatable` property on the respective column definition (`GridColDef`) to `false`.
 In the example below, the `title` and `year` columns can not be aggregated.
 
 {{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -235,7 +235,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
     // The `types` property defines which type of columns can use this aggregation function.
     // Here, we only want to propose this aggregation function for `string` columns.
     // If not defined, the aggregation will be available for all column types.
-    types: ['string'],
+    columnTypes: ['string'],
   };
 ```
 

@@ -23,7 +23,7 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * If `true`, the cells of the column can be aggregated based.
    * @default true
    */
-  aggregable?: boolean;
+  aggregatable?: boolean;
   /**
    * Limit the aggregation function usable on this column.
    * By default, the column will have all the aggregation functions that are compatible with its type.
