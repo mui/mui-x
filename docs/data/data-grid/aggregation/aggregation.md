@@ -189,7 +189,7 @@ The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation 
 
 #### Remove a built-in function for all columns
 
-You can remove some aggregations functions for all columns by passing a filtered object to the `aggregationFunctions` prop.
+You can remove some aggregation functions for all columns by passing a filtered object to the `aggregationFunctions` prop.
 
 In the example below, the `sum` aggregation function has been removed.
 
