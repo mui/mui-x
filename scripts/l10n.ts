@@ -274,7 +274,7 @@ async function generateReport(missingTranslations: MissingTranslations) {
           if (lineContent[lineContent.length - 1] === ',') {
             lineContent = lineContent.slice(0, lineContent.length - 1);
           }
-          lines.push(` - [\`${lineContent}\`](${permalink})`);
+          lines.push(` - [ \`\` ${lineContent} \`\`](${permalink})`);
         });
       }
 
