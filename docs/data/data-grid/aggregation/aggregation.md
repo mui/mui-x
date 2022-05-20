@@ -143,7 +143,7 @@ The demo below shows the _sum_ aggregation on both the grouping rows and the top
 
 ## Usage with tree data
 
-Like for row grouping, you can display the aggregated values either on the footer or on the grouping row.
+Like for row grouping, you can display the aggregated values either in the footer or in the grouping row.
 
 :::info
 If the aggregated values is displayed on the grouping row, it will always have priority over the row data.
