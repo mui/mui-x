@@ -11,7 +11,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - 🌍 Support localization on the date and time picker components (#4517) @alexfauquette
 
-  You can translate some texts as you do with the data grid. Check the [localization documentation for more information](mui.com/x/react-date-pickers/localization/)
+  Texts can be translated in the pickers components, similar to what can be done in the data grid component. Check the [localization documentation for more information](mui.com/x/react-date-pickers/localization/)
 
 - 📃 Support column spanning in the Excel export (#4830) @cherniavskii
 
