@@ -55,6 +55,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [core] Remove dead code for the docs (#4791) @oliviertassinari
 - [core] Run `yarn prettier` @oliviertassinari
 - [core] Polishes on `CHANGELOG.md` (#4876) @oliviertassinari
+- [core] Simplify rows cache management (#4933) @flaviendelangle
 - [core] Use internal icons for quick filter (#4912) @alexfauquette
 
 ## v5.11.0
