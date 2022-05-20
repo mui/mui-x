@@ -13,7 +13,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
   Texts can be translated in the pickers components, similar to what can be done in the data grid component. Check the [documentation](https://mui.com/x/react-date-pickers/localization/) for more information.
 
-- 📃 Add support for column spanning when exporting for Excel (#4830) @cherniavskii
+- 📃 Add support for column spanning when exporting to Excel (#4830) @cherniavskii
 
   <img src="https://user-images.githubusercontent.com/13808724/167691417-bf6baeb9-d409-4134-acb6-aadaf6434de9.png" width="800">
 
