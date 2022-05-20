@@ -25,7 +25,7 @@ const packagesWithL10n = [
   },
   {
     key: 'pickers',
-    reportName: '🕒 Date and Time Pickers',
+    reportName: '📅🕒 Date and Time Pickers',
     constantsRelativePath: 'packages/x-date-pickers/src/locales/enUS.ts',
     localesRelativePath: 'packages/x-date-pickers/src/locales',
   },
@@ -223,6 +223,7 @@ interface MissingKey {
   currentLineContent: string;
   lineIndex: number;
 }
+
 interface MissingTranslations {
   [localeCode: string]: {
     [packageCode: string]: {
@@ -253,9 +254,9 @@ async function generateReport(missingTranslations: MissingTranslations) {
         .toUpperCase()}.ts`;
       const filePath = `${localesRelativePath}/${fileName}`;
       if (!info) {
-        lines.push(` <summary>${reportName}: file to create </summary>`);
+        lines.push(` <summary>${reportName}: file to create</summary>`);
         lines.push('');
-        lines.push(` > Add file \`${filePath}\` to start contribution to this locale`);
+        lines.push(` > Add file \`${filePath}\` to start contributing to this locale.`);
       } else if (info.missingKeys.length === 0) {
         lines.push(` <summary>${reportName} (Done ✅)</summary>`);
         lines.push('');
@@ -264,7 +265,7 @@ async function generateReport(missingTranslations: MissingTranslations) {
           ` > You can still look for typo fix or improvements in [the translation file](${SOURCE_CODE_REPO}/blob/${lastCommitRef}/${filePath}) 🕵`,
         );
       } else {
-        lines.push(` <summary>${reportName}(${info.missingKeys.length} remaining)</summary>`);
+        lines.push(` <summary>${reportName} (${info.missingKeys.length} remaining)</summary>`);
         lines.push('');
         info.missingKeys.forEach((missingKey) => {
           const permalink = `${SOURCE_CODE_REPO}/blob/${lastCommitRef}/${info.path}#L${missingKey.lineIndex}`;
