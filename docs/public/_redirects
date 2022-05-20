@@ -17,6 +17,8 @@
 /x/license/ https://mui.com/store/legal/mui-x-eula/ 301
 /x/react-data-grid/group-pivot/ /x/react-data-grid/tree-data/ 301
 /:lang/x/react-data-grid/group-pivot/ /:lang/x/react-data-grid/tree-data/ 301
+/x/react-data-grid/columns/ /x/react-data-grid/column-definition/ 301
+/:lang/x/react-data-grid/columns/ /:lang/x/react-data-grid/column-definition/ 301
 # 2023
 
 # Proxies
