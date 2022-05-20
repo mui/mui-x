@@ -63,6 +63,10 @@ export const updateRowTree = (params: UpdateRowTreeParams) => {
     }
   });
 
+  params.nodes.inserted.forEach(insertedNode => {
+
+  })
+
   return {
     tree,
     treeDepth,
