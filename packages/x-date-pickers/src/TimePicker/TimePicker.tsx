@@ -110,17 +110,8 @@ TimePicker.propTypes = {
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
-  componentsProps: PropTypes.shape({
-    actionBar: PropTypes.shape({
-      actions: PropTypes.arrayOf(
-        PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired,
-      ),
-    }),
-    leftArrowButton: PropTypes.object,
-    rightArrowButton: PropTypes.object,
-    switchViewButton: PropTypes.object.isRequired,
-  }),
   components: PropTypes.object,
+  componentsProps: PropTypes.object,
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
