@@ -45,10 +45,10 @@ export interface GridRenderCellParamsPremium<V = any, R extends GridValidRowMode
 }
 
 export interface GridApiCachesPremium {
-  aggregation?: {
-    rulesOnLastColumnHydration?: GridAggregationRules;
-    rulesOnLastRowHydration?: GridAggregationRules;
-    footerLabelColumnOnLastColumnHydration?: AggregationFooterLabelColumn[];
+  aggregation: {
+    rulesOnLastColumnHydration: GridAggregationRules;
+    rulesOnLastRowHydration: GridAggregationRules;
+    footerLabelColumnOnLastColumnHydration: AggregationFooterLabelColumn[];
   };
 }
 

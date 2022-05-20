@@ -10,6 +10,7 @@ import {
   DataGridProps,
   ptBR,
   GridColumns,
+  gridClasses,
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -831,6 +832,15 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(errorOverlayElement.textContent).to.equal(error.message);
         expect(errorOverlayElement.offsetHeight).to.equal(2 * rowHeight);
       });
+
+      it('should apply the autoHeight class to the root element', () => {
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid {...baselineProps} autoHeight />
+          </div>,
+        );
+        expect(screen.getByRole('grid')).to.have.class(gridClasses.autoHeight);
+      });
     });
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
@@ -1110,5 +1120,19 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(NoRowsOverlay.callCount).to.equal(0);
     setProps({ loading: false, rows: [{ id: 1 }] });
     expect(NoRowsOverlay.callCount).to.equal(0);
+  });
+
+  it('should render the "no rows" overlay when changing the loading to false but not changing the rows prop', () => {
+    const NoRowsOverlay = spy(() => null);
+    const TestCase = (props: Partial<DataGridProps>) => (
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+      </div>
+    );
+    const rows: DataGridProps['rows'] = [];
+    const { setProps } = render(<TestCase rows={rows} loading />);
+    expect(NoRowsOverlay.callCount).to.equal(0);
+    setProps({ loading: false });
+    expect(NoRowsOverlay.callCount).not.to.equal(0);
   });
 });

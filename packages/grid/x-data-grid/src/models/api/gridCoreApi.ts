@@ -4,7 +4,7 @@ import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridRowsInternalCache } from '../../hooks/features/rows/gridRowsState';
 
 export interface GridApiCaches {
-  rows?: GridRowsInternalCache;
+  rows: GridRowsInternalCache;
 }
 
 /**

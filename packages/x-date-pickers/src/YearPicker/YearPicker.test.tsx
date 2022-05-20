@@ -104,4 +104,28 @@ describe('<YearPicker />', () => {
 
     expect(onChangeMock.callCount).to.equal(0);
   });
+
+  it('should allows to focus years when it contains valid date', () => {
+    render(
+      <YearPicker
+        minDate={adapterToUse.date('2018-11-01T00:00:00.000')}
+        maxDate={adapterToUse.date('2020-04-01T00:00:00.000')}
+        // date is chose such as replacing year by 2018 or 2020 makes it out of valid range
+        date={adapterToUse.date('2019-08-01T00:00:00.000')}
+        onChange={() => {}}
+        autoFocus // needed to allow key board navigation
+        isDateDisabled={() => false}
+      />,
+    );
+
+    const button2019 = screen.getByRole('button', { name: '2019' });
+
+    button2019.focus();
+    fireEvent.keyDown(button2019, { key: 'ArrowLeft' });
+    expect(document.activeElement).to.have.text('2018');
+
+    button2019.focus();
+    fireEvent.keyDown(button2019, { key: 'ArrowRight' });
+    expect(document.activeElement).to.have.text('2020');
+  });
 });

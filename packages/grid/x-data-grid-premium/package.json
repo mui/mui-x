@@ -42,6 +42,7 @@
     "directory": "packages/grid/x-data-grid-premium"
   },
   "dependencies": {
+    "@babel/runtime": "^7.17.2",
     "@mui/utils": "^5.7.0",
     "@mui/x-data-grid": "5.11.0",
     "@mui/x-data-grid-pro": "5.11.0",
@@ -55,7 +56,7 @@
     "@mui/material": "^5.2.8",
     "@mui/system": "^5.2.8",
     "exceljs": "^4.3.0",
-    "react": "^17.0.2"
+    "react": "^17.0.2 || ^18.0.0"
   },
   "peerDependenciesMeta": {
     "exceljs": {
