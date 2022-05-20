@@ -26,6 +26,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [DataGrid] Add class corresponding to current density (#4858) @m4theushw
 - [DataGrid] Execute the pipe-processors in their initialization order (#4913) @flaviendelangle
 - [DataGrid] Fix rendering of the no rows overlay when the `loading` prop is changed (#4910) @m4theushw
+- [DataGridPremium] Add `exceljs` to the dependencies (#4939) @alexfauquette
 - [DataGridPremium] Support column spanning in the Excel export (#4830) @cherniavskii
 - [l10n] Improve Russian (ru-RU) locale (#4864) @arvkonstantin
 
