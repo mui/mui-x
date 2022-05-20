@@ -11,7 +11,12 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - 🌍 Support localization on the date and time picker components (#4517) @alexfauquette
 
-	You can translate some texts as you do with the data grid. Check the [localization documentation for more information](mui.com/x/react-date-pickers/localization/)
+  You can translate some texts as you do with the data grid. Check the [localization documentation for more information](mui.com/x/react-date-pickers/localization/)
+
+- 📃 Support column spanning in the Excel export (#4830) @cherniavskii
+
+  <img src="https://user-images.githubusercontent.com/13808724/167691417-bf6baeb9-d409-4134-acb6-aadaf6434de9.png" width="800">
+
 - 🐞 Bugs fixes
 
 ### `@mui/x-data-grid@v5.11.1` / `@mui/x-data-grid-pro@v5.11.1` / `@mui/x-data-grid-premium@v5.11.1`
@@ -21,7 +26,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [DataGrid] Add class corresponding to current density (#4858) @m4theushw
 - [DataGrid] Execute the pipe-processors in their initialization order (#4913) @flaviendelangle
 - [DataGrid] Fix rendering of the no rows overlay when the `loading` prop is changed (#4910) @m4theushw
-- [DataGridPremium] Support column spanning in Excel export (#4830) @cherniavskii
+- [DataGridPremium] Support column spanning in the Excel export (#4830) @cherniavskii
 - [l10n] Improve Russian (ru-RU) locale (#4864) @arvkonstantin
 
 ### `@mui/x-date-pickers@5.0.0-alpha.4` / `@mui/x-date-pickers-pro@5.0.0-alpha.4`
