@@ -50,18 +50,13 @@
     "@types/format-util": "^1.0.2",
     "clsx": "^1.0.4",
     "prop-types": "^15.8.1",
-    "reselect": "^4.1.5"
+    "reselect": "^4.1.5",
+    "exceljs": "^4.3.0"
   },
   "peerDependencies": {
     "@mui/material": "^5.2.8",
     "@mui/system": "^5.2.8",
-    "exceljs": "^4.3.0",
     "react": "^17.0.2 || ^18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "exceljs": {
-      "optional": true
-    }
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
