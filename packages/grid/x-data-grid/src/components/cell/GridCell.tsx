@@ -36,7 +36,7 @@ export interface GridCellProps<V = any, F = V> {
   children: React.ReactNode;
   tabIndex: 0 | -1;
   colSpan?: number;
-  enableDragEvents?: boolean;
+  disableDragEvents?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -104,7 +104,7 @@ function GridCell(props: GridCellProps) {
     extendRowFullWidth,
     row,
     colSpan,
-    enableDragEvents,
+    disableDragEvents,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -232,12 +232,12 @@ function GridCell(props: GridCellProps) {
     return children;
   };
 
-  const draggableEventHandlers = enableDragEvents
-    ? {
+  const draggableEventHandlers = disableDragEvents
+    ? null
+    : {
         onDragEnter: publish('cellDragEnter', onDragEnter),
         onDragOver: publish('cellDragOver', onDragOver),
-      }
-    : null;
+      };
 
   return (
     <div
@@ -275,7 +275,7 @@ GridCell.propTypes = {
   className: PropTypes.string,
   colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
-  enableDragEvents: PropTypes.bool,
+  disableDragEvents: PropTypes.bool,
   field: PropTypes.string.isRequired,
   formattedValue: PropTypes.any,
   hasFocus: PropTypes.bool,

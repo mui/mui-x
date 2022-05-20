@@ -251,12 +251,12 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
     const classNames: string[] = [];
 
-    const enableDragEvents =
-      (!rootProps.disableColumnReorder && !column.disableReorder) ||
-      (!!(rootProps as any).rowReordering &&
-        !sortModel.length &&
-        treeDepth === 1 &&
-        Object.keys(editRowsState).length === 0);
+    const disableDragEvents =
+      (rootProps.disableColumnReorder && column.disableReorder) ||
+      (!(rootProps as any).rowReordering &&
+        sortModel.length &&
+        treeDepth > 1 &&
+        Object.keys(editRowsState).length > 0);
 
     if (column.cellClassName) {
       classNames.push(
@@ -340,7 +340,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           tabIndex={tabIndex}
           className={clsx(classNames)}
           colSpan={colSpan}
-          enableDragEvents={enableDragEvents}
+          disableDragEvents={disableDragEvents}
           {...rootProps.componentsProps?.cell}
         >
           {content}
