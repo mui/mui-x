@@ -2,5 +2,5 @@ export { MobileDateRangePicker } from './MobileDateRangePicker';
 export type {
   MobileDateRangePickerProps,
   MobileDateRangePickerSlotsComponent,
-  MobileDateRangePickerSlotsComponentProps,
+  MobileDateRangePickerSlotsComponentsProps,
 } from './MobileDateRangePicker';

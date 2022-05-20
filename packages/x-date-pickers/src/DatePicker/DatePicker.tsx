@@ -6,22 +6,22 @@ import {
   DesktopDatePicker,
   DesktopDatePickerProps,
   DesktopDatePickerSlotsComponent,
-  DesktopDatePickerSlotsComponentProps,
+  DesktopDatePickerSlotsComponentsProps,
 } from '../DesktopDatePicker';
 import {
   MobileDatePicker,
   MobileDatePickerProps,
   MobileDatePickerSlotsComponent,
-  MobileDatePickerSlotsComponentProps,
+  MobileDatePickerSlotsComponentsProps,
 } from '../MobileDatePicker';
 
 export interface DatePickerSlotsComponent
   extends MobileDatePickerSlotsComponent,
     DesktopDatePickerSlotsComponent {}
 
-export interface DatePickerSlotsComponentProps
-  extends MobileDatePickerSlotsComponentProps,
-    DesktopDatePickerSlotsComponentProps {}
+export interface DatePickerSlotsComponentsProps
+  extends MobileDatePickerSlotsComponentsProps,
+    DesktopDatePickerSlotsComponentsProps {}
 
 export interface DatePickerProps<TInputDate, TDate>
   extends Omit<DesktopDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
@@ -33,7 +33,7 @@ export interface DatePickerProps<TInputDate, TDate>
    */
   desktopModeMediaQuery?: string;
   components?: Partial<DatePickerSlotsComponent>;
-  componentProps?: Partial<DatePickerSlotsComponentProps>;
+  componentsProps?: Partial<DatePickerSlotsComponentsProps>;
 }
 
 type DatePickerComponent = (<TInputDate, TDate = TInputDate>(
@@ -101,7 +101,7 @@ DatePicker.propTypes = {
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
-  componentProps: PropTypes.shape({
+  componentsProps: PropTypes.shape({
     actionBar: PropTypes.shape({
       actions: PropTypes.arrayOf(
         PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired,

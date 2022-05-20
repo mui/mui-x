@@ -7,7 +7,7 @@ import {
   DateInputPropsLike,
   DesktopWrapperProps,
   DesktopWrapperSlotsComponent,
-  DesktopWrapperSlotsComponentProps,
+  DesktopWrapperSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import {
   DateRangePickerView,
@@ -30,15 +30,15 @@ const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<D
 export interface DesktopDateRangePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
     DateRangePickerViewSlotsComponent {}
-export interface DesktopDateRangePickerSlotsComponentProps
-  extends DesktopWrapperSlotsComponentProps,
+export interface DesktopDateRangePickerSlotsComponentsProps
+  extends DesktopWrapperSlotsComponentsProps,
     DateRangePickerViewSlotsComponentsProps {}
 
 export interface DesktopDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate>,
     DesktopWrapperProps {
   components?: Partial<DesktopDateRangePickerSlotsComponent>;
-  componentsProps?: Partial<DesktopDateRangePickerSlotsComponentProps>;
+  componentsProps?: Partial<DesktopDateRangePickerSlotsComponentsProps>;
 }
 
 type DesktopDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(

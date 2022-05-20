@@ -18,13 +18,13 @@ export interface MobileWrapperSlotsComponent
   extends PickersModalDialogSlotsComponent,
     DateInputSlotsComponent {}
 
-export interface MobileWrapperSlotsComponentProps extends PickersModalDialogSlotsComponentsProps {}
+export interface MobileWrapperSlotsComponentsProps extends PickersModalDialogSlotsComponentsProps {}
 
 export interface InternalMobileWrapperProps extends MobileWrapperProps, PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   PureDateInputComponent: React.JSXElementConstructor<DateInputPropsLike>;
   components?: Partial<MobileWrapperSlotsComponent>;
-  componentsProps?: Partial<MobileWrapperSlotsComponentProps>;
+  componentsProps?: Partial<MobileWrapperSlotsComponentsProps>;
 }
 
 export function MobileWrapper(props: InternalMobileWrapperProps) {

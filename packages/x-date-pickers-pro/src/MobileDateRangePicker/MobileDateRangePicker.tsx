@@ -7,7 +7,7 @@ import {
   usePickerState,
   DateInputPropsLike,
   MobileWrapperSlotsComponent,
-  MobileWrapperSlotsComponentProps,
+  MobileWrapperSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import {
@@ -30,15 +30,15 @@ const PureDateInputComponent = DateRangePickerInput as unknown as React.FC<DateI
 export interface MobileDateRangePickerSlotsComponent
   extends MobileWrapperSlotsComponent,
     DateRangePickerViewSlotsComponent {}
-export interface MobileDateRangePickerSlotsComponentProps
-  extends MobileWrapperSlotsComponentProps,
+export interface MobileDateRangePickerSlotsComponentsProps
+  extends MobileWrapperSlotsComponentsProps,
     DateRangePickerViewSlotsComponentsProps {}
 
 export interface MobileDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate>,
     MobileWrapperProps {
   components?: Partial<MobileDateRangePickerSlotsComponent>;
-  componentsProps?: Partial<MobileDateRangePickerSlotsComponentProps>;
+  componentsProps?: Partial<MobileDateRangePickerSlotsComponentsProps>;
 }
 
 type MobileDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(

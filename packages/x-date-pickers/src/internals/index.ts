@@ -2,13 +2,13 @@ export { DesktopTooltipWrapper } from './components/wrappers/DesktopTooltipWrapp
 export type {
   DesktopWrapperProps,
   DesktopWrapperSlotsComponent,
-  DesktopWrapperSlotsComponentProps,
+  DesktopWrapperSlotsComponentsProps,
 } from './components/wrappers/DesktopWrapper';
 export { MobileWrapper } from './components/wrappers/MobileWrapper';
 export type {
   MobileWrapperProps,
   MobileWrapperSlotsComponent,
-  MobileWrapperSlotsComponentProps,
+  MobileWrapperSlotsComponentsProps,
 } from './components/wrappers/MobileWrapper';
 export { MobileKeyboardInputView } from './components/CalendarOrClockPicker/CalendarOrClockPicker';
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';

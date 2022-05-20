@@ -2,5 +2,5 @@ export { MobileDateTimePicker } from './MobileDateTimePicker';
 export type {
   MobileDateTimePickerProps,
   MobileDateTimePickerSlotsComponent,
-  MobileDateTimePickerSlotsComponentProps,
+  MobileDateTimePickerSlotsComponentsProps,
 } from './MobileDateTimePicker';

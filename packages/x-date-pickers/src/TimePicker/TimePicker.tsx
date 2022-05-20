@@ -6,22 +6,22 @@ import {
   DesktopTimePicker,
   DesktopTimePickerProps,
   DesktopTimePickerSlotsComponent,
-  DesktopTimePickerSlotsComponentProps,
+  DesktopTimePickerSlotsComponentsProps,
 } from '../DesktopTimePicker';
 import {
   MobileTimePicker,
   MobileTimePickerProps,
   MobileTimePickerSlotsComponent,
-  MobileTimePickerSlotsComponentProps,
+  MobileTimePickerSlotsComponentsProps,
 } from '../MobileTimePicker';
 
 export interface TimePickerSlotsComponent
   extends MobileTimePickerSlotsComponent,
     DesktopTimePickerSlotsComponent {}
 
-export interface TimePickerSlotsComponentProps
-  extends MobileTimePickerSlotsComponentProps,
-    DesktopTimePickerSlotsComponentProps {}
+export interface TimePickerSlotsComponentsProps
+  extends MobileTimePickerSlotsComponentsProps,
+    DesktopTimePickerSlotsComponentsProps {}
 
 export interface TimePickerProps<TInputDate, TDate>
   extends Omit<DesktopTimePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
@@ -33,7 +33,7 @@ export interface TimePickerProps<TInputDate, TDate>
    */
   desktopModeMediaQuery?: string;
   components?: Partial<TimePickerSlotsComponent>;
-  componentProps?: Partial<TimePickerSlotsComponentProps>;
+  componentsProps?: Partial<TimePickerSlotsComponentsProps>;
 }
 
 type TimePickerComponent = (<TInputDate, TDate = TInputDate>(
@@ -110,7 +110,7 @@ TimePicker.propTypes = {
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
-  componentProps: PropTypes.shape({
+  componentsProps: PropTypes.shape({
     actionBar: PropTypes.shape({
       actions: PropTypes.arrayOf(
         PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired,

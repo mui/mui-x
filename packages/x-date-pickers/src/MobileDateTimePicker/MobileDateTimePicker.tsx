@@ -10,7 +10,7 @@ import {
   MobileWrapper,
   MobileWrapperProps,
   MobileWrapperSlotsComponent,
-  MobileWrapperSlotsComponentProps,
+  MobileWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/MobileWrapper';
 import {
   CalendarOrClockPicker,
@@ -25,15 +25,15 @@ export interface MobileDateTimePickerSlotsComponent
   extends MobileWrapperSlotsComponent,
     CalendarOrClockPickerSlotsComponent {}
 
-export interface MobileDateTimePickerSlotsComponentProps
-  extends MobileWrapperSlotsComponentProps,
+export interface MobileDateTimePickerSlotsComponentsProps
+  extends MobileWrapperSlotsComponentsProps,
     CalendarOrClockPickerSlotsComponentsProps {}
 
 export interface MobileDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate>,
     MobileWrapperProps {
   components?: Partial<MobileDateTimePickerSlotsComponent>;
-  componentsProps?: Partial<MobileDateTimePickerSlotsComponentProps>;
+  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps>;
 }
 
 type MobileDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(

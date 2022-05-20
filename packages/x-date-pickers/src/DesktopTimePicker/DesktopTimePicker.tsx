@@ -10,7 +10,7 @@ import {
   DesktopWrapper,
   DesktopWrapperProps,
   DesktopWrapperSlotsComponent,
-  DesktopWrapperSlotsComponentProps,
+  DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
 import {
   CalendarOrClockPicker,
@@ -25,15 +25,15 @@ export interface DesktopTimePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
     CalendarOrClockPickerSlotsComponent {}
 
-export interface DesktopTimePickerSlotsComponentProps
-  extends DesktopWrapperSlotsComponentProps,
+export interface DesktopTimePickerSlotsComponentsProps
+  extends DesktopWrapperSlotsComponentsProps,
     CalendarOrClockPickerSlotsComponentsProps {}
 
 export interface DesktopTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate>,
     DesktopWrapperProps {
   components?: Partial<DesktopTimePickerSlotsComponent>;
-  componentsProps?: Partial<DesktopTimePickerSlotsComponentProps>;
+  componentsProps?: Partial<DesktopTimePickerSlotsComponentsProps>;
 }
 
 type DesktopTimePickerComponent = (<TInputDate, TDate = TInputDate>(

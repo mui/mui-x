@@ -20,7 +20,7 @@ export interface DesktopWrapperSlotsComponent
   extends PickersPopperSlotsComponent,
     DateInputSlotsComponent {}
 
-export interface DesktopWrapperSlotsComponentProps extends PickersPopperSlotsComponentsProps {}
+export interface DesktopWrapperSlotsComponentsProps extends PickersPopperSlotsComponentsProps {}
 
 export interface InternalDesktopWrapperProps extends DesktopWrapperProps, PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
@@ -28,7 +28,7 @@ export interface InternalDesktopWrapperProps extends DesktopWrapperProps, Picker
     DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> }
   >;
   components?: Partial<DesktopWrapperSlotsComponent>;
-  componentsProps?: Partial<DesktopWrapperSlotsComponentProps>;
+  componentsProps?: Partial<DesktopWrapperSlotsComponentsProps>;
 }
 
 export function DesktopWrapper(props: InternalDesktopWrapperProps) {
