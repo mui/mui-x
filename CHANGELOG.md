@@ -32,7 +32,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [pickers] Add l10n support (#4517) @alexfauquette
 - [pickers] Close Popper when pressing <kbd>Esc</kbd> inside a modal (#4499) @alexfauquette
 - [pickers] Support class slots on toolbar components (#4855) @flaviendelangle
-- [TimePicker] Fix time validation when current date is null (#4867) @flaviendelangle
+- [TimePicker] Fix time validation when current date is `null` (#4867) @flaviendelangle
 
 ### Docs
 
