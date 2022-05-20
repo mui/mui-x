@@ -33,7 +33,7 @@ export const rowsStateInitializer: GridStateInitializer<
   apiRef.current.unstable_caches.rows = createRowsInternalCache({
     rows: props.rows,
     getRowId: props.getRowId,
-    loadingProp: props.loading,
+    loading: props.loading,
   });
 
   return {
@@ -137,7 +137,7 @@ export const useGridRows = (
         createRowsInternalCache({
           rows,
           getRowId: props.getRowId,
-          loadingProp: props.loading,
+          loading: props.loading,
         }),
         true,
       );
@@ -356,7 +356,7 @@ export const useGridRows = (
       cache = createRowsInternalCache({
         rows: props.rows,
         getRowId: props.getRowId,
-        loadingProp: props.loading,
+        loading: props.loading,
       });
     }
     throttledRowsChange(cache, false);
@@ -443,7 +443,7 @@ export const useGridRows = (
       createRowsInternalCache({
         rows: props.rows,
         getRowId: props.getRowId,
-        loadingProp: props.loading,
+        loading: props.loading,
       }),
       false,
     );

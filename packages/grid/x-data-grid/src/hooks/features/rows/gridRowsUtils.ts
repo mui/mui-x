@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  GridRowId,
-  GridRowIdGetter,
-  GridRowModel,
-  GridRowsProp,
-  GridRowTreeConfig,
-} from '../../../models';
+import { GridRowId, GridRowIdGetter, GridRowModel, GridRowTreeConfig } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsInternalCache, GridRowsState } from './gridRowsState';
@@ -46,15 +40,11 @@ export const getRowIdFromRowModel = (
 export const createRowsInternalCache = ({
   rows,
   getRowId,
-  loadingProp,
-}: {
-  getRowId: DataGridProcessedProps['getRowId'];
-  loadingProp: DataGridProcessedProps['loading'];
-  rows: GridRowsProp;
-}): GridRowsInternalCache => {
+  loading,
+}: Pick<DataGridProcessedProps, 'rows' | 'getRowId' | 'loading'>): GridRowsInternalCache => {
   const cache: GridRowsInternalCache = {
     rowsBeforePartialUpdates: rows,
-    loadingPropBeforePartialUpdates: loadingProp,
+    loadingPropBeforePartialUpdates: loading,
     idRowsLookup: {},
     idToIdLookup: {},
     ids: [],
