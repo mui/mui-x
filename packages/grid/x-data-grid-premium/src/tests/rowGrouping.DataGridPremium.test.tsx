@@ -20,9 +20,9 @@ import {
   GridGroupingColDefOverrideParams,
   getGroupRowIdFromPath,
   GridGroupNode,
+  TempGridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
-import { TempGridGroupNode } from '@mui/x-data-grid-pro/utils/tree/buildRowTree';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

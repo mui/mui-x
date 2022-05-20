@@ -17,7 +17,7 @@ import {
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   sortRowTree,
-  buildRowTree,
+  createRowTree,
   BuildRowTreeGroupingCriteria,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -229,7 +229,7 @@ export const useGridRowGroupingPreProcessors = (
         };
       });
 
-      return buildRowTree({
+      return createRowTree({
         ...params,
         rows,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,

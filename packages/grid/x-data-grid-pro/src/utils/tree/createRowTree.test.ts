@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
-import { buildRowTree } from './buildRowTree';
+import { createRowTree } from './createRowTree';
 
 describe('buildRowTree', () => {
   it('should not expand the rows when defaultGroupingExpansionDepth === 0', () => {
-    const response = buildRowTree({
+    const response = createRowTree({
       groupingName: '',
       idRowsLookup: {
         0: {},
@@ -31,8 +31,6 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: 0,
-      previousTree: null,
-      partialUpdates: null,
     });
 
     expect(
@@ -49,7 +47,7 @@ describe('buildRowTree', () => {
   });
 
   it('should expand the rows up to defaultGroupingExpansionDepth', () => {
-    const response = buildRowTree({
+    const response = createRowTree({
       groupingName: '',
       idRowsLookup: {
         0: {},
@@ -77,8 +75,6 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: 1,
-      previousTree: null,
-      partialUpdates: null,
     });
 
     expect(
@@ -95,7 +91,7 @@ describe('buildRowTree', () => {
   });
 
   it('should expanded all the rows when defaultGroupingExpansionDepth === -1', () => {
-    const response = buildRowTree({
+    const response = createRowTree({
       groupingName: '',
       idRowsLookup: {
         0: {},
@@ -123,8 +119,6 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: -1,
-      previousTree: null,
-      partialUpdates: null,
     });
 
     expect(
@@ -141,7 +135,7 @@ describe('buildRowTree', () => {
   });
 
   it('should link parent and children in the tree', () => {
-    const response = buildRowTree({
+    const response = createRowTree({
       groupingName: '',
       idRowsLookup: {
         0: {},
@@ -178,8 +172,6 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: 0,
-      previousTree: null,
-      partialUpdates: null,
     });
 
     expect(
@@ -198,7 +190,7 @@ describe('buildRowTree', () => {
   });
 
   it('should calculate the depth of the tree', () => {
-    const response = buildRowTree({
+    const response = createRowTree({
       groupingName: '',
       idRowsLookup: {
         0: {},
@@ -235,15 +227,13 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: 0,
-      previousTree: null,
-      partialUpdates: null,
     });
 
     expect(response.treeDepth).to.equal(3);
   });
 
   it('should add auto generated row when missing parent', () => {
-    const response = buildRowTree({
+    const response = createRowTree({
       groupingName: '',
       idRowsLookup: {
         0: {},
@@ -263,8 +253,6 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: 0,
-      previousTree: null,
-      partialUpdates: null,
     });
 
     expect(response).to.deep.equal({
@@ -323,7 +311,7 @@ describe('buildRowTree', () => {
   });
 
   it('should allow to have two rows with the same field at various depth', () => {
-    const response = buildRowTree({
+    const response = createRowTree({
       groupingName: '',
       idRowsLookup: {
         0: {},
@@ -349,8 +337,6 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: -1,
-      previousTree: null,
-      partialUpdates: null,
     });
 
     // The tree structure:

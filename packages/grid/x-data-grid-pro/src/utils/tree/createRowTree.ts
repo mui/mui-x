@@ -1,14 +1,12 @@
 import {
   GridRowId,
   GridRowTreeConfig,
-  GridKeyValue,
-  GridFooterNode,
-  GridLeafNode,
   GridGroupNode,
   GridTreeNode,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
 import { GridRowTreeCreationParams, GridRowTreeCreationValue } from '@mui/x-data-grid/internals';
+import { RowTreeBuilderRow, RowTreeBuilderGroupingCriteria, TempGridTreeNode, TempGridGroupNode } from './models'
 
 type GridGroupingCriteriaToIdTree = {
   [field: string]: {
@@ -16,30 +14,20 @@ type GridGroupingCriteriaToIdTree = {
   };
 };
 
-export interface BuildRowTreeGroupingCriteria {
-  field: string | null;
-  key: GridKeyValue;
-}
 
-interface BuildRowTreeParams extends GridRowTreeCreationParams {
-  rows: { id: GridRowId; path: BuildRowTreeGroupingCriteria[] }[];
+interface BuildRowTreeParams extends Omit<GridRowTreeCreationParams, 'partialUpdates' | 'previousTree'> {
+  rows: RowTreeBuilderRow[];
   defaultGroupingExpansionDepth: number;
   isGroupExpandedByDefault?: (node: TempGridGroupNode) => boolean;
   groupingName: string;
   onDuplicatePath?: (
     firstId: GridRowId,
     secondId: GridRowId,
-    path: BuildRowTreeGroupingCriteria[],
+    path: RowTreeBuilderGroupingCriteria[],
   ) => void;
 }
 
-export interface TempGridGroupNode extends Omit<GridGroupNode, 'children' | 'childrenExpanded'> {
-  children: Record<GridRowId, GridRowId>;
-}
-
-type TempGridTreeNode = GridLeafNode | GridFooterNode | TempGridGroupNode;
-
-export const getGroupRowIdFromPath = (path: BuildRowTreeGroupingCriteria[]) => {
+export const getGroupRowIdFromPath = (path: RowTreeBuilderGroupingCriteria[]) => {
   const pathStr = path
     .map((groupingCriteria) => `${groupingCriteria.field}/${groupingCriteria.key}`)
     .join('-');
@@ -76,7 +64,7 @@ export const getGroupRowIdFromPath = (path: BuildRowTreeGroupingCriteria[]) => {
  }
  ```
  */
-export const buildRowTree = (params: BuildRowTreeParams): GridRowTreeCreationValue => {
+export const createRowTree = (params: BuildRowTreeParams): GridRowTreeCreationValue => {
   const gridRootGroupNode: TempGridGroupNode = {
     type: 'group',
     id: GRID_ROOT_GROUP_ID,

@@ -18,8 +18,8 @@ import {
   GridLinkOperator,
   GridRowsProp,
   useGridApiRef,
+  TempGridGroupNode,
 } from '@mui/x-data-grid-pro';
-import { TempGridGroupNode } from '@mui/x-data-grid-pro/utils/tree/buildRowTree';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

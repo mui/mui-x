@@ -25,7 +25,8 @@ import {
   GridGroupingColDefOverrideParams,
 } from '../../../models/gridGroupingColDefOverride';
 import { GridTreeDataGroupingCell } from '../../../components';
-import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
+import { createRowTree } from '../../../utils/tree/createRowTree';
+import { RowTreeBuilderGroupingCriteria } from '../../../utils/tree/models'
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 
 export const useGridTreeDataPreProcessors = (
@@ -116,7 +117,7 @@ export const useGridTreeDataPreProcessors = (
     [props.treeData, getGroupingColDef],
   );
 
-  const createRowTree = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
+  const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
       if (!props.getTreeDataPath) {
         throw new Error('MUI: No getTreeDataPath given.');
@@ -126,12 +127,13 @@ export const useGridTreeDataPreProcessors = (
         .map((rowId) => ({
           id: rowId,
           path: props.getTreeDataPath!(params.idRowsLookup[rowId]).map(
-            (key): BuildRowTreeGroupingCriteria => ({ key, field: null }),
+            (key): RowTreeBuilderGroupingCriteria => ({ key, field: null }),
           ),
         }))
+          // TODO: Remove and support unsorted rows in `buildRowTree
         .sort((a, b) => a.path.length - b.path.length);
 
-      return buildRowTree({
+      return createRowTree({
         rows,
         ...params,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
@@ -180,7 +182,7 @@ export const useGridTreeDataPreProcessors = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
-  useGridRegisterStrategyProcessor(apiRef, TREE_DATA_STRATEGY, 'rowTreeCreation', createRowTree);
+  useGridRegisterStrategyProcessor(apiRef, TREE_DATA_STRATEGY, 'rowTreeCreation', createRowTreeForTreeData);
   useGridRegisterStrategyProcessor(apiRef, TREE_DATA_STRATEGY, 'filtering', filterRows);
   useGridRegisterStrategyProcessor(apiRef, TREE_DATA_STRATEGY, 'sorting', sortRows);
 

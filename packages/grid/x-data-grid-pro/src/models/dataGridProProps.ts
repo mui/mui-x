@@ -21,7 +21,7 @@ import {
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
-import { TempGridGroupNode } from '../utils/tree/buildRowTree';
+import { TempGridGroupNode } from '../utils/tree';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
