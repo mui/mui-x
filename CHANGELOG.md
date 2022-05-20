@@ -39,7 +39,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [docs] Avoid confusion with license key installation (#4891) @oliviertassinari
 - [docs] Complete the instructions for pickers installation in readme (#4852) @alexfauquette
 - [docs] Disable ads on paid-only pages (#4842) @flaviendelangle
-- [docs] Don't redirect on deploy preview (#4818) @m4theushw
+- [docs] Don't redirect to localized doc on deploy preview (#4818) @m4theushw
 - [docs] Limit `LICENSE` file to 80 char per line (#4873) @oliviertassinari
 - [docs] Typo on OrderId @oliviertassinari
 - [docs] Update feature comparison table (#4918) @cherniavskii
