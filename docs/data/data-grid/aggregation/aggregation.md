@@ -83,9 +83,9 @@ TODO
 
 When the row grouping is enabled, the aggregated values can be displayed on two positions:
 
-1. On the footer (the grid will add a top level footer to aggregate all the rows and one footer per group to aggregate its rows)
+1. `footer` - the grid will add a root level footer to aggregate all the rows and one footer per group to aggregate its rows
 
-2. On the grouping row
+2. `inline` - the grid will display aggregation on the grouping rows
 
 Both positions can be used simultaneously with different aggregation function as shown in the example below:
 
