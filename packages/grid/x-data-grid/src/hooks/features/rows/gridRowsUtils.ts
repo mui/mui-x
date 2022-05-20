@@ -1,14 +1,8 @@
 import * as React from 'react';
-import {
-  GridRowId,
-  GridRowIdGetter,
-  GridRowModel,
-  GridRowsProp,
-  GridRowTreeConfig,
-} from '../../../models';
+import { GridRowId, GridRowIdGetter, GridRowModel, GridRowTreeConfig } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import {GridRowsClassifiedUpdates, GridRowsInternalCache, GridRowsState} from './gridRowsInterfaces';
+import { GridRowsInternalCache, GridRowsState } from './gridRowsInterfaces';
 
 export const GRID_ROOT_GROUP_ID = `auto-generated-group-node-root`;
 
@@ -45,20 +39,18 @@ export const getRowIdFromRowModel = (
   return id;
 };
 
-interface ConvertRowsPropToStateParams {
-  getRowId: DataGridProcessedProps['getRowId'];
-  rows: GridRowsProp;
-}
-
 export const createRowsInternalCache = ({
   rows,
   getRowId,
-}: ConvertRowsPropToStateParams): GridRowsInternalCache => {
+  loading,
+}: Pick<DataGridProcessedProps, 'rows' | 'getRowId' | 'loading'>): GridRowsInternalCache => {
   const cache: GridRowsInternalCache = {
     rowsBeforePartialUpdates: rows,
+    loadingPropBeforePartialUpdates: loading,
     idRowsLookup: {},
     idToIdLookup: {},
     ids: [],
+    partialUpdates: null,
   };
 
   for (let i = 0; i < rows.length; i += 1) {
@@ -74,13 +66,11 @@ export const createRowsInternalCache = ({
 
 export const getRowsStateFromCache = ({
   apiRef,
-  updatedRows,
   previousTree,
   rowCountProp,
   loadingProp,
 }: {
   apiRef: React.MutableRefObject<GridApiCommunity>;
-  updatedRows: GridRowsClassifiedUpdates,
   previousTree: GridRowTreeConfig | null;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;

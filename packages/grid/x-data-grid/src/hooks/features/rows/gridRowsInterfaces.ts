@@ -1,15 +1,12 @@
-import {
-  GridRowId,
-  GridRowsLookup,
-  GridRowsProp,
-  GridRowTreeConfig,
-} from '../../../models/gridRows';
+import { GridRowId, GridRowsLookup, GridRowTreeConfig } from '../../../models/gridRows';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export interface GridRowTreeCreationParams {
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
   idToIdLookup: Record<string, GridRowId>;
   previousTree: GridRowTreeConfig | null;
+  partialUpdates: GridRowsPartialUpdates | null;
 }
 
 export interface GridRowTreeCreationValue {
@@ -30,7 +27,11 @@ export interface GridRowsInternalCache extends Omit<GridRowTreeCreationParams, '
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
    */
-  rowsBeforePartialUpdates: GridRowsProp;
+  rowsBeforePartialUpdates: DataGridProcessedProps['rows'];
+  /**
+   * The value of the `loading` prop since the last time that the rows state was updated.
+   */
+  loadingPropBeforePartialUpdates: DataGridProcessedProps['loading'];
 }
 
 export interface GridRowsState extends GridRowTreeCreationValue {
@@ -57,6 +58,9 @@ export interface GridRowsState extends GridRowTreeCreationValue {
 
 export type GridHydrateRowsValue = GridRowTreeCreationValue;
 
-export type GridRowsClassifiedUpdates = {
-  [type in 'delete' | 'insert' | 'update']: GridRowId[];
-};
+export type GridRowsPartialUpdateAction = 'insert' | 'modify' | 'delete';
+
+export interface GridRowsPartialUpdates {
+  actions: { [action in GridRowsPartialUpdateAction]: GridRowId[] };
+  idToActionLookup: { [id: GridRowId]: GridRowsPartialUpdateAction | undefined };
+}

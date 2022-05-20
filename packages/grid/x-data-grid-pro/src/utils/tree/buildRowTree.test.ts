@@ -32,6 +32,7 @@ describe('buildRowTree', () => {
       ],
       defaultGroupingExpansionDepth: 0,
       previousTree: null,
+      partialUpdates: null,
     });
 
     expect(
@@ -77,6 +78,7 @@ describe('buildRowTree', () => {
       ],
       defaultGroupingExpansionDepth: 1,
       previousTree: null,
+      partialUpdates: null,
     });
 
     expect(
@@ -122,6 +124,7 @@ describe('buildRowTree', () => {
       ],
       defaultGroupingExpansionDepth: -1,
       previousTree: null,
+      partialUpdates: null,
     });
 
     expect(
@@ -176,6 +179,7 @@ describe('buildRowTree', () => {
       ],
       defaultGroupingExpansionDepth: 0,
       previousTree: null,
+      partialUpdates: null,
     });
 
     expect(
@@ -232,6 +236,7 @@ describe('buildRowTree', () => {
       ],
       defaultGroupingExpansionDepth: 0,
       previousTree: null,
+      partialUpdates: null,
     });
 
     expect(response.treeDepth).to.equal(3);
@@ -259,6 +264,7 @@ describe('buildRowTree', () => {
       ],
       defaultGroupingExpansionDepth: 0,
       previousTree: null,
+      partialUpdates: null,
     });
 
     expect(response).to.deep.equal({
@@ -344,6 +350,7 @@ describe('buildRowTree', () => {
       ],
       defaultGroupingExpansionDepth: -1,
       previousTree: null,
+      partialUpdates: null,
     });
 
     // The tree structure:
