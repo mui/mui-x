@@ -165,10 +165,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * The grouping column used by the tree data.
    */
   groupingColDef?:
-      | GridGroupingColDefOverride<R>
-      | ((
-      params: GridGroupingColDefOverrideParams,
-  ) => GridGroupingColDefOverride<R> | undefined | null);
+    | GridGroupingColDefOverride<R>
+    | ((
+        params: GridGroupingColDefOverrideParams,
+      ) => GridGroupingColDefOverride<R> | undefined | null);
   /**
    * The row ids to show the detail panel.
    */
