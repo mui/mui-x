@@ -43,8 +43,8 @@ export const useGridAggregationPreProcessors = (
 ) => {
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      const { rulesOnLastColumnHydration = {}, footerLabelColumnOnLastColumnHydration } =
-        apiRef.current.unstable_caches.aggregation ?? {};
+      const { rulesOnLastColumnHydration, footerLabelColumnOnLastColumnHydration } =
+        apiRef.current.unstable_caches.aggregation;
 
       const aggregationRules = getAggregationRules({
         columnsLookup: columnsState.lookup,

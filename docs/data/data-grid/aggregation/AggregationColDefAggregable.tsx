@@ -8,7 +8,7 @@ const COLUMNS: GridColDef[] = [
     headerName: 'Title',
     width: 200,
     groupable: false,
-    aggregable: false,
+    aggregatable: false,
   },
   {
     field: 'gross',
@@ -27,7 +27,7 @@ const COLUMNS: GridColDef[] = [
     field: 'year',
     headerName: 'Year',
     type: 'number',
-    aggregable: false,
+    aggregatable: false,
   },
 ];
 

@@ -62,13 +62,12 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
   };
 
   return (
-    <MenuItem>
-      <FormControl fullWidth>
+    <MenuItem disableRipple>
+      <FormControl size="small" sx={{ width: 150 }}>
         <InputLabel id={`${id}-label`}>{label}</InputLabel>
         <Select
           labelId={`${id}-label`}
           id={`${id}-input`}
-          size="small"
           value={aggregationRules[position]?.aggregationFunctionName ?? ''}
           label={label}
           onChange={handleAggregationItemChange}

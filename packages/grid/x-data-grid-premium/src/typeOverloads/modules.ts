@@ -23,7 +23,7 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * If `true`, the cells of the column can be aggregated based.
    * @default true
    */
-  aggregable?: boolean;
+  aggregatable?: boolean;
   /**
    * Limit the aggregation function usable on this column.
    * By default, the column will have all the aggregation functions that are compatible with its type.
@@ -45,10 +45,10 @@ export interface GridRenderCellParamsPremium<V = any, R extends GridValidRowMode
 }
 
 export interface GridApiCachesPremium {
-  aggregation?: {
-    rulesOnLastColumnHydration?: GridAggregationRules;
-    rulesOnLastRowHydration?: GridAggregationRules;
-    footerLabelColumnOnLastColumnHydration?: AggregationFooterLabelColumn[];
+  aggregation: {
+    rulesOnLastColumnHydration: GridAggregationRules;
+    rulesOnLastRowHydration: GridAggregationRules;
+    footerLabelColumnOnLastColumnHydration: AggregationFooterLabelColumn[];
   };
 }
 

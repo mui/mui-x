@@ -49,7 +49,7 @@ const canColumnHaveAggregationFunction = ({
   aggregationFunctionName: string;
   aggregationFunction: GridAggregationFunction | undefined;
 }): boolean => {
-  if (!column || !column.aggregable) {
+  if (!column || !column.aggregatable) {
     return false;
   }
 
@@ -61,11 +61,11 @@ const canColumnHaveAggregationFunction = ({
     return column.availableAggregationFunctions.includes(aggregationFunctionName);
   }
 
-  if (!aggregationFunction.types) {
+  if (!aggregationFunction.columnTypes) {
     return true;
   }
 
-  return aggregationFunction.types.includes(column.type!);
+  return aggregationFunction.columnTypes.includes(column.type!);
 };
 
 export const getAvailableAggregationFunctions = ({

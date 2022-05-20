@@ -27,7 +27,7 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
    * Column types supported by this aggregation function.
    * If not defined, all types are supported (in most cases this property should be defined).
    */
-  types?: string[];
+  columnTypes?: string[];
 
   /**
    * Function that allows to apply a formatter to the aggregated value.
@@ -114,7 +114,7 @@ export interface GridColumnAggregationRules {
  * Object containing all the aggregation rules that must be applied to the current columns.
  * Unlike the aggregation model, those rules are sanitized and do not contain:
  * - items for non-existing columns
- * - items for non-aggregable columns (GridColDef.aggregable = false)
+ * - items for non-aggregatable columns (GridColDef.aggregatable = false)
  * - items for non-existing aggregation function
  * - items for non-available aggregation function on the column (GridColDef.availableAggregationFunctions)
  */

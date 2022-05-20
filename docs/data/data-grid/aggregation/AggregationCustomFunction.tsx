@@ -13,7 +13,7 @@ const COLUMNS: GridColDef[] = [
     headerName: 'Title',
     width: 200,
     groupable: false,
-    aggregable: false,
+    aggregatable: false,
   },
   {
     field: 'director',
@@ -47,7 +47,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
       return sortedValue[0];
     },
     label: 'First in alphabet',
-    types: ['string'],
+    columnTypes: ['string'],
   };
 
 const lastAlphabeticalAggregation: GridAggregationFunction<string, string | null> = {
@@ -61,7 +61,7 @@ const lastAlphabeticalAggregation: GridAggregationFunction<string, string | null
     return sortedValue[sortedValue.length - 1];
   },
   label: 'Last in alphabet',
-  types: ['string'],
+  columnTypes: ['string'],
 };
 
 export default function AggregationCustomFunction() {

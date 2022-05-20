@@ -20,12 +20,20 @@ import { createAggregationLookup } from './createAggregationLookup';
 export const aggregationStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'aggregationModel' | 'initialState'>,
   GridApiPremium
-> = (state, props) => ({
-  ...state,
-  aggregation: {
-    model: props.aggregationModel ?? props.initialState?.aggregation?.model ?? {},
-  },
-});
+> = (state, props, apiRef) => {
+  apiRef.current.unstable_caches.aggregation = {
+    rulesOnLastColumnHydration: {},
+    rulesOnLastRowHydration: {},
+    footerLabelColumnOnLastColumnHydration: [],
+  };
+
+  return {
+    ...state,
+    aggregation: {
+      model: props.aggregationModel ?? props.initialState?.aggregation?.model ?? {},
+    },
+  };
+};
 
 export const useGridAggregation = (
   apiRef: React.MutableRefObject<GridApiPremium>,
@@ -93,7 +101,7 @@ export const useGridAggregation = (
       rulesOnLastRowHydration,
       rulesOnLastColumnHydration,
       footerLabelColumnOnLastColumnHydration,
-    } = apiRef.current.unstable_caches.aggregation ?? {};
+    } = apiRef.current.unstable_caches.aggregation;
 
     const aggregationRules = getAggregationRules({
       columnsLookup: gridColumnLookupSelector(apiRef),

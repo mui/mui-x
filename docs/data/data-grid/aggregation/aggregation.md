@@ -62,8 +62,8 @@ It will disable all features related to the aggregation, even if a model is prov
 
 ### For some columns
 
-In case you need to disable the aggregation on specific column(s), set the `aggregable` property on the respective column definition (`GridColDef`) to `false`.
-In the example below, the `title` and `year`' columns can not be aggregated.
+In case you need to disable the aggregation on specific column(s), set the `aggregatable` property on the respective column definition (`GridColDef`) to `false`.
+In the example below, the `title` and `year` columns can not be aggregated.
 
 {{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -83,9 +83,9 @@ TODO
 
 When the row grouping is enabled, the aggregated values can be displayed on two positions:
 
-1. On the footer (the grid will add a top level footer to aggregate all the rows and one footer per group to aggregate its rows)
+1. `footer` - the grid will add a root level footer to aggregate all the rows and one footer per group to aggregate its rows
 
-2. On the grouping row
+2. `inline` - the grid will display aggregation on the grouping rows
 
 Both positions can be used simultaneously with different aggregation function as shown in the example below:
 
@@ -143,7 +143,7 @@ The demo below shows the _sum_ aggregation on both the grouping rows and the top
 
 ## Usage with tree data
 
-Like for row grouping, you can display the aggregated values either on the footer or on the grouping row.
+Like for row grouping, you can display the aggregated values either in the footer or in the grouping row.
 
 :::info
 If the aggregated values is displayed on the grouping row, it will always have priority over the row data.
@@ -177,7 +177,7 @@ The full typing details can be found on the [GridAggregationFunction API page](/
 
 The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions to cover the basic use-cases:
 
-| Name   | Behavior                                                   | Z Column types               |
+| Name   | Behavior                                                   | Supported column types       |
 | ------ | ---------------------------------------------------------- | ---------------------------- |
 | `sum`  | Returns the sum of all values in the group                 | `number`                     |
 | `avg`  | Returns the non-rounded average of all values in the group | `number`                     |
@@ -189,7 +189,7 @@ The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation 
 
 #### Remove a built-in function for all columns
 
-You can remove some aggregations functions for all columns by passing a filtered object to the `aggregationFunctions` prop.
+You can remove some aggregation functions for all columns by passing a filtered object to the `aggregationFunctions` prop.
 
 In the example below, the `sum` aggregation function has been removed.
 
@@ -235,7 +235,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
     // The `types` property defines which type of columns can use this aggregation function.
     // Here, we only want to propose this aggregation function for `string` columns.
     // If not defined, the aggregation will be available for all column types.
-    types: ['string'],
+    columnTypes: ['string'],
   };
 ```
 

@@ -112,7 +112,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
       });
 
-      it('should ignore aggregation rule with colDef.aggregable = false', () => {
+      it('should ignore aggregation rule with colDef.aggregatable = false', () => {
         render(
           <Test
             columns={[
@@ -124,7 +124,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
                 field: 'idBis',
                 type: 'number',
                 valueGetter: (params) => params.row.id,
-                aggregable: false,
+                aggregatable: false,
               },
             ]}
             initialState={{
@@ -320,7 +320,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
   });
 
   describe('Column Menu', () => {
-    it('should render footer select on aggregable column', () => {
+    it('should render footer select on aggregatable column', () => {
       render(<Test />);
 
       apiRef.current.showColumnMenu('id');
@@ -331,7 +331,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(screen.queryByLabelText('Inline')).to.equal(null);
     });
 
-    it('should render footer and inline select on aggregable column with row grouping', () => {
+    it('should render footer and inline select on aggregatable column with row grouping', () => {
       render(
         <Test
           initialState={{
@@ -522,8 +522,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
-  describe('colDef: aggregable', () => {
-    it('should not aggregate if colDef.aggregable = false', () => {
+  describe('colDef: aggregatable', () => {
+    it('should not aggregate if colDef.aggregatable = false', () => {
       render(
         <Test
           initialState={{ aggregation: { model: { id: { footer: 'max' } } } }}
@@ -531,7 +531,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             {
               field: 'id',
               type: 'number',
-              aggregable: false,
+              aggregatable: false,
             },
           ]}
         />,
@@ -539,7 +539,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
     });
 
-    it('should not render column menu select if colDef.aggregable = false', () => {
+    it('should not render column menu select if colDef.aggregatable = false', () => {
       render(
         <Test
           initialState={{ aggregation: { model: { id: { footer: 'max' } } } }}
@@ -547,7 +547,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             {
               field: 'id',
               type: 'number',
-              aggregable: false,
+              aggregatable: false,
             },
           ]}
         />,

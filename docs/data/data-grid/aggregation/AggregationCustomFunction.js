@@ -11,7 +11,7 @@ const COLUMNS = [
     headerName: 'Title',
     width: 200,
     groupable: false,
-    aggregable: false,
+    aggregatable: false,
   },
   {
     field: 'director',
@@ -44,7 +44,7 @@ const firstAlphabeticalAggregation = {
     return sortedValue[0];
   },
   label: 'First in alphabet',
-  types: ['string'],
+  columnTypes: ['string'],
 };
 
 const lastAlphabeticalAggregation = {
@@ -58,7 +58,7 @@ const lastAlphabeticalAggregation = {
     return sortedValue[sortedValue.length - 1];
   },
   label: 'Last in alphabet',
-  types: ['string'],
+  columnTypes: ['string'],
 };
 
 export default function AggregationCustomFunction() {
