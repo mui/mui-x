@@ -177,7 +177,7 @@ The full typing details can be found on the [GridAggregationFunction API page](/
 
 The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions to cover the basic use-cases:
 
-| Name   | Behavior                                                   | Z Column types               |
+| Name   | Behavior                                                   | Supported column types       |
 | ------ | ---------------------------------------------------------- | ---------------------------- |
 | `sum`  | Returns the sum of all values in the group                 | `number`                     |
 | `avg`  | Returns the non-rounded average of all values in the group | `number`                     |
