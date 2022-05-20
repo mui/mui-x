@@ -47,7 +47,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 ### Core
 
 - [core] Add new script to generate tree data rows from file tree (#4902) @flaviendelangle
-- [core] Code style edit (#4874) @oliviertassinari
+- [core] Fix code style (#4874) @oliviertassinari
 - [core] Fix React 18 peer dependency (#4908) @oliviertassinari
 - [core] Fix link to the LICENSE file (#4875) @oliviertassinari
 - [core] Fix transitive babel dependency (#4793) @oliviertassinari
