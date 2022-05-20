@@ -42,6 +42,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 ### Docs
 
+- [docs] Add 301 redirect for columns page (#4940) @alexfauquette
 - [docs] Avoid confusion with license key installation (#4891) @oliviertassinari
 - [docs] Complete the instructions for pickers installation in readme (#4852) @alexfauquette
 - [docs] Disable ads on paid-only pages (#4842) @flaviendelangle
