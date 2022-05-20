@@ -254,7 +254,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     const disableDragEvents =
       (rootProps.disableColumnReorder && column.disableReorder) ||
       (!(rootProps as any).rowReordering &&
-        sortModel.length &&
+        !!sortModel.length &&
         treeDepth > 1 &&
         Object.keys(editRowsState).length > 0);
 
