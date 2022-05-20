@@ -482,7 +482,7 @@ describe('<DesktopDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -508,7 +508,7 @@ describe('<DesktopDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={null}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 

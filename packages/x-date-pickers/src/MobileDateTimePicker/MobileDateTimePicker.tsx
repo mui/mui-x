@@ -6,15 +6,35 @@ import {
   dateTimePickerValueManager,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
-import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
+import {
+  MobileWrapper,
+  MobileWrapperProps,
+  MobileWrapperSlotsComponent,
+  MobileWrapperSlotsComponentsProps,
+} from '../internals/components/wrappers/MobileWrapper';
+import {
+  CalendarOrClockPicker,
+  CalendarOrClockPickerSlotsComponent,
+  CalendarOrClockPickerSlotsComponentsProps,
+} from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 
+export interface MobileDateTimePickerSlotsComponent
+  extends MobileWrapperSlotsComponent,
+    CalendarOrClockPickerSlotsComponent {}
+
+export interface MobileDateTimePickerSlotsComponentsProps
+  extends MobileWrapperSlotsComponentsProps,
+    CalendarOrClockPickerSlotsComponentsProps {}
+
 export interface MobileDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {}
+    MobileWrapperProps {
+  components?: Partial<MobileDateTimePickerSlotsComponent>;
+  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps>;
+}
 
 type MobileDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: MobileDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -48,8 +68,22 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const { ToolbarComponent = DateTimePickerToolbar, value, onChange, ...other } = props;
-  const DateInputProps = { ...inputProps, ...other, ref, validationError };
+  const {
+    ToolbarComponent = DateTimePickerToolbar,
+    value,
+    onChange,
+    components,
+    componentsProps,
+    ...other
+  } = props;
+  const DateInputProps = {
+    ...inputProps,
+    ...other,
+    components,
+    componentsProps,
+    ref,
+    validationError,
+  };
 
   return (
     <MobileWrapper
@@ -57,6 +91,8 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
       {...wrapperProps}
       DateInputProps={DateInputProps}
       PureDateInputComponent={PureDateInput}
+      components={components}
+      componentsProps={componentsProps}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -64,6 +100,8 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </MobileWrapper>
@@ -91,28 +129,11 @@ MobileDateTimePicker.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   autoFocus: PropTypes.bool,
-  /**
-   * Cancel text message.
-   * @default 'Cancel'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  cancelText: PropTypes.node,
   children: PropTypes.node,
   /**
    * className applied to the root component.
    */
   className: PropTypes.string,
-  /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  clearText: PropTypes.node,
   /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
@@ -121,12 +142,10 @@ MobileDateTimePicker.propTypes = {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
-   * @default {}
    */
   components: PropTypes.object,
   /**
    * The props used for each slot inside.
-   * @default {}
    */
   componentsProps: PropTypes.object,
   /**
@@ -276,12 +295,6 @@ MobileDateTimePicker.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
-  /**
-   * Ok button text.
-   * @default 'OK'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
@@ -436,11 +449,6 @@ MobileDateTimePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the today button is displayed. **Note** that `showClearButton` has a higher priority.
-   * @default false
-   */
-  showTodayButton: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
@@ -448,12 +456,6 @@ MobileDateTimePicker.propTypes = {
    * Time tab icon.
    */
   timeIcon: PropTypes.node,
-  /**
-   * Today text message.
-   * @default 'Today'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  todayText: PropTypes.node,
   /**
    * Component that will replace default toolbar renderer.
    * @default DateTimePickerToolbar
