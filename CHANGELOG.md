@@ -32,9 +32,37 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 ### `@mui/x-date-pickers@5.0.0-alpha.4` / `@mui/x-date-pickers-pro@5.0.0-alpha.4`
 
+#### Breaking changes
+
+The following props have been removed: `clearable`, `showTodayButton`, `cancelText`, `okText`.
+To control the presence of action buttons, you can pass props to the `ActionBar` as follow
+
+```jsx
+<DatePicker
+  componentsProps={{ actionBar: { actions: ['clear'] } }}
+/>
+```
+
+The default `ActionBar` accept a prop `actions` which indicates buttons to display and their order.
+Default values are `['cancel', 'accept']` for mobile and `[]` for desktop.
+
+If you want to have a different set of actions for mobile and desktop components, `actions` can be a callback.
+It takes as an input the component variant and returns the array of actions to display.
+
+```jsx
+<DatePicker
+  // This example show no action on desktop, and 'clear' action otherwise
+  componentsProps={{ actionBar: { actions: (variant) => variant === 'desktop' ? [] : ['clear'] } }}
+/>
+```
+
+Available actions are `'clear'`, `'cancel'`, `'accept'`, and `'today'`.
+You can add other ones by overriding the `ActionBar` slot.
+
 #### Changes
 
 - [DatePicker] Fix keyboard accessibility for first and last year (#4807) @alexfauquette
+- [pickers] Add component slot for action bar (#4778) @alexfauquette
 - [pickers] Add l10n support (#4517) @alexfauquette
 - [pickers] Close Popper when pressing <kbd>Esc</kbd> inside a modal (#4499) @alexfauquette
 - [pickers] Support class slots on toolbar components (#4855) @flaviendelangle
