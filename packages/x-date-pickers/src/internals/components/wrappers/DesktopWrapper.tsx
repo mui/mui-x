@@ -5,19 +5,30 @@ import {
   PickersPopper,
   ExportedPickerPopperProps,
   ExportedPickerPaperProps,
+  PickersPopperSlotsComponent,
+  PickersPopperSlotsComponentsProps,
 } from '../PickersPopper';
 import { DateInputPropsLike } from './WrapperProps';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
+import { DateInputSlotsComponent } from '../PureDateInput';
 
 export interface DesktopWrapperProps extends ExportedPickerPopperProps, ExportedPickerPaperProps {
   children?: React.ReactNode;
 }
+
+export interface DesktopWrapperSlotsComponent
+  extends PickersPopperSlotsComponent,
+    DateInputSlotsComponent {}
+
+export interface DesktopWrapperSlotsComponentsProps extends PickersPopperSlotsComponentsProps {}
 
 export interface InternalDesktopWrapperProps extends DesktopWrapperProps, PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   KeyboardDateInputComponent: React.JSXElementConstructor<
     DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> }
   >;
+  components?: Partial<DesktopWrapperSlotsComponent>;
+  componentsProps?: Partial<DesktopWrapperSlotsComponentsProps>;
 }
 
 export function DesktopWrapper(props: InternalDesktopWrapperProps) {
@@ -25,15 +36,17 @@ export function DesktopWrapper(props: InternalDesktopWrapperProps) {
     children,
     DateInputProps,
     KeyboardDateInputComponent,
+    onClear,
     onDismiss,
     onCancel,
+    onAccept,
+    onSetToday,
     open,
     PopperProps,
     PaperProps,
     TransitionComponent,
-    onClear,
-    clearText,
-    clearable,
+    components,
+    componentsProps,
   } = props;
   const ownInputRef = React.useRef<HTMLInputElement>(null);
   const inputRef = useForkRef(DateInputProps.inputRef, ownInputRef);
@@ -51,8 +64,10 @@ export function DesktopWrapper(props: InternalDesktopWrapperProps) {
         onClose={onDismiss}
         onCancel={onCancel}
         onClear={onClear}
-        clearText={clearText}
-        clearable={clearable}
+        onAccept={onAccept}
+        onSetToday={onSetToday}
+        components={components}
+        componentsProps={componentsProps}
       >
         {children}
       </PickersPopper>

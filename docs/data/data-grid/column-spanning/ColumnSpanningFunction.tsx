@@ -13,7 +13,7 @@ type Item = typeof items[number];
 interface SubtotalHeader {
   id: 'SUBTOTAL';
   label: string;
-  subtotal: 624;
+  subtotal: number;
 }
 
 interface TaxHeader {

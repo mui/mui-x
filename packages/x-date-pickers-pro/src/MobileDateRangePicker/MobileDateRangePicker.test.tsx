@@ -200,6 +200,7 @@ describe('<MobileDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
+          componentsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
 
@@ -266,7 +267,7 @@ describe('<MobileDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -293,7 +294,7 @@ describe('<MobileDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
