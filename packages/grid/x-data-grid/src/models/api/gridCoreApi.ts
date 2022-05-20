@@ -5,7 +5,7 @@ import { GridRowsInternalCache } from '../../hooks/features/rows/gridRowsState';
 
 // TODO: Export and make it augmentable
 interface Caches {
-  rows?: GridRowsInternalCache;
+  rows: GridRowsInternalCache;
 }
 
 /**

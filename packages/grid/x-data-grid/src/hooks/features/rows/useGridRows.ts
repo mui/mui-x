@@ -3,14 +3,7 @@ import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
-import {
-  GridRowModel,
-  GridRowId,
-  GridRowsProp,
-  GridRowIdGetter,
-  GridRowTreeNodeConfig,
-  GridRowTreeConfig,
-} from '../../../models/gridRows';
+import { GridRowModel, GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -25,118 +18,32 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
-import { GridRowInternalCacheValue, GridRowsInternalCache, GridRowsState } from './gridRowsState';
-import { checkGridRowIdIsValid, getTreeNodeDescendants } from './gridRowsUtils';
+import { GridRowsInternalCache } from './gridRowsState';
+import {
+  getTreeNodeDescendants,
+  createRowsInternalCache,
+  getRowsStateFromCache,
+  getRowIdFromRowModel,
+} from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
-
-interface ConvertRowsPropToStateParams {
-  prevCache: GridRowsInternalCache;
-  getRowId: DataGridProcessedProps['getRowId'];
-  loadingProp: DataGridProcessedProps['loading'];
-  rows?: GridRowsProp;
-}
-
-function getGridRowId(
-  rowModel: GridRowModel,
-  getRowId?: GridRowIdGetter,
-  detailErrorMessage?: string,
-): GridRowId {
-  const id = getRowId ? getRowId(rowModel) : rowModel.id;
-  checkGridRowIdIsValid(id, rowModel, detailErrorMessage);
-  return id;
-}
-
-const convertRowsPropToState = ({
-  prevCache: prevState,
-  rows,
-  getRowId,
-  loadingProp,
-}: ConvertRowsPropToStateParams): GridRowsInternalCache => {
-  let value: GridRowInternalCacheValue;
-  if (rows) {
-    value = {
-      idRowsLookup: {},
-      idToIdLookup: {},
-      ids: [],
-    };
-    for (let i = 0; i < rows.length; i += 1) {
-      const row = rows[i];
-      const id = getGridRowId(row, getRowId);
-      value.idRowsLookup[id] = row;
-      value.idToIdLookup[id] = id;
-      value.ids.push(id);
-    }
-  } else {
-    value = prevState.value;
-  }
-
-  return {
-    value,
-    loadingPropBeforePartialUpdates: loadingProp,
-    rowsBeforePartialUpdates: rows ?? prevState.rowsBeforePartialUpdates,
-  };
-};
-
-const getRowsStateFromCache = (
-  rowsCache: GridRowsInternalCache,
-  previousTree: GridRowTreeConfig | null,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-  rowCountProp: number | undefined,
-  loadingProp: boolean | undefined,
-): GridRowsState => {
-  const { value } = rowsCache;
-  const rowCount = rowCountProp ?? 0;
-
-  const groupingResponse = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
-    ...value,
-    previousTree,
-  });
-
-  const processedGroupingResponse = apiRef.current.unstable_applyPipeProcessors(
-    'hydrateRows',
-    groupingResponse,
-  );
-
-  const dataTopLevelRowCount =
-    processedGroupingResponse.treeDepth === 1
-      ? processedGroupingResponse.ids.length
-      : Object.values(processedGroupingResponse.tree).filter((node) => node.parent == null).length;
-
-  return {
-    ...processedGroupingResponse,
-    groupingResponseBeforeRowHydration: groupingResponse,
-    loading: loadingProp,
-    totalRowCount: Math.max(rowCount, processedGroupingResponse.ids.length),
-    totalTopLevelRowCount: Math.max(rowCount, dataTopLevelRowCount),
-  };
-};
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId' | 'loading'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.rows = convertRowsPropToState({
+  apiRef.current.unstable_caches.rows = createRowsInternalCache({
     rows: props.rows,
     getRowId: props.getRowId,
-    loadingProp: props.loading,
-    prevCache: {
-      value: {
-        idRowsLookup: {},
-        idToIdLookup: {},
-        ids: [],
-      },
-      rowsBeforePartialUpdates: [],
-    },
+    loading: props.loading,
   });
 
   return {
     ...state,
-    rows: getRowsStateFromCache(
-      apiRef.current.unstable_caches.rows,
-      null,
+    rows: getRowsStateFromCache({
       apiRef,
-      props.rowCount,
-      props.loading,
-    ),
+      previousTree: null,
+      rowCountProp: props.rowCount,
+      loadingProp: props.loading,
+    }),
   };
 };
 
@@ -186,13 +93,12 @@ export const useGridRows = (
         lastUpdateMs.current = Date.now();
         apiRef.current.setState((state) => ({
           ...state,
-          rows: getRowsStateFromCache(
-            apiRef.current.unstable_caches.rows!,
-            gridRowTreeSelector(apiRef),
+          rows: getRowsStateFromCache({
             apiRef,
-            props.rowCount,
-            props.loading,
-          ),
+            previousTree: gridRowTreeSelector(apiRef),
+            rowCountProp: props.rowCount,
+            loadingProp: props.loading,
+          }),
         }));
         apiRef.current.publishEvent('rowsSet');
         apiRef.current.forceUpdate();
@@ -228,16 +134,15 @@ export const useGridRows = (
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
       throttledRowsChange(
-        convertRowsPropToState({
+        createRowsInternalCache({
           rows,
-          prevCache: apiRef.current.unstable_caches.rows!,
           getRowId: props.getRowId,
-          loadingProp: props.loading,
+          loading: props.loading,
         }),
         true,
       );
     },
-    [apiRef, logger, props.getRowId, props.loading, throttledRowsChange],
+    [logger, props.getRowId, props.loading, throttledRowsChange],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
@@ -256,7 +161,7 @@ export const useGridRows = (
       const uniqUpdates = new Map<GridRowId, GridRowModel>();
 
       updates.forEach((update) => {
-        const id = getGridRowId(
+        const id = getRowIdFromRowModel(
           update,
           props.getRowId,
           'A row was provided without id when calling updateRows():',
@@ -271,42 +176,40 @@ export const useGridRows = (
 
       const deletedRowIds: GridRowId[] = [];
 
-      const newStateValue: GridRowInternalCacheValue = {
-        idRowsLookup: { ...apiRef.current.unstable_caches.rows!.value.idRowsLookup },
-        idToIdLookup: { ...apiRef.current.unstable_caches.rows!.value.idToIdLookup },
-        ids: [...apiRef.current.unstable_caches.rows!.value.ids],
+      const prevCache = apiRef.current.unstable_caches.rows;
+      const newCache: GridRowsInternalCache = {
+        rowsBeforePartialUpdates: prevCache.rowsBeforePartialUpdates,
+        loadingPropBeforePartialUpdates: prevCache.loadingPropBeforePartialUpdates,
+        idRowsLookup: { ...prevCache.idRowsLookup },
+        idToIdLookup: { ...prevCache.idToIdLookup },
+        ids: [...prevCache.ids],
       };
 
       uniqUpdates.forEach((partialRow, id) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
-          delete newStateValue.idRowsLookup[id];
-          delete newStateValue.idToIdLookup[id];
+          delete newCache.idRowsLookup[id];
+          delete newCache.idToIdLookup[id];
           deletedRowIds.push(id);
           return;
         }
 
         const oldRow = apiRef.current.getRow(id);
         if (!oldRow) {
-          newStateValue.idRowsLookup[id] = partialRow;
-          newStateValue.idToIdLookup[id] = id;
-          newStateValue.ids.push(id);
+          newCache.idRowsLookup[id] = partialRow;
+          newCache.idToIdLookup[id] = id;
+          newCache.ids.push(id);
           return;
         }
 
-        newStateValue.idRowsLookup[id] = { ...apiRef.current.getRow(id), ...partialRow };
+        newCache.idRowsLookup[id] = { ...apiRef.current.getRow(id), ...partialRow };
       });
 
       if (deletedRowIds.length > 0) {
-        newStateValue.ids = newStateValue.ids.filter((id) => !deletedRowIds.includes(id));
+        newCache.ids = newCache.ids.filter((id) => !deletedRowIds.includes(id));
       }
 
-      const state: GridRowsInternalCache = {
-        ...apiRef.current.unstable_caches.rows!,
-        value: newStateValue,
-      };
-
-      throttledRowsChange(state, true);
+      throttledRowsChange(newCache, true);
     },
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
   );
@@ -442,26 +345,22 @@ export const useGridRows = (
   const groupRows = React.useCallback(() => {
     logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
 
-    let rows: GridRowsProp | undefined;
-    if (apiRef.current.unstable_caches.rows!.rowsBeforePartialUpdates === props.rows) {
-      // The `props.rows` has not changed since the last row grouping
-      // We can keep the potential updates stored in `inputRowsAfterUpdates` on the new grouping
-      rows = undefined;
+    let cache: GridRowsInternalCache;
+    if (apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows) {
+      // The `props.rows` did not change since the last row grouping
+      // We can use the current rows cache which contains the partial updates done recently.
+      cache = apiRef.current.unstable_caches.rows;
     } else {
       // The `props.rows` has changed since the last row grouping
       // We must use the new `props.rows` on the new grouping
       // This occurs because this event is triggered before the `useEffect` on the rows when both the grouping pre-processing and the rows changes on the same render
-      rows = props.rows;
-    }
-    throttledRowsChange(
-      convertRowsPropToState({
-        rows,
+      cache = createRowsInternalCache({
+        rows: props.rows,
         getRowId: props.getRowId,
-        loadingProp: props.loading,
-        prevCache: apiRef.current.unstable_caches.rows!,
-      }),
-      false,
-    );
+        loading: props.loading,
+      });
+    }
+    throttledRowsChange(cache, false);
   }, [logger, apiRef, props.rows, props.getRowId, props.loading, throttledRowsChange]);
 
   const handleStrategyProcessorChange = React.useCallback<
@@ -534,7 +433,7 @@ export const useGridRows = (
 
     // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
     if (
-      apiRef.current.unstable_caches.rows!.rowsBeforePartialUpdates === props.rows &&
+      apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows &&
       apiRef.current.unstable_caches.rows!.loadingPropBeforePartialUpdates === props.loading
     ) {
       return;
@@ -542,11 +441,10 @@ export const useGridRows = (
 
     logger.debug(`Updating all rows, new length ${props.rows.length}`);
     throttledRowsChange(
-      convertRowsPropToState({
+      createRowsInternalCache({
         rows: props.rows,
         getRowId: props.getRowId,
-        loadingProp: props.loading,
-        prevCache: apiRef.current.unstable_caches.rows!,
+        loading: props.loading,
       }),
       false,
     );
@@ -554,9 +452,9 @@ export const useGridRows = (
     props.rows,
     props.rowCount,
     props.getRowId,
+    props.loading,
     logger,
     throttledRowsChange,
     apiRef,
-    props.loading,
   ]);
 };

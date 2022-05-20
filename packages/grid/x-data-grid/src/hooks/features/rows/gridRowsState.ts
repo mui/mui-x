@@ -1,9 +1,5 @@
-import {
-  GridRowId,
-  GridRowsLookup,
-  GridRowsProp,
-  GridRowTreeConfig,
-} from '../../../models/gridRows';
+import { GridRowId, GridRowsLookup, GridRowTreeConfig } from '../../../models/gridRows';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export interface GridRowTreeCreationParams {
   ids: GridRowId[];
@@ -25,19 +21,16 @@ export interface GridRowTreeCreationValue {
   idToIdLookup: Record<string, GridRowId>;
 }
 
-export type GridRowInternalCacheValue = Omit<GridRowTreeCreationParams, 'previousTree'>;
-
-export interface GridRowsInternalCache {
-  value: GridRowInternalCacheValue;
+export interface GridRowsInternalCache extends Omit<GridRowTreeCreationParams, 'previousTree'> {
   /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
    */
-  rowsBeforePartialUpdates: GridRowsProp;
+  rowsBeforePartialUpdates: DataGridProcessedProps['rows'];
   /**
    * The value of the `loading` prop since the last time that the rows state was updated.
    */
-  loadingPropBeforePartialUpdates?: boolean;
+  loadingPropBeforePartialUpdates: DataGridProcessedProps['loading'];
 }
 
 export interface GridRowsState extends GridRowTreeCreationValue {
