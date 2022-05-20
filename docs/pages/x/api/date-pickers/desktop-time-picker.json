@@ -9,13 +9,6 @@
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
-    "clearable": { "type": { "name": "bool" } },
-    "clearText": {
-      "type": { "name": "node" },
-      "default": "'Clear'",
-      "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
-    },
     "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."

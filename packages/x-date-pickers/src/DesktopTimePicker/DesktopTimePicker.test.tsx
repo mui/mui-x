@@ -521,7 +521,7 @@ describe('<DesktopTimePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
