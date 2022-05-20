@@ -62,7 +62,7 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
   };
 
   return (
-    <MenuItem>
+    <MenuItem disableRipple>
       <FormControl size="small" sx={{ width: 150 }}>
         <InputLabel id={`${id}-label`}>{label}</InputLabel>
         <Select
