@@ -1,2 +1,2 @@
-export { getGroupRowIdFromPath } from './createRowTree';
+export { getGroupRowIdFromPath } from './utils';
 export type { TempGridGroupNode } from './models';

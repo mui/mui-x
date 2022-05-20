@@ -4,7 +4,12 @@ import {
   GridRowTreeConfig,
   GridFilterState,
   GridGroupNode,
-  GridTreeNode, GridRowsLookup, GridRowModel, GridColDef, GridKeyValue, GridColumnLookup,
+  GridTreeNode,
+  GridRowsLookup,
+  GridRowModel,
+  GridColDef,
+  GridKeyValue,
+  GridColumnLookup,
 } from '@mui/x-data-grid';
 import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -12,7 +17,8 @@ import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridStatePro } from '../../../models/gridStatePro';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 import { GridApiPro } from '../../../models/gridApiPro';
-import {GridGroupingValueGetterParams} from "@mui/x-data-grid-pro/models/gridGroupingValueGetterParams";
+import { GridGroupingValueGetterParams } from '@mui/x-data-grid-pro/models/gridGroupingValueGetterParams';
+import { RowTreeBuilderGroupingCriteria } from '@mui/x-data-grid-pro/utils/tree/models';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
@@ -180,13 +186,11 @@ export const setStrategyAvailability = (
   apiRef.current.unstable_setStrategyAvailability('rowTree', ROW_GROUPING_STRATEGY, isAvailable);
 };
 
-
-
 export const getCellGroupingCriteria = ({
-                                   row,
-                                   id,
-                                   colDef,
-                                 }: {
+  row,
+  id,
+  colDef,
+}: {
   row: GridRowModel;
   id: GridRowId;
   colDef: GridColDef;
@@ -214,29 +218,3 @@ export const getCellGroupingCriteria = ({
     field: colDef.field,
   };
 };
-
-export const hey = ({ rowGroupingModel, ids, idRowsLookup, columnsLookup }: { rowGroupingModel: GridRowGroupingModel, ids: GridRowId[], idRowsLookup: GridRowsLookup, columnsLookup: GridColumnLookup }) => {
-  const distinctValues: {
-    [field: string]: { lookup: { [val: string]: boolean }; list: any[] };
-  } = Object.fromEntries(
-      rowGroupingModel.map((groupingField) => [groupingField, { lookup: {}, list: [] }]),
-  );
-
-  ids.forEach((rowId) => {
-    const row = idRowsLookup[rowId];
-
-    rowGroupingModel.forEach((groupingCriteria) => {
-      const { key } = getCellGroupingCriteria({
-        row,
-        id: rowId,
-        colDef: columnsLookup[groupingCriteria],
-      });
-      const groupingFieldsDistinctKeys = distinctValues[groupingCriteria];
-
-      if (key != null && !groupingFieldsDistinctKeys.lookup[key.toString()]) {
-        groupingFieldsDistinctKeys.lookup[key.toString()] = true;
-        groupingFieldsDistinctKeys.list.push(key);
-      }
-    });
-  });
-}

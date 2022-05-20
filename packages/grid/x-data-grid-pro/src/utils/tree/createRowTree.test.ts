@@ -13,7 +13,7 @@ describe('buildRowTree', () => {
       },
       idToIdLookup: { 0: 0, 1: 1, 2: 2 },
       ids: [0, 1, 2],
-      rows: [
+      nodes: [
         { id: 0, path: [{ key: 'A', field: null }] },
         {
           id: 1,
@@ -56,7 +56,7 @@ describe('buildRowTree', () => {
       },
       idToIdLookup: { 0: 0, 1: 1, 2: 2 },
       ids: [0, 1, 2],
-      rows: [
+      nodes: [
         { id: 0, path: [{ key: 'A', field: null }] },
         {
           id: 1,
@@ -100,7 +100,7 @@ describe('buildRowTree', () => {
       },
       idToIdLookup: { 0: 0, 1: 1, 2: 2 },
       ids: [0, 1, 2],
-      rows: [
+      nodes: [
         { id: 0, path: [{ key: 'A', field: null }] },
         {
           id: 1,
@@ -145,7 +145,7 @@ describe('buildRowTree', () => {
       },
       idToIdLookup: { 0: 0, 1: 1, 2: 2 },
       ids: [0, 1, 2, 3],
-      rows: [
+      nodes: [
         { id: 0, path: [{ key: 'A', field: null }] },
         {
           id: 1,
@@ -200,7 +200,7 @@ describe('buildRowTree', () => {
       },
       idToIdLookup: { 0: 0, 1: 1, 2: 2 },
       ids: [0, 1, 2, 3],
-      rows: [
+      nodes: [
         { id: 0, path: [{ key: 'A', field: null }] },
         {
           id: 1,
@@ -241,7 +241,7 @@ describe('buildRowTree', () => {
       },
       idToIdLookup: { 0: 0, 1: 1 },
       ids: [0, 1],
-      rows: [
+      nodes: [
         { id: 0, path: [{ key: 'A', field: null }] },
         {
           id: 1,
@@ -319,7 +319,7 @@ describe('buildRowTree', () => {
       },
       idToIdLookup: { 0: 0, 1: 1, 2: 2 },
       ids: [0, 1],
-      rows: [
+      nodes: [
         {
           id: 0,
           path: [

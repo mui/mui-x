@@ -26,7 +26,7 @@ import {
 } from '../../../models/gridGroupingColDefOverride';
 import { GridTreeDataGroupingCell } from '../../../components';
 import { createRowTree } from '../../../utils/tree/createRowTree';
-import { RowTreeBuilderGroupingCriteria } from '../../../utils/tree/models'
+import { RowTreeBuilderGroupingCriteria } from '../../../utils/tree/models';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 
 export const useGridTreeDataPreProcessors = (
@@ -123,19 +123,21 @@ export const useGridTreeDataPreProcessors = (
         throw new Error('MUI: No getTreeDataPath given.');
       }
 
-      const rows = params.ids
+      const nodes = params.ids
         .map((rowId) => ({
           id: rowId,
           path: props.getTreeDataPath!(params.idRowsLookup[rowId]).map(
             (key): RowTreeBuilderGroupingCriteria => ({ key, field: null }),
           ),
         }))
-          // TODO: Remove and support unsorted rows in `buildRowTree
+        // TODO: Remove and support unsorted rows in `buildRowTree
         .sort((a, b) => a.path.length - b.path.length);
 
       return createRowTree({
-        rows,
-        ...params,
+        nodes,
+        ids: params.ids,
+        idRowsLookup: params.idRowsLookup,
+        idToIdLookup: params.idToIdLookup,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: TREE_DATA_STRATEGY,
@@ -182,7 +184,12 @@ export const useGridTreeDataPreProcessors = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
-  useGridRegisterStrategyProcessor(apiRef, TREE_DATA_STRATEGY, 'rowTreeCreation', createRowTreeForTreeData);
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    TREE_DATA_STRATEGY,
+    'rowTreeCreation',
+    createRowTreeForTreeData,
+  );
   useGridRegisterStrategyProcessor(apiRef, TREE_DATA_STRATEGY, 'filtering', filterRows);
   useGridRegisterStrategyProcessor(apiRef, TREE_DATA_STRATEGY, 'sorting', sortRows);
 

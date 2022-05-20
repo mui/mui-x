@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   gridColumnLookupSelector,
+  GridRowId,
   gridRowIdsSelector,
   gridRowTreeSelector,
   useFirstRender,
@@ -16,7 +17,7 @@ import {
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { createRowTree } from '../../../utils/tree/createRowTree';
 import { RowTreeBuilderGroupingCriteria } from '../../../utils/tree/models';
-import {updateRowTree} from "../../../utils/tree/updateRowTree";
+import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   gridRowGroupingModelSelector,
@@ -32,7 +33,7 @@ import {
   ROW_GROUPING_STRATEGY,
   isGroupingColumn,
   setStrategyAvailability,
-    getCellGroupingCriteria,
+  getCellGroupingCriteria,
 } from './gridRowGroupingUtils';
 import { GridApiPro } from '../../../models/gridApiPro';
 
@@ -146,7 +147,7 @@ export const useGridRowGroupingPreProcessors = (
         },
       }));
 
-      const rows = params.ids.map((rowId) => {
+      const getRowTreeBuilderNode = (rowId: GridRowId) => {
         const row = params.idRowsLookup[rowId];
         const parentPath = rowGroupingModel
           .map((groupingField) =>
@@ -167,23 +168,31 @@ export const useGridRowGroupingPreProcessors = (
           path: [...parentPath, leafGroupingCriteria],
           id: rowId,
         };
-      });
+      };
 
       if (params.previousTree && params.partialUpdates) {
-          return updateRowTree({
-              ...params,
-              previousTree: params.previousTree,
-              partialUpdates: params.partialUpdates,
-              rows,
-              defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
-              isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-              groupingName: ROW_GROUPING_STRATEGY,
-          })
+        return updateRowTree({
+          nodes: {
+            inserted: [],
+            updated: [],
+            deleted: [],
+          },
+          ids: params.ids,
+          idRowsLookup: params.idRowsLookup,
+          idToIdLookup: params.idToIdLookup,
+          previousTree: params.previousTree,
+          partialUpdates: params.partialUpdates,
+          defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+          isGroupExpandedByDefault: props.isGroupExpandedByDefault,
+          groupingName: ROW_GROUPING_STRATEGY,
+        });
       }
 
       return createRowTree({
-        ...params,
-        rows,
+        nodes: params.ids.map(getRowTreeBuilderNode),
+        ids: params.ids,
+        idRowsLookup: params.idRowsLookup,
+        idToIdLookup: params.idToIdLookup,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: ROW_GROUPING_STRATEGY,
@@ -220,7 +229,12 @@ export const useGridRowGroupingPreProcessors = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
-  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'rowTreeCreation', createRowTreeForRowGrouping);
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    ROW_GROUPING_STRATEGY,
+    'rowTreeCreation',
+    createRowTreeForRowGrouping,
+  );
   useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'filtering', filterRows);
   useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'sorting', sortRows);
 
