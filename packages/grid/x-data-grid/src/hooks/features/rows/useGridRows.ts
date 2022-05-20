@@ -179,6 +179,7 @@ export const useGridRows = (
       const prevCache = apiRef.current.unstable_caches.rows;
       const newCache: GridRowsInternalCache = {
         rowsBeforePartialUpdates: prevCache.rowsBeforePartialUpdates,
+        loadingPropBeforePartialUpdates: prevCache.loadingPropBeforePartialUpdates,
         idRowsLookup: { ...prevCache.idRowsLookup },
         idToIdLookup: { ...prevCache.idToIdLookup },
         ids: [...prevCache.ids],
