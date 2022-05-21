@@ -71,9 +71,19 @@ In the following demo, a formatter is used to display the tax rate's decimal val
 
 The value generated is only used for rendering purposes.
 Filtering and sorting do not rely on the formatted value.
-Use the [`valueParser`](/x/react-data-grid/cells/#value-parser) to support filtering.
+Use the [`valueParser`](#value-parser) to support filtering.
 
-## Rendering content
+### Value parser
+
+The value parser allows you to convert the user-entered value to another one used for filtering or editing.
+Common use cases include parsing date strings to JavaScript `Date` objects or formatted numbers (e.g. "1,000.50") into `Number`.
+It can be understood as the inverse of [`valueFormatter`](#value-formatter).
+
+In the following demo, the tax rate is displayed as a percentage (e.g. 20%) but a decimal number is used as value (e.g. 0.2).
+
+{{"demo": "ValueParserGrid.js", "bg": "inline"}}
+
+## Rendering cells
 
 By default, the grid renders the value as a string in the cell.
 It resolves the rendered output in the following order:

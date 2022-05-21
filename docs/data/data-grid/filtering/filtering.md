@@ -182,9 +182,9 @@ const operator: GridFilterOperator = {
 };
 ```
 
-**Note**: The [`valueFormatter`](/x/react-data-grid/cells/#value-formatter) is only used for rendering purposes.
+**Note**: The [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) is only used for rendering purposes.
 
-**Note**: If the column has a [`valueGetter`](/x/react-data-grid/cells/#value-getter), then `params.value` will be the resolved value.
+**Note**: If the column has a [`valueGetter`](/x/react-data-grid/column-definition/#value-getter), then `params.value` will be the resolved value.
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
 
