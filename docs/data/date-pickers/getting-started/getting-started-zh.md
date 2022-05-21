@@ -3,7 +3,7 @@ title: React Date Picker（日期选择器）和 Time Picker（时间选择器�
 components: TextField
 githubLabel: 'component: DatePicker'
 materialDesign: https://material.io/components/date-pickers
-waiAria: https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
+waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
 packageName: '@mui/x-date-pickers'
 ---
 
