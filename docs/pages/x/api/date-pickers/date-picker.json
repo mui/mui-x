@@ -6,16 +6,11 @@
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "cancelText": { "type": { "name": "node" }, "default": "'Cancel'" },
     "className": { "type": { "name": "string" } },
-    "clearable": { "type": { "name": "bool" } },
-    "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
     "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
@@ -36,12 +31,11 @@
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
-    "leftArrowButtonText": { "type": { "name": "string" } },
+    "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
     "mask": { "type": { "name": "string" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
-    "okText": { "type": { "name": "node" }, "default": "'OK'" },
     "onAccept": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
@@ -73,14 +67,12 @@
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
     },
     "rifmFormatter": { "type": { "name": "func" } },
-    "rightArrowButtonText": { "type": { "name": "string" } },
+    "rightArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "showTodayButton": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "todayText": { "type": { "name": "node" }, "default": "'Today'" },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DatePickerToolbar" },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },

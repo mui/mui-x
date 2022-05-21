@@ -6,20 +6,16 @@ import TrapFocus, { TrapFocusProps as MuiTrapFocusProps } from '@mui/material/Un
 import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import Button from '@mui/material/Button';
-import DialogActions from '@mui/material/DialogActions';
+import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
+
+export interface PickersPopperSlotsComponent {
+  ActionBar: React.ElementType<PickersActionBarProps>;
+}
+export interface PickersPopperSlotsComponentsProps {
+  actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+}
 
 export interface ExportedPickerPaperProps {
-  /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable?: boolean;
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   */
-  clearText?: React.ReactNode;
   /**
    * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
@@ -46,8 +42,12 @@ export interface PickerPopperProps extends ExportedPickerPopperProps, ExportedPi
   children?: React.ReactNode;
   onClose: () => void;
   onBlur?: () => void;
-  onClear?: () => void;
-  onCancel?: () => void;
+  onClear: () => void;
+  onCancel: () => void;
+  onAccept: () => void;
+  onSetToday: () => void;
+  components?: Partial<PickersPopperSlotsComponent>;
+  componentsProps?: Partial<PickersPopperSlotsComponentsProps>;
 }
 
 const PickersPopperRoot = styled(Popper)<{ ownerState: PickerPopperProps }>(({ theme }) => ({
@@ -62,19 +62,6 @@ const PickersPopperPaper = styled(Paper)<{
   ...(ownerState.placement === 'top' && {
     transformOrigin: 'bottom center',
   }),
-}));
-
-const PickersPopperAction = styled(DialogActions)<{
-  ownerState: PickerPopperProps;
-}>(({ ownerState }) => ({
-  ...(ownerState.clearable
-    ? {
-        justifyContent: 'flex-start',
-        '& > *:first-of-type': {
-          marginRight: 'auto',
-        },
-      }
-    : { padding: 0 }),
 }));
 
 function clickedRootScrollbar(event: MouseEvent, doc: Document) {
@@ -229,14 +216,17 @@ export const PickersPopper = (props: PickerPopperProps) => {
     onBlur,
     onClose,
     onClear,
-    clearable = false,
-    clearText = 'Clear',
+    onAccept,
+    onCancel,
+    onSetToday,
     open,
     PopperProps,
     role,
     TransitionComponent = Grow,
     TrapFocusProps,
     PaperProps = {},
+    components,
+    componentsProps,
   } = props;
 
   React.useEffect(() => {
@@ -293,6 +283,8 @@ export const PickersPopper = (props: PickerPopperProps) => {
     }
   };
 
+  const ActionBar = components?.ActionBar ?? PickersActionBar;
+
   return (
     <PickersPopperRoot
       transition
@@ -332,13 +324,14 @@ export const PickersPopper = (props: PickerPopperProps) => {
               {...otherPaperProps}
             >
               {children}
-              <PickersPopperAction ownerState={ownerState}>
-                {clearable && (
-                  <Button data-mui-test="clear-action-button" onClick={onClear}>
-                    {clearText}
-                  </Button>
-                )}
-              </PickersPopperAction>
+              <ActionBar
+                onAccept={onAccept}
+                onClear={onClear}
+                onCancel={onCancel}
+                onSetToday={onSetToday}
+                actions={[]}
+                {...componentsProps?.actionBar}
+              />
             </PickersPopperPaper>
           </TransitionComponent>
         </TrapFocus>

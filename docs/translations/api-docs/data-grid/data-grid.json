@@ -433,6 +433,21 @@
       "nodeName": "the right pinned column headers"
     },
     "root": { "description": "Styles applied to the root element." },
+    "root--densityStandard": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "density is \"standard\" (default)"
+    },
+    "root--densityComfortable": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "density is \"comfortable\""
+    },
+    "root--densityCompact": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "density is \"compact\""
+    },
     "row--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row element",
@@ -567,6 +582,7 @@
     "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
     "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
     "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
-    "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row."
+    "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
+    "QuickFilterIcon": "Icon displayed on the quick filter input."
   }
 }

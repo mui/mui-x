@@ -11,16 +11,13 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
     },
-    "cancelText": { "type": { "name": "node" }, "default": "'Cancel'" },
     "className": { "type": { "name": "string" } },
-    "clearable": { "type": { "name": "bool" } },
-    "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
     "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": { "type": { "name": "object" } },
+    "componentsProps": { "type": { "name": "object" } },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "DialogProps": { "type": { "name": "object" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
@@ -28,7 +25,12 @@
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
-    "endText": { "type": { "name": "node" }, "default": "'End'" },
+    "endText": {
+      "type": { "name": "node" },
+      "default": "'End'",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`"
@@ -39,12 +41,11 @@
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
-    "leftArrowButtonText": { "type": { "name": "string" } },
+    "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
     "mask": { "type": { "name": "string" }, "default": "'__/__/____'" },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
-    "okText": { "type": { "name": "node" }, "default": "'OK'" },
     "onAccept": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
@@ -64,15 +65,18 @@
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
     },
     "rifmFormatter": { "type": { "name": "func" } },
-    "rightArrowButtonText": { "type": { "name": "string" } },
+    "rightArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "showTodayButton": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "startText": { "type": { "name": "node" }, "default": "'Start'" },
-    "todayText": { "type": { "name": "node" }, "default": "'Today'" },
+    "startText": {
+      "type": { "name": "node" },
+      "default": "'Start'",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" }
   },
