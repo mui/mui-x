@@ -296,7 +296,7 @@ To customize column types, or override the existing components, you can provide 
 This property works like the `renderCell` property, which is rendered while cells are in view mode.
 
 ```tsx
-function CustomEditComponent(props: GridRenderEditCellParams) {
+function CustomEditComponent(params: GridRenderEditCellParams) {
   return <input type="text" value={params.value} onValueChange={...}>;
 }
 
