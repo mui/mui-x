@@ -36,8 +36,8 @@ By default, the export menu displays all the available export formats, according
 
 - [Print](#print-export)
 - [CSV](#csv-export)
-- [Excel](#excel-export) [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
-- [Clipboard](#clipboard) [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/) (🚧 Not delivered yet)
+- [Excel](#excel-export) [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+- [Clipboard](#clipboard) [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/) (🚧 Not delivered yet)
 
 You can customize their respective behavior by passing an options object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
@@ -225,7 +225,7 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
 To install it:
@@ -316,14 +316,14 @@ In the following demo, both methods are used to set a custom header and a custom
 
 {{"demo": "ExcelCustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #199](https://github.com/mui/mui-x/issues/199) if you want to see it land faster.
 > You will be able to copy and paste items to and from the grid using the system clipboard.
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 > ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
@@ -335,7 +335,7 @@ In the following demo, both methods are used to set a custom header and a custom
 
 {{"demo": "PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-### Excel [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+### Excel [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 {{"demo": "ExcelExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
