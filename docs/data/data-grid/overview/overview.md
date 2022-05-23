@@ -2,7 +2,7 @@
 title: React Data Grid component
 githubLabel: 'component: data grid'
 packageName: '@mui/x-data-grid'
-waiAria: https://www.w3.org/TR/wai-aria-practices-1.1/#grid
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 ---
 
 # Data Grid
@@ -108,7 +108,7 @@ Here are some resources you might be interested in to learn more about the grid:
 - The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
 - The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/grid)
 - The [Material Design specification](https://material.io/design/components/data-tables.html) specification
-- The accessibility [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
+- The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)
 - The [Sketch](https://mui.com/store/items/sketch-react/) and [Figma](https://mui.com/store/items/figma-react/) design assets
 
 ## API
