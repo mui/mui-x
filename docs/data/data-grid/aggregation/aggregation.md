@@ -147,7 +147,7 @@ Like for row grouping, you can display the aggregated values either in the foote
 
 :::info
 If the aggregated value is displayed in the grouping row, it will always have priority over the row data.
-This means the data from groups explicitly provided in your dataset will be ignored in favour of their aggregated values.  
+This means that the data from groups explicitly provided in your dataset will be ignored in favour of their aggregated values.  
 :::
 
 The demo below shows the _sum_ aggregation on the "Size" column and the _max_ aggregation on the "Last modification" column.
