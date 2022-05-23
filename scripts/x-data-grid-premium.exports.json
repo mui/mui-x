@@ -371,6 +371,7 @@
   { "name": "GridRowGroupChildrenGetterParams", "kind": "Interface" },
   { "name": "GridRowGroupingApi", "kind": "Interface" },
   { "name": "GridRowGroupingInitialState", "kind": "Interface" },
+  { "name": "GridRowGroupingInternalCache", "kind": "Interface" },
   { "name": "GridRowGroupingModel", "kind": "TypeAlias" },
   { "name": "gridRowGroupingModelSelector", "kind": "Variable" },
   { "name": "gridRowGroupingNameSelector", "kind": "Variable" },

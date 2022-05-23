@@ -17,7 +17,6 @@ import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
-  gridRowGroupingStateSelector,
 } from './gridRowGroupingSelector';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
