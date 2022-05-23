@@ -146,7 +146,7 @@ The demo below shows the _sum_ aggregation on both the grouping rows and the top
 Like for row grouping, you can display the aggregated values either in the footer or in the grouping row.
 
 :::info
-If the aggregated values is displayed on the grouping row, it will always have priority over the row data.
+If the aggregated value is displayed in the grouping row, it will always have priority over the row data.
 This means the data from groups explicitly provided in your dataset will be ignored in favour of their aggregated values.  
 :::
 
