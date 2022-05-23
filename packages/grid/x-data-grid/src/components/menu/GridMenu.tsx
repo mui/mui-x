@@ -78,11 +78,9 @@ const GridMenu = (props: GridMenuProps) => {
       (prevTarget.current as HTMLElement).focus();
     }
 
-    if (open) {
-      apiRef.current.publishEvent('menuOpen', { target, open });
-    } else {
-      apiRef.current.publishEvent('menuClose', { target, open });
-    }
+    // Emit menuOpen or menuClose events
+    const eventName = open ? 'menuOpen' : 'menuClose';
+    apiRef.current.publishEvent(eventName, { target });
 
     prevOpen.current = open;
     prevTarget.current = target;
