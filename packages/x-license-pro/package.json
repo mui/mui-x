@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.2",
-    "@mui/utils": "^5.7.0",
+    "@mui/utils": "^5.8.0",
     "esm": "^3.2.25",
     "yargs": "^17.5.1"
   },

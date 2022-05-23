@@ -46,7 +46,7 @@
     "@date-io/dayjs": "^2.14.0",
     "@date-io/luxon": "^2.14.0",
     "@date-io/moment": "^2.14.0",
-    "@mui/utils": "^5.7.0",
+    "@mui/utils": "^5.8.0",
     "@mui/x-date-pickers": "5.0.0-alpha.4",
     "@mui/x-license-pro": "5.11.1",
     "clsx": "^1.1.1",
