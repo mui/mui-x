@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v5.11.1
+
+_May 20, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Support localization on the date and time picker components (#4517) @alexfauquette
+
+  Texts can be translated in the pickers components, similar to what can be done in the data grid component. Check the [documentation](https://mui.com/x/react-date-pickers/localization/) for more information.
+
+- 📃 Add support for column spanning when exporting to Excel (#4830) @cherniavskii
+
+  <img src="https://user-images.githubusercontent.com/13808724/167691417-bf6baeb9-d409-4134-acb6-aadaf6434de9.png" width="800">
+
+- 🐞 Bugs fixes
+
+### `@mui/x-data-grid@v5.11.1` / `@mui/x-data-grid-pro@v5.11.1` / `@mui/x-data-grid-premium@v5.11.1`
+
+#### Changes
+
+- [DataGrid] Add a CSS class corresponding to current density (#4858) @m4theushw
+- [DataGrid] Execute the pipe-processors in their initialization order (#4913) @flaviendelangle
+- [DataGrid] Fix rendering of the no rows overlay when the `loading` prop is changed (#4910) @m4theushw
+- [DataGridPremium] Add `exceljs` to the dependencies (#4939) @alexfauquette
+- [DataGridPremium] Support column spanning in the Excel export (#4830) @cherniavskii
+- [l10n] Improve Russian (ru-RU) locale (#4864) @arvkonstantin
+
+### `@mui/x-date-pickers@5.0.0-alpha.4` / `@mui/x-date-pickers-pro@5.0.0-alpha.4`
+
+#### Breaking changes
+
+- The props related to the action bar buttons have been removed (`clearable`, `showTodayButton`, `cancelText`, `okText`)
+
+  To decide which button must be displayed and in which order, you can now use the `actions` prop of the `actionBar` component slot props.
+
+   ```jsx
+   <DatePicker
+     componentsProps={{ 
+       actionBar: { 
+         // The actions will be the same between desktop and mobile
+         actions: ['clear'],
+
+         // The actions will be different between desktop and mobile
+         actions: (variant) => variant === 'desktop' ? [] : ['clear'],
+       }
+     }}
+   />
+   ```
+
+  The build-in `ActionBar` component supports 4 different actions: `'clear'`, `'cancel'`, `'accept'`, and `'today'`.
+  By default, the pickers will render the cancel and accept button on mobile and no action on desktop.
+
+  If you need other actions, you can provide your own component to the `ActionBar` component slot
+
+   ```jsx
+   <DatePicker
+     components={{ ActionBar: CustomActionBar }}
+   />
+   ```
+
+#### Changes
+
+- [DatePicker] Fix keyboard accessibility for first and last year (#4807) @alexfauquette
+- [pickers] Add component slot for action bar (#4778) @alexfauquette
+- [pickers] Add l10n support (#4517) @alexfauquette
+- [pickers] Close Popper when pressing <kbd>Esc</kbd> inside a modal (#4499) @alexfauquette
+- [pickers] Support class slots on toolbar components (#4855) @flaviendelangle
+- [TimePicker] Fix time validation when current date is `null` (#4867) @flaviendelangle
+
+### Docs
+
+- [docs] Add 301 redirect for columns page (#4940) @alexfauquette
+- [docs] Avoid confusion with license key installation (#4891) @oliviertassinari
+- [docs] Complete the instructions for pickers installation in readme (#4852) @alexfauquette
+- [docs] Disable ads on paid-only pages (#4842) @flaviendelangle
+- [docs] Don't redirect to localized doc on deploy preview (#4818) @m4theushw
+- [docs] Limit `LICENSE` file to 80 char per line (#4873) @oliviertassinari
+- [docs] Typo on OrderId @oliviertassinari
+- [docs] Update feature comparison table (#4918) @cherniavskii
+
+### Core
+
+- [core] Add new script to generate tree data rows from file tree (#4902) @flaviendelangle
+- [core] Fix code style (#4874) @oliviertassinari
+- [core] Fix React 18 peer dependency (#4908) @oliviertassinari
+- [core] Fix link to the LICENSE file (#4875) @oliviertassinari
+- [core] Fix transitive babel dependency (#4793) @oliviertassinari
+- [core] New pipe processing `rowHydration` (#4896) @flaviendelangle
+- [core] Remove dead code for the docs (#4791) @oliviertassinari
+- [core] Run `yarn prettier` @oliviertassinari
+- [core] Polishes on `CHANGELOG.md` (#4876) @oliviertassinari
+- [core] Simplify rows cache management (#4933) @flaviendelangle
+- [core] Use internal icons for quick filter (#4912) @alexfauquette
+
 ## v5.11.0
 
 _May 13, 2022_

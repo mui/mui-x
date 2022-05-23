@@ -99,6 +99,7 @@ const columns: GridColDef[] = [
           color="primary"
           size="small"
           style={{ marginLeft: 16 }}
+          tabIndex={params.hasFocus ? 0 : -1}
         >
           Open
         </Button>
@@ -108,17 +109,22 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "RenderCellGrid.js", "bg": "inline"}}
+{{"demo": "RenderCellGrid.js", "bg": "inline", "defaultCodeOpen": false }}
 
-**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/x/react-data-grid/export/#exported-cells) the data.
-
-> ⚠️ When using `renderCell` with object cell values
-> remember to handle [sorting](/x/react-data-grid/sorting/#custom-comparator).
-> Otherwise, sorting won't work.
+> ⚠️ Using `renderCell`, requires paying attention to the following points.
+> If the type of the value returned by `valueGetter` does not correspond to the column's `type`, you should:
+>
+> - handle [sorting](/x/react-data-grid/sorting/#custom-comparator) by providing `sortComparator` to the column.
+> - set a `valueFormatter` providing a representation for the value to be used when [exporting](/x/react-data-grid/export/#exported-cells) the data.
 
 ### Styling cells
 
 You can check the [styling cells](/x/react-data-grid/style/#styling-cells) section for more information.
+
+### Making accessible cells
+
+Cell content should not be in the tab sequence except if cell is focused.
+You can check the [tab sequence](/x/react-data-grid/accessibility/#tab-sequence) section for more information.
 
 ### Expand cell renderer
 
