@@ -26,7 +26,7 @@ import {
 } from '../../../models/gridGroupingColDefOverride';
 import { GridTreeDataGroupingCell } from '../../../components';
 import { createRowTree } from '../../../utils/tree/createRowTree';
-import { RowTreeBuilderGroupingCriteria } from '../../../utils/tree/models';
+import { RowTreeBuilderGroupingCriterion } from '../../../utils/tree/models';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 
 export const useGridTreeDataPreProcessors = (
@@ -127,7 +127,7 @@ export const useGridTreeDataPreProcessors = (
         .map((rowId) => ({
           id: rowId,
           path: props.getTreeDataPath!(params.idRowsLookup[rowId]).map(
-            (key): RowTreeBuilderGroupingCriteria => ({ key, field: null }),
+            (key): RowTreeBuilderGroupingCriterion => ({ key, field: null }),
           ),
         }))
         .sort((a, b) => a.path.length - b.path.length);

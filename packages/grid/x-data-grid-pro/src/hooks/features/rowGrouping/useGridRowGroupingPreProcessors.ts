@@ -16,7 +16,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { createRowTree } from '../../../utils/tree/createRowTree';
-import { RowTreeBuilderGroupingCriteria } from '../../../utils/tree/models';
+import { RowTreeBuilderGroupingCriterion } from '../../../utils/tree/models';
 import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
@@ -157,9 +157,9 @@ export const useGridRowGroupingPreProcessors = (
               colDef: columnsLookup[groupingField],
             }),
           )
-          .filter((cell) => cell.key != null) as RowTreeBuilderGroupingCriteria[];
+          .filter((cell) => cell.key != null) as RowTreeBuilderGroupingCriterion[];
 
-        const leafGroupingCriteria: RowTreeBuilderGroupingCriteria = {
+        const leafGroupingCriteria: RowTreeBuilderGroupingCriterion = {
           key: rowId.toString(),
           field: null,
         };

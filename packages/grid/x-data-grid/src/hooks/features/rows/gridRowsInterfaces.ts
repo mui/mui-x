@@ -8,7 +8,6 @@ export interface GridRowTreeCreationParams {
   dataRowIds: GridRowId[];
   idRowsLookup: GridRowsLookup;
   idToIdLookup: Record<string, GridRowId>;
-  previousTree: GridRowTreeConfig | null;
   partialUpdates: GridRowsPartialUpdates | null;
 }
 
@@ -20,13 +19,11 @@ export interface GridRowTreeCreationValue {
   groupingName: string;
   tree: GridRowTreeConfig;
   treeDepth: number;
-  ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
   idToIdLookup: Record<string, GridRowId>;
 }
 
-export interface GridRowsInternalCache
-  extends Omit<GridRowTreeCreationParams, 'previousTree' | 'ids'> {
+export interface GridRowsInternalCache extends Omit<GridRowTreeCreationParams, 'previousTree'> {
   /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
@@ -36,13 +33,10 @@ export interface GridRowsInternalCache
    * The value of the `loading` prop since the last time that the rows state was updated.
    */
   loadingPropBeforePartialUpdates: DataGridProcessedProps['loading'];
-  /**
-   * TODO: Document
-   */
-  dataRowIds: GridRowId[];
 }
 
 export interface GridRowsState extends GridRowTreeCreationValue {
+  ids: GridRowId[];
   /**
    * Matches the value of the `loading` prop.
    */

@@ -18,7 +18,7 @@ import { GridStatePro } from '../../../models/gridStatePro';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridGroupingValueGetterParams } from '@mui/x-data-grid-pro/models/gridGroupingValueGetterParams';
-import { RowTreeBuilderGroupingCriteria } from '@mui/x-data-grid-pro/utils/tree/models';
+import { RowTreeBuilderGroupingCriterion } from '@mui/x-data-grid-pro/utils/tree/models';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 

@@ -67,22 +67,20 @@ export const createRowsInternalCache = ({
 
 export const getRowsStateFromCache = ({
   apiRef,
-  previousTree,
   rowCountProp,
   loadingProp,
 }: {
   apiRef: React.MutableRefObject<GridApiCommunity>;
-  previousTree: GridRowTreeConfig | null;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
 }): GridRowsState => {
   const { rowsBeforePartialUpdates, ...cacheForGrouping } = apiRef.current.unstable_caches.rows;
   const rowCount = rowCountProp ?? 0;
 
-  const groupingResponse = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
-    ...cacheForGrouping,
-    previousTree,
-  });
+  const groupingResponse = apiRef.current.unstable_applyStrategyProcessor(
+    'rowTreeCreation',
+    cacheForGrouping,
+  );
 
   apiRef.current.unstable_caches.rows = {
     ...apiRef.current.unstable_caches.rows,
@@ -96,17 +94,20 @@ export const getRowsStateFromCache = ({
     groupingResponse,
   );
 
+  const ids = Object.values(processedGroupingResponse.idToIdLookup);
+
   const dataTopLevelRowCount =
     processedGroupingResponse.treeDepth === 1
-      ? processedGroupingResponse.ids.length
+      ? ids.length
       : Object.values(processedGroupingResponse.tree).filter((node) => node.parent == null).length;
 
   return {
     ...processedGroupingResponse,
     groupingResponseBeforeRowHydration: groupingResponse,
     loading: loadingProp,
-    totalRowCount: Math.max(rowCount, processedGroupingResponse.ids.length),
+    totalRowCount: Math.max(rowCount, ids.length),
     totalTopLevelRowCount: Math.max(rowCount, dataTopLevelRowCount),
+    ids,
   };
 };
 

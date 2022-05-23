@@ -16,7 +16,7 @@ import {
   sortRowTree,
   createRowTree,
   updateRowTree,
-  RowTreeBuilderGroupingCriteria,
+  RowTreeBuilderGroupingCriterion,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -157,9 +157,9 @@ export const useGridRowGroupingPreProcessors = (
               colDef: columnsLookup[groupingField],
             }),
           )
-          .filter((cell) => cell.key != null) as RowTreeBuilderGroupingCriteria[];
+          .filter((cell) => cell.key != null) as RowTreeBuilderGroupingCriterion[];
 
-        const leafGroupingCriteria: RowTreeBuilderGroupingCriteria = {
+        const leafGroupingCriteria: RowTreeBuilderGroupingCriterion = {
           key: rowId.toString(),
           field: null,
         };
@@ -170,17 +170,18 @@ export const useGridRowGroupingPreProcessors = (
         };
       };
 
-      if (params.previousTree && params.partialUpdates) {
+      if (params.partialUpdates) {
+        const previousTree = gridRowTreeSelector(apiRef);
+
         return updateRowTree({
           nodes: {
             inserted: params.partialUpdates.actions.insert.map(getRowTreeBuilderNode),
             modified: params.partialUpdates.actions.modify.map(getRowTreeBuilderNode),
             deleted: params.partialUpdates.actions.delete,
           },
-          ids: params.dataRowIds,
           idRowsLookup: params.idRowsLookup,
           idToIdLookup: params.idToIdLookup,
-          previousTree: params.previousTree,
+          previousTree,
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
           groupingName: ROW_GROUPING_STRATEGY,

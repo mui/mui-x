@@ -1,6 +1,6 @@
-import { RowTreeBuilderGroupingCriteria } from '@mui/x-data-grid-pro/utils/tree/models';
+import { RowTreeBuilderGroupingCriterion } from '@mui/x-data-grid-pro/utils/tree/models';
 
-export const getGroupRowIdFromPath = (path: RowTreeBuilderGroupingCriteria[]) => {
+export const getGroupRowIdFromPath = (path: RowTreeBuilderGroupingCriterion[]) => {
   const pathStr = path
     .map((groupingCriteria) => `${groupingCriteria.field}/${groupingCriteria.key}`)
     .join('-');

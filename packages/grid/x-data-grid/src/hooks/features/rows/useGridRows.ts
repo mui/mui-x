@@ -12,6 +12,7 @@ import {
   gridRowTreeSelector,
   gridRowIdsSelector,
   gridRowGroupingNameSelector,
+  gridRowTreeDepthSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -44,7 +45,6 @@ export const rowsStateInitializer: GridStateInitializer<
     ...state,
     rows: getRowsStateFromCache({
       apiRef,
-      previousTree: null,
       rowCountProp: props.rowCount,
       loadingProp: props.loading,
     }),
@@ -99,7 +99,6 @@ export const useGridRows = (
           ...state,
           rows: getRowsStateFromCache({
             apiRef,
-            previousTree: gridRowTreeSelector(apiRef),
             rowCountProp: props.rowCount,
             loadingProp: props.loading,
           }),
@@ -204,7 +203,7 @@ export const useGridRows = (
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
           // Action === "delete"
-          if (actionAlreadyAppliedToRow === 'delete') {
+          if (actionAlreadyAppliedToRow === 'delete' || !idRowsLookup[id]) {
             return;
           }
           if (actionAlreadyAppliedToRow != null) {

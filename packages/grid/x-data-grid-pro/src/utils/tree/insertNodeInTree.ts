@@ -6,21 +6,19 @@ import {
   GridTreeNode,
 } from '@mui/x-data-grid';
 import { getGroupRowIdFromPath } from './utils';
-import { GridTreePathDuplicateHandler, RowTreeBuilderGroupingCriteria } from './models';
+import { GridTreePathDuplicateHandler, RowTreeBuilderGroupingCriterion } from './models';
 
 export const insertNodeInTree = ({
   id,
   path,
   tree,
-  ids,
   idRowsLookup,
   idToIdLookup,
   onDuplicatePath,
 }: {
   id: GridRowId;
-  path: RowTreeBuilderGroupingCriteria[];
+  path: RowTreeBuilderGroupingCriterion[];
   tree: Record<GridRowId, GridTreeNode>;
-  ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
   idToIdLookup: Record<string, GridRowId>;
   onDuplicatePath?: GridTreePathDuplicateHandler;
@@ -61,7 +59,6 @@ export const insertNodeInTree = ({
       if (!currentGroupNode) {
         idRowsLookup[nodeId] = {};
         idToIdLookup[nodeId] = nodeId;
-        ids.push(nodeId);
 
         const groupNode: GridGroupNode = {
           type: 'group',

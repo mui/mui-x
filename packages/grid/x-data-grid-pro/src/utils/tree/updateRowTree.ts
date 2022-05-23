@@ -5,9 +5,10 @@ import {
   GridRowsLookup,
   GridRowTreeConfig,
 } from '@mui/x-data-grid';
-import { isDeepEqual } from '@mui/x-data-grid/internals';
-import { RowTreeBuilderGroupingCriteria, RowTreeBuilderNode } from './models';
+import { GridRowTreeCreationValue, isDeepEqual } from '@mui/x-data-grid/internals';
+import { RowTreeBuilderGroupingCriterion, RowTreeBuilderNode } from './models';
 import { insertNodeInTree } from './insertNodeInTree';
+import { removeNodeFromTree } from './removeNodeFromTree';
 
 export interface UpdateRowTreeNodes {
   inserted: RowTreeBuilderNode[];
@@ -18,7 +19,7 @@ export interface UpdateRowTreeNodes {
 const getNodePathInTree = (
   tree: GridRowTreeConfig,
   id: GridRowId,
-): RowTreeBuilderGroupingCriteria[] => {
+): RowTreeBuilderGroupingCriterion[] => {
   const node = tree[id];
 
   const parentPath =
@@ -48,34 +49,23 @@ interface UpdateRowTreeParams {
   onDuplicatePath?: (
     firstId: GridRowId,
     secondId: GridRowId,
-    path: RowTreeBuilderGroupingCriteria[],
+    path: RowTreeBuilderGroupingCriterion[],
   ) => void;
 }
 
-export const updateRowTree = (params: UpdateRowTreeParams) => {
+export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationValue => {
   const tree = { ...params.previousTree };
 
   // TODO: Retrieve previous tree depth
   let treeDepth = 1;
-  const ids = Object.values(params.idToIdLookup);
   const idRowsLookup = { ...params.idRowsLookup };
   const idToIdLookup = { ...params.idToIdLookup };
-
-  params.nodes.modified.forEach((modifiedNode) => {
-    const pathInPreviousTree = getNodePathInTree(params.previousTree, modifiedNode.id);
-    const isInSameGroup = isDeepEqual(pathInPreviousTree, modifiedNode.path);
-
-    if (!isInSameGroup) {
-      console.log('Must be removed from old group and added to new one');
-    }
-  });
 
   for (let i = 0; i < params.nodes.inserted.length; i += 1) {
     const node = params.nodes.inserted[i];
 
     insertNodeInTree({
       tree,
-      ids,
       idRowsLookup,
       idToIdLookup,
       id: node.id,
@@ -86,12 +76,47 @@ export const updateRowTree = (params: UpdateRowTreeParams) => {
     treeDepth = Math.max(treeDepth, node.path.length);
   }
 
-  params.nodes.deleted.forEach((deletedNode) => {});
+  for (let i = 0; i < params.nodes.deleted.length; i += 1) {
+    const nodeId = params.nodes.deleted[i];
+
+    removeNodeFromTree({
+      tree,
+      idRowsLookup,
+      idToIdLookup,
+      id: nodeId,
+    });
+  }
+
+  for (let i = 0; i < params.nodes.modified.length; i += 1) {
+    const node = params.nodes.modified[i];
+
+    const pathInPreviousTree = getNodePathInTree(params.previousTree, node.id);
+    const isInSameGroup = isDeepEqual(pathInPreviousTree, node.path);
+
+    if (!isInSameGroup) {
+      removeNodeFromTree({
+        tree,
+        idRowsLookup,
+        idToIdLookup,
+        id: node.id,
+      });
+
+      insertNodeInTree({
+        tree,
+        idRowsLookup,
+        idToIdLookup,
+        id: node.id,
+        path: node.path,
+        onDuplicatePath: params.onDuplicatePath,
+      });
+
+      treeDepth = Math.max(treeDepth, node.path.length);
+    }
+  }
 
   return {
     tree,
     treeDepth,
-    ids,
     idRowsLookup,
     idToIdLookup,
     groupingName: params.groupingName,
