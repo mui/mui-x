@@ -8,10 +8,10 @@ import {
   GridRowModel,
   GridColDef,
   GridKeyValue,
-  GridGroupingValueGetterParams,
 } from '@mui/x-data-grid-pro';
 import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { GridGroupingValueGetterParams } from '../../../models/gridGroupingValueGetterParams';
 import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';

@@ -5,6 +5,7 @@ import {
   GridRowParams,
   GridRowId,
   GridValidRowModel,
+  GridGroupNode,
 } from '@mui/x-data-grid';
 import {
   GridExperimentalFeatures,
@@ -20,7 +21,6 @@ import {
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
-import { TempGridGroupNode } from '../utils/tree';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
@@ -76,10 +76,10 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {TempGridGroupNode} node The node of the group to test.
+   * @param {GridGroupNode} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
-  isGroupExpandedByDefault?: (node: TempGridGroupNode) => boolean;
+  isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
   /**
    * If `true`, the column pinning is disabled.
    * @default false
