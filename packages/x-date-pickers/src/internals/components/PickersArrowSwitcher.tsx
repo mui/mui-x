@@ -95,8 +95,8 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const {
     children,
     className,
-    components = {},
-    componentsProps = {},
+    components,
+    componentsProps,
     isLeftDisabled,
     isLeftHidden,
     isRightDisabled,
@@ -110,11 +110,11 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';
 
-  const leftArrowButtonProps = componentsProps.leftArrowButton || {};
-  const LeftArrowIcon = components.LeftArrowIcon || ArrowLeft;
+  const leftArrowButtonProps = componentsProps?.leftArrowButton || {};
+  const LeftArrowIcon = components?.LeftArrowIcon || ArrowLeft;
 
-  const rightArrowButtonProps = componentsProps.rightArrowButton || {};
-  const RightArrowIcon = components.RightArrowIcon || ArrowRight;
+  const rightArrowButtonProps = componentsProps?.rightArrowButton || {};
+  const RightArrowIcon = components?.RightArrowIcon || ArrowRight;
 
   const ownerState = props;
 
@@ -126,7 +126,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       {...other}
     >
       <PickersArrowSwitcherButton
-        as={components.LeftArrowButton}
+        as={components?.LeftArrowButton}
         size="small"
         aria-label={leftArrowButtonText}
         title={leftArrowButtonText}
@@ -147,7 +147,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
       <PickersArrowSwitcherButton
-        as={components.RightArrowButton}
+        as={components?.RightArrowButton}
         size="small"
         aria-label={rightArrowButtonText}
         title={rightArrowButtonText}

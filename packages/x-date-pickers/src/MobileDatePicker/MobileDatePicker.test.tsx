@@ -221,11 +221,11 @@ describe('<MobileDatePicker />', () => {
     render(
       <MobileDatePicker
         renderInput={(params) => <TextField {...params} />}
-        showTodayButton
         onClose={onCloseMock}
         onChange={handleChange}
         value={adapterToUse.date('2018-01-01T00:00:00.000')}
         DialogProps={{ TransitionComponent: FakeTransitionComponent }}
+        componentsProps={{ actionBar: { actions: ['today'] } }}
       />,
     );
     const start = adapterToUse.date();
@@ -445,7 +445,7 @@ describe('<MobileDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -471,7 +471,7 @@ describe('<MobileDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={null}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 

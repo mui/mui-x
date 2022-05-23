@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { capitalize } from '@mui/material';
 import {
-  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GRID_TREE_DATA_GROUPING_FIELD,
   GRID_ROOT_GROUP_ID,
   GridColDef,
   GridFooterNode,
   GridGroupNode,
-  gridRowGroupingModelSelector,
   GridRowId,
 } from '@mui/x-data-grid-pro';
 import {
@@ -27,7 +25,11 @@ import {
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridApiPremium } from '../../../models/gridApiPremium';
-import { getRowGroupingFieldFromGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
+import {
+  getRowGroupingFieldFromGroupingCriteria,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+} from '../rowGrouping/gridRowGroupingUtils';
+import { gridRowGroupingModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 
 export const GRID_AGGREGATION_ROOT_FOOTER_ROW_ID = 'auto-generated-group-footer-root';
