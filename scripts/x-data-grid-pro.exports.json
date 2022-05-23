@@ -290,6 +290,7 @@
   { "name": "GridLocaleTextApi", "kind": "Interface" },
   { "name": "GridMenu", "kind": "Variable" },
   { "name": "GridMenuIcon", "kind": "Variable" },
+  { "name": "GridMenuParams", "kind": "Interface" },
   { "name": "GridMenuProps", "kind": "Interface" },
   { "name": "GridMoreVertIcon", "kind": "Variable" },
   { "name": "GridNativeColTypes", "kind": "TypeAlias" },

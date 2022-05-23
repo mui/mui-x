@@ -605,6 +605,20 @@ DataGridPremiumRaw.propTypes = {
    */
   onFilterModelChange: PropTypes.func,
   /**
+   * Callback fired when the menu is closed.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuClose: PropTypes.func,
+  /**
+   * Callback fired when the menu is opened.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuOpen: PropTypes.func,
+  /**
    * Callback fired when the current page has changed.
    * @param {number} page Index of the page displayed on the Grid.
    * @param {GridCallbackDetails} details Additional details for this callback.
