@@ -192,7 +192,7 @@ export const useGridRows = (
       };
       const idRowsLookup = { ...prevCache.idRowsLookup };
       const idToIdLookup = { ...prevCache.idToIdLookup };
-      let ids = [...prevCache.ids];
+      let dataRowIds = [...prevCache.dataRowIds];
 
       const alreadyAppliedActionsToRemove: {
         [action in GridRowsPartialUpdateAction]: { [id: GridRowId]: true };
@@ -242,7 +242,7 @@ export const useGridRows = (
 
         idRowsLookup[id] = partialRow;
         idToIdLookup[id] = id;
-        ids.push(id);
+        dataRowIds.push(id);
       });
 
       Object.entries(alreadyAppliedActionsToRemove).forEach(([action, idsToRemove]) => {
@@ -254,13 +254,13 @@ export const useGridRows = (
       });
 
       if (Object.keys(deletedRowIdLookup).length > 0) {
-        ids = ids.filter((id) => !deletedRowIdLookup[id]);
+        dataRowIds = dataRowIds.filter((id) => !deletedRowIdLookup[id]);
       }
 
       const newCache: GridRowsInternalCache = {
         idRowsLookup,
         idToIdLookup,
-        ids,
+        dataRowIds,
         partialUpdates,
         rowsBeforePartialUpdates: prevCache.rowsBeforePartialUpdates,
         loadingPropBeforePartialUpdates: prevCache.loadingPropBeforePartialUpdates,

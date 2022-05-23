@@ -1,10 +1,4 @@
-import {
-  GridFooterNode,
-  GridGroupNode,
-  GridKeyValue,
-  GridLeafNode,
-  GridRowId,
-} from '@mui/x-data-grid';
+import { GridKeyValue, GridRowId } from '@mui/x-data-grid';
 
 export interface RowTreeBuilderGroupingCriteria {
   field: string | null;
@@ -16,8 +10,8 @@ export interface RowTreeBuilderNode {
   path: RowTreeBuilderGroupingCriteria[];
 }
 
-export interface TempGridGroupNode extends Omit<GridGroupNode, 'children' | 'childrenExpanded'> {
-  children: Record<GridRowId, GridRowId>;
-}
-
-export type TempGridTreeNode = GridLeafNode | GridFooterNode | TempGridGroupNode;
+export type GridTreePathDuplicateHandler = (
+  firstId: GridRowId,
+  secondId: GridRowId,
+  path: RowTreeBuilderGroupingCriteria[],
+) => void;

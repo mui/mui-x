@@ -174,14 +174,12 @@ export const useGridRowGroupingPreProcessors = (
         return updateRowTree({
           nodes: {
             inserted: [],
-            updated: [],
+            modified: [],
             deleted: [],
           },
-          ids: params.ids,
           idRowsLookup: params.idRowsLookup,
           idToIdLookup: params.idToIdLookup,
           previousTree: params.previousTree,
-          partialUpdates: params.partialUpdates,
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
           groupingName: ROW_GROUPING_STRATEGY,
@@ -189,8 +187,7 @@ export const useGridRowGroupingPreProcessors = (
       }
 
       return createRowTree({
-        nodes: params.ids.map(getRowTreeBuilderNode),
-        ids: params.ids,
+        nodes: params.dataRowIds.map(getRowTreeBuilderNode),
         idRowsLookup: params.idRowsLookup,
         idToIdLookup: params.idToIdLookup,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,

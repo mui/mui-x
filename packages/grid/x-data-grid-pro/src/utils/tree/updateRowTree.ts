@@ -1,6 +1,13 @@
-import { GRID_ROOT_GROUP_ID, GridRowId, GridRowsLookup, GridRowTreeConfig } from '@mui/x-data-grid';
+import {
+  GRID_ROOT_GROUP_ID,
+  GridGroupNode,
+  GridRowId,
+  GridRowsLookup,
+  GridRowTreeConfig,
+} from '@mui/x-data-grid';
 import { isDeepEqual } from '@mui/x-data-grid/internals';
-import { RowTreeBuilderGroupingCriteria, RowTreeBuilderNode, TempGridGroupNode } from './models';
+import { RowTreeBuilderGroupingCriteria, RowTreeBuilderNode } from './models';
+import { insertNodeInTree } from './insertNodeInTree';
 
 export interface UpdateRowTreeNodes {
   inserted: RowTreeBuilderNode[];
@@ -31,13 +38,12 @@ const getNodePathInTree = (
 };
 
 interface UpdateRowTreeParams {
-  ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
   idToIdLookup: Record<string, GridRowId>;
   previousTree: GridRowTreeConfig;
   nodes: UpdateRowTreeNodes;
   defaultGroupingExpansionDepth: number;
-  isGroupExpandedByDefault?: (node: TempGridGroupNode) => boolean;
+  isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
   groupingName: string;
   onDuplicatePath?: (
     firstId: GridRowId,
@@ -49,8 +55,9 @@ interface UpdateRowTreeParams {
 export const updateRowTree = (params: UpdateRowTreeParams) => {
   const tree = { ...params.previousTree };
 
-  const treeDepth = 1;
-  const ids = [...params.ids];
+  // TODO: Retrieve previous tree depth
+  let treeDepth = 1;
+  const ids = Object.values(params.idToIdLookup);
   const idRowsLookup = { ...params.idRowsLookup };
   const idToIdLookup = { ...params.idToIdLookup };
 
@@ -63,9 +70,23 @@ export const updateRowTree = (params: UpdateRowTreeParams) => {
     }
   });
 
-  params.nodes.inserted.forEach(insertedNode => {
+  for (let i = 0; i < params.nodes.inserted.length; i += 1) {
+    const node = params.nodes.inserted[i];
 
-  })
+    insertNodeInTree({
+      tree,
+      ids,
+      idRowsLookup,
+      idToIdLookup,
+      id: node.id,
+      path: node.path,
+      onDuplicatePath: params.onDuplicatePath,
+    });
+
+    treeDepth = Math.max(treeDepth, node.path.length);
+  }
+
+  params.nodes.deleted.forEach((deletedNode) => {});
 
   return {
     tree,

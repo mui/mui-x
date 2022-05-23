@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
 import { createRowTree } from './createRowTree';
 
-describe('buildRowTree', () => {
+describe('createRowTree', () => {
   it('should not expand the rows when defaultGroupingExpansionDepth === 0', () => {
     const response = createRowTree({
       groupingName: '',

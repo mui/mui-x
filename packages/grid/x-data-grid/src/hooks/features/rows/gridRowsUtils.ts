@@ -49,16 +49,17 @@ export const createRowsInternalCache = ({
     loadingPropBeforePartialUpdates: loading,
     idRowsLookup: {},
     idToIdLookup: {},
-    ids: [],
+    dataRowIds: [],
     partialUpdates: null,
   };
 
+  // TODO: Is it useful to init those elements ?
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
     const id = getRowIdFromRowModel(row, getRowId);
     cache.idRowsLookup[id] = row;
     cache.idToIdLookup[id] = id;
-    cache.ids.push(id);
+    cache.dataRowIds.push(id);
   }
 
   return cache;
@@ -82,6 +83,13 @@ export const getRowsStateFromCache = ({
     ...cacheForGrouping,
     previousTree,
   });
+
+  apiRef.current.unstable_caches.rows = {
+    ...apiRef.current.unstable_caches.rows,
+    idRowsLookup: groupingResponse.idRowsLookup,
+    idToIdLookup: groupingResponse.idToIdLookup,
+    partialUpdates: null,
+  };
 
   const processedGroupingResponse = apiRef.current.unstable_applyPipeProcessors(
     'hydrateRows',

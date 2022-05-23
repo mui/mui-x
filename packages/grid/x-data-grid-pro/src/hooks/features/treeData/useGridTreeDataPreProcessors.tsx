@@ -123,19 +123,17 @@ export const useGridTreeDataPreProcessors = (
         throw new Error('MUI: No getTreeDataPath given.');
       }
 
-      const nodes = params.ids
+      const nodes = params.dataRowIds
         .map((rowId) => ({
           id: rowId,
           path: props.getTreeDataPath!(params.idRowsLookup[rowId]).map(
             (key): RowTreeBuilderGroupingCriteria => ({ key, field: null }),
           ),
         }))
-        // TODO: Remove and support unsorted rows in `buildRowTree
         .sort((a, b) => a.path.length - b.path.length);
 
       return createRowTree({
         nodes,
-        ids: params.ids,
         idRowsLookup: params.idRowsLookup,
         idToIdLookup: params.idToIdLookup,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
