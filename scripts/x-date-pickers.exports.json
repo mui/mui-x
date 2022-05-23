@@ -22,6 +22,7 @@
   { "name": "DatePickerProps", "kind": "Interface" },
   { "name": "DateTimePicker", "kind": "Variable" },
   { "name": "DateTimePickerProps", "kind": "Interface" },
+  { "name": "deDE", "kind": "Variable" },
   { "name": "DEFAULT_LOCALE", "kind": "Variable" },
   { "name": "DesktopDatePicker", "kind": "Variable" },
   { "name": "DesktopDatePickerProps", "kind": "Interface" },
