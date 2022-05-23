@@ -34,13 +34,21 @@ import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
-> = (state, props) => ({
-  ...state,
-  rowGrouping: {
-    model: props.rowGroupingModel ?? props.initialState?.rowGrouping?.model ?? [],
-    unstable_sanitizedModelOnLastRowTreeCreation: [],
-  },
-});
+> = (state, props, apiRef) => {
+  apiRef.current.unstable_caches = {
+    ...apiRef.current.unstable_caches,
+    rowGrouping: {
+      sanitizedModelOnLastRowTreeCreation: [],
+    },
+  };
+
+  return {
+    ...state,
+    rowGrouping: {
+      model: props.rowGroupingModel ?? props.initialState?.rowGrouping?.model ?? [],
+    },
+  };
+};
 
 /**
  * @requires useGridColumns (state, method) - can be after, async only
@@ -242,19 +250,12 @@ export const useGridRowGrouping = (
     GridEventListener<'columnsChange'>
   >(() => {
     const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-    const lastGroupingColumnsModelApplied = gridRowGroupingStateSelector(
-      apiRef.current.state,
-    ).unstable_sanitizedModelOnLastRowTreeCreation;
+    const lastGroupingColumnsModelApplied =
+      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation;
 
     if (!isDeepEqual(lastGroupingColumnsModelApplied, rowGroupingModel)) {
-      apiRef.current.setState((state) => ({
-        ...state,
-        rowGrouping: {
-          ...state.rowGrouping,
-          unstable_sanitizedModelOnLastRowTreeCreation: rowGroupingModel,
-        },
-      }));
-
+      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation =
+        rowGroupingModel;
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);
 
