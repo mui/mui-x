@@ -181,15 +181,15 @@ export const addFooterRows = ({
     return groupingParams;
   }
 
-  const ids = [...groupingParams.ids];
   const idRowsLookup = { ...groupingParams.idRowsLookup };
+  const idToIdLookup = { ...groupingParams.idToIdLookup };
   const tree = { ...groupingParams.tree };
 
   const addGroupFooter = (groupNode: GridGroupNode) => {
     if (!isGroupAggregated || isGroupAggregated(groupNode, 'footer')) {
       const footerId = getAggregationFooterRowIdFromGroupId(groupNode.id);
 
-      ids.push(footerId);
+      idToIdLookup[footerId] = footerId;
       idRowsLookup[footerId] = {};
       tree[footerId] = {
         id: footerId,
@@ -216,7 +216,7 @@ export const addFooterRows = ({
 
   return {
     ...groupingParams,
-    ids,
+    idToIdLookup,
     idRowsLookup,
     tree,
   };

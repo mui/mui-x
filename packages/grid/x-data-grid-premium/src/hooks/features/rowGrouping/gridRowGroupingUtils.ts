@@ -99,7 +99,7 @@ export const filterRowTreeFromGroupingColumns = (
         const childSubTreeSize = filterTreeNode(
           childNode,
           areAncestorsPassingChildren && isMatchingFilters,
-          areAncestorsExpanded && node.childrenExpanded,
+          areAncestorsExpanded && !!node.childrenExpanded,
         );
         filteredDescendantCount += childSubTreeSize;
       });
