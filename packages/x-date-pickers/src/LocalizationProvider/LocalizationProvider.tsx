@@ -170,5 +170,5 @@ LocalizationProvider.propTypes = {
   /**
    * Locale for components texts
    */
-  localeText: PropTypes.any,
+  localeText: PropTypes.object,
 } as any;
