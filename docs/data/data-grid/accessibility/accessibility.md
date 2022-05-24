@@ -17,7 +17,7 @@ The most commonly encountered conformance guidelines for accessibility are:
 WCAG 2.0 has three levels of conformance; A, AA, and AAA (in order of conformance).
 As meeting WCAG 2.0 level AA guidelines also meets the ADA and Section 508 standards, it's likely the standard that most organizations will want to target.
 
-The [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid) provides valuable insight on how to make the grid highly accessible.
+The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provides valuable insight on how to make the grid highly accessible.
 
 ## Density
 
@@ -44,6 +44,32 @@ The user can override this setting with the toolbar density selector if provided
 ## Keyboard navigation
 
 The grid responds to keyboard interactions from the user and emits events when key presses happen on the grid cells.
+
+### Tab sequence
+
+According to [WCAG](https://www.w3.org/TR/wai-aria-practices-1.1/#grid), only one of the focusable elements contained by the grid should be included in the page tab sequence.
+For an element to be included in the tab sequence, it needs to have a `tabIndex` value of zero or greater.
+
+When a cell of the grid is focused, the first inner element with `tabIndex=0` will receive the focus.
+If there is no element with `tabIndex=0`, the focus is set on the cell itself.
+
+In the example below, the first grid does not remove links from the tab sequence, which implies having to pass through all the links before accessing the pagination controls.
+This behavior makes it complicated to navigate between elements when using large datasets.
+
+{{"demo": "FocusManagement.js", "bg": "inline", "defaultCodeOpen": false}}
+
+If you are customizing cell rendering with the [`renderCell`](/x/react-data-grid/columns/#render-cell) method, you become responsible for removing focusable elements from the page tab sequence.
+To do so, use the `tabIndex` prop passed to the `renderCell` params to know if the rendered cell has focus and so if the inner elements should be removed from the tab sequence.
+
+```jsx
+renderCell: (params) => (
+  <Box>
+    <Link tabIndex={params.tabIndex} href="/#">
+      more info
+    </Link>
+  </Box>
+);
+```
 
 ### Navigation
 

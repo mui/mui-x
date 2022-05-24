@@ -27,6 +27,8 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelection
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
+import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
+import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -117,6 +119,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
+  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
     hasScrollY: false,
@@ -287,6 +291,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
     const classNames: string[] = [];
 
+    const disableDragEvents =
+      (rootProps.disableColumnReorder && column.disableReorder) ||
+      (!(rootProps as any).rowReordering &&
+        !!sortModel.length &&
+        treeDepth > 1 &&
+        Object.keys(editRowsState).length > 0);
+
     if (column.cellClassName) {
       classNames.push(
         clsx(
@@ -369,6 +380,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           tabIndex={tabIndex}
           className={clsx(classNames)}
           colSpan={colSpan}
+          disableDragEvents={disableDragEvents}
           {...rootProps.componentsProps?.cell}
         >
           {content}
