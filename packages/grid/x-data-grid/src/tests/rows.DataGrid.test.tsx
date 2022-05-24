@@ -670,6 +670,42 @@ describe('<DataGrid /> - Rows', () => {
         virtualScroller.dispatchEvent(new Event('scroll'));
         expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101); // Ensure that all rows before the last were measured
       });
+
+      it('should allow to mix rows with dynamic row height and default row height', async () => {
+        // Swallow "ResizeObserver loop limit exceeded" errors
+        // See https://github.com/WICG/resize-observer/issues/38
+        const originalErrorHandler = window.onerror;
+        window.onerror = () => {};
+
+        const headerHeight = 50;
+        const densityFactor = 1.3;
+        const rowHeight = 52;
+        const border = 1;
+        const measuredRowHeight = 100;
+        const expectedHeight = measuredRowHeight + border + rowHeight * densityFactor;
+        render(
+          <TestCase
+            getBioContentHeight={({ clientId }) => (clientId === 'c1' ? measuredRowHeight : 0)}
+            getRowHeight={({ id }) => (id === 'c1' ? 'auto' : null)}
+            density="comfortable"
+            rows={baselineProps.rows.slice(0, 2)}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+          />,
+        );
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        )!;
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${Math.floor(expectedHeight)}px`,
+          });
+        });
+
+        window.onerror = originalErrorHandler;
+      });
     });
   });
 

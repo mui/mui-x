@@ -84,14 +84,16 @@ export const useGridRowsMeta = (
           const rowHeightFromUser = getRowHeightProp({ ...row, densityFactor });
 
           if (rowHeightFromUser === 'auto') {
-            const estimatedRowHeight = getEstimatedRowHeight
-              ? getEstimatedRowHeight({ ...row, densityFactor })
-              : rowHeightFromDensity;
+            if (needsFirstMeasurement) {
+              const estimatedRowHeight = getEstimatedRowHeight
+                ? getEstimatedRowHeight({ ...row, densityFactor })
+                : rowHeightFromDensity;
 
-            // If the row was not measured yet use the estimated row height
-            baseRowHeight = needsFirstMeasurement
-              ? estimatedRowHeight ?? rowHeightFromDensity
-              : existingBaseRowHeight;
+              // If the row was not measured yet use the estimated row height
+              baseRowHeight = estimatedRowHeight ?? rowHeightFromDensity;
+            } else {
+              baseRowHeight = existingBaseRowHeight;
+            }
 
             hasRowWithAutoHeight.current = true;
             rowsHeightLookup.current[row.id].autoHeight = true;
