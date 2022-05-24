@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { Clock } from '../internals/components/icons';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
@@ -64,6 +64,10 @@ export function useTimePickerDefaultizedProps<
   const utils = useUtils<TDate>();
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
+  const localeText = useLocaleText();
+
+  const getOpenDialogAriaText = localeText.openTimePickerDialogue;
+
   return {
     ampm,
     openTo: 'hours',
@@ -71,6 +75,7 @@ export function useTimePickerDefaultizedProps<
     acceptRegex: ampm ? /[\dapAP]/gi : /\d/gi,
     mask: ampm ? '__:__ _m' : '__:__',
     disableMaskedInput: false,
+    getOpenDialogAriaText,
     inputFormat: ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h,
     ...themeProps,
     components: {

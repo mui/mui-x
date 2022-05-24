@@ -6,11 +6,6 @@ import { useLocaleText, useUtils } from '../hooks/useUtils';
 import { Calendar } from './icons';
 import { useMaskedInput } from '../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
-import { buildDeprecatedPropsWarning } from '../utils/warning';
-
-const deprecatedPropsWarning = buildDeprecatedPropsWarning(
-  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
-);
 
 export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TInputDate, TDate>(
   props: DateInputProps<TInputDate, TDate>,
@@ -28,10 +23,6 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TIn
     renderInput,
     ...other
   } = props;
-
-  deprecatedPropsWarning({
-    getOpenDialogAriaText: getOpenDialogAriaTextProp,
-  });
 
   const localeText = useLocaleText();
 

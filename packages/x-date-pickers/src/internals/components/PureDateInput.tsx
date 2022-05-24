@@ -7,7 +7,6 @@ import { onSpaceOrEnter } from '../utils/utils';
 import { useLocaleText, useUtils } from '../hooks/useUtils';
 import { getDisplayDate } from '../utils/text-field-helper';
 import { MuiPickersAdapter } from '../models';
-import { buildDeprecatedPropsWarning } from '../utils/warning';
 
 // TODO: make `variant` optional.
 export type MuiTextFieldProps = MuiTextFieldPropsType | Omit<MuiTextFieldPropsType, 'variant'>;
@@ -45,7 +44,6 @@ export interface DateInputProps<TInputDate, TDate> {
    * @param {TInputDate} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
    */
   getOpenDialogAriaText?: (date: TInputDate, utils: MuiPickersAdapter<TDate>) => string;
@@ -112,10 +110,6 @@ export type ExportedDateInputProps<TInputDate, TDate> = Omit<
   | 'validationError'
 >;
 
-const deprecatedPropsWarning = buildDeprecatedPropsWarning(
-  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
-);
-
 // TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?
 export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate, TDate>(
   props: DateInputProps<TInputDate, TDate>,
@@ -135,13 +129,11 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     validationError,
   } = props;
 
-  deprecatedPropsWarning({
-    getOpenDialogAriaText: getOpenDialogAriaTextProp,
-  });
-
   const localeText = useLocaleText();
 
-  const getOpenDialogAriaText = getOpenDialogAriaTextProp ?? localeText.openTimePickerDialogue;
+  // The prop can not be deprecated
+  // Default is "Choose date, ...", but time pickers override it with "Choose time, ..."
+  const getOpenDialogAriaText = getOpenDialogAriaTextProp ?? localeText.openDatePickerDialogue;
 
   const utils = useUtils<TDate>();
   const PureDateInputProps = React.useMemo(
