@@ -21,6 +21,7 @@ import {
   GridAggregationRule,
   GridAggregationRules,
   GridColumnAggregationRules,
+  AggregationFooterLabelColumn,
 } from './gridAggregationInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -266,11 +267,6 @@ export const hasAggregationRulesChanged = (
     );
   });
 };
-
-export interface AggregationFooterLabelColumn {
-  groupingCriteria?: string[];
-  field: string;
-}
 
 export const getAggregationFooterLabelColumns = ({
   apiRef,

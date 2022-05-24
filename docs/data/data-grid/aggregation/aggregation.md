@@ -4,7 +4,7 @@ title: Data Grid - Aggregation
 
 # Data Grid - Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-<p class="description">Use aggregation functions to aggregate your row values.</p>
+<p class="description">Use aggregation functions to combine your row values.</p>
 
 The aggregation can be modified through the grid interface by opening the column menu and selecting an item on the _Aggregation_ select.
 
@@ -20,7 +20,7 @@ The aggregated values will be rendered in a footer row at the bottom of the grid
 
 ### Structure of the model
 
-The aggregation model is a lookup where the keys are the field of the columns to aggregate and the values are aggregation items describing how those columns should be aggregated.
+The aggregation model is a lookup where the keys are the columns, and the values are aggregation items, containing the functions defining the aggregation behavior, and where the aggregated values should be displayed.
 
 An aggregation item is an object where `item.footer` contains the name of the aggregation function to apply on the footers
 and `item.inline` contains the name of the aggregation function to apply on the grouping rows.
@@ -44,9 +44,9 @@ To initialize the aggregation without controlling it, provide the model to the `
 
 ### Controlled aggregation
 
-Use the `filterModel` prop to control the aggregation passed to the grid.
+Use the `aggregationModel` prop to control the aggregation passed to the grid.
 
-You can use the `onFilterModelChange` prop to listen to changes to the filters and update the prop accordingly.
+You can use the `onAggregationModelChange` prop to listen to changes to the aggregation and update the prop accordingly.
 
 {{"demo": "AggregationControlled.js", "bg": "inline"}}
 
@@ -167,9 +167,7 @@ In the example below, the movie _Avatar_ is not passing the filters but is still
 
 ### Basic structure
 
-An aggregation function is an object describing how to generate an aggregated value for a given set of values.
-
-Let's take a look at a simple aggregation function:
+An aggregation function is an object describing how to combine a given set of values.
 
 The full typing details can be found on the [GridAggregationFunction API page](/x/api/data-grid/grid-aggregation-function/).
 
@@ -207,7 +205,7 @@ const column = {
 };
 ```
 
-In the example below, the only aggregation function available for the **Year** column is `max` whereas all aggregation functions are available for the **Gross** column
+In the example below, the **Year** column can be aggregated using the `max` and `min` functions, whereas all functions are available for the **Gross** column
 
 {{"demo": "AggregationRemoveFunctionOneColumn.js", "bg": "inline"}}
 
@@ -265,7 +263,7 @@ const aggregationFunction: GridAggregationFunction = {
 
 ## Custom rendering
 
-If the column you are aggregating from have a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide how you want to render it.
+If the column used to display the aggregation have a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide how you want to render it.
 
 This objects contains a `hasCellUnit` which informs you if the current aggregation has the same unit as the rest of this column's data (for instance, if your column is in `$`, does the aggregated value is also in `$` or is it unit-less ?)
 

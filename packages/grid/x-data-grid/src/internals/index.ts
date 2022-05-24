@@ -94,3 +94,4 @@ export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
+export type { GridApiCaches } from '../models/gridApiCaches';

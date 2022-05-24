@@ -49,7 +49,7 @@ describe('<CalendarPicker />', () => {
 
     expect(screen.getByText('January 2019')).toBeVisible();
     expect(screen.getAllByMuiTest('day')).to.have.length(31);
-    // It should follow https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
+    // It should follow https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
     expect(
       document.querySelector('[role="grid"] > [role="row"] > [role="cell"] > button'),
     ).to.have.text('1');

@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { GridEventPublisher, GridEventListener, GridEventsStr } from '../events';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
-import { GridRowsInternalCache } from '../../hooks/features/rows/gridRowsInterfaces';
-
-export interface GridApiCaches {
-  rows: GridRowsInternalCache;
-}
+import { GridApiCaches } from '../gridApiCaches';
 
 /**
  * The core API interface that is available in the grid `apiRef`.

@@ -20,7 +20,6 @@ import {
   GridGroupingColDefOverrideParams,
   getGroupRowIdFromPath,
   GridGroupNode,
-  TempGridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 
@@ -614,7 +613,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   describe('prop: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
       const isGroupExpandedByDefault = spy(
-        (node: TempGridGroupNode) =>
+        (node: GridGroupNode) =>
           node.groupingKey === 'Cat A' && node.groupingField === 'category1',
       );
 
@@ -642,7 +641,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
 
     it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
-      const isGroupExpandedByDefault = (node: TempGridGroupNode) =>
+      const isGroupExpandedByDefault = (node: GridGroupNode) =>
         node.groupingKey === 'Cat A' && node.groupingField === 'category1';
 
       render(
