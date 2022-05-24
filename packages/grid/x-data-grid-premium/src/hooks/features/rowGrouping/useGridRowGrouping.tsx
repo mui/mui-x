@@ -34,11 +34,8 @@ import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches = {
-    ...apiRef.current.unstable_caches,
-    rowGrouping: {
-      sanitizedModelOnLastRowTreeCreation: [],
-    },
+  apiRef.current.unstable_caches.rowGrouping = {
+    sanitizedModelOnLastRowTreeCreation: [],
   };
 
   return {
