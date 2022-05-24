@@ -131,7 +131,13 @@ Note that, due to the implementation adopted, the virtualization of the columns 
 > Add padding to the cells to increase the space between the content and the cell borders.
 >
 > ```tsx
-> <DataGrid sx={{ '& .MuiDataGrid-cell': { py: 1 } }} />
+> <DataGrid
+>   sx={{
+>     '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
+>     '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+>     '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+>   }}
+> />
 > ```
 
 ## Row spacing

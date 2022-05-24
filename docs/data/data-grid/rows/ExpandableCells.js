@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
@@ -85,9 +85,16 @@ export default function ExpandableCells() {
         columns={columns}
         getEstimatedRowHeight={() => 100}
         getRowHeight={() => 'auto'}
+        components={{ Toolbar: GridToolbar }}
         sx={{
-          '& .MuiDataGrid-cell': {
+          '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
             py: '8px',
+          },
+          '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': {
+            py: '15px',
+          },
+          '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
+            py: '22px',
           },
         }}
       />
