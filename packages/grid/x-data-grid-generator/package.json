@@ -44,8 +44,8 @@
     "yargs": "^17.5.1"
   },
   "peerDependencies": {
-    "@mui/icons-material": "^5.2.5",
-    "@mui/material": "^5.2.8",
+    "@mui/icons-material": "^5.4.1",
+    "@mui/material": "^5.4.1",
     "react": "^17.0.2 || ^18.0.0"
   },
   "setupFiles": [

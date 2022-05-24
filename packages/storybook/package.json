@@ -16,8 +16,8 @@
     "directory": "packages/storybook"
   },
   "dependencies": {
-    "@mui/icons-material": "^5.6.2",
-    "@mui/material": "^5.7.0",
+    "@mui/icons-material": "^5.8.0",
+    "@mui/material": "^5.8.0",
     "@mui/x-data-grid": "5.11.1",
     "@mui/x-data-grid-generator": "5.11.1",
     "@mui/x-data-grid-premium": "5.11.1",
