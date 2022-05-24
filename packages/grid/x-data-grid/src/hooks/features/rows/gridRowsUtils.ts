@@ -128,12 +128,9 @@ export const getRowsStateFromCache = ({
     groupingResponse,
   );
 
-  const datasetSize = Object.values(cacheForGrouping.dataRowIdToIdLookup).length;
-
-  const dataTopLevelRowCount =
-    processedGroupingResponse.treeDepth === 1
-      ? datasetSize
-      : Object.values(processedGroupingResponse.tree).filter((node) => node.parent == null).length;
+  const datasetSize = groupingResponse.dataRowIds.length;
+  const dataTopLevelRowCount = (groupingResponse.tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children
+    .length;
 
   return {
     ...processedGroupingResponse,
