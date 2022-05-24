@@ -4,7 +4,7 @@ title: Data Grid - Aggregation
 
 # Data Grid - Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-<p class="description">Use aggregation functions to aggregate your row values.</p>
+<p class="description">Use aggregation functions to combine your row values.</p>
 
 The aggregation can be modified through the grid interface by opening the column menu and selecting an item on the _Aggregation_ select.
 
