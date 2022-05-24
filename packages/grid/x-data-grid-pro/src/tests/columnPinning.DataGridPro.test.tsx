@@ -185,7 +185,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeaderCell(2).firstChild).to.have.attribute('draggable', 'false');
   });
 
-  it.only('should not allow to drop a column on top of a pinned column', () => {
+  it('should not allow to drop a column on top of a pinned column', () => {
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
     expect(
       document.querySelector('.MuiDataGrid-pinnedColumnHeaders--right')?.textContent,

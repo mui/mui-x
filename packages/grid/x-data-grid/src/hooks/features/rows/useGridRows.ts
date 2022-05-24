@@ -215,8 +215,9 @@ export const useGridRows = (
         [action in GridRowsPartialUpdateAction]: { [id: GridRowId]: true };
       } = { insert: {}, modify: {}, delete: {} };
 
-      uniqUpdates.forEach((partialRow, id) => {
+        uniqUpdates.forEach((partialRow, id) => {
         const actionAlreadyAppliedToRow = partialUpdates.idToActionLookup[id];
+
 
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
