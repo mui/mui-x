@@ -1,12 +1,7 @@
 import * as React from 'react';
 import { GridEventPublisher, GridEventListener, GridEventsStr } from '../events';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
-import { GridRowsInternalCache } from '../../hooks/features/rows/gridRowsState';
-
-// TODO: Export and make it augmentable
-interface Caches {
-  rows: GridRowsInternalCache;
-}
+import { GridApiCaches } from '../gridApiCaches';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
@@ -56,7 +51,7 @@ export interface GridCoreApi {
    * The caches used by hooks and state initializers.
    * @ignore - do not document.
    */
-  unstable_caches: Caches;
+  unstable_caches: GridApiCaches;
   /**
    * Registers a handler for an event.
    * @param {string} event The name of the event.

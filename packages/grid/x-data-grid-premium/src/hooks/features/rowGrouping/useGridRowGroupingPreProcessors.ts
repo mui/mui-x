@@ -141,13 +141,8 @@ export const useGridRowGroupingPreProcessors = (
     (params) => {
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const columnsLookup = gridColumnLookupSelector(apiRef);
-      apiRef.current.setState((state) => ({
-        ...state,
-        rowGrouping: {
-          ...state.rowGrouping,
-          unstable_sanitizedModelOnLastRowTreeCreation: rowGroupingModel,
-        },
-      }));
+      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation =
+        rowGroupingModel;
 
       const distinctValues: {
         [field: string]: { lookup: { [val: string]: boolean }; list: any[] };
