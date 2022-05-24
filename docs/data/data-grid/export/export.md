@@ -36,8 +36,8 @@ By default, the export menu displays all the available export formats, according
 
 - [Print](#print-export)
 - [CSV](#csv-export)
-- [Excel](#excel-export) [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
-- [Clipboard](#clipboard) [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/) (🚧 Not delivered yet)
+- [Excel](#excel-export) [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+- [Clipboard](#clipboard) [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/) (🚧 Not delivered yet)
 
 You can customize their respective behavior by passing an options object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
@@ -110,7 +110,8 @@ The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) t
 | `gridPaginatedVisibleSortedGridRowIdsSelector` | The rows after applying the sorting rules, the filtering rules, without the collapsed rows and only for the current page (**Note**: If the pagination is disabled, it will still take the value of `page` and `pageSize`). |
 
 {{"demo": "CsvGetRowsToExport.js", "bg": "inline", "defaultCodeOpen": false}}
-When using [Row grouping](/x/react-data-grid/row-grouping), it can be useful to remove the groups from the CSV export
+
+When using [Row grouping](/x/react-data-grid/row-grouping/), it can be useful to remove the groups from the CSV export.
 
 {{"demo": "CsvGetRowsToExportRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -119,7 +120,7 @@ When using [Row grouping](/x/react-data-grid/row-grouping), it can be useful to 
 ### Exported cells
 
 When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.
-You can provide a [`valueFormatter`](/x/react-data-grid/cells/#value-formatter) with a string representation to be used.
+You can provide a [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) with a string representation to be used.
 
 ```jsx
 <DataGrid
@@ -224,7 +225,7 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
 To install it:
@@ -315,14 +316,14 @@ In the following demo, both methods are used to set a custom header and a custom
 
 {{"demo": "ExcelCustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #199](https://github.com/mui/mui-x/issues/199) if you want to see it land faster.
 > You will be able to copy and paste items to and from the grid using the system clipboard.
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 > ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
@@ -334,7 +335,7 @@ In the following demo, both methods are used to set a custom header and a custom
 
 {{"demo": "PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-### Excel [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+### Excel [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 {{"demo": "ExcelExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

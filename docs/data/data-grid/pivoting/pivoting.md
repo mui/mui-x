@@ -2,7 +2,7 @@
 title: Data Grid - Pivoting
 ---
 
-# Data Grid - Pivoting [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data Grid - Pivoting [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 <p class="description">Turn a column values into columns.</p>
 

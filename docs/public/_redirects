@@ -2,7 +2,7 @@
 
 # For links that we can't edit later on, e.g. hosted in the code published on npm or sent by email
 # should all be prefixed with x-
-/r/x-get-license scope=pro https://mui.com/store/items/material-ui-pro/ 302
+/r/x-get-license scope=pro https://mui.com/store/items/mui-x-pro/ 302
 /r/x-get-license scope=premium https://mui.com/store/items/mui-x-premium/ 302
 /r/x-get-license https://mui.com/pricing/ 302
 /r/x-license-eula https://mui.com/store/legal/mui-x-eula/ 302
