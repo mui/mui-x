@@ -113,6 +113,7 @@ const VirtualScrollerDetailPanel = styled(Box, {
   width: '100%',
   position: 'absolute',
   backgroundColor: theme.palette.background.default,
+  overflow: 'auto',
 }));
 
 const VirtualScrollerPinnedColumns = styled('div', {
