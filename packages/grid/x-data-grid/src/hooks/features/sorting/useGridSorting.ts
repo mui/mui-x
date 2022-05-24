@@ -17,7 +17,7 @@ import {
   gridSortedRowIdsSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
-import { GRID_ROOT_GROUP_ID, gridRowIdsSelector, gridRowTreeSelector } from '../rows';
+import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
@@ -32,6 +32,7 @@ import {
 } from './gridSortingUtils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
 
 export const sortingStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>
@@ -127,8 +128,11 @@ export const useGridSorting = (
           ...state,
           sorting: {
             ...state.sorting,
-            // TODO: Fix
-            sortedRows: gridRowIdsSelector(state, apiRef.current.instanceId),
+            sortedRows: getTreeNodeDescendants(
+              gridRowTreeSelector(apiRef),
+              GRID_ROOT_GROUP_ID,
+              false,
+            ),
           },
         };
       }

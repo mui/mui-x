@@ -613,8 +613,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   describe('prop: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
       const isGroupExpandedByDefault = spy(
-        (node: GridGroupNode) =>
-          node.groupingKey === 'Cat A' && node.groupingField === 'category1',
+        (node: GridGroupNode) => node.groupingKey === 'Cat A' && node.groupingField === 'category1',
       );
 
       render(

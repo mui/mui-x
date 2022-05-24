@@ -330,8 +330,7 @@ export const getAggregationFooterLabel = ({
   }
 
   const getAggregationFunctionsAppliedOnCurrentGroup = () => {
-    const groupAggregatedValues = gridAggregationLookupSelector(apiRef)[groupNode?.id ?? ''];
-
+    const groupAggregatedValues = gridAggregationLookupSelector(apiRef)[groupNode.id];
     return Object.keys(groupAggregatedValues)
       .filter((field) => groupAggregatedValues[field].footer != null)
       .map((field) => ({
