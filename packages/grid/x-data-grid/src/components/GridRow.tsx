@@ -143,7 +143,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   React.useLayoutEffect(() => {
     if (currentPage.range) {
       // The index prop is relative to the rows from all pages. As example, the index prop of the
-      // first row is 5 if pageSize=4 and page=1. However, the index used by the virtualization
+      // first row is 5 if pageSize=5 and page=1. However, the index used by the virtualization
       // doesn't care about pagination and considers the rows from the current page only, so the
       // first row always has index=0. We need to subtract the index of the first row to make it
       // compatible with the index used by the virtualization.
@@ -153,12 +153,15 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     const rootElement = ref.current;
     const hasFixedHeight = rowHeight !== 'auto';
     if (!rootElement || hasFixedHeight || typeof ResizeObserver === 'undefined') {
-      return () => {};
+      return undefined;
     }
 
     const resizeObserver = new ResizeObserver((entries) => {
-      const borderBoxSize = entries[0].borderBoxSize[0];
-      apiRef.current.unstable_storeRowHeightMeasurement(rowId, borderBoxSize.blockSize);
+      const [entry] = entries;
+      const height = entry.borderBoxSize
+        ? entry.borderBoxSize[0].blockSize
+        : entry.contentRect.height;
+      apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
     });
 
     resizeObserver.observe(rootElement);
