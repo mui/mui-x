@@ -139,6 +139,7 @@ const nbNOGrid: GridLocaleText = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Rad reorganisering',
+  MuiTablePagination: {},
 };
 
 export const nbNO: Localization = getGridLocalization(nbNOGrid);
