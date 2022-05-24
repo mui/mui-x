@@ -46,7 +46,7 @@ To initialize the aggregation without controlling it, provide the model to the `
 
 Use the `aggregationModel` prop to control the aggregation passed to the grid.
 
-You can use the `onFilterModelChange` prop to listen to changes to the filters and update the prop accordingly.
+You can use the `onAggregationModelChange` prop to listen to changes to the aggregation and update the prop accordingly.
 
 {{"demo": "AggregationControlled.js", "bg": "inline"}}
 
