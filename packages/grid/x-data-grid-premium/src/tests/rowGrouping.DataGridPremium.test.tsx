@@ -103,7 +103,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
 
     describe('prop: rowGroupingModel', () => {
-      it.only('should not call onRowGroupingModelChange on initialisation or on rowGroupingModel prop change', () => {
+      it('should not call onRowGroupingModelChange on initialisation or on rowGroupingModel prop change', () => {
         const onRowGroupingModelChange = spy();
 
         const { setProps } = render(

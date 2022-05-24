@@ -17,7 +17,7 @@ import {
   gridSortedRowIdsSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
-import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
+import { GRID_ROOT_GROUP_ID, gridRowIdsSelector, gridRowTreeSelector } from '../rows';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
@@ -127,6 +127,7 @@ export const useGridSorting = (
           ...state,
           sorting: {
             ...state.sorting,
+            // TODO: Fix
             sortedRows: gridRowIdsSelector(state, apiRef.current.instanceId),
           },
         };
@@ -258,12 +259,13 @@ export const useGridSorting = (
   const flatSortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
+      const rowIds = (rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode)!.children;
 
       if (!params.sortRowList) {
         const bodyRowIds: GridRowId[] = [];
         const footerRowIds: GridRowId[] = [];
 
-        gridRowIdsSelector(apiRef).forEach((rowId) => {
+        rowIds.forEach((rowId) => {
           if (rowTree[rowId].type === 'footer') {
             footerRowIds.push(rowId);
           } else {
@@ -277,8 +279,8 @@ export const useGridSorting = (
       const bodyRows: (GridGroupNode | GridLeafNode)[] = [];
       const footerRowIds: GridRowId[] = [];
 
-      // TODO: We probably do not want to loop over the tree
-      Object.values(rowTree).forEach((rowNode) => {
+      rowIds.forEach((rowId) => {
+        const rowNode = rowTree[rowId];
         if (rowNode.type === 'footer') {
           footerRowIds.push(rowNode.id);
         } else if (rowNode.parent != null) {

@@ -287,7 +287,7 @@ export const useGridRows = (
     const allRows = gridRowIdsSelector(apiRef);
     const idRowsLookup = gridRowsLookupSelector(apiRef);
 
-    return new Map(allRows.map((id) => [id, idRowsLookup[id]]));
+    return new Map(allRows.map((id) => [id, idRowsLookup[id] ?? {}]));
   }, [apiRef]);
 
   const getRowsCount = React.useCallback<GridRowApi['getRowsCount']>(
