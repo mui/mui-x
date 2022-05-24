@@ -5,7 +5,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import {GridGroupNode, GridRowId, GridRowModel} from '../../../models/gridRows';
+import { GridGroupNode, GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -14,7 +14,7 @@ import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePan
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
-import {GRID_ROOT_GROUP_ID, gridRowTreeSelector} from '../rows';
+import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GRID_DEFAULT_STRATEGY,
@@ -285,8 +285,8 @@ export const useGridFilter = (
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       if (props.filterMode === GridFeatureModeConstant.client && params.isRowMatchingFilters) {
-          const tree = gridRowTreeSelector(apiRef)
-        const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children
+        const tree = gridRowTreeSelector(apiRef);
+        const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
         const filteredRowsLookup: Record<GridRowId, boolean> = {};
         for (let i = 0; i < rowIds.length; i += 1) {
           const rowId = rowIds[i];
