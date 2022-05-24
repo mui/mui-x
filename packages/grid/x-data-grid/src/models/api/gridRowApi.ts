@@ -44,6 +44,7 @@ export interface GridRowApi {
   getRowsCount: () => number;
   /**
    * Gets the list of row ids.
+   * TODO: Rename or remove ?
    * @returns {GridRowId[]} A list of ids.
    */
   getAllRowIds: () => GridRowId[];

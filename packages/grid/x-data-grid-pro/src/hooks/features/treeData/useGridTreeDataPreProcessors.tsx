@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  gridRowIdsSelector,
   gridRowTreeSelector,
   useFirstRender,
   GridColDef,
@@ -188,11 +187,9 @@ export const useGridTreeDataPreProcessors = (
   const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
-      const rowIds = gridRowIdsSelector(apiRef);
 
       return sortRowTree({
         rowTree,
-        rowIds,
         sortRowList: params.sortRowList,
         disableChildrenSorting: props.disableChildrenSorting,
       });

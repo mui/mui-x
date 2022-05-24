@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGridApiEventHandler, gridRowIdsSelector, GridRowId } from '@mui/x-data-grid';
+import { useGridApiEventHandler, gridDataRowIdsSelector, GridRowId } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -14,7 +14,7 @@ function cacheContentAndHeight(
 
   // TODO change to lazy approach using a Proxy
   // only call getDetailPanelContent when asked for an id
-  const rowIds = gridRowIdsSelector(apiRef);
+  const rowIds = gridDataRowIdsSelector(apiRef);
   const contentCache = rowIds.reduce<Record<GridRowId, ReturnType<typeof getDetailPanelContent>>>(
     (acc, id) => {
       const params = apiRef.current.getRowParams(id);

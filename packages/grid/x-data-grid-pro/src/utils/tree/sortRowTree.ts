@@ -1,67 +1,47 @@
 import {
   GRID_ROOT_GROUP_ID,
-  GridFooterNode,
   GridGroupNode,
-  GridLeafNode,
   GridRowId,
-  GridRowTreeConfig,
+  GridRowTreeConfig, GridTreeNode,
 } from '@mui/x-data-grid';
 import { GridSortingModelApplier } from '@mui/x-data-grid/internals';
 
 interface SortRowTreeParams {
-  rowIds: GridRowId[];
   rowTree: GridRowTreeConfig;
   disableChildrenSorting: boolean;
   sortRowList: GridSortingModelApplier | null;
 }
 
 export const sortRowTree = (params: SortRowTreeParams) => {
-  const { rowIds, rowTree, disableChildrenSorting, sortRowList } = params;
+  const { rowTree, disableChildrenSorting, sortRowList } = params;
   let sortedRows: GridRowId[] = [];
 
-  // Group the rows by parent
-  const groupedByParentRows = new Map<
-    GridRowId,
-    { body: (GridGroupNode | GridLeafNode)[]; footer: GridFooterNode[] }
-  >([[GRID_ROOT_GROUP_ID, { body: [], footer: [] }]]);
-  for (let i = 0; i < rowIds.length; i += 1) {
-    const rowId = rowIds[i];
-    const node = rowTree[rowId];
+  const sortedGroupedByParentRows = new Map<GridRowId, GridRowId[]>();
 
-    if (node.parent != null) {
-      let group = groupedByParentRows.get(node.parent);
-      if (!group) {
-        group = { body: [], footer: [] };
-        groupedByParentRows.set(node.parent, group);
-      }
+  const sortGroup = (node: GridGroupNode) => {
+    const shouldSortGroup = !!sortRowList && (!disableChildrenSorting || node.depth === -1)
 
-      if (node.type === 'footer') {
-        group.footer.push(node);
+    const footerIds: GridRowId[] = []
+    const unsortedBodyNodes: GridTreeNode[] = []
+
+    node.children.forEach(childNodeId => {
+      const childNode = rowTree[childNodeId]
+      if (childNode.type === 'footer') {
+        footerIds.push(childNodeId)
       } else {
-        group.body.push(node);
+        unsortedBodyNodes.push(childNode)
       }
-    }
+
+      if (childNode.type === 'group') {
+        sortGroup(childNode)
+      }
+    })
+
+    const sortedBodyRowIds = shouldSortGroup ? sortRowList(unsortedBodyNodes) : unsortedBodyNodes.map(childNode => childNode.id)
+    sortedGroupedByParentRows.set(node.id, [...sortedBodyRowIds, ...footerIds])
   }
 
-  // Apply the sorting to each list of children
-  const sortedGroupedByParentRows = new Map<GridRowId, GridRowId[]>();
-  groupedByParentRows.forEach((group, parent) => {
-    if (group.body.length === 0) {
-      sortedGroupedByParentRows.set(parent, []);
-    } else {
-      let sortedBodyRows: GridRowId[];
-      const depth = group.body[0].depth;
-      if ((depth > 0 && disableChildrenSorting) || !sortRowList) {
-        sortedBodyRows = group.body.map((row) => row.id);
-      } else {
-        sortedBodyRows = sortRowList(group.body);
-      }
-
-      const footerRows = group.footer.map((row) => row.id);
-
-      sortedGroupedByParentRows.set(parent, [...sortedBodyRows, ...footerRows]);
-    }
-  });
+  sortGroup(rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode)
 
   // Flatten the sorted lists to have children just after their parent
   const insertRowListIntoSortedRows = (startIndex: number, rowList: GridRowId[]) => {

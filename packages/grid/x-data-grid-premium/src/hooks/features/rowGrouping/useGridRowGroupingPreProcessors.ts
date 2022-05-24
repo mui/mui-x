@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   gridColumnLookupSelector,
   GridRowId,
-  gridRowIdsSelector,
   gridRowTreeSelector,
   useFirstRender,
 } from '@mui/x-data-grid-pro';
@@ -206,11 +205,9 @@ export const useGridRowGroupingPreProcessors = (
   const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
-      const rowIds = gridRowIdsSelector(apiRef);
 
       return sortRowTree({
         rowTree,
-        rowIds,
         sortRowList: params.sortRowList,
         disableChildrenSorting: false,
       });

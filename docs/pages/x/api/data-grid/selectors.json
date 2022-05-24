@@ -78,6 +78,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridDataRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridDensityFactorSelector",
     "returnType": "number",
     "description": "",
@@ -272,12 +278,6 @@
   {
     "name": "gridRowGroupingSanitizedModelSelector",
     "returnType": "string[]",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridRowIdsSelector",
-    "returnType": "GridRowId[]",
     "description": "",
     "supportsApiRef": true
   },
