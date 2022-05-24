@@ -1,7 +1,7 @@
 import { GridLocaleText } from '@mui/x-data-grid';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-const nbNOGrid: GridLocaleText = {
+const nbNOGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rader',
   noResultsOverlayLabel: 'Fant ingen resultat.',
@@ -139,7 +139,6 @@ const nbNOGrid: GridLocaleText = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Rad reorganisering',
-  MuiTablePagination: {},
 };
 
 export const nbNO: Localization = getGridLocalization(nbNOGrid);
