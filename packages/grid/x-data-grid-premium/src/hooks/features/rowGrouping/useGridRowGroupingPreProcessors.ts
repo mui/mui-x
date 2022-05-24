@@ -144,12 +144,6 @@ export const useGridRowGroupingPreProcessors = (
       apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation =
         rowGroupingModel;
 
-      const distinctValues: {
-        [field: string]: { lookup: { [val: string]: boolean }; list: any[] };
-      } = Object.fromEntries(
-        rowGroupingModel.map((groupingField) => [groupingField, { lookup: {}, list: [] }]),
-      );
-
       const getCellGroupingCriteria = ({
         row,
         id,
@@ -182,24 +176,6 @@ export const useGridRowGroupingPreProcessors = (
           field: colDef.field,
         };
       };
-
-      params.ids.forEach((rowId) => {
-        const row = params.idRowsLookup[rowId];
-
-        rowGroupingModel.forEach((groupingCriteria) => {
-          const { key } = getCellGroupingCriteria({
-            row,
-            id: rowId,
-            colDef: columnsLookup[groupingCriteria],
-          });
-          const groupingFieldsDistinctKeys = distinctValues[groupingCriteria];
-
-          if (key != null && !groupingFieldsDistinctKeys.lookup[key.toString()]) {
-            groupingFieldsDistinctKeys.lookup[key.toString()] = true;
-            groupingFieldsDistinctKeys.list.push(key);
-          }
-        });
-      });
 
       const rows = params.ids.map((rowId) => {
         const row = params.idRowsLookup[rowId];
