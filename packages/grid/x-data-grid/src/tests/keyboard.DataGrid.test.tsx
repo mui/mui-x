@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, createEvent } from '@mui/monorepo/test/utils';
+// @ts-ignore Remove once the test utils are typed
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import Portal from '@mui/material/Portal';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -52,6 +54,7 @@ describe('<DataGrid /> - Keyboard', () => {
           headerHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ columnField: 'id', operatorValue: '>', value: 10 }] }}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
           {...props}
         />
       </div>
@@ -190,7 +193,46 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
       expect(getActiveCell()).to.equal(`3-1`);
+    });
+
+    it('should move to the first row before moving to column header when pressing "PageUp"', function test() {
+      if (isJSDOM) {
+        // This test is not relevant if we can't choose the actual height
+        this.skip();
+      }
+
+      render(<NavigationTestCaseNoScrollX />);
+      const cell = getCell(3, 1);
+      fireClickEvent(cell);
+      expect(getActiveCell()).to.equal('3-1');
+
       fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(`0-1`, 'should focus first row');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(null);
+      expect(getActiveColumnHeader()).to.equal(`1`);
+    });
+
+    it('should move to the first row before moving to column header when pressing "PageUp" on page > 0', function test() {
+      if (isJSDOM) {
+        // This test is not relevant if we can't choose the actual height
+        this.skip();
+      }
+
+      render(<NavigationTestCaseNoScrollX hideFooter={false} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+
+      const cell = getCell(13, 1);
+      fireClickEvent(cell);
+      expect(getActiveCell()).to.equal('13-1');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(`10-1`, 'should focus first row');
+
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(getActiveCell()).to.equal(null);
       expect(getActiveColumnHeader()).to.equal(`1`);
     });
 
@@ -269,9 +311,24 @@ describe('<DataGrid /> - Keyboard', () => {
         </div>,
       );
       getColumnHeaderCell(0).focus();
-      const virtualScroller = document.querySelector(
-        '.MuiDataGrid-virtualScroller',
-      )! as HTMLElement;
+      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+      expect(virtualScroller.scrollLeft).to.equal(0);
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expect(virtualScroller.scrollLeft).not.to.equal(0);
+    });
+
+    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
+      if (isJSDOM) {
+        // Need layouting for column virtualization
+        this.skip();
+      }
+      render(
+        <div style={{ width: 60, height: 300 }}>
+          <DataGrid autoHeight={isJSDOM} {...getData(10, 10)} rows={[]} />
+        </div>,
+      );
+      getColumnHeaderCell(0).focus();
+      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
       expect(virtualScroller.scrollLeft).to.equal(0);
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
       expect(virtualScroller.scrollLeft).not.to.equal(0);
@@ -325,92 +382,99 @@ describe('<DataGrid /> - Keyboard', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
       expect(getActiveCell()).to.equal(`5-1`);
     });
-  });
-  /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 
-  it('should be able to type in an child input', () => {
-    const handleInputKeyDown = spy((event) => event.defaultPrevented);
+    it('should move focus when the focus is on a column header button', function test() {
+      if (isJSDOM) {
+        // This test is not relevant if we can't choose the actual height
+        this.skip();
+      }
 
-    const columns = [
-      {
-        field: 'name',
-        headerName: 'Name',
-        width: 200,
-        renderCell: () => (
-          <input type="text" data-testid="custom-input" onKeyDown={handleInputKeyDown} />
-        ),
-      },
-    ];
+      render(<NavigationTestCaseNoScrollX />);
 
-    const rows = [
-      {
-        id: 1,
-        name: 'John',
-      },
-    ];
+      // get the sort button in column header 1
+      const columnMenuButton =
+        getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
 
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid rows={rows} columns={columns} />
-      </div>,
-    );
-    const input = screen.getByTestId('custom-input');
-    fireClickEvent(input);
-    const keydownEvent = createEvent.keyDown(input, {
-      key: 'a',
+      // Simulate click on this button
+      fireEvent.mouseUp(columnMenuButton);
+      fireEvent.click(columnMenuButton);
+      columnMenuButton.focus();
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      expect(getActiveCell()).to.equal(`0-1`);
     });
-    fireEvent(input, keydownEvent);
-    expect(handleInputKeyDown.returnValues).to.deep.equal([false]);
+
+    it('should be able to use keyboard in a columnHeader child input', () => {
+      const columns = [
+        {
+          field: 'name',
+          headerName: 'Name',
+          width: 200,
+          renderHeader: () => <input type="text" data-testid="custom-input" />,
+        },
+      ];
+
+      const rows = [
+        {
+          id: 1,
+          name: 'John',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={rows} columns={columns} />
+        </div>,
+      );
+      const input = screen.getByTestId('custom-input');
+      fireEvent.mouseUp(input);
+      fireEvent.click(input);
+      input.focus();
+
+      // Verify that the event is not prevented during the bubbling.
+      // fireEvent.keyDown return false if it is the case
+      // For more info, see the related discussion: https://github.com/mui/mui-x/pull/3624#discussion_r787767632
+      expect(fireEvent.keyDown(input, { key: 'a' })).to.equal(true);
+      expect(fireEvent.keyDown(input, { key: ' ' })).to.equal(true);
+      expect(fireEvent.keyDown(input, { key: 'ArrowLeft' })).to.equal(true);
+    });
   });
 
-  it('should ignore key shortcuts if activeElement is not a cell', () => {
-    const columns = [
-      {
-        field: 'id',
-      },
-      {
-        field: 'name',
-        renderCell: () => <input type="text" data-testid="custom-input" tabIndex={0} />,
-      },
-    ];
-
-    const rows = [
-      {
-        id: 1,
-        name: 'John',
-      },
-    ];
-
+  it('should ignore events coming from a portal inside the cell', () => {
+    const handleCellKeyDown = spy();
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid rows={rows} columns={columns} />
+        <DataGrid
+          rows={[{ id: 1, name: 'John' }]}
+          onCellKeyDown={handleCellKeyDown}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'name',
+              renderCell: () => (
+                <Portal>
+                  <input type="text" name="custom-input" />
+                </Portal>
+              ),
+            },
+          ]}
+        />
       </div>,
     );
-    const input = screen.getByTestId('custom-input');
-    fireClickEvent(input);
-    expect(getActiveCell()).to.equal('0-1');
+    fireEvent.mouseUp(getCell(0, 1));
+    fireEvent.click(getCell(0, 1));
+    expect(handleCellKeyDown.callCount).to.equal(0);
+    const input = document.querySelector<HTMLInputElement>('input[name="custom-input"]')!;
+    input.focus();
     fireEvent.keyDown(input, { key: 'ArrowLeft' });
-    expect(getActiveCell()).to.equal('0-1');
+    expect(handleCellKeyDown.callCount).to.equal(0);
   });
 
   it('should call preventDefault when using keyboard navigation', () => {
     const handleKeyDown = spy((event) => event.defaultPrevented);
 
-    const columns = [
-      {
-        field: 'id',
-      },
-      {
-        field: 'name',
-      },
-    ];
-
-    const rows = [
-      {
-        id: 1,
-        name: 'John',
-      },
-    ];
+    const columns = [{ field: 'id' }, { field: 'name' }];
+    const rows = [{ id: 1, name: 'John' }];
 
     render(
       <div style={{ width: 300, height: 300 }} onKeyDown={handleKeyDown}>
@@ -484,5 +548,27 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(renderCell.callCount).to.equal(4);
     fireEvent.keyDown(input, { key: 'b' });
     expect(renderCell.callCount).to.equal(4);
+  });
+
+  it('should not scroll horizontally when cell is wider than viewport', () => {
+    const columns = [{ field: 'id', width: 400 }, { field: 'name' }];
+    const rows = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Doe' },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+    const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+
+    const firstCell = getCell(0, 0);
+    fireClickEvent(firstCell);
+    expect(virtualScroller.scrollLeft).to.equal(0);
+
+    fireEvent.keyDown(firstCell, { key: 'ArrowDown' });
+    expect(virtualScroller.scrollLeft).to.equal(0);
   });
 });

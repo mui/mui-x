@@ -1,13 +1,16 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "isolatedModules": true,
     /* files are emitted by babel */
     "noEmit": true,
-    "types": ["react", "node", "requestidlecallback"],
-    "jsx": "preserve",
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "incremental": true
+    "esModuleInterop": true,
+    "types": ["react", "node"],
+    "incremental": true,
+    "noImplicitAny": true
   },
-  "include": ["src/pages/**/*"],
+  "include": ["src/pages/**/*", "data/**/*"],
   "exclude": ["docs/.next", "docs/export"]
 }

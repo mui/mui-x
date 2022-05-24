@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { GridRenderEditCellParams } from '@mui/x-data-grid';
+import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
 
-function EditRating(props: GridRenderEditCellParams) {
+function EditRating(props: GridRenderEditCellParams<number>) {
   const { id, value, api, field } = props;
 
   const handleChange = (event: any) => {
@@ -45,6 +45,6 @@ function EditRating(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditRating(params: GridRenderEditCellParams) {
+export function renderEditRating(params: GridRenderEditCellParams<number>) {
   return <EditRating {...params} />;
 }

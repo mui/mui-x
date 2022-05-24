@@ -3,26 +3,15 @@ import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
 import * as ts from 'typescript';
-
-export interface Project {
-  name: ProjectNames;
-  exports: Record<string, ts.Symbol>;
-  program: ts.Program;
-  checker: ts.TypeChecker;
-  workspaceRoot: string;
-  prettierConfigPath: string;
-}
-
-export type ProjectNames = 'x-data-grid' | 'x-data-grid-pro';
-
-export type Projects = Map<ProjectNames, Project>;
+import { Project, ProjectNames } from '../getTypeScriptProjects';
 
 export type DocumentedInterfaces = Map<string, ProjectNames[]>;
 
 export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>
   symbol
     .getDocumentationComment(project.checker)
-    .map((comment) => comment.text)
+    .flatMap((comment) => comment.text.split('\n'))
+    .filter((line) => !line.startsWith('TODO'))
     .join('\n');
 
 export const getSymbolJSDocTags = (symbol: ts.Symbol) =>
@@ -45,6 +34,10 @@ export function escapeCell(value: string) {
 }
 
 export const formatType = (rawType: string) => {
+  if (!rawType) {
+    return '';
+  }
+
   const prefix = 'type FakeType = ';
   const signatureWithTypeName = `${prefix}${rawType}`;
 
@@ -60,14 +53,18 @@ export const formatType = (rawType: string) => {
 };
 
 export const stringifySymbol = (symbol: ts.Symbol, project: Project) => {
-  const rawType =
-    symbol.valueDeclaration && ts.isPropertySignature(symbol.valueDeclaration)
-      ? symbol.valueDeclaration.type?.getText() ?? ''
-      : project.checker.typeToString(
-          project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
-          symbol.valueDeclaration,
-          ts.TypeFormatFlags.NoTruncation,
-        );
+  let rawType: string;
+
+  const declaration = symbol.declarations?.[0];
+  if (declaration && ts.isPropertySignature(declaration)) {
+    rawType = declaration.type?.getText() ?? '';
+  } else {
+    rawType = project.checker.typeToString(
+      project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
+      symbol.valueDeclaration,
+      ts.TypeFormatFlags.NoTruncation,
+    );
+  }
 
   return formatType(rawType);
 };
@@ -86,7 +83,7 @@ export function linkify(
     if (!documentedInterfaces.get(content)) {
       return content;
     }
-    const url = `/api/data-grid/${kebabCase(content)}/`;
+    const url = `/x/api/data-grid/${kebabCase(content)}/`;
     return format === 'markdown' ? `[${content}](${url})` : `<a href="${url}">${content}</a>`;
   });
 }
@@ -105,3 +102,28 @@ export function writePrettifiedFile(filename: string, data: string, project: Pro
     encoding: 'utf8',
   });
 }
+
+/**
+ * Goes to the root symbol of ExportSpecifier
+ * That corresponds to one of the following patterns
+ * - `export { XXX}`
+ * - `export { XXX } from './modules'`
+ *
+ * Do not go to the root definition for TypeAlias (ie: `export type XXX = YYY`)
+ * Because we usually want to keep the description and tags of the aliased symbol.
+ */
+export const resolveExportSpecifier = (symbol: ts.Symbol, project: Project) => {
+  let resolvedSymbol = symbol;
+
+  while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {
+    const newResolvedSymbol = project.checker.getImmediateAliasedSymbol(resolvedSymbol);
+
+    if (!newResolvedSymbol) {
+      throw new Error('Impossible to resolve export specifier');
+    }
+
+    resolvedSymbol = newResolvedSymbol;
+  }
+
+  return resolvedSymbol;
+};

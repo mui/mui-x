@@ -1,22 +1,21 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import {
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridPro,
-  GridEvents,
   DataGridProProps,
+  GridSelectionModel,
 } from '@mui/x-data-grid-pro';
 import { getData } from 'storybook/src/data/data-service';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
-  return [...getRows()]
+  return Array.from(getRows())
     .filter((row) => row.classList.contains('Mui-selected'))
     .map((row) =>
       Number(
@@ -28,7 +27,7 @@ function getSelectedRowIds() {
 describe('<DataGridPro /> - Selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestDataGridSelection = ({
     rowLength = 4,
@@ -41,7 +40,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...data} {...other} apiRef={apiRef} autoHeight={isJSDOM} />
+        <DataGridPro {...data} {...other} apiRef={apiRef} disableVirtualization />
       </div>
     );
   };
@@ -57,7 +56,7 @@ describe('<DataGridPro /> - Selection', () => {
         />,
       );
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(4);
@@ -77,7 +76,7 @@ describe('<DataGridPro /> - Selection', () => {
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(0);
@@ -96,7 +95,7 @@ describe('<DataGridPro /> - Selection', () => {
       );
 
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(rowLength);
@@ -115,7 +114,7 @@ describe('<DataGridPro /> - Selection', () => {
       );
 
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
 
       fireEvent.click(getCell(0, 0).querySelector('input'));
@@ -131,11 +130,9 @@ describe('<DataGridPro /> - Selection', () => {
         render(
           <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
         );
-      })
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
-        );
+      }).toErrorDev(
+        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+      );
     });
 
     it('should select all the rows of the current page if no row of the current page is selected', () => {
@@ -152,7 +149,7 @@ describe('<DataGridPro /> - Selection', () => {
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2, 3]);
@@ -175,7 +172,7 @@ describe('<DataGridPro /> - Selection', () => {
       fireEvent.click(getCell(2, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
@@ -197,7 +194,7 @@ describe('<DataGridPro /> - Selection', () => {
       fireEvent.click(getCell(1, 0));
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'false');
     });
@@ -226,7 +223,7 @@ describe('<DataGridPro /> - Selection', () => {
     it('should check if the rows selected by clicking on the rows are selected', () => {
       render(<TestDataGridSelection />);
 
-      fireEvent.click(getRow(1));
+      fireEvent.click(getCell(1, 0));
 
       expect(apiRef.current.isRowSelected(0)).to.equal(false);
       expect(apiRef.current.isRowSelected(1)).to.equal(true);
@@ -379,7 +376,7 @@ describe('<DataGridPro /> - Selection', () => {
   it('should select only filtered rows after filter is applied', () => {
     render(<TestDataGridSelection checkboxSelection />);
     const selectAll = screen.getByRole('checkbox', {
-      name: /select all rows checkbox/i,
+      name: /select all rows/i,
     });
     apiRef.current.setFilterModel({
       items: [
@@ -404,11 +401,22 @@ describe('<DataGridPro /> - Selection', () => {
   describe('controlled selection', () => {
     it('should not publish GRID_SELECTION_CHANGE if the selection state did not change ', () => {
       const handleSelectionChange = spy();
-      const selectionModel = [];
+      const selectionModel: GridSelectionModel = [];
       render(<TestDataGridSelection selectionModel={selectionModel} />);
-      apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
+      apiRef.current.subscribeEvent('selectionChange', handleSelectionChange);
       apiRef.current.setSelectionModel(selectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
+    });
+
+    it('should not call onSelectionModelChange on initialization if selectionModel contains more than one id and checkboxSelection=false', () => {
+      const onSelectionModelChange = spy();
+      render(
+        <TestDataGridSelection
+          onSelectionModelChange={onSelectionModelChange}
+          selectionModel={[0, 1]}
+        />,
+      );
+      expect(onSelectionModelChange.callCount).to.equal(0);
     });
   });
 });

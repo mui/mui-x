@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid';
+import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
 import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
@@ -19,7 +19,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 }));
 
-function EditCurrency(props: GridRenderEditCellParams) {
+function EditCurrency(props: GridRenderEditCellParams<string>) {
   const { id, value, api, field } = props;
 
   const handleChange = React.useCallback(
@@ -35,7 +35,7 @@ function EditCurrency(props: GridRenderEditCellParams) {
 
   return (
     <StyledAutocomplete
-      value={value as string}
+      value={value}
       onChange={handleChange}
       options={CURRENCY_OPTIONS}
       autoHighlight
@@ -47,7 +47,7 @@ function EditCurrency(props: GridRenderEditCellParams) {
           component="li"
           sx={{
             '& > img': {
-              mr: 2,
+              mr: 1.5,
               flexShrink: 0,
             },
           }}
@@ -79,6 +79,6 @@ function EditCurrency(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditCurrency(params: GridRenderEditCellParams) {
+export function renderEditCurrency(params: GridRenderEditCellParams<string>) {
   return <EditCurrency {...params} />;
 }

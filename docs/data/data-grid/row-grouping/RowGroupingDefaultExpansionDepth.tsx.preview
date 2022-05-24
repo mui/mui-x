@@ -1,0 +1,7 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  defaultGroupingExpansionDepth={-1}
+  disableSelectionOnClick
+  initialState={initialState}
+/>

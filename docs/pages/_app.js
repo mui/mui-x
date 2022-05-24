@@ -6,9 +6,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
-import pages from 'docsx/src/pages'; // DO NOT REMOVE
-import newPages from 'docsx/data/pages'; // DO NOT REMOVE
-import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
+import pages from 'docsx/data/pages'; // DO NOT REMOVE
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
@@ -22,6 +20,7 @@ import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
 import { LANGUAGES } from 'docs/src/modules/constants';
 import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
+import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
 import {
   UserLanguageProvider,
   useSetUserLanguage,
@@ -36,21 +35,46 @@ function getMuiPackageVersion(packageName, commitRef) {
     return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;
+  return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
 }
 
 ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
+    if (newDeps['@mui/x-data-grid']) {
       newDeps['@mui/material'] = versions['@mui/material'];
+    }
+
+    if (newDeps['@mui/x-data-grid-pro']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
+    }
+
+    if (newDeps['@mui/x-data-grid-premium']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
+      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
+      // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
+      // use `import 'exceljs'` in demonstrations instead
+      newDeps.exceljs = versions.exceljs;
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
       newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid']; // TS types are imported from @mui/x-data-grid
+      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid-pro
+    }
+
+    if (newDeps['@mui/x-date-pickers']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['date-fns'] = versions['date-fns'];
+    }
+
+    if (newDeps['@mui/x-date-pickers-pro']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
     }
 
     return newDeps;
@@ -58,9 +82,14 @@ ponyfillGlobal.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     const output = {
       ...versions,
-      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
-      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
+      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
+      '@mui/x-data-grid-premium': getMuiPackageVersion('x-data-grid-premium', muiCommitRef),
+      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
+      '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
+      '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
+      'date-fns': 'latest',
+      exceljs: 'latest',
     };
     return output;
   },
@@ -84,7 +113,11 @@ function LanguageNegotiation() {
       acceptLanguage.get(navigator.language) ||
       userLanguage;
 
-    if (userLanguageUrl === 'en' && userLanguage !== preferedLanguage) {
+    if (
+      userLanguageUrl === 'en' &&
+      userLanguage !== preferedLanguage &&
+      !process.env.PULL_REQUEST
+    ) {
       window.location =
         preferedLanguage === 'en' ? canonicalAs : `/${preferedLanguage}${canonicalAs}`;
     } else if (userLanguage !== userLanguageUrl) {
@@ -211,12 +244,7 @@ function AppWrapper(props) {
     }
   }, []);
 
-  let productPages = pages;
-  if (router.asPath.startsWith('/x')) {
-    productPages = newPages;
-  }
-
-  const activePage = findActivePage(productPages, router.pathname);
+  const activePage = findActivePage(pages, router.pathname);
 
   let fonts = [];
   if (router.pathname.match(/onepirate/)) {
@@ -233,17 +261,19 @@ function AppWrapper(props) {
         ))}
       </NextHead>
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
-        <CodeVariantProvider>
-          <PageContext.Provider value={{ activePage, pages: productPages }}>
-            <ThemeProvider>
-              <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                <XWrapper>{children}</XWrapper>
-                <GoogleAnalytics />
-              </DocsStyledEngineProvider>
-            </ThemeProvider>
-          </PageContext.Provider>
-          <LanguageNegotiation />
-        </CodeVariantProvider>
+        <CodeCopyProvider>
+          <CodeVariantProvider>
+            <PageContext.Provider value={{ activePage, pages }}>
+              <ThemeProvider>
+                <DocsStyledEngineProvider cacheLtr={emotionCache}>
+                  {children}
+                  <GoogleAnalytics />
+                </DocsStyledEngineProvider>
+              </ThemeProvider>
+            </PageContext.Provider>
+            <LanguageNegotiation />
+          </CodeVariantProvider>
+        </CodeCopyProvider>
       </UserLanguageProvider>
     </React.Fragment>
   );

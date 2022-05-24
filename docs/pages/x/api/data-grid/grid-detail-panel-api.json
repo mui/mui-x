@@ -1,0 +1,21 @@
+{
+  "name": "GridDetailPanelApi",
+  "description": "The master/detail API interface that is available in the grid apiRef.",
+  "properties": [
+    {
+      "name": "getExpandedDetailPanels",
+      "description": "Returns the rows whose detail panel is open.",
+      "type": "() => GridRowId[]"
+    },
+    {
+      "name": "setExpandedDetailPanels",
+      "description": "Changes which rows to expand the detail panel.",
+      "type": "(ids: GridRowId[]) => void"
+    },
+    {
+      "name": "toggleDetailPanel",
+      "description": "Expands or collapses the detail panel of a row.",
+      "type": "(id: GridRowId) => void"
+    }
+  ]
+}

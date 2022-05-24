@@ -39,6 +39,9 @@ export const LoadingRowsAutoHeight = () => (
 export const VerticalScroll = () => <GridDataSet nbRows={200} nbCols={2} />;
 export const HorizontalScroll = () => <GridDataSet nbRows={15} nbCols={20} />;
 export const BothScroll = () => <GridDataSet nbRows={200} nbCols={50} />;
+export const AutoHeightWithRightBordersSnap = () => (
+  <GridDataSet nbRows={5} nbCols={5} autoHeight showCellRightBorder showColumnRightBorder />
+);
 export const BothScrollNoExtendAndBorders = () => (
   <GridDataSet nbRows={200} nbCols={50} disableExtendRowFullWidth showCellRightBorder />
 );

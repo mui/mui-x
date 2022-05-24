@@ -1,4 +1,5 @@
-import { GridApiRef, GridColumns, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import { GridColumns, useGridApiRef, DataGridPro, GridApi } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -12,7 +13,7 @@ describe('<DataGridPro /> - Export', () => {
     autoHeight: isJSDOM,
   };
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const columns: GridColumns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
@@ -20,6 +21,7 @@ describe('<DataGridPro /> - Export', () => {
     it('should work with basic strings', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
+
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -260,6 +262,36 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,Brand', '0,Nike'].join('\r\n'));
+    });
+
+    it('should export the rows returned by params.getRowsToExport if defined', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(apiRef.current.getDataAsCsv({ getRowsToExport: () => [0] })).to.equal(
+        ['id,Brand', '0,Nike'].join('\r\n'),
+      );
     });
 
     it('should not export hidden column (deprecated)', () => {
@@ -575,6 +607,47 @@ describe('<DataGridPro /> - Export', () => {
       };
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
+    });
+
+    it('should warn when a value of a field is an object and no `valueFormatter` is provided', () => {
+      const COUNTRY_ISO_OPTIONS = [
+        { value: 'FR', label: 'France' },
+        { value: 'BR', label: 'Brazil' },
+      ];
+
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[
+                { field: 'id' },
+                {
+                  field: 'country',
+                  type: 'singleSelect',
+                  valueOptions: COUNTRY_ISO_OPTIONS,
+                },
+              ]}
+              rows={[
+                { id: 0, country: COUNTRY_ISO_OPTIONS[0] },
+                { id: 1, country: COUNTRY_ISO_OPTIONS[1] },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(() => {
+        apiRef.current.getDataAsCsv();
+      }).toWarnDev(
+        [
+          'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+          'You can provide a `valueFormatter` with a string representation to be used.',
+        ].join('\n'),
+      );
     });
   });
 });

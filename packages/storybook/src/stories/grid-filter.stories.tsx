@@ -8,7 +8,7 @@ import {
   GridColDef,
   GridColTypeDef,
   GridFilterInputValueProps,
-  GridFilterItem,
+  GridFilterOperator,
   GridFilterModel,
   getGridNumericOperators,
   GridLinkOperator,
@@ -504,18 +504,17 @@ export function CustomFilterOperator() {
     </div>
   );
 }
-const RatingOnlyOperators = [
+const RatingOnlyOperators: GridFilterOperator[] = [
   {
     label: 'From',
     value: 'from',
-    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+    getApplyFilterFn: (filterItem) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
-      return (params): boolean => {
-        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        return Number(rowValue) >= Number(filterItem.value);
+      return (params) => {
+        return Number(params.value) >= Number(filterItem.value);
       };
     },
     InputComponent: RatingInputValue,
@@ -695,6 +694,30 @@ export function DemoMultiFilteringGrid() {
       <DataGridPro
         initialState={{ filter: { filterModel: demoFilterModel } }}
         {...data}
+        checkboxSelection
+      />
+    </div>
+  );
+}
+
+export function MultiFilteringPanelSnap() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPro
+        {...data}
+        initialState={{
+          filter: { filterModel: demoFilterModel },
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
         checkboxSelection
       />
     </div>

@@ -36,7 +36,7 @@ defaults: &defaults
     REACT_DIST_TAG: << parameters.react-dist-tag >>
   working_directory: /tmp/mui
   docker:
-    - image: circleci/node:12
+    - image: cimg/node:12.22
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -95,7 +95,7 @@ commands:
           key: v8-yarn-{{ checksum "yarn.lock" }}
           paths:
             # Keep path in sync with "Set yarn cache folder"
-            # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
+            # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
             - /tmp/yarn-cache
       - when:
           condition: << parameters.browsers >>
@@ -105,7 +105,7 @@ commands:
                 key: v5-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
                 paths:
                   # Keep path in sync with "PLAYWRIGHT_BROWSERS_PATH"
-                  # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
+                  # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
                   - /tmp/pw-browsers
 
 jobs:
@@ -135,6 +135,12 @@ jobs:
             then
               exit 1
             fi
+      - run:
+          name: Coverage
+          command: |
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_DIST_TAG-jsdom"
   test_lint:
     <<: *defaults
     steps:
@@ -143,9 +149,6 @@ jobs:
       - run:
           name: Eslint
           command: yarn eslint:ci
-      - run:
-          name: Stylelint
-          command: yarn stylelint
       - run:
           name: Lint JSON
           command: yarn jsonlint
@@ -181,7 +184,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -208,11 +211,11 @@ jobs:
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Tests TypeScript definitions
-          command: yarn typescript
+          command: yarn typescript:ci
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -225,7 +228,7 @@ jobs:
   test_e2e_website:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:f08e263c95e83334104e6e2fee047ad92062a03af6ae94c0f8686ba2b3014823
+      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -240,7 +243,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -256,7 +259,7 @@ jobs:
   test_performance:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:

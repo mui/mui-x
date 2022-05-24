@@ -4,7 +4,8 @@
     "outDir": "build/",
     "rootDirs": ["src"],
     "types": ["node", "requestidlecallback"],
-    "sourceMap": true
+    "sourceMap": true,
+    "noEmit": false
   },
   "include": ["src/**/*"],
   "exclude": ["__tests__", "**/*.test.ts", "node_modules", "lib", "build", "scripts"]

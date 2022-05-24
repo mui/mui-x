@@ -60,6 +60,7 @@ export const CURRENCY_OPTIONS = [
   'HKD',
   'TRY',
 ];
+
 export const COUNTRY_OPTIONS = [
   'United States',
   'United Kingdom',
@@ -76,7 +77,16 @@ export const COUNTRY_OPTIONS = [
   'Hong Kong',
   'Turkey',
 ];
-export const COUNTRY_ISO_OPTIONS = [
+
+export interface CountryIsoOption {
+  value: string;
+  code: string;
+  label: string;
+  phone: string;
+  suggested?: boolean;
+}
+
+export const COUNTRY_ISO_OPTIONS: CountryIsoOption[] = [
   { value: 'AD', code: 'AD', label: 'Andorra', phone: '376' },
   { value: 'AE', code: 'AE', label: 'United Arab Emirates', phone: '971' },
   { value: 'AF', code: 'AF', label: 'Afghanistan', phone: '93' },
@@ -326,3 +336,7 @@ export const COUNTRY_ISO_OPTIONS = [
   { value: 'ZM', code: 'ZM', label: 'Zambia', phone: '260' },
   { value: 'ZW', code: 'ZW', label: 'Zimbabwe', phone: '263' },
 ];
+
+export const COUNTRY_ISO_OPTIONS_SORTED = [...COUNTRY_ISO_OPTIONS].sort((v1, v2) =>
+  v1.label.localeCompare(v2.label),
+);

@@ -1,5 +1,0 @@
-<DataGrid
-  {...data}
-  sortModel={sortModel}
-  onSortModelChange={(model) => setSortModel(model)}
-/>

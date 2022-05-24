@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderEditCellParams, GridEvents } from '@mui/x-data-grid';
+import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { MenuProps } from '@mui/material/Menu';
@@ -11,7 +11,7 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
 import { STATUS_OPTIONS } from '../services/static-data';
 
-function EditStatus(props: GridRenderEditCellParams) {
+function EditStatus(props: GridRenderEditCellParams<string>) {
   const { id, value, api, field } = props;
 
   const handleChange: SelectProps['onChange'] = (event) => {
@@ -23,7 +23,7 @@ function EditStatus(props: GridRenderEditCellParams) {
       // TODO v6: remove once we stop ignoring events fired from portals
       const params = api.getCellParams(id, field);
       api.publishEvent(
-        GridEvents.cellNavigationKeyDown,
+        'cellNavigationKeyDown',
         params,
         event as any as React.KeyboardEvent<HTMLElement>,
       );
@@ -85,6 +85,6 @@ function EditStatus(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditStatus(params: GridRenderEditCellParams) {
+export function renderEditStatus(params: GridRenderEditCellParams<string>) {
   return <EditStatus {...params} />;
 }

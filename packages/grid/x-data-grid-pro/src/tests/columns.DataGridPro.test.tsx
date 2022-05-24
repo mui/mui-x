@@ -1,16 +1,16 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
-  GridApiRef,
   DataGridProProps,
   useGridApiRef,
   DataGridPro,
   gridClasses,
-  GridEvents,
   gridColumnLookupSelector,
-  allGridColumnsFieldsSelector,
+  gridColumnFieldsSelector,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
@@ -19,7 +19,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Columns', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -98,9 +98,7 @@ describe('<DataGridPro /> - Columns', () => {
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseUp(separator);
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getCell(1, 0)).toHaveInlineStyle({ width: '110px' });
     });
 
@@ -121,9 +119,7 @@ describe('<DataGridPro /> - Columns', () => {
       fireEvent.touchEnd(separator, {
         changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
       });
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(getCell(1, 0)).toHaveInlineStyle({ width: '110px' });
     });
 
@@ -170,16 +166,12 @@ describe('<DataGridPro /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         apiRef.current.setColumnWidth('brand', 150);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
@@ -191,9 +183,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
@@ -204,9 +194,7 @@ describe('<DataGridPro /> - Columns', () => {
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
         fireEvent.mouseUp(separator);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
@@ -218,16 +206,12 @@ describe('<DataGridPro /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         apiRef.current.setColumnWidth('brand', 150);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '175px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
@@ -239,16 +223,12 @@ describe('<DataGridPro /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
 
         apiRef.current.setColumnWidth('brand', 150);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '125px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
@@ -260,9 +240,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
@@ -273,9 +251,7 @@ describe('<DataGridPro /> - Columns', () => {
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
         fireEvent.mouseUp(separator);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '175px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
@@ -287,9 +263,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
@@ -300,9 +274,7 @@ describe('<DataGridPro /> - Columns', () => {
         fireEvent.mouseMove(separator, { clientX: 50, buttons: 1 });
         fireEvent.mouseUp(separator);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '125px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
@@ -314,16 +286,12 @@ describe('<DataGridPro /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         apiRef.current.setColumnWidth('brand', 150);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
@@ -335,9 +303,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
@@ -348,9 +314,7 @@ describe('<DataGridPro /> - Columns', () => {
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
         fireEvent.mouseUp(separator);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
@@ -362,7 +326,6 @@ describe('<DataGridPro /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
 
         const separator = getColumnHeaderCell(0).querySelector(
@@ -373,51 +336,54 @@ describe('<DataGridPro /> - Columns', () => {
         fireEvent.mouseMove(separator, { clientX: 100, buttons: 1 });
         fireEvent.mouseUp(separator);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
         fireEvent.mouseUp(separator);
 
-        // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
       });
     });
   });
 
-  describe('column pre-processing', () => {
-    it('should not loose column width when re-applying pre-processing', () => {
+  describe('column pipe processing', () => {
+    it('should not loose column width when re-applying pipe processing', () => {
       render(<Test checkboxSelection />);
       apiRef.current.setColumnWidth('brand', 300);
-      expect(gridColumnLookupSelector(apiRef.current.state).brand.computedWidth).to.equal(300);
-      apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
-      expect(gridColumnLookupSelector(apiRef.current.state).brand.computedWidth).to.equal(300);
+      expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
 
-    it('should not loose column index when re-applying pre-processing', () => {
+    it('should not loose column index when re-applying pipe processing', () => {
       render(<Test checkboxSelection columns={[{ field: 'id' }, { field: 'brand' }]} />);
-      expect(allGridColumnsFieldsSelector(apiRef.current.state).indexOf('brand')).to.equal(2);
+      expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       apiRef.current.setColumnIndex('brand', 1);
-      expect(allGridColumnsFieldsSelector(apiRef.current.state).indexOf('brand')).to.equal(1);
-      apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
-      expect(allGridColumnsFieldsSelector(apiRef.current.state).indexOf('brand')).to.equal(1);
+      expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
 
-    it('should not loose imperatively added columns when re-applying pre-processing', () => {
+    it('should not loose imperatively added columns when re-applying pipe processing', () => {
       render(<Test checkboxSelection />);
       apiRef.current.updateColumn({ field: 'id' });
-      expect(allGridColumnsFieldsSelector(apiRef.current.state)).to.deep.equal([
-        '__check__',
-        'brand',
-        'id',
-      ]);
-      apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns' as any);
-      expect(allGridColumnsFieldsSelector(apiRef.current.state)).to.deep.equal([
-        '__check__',
-        'brand',
-        'id',
-      ]);
+      expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
+  });
+
+  it('should warn if unsupported column type is used', () => {
+    const singleColumns = [{ field: 'brand', type: 'str' }];
+
+    expect(() => {
+      render(<Test columns={singleColumns} />);
+    }).toWarnDev(
+      [
+        `MUI: The column type "str" you are using is not supported.`,
+        `Column type "string" is being used instead.`,
+      ].join('\n'),
+    );
   });
 });

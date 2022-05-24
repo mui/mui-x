@@ -1,6 +1,7 @@
 import path from 'path';
 import * as ts from 'typescript';
-import { Project, Projects, writePrettifiedFile } from './utils';
+import { writePrettifiedFile, resolveExportSpecifier } from './utils';
+import { Project, Projects } from '../getTypeScriptProjects';
 
 interface BuildExportsDocumentationOptions {
   projects: Projects;
@@ -16,7 +17,9 @@ const buildPackageExports = (project: Project) => {
     .map(([name, symbol]) => {
       return {
         name,
-        kind: syntaxKindToSyntaxName[symbol.declarations?.[0].kind!],
+        kind: syntaxKindToSyntaxName[
+          resolveExportSpecifier(symbol, project).declarations?.[0].kind!
+        ],
       };
     })
     .sort((a, b) => a.name.localeCompare(b.name));

@@ -1,0 +1,7 @@
+<DataGridPremium
+  rows={rows}
+  columns={columns}
+  components={{
+    Toolbar: CustomToolbar,
+  }}
+/>

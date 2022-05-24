@@ -1,0 +1,9 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
+    "shouldDisableYear": "Disable specific years dynamically. Works like <code>shouldDisableDate</code> but for year selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): Return <code>true</code> if the year should be disabled."
+  },
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "slotDescriptions": {}
+}

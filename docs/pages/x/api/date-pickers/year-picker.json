@@ -1,0 +1,14 @@
+{
+  "props": {
+    "onYearChange": { "type": { "name": "func" } },
+    "shouldDisableYear": { "type": { "name": "func" } }
+  },
+  "slots": {},
+  "name": "YearPicker",
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearPicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-date-pickers/src/YearPicker/YearPicker.tsx",
+  "inheritance": null,
+  "demos": "<ul></ul>"
+}

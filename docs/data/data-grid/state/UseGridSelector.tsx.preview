@@ -1,0 +1,10 @@
+<DataGridPro
+  {...data}
+  loading={loading}
+  pagination
+  pageSize={10}
+  hideFooter
+  components={{
+    Toolbar,
+  }}
+/>

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { GridCellParams } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 import { DemoLink } from './renderLink';
 
-export function renderEmail(params: GridCellParams) {
-  const email = params.value as string;
+export function renderEmail(params: GridRenderCellParams<string, any, any>) {
+  const email = params.value ?? '';
 
   return <DemoLink href={`mailto:${email}`}>{email}</DemoLink>;
 }

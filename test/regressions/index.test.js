@@ -102,7 +102,7 @@ async function main() {
         page.mouse.move(0, 0);
 
         if (
-          pathURL.startsWith('/docs-components-data-grid-filtering') &&
+          pathURL.startsWith('/docs-data-grid-filtering') &&
           !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL) // These cases don't render content
         ) {
           // Wait for the flags to load
@@ -129,7 +129,7 @@ async function main() {
     });
 
     it('should position the headers matching the columns', async function test() {
-      const route = `${baseUrl}/docs-components-data-grid-virtualization/ColumnVirtualizationGrid`;
+      const route = `${baseUrl}/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
       const screenshotPath = path.resolve(
         screenshotDir,
         `${route.replace(baseUrl, '.')}ScrollLeft400px.png`,
@@ -192,6 +192,29 @@ async function main() {
         });
       });
     });
+
+    // describe('DateTimePicker', () => {
+    //   it('should handle change in pointer correctly', async () => {
+    //     const index = routes.findIndex(
+    //         (route) => route === '/regression-pickers/UncontrolledDateTimePicker',
+    //     );
+    //     const testcase = await renderFixture(index);
+    //
+    //     await page.click('[aria-label="Choose date"]');
+    //     await page.click('[aria-label*="switch to year view"]');
+    //     await takeScreenshot({
+    //       testcase: await page.waitForSelector('[role="dialog"]'),
+    //       route: '/regression-pickers/UncontrolledDateTimePicker-desktop',
+    //     });
+    //     await page.evaluate(() => {
+    //       window.muiTogglePickerMode();
+    //     });
+    //     await takeScreenshot({
+    //       testcase,
+    //       route: '/regression-pickers/UncontrolledDateTimePicker-mobile',
+    //     });
+    //   });
+    // });
   });
 
   run();

@@ -70,7 +70,7 @@ async function testFilter100kRows(page) {
   await page.goto(baseUrl);
 
   await page.selectOption('label=Columns', 'currencyPair');
-  await page.selectOption('label=Operators >> nth=1', 'startsWith');
+  await page.selectOption('label=Operator', 'startsWith');
   const t0 = await page.evaluate(() => performance.now());
   await page.type('label=Value', 'usd');
 
@@ -99,7 +99,7 @@ async function testSelect100kRows(page) {
   await page.goto(baseUrl);
 
   const t0 = await page.evaluate(() => performance.now());
-  await page.click('[aria-label="Select All Rows checkbox"]');
+  await page.click('[aria-label="Select all rows"]');
   const t1 = await page.evaluate(() => performance.now());
   return t1 - t0;
 }
@@ -108,9 +108,9 @@ async function testDeselect100kRows(page) {
   const baseUrl = `http://localhost:${PORT}/performance/DataGrid/SelectRows100000`;
   await page.goto(baseUrl);
 
-  await page.click('[aria-label="Select All Rows checkbox"]');
+  await page.click('[aria-label="Select all rows"]');
   const t0 = await page.evaluate(() => performance.now());
-  await page.click('[aria-label="Select All Rows checkbox"]');
+  await page.click('[aria-label="Unselect all rows"]');
   const t1 = await page.evaluate(() => performance.now());
   return t1 - t0;
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridColDef, useGridApiRef, GridOverlay } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 
 export default {
@@ -112,6 +112,17 @@ export const ThrowException = () => {
   );
 };
 
+export const ErrorWithAutoHeight = () => {
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
+
+  return (
+    <div style={{ width: '100%' }}>
+      <DataGridPro rows={rows} columns={cols} autoHeight error={{ message: 'ERROR' }} />
+    </div>
+  );
+};
+
 export const ShowErrorApi = () => {
   const api = useGridApiRef();
   const rows = React.useMemo(() => getRows(), []);
@@ -145,12 +156,19 @@ export const ErrorProp = () => {
 };
 function CustomErrorOverlay(props) {
   return (
-    <GridOverlay className="custom-overlay">
-      <div style={{ textAlign: 'center' }}>
-        <h1>{props.title}</h1>
-        <p>{typeof props.error === 'string' ? props.error : props.error.message}</p>
-      </div>
-    </GridOverlay>
+    <div
+      style={{
+        textAlign: 'center',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+      className="custom-overlay"
+    >
+      <h1>{props.title}</h1>
+      <p>{typeof props.error === 'string' ? props.error : props.error.message}</p>
+    </div>
   );
 }
 

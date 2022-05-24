@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
-import { GridCellParams } from '../../../_modules_/grid/models/params/gridCellParams';
+import { GridCellParams } from '../models/params/gridCellParams';
 
-const TestRenderCellParams = () => {
+const RenderCellParamsExplicitTyping = () => {
   return (
     <DataGrid
       rows={[]}
@@ -45,7 +45,7 @@ const TestRenderCellParams = () => {
   );
 };
 
-const TestCellParamsValue = () => {
+const CellParamsValue = () => {
   return (
     <DataGrid
       rows={[]}
@@ -61,12 +61,12 @@ const TestCellParamsValue = () => {
   );
 };
 
-const TestCellParamsRow = () => {
+const CellParamsRow = () => {
   return (
     <DataGrid
       rows={[]}
       columns={[{ field: 'brand' }]}
-      onCellClick={(params: GridCellParams<any>) => {
+      onCellClick={(params: GridCellParams) => {
         params.row.brand!.toUpperCase();
       }}
       onCellDoubleClick={(params: GridCellParams<any, { brand: number }>) => {
@@ -77,7 +77,7 @@ const TestCellParamsRow = () => {
   );
 };
 
-const TestCellParamsFormattedValue = () => {
+const CellParamsFormattedValue = () => {
   return (
     <DataGrid
       rows={[]}

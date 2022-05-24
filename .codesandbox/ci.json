@@ -5,18 +5,24 @@
     "packages/x-license-pro",
     "packages/grid/x-data-grid",
     "packages/grid/x-data-grid-pro",
-    "packages/grid/x-data-grid-generator"
+    "packages/grid/x-data-grid-premium",
+    "packages/grid/x-data-grid-generator",
+    "packages/x-date-pickers",
+    "packages/x-date-pickers-pro"
   ],
   "publishDirectory": {
     "@mui/x-license-pro": "packages/x-license-pro/build",
     "@mui/x-data-grid": "packages/grid/x-data-grid/build",
     "@mui/x-data-grid-pro": "packages/grid/x-data-grid-pro/build",
-    "@mui/x-data-grid-generator": "packages/grid/x-data-grid-generator/build"
+    "@mui/x-data-grid-premium": "packages/grid/x-data-grid-premium/build",
+    "@mui/x-data-grid-generator": "packages/grid/x-data-grid-generator/build",
+    "@mui/x-date-pickers": "packages/x-date-pickers/build",
+    "@mui/x-date-pickers-pro": "packages/x-date-pickers-pro/build"
   },
   "sandboxes": [
     "new",
-    "github/mui-org/material-ui/tree/master/examples/create-react-app",
-    "github/mui-org/material-ui/tree/master/examples/create-react-app-with-typescript"
+    "github/mui/material-ui/tree/master/examples/create-react-app",
+    "github/mui/material-ui/tree/master/examples/create-react-app-with-typescript"
   ],
   "silent": true
 }

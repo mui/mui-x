@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -6,8 +7,8 @@ import {
   DataGridPro,
   gridClasses,
   useGridApiRef,
-  GridApiRef,
   DataGridProProps,
+  GridApi,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -15,7 +16,8 @@ import { getCell, getRow } from 'test/utils/helperFn';
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
+
   const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     const data = useData(100, 1);
@@ -33,11 +35,9 @@ describe('<DataGridPro/> - Components', () => {
     });
 
     it('should throw a console error if hideFooterRowCount is used with pagination', () => {
-      expect(() => render(<TestCase hideFooterRowCount pagination />))
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
-        );
+      expect(() => render(<TestCase hideFooterRowCount pagination />)).toErrorDev(
+        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+      );
     });
   });
 

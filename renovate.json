@@ -78,7 +78,7 @@
     },
     {
       "groupName": "node",
-      "matchPackageNames": ["node"],
+      "matchPackageNames": ["node", "cimg/node"],
       "enabled": false
     },
     {
@@ -91,6 +91,10 @@
         "@mui/system",
         "@mui/utils"
       ]
+    },
+    {
+      "groupName": "Playwright",
+      "matchPackagePatterns": ["playwright", "@playwright/test"]
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],

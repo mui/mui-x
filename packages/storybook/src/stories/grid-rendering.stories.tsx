@@ -1,19 +1,9 @@
 import * as React from 'react';
-import { DataGridPro, GridOverlay } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import '../style/grid-stories.css';
 import { action } from '@storybook/addon-actions';
-
-function CustomLoadingOverlay() {
-  return (
-    <GridOverlay>
-      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-        <LinearProgress />
-      </div>
-    </GridOverlay>
-  );
-}
 
 export default {
   title: 'DataGridPro Test/Rendering',
@@ -71,7 +61,7 @@ export const InfiniteLoading = () => {
         loading={loading}
         onRowsScrollEnd={handleOnRowsScrollEnd}
         components={{
-          LoadingOverlay: CustomLoadingOverlay,
+          LoadingOverlay: LinearProgress,
         }}
       />
     </div>
