@@ -20,7 +20,7 @@ The aggregated values will be rendered in a footer row at the bottom of the grid
 
 ### Structure of the model
 
-The aggregation model is a lookup where the keys are the field of the columns to aggregate and the values are aggregation items describing how those columns should be aggregated.
+The aggregation model is a lookup where the keys are the columns, and the values are aggregation items, containing the functions defining the aggregation behavior, and where the aggregated values should be displayed.
 
 An aggregation item is an object where `item.footer` contains the name of the aggregation function to apply on the footers
 and `item.inline` contains the name of the aggregation function to apply on the grouping rows.
