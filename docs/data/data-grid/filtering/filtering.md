@@ -22,9 +22,9 @@ _See [the dedicated section](#customize-the-operators) to learn how to create yo
 
 > ⚠️ The `DataGrid` can only filter the rows according to one criterion at the time.
 >
-> To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/material-ui-pro/)
+> To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
 
-## Multi-filtering [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Multi-filtering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 The following demo lets you filter the rows according to several criteria at the same time.
 
@@ -45,11 +45,11 @@ A filter item represents a filtering rule and is composed of several elements:
 - `filterItem.columnField`: the field on which we want to apply the rule.
 - `filterItem.value`: the value to look for.
 - `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
-- `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)): only useful when multiple filters are used.
+- `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)): only useful when multiple filters are used.
 
 **Note**: Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
 
-#### The `linkOperator` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+#### The `linkOperator` [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 The `linkOperator` tells the grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
@@ -182,9 +182,9 @@ const operator: GridFilterOperator = {
 };
 ```
 
-**Note**: The [`valueFormatter`](/x/react-data-grid/cells/#value-formatter) is only used for rendering purposes.
+**Note**: The [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) is only used for rendering purposes.
 
-**Note**: If the column has a [`valueGetter`](/x/react-data-grid/cells/#value-getter), then `params.value` will be the resolved value.
+**Note**: If the column has a [`valueGetter`](/x/react-data-grid/column-definition/#value-getter), then `params.value` will be the resolved value.
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
 
@@ -383,13 +383,13 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 {{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 > ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 {{"demo": "FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
