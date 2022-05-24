@@ -72,8 +72,15 @@ export interface GridAggregationState {
   model: GridAggregationModel;
   lookup: GridAggregationLookup;
 }
+
 export interface GridAggregationInitialState {
   model?: GridAggregationModel;
+}
+
+export interface GridAggregationInternalCache {
+  rulesOnLastColumnHydration: GridAggregationRules;
+  rulesOnLastRowHydration: GridAggregationRules;
+  footerLabelColumnOnLastColumnHydration: AggregationFooterLabelColumn[];
 }
 
 export interface GridAggregationApi {
@@ -123,4 +130,9 @@ export type GridAggregationRules = { [field: string]: GridColumnAggregationRules
 export interface GridAggregationFooterLabelParams {
   groupNode: GridRowTreeNodeConfig | null;
   aggregationFunctions: { field: string; aggregationFunctionName: string }[];
+}
+
+export interface AggregationFooterLabelColumn {
+  groupingCriteria?: string[];
+  field: string;
 }
