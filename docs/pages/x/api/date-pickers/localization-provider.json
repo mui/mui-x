@@ -14,7 +14,7 @@
       "deprecated": true,
       "deprecationInfo": "Use <code>adapterLocale</code> instead"
     },
-    "localeText": { "type": { "name": "any" } }
+    "localeText": { "type": { "name": "object" } }
   },
   "slots": {},
   "name": "LocalizationProvider",
