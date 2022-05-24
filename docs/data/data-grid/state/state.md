@@ -18,7 +18,7 @@ This prop has the same format as the returned value of `apiRef.current.exportSta
 
 {{"demo": "InitialState.js", "bg": "inline"}}
 
-## Access the state [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Access the state [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 The state is exposed on the `apiRef` object.
 It is strongly advised not to access the state values directly because the state itself is not considered a public API and its structure can change.
@@ -94,7 +94,7 @@ In the demo below, clicking on **Recreate the 2nd grid** will re-mount the 2nd g
 
 {{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 You can pass the state returned by `apiRef.current.exportState()` to the `apiRef.current.restoreState` method.
 In the demo below, clicking on **Save current view** will create a snapshot of the changes made in the state, considering the initial state.

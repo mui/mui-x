@@ -6,7 +6,7 @@ packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://material.io/components/date-pickers
 ---
 
-# Date Range Picker [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+# Date Range Picker [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 <p class="description">日期选择器让用户选择一系列的日期。</p>
 
