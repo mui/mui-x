@@ -117,7 +117,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const { top, left } = scrollPosition.current!;
 
     const firstRowIndex = Math.min(
-      apiRef.current.unstable_getLastMeasuredRowIndex(),
+      Math.min(0, apiRef.current.unstable_getLastMeasuredRowIndex()),
       getIndexFromScroll(top, rowsMeta.positions),
     );
     const lastRowIndex = rootProps.autoHeight
