@@ -169,8 +169,6 @@ In the example below, the movie _Avatar_ is not passing the filters but is still
 
 An aggregation function is an object describing how to generate an aggregated value for a given set of values.
 
-Let's take a look at a simple aggregation function:
-
 The full typing details can be found on the [GridAggregationFunction API page](/x/api/data-grid/grid-aggregation-function/).
 
 ### Built-in functions
