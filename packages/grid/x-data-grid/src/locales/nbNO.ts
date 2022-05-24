@@ -26,11 +26,17 @@ const nbNOGrid: GridLocaleText = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Søk...',
+  toolbarQuickFilterLabel: 'Søk',
+  toolbarQuickFilterDeleteIconLabel: 'Slett',
+
   // Export selector toolbar button text
   toolbarExport: 'Eksporter',
   toolbarExportLabel: 'Eksporter',
   toolbarExportCSV: 'Last ned som CSV',
   toolbarExportPrint: 'Skriv ut',
+  toolbarExportExcel: 'Last ned som Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Finn kolonne',
@@ -42,7 +48,10 @@ const nbNOGrid: GridLocaleText = {
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
   filterPanelDeleteIconLabel: 'Slett',
+  filterPanelLinkOperator: 'Logisk operator',
   filterPanelOperators: 'Operatører',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
   filterPanelColumns: 'Kolonner',
@@ -62,6 +71,7 @@ const nbNOGrid: GridLocaleText = {
   filterOperatorOnOrBefore: 'er på eller før',
   filterOperatorIsEmpty: 'er tom',
   filterOperatorIsNotEmpty: 'er ikke tom',
+  filterOperatorIsAnyOf: 'er en av',
 
   // Filter values text
   filterValueAny: 'noen',
@@ -87,15 +97,19 @@ const nbNOGrid: GridLocaleText = {
   footerRowSelected: (count) =>
     count !== 1 ? `${count.toLocaleString()} rader valgt` : `${count.toLocaleString()} rad valgt`,
 
-  // Total rows footer text
+  // Total row amount footer text
   footerTotalRows: 'Totalt antall rader:',
 
-  // Total visible rows footer text
+  // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} av ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Avmerkingsboks valgt',
+  checkboxSelectionSelectAllRows: 'Velg alle rader',
+  checkboxSelectionUnselectAllRows: 'Velg bort alle rader',
+  checkboxSelectionSelectRow: 'Velg rad',
+  checkboxSelectionUnselectRow: 'Velg bort rad',
 
   // Boolean cell text
   booleanCellTrueLabel: 'sant',
@@ -119,20 +133,11 @@ const nbNOGrid: GridLocaleText = {
   groupColumn: (name) => `Grupper på ${name}`,
   unGroupColumn: (name) => `Stopp å grupper på ${name}`,
 
-  // Used core components translation keys
-  MuiTablePagination: {},
-  toolbarQuickFilterPlaceholder: 'Søk...',
-  toolbarQuickFilterLabel: 'Søk',
-  toolbarQuickFilterDeleteIconLabel: 'Slett',
-  toolbarExportExcel: 'Last ned som Excel',
-  filterPanelLinkOperator: 'Logisk operator',
-  filterOperatorIsAnyOf: 'er en av',
-  checkboxSelectionSelectAllRows: 'Velg alle rader',
-  checkboxSelectionUnselectAllRows: 'Velg bort alle rader',
-  checkboxSelectionSelectRow: 'Velg rad',
-  checkboxSelectionUnselectRow: 'Velg bort rad',
+  // Master/detail
   expandDetailPanel: 'Utvid',
   collapseDetailPanel: 'Kollaps',
+
+  // Row reordering text
   rowReorderingHeaderName: 'Rad reorganisering',
 };
 
