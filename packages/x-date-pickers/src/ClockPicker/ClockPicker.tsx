@@ -535,6 +535,7 @@ ClockPicker.propTypes = {
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
    * @returns {string} The clock label.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    * @default <TDate extends any>(
    *   view: ClockView,
    *   time: TDate | null,
@@ -550,6 +551,7 @@ ClockPicker.propTypes = {
    * @param {string} hours The hours to format.
    * @returns {string} the formatted hours text.
    * @default (hours: string) => `${hours} hours`
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getHoursClockNumberText: PropTypes.func,
   /**
@@ -557,6 +559,7 @@ ClockPicker.propTypes = {
    * @param {string} minutes The minutes to format.
    * @returns {string} the formatted minutes text.
    * @default (minutes: string) => `${minutes} minutes`
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getMinutesClockNumberText: PropTypes.func,
   /**
@@ -564,6 +567,7 @@ ClockPicker.propTypes = {
    * @param {string} seconds The seconds to format.
    * @returns {string} the formatted seconds text.
    * @default (seconds: string) => `${seconds} seconds`
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getSecondsClockNumberText: PropTypes.func,
   /**
