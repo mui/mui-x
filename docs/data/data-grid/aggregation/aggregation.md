@@ -207,7 +207,7 @@ const column = {
 };
 ```
 
-In the example below, the only aggregation function available for the **Year** column is `max` whereas all aggregation functions are available for the **Gross** column
+In the example below, the **Year** column can be aggregated using the `max` and `min` functions, whereas all functions are available for the **Gross** column
 
 {{"demo": "AggregationRemoveFunctionOneColumn.js", "bg": "inline"}}
 
