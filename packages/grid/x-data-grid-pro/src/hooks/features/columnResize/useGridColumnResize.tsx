@@ -18,6 +18,7 @@ import {
   findParentElementFromClassName,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
+import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
   getFieldFromHeaderElem,
@@ -95,10 +96,22 @@ function computeOffsetToSeparator(
   return columnBounds.right - clickX;
 }
 
-function getSeparatorSide(element: HTMLElement) {
-  return element.classList.contains(gridClasses['columnSeparator--sideRight'])
+function flipSeparatorSide(side: GridColumnHeaderSeparatorSides) {
+  if (side === GridColumnHeaderSeparatorSides.Right) {
+    return GridColumnHeaderSeparatorSides.Left;
+  }
+  return GridColumnHeaderSeparatorSides.Right;
+}
+
+function getSeparatorSide(element: HTMLElement, direction: Direction) {
+  const side = element.classList.contains(gridClasses['columnSeparator--sideRight'])
     ? GridColumnHeaderSeparatorSides.Right
     : GridColumnHeaderSeparatorSides.Left;
+  if (direction === 'rtl') {
+    // Resizing logic should be mirrored in the RTL case
+    return flipSeparatorSide(side);
+  }
+  return side;
 }
 
 export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
@@ -119,6 +132,7 @@ export const useGridColumnResize = (
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
   const colCellElementsRef = React.useRef<Element[]>();
+  const theme = useTheme();
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
@@ -245,7 +259,7 @@ export const useGridColumnResize = (
       const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
 
-      separatorSide.current = getSeparatorSide(event.currentTarget);
+      separatorSide.current = getSeparatorSide(event.currentTarget, theme.direction);
 
       initialOffsetToSeparator.current = computeOffsetToSeparator(
         event.clientX,
@@ -346,7 +360,7 @@ export const useGridColumnResize = (
     ) as HTMLDivElement;
     colCellElementsRef.current = findGridCellElementsFromCol(colElementRef.current, apiRef.current);
 
-    separatorSide.current = getSeparatorSide(event.target);
+    separatorSide.current = getSeparatorSide(event.target, theme.direction);
 
     initialOffsetToSeparator.current = computeOffsetToSeparator(
       touch.clientX,
