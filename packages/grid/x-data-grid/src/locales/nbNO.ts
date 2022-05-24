@@ -1,6 +1,5 @@
+import { GridLocaleText } from '@mui/x-data-grid';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
-
-import {GridLocaleText} from '@mui/x-data-grid';
 
 const nbNOGrid: GridLocaleText = {
   // Root
@@ -24,7 +23,8 @@ const nbNOGrid: GridLocaleText = {
   toolbarFiltersLabel: 'Vis filter',
   toolbarFiltersTooltipHide: 'Skjul fitler',
   toolbarFiltersTooltipShow: 'Vis filter',
-  toolbarFiltersTooltipActive: (count) => (count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`),
+  toolbarFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
 
   // Export selector toolbar button text
   toolbarExport: 'Eksporter',
@@ -78,18 +78,21 @@ const nbNOGrid: GridLocaleText = {
   columnMenuSortDesc: 'Sorter SYNKENDE',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) => (count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`),
+  columnHeaderFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
   columnHeaderFiltersLabel: 'Vis filter',
   columnHeaderSortIconLabel: 'Sorter',
 
   // Rows selected footer text
-  footerRowSelected: (count) => count !== 1 ? `${count.toLocaleString()} rader valgt` : `${count.toLocaleString()} rad valgt`,
+  footerRowSelected: (count) =>
+    count !== 1 ? `${count.toLocaleString()} rader valgt` : `${count.toLocaleString()} rad valgt`,
 
   // Total rows footer text
   footerTotalRows: 'Totalt antall rader:',
 
   // Total visible rows footer text
-  footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} av ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} av ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Avmerkingsboks valgt',
@@ -130,7 +133,7 @@ const nbNOGrid: GridLocaleText = {
   checkboxSelectionUnselectRow: 'Velg bort rad',
   expandDetailPanel: 'Utvid',
   collapseDetailPanel: 'Kollaps',
-  rowReorderingHeaderName: 'Rad reorganisering'
+  rowReorderingHeaderName: 'Rad reorganisering',
 };
 
 export const nbNO: Localization = getGridLocalization(nbNOGrid);
