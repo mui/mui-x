@@ -17,7 +17,7 @@ In the following example, the labels of the density selector are customized.
 
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
 
-> ⚠️ It's important to note that because the data grid uses components from the Material UI Core library some translation keys need to be accessed using that component key.
+> ⚠️ It's important to note that because the data grid uses components from the Material UI library some translation keys need to be accessed using that component key.
 >
 > One example is the `TablePagination` component used in the grid footer when pagination is enabled.
 >
