@@ -1,1 +1,9 @@
-TO ADAPT
+<DataGridPro
+  treeData
+  apiRef={apiRef}
+  rows={rows}
+  columns={columns}
+  getTreeDataPath={getTreeDataPath}
+  groupingColDef={CUSTOM_GROUPING_COL_DEF}
+  disableChildrenFiltering
+/>
