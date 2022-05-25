@@ -52,12 +52,32 @@ const serializeRow = (
 ) => {
   const row: { [colField: string]: undefined | number | boolean | string | Date } = {};
   const dataValidation: { [key: string]: Excel.DataValidation } = {};
+  const mergedCells: { leftIndex: number; rightIndex: number }[] = [];
 
   const firstCellParams = api.getCellParams(id, columns[0].field);
   const outlineLevel = firstCellParams.rowNode.depth;
 
-  columns.forEach((column) => {
+  // `colSpan` is only calculated for rendered rows, so we need to calculate it during export for every row
+  api.unstable_calculateColSpan({
+    rowId: id,
+    minFirstColumn: 0,
+    maxLastColumn: columns.length - 1,
+  });
+
+  columns.forEach((column, colIndex) => {
+    const colSpanInfo = api.unstable_getCellColSpanInfo(id, colIndex);
+    if (colSpanInfo && colSpanInfo.spannedByColSpan) {
+      return;
+    }
+    if (colSpanInfo && colSpanInfo.cellProps.colSpan > 1) {
+      mergedCells.push({
+        leftIndex: colIndex + 1,
+        rightIndex: colIndex + colSpanInfo.cellProps.colSpan,
+      });
+    }
+
     const cellParams = api.getCellParams(id, column.field);
+
     switch (cellParams.colDef.type) {
       case 'singleSelect': {
         if (typeof cellParams.colDef.valueOptions === 'function') {
@@ -139,6 +159,7 @@ const serializeRow = (
     row,
     dataValidation,
     outlineLevel,
+    mergedCells,
   };
 };
 
@@ -236,7 +257,7 @@ export async function buildExcel(
   }
 
   rowIds.forEach((id) => {
-    const { row, dataValidation, outlineLevel } = serializeRow(
+    const { row, dataValidation, outlineLevel, mergedCells } = serializeRow(
       id,
       columns,
       api,
@@ -253,6 +274,12 @@ export async function buildExcel(
     if (outlineLevel) {
       newRow.outlineLevel = outlineLevel;
     }
+
+    // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
+    const lastRowIndex = newRow.worksheet.rowCount;
+    mergedCells.forEach((mergedCell) => {
+      worksheet.mergeCells(lastRowIndex, mergedCell.leftIndex, lastRowIndex, mergedCell.rightIndex);
+    });
   });
 
   if (exceljsPostProcess) {

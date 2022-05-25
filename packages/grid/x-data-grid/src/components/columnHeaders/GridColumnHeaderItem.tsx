@@ -101,6 +101,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     hasScrollY: false,
   };
 
+  const isDraggable = React.useMemo(
+    () => !rootProps.disableColumnReorder && !disableReorder && !column.disableReorder,
+    [rootProps.disableColumnReorder, disableReorder, column.disableReorder],
+  );
+
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader) {
     headerComponent = column.renderHeader(apiRef.current.getColumnHeaderParams(column.field));
@@ -134,12 +139,14 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     onBlur: publish('columnHeaderBlur'),
   };
 
-  const draggableEventHandlers = {
-    onDragStart: publish('columnHeaderDragStart'),
-    onDragEnter: publish('columnHeaderDragEnter'),
-    onDragOver: publish('columnHeaderDragOver'),
-    onDragEnd: publish('columnHeaderDragEnd'),
-  };
+  const draggableEventHandlers = isDraggable
+    ? {
+        onDragStart: publish('columnHeaderDragStart'),
+        onDragEnter: publish('columnHeaderDragEnter'),
+        onDragOver: publish('columnHeaderDragOver'),
+        onDragEnd: publish('columnHeaderDragEnd'),
+      }
+    : null;
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
@@ -236,7 +243,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     >
       <div
         className={classes.draggableContainer}
-        draggable={!rootProps.disableColumnReorder && !disableReorder && !column.disableReorder}
+        draggable={isDraggable}
         {...draggableEventHandlers}
       >
         <div className={classes.titleContainer}>

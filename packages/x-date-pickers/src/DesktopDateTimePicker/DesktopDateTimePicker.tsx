@@ -4,20 +4,37 @@ import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
   dateTimePickerValueManager,
+  DateTimePickerSlotsComponent,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
+  DesktopWrapperSlotsComponent,
+  DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
+import {
+  CalendarOrClockPicker,
+  CalendarOrClockPickerSlotsComponentsProps,
+} from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 
+export interface DesktopDateTimePickerSlotsComponent
+  extends DesktopWrapperSlotsComponent,
+    DateTimePickerSlotsComponent {}
+
+export interface DesktopDateTimePickerSlotsComponentsProps
+  extends DesktopWrapperSlotsComponentsProps,
+    CalendarOrClockPickerSlotsComponentsProps {}
+
 export interface DesktopDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate>,
-    DesktopWrapperProps {}
+    DesktopWrapperProps {
+  components?: Partial<DesktopDateTimePickerSlotsComponent>;
+  componentsProps?: Partial<DesktopDateTimePickerSlotsComponentsProps>;
+}
 
 type DesktopDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: DesktopDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -57,11 +74,18 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     ToolbarComponent = DateTimePickerToolbar,
     TransitionComponent,
     value,
-    clearable,
-    clearText,
+    components,
+    componentsProps,
     ...other
   } = props;
-  const AllDateInputProps = { ...inputProps, ...other, ref, validationError };
+  const AllDateInputProps = {
+    ...inputProps,
+    ...other,
+    components,
+    componentsProps,
+    ref,
+    validationError,
+  };
 
   return (
     <DesktopWrapper
@@ -71,8 +95,8 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
       PopperProps={PopperProps}
       PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
-      clearable={clearable}
-      clearText={clearText}
+      components={components}
+      componentsProps={componentsProps}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -80,6 +104,8 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
         DateInputProps={AllDateInputProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </DesktopWrapper>
@@ -113,16 +139,6 @@ DesktopDateTimePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   */
-  clearText: PropTypes.node,
-  /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
@@ -130,12 +146,10 @@ DesktopDateTimePicker.propTypes = {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
-   * @default {}
    */
   components: PropTypes.object,
   /**
    * The props used for each slot inside.
-   * @default {}
    */
   componentsProps: PropTypes.object,
   /**
@@ -152,11 +166,12 @@ DesktopDateTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true` future days are disabled.
    * @default false
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, todays date is rendering without highlighting with circle.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -176,6 +191,7 @@ DesktopDateTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
+   * If `true` past days are disabled.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -237,6 +253,7 @@ DesktopDateTimePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -250,7 +267,7 @@ DesktopDateTimePicker.propTypes = {
    */
   mask: PropTypes.string,
   /**
-   * Max selectable date. @DateIOType
+   * Maximal selectable date. @DateIOType
    */
   maxDate: PropTypes.any,
   /**
@@ -263,7 +280,7 @@ DesktopDateTimePicker.propTypes = {
    */
   maxTime: PropTypes.any,
   /**
-   * Min selectable date. @DateIOType
+   * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
   /**
@@ -314,7 +331,7 @@ DesktopDateTimePicker.propTypes = {
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new year.
+   * @param {TDate} month The new month.
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
@@ -402,13 +419,14 @@ DesktopDateTimePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate
-   * @param {TDate} day The date to check.
-   * @returns {boolean} If `true` the day will be disabled.
+   * @param {TDate} day The date to test.
+   * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
@@ -432,7 +450,7 @@ DesktopDateTimePicker.propTypes = {
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Return `true` if the year should be disabled.
+   * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**

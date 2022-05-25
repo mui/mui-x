@@ -7,6 +7,7 @@ import type {
   GridColumnVisibilityChangeParams,
   GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
+  GridMenuParams,
   GridPreferencePanelParams,
   GridRowParams,
   GridRowSelectionCheckboxParams,
@@ -502,4 +503,14 @@ export interface GridEventLookup
    * Fired when the preference panel is opened.
    */
   preferencePanelOpen: { params: GridPreferencePanelParams };
+
+  // Menu
+  /**
+   * Fired when the menu is opened.
+   */
+  menuOpen: { params: GridMenuParams };
+  /**
+   * Fired when the grid menu is closed.
+   */
+  menuClose: { params: GridMenuParams };
 }

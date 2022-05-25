@@ -4,7 +4,7 @@ title: Date picker, Time picker React components
 components: DatePicker,DateTimePicker,TimePicker
 githubLabel: 'component: DatePicker'
 materialDesign: https://material.io/components/date-pickers
-waiAria: https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
+waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -30,15 +30,17 @@ We currently support 4 different date-libraries:
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
 
+If you need to use `js-joda`, `date-fns-jalali`, `jalaali`, or `hijri` library, you should be able to find the corresponding date-library from [`@date-io`](https://github.com/dmtrKovalenko/date-io#projects).
+
 First you have to install the adapter package for the date-library you want to use:
 
 ```sh
 // date-fns
 npm install @date-io/date-fns
 // or for Day.js
-npm install -s @date-io/dayjs
+npm install @date-io/dayjs
 // or for Luxon
-npm install -s @date-io/luxon
+npm install @date-io/luxon
 // or for Moment.js
 npm install @date-io/moment
 ```

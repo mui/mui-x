@@ -3,12 +3,15 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import {
   wrapPickerMount,
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
+  AdapterClassToUse,
   withPickerControls,
   openPicker,
 } from '../../../../test/utils/pickers-utils';
@@ -215,6 +218,39 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
+  it('respect localeText', () => {
+    const theme = createTheme({
+      components: {
+        MuiLocalizationProvider: {
+          defaultProps: {
+            localeText: { start: 'Início', end: 'Fim' },
+          },
+        },
+      } as any,
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <LocalizationProvider dateAdapter={AdapterClassToUse}>
+          <DesktopDateRangePicker
+            renderInput={(startProps, endProps) => (
+              <React.Fragment>
+                <TextField {...startProps} variant="standard" />
+                <TextField {...endProps} variant="standard" />
+              </React.Fragment>
+            )}
+            onChange={() => {}}
+            TransitionComponent={FakeTransitionComponent}
+            value={[null, null]}
+          />
+        </LocalizationProvider>
+      </ThemeProvider>,
+    );
+
+    expect(screen.queryByText('Início')).not.to.equal(null);
+    expect(screen.queryByText('Fim')).not.to.equal(null);
+  });
+
   it('prop: renderDay - should be called and render days', async () => {
     render(
       <WrappedDesktopDateRangePicker
@@ -234,6 +270,32 @@ describe('<DesktopDateRangePicker />', () => {
     openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
     expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
+  });
+
+  it('componentsProps `actionBar` - allows to renders clear button in Desktop mode', () => {
+    function DesktopDateRangePickerClearable() {
+      return (
+        <WrappedDesktopDateRangePicker
+          initialValue={[
+            adapterToUse.date('2018-01-01T00:00:00.000'),
+            adapterToUse.date('2018-01-31T00:00:00.000'),
+          ]}
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
+        />
+      );
+    }
+    render(<DesktopDateRangePickerClearable />);
+
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+    expect(screen.getAllByRole('textbox')[0]).to.have.value('01/01/2018');
+    expect(screen.getAllByRole('textbox')[1]).to.have.value('01/31/2018');
+
+    fireEvent.click(screen.getByText('Clear'));
+
+    expect(screen.getAllByRole('textbox')[0]).to.have.value('');
+    expect(screen.getAllByRole('textbox')[1]).to.have.value('');
+    expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
   describe('prop: PopperProps', () => {
@@ -630,7 +692,7 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -657,7 +719,7 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 

@@ -6,15 +6,35 @@ import {
   dateTimePickerValueManager,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
-import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
+import {
+  MobileWrapper,
+  MobileWrapperProps,
+  MobileWrapperSlotsComponent,
+  MobileWrapperSlotsComponentsProps,
+} from '../internals/components/wrappers/MobileWrapper';
+import {
+  CalendarOrClockPicker,
+  CalendarOrClockPickerSlotsComponent,
+  CalendarOrClockPickerSlotsComponentsProps,
+} from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 
+export interface MobileDateTimePickerSlotsComponent
+  extends MobileWrapperSlotsComponent,
+    CalendarOrClockPickerSlotsComponent {}
+
+export interface MobileDateTimePickerSlotsComponentsProps
+  extends MobileWrapperSlotsComponentsProps,
+    CalendarOrClockPickerSlotsComponentsProps {}
+
 export interface MobileDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {}
+    MobileWrapperProps {
+  components?: Partial<MobileDateTimePickerSlotsComponent>;
+  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps>;
+}
 
 type MobileDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: MobileDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -48,8 +68,22 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const { ToolbarComponent = DateTimePickerToolbar, value, onChange, ...other } = props;
-  const DateInputProps = { ...inputProps, ...other, ref, validationError };
+  const {
+    ToolbarComponent = DateTimePickerToolbar,
+    value,
+    onChange,
+    components,
+    componentsProps,
+    ...other
+  } = props;
+  const DateInputProps = {
+    ...inputProps,
+    ...other,
+    components,
+    componentsProps,
+    ref,
+    validationError,
+  };
 
   return (
     <MobileWrapper
@@ -57,6 +91,8 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
       {...wrapperProps}
       DateInputProps={DateInputProps}
       PureDateInputComponent={PureDateInput}
+      components={components}
+      componentsProps={componentsProps}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -64,6 +100,8 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </MobileWrapper>
@@ -91,26 +129,11 @@ MobileDateTimePicker.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   autoFocus: PropTypes.bool,
-  /**
-   * Cancel text message.
-   * @default 'Cancel'
-   */
-  cancelText: PropTypes.node,
   children: PropTypes.node,
   /**
    * className applied to the root component.
    */
   className: PropTypes.string,
-  /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   */
-  clearText: PropTypes.node,
   /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
@@ -119,12 +142,10 @@ MobileDateTimePicker.propTypes = {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
-   * @default {}
    */
   components: PropTypes.object,
   /**
    * The props used for each slot inside.
-   * @default {}
    */
   componentsProps: PropTypes.object,
   /**
@@ -145,11 +166,12 @@ MobileDateTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true` future days are disabled.
    * @default false
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, todays date is rendering without highlighting with circle.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -169,6 +191,7 @@ MobileDateTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
+   * If `true` past days are disabled.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -230,6 +253,7 @@ MobileDateTimePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -243,7 +267,7 @@ MobileDateTimePicker.propTypes = {
    */
   mask: PropTypes.string,
   /**
-   * Max selectable date. @DateIOType
+   * Maximal selectable date. @DateIOType
    */
   maxDate: PropTypes.any,
   /**
@@ -256,7 +280,7 @@ MobileDateTimePicker.propTypes = {
    */
   maxTime: PropTypes.any,
   /**
-   * Min selectable date. @DateIOType
+   * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
   /**
@@ -273,11 +297,6 @@ MobileDateTimePicker.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
-  /**
-   * Ok button text.
-   * @default 'OK'
-   */
-  okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
@@ -312,7 +331,7 @@ MobileDateTimePicker.propTypes = {
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new year.
+   * @param {TDate} month The new month.
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
@@ -392,13 +411,14 @@ MobileDateTimePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate
-   * @param {TDate} day The date to check.
-   * @returns {boolean} If `true` the day will be disabled.
+   * @param {TDate} day The date to test.
+   * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
@@ -422,7 +442,7 @@ MobileDateTimePicker.propTypes = {
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Return `true` if the year should be disabled.
+   * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -431,11 +451,6 @@ MobileDateTimePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the today button is displayed. **Note** that `showClearButton` has a higher priority.
-   * @default false
-   */
-  showTodayButton: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
@@ -443,11 +458,6 @@ MobileDateTimePicker.propTypes = {
    * Time tab icon.
    */
   timeIcon: PropTypes.node,
-  /**
-   * Today text message.
-   * @default 'Today'
-   */
-  todayText: PropTypes.node,
   /**
    * Component that will replace default toolbar renderer.
    * @default DateTimePickerToolbar
