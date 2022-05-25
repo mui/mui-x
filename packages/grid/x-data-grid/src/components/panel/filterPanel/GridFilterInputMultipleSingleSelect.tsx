@@ -14,7 +14,7 @@ export type GridFilterInputMultipleSingleSelectProps = {
   apiRef: React.MutableRefObject<GridApiCommon>;
   focusElementRef?: React.Ref<any>;
   type?: 'singleSelect';
-} & Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
+} & Omit<AutocompleteProps<any[], true, false, false>, 'options' | 'renderInput'>;
 
 const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEqualToValue'] = (
   option,
