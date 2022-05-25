@@ -45,10 +45,6 @@ export const useGridRowsMeta = (
     };
   }>({});
 
-  if (typeof window === 'object') {
-    window.rowsHeightLookup = rowsHeightLookup.current;
-  }
-
   // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
   const lastMeasuredRowIndex = React.useRef(-1);
   const hasRowWithAutoHeight = React.useRef(false);
