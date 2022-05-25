@@ -5,10 +5,11 @@ interface SortRowTreeParams {
   rowTree: GridRowTreeConfig;
   disableChildrenSorting: boolean;
   sortRowList: GridSortingModelApplier | null;
+  shouldRenderGroupBelowLeaves: boolean;
 }
 
 export const sortRowTree = (params: SortRowTreeParams) => {
-  const { rowTree, disableChildrenSorting, sortRowList } = params;
+  const { rowTree, disableChildrenSorting, sortRowList, shouldRenderGroupBelowLeaves } = params;
   let sortedRows: GridRowId[] = [];
 
   const sortedGroupedByParentRows = new Map<GridRowId, GridRowId[]>();
@@ -16,19 +17,45 @@ export const sortRowTree = (params: SortRowTreeParams) => {
   const sortGroup = (node: GridGroupNode) => {
     const shouldSortGroup = !!sortRowList && (!disableChildrenSorting || node.depth === -1);
 
-    const sortedRowIds = shouldSortGroup
-      ? sortRowList(node.children.map((childId) => rowTree[childId]))
-      : [...node.children];
+    let sortedRowIds: GridRowId[];
+
+    if (shouldSortGroup) {
+      for (let i = 0; i < node.children.length; i += 1) {
+        const childNode = rowTree[node.children[i]];
+        if (childNode.type === 'group') {
+          sortGroup(childNode);
+        }
+      }
+
+      sortedRowIds = sortRowList(node.children.map((childId) => rowTree[childId]));
+    } else if (shouldRenderGroupBelowLeaves) {
+      const childrenLeaves: GridRowId[] = [];
+      const childrenGroups: GridRowId[] = [];
+      for (let i = 0; i < node.children.length; i += 1) {
+        const childId = node.children[i];
+        const childNode = rowTree[childId];
+        if (childNode.type === 'group') {
+          sortGroup(childNode);
+          childrenGroups.push(childId);
+        } else if (childNode.type === 'leaf') {
+          childrenLeaves.push(childId);
+        }
+      }
+
+      sortedRowIds = [...childrenLeaves, ...childrenGroups];
+    } else {
+      for (let i = 0; i < node.children.length; i += 1) {
+        const childNode = rowTree[node.children[i]];
+        if (childNode.type === 'group') {
+          sortGroup(childNode);
+        }
+      }
+
+      sortedRowIds = [...node.children];
+    }
 
     if (node.footerId != null) {
       sortedRowIds.push(node.footerId);
-    }
-
-    for (let i = 0; i < node.children.length; i += 1) {
-      const childNode = rowTree[node.children[i]];
-      if (childNode.type === 'group') {
-        sortGroup(childNode);
-      }
     }
 
     sortedGroupedByParentRows.set(node.id, sortedRowIds);

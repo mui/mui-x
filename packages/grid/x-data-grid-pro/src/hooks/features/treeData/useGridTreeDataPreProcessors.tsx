@@ -192,6 +192,7 @@ export const useGridTreeDataPreProcessors = (
         rowTree,
         sortRowList: params.sortRowList,
         disableChildrenSorting: props.disableChildrenSorting,
+        shouldRenderGroupBelowLeaves: false,
       });
     },
     [apiRef, props.disableChildrenSorting],

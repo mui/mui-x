@@ -210,6 +210,7 @@ export const useGridRowGroupingPreProcessors = (
         rowTree,
         sortRowList: params.sortRowList,
         disableChildrenSorting: false,
+        shouldRenderGroupBelowLeaves: true,
       });
     },
     [apiRef],
