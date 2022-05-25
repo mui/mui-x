@@ -5,6 +5,9 @@ import { styled } from '@mui/material/styles';
 import { debounce } from '@mui/material/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
+import { GridFilterModel } from '../../models/gridFilterModel';
+import { isDeepEqual } from '../../utils/utils';
 
 const GridToolbarQuickFilterRoot = styled(TextField, {
   name: 'MuiDataGrid',
@@ -24,6 +27,8 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
 const defaultSearchValueParser = (searchText: string) =>
   searchText.split(' ').filter((word) => word !== '');
 
+const defaultSearchValueFormatter = (values: string[]) => values.join(' ');
+
 export type GridToolbarQuickFilterProps = TextFieldProps & {
   /**
    * Function responsible for parsing text input in an array of independent values for quick filtering.
@@ -32,6 +37,12 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
    */
   quickFilterParser?: (input: string) => any[];
   /**
+   * Function responsible for formatting values of quick filter in a string when the model is modified
+   * @param {any[]} values The new values passed to the quick filter model
+   * @returns {string} The string to display in the text field
+   */
+  quickFilterFormatter?: (values: GridFilterModel['quickFilterValues']) => string;
+  /**
    * The debounce time in milliseconds.
    * @default 500
    */
@@ -39,12 +50,36 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
 };
 
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
-  const { quickFilterParser = defaultSearchValueParser, debounceMs = 500, ...other } = props;
+  const {
+    quickFilterParser = defaultSearchValueParser,
+    quickFilterFormatter = defaultSearchValueFormatter,
+    debounceMs = 500,
+    ...other
+  } = props;
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const quickFilterValues = gridQuickFilterValuesSelector(apiRef);
 
   const [searchValue, setSearchValue] = React.useState('');
+  const [prevQuickFilterValues, setPrevQuickFilterValues] = React.useState(quickFilterValues);
+
+  React.useEffect(() => {
+    if (!isDeepEqual(prevQuickFilterValues, quickFilterValues)) {
+      // The model of quick filter value has been updated
+      setPrevQuickFilterValues(quickFilterValues);
+      if (!isDeepEqual(quickFilterParser(searchValue), quickFilterValues)) {
+        // The input value and the new model are un-sync so we will update the input
+        setSearchValue(quickFilterFormatter(quickFilterValues ?? []));
+      }
+    }
+  }, [
+    prevQuickFilterValues,
+    quickFilterValues,
+    searchValue,
+    quickFilterFormatter,
+    quickFilterParser,
+  ]);
 
   const updateSearchValue = React.useCallback(
     (newSearchValue) => {
