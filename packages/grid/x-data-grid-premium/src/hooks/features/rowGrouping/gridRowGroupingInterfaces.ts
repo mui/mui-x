@@ -2,16 +2,18 @@ export type GridRowGroupingModel = string[];
 
 export interface GridRowGroupingState {
   model: GridRowGroupingModel;
-  /**
-   * Tracks the model on the last pre-processing
-   * Allows to check if we need to re-build the grouping columns when the grid upserts a column.
-   * TODO: Move outside of the state
-   */
-  unstable_sanitizedModelOnLastRowTreeCreation: GridRowGroupingModel;
 }
 
 export interface GridRowGroupingInitialState {
   model?: GridRowGroupingModel;
+}
+
+export interface GridRowGroupingInternalCache {
+  /**
+   * Tracks the model on the last pre-processing
+   * Allows to check if we need to re-build the grouping columns when the grid upserts a column.
+   */
+  sanitizedModelOnLastRowTreeCreation: GridRowGroupingModel;
 }
 
 export interface GridRowGroupingApi {

@@ -41,7 +41,7 @@ To set a minimum and maximum width for a `flex` column set the `minWidth` and th
 
 {{"demo": "ColumnFluidWidthGrid.js", "bg": "inline"}}
 
-## Resizing [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Resizing [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 By default, `DataGridPro` allows all columns to be resized by dragging the right portion of the column separator.
 

@@ -15,7 +15,6 @@ import {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedColumns } from '../hooks/features/columnPinning';
-import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import { GridApiPro } from './gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -23,12 +22,7 @@ import {
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
-  /**
-   * @deprecated
-   */
-  rowGrouping?: boolean;
-}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -113,17 +107,6 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   rowReordering: boolean;
-  /**
-   * If `true`, the row grouping is disabled.
-   * @default false
-   */
-  disableRowGrouping: boolean;
-  /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
-   * @default 'single'
-   */
-  rowGroupingColumnMode: 'single' | 'multiple';
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -209,14 +192,4 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowOrderChange?: GridEventListener<'rowOrderChange'>;
-  /**
-   * Set the row grouping model of the grid.
-   */
-  rowGroupingModel?: GridRowGroupingModel;
-  /**
-   * Callback fired when the row grouping model changes.
-   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
 }

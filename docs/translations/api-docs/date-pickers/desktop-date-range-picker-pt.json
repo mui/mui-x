@@ -4,8 +4,6 @@
     "acceptRegex": "Regular expression to detect &quot;accepted&quot; symbols.",
     "calendars": "The number of calendars that render on <strong>desktop</strong>.",
     "className": "className applied to the root component.",
-    "clearable": "If <code>true</code>, it shows the clear action in the picker dialog.",
-    "clearText": "Clear text message.",
     "closeOnSelect": "If <code>true</code> the popup or dialog will immediately close after submitting full date.",
     "components": "The components used for each slot. Either a string to use an HTML element or a component.",
     "componentsProps": "The props used for each slot inside.",

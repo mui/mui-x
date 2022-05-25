@@ -4,20 +4,37 @@ import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
   datePickerValueManager,
+  DatePickerSlotsComponent,
 } from '../DatePicker/shared';
 import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
+  DesktopWrapperSlotsComponent,
+  DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
+import {
+  CalendarOrClockPicker,
+  CalendarOrClockPickerSlotsComponentsProps,
+} from '../internals/components/CalendarOrClockPicker';
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 
+export interface DesktopDatePickerSlotsComponent
+  extends DesktopWrapperSlotsComponent,
+    DatePickerSlotsComponent {}
+
+export interface DesktopDatePickerSlotsComponentsProps
+  extends DesktopWrapperSlotsComponentsProps,
+    CalendarOrClockPickerSlotsComponentsProps {}
+
 export interface DesktopDatePickerProps<TInputDate, TDate>
   extends BaseDatePickerProps<TInputDate, TDate>,
-    DesktopWrapperProps {}
+    DesktopWrapperProps {
+  components?: Partial<DesktopDatePickerSlotsComponent>;
+  componentsProps?: Partial<DesktopDatePickerSlotsComponentsProps>;
+}
 
 type DesktopDatePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: DesktopDatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -53,11 +70,18 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     ToolbarComponent = DatePickerToolbar,
     TransitionComponent,
     value,
-    clearText,
-    clearable,
+    components,
+    componentsProps,
     ...other
   } = props;
-  const AllDateInputProps = { ...inputProps, ...other, ref, validationError };
+  const AllDateInputProps = {
+    ...inputProps,
+    ...other,
+    components,
+    componentsProps,
+    ref,
+    validationError,
+  };
 
   return (
     <DesktopWrapper
@@ -67,8 +91,8 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
       PopperProps={PopperProps}
       PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
-      clearText={clearText}
-      clearable={clearable}
+      components={components}
+      componentsProps={componentsProps}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -76,6 +100,8 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
         DateInputProps={AllDateInputProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </DesktopWrapper>
@@ -99,17 +125,6 @@ DesktopDatePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  clearText: PropTypes.node,
-  /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
@@ -117,12 +132,10 @@ DesktopDatePicker.propTypes = {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
-   * @default {}
    */
   components: PropTypes.object,
   /**
    * The props used for each slot inside.
-   * @default {}
    */
   componentsProps: PropTypes.object,
   /**

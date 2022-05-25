@@ -1,4 +1,8 @@
-import { GridRowId, GridRowModel, GridRowTreeConfig } from '../../../models';
+import * as React from 'react';
+import { GridRowId, GridRowIdGetter, GridRowModel, GridRowTreeConfig } from '../../../models';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridRowsInternalCache, GridRowsState } from './gridRowsState';
 
 /**
  * A helper function to check if the id provided is valid.
@@ -22,6 +26,78 @@ export function checkGridRowIdIsValid(
     );
   }
 }
+
+export const getRowIdFromRowModel = (
+  rowModel: GridRowModel,
+  getRowId?: GridRowIdGetter,
+  detailErrorMessage?: string,
+): GridRowId => {
+  const id = getRowId ? getRowId(rowModel) : rowModel.id;
+  checkGridRowIdIsValid(id, rowModel, detailErrorMessage);
+  return id;
+};
+
+export const createRowsInternalCache = ({
+  rows,
+  getRowId,
+  loading,
+}: Pick<DataGridProcessedProps, 'rows' | 'getRowId' | 'loading'>): GridRowsInternalCache => {
+  const cache: GridRowsInternalCache = {
+    rowsBeforePartialUpdates: rows,
+    loadingPropBeforePartialUpdates: loading,
+    idRowsLookup: {},
+    idToIdLookup: {},
+    ids: [],
+  };
+
+  for (let i = 0; i < rows.length; i += 1) {
+    const row = rows[i];
+    const id = getRowIdFromRowModel(row, getRowId);
+    cache.idRowsLookup[id] = row;
+    cache.idToIdLookup[id] = id;
+    cache.ids.push(id);
+  }
+
+  return cache;
+};
+
+export const getRowsStateFromCache = ({
+  apiRef,
+  previousTree,
+  rowCountProp,
+  loadingProp,
+}: {
+  apiRef: React.MutableRefObject<GridApiCommunity>;
+  previousTree: GridRowTreeConfig | null;
+  rowCountProp: number | undefined;
+  loadingProp: boolean | undefined;
+}): GridRowsState => {
+  const { rowsBeforePartialUpdates, ...cacheForGrouping } = apiRef.current.unstable_caches.rows;
+  const rowCount = rowCountProp ?? 0;
+
+  const groupingResponse = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
+    ...cacheForGrouping,
+    previousTree,
+  });
+
+  const processedGroupingResponse = apiRef.current.unstable_applyPipeProcessors(
+    'hydrateRows',
+    groupingResponse,
+  );
+
+  const dataTopLevelRowCount =
+    processedGroupingResponse.treeDepth === 1
+      ? processedGroupingResponse.ids.length
+      : Object.values(processedGroupingResponse.tree).filter((node) => node.parent == null).length;
+
+  return {
+    ...processedGroupingResponse,
+    groupingResponseBeforeRowHydration: groupingResponse,
+    loading: loadingProp,
+    totalRowCount: Math.max(rowCount, processedGroupingResponse.ids.length),
+    totalTopLevelRowCount: Math.max(rowCount, dataTopLevelRowCount),
+  };
+};
 
 export const getTreeNodeDescendants = (
   tree: GridRowTreeConfig,

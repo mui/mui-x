@@ -1,5 +1,5 @@
 {
-  "version": "5.11.0",
+  "version": "5.11.1",
   "private": true,
   "scripts": {
     "start": "yarn docs:dev",
@@ -17,6 +17,7 @@
     "storybook:build": "yarn workspace storybook build",
     "storybook:export": "yarn workspace storybook export",
     "deduplicate": "node scripts/deduplicate.js",
+    "dataset:file-tree": "babel-node -x .ts ./scripts/treeDataFromFileTree.ts",
     "l10n": "babel-node -x .ts ./scripts/l10n.ts",
     "jsonlint": "node ./scripts/jsonlint.js",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
@@ -99,8 +100,8 @@
     "@types/requestidlecallback": "^0.3.4",
     "@types/sinon": "^10.0.11",
     "@types/yargs": "^17.0.10",
-    "@typescript-eslint/eslint-plugin": "^5.24.0",
-    "@typescript-eslint/parser": "^5.24.0",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
     "argos-cli": "^0.3.3",
     "babel-loader": "^8.2.5",
     "babel-plugin-istanbul": "^6.1.1",

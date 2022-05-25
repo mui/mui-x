@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
 ---
 
-# Date Range Picker [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+# Date Range Picker [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 <p class="description">Date pickers let the user select a range of dates.</p>
 

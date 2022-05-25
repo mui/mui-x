@@ -282,7 +282,7 @@ describe('<MobileDateTimePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -308,7 +308,7 @@ describe('<MobileDateTimePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={null}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 

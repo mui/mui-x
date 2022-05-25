@@ -6,8 +6,14 @@ import {
   usePickerState,
   DateInputPropsLike,
   DesktopWrapperProps,
+  DesktopWrapperSlotsComponent,
+  DesktopWrapperSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
+import {
+  DateRangePickerView,
+  DateRangePickerViewSlotsComponent,
+  DateRangePickerViewSlotsComponentsProps,
+} from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
@@ -21,9 +27,19 @@ const releaseInfo = getReleaseInfo();
 
 const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
 
+export interface DesktopDateRangePickerSlotsComponent
+  extends DesktopWrapperSlotsComponent,
+    DateRangePickerViewSlotsComponent {}
+export interface DesktopDateRangePickerSlotsComponentsProps
+  extends DesktopWrapperSlotsComponentsProps,
+    DateRangePickerViewSlotsComponentsProps {}
+
 export interface DesktopDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate>,
-    DesktopWrapperProps {}
+    DesktopWrapperProps {
+  components?: Partial<DesktopDateRangePickerSlotsComponent>;
+  componentsProps?: Partial<DesktopDateRangePickerSlotsComponentsProps>;
+}
 
 type DesktopDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: DesktopDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -62,11 +78,20 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     dateRangePickerValueManager,
   );
 
-  const { value, onChange, PopperProps, TransitionComponent, clearText, clearable, ...other } =
-    props;
+  const {
+    value,
+    onChange,
+    PopperProps,
+    TransitionComponent,
+    components,
+    componentsProps,
+    ...other
+  } = props;
   const DateInputProps = {
     ...inputProps,
     ...other,
+    components,
+    componentsProps,
     currentlySelectingRangeEnd,
     setCurrentlySelectingRangeEnd,
     validationError,
@@ -80,8 +105,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       KeyboardDateInputComponent={KeyboardDateInputComponent}
       PopperProps={PopperProps}
       TransitionComponent={TransitionComponent}
-      clearable={clearable}
-      clearText={clearText}
+      components={components}
+      componentsProps={componentsProps}
     >
       <DateRangePickerView<TInputDate, TDate>
         open={wrapperProps.open}
@@ -89,6 +114,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}
         setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
         {...pickerProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </DesktopTooltipWrapper>
@@ -117,17 +144,6 @@ DesktopDateRangePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  clearText: PropTypes.node,
-  /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
@@ -135,12 +151,10 @@ DesktopDateRangePicker.propTypes = {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
-   * @default {}
    */
   components: PropTypes.object,
   /**
    * The props used for each slot inside.
-   * @default {}
    */
   componentsProps: PropTypes.object,
   /**
