@@ -10,19 +10,24 @@ title: Data Grid - Rows
 
 The rows can be defined with the `rows` prop, which expects an array of objects.
 
-> ⚠️ The `rows` prop should keep the same reference between two renders except when you want to apply new rows.
-> Otherwise, the grid will re-apply heavy work like sorting and filtering.
+:::warning
+The `rows` prop should keep the same reference between two renders except when you want to apply new rows.
+Otherwise, the grid will re-apply heavy work like sorting and filtering.
+:::
 
 {{"demo": "RowsGrid.js", "bg": "inline"}}
 
-> ⚠️ Each row object should have a field that uniquely identifies the row.
-> By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/column-definition) for `id` field is not required.
->
-> When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
->
-> ```tsx
-> <DataGrid getRowId={(row) => row.internalId} />
-> ```
+:::warning
+Each row object should have a field that uniquely identifies the row.
+By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/column-definition) for `id` field is not required.
+
+When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
+
+```tsx
+<DataGrid getRowId={(row) => row.internalId} />
+```
+
+:::
 
 {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -88,17 +93,20 @@ If you need some rows to have different row heights this can be achieved using t
 
 {{"demo": "VariableRowHeightGrid.js", "bg": "inline"}}
 
-> ⚠ Changing the `DataGrid` density does not affect the rows with variable row height.
-> You can access the density factor from the params provided to the `getRowHeight` prop
->
-> ⚠ Always memoize the function provided to `getRowHeight`.
-> The grid bases on the referential value of these props to cache their values and optimize the rendering.
->
-> ```tsx
-> const handleGetRowHeight = React.useCallback(() => { ... }, []);
->
-> <DataGridPro getRowHeight={handleGetRowHeight} />
-> ```
+:::warning
+Changing the `DataGrid` density does not affect the rows with variable row height.
+You can access the density factor from the params provided to the `getRowHeight` prop
+
+Always memoize the function provided to `getRowHeight`.
+The grid bases on the referential value of these props to cache their values and optimize the rendering.
+
+```tsx
+const handleGetRowHeight = React.useCallback(() => { ... }, []);
+
+<DataGridPro getRowHeight={handleGetRowHeight} />
+```
+
+:::
 
 ## Row spacing
 
@@ -127,8 +135,8 @@ To add a border instead, set `rowSpacingType` to `"border"` and customize the co
 />
 ```
 
-:::info
-⚠ Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/master-detail/) is not recommended because the detail panel relies on the bottom margin to work.
+:::warning
+Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/master-detail/) is not recommended because the detail panel relies on the bottom margin to work.
 
 As an alternative, you can use the top spacing to define the space between rows.
 It's easier to always increase the next row spacing no matter if the detail panel is expanded or not, but you can use `gridDetailPanelExpandedRowIdsSelector` to apply a spacing depending on the open state.
@@ -207,15 +215,19 @@ To already start with a few suggested options configured, spread `GRID_REORDER_C
 
 This approach can also be used to change the location of the toggle column.
 
-> ⚠️ For now, row reordering is disabled if sorting is applied to the grid.
->
-> In addition, if row grouping or tree data is being used, the row reordering is also disabled.
+:::warning
+For now, row reordering is disabled if sorting is applied to the grid.
+
+In addition, if row grouping or tree data is being used, the row reordering is also disabled.
+:::
 
 ## 🚧 Row spanning
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
+:::
 
 Each cell takes up the width of one row.
 Row spanning allows to change this default behavior.
@@ -224,9 +236,11 @@ This is very close to the "row spanning" in an HTML `<table>`.
 
 ## 🚧 Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #1251](https://github.com/mui/mui-x/issues/1251) if you want to see it land faster.
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #1251](https://github.com/mui/mui-x/issues/1251) if you want to see it land faster.
+:::
 
 Pinned (or frozen, locked, or sticky) rows are rows that are visible at all times while the user scrolls the grid vertically.
 

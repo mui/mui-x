@@ -42,7 +42,10 @@ You may want to turn it off to be able to test the grid with a headless browser,
 <DataGrid {...data} disableVirtualization />
 ```
 
-**Note**: Disabling the virtualization will increase the size of the DOM and drastically reduce the performance. Use it only for testing purposes or on small datasets.
+:::info
+Disabling the virtualization will increase the size of the DOM and drastically reduce the performance.
+Use it only for testing purposes or on small datasets.
+:::
 
 ## API
 

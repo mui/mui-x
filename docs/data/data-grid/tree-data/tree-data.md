@@ -115,9 +115,11 @@ You can limit the sorting to the top-level rows with the `disableChildrenSorting
 
 ## Children lazy-loading
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
+:::
 
 Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown below.
 This implementation does not support every feature of the grid but can be a good starting point for large datasets.
