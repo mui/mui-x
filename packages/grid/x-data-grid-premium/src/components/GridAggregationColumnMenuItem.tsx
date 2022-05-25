@@ -74,12 +74,12 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
           onBlur={(e) => e.stopPropagation()}
           fullWidth
         >
+          <MenuItem value="">...</MenuItem>
           {availableAggregationFunctions.map((aggFunc) => (
             <MenuItem key={aggFunc} value={aggFunc}>
               {aggFunc}
             </MenuItem>
           ))}
-          <MenuItem value="">...</MenuItem>
         </Select>
       </FormControl>
     </MenuItem>
