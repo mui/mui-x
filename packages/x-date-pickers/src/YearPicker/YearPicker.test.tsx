@@ -172,8 +172,7 @@ describe('<YearPicker />', () => {
         // date is chose such as replacing year by 2018 or 2020 makes it out of valid range
         date={adapterToUse.date('2019-08-01T00:00:00.000')}
         onChange={() => {}}
-        autoFocus // needed to allow key board navigation
-        isDateDisabled={() => false}
+        autoFocus // needed to allow keyboard navigation
       />,
     );
 
