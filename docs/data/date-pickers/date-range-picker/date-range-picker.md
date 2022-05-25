@@ -79,7 +79,7 @@ This feature isn't implemented yet. It's coming.
 
 Range shortcuts allows your users to select a commonly-used range in one click (eg: last week, last month, …)
 
-## 🚧 Month Range Picker
+## 🚧 Month range Picker
 
 :::warning
 This feature isn't implemented yet. It's coming.
@@ -87,4 +87,4 @@ This feature isn't implemented yet. It's coming.
 👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
 :::
 
-Month Range picker allows setting date ranges by picking months only.
+Month range picker allows setting date ranges by picking months only.
