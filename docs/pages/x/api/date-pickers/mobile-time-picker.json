@@ -73,5 +73,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MobileTimePicker/MobileTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }
