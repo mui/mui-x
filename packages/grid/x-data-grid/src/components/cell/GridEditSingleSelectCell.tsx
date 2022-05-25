@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
-import { SelectProps } from '@mui/material/Select';
+import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {
   GridRenderEditCellParams,
@@ -10,7 +10,7 @@ import {
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
-import { GridColDef, ValueOptions } from '../../models/colDef/gridColDef';
+import { ValueOptions } from '../../models/colDef/gridColDef';
 import { getValueFromValueOptions } from '../panel/filterPanel/filterPanelUtils';
 
 const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.ElementType) => {
@@ -27,7 +27,19 @@ const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.
   );
 };
 
-function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectProps, 'id'>) {
+export interface GridEditSingleSelectCellProps
+  extends GridRenderEditCellParams,
+    Omit<SelectProps, 'id' | 'tabIndex' | 'value'> {
+  /**
+   * Callback called when the value is changed by the user.
+   * @param {SelectChangeEvent<any>} event The event source of the callback.
+   * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
+   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   */
+  onValueChange?: (event: SelectChangeEvent<any>, newValue: any) => Promise<void> | void;
+}
+
+function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const {
     id,
     value,
@@ -46,6 +58,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
     isValidating,
     isProcessingProps,
     error,
+    onValueChange,
     ...other
   } = props;
 
@@ -78,11 +91,16 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
     });
   }
 
-  const handleChange = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleChange: SelectProps['onChange'] = async (event) => {
     setOpen(false);
     const target = event.target as HTMLInputElement;
     // NativeSelect casts the value to a string.
     const formattedTargetValue = getValueFromValueOptions(target.value, valueOptionsFormatted);
+
+    if (onValueChange) {
+      await onValueChange(event, formattedTargetValue);
+    }
+
     const isValid = await api.setEditCellValue({ id, field, value: formattedTargetValue }, event);
 
     if (rootProps.experimentalFeatures?.newEditingApi) {
@@ -98,7 +116,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
     if (canCommit) {
       api.setCellMode(id, field, 'view');
 
-      if (event.key) {
+      if ((event as any).key) {
         // TODO v6: remove once we stop ignoring events fired from portals
         const params = api.getCellParams(id, field);
         api.publishEvent('cellNavigationKeyDown', params, event);
@@ -203,6 +221,13 @@ GridEditSingleSelectCell.propTypes = {
   isProcessingProps: PropTypes.bool,
   isValidating: PropTypes.bool,
   /**
+   * Callback called when the value is changed by the user.
+   * @param {SelectChangeEvent<any>} event The event source of the callback.
+   * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
+   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   */
+  onValueChange: PropTypes.func,
+  /**
    * The row model of the row that the current cell belongs to.
    */
   row: PropTypes.object.isRequired,
@@ -210,9 +235,18 @@ GridEditSingleSelectCell.propTypes = {
    * The node of the row that the current cell belongs to.
    */
   rowNode: PropTypes.object.isRequired,
+  /**
+   * the tabIndex value.
+   */
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.any,
 } as any;
 
 export { GridEditSingleSelectCell };
-export const renderEditSingleSelectCell: GridColDef['renderEditCell'] = (params) => (
+
+export const renderEditSingleSelectCell = (params: GridEditSingleSelectCellProps) => (
   <GridEditSingleSelectCell {...params} />
 );

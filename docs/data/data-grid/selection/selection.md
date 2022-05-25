@@ -17,7 +17,7 @@ To unselect a row, hold the <kbd class="key">Ctrl</kbd> key and click on it.
 
 {{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
 
-### Multiple row selection [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Multiple row selection [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 On the `DataGridPro` component, you can select multiple rows in two ways:
 
@@ -61,16 +61,19 @@ Each time this prop changes, the `onSelectionModelChange` callback is called wit
 Using the controlled selection with `paginationMode="server"` may result in selected rows being lost when the page is changed.
 This happens because the grid cross-checks with the `rows` prop and only calls `onSelectionModelChange` with existing row IDs.
 Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the grid will call `onSelectionModelChange` with an empty value.
-To prevent this unwanted behavior, there are two ways:
+To prevent this, enable the `keepNonExistentRowsSelected` prop to keep the rows selected even if they do not exist.
 
-- Save the `selectionModel` **before the page is changed** and restore it later
-- Append the newly loaded rows to the existing rows
+```tsx
+<DataGrid keepNonExistentRowsSelected />
+```
 
-The following demo shows how to implement the first solution:
+By using this approach, clicking in the **Select All** checkbox may still leave some rows selected.
+It is up to you to clean the selection model, using the `selectionModel` prop.
+The following demo shows the prop in action:
 
 {{"demo": "ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
@@ -78,7 +81,7 @@ The grid exposes a set of methods that enables all of these features using the i
 
 {{"demo": "SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## 🚧 Range selection [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+## 🚧 Range selection [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

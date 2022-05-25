@@ -248,6 +248,13 @@ export interface DataGridPropsWithDefaultValues {
    */
   hideFooterSelectedRowCount: boolean;
   /**
+   * If `true`, the selection model will retain selected rows that do not exist.
+   * Useful when using server side pagination and row selections need to be retained
+   * when changing pages.
+   * @default false
+   */
+  keepNonExistentRowsSelected: boolean;
+  /**
    * Pass a custom logger in the components that implements the [[Logger]] interface.
    * @default console
    */
@@ -605,6 +612,20 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPreferencePanelOpen?: GridEventListener<'preferencePanelOpen'>;
+  /**
+   * Callback fired when the menu is opened.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuOpen?: GridEventListener<'menuOpen'>;
+  /**
+   * Callback fired when the menu is closed.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuClose?: GridEventListener<'menuClose'>;
   /**
    * Set the edit rows model of the grid.
    */

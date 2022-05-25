@@ -80,7 +80,7 @@ StaticDateTimePicker.propTypes = {
   acceptRegex: PropTypes.instanceOf(RegExp),
   /**
    * 12h/24h view for hour selection clock.
-   * @default false
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
   /**
@@ -213,6 +213,7 @@ StaticDateTimePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -356,6 +357,7 @@ StaticDateTimePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**

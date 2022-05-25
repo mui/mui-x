@@ -5,8 +5,6 @@
     "ampm": "12h/24h view for hour selection clock.",
     "ampmInClock": "Display ampm controls under the clock (instead of in the toolbar).",
     "className": "className applied to the root component.",
-    "clearable": "If <code>true</code>, it shows the clear action in the picker dialog.",
-    "clearText": "Clear text message.",
     "closeOnSelect": "If <code>true</code> the popup or dialog will immediately close after submitting full date.",
     "components": "The components used for each slot. Either a string to use an HTML element or a component.",
     "componentsProps": "The props used for each slot inside.",

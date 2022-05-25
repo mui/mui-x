@@ -141,19 +141,8 @@ export const useGridRowGroupingPreProcessors = (
     (params) => {
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const columnsLookup = gridColumnLookupSelector(apiRef);
-      apiRef.current.setState((state) => ({
-        ...state,
-        rowGrouping: {
-          ...state.rowGrouping,
-          unstable_sanitizedModelOnLastRowTreeCreation: rowGroupingModel,
-        },
-      }));
-
-      const distinctValues: {
-        [field: string]: { lookup: { [val: string]: boolean }; list: any[] };
-      } = Object.fromEntries(
-        rowGroupingModel.map((groupingField) => [groupingField, { lookup: {}, list: [] }]),
-      );
+      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation =
+        rowGroupingModel;
 
       const getCellGroupingCriteria = ({
         row,
@@ -187,24 +176,6 @@ export const useGridRowGroupingPreProcessors = (
           field: colDef.field,
         };
       };
-
-      params.ids.forEach((rowId) => {
-        const row = params.idRowsLookup[rowId];
-
-        rowGroupingModel.forEach((groupingCriteria) => {
-          const { key } = getCellGroupingCriteria({
-            row,
-            id: rowId,
-            colDef: columnsLookup[groupingCriteria],
-          });
-          const groupingFieldsDistinctKeys = distinctValues[groupingCriteria];
-
-          if (key != null && !groupingFieldsDistinctKeys.lookup[key.toString()]) {
-            groupingFieldsDistinctKeys.lookup[key.toString()] = true;
-            groupingFieldsDistinctKeys.list.push(key);
-          }
-        });
-      });
 
       const rows = params.ids.map((rowId) => {
         const row = params.idRowsLookup[rowId];

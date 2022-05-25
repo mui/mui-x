@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
 ---
 
-# Date range picker [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+# Date range picker [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 <p class="description">Date pickers let the user select a range of dates.</p>
 
@@ -71,8 +71,20 @@ You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/
 
 ## 🚧 Pre-defined range shortcuts
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #4563](https://github.com/mui/mui-x/issues/4563) if you want to see it land faster.
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #4563](https://github.com/mui/mui-x/issues/4563) if you want to see it land faster.
+:::
 
 Range shortcuts allows your users to select a commonly-used range in one click (eg: last week, last month, …)
+
+## 🚧 Month Range Picker
+
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
+:::
+
+Month Range picker allows setting date ranges by picking months only.

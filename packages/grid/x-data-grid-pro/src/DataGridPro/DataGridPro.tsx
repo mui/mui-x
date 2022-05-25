@@ -397,6 +397,13 @@ DataGridProRaw.propTypes = {
    */
   isRowSelectable: PropTypes.func,
   /**
+   * If `true`, the selection model will retain selected rows that do not exist.
+   * Useful when using server side pagination and row selections need to be retained
+   * when changing pages.
+   * @default false
+   */
+  keepNonExistentRowsSelected: PropTypes.bool,
+  /**
    * If `true`, a  loading overlay is displayed.
    */
   loading: PropTypes.bool,
@@ -588,6 +595,20 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onFilterModelChange: PropTypes.func,
+  /**
+   * Callback fired when the menu is closed.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuClose: PropTypes.func,
+  /**
+   * Callback fired when the menu is opened.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuOpen: PropTypes.func,
   /**
    * Callback fired when the current page has changed.
    * @param {number} page Index of the page displayed on the Grid.

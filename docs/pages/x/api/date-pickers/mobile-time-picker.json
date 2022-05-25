@@ -6,12 +6,9 @@
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "ampm": { "type": { "name": "bool" } },
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" } },
-    "cancelText": { "type": { "name": "node" }, "default": "'Cancel'" },
     "className": { "type": { "name": "string" } },
-    "clearable": { "type": { "name": "bool" } },
-    "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
     "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
@@ -39,7 +36,6 @@
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "okText": { "type": { "name": "node" }, "default": "'OK'" },
     "onAccept": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
@@ -59,9 +55,7 @@
     "readOnly": { "type": { "name": "bool" } },
     "rifmFormatter": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
-    "showTodayButton": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "todayText": { "type": { "name": "node" }, "default": "'Today'" },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
     "value": { "type": { "name": "any" } },
@@ -79,5 +73,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MobileTimePicker/MobileTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

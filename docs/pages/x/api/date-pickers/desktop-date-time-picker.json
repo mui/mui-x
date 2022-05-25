@@ -6,17 +6,15 @@
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "ampm": { "type": { "name": "bool" } },
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
-    "clearable": { "type": { "name": "bool" } },
-    "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
     "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": { "type": { "name": "object" } },
+    "componentsProps": { "type": { "name": "object" } },
     "dateRangeIcon": { "type": { "name": "node" } },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
@@ -39,7 +37,7 @@
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
-    "leftArrowButtonText": { "type": { "name": "string" } },
+    "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
     "mask": { "type": { "name": "string" } },
     "maxDate": { "type": { "name": "any" } },
@@ -80,7 +78,7 @@
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
     },
     "rifmFormatter": { "type": { "name": "func" } },
-    "rightArrowButtonText": { "type": { "name": "string" } },
+    "rightArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
@@ -106,5 +104,6 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDateTimePicker/DesktopDateTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

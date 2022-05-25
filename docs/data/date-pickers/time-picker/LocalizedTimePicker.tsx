@@ -26,7 +26,10 @@ export default function LocalizedTimePicker() {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} locale={localeMap[locale]}>
+    <LocalizationProvider
+      dateAdapter={AdapterDateFns}
+      adapterLocale={localeMap[locale]}
+    >
       <div>
         <ToggleButtonGroup value={locale} exclusive sx={{ mb: 2, display: 'block' }}>
           {Object.keys(localeMap).map((localeItem) => (

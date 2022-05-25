@@ -18,6 +18,11 @@ export interface BaseTimePickerProps<TInputDate, TDate>
     ValidationProps<TimeValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
   /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm?: boolean;
+  /**
    * Callback fired on view change.
    * @param {ClockPickerView} view The new view.
    */

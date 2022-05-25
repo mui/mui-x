@@ -93,6 +93,7 @@
     "isCellEditable": { "type": { "name": "func" } },
     "isGroupExpandedByDefault": { "type": { "name": "func" } },
     "isRowSelectable": { "type": { "name": "func" } },
+    "keepNonExistentRowsSelected": { "type": { "name": "bool" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -142,6 +143,8 @@
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
+    "onMenuClose": { "type": { "name": "func" } },
+    "onMenuOpen": { "type": { "name": "func" } },
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
     "onPinnedColumnsChange": { "type": { "name": "func" } },
@@ -311,6 +314,9 @@
       "pinnedColumnHeaders--left",
       "pinnedColumnHeaders--right",
       "root",
+      "root--densityStandard",
+      "root--densityComfortable",
+      "root--densityCompact",
       "row--editable",
       "row--editing",
       "row--dragging",
@@ -338,5 +344,6 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid#commercial-version\">DataGridPremium</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-data-grid#commercial-version\">DataGridPremium</a></li></ul>",
+  "packages": ["@mui/x-data-grid-premium"]
 }

@@ -3,7 +3,7 @@ import Fade from '@mui/material/Fade';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { SlideDirection } from './PickersSlideTransition';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { ExportedDateValidationProps } from '../internals/hooks/validation/useDateValidation';
 import { ArrowDropDown } from '../internals/components/icons';
@@ -18,6 +18,7 @@ import {
   useNextMonthDisabled,
 } from '../internals/hooks/date-helpers-hooks';
 import { CalendarPickerView } from '../internals/models';
+import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
@@ -121,6 +122,10 @@ function getSwitchingViewAriaText(view: CalendarPickerView) {
     : 'calendar view is open, switch to year view';
 }
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 /**
  * @ignore - do not document.
  */
@@ -133,16 +138,26 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
     disableFuture,
     disablePast,
     getViewSwitchingButtonText = getSwitchingViewAriaText,
-    leftArrowButtonText = 'Previous month',
+    leftArrowButtonText: leftArrowButtonTextProp,
     maxDate,
     minDate,
     onMonthChange,
     onViewChange,
     openView: currentView,
     reduceAnimations,
-    rightArrowButtonText = 'Next month',
+    rightArrowButtonText: rightArrowButtonTextProp,
     views,
   } = props;
+
+  deprecatedPropsWarning({
+    leftArrowButtonText: leftArrowButtonTextProp,
+    rightArrowButtonText: rightArrowButtonTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
+  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
 
   const utils = useUtils<TDate>();
 

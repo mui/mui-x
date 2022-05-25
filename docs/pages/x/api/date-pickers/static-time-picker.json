@@ -6,7 +6,7 @@
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "ampm": { "type": { "name": "bool" } },
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
@@ -73,5 +73,6 @@
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers/src/StaticTimePicker/StaticTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

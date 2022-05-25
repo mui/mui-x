@@ -2,7 +2,7 @@
 title: Data Grid - Aggregation
 ---
 
-# Data Grid - Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data Grid - Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 <p class="description">Apply aggregation function to populate the group row with values.</p>
 

@@ -42,13 +42,9 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
-    cancelText,
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
-    okText,
     PopperProps,
-    showTodayButton,
-    todayText,
     TransitionComponent,
     ...other
   } = props;
@@ -66,17 +62,7 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<
     );
   }
 
-  return (
-    <MobileDateRangePicker
-      ref={ref}
-      cancelText={cancelText}
-      DialogProps={DialogProps}
-      okText={okText}
-      showTodayButton={showTodayButton}
-      todayText={todayText}
-      {...other}
-    />
-  );
+  return <MobileDateRangePicker ref={ref} DialogProps={DialogProps} {...other} />;
 }) as DateRangePickerComponent;
 
 DateRangePicker.propTypes = {
@@ -95,26 +81,11 @@ DateRangePicker.propTypes = {
    * @default 2
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
-  /**
-   * Cancel text message.
-   * @default 'Cancel'
-   */
-  cancelText: PropTypes.node,
   children: PropTypes.node,
   /**
    * className applied to the root component.
    */
   className: PropTypes.string,
-  /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   */
-  clearText: PropTypes.node,
   /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
@@ -123,12 +94,10 @@ DateRangePicker.propTypes = {
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
-   * @default {}
    */
   components: PropTypes.object,
   /**
    * The props used for each slot inside.
-   * @default {}
    */
   componentsProps: PropTypes.object,
   /**
@@ -181,6 +150,7 @@ DateRangePicker.propTypes = {
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   endText: PropTypes.node,
   /**
@@ -220,6 +190,7 @@ DateRangePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -241,11 +212,6 @@ DateRangePicker.propTypes = {
    * Min selectable date. @DateIOType
    */
   minDate: PropTypes.any,
-  /**
-   * Ok button text.
-   * @default 'OK'
-   */
-  okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
@@ -365,6 +331,7 @@ DateRangePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
@@ -396,24 +363,15 @@ DateRangePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the today button is displayed. **Note** that `showClearButton` has a higher priority.
-   * @default false
-   */
-  showTodayButton: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   startText: PropTypes.node,
-  /**
-   * Today text message.
-   * @default 'Today'
-   */
-  todayText: PropTypes.node,
   /**
    * Date format, that is displaying in toolbar.
    */
