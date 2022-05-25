@@ -116,6 +116,16 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers/time-picker' },
       { pathname: '/x/react-date-pickers/localization' },
       {
+        pathname: '/x/react-date-pickers/date-time-range-picker',
+        title: 'Date time range picker 🚧',
+        plan: 'pro',
+      },
+      {
+        pathname: '/x/react-date-pickers/time-range-picker',
+        title: 'Time range picker 🚧',
+        plan: 'pro',
+      },
+      {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',
         children: [
