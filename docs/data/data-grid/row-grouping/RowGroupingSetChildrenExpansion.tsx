@@ -38,7 +38,7 @@ export default function RowGroupingSetChildrenExpansion() {
 
   return (
     <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
-      <Button onClick={toggle2ndGroup}>Toggle 2nd group expansion</Button>
+      <Button onClick={toggle2ndGroup}>Toggle 2nd row expansion</Button>
       <div style={{ height: 400, width: '100%' }}>
         <DataGridPremium
           {...data}
