@@ -72,6 +72,7 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
           label={label}
           onChange={handleAggregationItemChange}
           onBlur={(e) => e.stopPropagation()}
+          fullWidth
         >
           {availableAggregationFunctions.map((aggFunc) => (
             <MenuItem key={aggFunc} value={aggFunc}>
