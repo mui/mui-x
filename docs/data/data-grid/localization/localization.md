@@ -19,7 +19,7 @@ In the following example, the labels of the density selector are customized.
 
 > ⚠️ It's important to note that because the data grid uses components from the Material UI library some translation keys need to be accessed using that component key.
 >
-> One example is the `TablePagination` component used in the grid footer when pagination is enabled.
+> One example is the table pagination component used in the grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [`TablePagination`](/material-ui/api/table-pagination/) component.
 >
 > ```jsx
 > <DataGrid
