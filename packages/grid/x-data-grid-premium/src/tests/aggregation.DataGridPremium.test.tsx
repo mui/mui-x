@@ -59,7 +59,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
   describe('Setting aggregation model', () => {
     describe('initialState: aggregation.model', () => {
-      it('should allow to initialize the aggregation', () => {
+      it('should allow to initialize aggregation', () => {
         render(<Test initialState={{ aggregation: { model: { id: { footer: 'max' } } } }} />);
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
       });
