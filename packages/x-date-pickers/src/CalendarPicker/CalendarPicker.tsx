@@ -340,8 +340,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
       const closestEnabledDate = findClosestEnabledDate({
         utils,
         date,
-        minDate: minDate ?? defaultDates.minDate,
-        maxDate: maxDate ?? defaultDates.maxDate,
+        minDate,
+        maxDate,
         disablePast,
         disableFuture,
         isDateDisabled,
