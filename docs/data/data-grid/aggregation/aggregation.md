@@ -71,7 +71,7 @@ In the example below, the `title` and `year` columns are blocked from being aggr
 
 ### Choose the column for the label
 
-Use the `aggregationFooterLabelField` to choose on which column the label of the aggregation should be rendered.
+Use the `aggregationFooterLabelField` prop to choose which column to render the aggregation label on.
 
 {{"demo": "AggregationLabelColumn.js", "bg": "inline"}}
 
