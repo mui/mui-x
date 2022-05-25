@@ -45,6 +45,10 @@ export const useGridRowsMeta = (
     };
   }>({});
 
+  if (typeof window === 'object') {
+    window.rowsHeightLookup = rowsHeightLookup.current;
+  }
+
   // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
   const lastMeasuredRowIndex = React.useRef(-1);
   const hasRowWithAutoHeight = React.useRef(false);
@@ -165,10 +169,13 @@ export const useGridRowsMeta = (
     getEstimatedRowHeight,
   ]);
 
-  const getRowHeight = React.useCallback<GridRowsMetaApi['unstable_getRowHeight']>((rowId) => {
-    const height = rowsHeightLookup.current[rowId];
-    return height ? height.sizes.base : 0;
-  }, []);
+  const getRowHeight = React.useCallback<GridRowsMetaApi['unstable_getRowHeight']>(
+    (rowId) => {
+      const height = rowsHeightLookup.current[rowId];
+      return height ? height.sizes.base : rowHeightFromDensity;
+    },
+    [rowHeightFromDensity],
+  );
 
   const getRowInternalSizes = (rowId: GridRowId): Record<string, number> | undefined =>
     rowsHeightLookup.current[rowId]?.sizes;
