@@ -348,4 +348,6 @@ export const useGridSorting = (
       apiRef.current.setSortModel(props.sortModel);
     }
   }, [apiRef, props.sortModel]);
+
+  console.log(apiRef.current.state);
 };

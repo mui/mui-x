@@ -1,9 +1,4 @@
-import {
-  GridRowId,
-  GridRowTreeConfig,
-  GridFilterState,
-  GridTreeNode,
-} from '@mui/x-data-grid';
+import { GridRowId, GridRowTreeConfig, GridFilterState, GridTreeNode } from '@mui/x-data-grid';
 import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals';
 
 interface FilterRowTreeFromTreeDataParams {
