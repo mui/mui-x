@@ -267,7 +267,7 @@ If the column used to display the aggregation have a `renderCell` property, the 
 
 This objects contains a `hasCellUnit` which informs you if the current aggregation has the same unit as the rest of this column's data (for instance, if your column is in `$`, does the aggregated value is also in `$` or is it unit-less ?)
 
-In the example below, you can see that all the aggregation function are rendered with the rating UI except the `size` one because it is not a valid rating.
+In the example below, you can see that all the aggregation functions are rendered with the rating UI aside from `size`, because it's not a valid rating:
 
 {{"demo": "AggregationRenderCell.js", "bg": "inline", "defaultCodeOpen": false}}
 
