@@ -24,16 +24,15 @@ export const sortRowTree = (params: SortRowTreeParams) => {
       sortedRowIds.push(node.footerId);
     }
 
-    for (let i=0; i<node.children.length; i+= 1) {
-      const childNode = rowTree[node.children[i]]
+    for (let i = 0; i < node.children.length; i += 1) {
+      const childNode = rowTree[node.children[i]];
       if (childNode.type === 'group') {
-        sortGroup(childNode)
+        sortGroup(childNode);
       }
     }
 
     sortedGroupedByParentRows.set(node.id, sortedRowIds);
   };
-
 
   sortGroup(rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode);
 

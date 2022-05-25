@@ -5,7 +5,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
-import { GridGroupNode, GridLeafNode, GridRowId } from '../../../models/gridRows';
+import { GridGroupNode } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
 import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -263,14 +263,16 @@ export const useGridSorting = (
   const flatSortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
-      const rootGroupNode = (rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode);
+      const rootGroupNode = rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode;
 
-        const sortedChildren = params.sortRowList ? params.sortRowList(rootGroupNode.children.map(childId => rowTree[childId])) : [...rootGroupNode.children]
-        if (rootGroupNode.footerId != null) {
-            sortedChildren.push(rootGroupNode.footerId)
-        }
+      const sortedChildren = params.sortRowList
+        ? params.sortRowList(rootGroupNode.children.map((childId) => rowTree[childId]))
+        : [...rootGroupNode.children];
+      if (rootGroupNode.footerId != null) {
+        sortedChildren.push(rootGroupNode.footerId);
+      }
 
-        return sortedChildren
+      return sortedChildren;
     },
     [apiRef],
   );

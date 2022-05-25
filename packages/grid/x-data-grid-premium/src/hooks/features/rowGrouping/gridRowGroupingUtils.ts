@@ -119,7 +119,8 @@ export const filterRowTreeFromGroupingColumns = (
 
     // TODO: Should we keep storing the visibility status of footer independently or rely on the group visibility in the selector ?
     if (node.type === 'group' && node.footerId != null) {
-      visibleRowsLookup[node.footerId] = shouldPassFilters && areAncestorsExpanded && !!node.childrenExpanded;
+      visibleRowsLookup[node.footerId] =
+        shouldPassFilters && areAncestorsExpanded && !!node.childrenExpanded;
     }
 
     if (!shouldPassFilters) {
