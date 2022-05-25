@@ -210,7 +210,7 @@ export const addFooterRows = ({
     if (groupId != null) {
       tree[groupId] = {
         ...tree[groupId],
-        children: [...(tree[groupId].children ?? []), footerId],
+        footerId,
       };
     }
   };

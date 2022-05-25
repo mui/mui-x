@@ -74,6 +74,11 @@ export const filterRowTreeFromTreeData = (
     visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
     filteredRowsLookup[node.id] = shouldPassFilters;
 
+    if (node.footerId != null) {
+      visibleRowsLookup[node.footerId] =
+        shouldPassFilters && areAncestorsExpanded && !!node.childrenExpanded;
+    }
+
     if (!shouldPassFilters) {
       return 0;
     }

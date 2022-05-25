@@ -31,6 +31,10 @@ export interface GridRowTreeNodeConfig {
    */
   children?: GridRowId[];
   /**
+   * The id of the footer
+   */
+  footerId?: GridRowId | null;
+  /**
    * The row id of the parent (null if this row is a top level row).
    */
   parent: GridRowId | null;

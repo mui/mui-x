@@ -15,19 +15,19 @@ export const sortRowTree = (params: SortRowTreeParams) => {
   // Group the rows by parent
   const groupedByParentRows = new Map<
     GridRowId | null,
-    { body: GridRowTreeNodeConfig[]; footer: GridRowTreeNodeConfig[] }
-  >([[null, { body: [], footer: [] }]]);
+    { body: GridRowTreeNodeConfig[]; footer: GridRowTreeNodeConfig | null }
+  >([[null, { body: [], footer: null }]]);
   for (let i = 0; i < rowIds.length; i += 1) {
     const rowId = rowIds[i];
     const node = rowTree[rowId];
     let group = groupedByParentRows.get(node.parent);
     if (!group) {
-      group = { body: [], footer: [] };
+      group = { body: [], footer: null };
       groupedByParentRows.set(node.parent, group);
     }
 
     if (node.position === 'footer') {
-      group.footer.push(node);
+      group.footer = node;
     } else {
       group.body.push(node);
     }
@@ -39,17 +39,19 @@ export const sortRowTree = (params: SortRowTreeParams) => {
     if (group.body.length === 0) {
       sortedGroupedByParentRows.set(parent, []);
     } else {
-      let sortedBodyRows: GridRowId[];
+      let groupSortedRows: GridRowId[];
       const depth = group.body[0].depth;
       if ((depth > 0 && disableChildrenSorting) || !sortRowList) {
-        sortedBodyRows = group.body.map((row) => row.id);
+        groupSortedRows = group.body.map((row) => row.id);
       } else {
-        sortedBodyRows = sortRowList(group.body);
+        groupSortedRows = sortRowList(group.body);
       }
 
-      const footerRows = group.footer.map((row) => row.id);
+      if (group.footer != null) {
+        groupSortedRows.push(group.footer.id);
+      }
 
-      sortedGroupedByParentRows.set(parent, [...sortedBodyRows, ...footerRows]);
+      sortedGroupedByParentRows.set(parent, groupSortedRows);
     }
   });
 
