@@ -51,7 +51,8 @@ function MockTime(props) {
   return ready ? props.children : null;
 }
 
-MockTime.prototype = {
+MockTime.propTypes = {
+  children: PropTypes.node.isRequired,
   isDataGridTest: PropTypes.bool,
 };
 
