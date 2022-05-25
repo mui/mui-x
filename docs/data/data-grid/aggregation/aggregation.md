@@ -81,7 +81,7 @@ TODO
 
 ## Usage with row grouping
 
-When the row grouping is enabled, the aggregated values can be displayed on two positions:
+When the row grouping is enabled, the aggregated values can be displayed in two positions:
 
 1. `footer` - the grid will add a root level footer to aggregate all the rows and one footer per group to aggregate its rows
 
