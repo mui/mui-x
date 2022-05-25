@@ -53,7 +53,7 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  */
 export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWithDefaultValue {
   /**
-   * If `true`, the aggregation is disabled.
+   * If `true`, aggregation is disabled.
    * @default false
    */
   disableAggregation: boolean;
@@ -113,7 +113,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * Determines in a group of rows should be aggregated.
    * @param {GridGroupNode} groupNode The current group.
-   * @param {GridAggregationPosition} position The position on which the aggregation has to be done.
+   * @param {GridAggregationPosition} position The position on which aggregation has to be done.
    * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
    */
   isGroupAggregated?: (groupNode: GridGroupNode, position: GridAggregationPosition) => boolean;

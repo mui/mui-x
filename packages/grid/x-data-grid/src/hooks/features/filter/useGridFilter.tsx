@@ -294,7 +294,7 @@ export const useGridFilter = (
         }
         return {
           filteredRowsLookup,
-          // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` since no row is collapsed.
+          // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
           visibleRowsLookup: filteredRowsLookup,
           filteredDescendantCountLookup: {},
         };

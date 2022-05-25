@@ -62,7 +62,7 @@ export interface GridRowsState extends GridRowTreeCreationValue, GridRowsLookups
 
 export type GridHydrateRowsValue = GridRowTreeCreationValue;
 
-export type GridRowsPartialUpdateAction = 'insert' | 'modify' | 'delete';
+export type GridRowsPartialUpdateAction = 'insert' | 'modify' | 'remove';
 
 export interface GridRowsFullUpdate {
   type: 'full';

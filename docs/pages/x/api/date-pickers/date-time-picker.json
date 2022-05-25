@@ -109,5 +109,6 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

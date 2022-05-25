@@ -89,5 +89,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DesktopDateRangePicker/DesktopDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro"]
 }

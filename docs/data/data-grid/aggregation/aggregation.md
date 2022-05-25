@@ -11,7 +11,7 @@ The aggregation can be modified through the grid interface by opening the column
 The aggregated values will be rendered in a footer row at the bottom of the grid.
 
 :::warning
-⚠️ The footer row will be pinned at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
+The footer row will be pinned at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
 :::
 
 {{"demo": "AggregationBasic.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -26,7 +26,7 @@ An aggregation item is an object where `item.footer` contains the name of the ag
 and `item.inline` contains the name of the aggregation function to apply on the grouping rows.
 
 :::info
-If you only want to aggregate on the footer, you can use the short notation
+If you only need to aggregate in the footer, you can use the short notation:
 
 ```ts
 const model: GridAggregationModel = { gross: { footer: 'sum' } };
@@ -36,34 +36,34 @@ const model: GridAggregationModel = { gross: 'sum' };
 
 :::
 
-### Initialize the aggregation
+### Initialize aggregation
 
-To initialize the aggregation without controlling it, provide the model to the `initialState` prop.
+To initialize aggregation without controlling it, provide the model to the `initialState` prop.
 
 {{"demo": "AggregationInitialState.js", "bg": "inline"}}
 
 ### Controlled aggregation
 
-Use the `aggregationModel` prop to control the aggregation passed to the grid.
+Use the `aggregationModel` prop to control aggregation passed to the grid.
 
-You can use the `onAggregationModelChange` prop to listen to changes to the aggregation and update the prop accordingly.
+You can use the `onAggregationModelChange` prop to listen to changes to aggregation and update the prop accordingly.
 
 {{"demo": "AggregationControlled.js", "bg": "inline"}}
 
-## Disable the aggregation
+## Disable aggregation
 
 ### For all columns
 
-You can disable the aggregation by setting the `disableAggregation` prop to true.
+You can disable aggregation by setting the `disableAggregation` prop to true.
 
-It will disable all features related to the aggregation, even if a model is provided.
+It will disable all features related to aggregation, even if a model is provided.
 
 {{"demo": "AggregationDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### For some columns
 
-In case you need to disable the aggregation on specific column(s), set the `aggregatable` property on the respective column definition (`GridColDef`) to `false`.
-In the example below, the `title` and `year` columns can not be aggregated.
+In case you need to disable aggregation on specific column(s), set the `aggregatable` property on the respective column definition (`GridColDef`) to `false`.
+In the example below, the `title` and `year` columns are blocked from being aggregated:
 
 {{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -71,7 +71,7 @@ In the example below, the `title` and `year` columns can not be aggregated.
 
 ### Choose the column for the label
 
-Use the `aggregationFooterLabelField` to choose on which column the label of the aggregation should be rendered.
+Use the `aggregationFooterLabelField` prop to choose which column to render the aggregation label on.
 
 {{"demo": "AggregationLabelColumn.js", "bg": "inline"}}
 
@@ -81,7 +81,7 @@ TODO
 
 ## Usage with row grouping
 
-When the row grouping is enabled, the aggregated values can be displayed on two positions:
+When the row grouping is enabled, the aggregated values can be displayed in two positions:
 
 1. `footer` - the grid will add a root level footer to aggregate all the rows and one footer per group to aggregate its rows
 
@@ -113,7 +113,7 @@ Both positions can be used simultaneously with different aggregation function as
 
 ### Only aggregate some groups
 
-You can limit the aggregation to some groups with the `isGroupAggregated` prop.
+You can limit aggregation to some groups with the `isGroupAggregated` prop.
 This function receives two parameters:
 
 1. The group from which the grid is trying to aggregate or `null` if trying to aggregate the root group.
@@ -156,7 +156,7 @@ The demo below shows the _sum_ aggregation on the "Size" column and the _max_ ag
 
 ## Filtering
 
-By default, the aggregation only uses the filtered rows.
+By default, aggregation only uses the filtered rows.
 You can set the `aggregatedRows` to `"all"` to use all rows.
 
 In the example below, the movie _Avatar_ is not passing the filters but is still used for the **max** aggregation of the `gross` column.
@@ -232,7 +232,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
     label: 'First in alphabet',
     // The `types` property defines which type of columns can use this aggregation function.
     // Here, we only want to propose this aggregation function for `string` columns.
-    // If not defined, the aggregation will be available for all column types.
+    // If not defined, aggregation will be available for all column types.
     columnTypes: ['string'],
   };
 ```
@@ -246,7 +246,7 @@ In the example below, the grid have two additional custom aggregation functions 
 By default, the aggregated cell uses the value formatter of its column.
 But for some columns, the format of the aggregated value may have to differ from the format of the other cell values.
 
-You can provide a `valueFormatter` method to your aggregation function to override the one of the column.
+You can provide a `valueFormatter` method to your aggregation function to override the column's default formatting.
 
 ```ts
 const aggregationFunction: GridAggregationFunction = {
@@ -263,11 +263,11 @@ const aggregationFunction: GridAggregationFunction = {
 
 ## Custom rendering
 
-If the column used to display the aggregation have a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide how you want to render it.
+If the column used to display aggregation have a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide how you want to render it.
 
-This objects contains a `hasCellUnit` which informs you if the current aggregation has the same unit as the rest of this column's data (for instance, if your column is in `$`, does the aggregated value is also in `$` or is it unit-less ?)
+This object contains a `hasCellUnit` which lets you know if the current aggregation has the same unit as the rest of the column's data—for instance, if your column is in `$`, is the aggregated value is also in `$`?
 
-In the example below, you can see that all the aggregation function are rendered with the rating UI except the `size` one because it is not a valid rating.
+In the example below, you can see that all the aggregation functions are rendered with the rating UI aside from `size`, because it's not a valid rating:
 
 {{"demo": "AggregationRenderCell.js", "bg": "inline", "defaultCodeOpen": false}}
 

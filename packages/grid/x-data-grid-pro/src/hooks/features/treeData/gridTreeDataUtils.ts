@@ -1,4 +1,11 @@
-import { GridRowId, GridRowTreeConfig, GridFilterState, GridTreeNode } from '@mui/x-data-grid';
+import {
+  GridRowId,
+  GridRowTreeConfig,
+  GridFilterState,
+  GridTreeNode,
+  GRID_ROOT_GROUP_ID,
+  GridGroupNode
+} from '@mui/x-data-grid';
 import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals';
 
 interface FilterRowTreeFromTreeDataParams {
@@ -70,6 +77,11 @@ export const filterRowTreeFromTreeData = (
 
     visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
     filteredRowsLookup[node.id] = shouldPassFilters;
+
+    // TODO: Should we keep storing the visibility status of footer independently or rely on the group visibility in the selector ?
+    if (node.type === 'group' && node.footerId != null) {
+      visibleRowsLookup[node.footerId] = shouldPassFilters && areAncestorsExpanded && !!node.childrenExpanded;
+    }
 
     if (!shouldPassFilters) {
       return 0;

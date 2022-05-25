@@ -184,7 +184,7 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   ),
   /**
-   * If `true`, the aggregation is disabled.
+   * If `true`, aggregation is disabled.
    * @default false
    */
   disableAggregation: PropTypes.bool,
@@ -421,7 +421,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Determines in a group of rows should be aggregated.
    * @param {GridGroupNode} groupNode The current group.
-   * @param {GridAggregationPosition} position The position on which the aggregation has to be done.
+   * @param {GridAggregationPosition} position The position on which aggregation has to be done.
    * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
    */
   isGroupAggregated: PropTypes.func,

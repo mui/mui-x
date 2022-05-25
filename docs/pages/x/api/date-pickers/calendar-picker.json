@@ -61,5 +61,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/CalendarPicker/CalendarPicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

@@ -263,36 +263,14 @@ export const useGridSorting = (
   const flatSortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
-      const rowIds = (rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode)!.children;
+      const rootGroupNode = (rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode);
 
-      if (!params.sortRowList) {
-        const bodyRowIds: GridRowId[] = [];
-        const footerRowIds: GridRowId[] = [];
-
-        rowIds.forEach((rowId) => {
-          if (rowTree[rowId].type === 'footer') {
-            footerRowIds.push(rowId);
-          } else {
-            bodyRowIds.push(rowId);
-          }
-        });
-
-        return [...bodyRowIds, ...footerRowIds];
-      }
-
-      const bodyRows: (GridGroupNode | GridLeafNode)[] = [];
-      const footerRowIds: GridRowId[] = [];
-
-      rowIds.forEach((rowId) => {
-        const rowNode = rowTree[rowId];
-        if (rowNode.type === 'footer') {
-          footerRowIds.push(rowNode.id);
-        } else if (rowNode.parent != null) {
-          bodyRows.push(rowNode);
+        const sortedChildren = params.sortRowList ? params.sortRowList(rootGroupNode.children.map(childId => rowTree[childId])) : [...rootGroupNode.children]
+        if (rootGroupNode.footerId != null) {
+            sortedChildren.push(rootGroupNode.footerId)
         }
-      });
 
-      return [...params.sortRowList(bodyRows), ...footerRowIds];
+        return sortedChildren
     },
     [apiRef],
   );

@@ -4,6 +4,7 @@ import {
   gridColumnLookupSelector,
   gridFilteredRowsLookupSelector,
   GridGroupNode,
+  GridLeafNode,
   GridRowId,
   gridRowTreeSelector,
 } from '@mui/x-data-grid-pro';
@@ -124,20 +125,16 @@ export const createAggregationLookup = ({
   const rowTree = gridRowTreeSelector(apiRef);
 
   const createGroupAggregationLookup = (groupNode: GridGroupNode) => {
-    let hasAggregableChildren = false;
     for (let i = 0; i < groupNode.children.length; i += 1) {
       const childId = groupNode.children[i];
-      const childNode = rowTree[childId];
+      const childNode = rowTree[childId] as GridGroupNode | GridLeafNode;
 
       if (childNode.type === 'group') {
         createGroupAggregationLookup(childNode);
       }
-
-      if (childNode.type === 'leaf' || childNode.type === 'group') {
-        hasAggregableChildren = true;
-      }
     }
 
+    const hasAggregableChildren = groupNode.children.length;
     if (hasAggregableChildren) {
       aggregationLookup[groupNode.id] = getGroupAggregatedValue({
         groupId: groupNode.id,

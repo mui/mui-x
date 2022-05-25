@@ -212,7 +212,7 @@ export const useGridRows = (
         actions: {
           insert: [...(prevCache.updates.actions.insert ?? [])],
           modify: [...(prevCache.updates.actions.modify ?? [])],
-          delete: [...(prevCache.updates.actions.delete ?? [])],
+          remove: [...(prevCache.updates.actions.remove ?? [])],
         },
         idToActionLookup: { ...prevCache.updates.idToActionLookup },
       };
@@ -221,7 +221,7 @@ export const useGridRows = (
 
       const alreadyAppliedActionsToRemove: {
         [action in GridRowsPartialUpdateAction]: { [id: GridRowId]: true };
-      } = { insert: {}, modify: {}, delete: {} };
+      } = { insert: {}, modify: {}, remove: {} };
 
       uniqUpdates.forEach((partialRow, id) => {
         const actionAlreadyAppliedToRow = partialUpdates.idToActionLookup[id];
@@ -229,13 +229,13 @@ export const useGridRows = (
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
           // Action === "delete"
-          if (actionAlreadyAppliedToRow === 'delete' || !dataRowIdToModelLookup[id]) {
+          if (actionAlreadyAppliedToRow === 'remove' || !dataRowIdToModelLookup[id]) {
             return;
           }
           if (actionAlreadyAppliedToRow != null) {
             alreadyAppliedActionsToRemove[actionAlreadyAppliedToRow][id] = true;
           }
-          partialUpdates.actions.delete.push(id);
+          partialUpdates.actions.remove.push(id);
 
           deletedRowIdLookup[id] = true;
           delete dataRowIdToModelLookup[id];
@@ -246,8 +246,8 @@ export const useGridRows = (
         const oldRow = dataRowIdToModelLookup[id];
         if (oldRow) {
           // Action === "modify"
-          if (actionAlreadyAppliedToRow === 'delete') {
-            alreadyAppliedActionsToRemove.delete[id] = true;
+          if (actionAlreadyAppliedToRow === 'remove') {
+            alreadyAppliedActionsToRemove.remove[id] = true;
             partialUpdates.actions.modify.push(id);
           } else if (actionAlreadyAppliedToRow == null) {
             partialUpdates.actions.modify.push(id);
@@ -258,8 +258,8 @@ export const useGridRows = (
         }
 
         // Action === "insert"
-        if (actionAlreadyAppliedToRow === 'delete') {
-          alreadyAppliedActionsToRemove.delete[id] = true;
+        if (actionAlreadyAppliedToRow === 'remove') {
+          alreadyAppliedActionsToRemove.remove[id] = true;
           partialUpdates.actions.insert.push(id);
         } else if (actionAlreadyAppliedToRow == null) {
           partialUpdates.actions.insert.push(id);

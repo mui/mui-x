@@ -1,10 +1,4 @@
-import {
-  GRID_ROOT_GROUP_ID,
-  GridGroupNode,
-  GridRowId,
-  GridRowTreeConfig,
-  GridTreeNode,
-} from '@mui/x-data-grid';
+import { GRID_ROOT_GROUP_ID, GridGroupNode, GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
 import { GridSortingModelApplier } from '@mui/x-data-grid/internals';
 
 interface SortRowTreeParams {
@@ -22,27 +16,24 @@ export const sortRowTree = (params: SortRowTreeParams) => {
   const sortGroup = (node: GridGroupNode) => {
     const shouldSortGroup = !!sortRowList && (!disableChildrenSorting || node.depth === -1);
 
-    const footerIds: GridRowId[] = [];
-    const unsortedBodyNodes: GridTreeNode[] = [];
+    const sortedRowIds = shouldSortGroup
+      ? sortRowList(node.children.map((childId) => rowTree[childId]))
+      : [...node.children];
 
-    node.children.forEach((childNodeId) => {
-      const childNode = rowTree[childNodeId];
-      if (childNode.type === 'footer') {
-        footerIds.push(childNodeId);
-      } else {
-        unsortedBodyNodes.push(childNode);
-      }
+    if (node.footerId != null) {
+      sortedRowIds.push(node.footerId);
+    }
 
+    for (let i=0; i<node.children.length; i+= 1) {
+      const childNode = rowTree[node.children[i]]
       if (childNode.type === 'group') {
-        sortGroup(childNode);
+        sortGroup(childNode)
       }
-    });
+    }
 
-    const sortedBodyRowIds = shouldSortGroup
-      ? sortRowList(unsortedBodyNodes)
-      : unsortedBodyNodes.map((childNode) => childNode.id);
-    sortedGroupedByParentRows.set(node.id, [...sortedBodyRowIds, ...footerIds]);
+    sortedGroupedByParentRows.set(node.id, sortedRowIds);
   };
+
 
   sortGroup(rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode);
 

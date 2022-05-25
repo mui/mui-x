@@ -47,12 +47,8 @@ export interface GridTreeBasicNode {
 
 export interface GridLeafNode extends GridTreeBasicNode {
   type: 'leaf';
-  // /**
-  //  * If `true`, this node is passing the filters.
-  //  */
-  // isPassingFilters?: boolean;
   /**
-   * The row id of the group containing this node.
+   * The id of the group containing this node.
    */
   parent: GridRowId;
   /**
@@ -80,36 +76,41 @@ export interface GridGroupNode extends GridTreeBasicNode {
    */
   groupingField: string | null;
   /**
-   * The id of the children nodes.
+   * The id of the body children nodes.
+   * Only contains the children of type "group" and "leaf".
    */
   children: GridRowId[];
   /**
-   * The id of the children nodes, grouped by grouping field and grouping key.
+   * The id of the footer child node.
    */
-  childrenFromPath: {
-    [groupingField: string]: {
-      [groupingKey: string]: GridRowId;
-    };
-  };
+  footerId?: GridRowId | null;
+  /**
+   * The id of the children nodes, grouped by grouping field and grouping key.
+   * Only contains the children of type "group" and "leaf".
+   * Not defined for flat tree.
+   */
+  childrenFromPath?: GridChildrenFromPathLookup;
   /**
    * If `true`, the children of this group are not visible.
    * @default false
    */
   childrenExpanded?: boolean;
   /**
-   * The row id of the group containing this node (null for the root group).
+   * The id of the group containing this node (null for the root group).
    */
   parent: GridRowId | null;
-  // /**
-  //  * If `true`, this node is passing the filters.
-  //  */
-  // isPassingFilters?: boolean;
 }
+
+export type GridChildrenFromPathLookup = {
+  [groupingField: string]: {
+    [groupingKey: string]: GridRowId;
+  };
+};
 
 export interface GridFooterNode extends GridTreeBasicNode {
   type: 'footer';
   /**
-   * The row id of the group containing this node.
+   * The id of the group containing this node.
    */
   parent: GridRowId;
 }
