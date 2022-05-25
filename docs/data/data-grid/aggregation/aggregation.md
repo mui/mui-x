@@ -246,7 +246,7 @@ In the example below, the grid have two additional custom aggregation functions 
 By default, the aggregated cell uses the value formatter of its column.
 But for some columns, the format of the aggregated value may have to differ from the format of the other cell values.
 
-You can provide a `valueFormatter` method to your aggregation function to override the one of the column.
+You can provide a `valueFormatter` method to your aggregation function to override the column's default formatting.
 
 ```ts
 const aggregationFunction: GridAggregationFunction = {
