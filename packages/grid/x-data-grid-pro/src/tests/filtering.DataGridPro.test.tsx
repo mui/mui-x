@@ -282,7 +282,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('deleteFilterItem');
   });
 
-  it('should call onFilterModelChange with reason=addFilterItem when a filter is added', () => {
+  it('should call onFilterModelChange with reason=upsertFilterItems when a filter is added', () => {
     const onFilterModelChange = spy();
     render(
       <TestCase
@@ -298,7 +298,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(onFilterModelChange.callCount).to.equal(0);
     fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
     expect(onFilterModelChange.callCount).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('addFilterItem');
+    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
 
   it('should publish filterModelChange with the reason whenever the model changes', () => {
@@ -314,7 +314,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(listener.callCount).to.equal(0);
     fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
     expect(listener.callCount).to.equal(1);
-    expect(listener.lastCall.args[1].reason).to.equal('addFilterItem');
+    expect(listener.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
 
   it('should only select visible rows', () => {

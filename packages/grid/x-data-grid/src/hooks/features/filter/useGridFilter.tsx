@@ -119,6 +119,23 @@ export const useGridFilter = (
     [apiRef],
   );
 
+  const upsertFilterItems = React.useCallback<GridFilterApi['upsertFilterItems']>(
+    (items) => {
+      const filterModel = gridFilterModelSelector(apiRef);
+      const existingItems = [...filterModel.items];
+      items.forEach((item) => {
+        const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
+        if (itemIndex === -1) {
+          existingItems.push(item);
+        } else {
+          existingItems[itemIndex] = item;
+        }
+      });
+      apiRef.current.setFilterModel({ ...filterModel, items }, 'upsertFilterItems');
+    },
+    [apiRef],
+  );
+
   const deleteFilterItem = React.useCallback<GridFilterApi['deleteFilterItem']>(
     (itemToDelete) => {
       const filterModel = gridFilterModelSelector(apiRef);
@@ -225,6 +242,7 @@ export const useGridFilter = (
     unstable_applyFilters: applyFilters,
     deleteFilterItem,
     upsertFilterItem,
+    upsertFilterItems,
     setFilterModel,
     showFilterPanel,
     hideFilterPanel,

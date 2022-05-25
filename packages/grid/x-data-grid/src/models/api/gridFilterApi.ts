@@ -22,6 +22,11 @@ export interface GridFilterApi {
    */
   upsertFilterItem: (item: GridFilterItem) => void;
   /**
+   * Updates or inserts many [[GridFilterItem]].
+   * @param {GridFilterItem[]} items The filters to update.
+   */
+  upsertFilterItems: (items: GridFilterItem[]) => void;
+  /**
    * Applies all filters on all rows.
    * @ignore - do not document.
    */
