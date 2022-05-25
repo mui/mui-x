@@ -26,7 +26,7 @@ An aggregation item is an object where `item.footer` contains the name of the ag
 and `item.inline` contains the name of the aggregation function to apply on the grouping rows.
 
 :::info
-If you only want to aggregate on the footer, you can use the short notation
+If you only need to aggregate in the footer, you can use the short notation:
 
 ```ts
 const model: GridAggregationModel = { gross: { footer: 'sum' } };
