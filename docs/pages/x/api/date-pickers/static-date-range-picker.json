@@ -87,5 +87,6 @@
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers-pro/src/StaticDateRangePicker/StaticDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro"]
 }
