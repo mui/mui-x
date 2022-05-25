@@ -219,7 +219,6 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const renderView = () => {
     const sharedCalendarProps = {
       parsedValue,
-      isDateDisabled,
       changeFocusedDay,
       onSelectedDaysChange: handleSelectedDayChange,
       reduceAnimations,

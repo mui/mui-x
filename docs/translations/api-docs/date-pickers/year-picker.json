@@ -1,8 +1,11 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
-    "shouldDisableYear": "Disable specific years dynamically. Works like <code>shouldDisableDate</code> but for year selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): Return <code>true</code> if the year should be disabled."
+    "disableFuture": "If <code>true</code> future days are disabled.",
+    "disablePast": "If <code>true</code> past days are disabled.",
+    "maxDate": "Maximal selectable date. @DateIOType",
+    "minDate": "Minimal selectable date. @DateIOType",
+    "shouldDisableYear": "Disable specific years dynamically. Works like <code>shouldDisableDate</code> but for year selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): Returns <code>true</code> if the year should be disabled."
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {}

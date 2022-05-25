@@ -22,9 +22,11 @@
     "DialogProps": { "type": { "name": "object" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
     "endText": {
       "type": { "name": "node" },
       "default": "'End'",
