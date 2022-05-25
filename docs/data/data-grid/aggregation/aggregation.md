@@ -63,7 +63,7 @@ It will disable all features related to the aggregation, even if a model is prov
 ### For some columns
 
 In case you need to disable the aggregation on specific column(s), set the `aggregatable` property on the respective column definition (`GridColDef`) to `false`.
-In the example below, the `title` and `year` columns can not be aggregated.
+In the example below, the `title` and `year` columns are blocked from being aggregated:
 
 {{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
 
