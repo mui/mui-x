@@ -195,7 +195,8 @@ describe('<ClockPicker />', () => {
   });
 
   it('should display options, but not update value when readOnly prop is passed', function test() {
-    if (/safari/i.test(window.navigator.userAgent) || /firefox/i.test(window.navigator.userAgent)) {
+    // Only run in supported browsers
+    if (typeof Touch === 'undefined') {
       this.skip();
     }
     const selectEvent = {
@@ -228,7 +229,8 @@ describe('<ClockPicker />', () => {
   });
 
   it('should display disabled options when disabled prop is passed', function test() {
-    if (/safari/i.test(window.navigator.userAgent) || /firefox/i.test(window.navigator.userAgent)) {
+    // Only run in supported browsers
+    if (typeof Touch === 'undefined') {
       this.skip();
     }
     const selectEvent = {
