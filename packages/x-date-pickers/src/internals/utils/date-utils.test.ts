@@ -9,18 +9,18 @@ describe('findClosestEnabledDate', () => {
   );
   const only18th = (date: any) => adapterToUse.format(date, 'dayOfMonth') !== day18thText;
 
-  it('should fallback to today if all dates are disabled', () => {
+  it('should return null if all dates are disabled', () => {
     const result = findClosestEnabledDate({
       date: adapterToUse.date('2000-01-01T00:00:00.000'),
       minDate: adapterToUse.date('1999-01-01T00:00:00.000'), // Use close-by min/max dates to reduce the test runtime.
       maxDate: adapterToUse.date('2001-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: () => true,
+      isDateDisabled: () => true,
       disableFuture: false,
       disablePast: false,
     });
 
-    expect(result).toEqualDateTime(adapterToUse.startOfDay(adapterToUse.date()));
+    expect(result).to.equal(null);
   });
 
   it('should return given date if it is enabled', () => {
@@ -29,7 +29,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('1900-01-01T00:00:00.000'),
       maxDate: adapterToUse.date('2100-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: () => false,
+      isDateDisabled: () => false,
       disableFuture: false,
       disablePast: false,
     })!;
@@ -45,7 +45,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('1900-01-01T00:00:00.000'),
       maxDate: adapterToUse.date('2100-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: only18th,
+      isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
     })!;
@@ -61,7 +61,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('1900-01-01T00:00:00.000'),
       maxDate: adapterToUse.date('2100-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: only18th,
+      isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
     })!;
@@ -78,7 +78,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('1900-01-01T00:00:00.000'),
       maxDate: adapterToUse.date('2100-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: only18th,
+      isDateDisabled: only18th,
       disableFuture: false,
       disablePast: true,
     })!;
@@ -94,7 +94,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('1900-01-01T00:00:00.000'),
       maxDate: adapterToUse.date('2100-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: () => false,
+      isDateDisabled: () => false,
       disableFuture: true,
       disablePast: true,
     })!;
@@ -109,7 +109,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('1900-01-01T00:00:00.000'),
       maxDate: adapterToUse.date('2100-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: (date) => adapterToUse.isSameDay(date, today),
+      isDateDisabled: (date) => adapterToUse.isSameDay(date, today),
       disableFuture: true,
       disablePast: true,
     });
@@ -123,7 +123,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('2018-08-18T00:00:00.000'),
       maxDate: adapterToUse.date('2100-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: only18th,
+      isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
     })!;
@@ -139,7 +139,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('2018-08-01T00:00:00.000'),
       maxDate: adapterToUse.date('2100-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: only18th,
+      isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
     })!;
@@ -155,7 +155,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('1900-01-01T00:00:00.000'),
       maxDate: adapterToUse.date('2018-07-18T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: only18th,
+      isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
     })!;
@@ -171,7 +171,7 @@ describe('findClosestEnabledDate', () => {
       minDate: adapterToUse.date('1900-01-01T00:00:00.000'),
       maxDate: adapterToUse.date('2018-08-17T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: only18th,
+      isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
     })!;
@@ -181,17 +181,17 @@ describe('findClosestEnabledDate', () => {
     );
   });
 
-  it('should fallback to today if minDate is after maxDate', () => {
+  it('should return null if minDate is after maxDate', () => {
     const result = findClosestEnabledDate({
       date: adapterToUse.date('2000-01-01T00:00:00.000'),
       minDate: adapterToUse.date('2000-01-01T00:00:00.000'),
       maxDate: adapterToUse.date('1999-01-01T00:00:00.000'),
       utils: adapterToUse,
-      shouldDisableDate: () => false,
+      isDateDisabled: () => false,
       disableFuture: false,
       disablePast: false,
     })!;
 
-    expect(result).toEqualDateTime(adapterToUse.startOfDay(adapterToUse.date()));
+    expect(result).to.equal(null);
   });
 });

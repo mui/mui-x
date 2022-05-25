@@ -29,7 +29,6 @@ export default function SubComponentsPickers() {
         <Grid item xs={12} md={6}>
           <YearPicker
             date={date}
-            isDateDisabled={() => false}
             minDate={minDate}
             maxDate={maxDate}
             onChange={(newDate) => setDate(newDate)}

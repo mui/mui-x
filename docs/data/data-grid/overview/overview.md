@@ -2,7 +2,7 @@
 title: React Data Grid component
 githubLabel: 'component: data grid'
 packageName: '@mui/x-data-grid'
-waiAria: https://www.w3.org/TR/wai-aria-practices-1.1/#grid
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 ---
 
 # Data Grid
@@ -78,10 +78,10 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 - [Sorting](/x/react-data-grid/sorting/) and [multi-sorting](/x/react-data-grid/sorting/#multi-sorting) <span class="plan-pro"></span>
 - [Selection](/x/react-data-grid/selection/)
 - [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization) and [rows virtualization](/x/react-data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
-- [Row grouping](/x/react-data-grid/row-grouping) <span class="plan-premium"></span>
+- [Row grouping](/x/react-data-grid/row-grouping/) <span class="plan-premium"></span>
 - [Excel export](/x/react-data-grid/export/#excel-export) <span class="plan-premium"></span>
-- [Tree data](/x/react-data-grid/tree-data) <span class="plan-pro"></span>
-- [Master detail](/x/react-data-grid/master-detail) <span class="plan-pro"></span>
+- [Tree data](/x/react-data-grid/tree-data/) <span class="plan-pro"></span>
+- [Master detail](/x/react-data-grid/master-detail/) <span class="plan-pro"></span>
 - [Resizable columns](/x/react-data-grid/column-dimensions/#resizing) <span class="plan-pro"></span>
 - [100% customizable](/x/react-data-grid/style/)
 - Server-side data
@@ -106,9 +106,9 @@ You can find more details on, the [feature comparison](/x/react-data-grid/gettin
 Here are some resources you might be interested in to learn more about the grid:
 
 - The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
-- The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/grid)
-- The [Material Design specification](https://material.io/design/components/data-tables.html) specification
-- The accessibility [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
+- The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/)
+- The [Material Design specification](https://material.io/components/data-tables) specification
+- The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)
 - The [Sketch](https://mui.com/store/items/sketch-react/) and [Figma](https://mui.com/store/items/figma-react/) design assets
 
 ## API

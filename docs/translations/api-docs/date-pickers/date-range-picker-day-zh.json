@@ -4,7 +4,7 @@
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "day": "The date to show.",
     "disabled": "If <code>true</code>, renders as disabled.",
-    "disableHighlightToday": "If <code>true</code>, todays date is rendering without highlighting with circle.",
+    "disableHighlightToday": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",
     "disableMargin": "If <code>true</code>, days are rendering without margin. Useful for displaying linked range of days.",
     "isEndOfHighlighting": "Set to <code>true</code> if the <code>day</code> is the end of a highlighted date range.",
     "isEndOfPreviewing": "Set to <code>true</code> if the <code>day</code> is the start of a highlighted date range.",

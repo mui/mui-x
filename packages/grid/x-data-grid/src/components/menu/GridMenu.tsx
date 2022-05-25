@@ -11,6 +11,7 @@ import { HTMLElementType } from '@mui/utils';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type MenuPosition =
   | 'bottom-end'
@@ -65,6 +66,7 @@ const transformOrigin = {
 
 const GridMenu = (props: GridMenuProps) => {
   const { open, target, onClickAway, children, position, className, onExited, ...other } = props;
+  const apiRef = useGridApiContext();
   const prevTarget = React.useRef(target);
   const prevOpen = React.useRef(open);
   const rootProps = useGridRootProps();
@@ -76,9 +78,13 @@ const GridMenu = (props: GridMenuProps) => {
       (prevTarget.current as HTMLElement).focus();
     }
 
+    // Emit menuOpen or menuClose events
+    const eventName = open ? 'menuOpen' : 'menuClose';
+    apiRef.current.publishEvent(eventName, { target });
+
     prevOpen.current = open;
     prevTarget.current = target;
-  }, [open, target]);
+  }, [apiRef, open, target]);
 
   const handleExited = (popperOnExited: (() => {}) | undefined) => (node: HTMLElement) => {
     if (popperOnExited) {
