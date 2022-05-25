@@ -8,6 +8,8 @@ import {
   getStaticWrapperUtilityClass,
   PickerStaticWrapperClasses,
 } from './pickerStaticWrapperClasses';
+import { PickersActionBar, PickersActionBarProps } from '../../../PickersActionBar';
+import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 
 const useUtilityClasses = (ownerState: PickerStaticWrapperProps) => {
   const { classes } = ownerState;
@@ -18,7 +20,15 @@ const useUtilityClasses = (ownerState: PickerStaticWrapperProps) => {
   return composeClasses(slots, getStaticWrapperUtilityClass, classes);
 };
 
-export interface PickerStaticWrapperProps {
+export interface PickersStaticWrapperSlotsComponent {
+  ActionBar: React.ElementType<PickersActionBarProps>;
+}
+
+export interface PickersStaticWrapperSlotsComponentsProps {
+  actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+}
+
+export interface PickerStaticWrapperProps extends PickerStateWrapperProps {
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
@@ -28,6 +38,16 @@ export interface PickerStaticWrapperProps {
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    */
   displayStaticWrapperAs: 'desktop' | 'mobile';
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<PickersStaticWrapperSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<PickersStaticWrapperSlotsComponentsProps>;
 }
 
 const PickerStaticWrapperRoot = styled('div', {
@@ -44,13 +64,33 @@ const PickerStaticWrapperRoot = styled('div', {
 
 export function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerStaticWrapper' });
-  const { displayStaticWrapperAs, ...other } = props;
+  const {
+    displayStaticWrapperAs,
+    onAccept,
+    onClear,
+    onCancel,
+    onDismiss,
+    onSetToday,
+    open,
+    components,
+    componentsProps,
+    ...other
+  } = props;
 
   const classes = useUtilityClasses(props);
+  const ActionBar = components?.ActionBar ?? PickersActionBar;
 
   return (
     <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
       <PickerStaticWrapperRoot className={classes.root} {...other} />
+      <ActionBar
+        onAccept={onAccept}
+        onClear={onClear}
+        onCancel={onCancel}
+        onSetToday={onSetToday}
+        actions={['cancel', 'accept']}
+        {...componentsProps?.actionBar}
+      />
     </WrapperVariantContext.Provider>
   );
 }

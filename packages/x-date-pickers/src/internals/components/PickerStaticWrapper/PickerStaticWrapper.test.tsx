@@ -6,18 +6,29 @@ import { pickerStaticWrapperClasses as classes } from './pickerStaticWrapperClas
 describe('<PickerStaticWrapper />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<PickerStaticWrapper displayStaticWrapperAs="mobile" />, () => ({
-    classes,
-    muiName: 'MuiPickerStaticWrapper',
-    refInstanceof: undefined,
-    render,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeVariants',
-      'propsSpread',
-      'refForwarding',
-      'rootClass',
-    ],
-  }));
+  describeConformance(
+    <PickerStaticWrapper
+      displayStaticWrapperAs="mobile"
+      open
+      onDismiss={() => {}}
+      onCancel={() => {}}
+      onSetToday={() => {}}
+      onAccept={() => {}}
+      onClear={() => {}}
+    />,
+    () => ({
+      classes,
+      muiName: 'MuiPickerStaticWrapper',
+      refInstanceof: undefined,
+      render,
+      skip: [
+        'componentProp',
+        'componentsProp',
+        'themeVariants',
+        'propsSpread',
+        'refForwarding',
+        'rootClass',
+      ],
+    }),
+  );
 });

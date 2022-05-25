@@ -32,7 +32,15 @@ export interface DatePickerProps<TInputDate, TDate>
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery?: string;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<DatePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<DatePickerSlotsComponentsProps>;
 }
 
@@ -101,7 +109,15 @@ DatePicker.propTypes = {
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps: PropTypes.object,
   /**
    * Default calendar month displayed when `value={null}`.

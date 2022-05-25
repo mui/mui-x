@@ -6,8 +6,8 @@
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
-    "components": { "type": { "name": "object" } },
-    "componentsProps": { "type": { "name": "object" } },
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "disabled": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "getClockLabelText": {

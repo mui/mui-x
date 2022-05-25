@@ -12,27 +12,36 @@ import {
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/MobileWrapper';
-import {
-  CalendarOrClockPicker,
-  CalendarOrClockPickerSlotsComponent,
-  CalendarOrClockPickerSlotsComponentsProps,
-} from '../internals/components/CalendarOrClockPicker';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
-import { PureDateInput } from '../internals/components/PureDateInput';
+import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import {
+  ClockPickerSlotsComponent,
+  ClockPickerSlotsComponentsProps,
+} from '../ClockPicker/ClockPicker';
 
 export interface MobileTimePickerSlotsComponent
   extends MobileWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent {}
+    ClockPickerSlotsComponent,
+    DateInputSlotsComponent {}
 
 export interface MobileTimePickerSlotsComponentsProps
   extends MobileWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps {}
+    ClockPickerSlotsComponentsProps {}
 
 export interface MobileTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate>,
     MobileWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<MobileTimePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<MobileTimePickerSlotsComponentsProps>;
 }
 
@@ -91,7 +100,6 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
       components={components}
       componentsProps={componentsProps}
     >
-      {/* @ts-ignore time picker has no component slot for the calendar header */}
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
@@ -137,10 +145,14 @@ MobileTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps: PropTypes.object,
   /**
    * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.

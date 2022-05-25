@@ -27,7 +27,15 @@ export interface InternalDesktopWrapperProps extends DesktopWrapperProps, Picker
   KeyboardDateInputComponent: React.JSXElementConstructor<
     DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> }
   >;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<DesktopWrapperSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<DesktopWrapperSlotsComponentsProps>;
 }
 
