@@ -22,9 +22,11 @@
     "DialogProps": { "type": { "name": "object" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
     "endText": {
       "type": { "name": "node" },
       "default": "'End'",
@@ -87,5 +89,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/MobileDateRangePicker/MobileDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro"]
 }

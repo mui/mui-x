@@ -15,9 +15,11 @@
     "componentsProps": { "type": { "name": "object" } },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`"
@@ -88,5 +90,6 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDatePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDatePicker/DesktopDatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

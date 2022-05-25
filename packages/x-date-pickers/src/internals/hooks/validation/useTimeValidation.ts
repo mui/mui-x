@@ -47,20 +47,31 @@ export type TimeValidationError =
   | 'shouldDisableTime-seconds'
   | null;
 
-export const validateTime: Validator<any, TimeValidationProps<any, any>> = (
-  utils,
+export const validateTime: Validator<any, TimeValidationProps<any, any>> = ({
+  adapter,
   value,
-  { minTime, maxTime, minutesStep, shouldDisableTime, disableIgnoringDatePartForTimeValidation },
-): TimeValidationError => {
-  const date = utils.date(value);
-  const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
+  props,
+}): TimeValidationError => {
+  const {
+    minTime,
+    maxTime,
+    minutesStep,
+    shouldDisableTime,
+    disableIgnoringDatePartForTimeValidation,
+  } = props;
+
+  const date = adapter.utils.date(value);
+  const isAfter = createIsAfterIgnoreDatePart(
+    disableIgnoringDatePartForTimeValidation,
+    adapter.utils,
+  );
 
   if (value === null) {
     return null;
   }
 
   switch (true) {
-    case !utils.isValid(value):
+    case !adapter.utils.isValid(value):
       return 'invalidDate';
 
     case Boolean(minTime && isAfter(minTime, date!)):
@@ -69,16 +80,20 @@ export const validateTime: Validator<any, TimeValidationProps<any, any>> = (
     case Boolean(maxTime && isAfter(date!, maxTime)):
       return 'maxTime';
 
-    case Boolean(shouldDisableTime && shouldDisableTime(utils.getHours(date!), 'hours')):
+    case Boolean(shouldDisableTime && shouldDisableTime(adapter.utils.getHours(date!), 'hours')):
       return 'shouldDisableTime-hours';
 
-    case Boolean(shouldDisableTime && shouldDisableTime(utils.getMinutes(date!), 'minutes')):
+    case Boolean(
+      shouldDisableTime && shouldDisableTime(adapter.utils.getMinutes(date!), 'minutes'),
+    ):
       return 'shouldDisableTime-minutes';
 
-    case Boolean(shouldDisableTime && shouldDisableTime(utils.getSeconds(date!), 'seconds')):
+    case Boolean(
+      shouldDisableTime && shouldDisableTime(adapter.utils.getSeconds(date!), 'seconds'),
+    ):
       return 'shouldDisableTime-seconds';
 
-    case Boolean(minutesStep && utils.getMinutes(date!) % minutesStep !== 0):
+    case Boolean(minutesStep && adapter.utils.getMinutes(date!) % minutesStep !== 0):
       return 'minutesStep';
 
     default:
