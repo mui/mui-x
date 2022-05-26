@@ -361,6 +361,9 @@ export const useGridCellEditing = (
       const { error, isProcessingProps } = editingState[id][field];
 
       if (error || isProcessingProps) {
+        // Attempt to change cell mode to "view" was not successful
+        // Update previous mode to allow another attempt
+        prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
         return;
       }
 
@@ -368,6 +371,8 @@ export const useGridCellEditing = (
 
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
+          prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
+
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else {
@@ -483,9 +488,14 @@ export const useGridCellEditing = (
 
   React.useEffect(() => {
     const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+
+    // Update the ref here because updateStateToStopCellEditMode may change it later
+    const copyOfPrevCellModes = prevCellModesModel.current;
+    prevCellModesModel.current = cellModesModel;
+
     Object.entries(cellModesModel).forEach(([id, fields]) => {
       Object.entries(fields).forEach(([field, params]) => {
-        const prevMode = prevCellModesModel.current[id]?.[field]?.mode || GridCellModes.View;
+        const prevMode = copyOfPrevCellModes[id]?.[field]?.mode || GridCellModes.View;
         const originalId = idToIdLookup[id] ?? id;
         if (params.mode === GridCellModes.Edit && prevMode === GridCellModes.View) {
           updateStateToStartCellEditMode({ id: originalId, field, ...params });
@@ -494,6 +504,5 @@ export const useGridCellEditing = (
         }
       });
     });
-    prevCellModesModel.current = cellModesModel;
   }, [apiRef, cellModesModel, updateStateToStartCellEditMode, updateStateToStopCellEditMode]);
 };
