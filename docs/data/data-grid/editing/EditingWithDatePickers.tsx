@@ -7,13 +7,18 @@ import {
   GridColDef,
   GridRenderEditCellParams,
   GRID_DATE_COL_DEF,
+  GRID_DATETIME_COL_DEF,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import {
+  DatePicker,
+  DateTimePicker,
+  LocalizationProvider,
+} from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import TextField from '@mui/material/TextField';
 
@@ -46,6 +51,36 @@ const dateColumnType = {
   renderEditCell: renderDateEditCell,
 };
 
+function GridEditDateTimeCell({
+  id,
+  field,
+  value,
+}: GridRenderEditCellParams<Date | null>) {
+  const apiRef = useGridApiContext();
+
+  function handleChange(newValue: unknown) {
+    apiRef.current.setEditCellValue({ id, field, value: newValue });
+  }
+
+  return (
+    <DateTimePicker
+      value={value}
+      renderInput={(params) => <TextField {...params} />}
+      onChange={handleChange}
+      ampm={false}
+    />
+  );
+}
+
+const renderDateTimeEditCell: GridColDef['renderEditCell'] = (params) => {
+  return <GridEditDateTimeCell {...params} />;
+};
+
+const dateTimeColumnType = {
+  ...GRID_DATETIME_COL_DEF,
+  renderEditCell: renderDateTimeEditCell,
+};
+
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
@@ -54,6 +89,13 @@ const columns: GridColumns = [
     ...dateColumnType,
     headerName: 'Date Created',
     width: 180,
+    editable: true,
+  },
+  {
+    field: 'lastLogin',
+    ...dateTimeColumnType,
+    headerName: 'Last Login',
+    width: 220,
     editable: true,
   },
 ];
