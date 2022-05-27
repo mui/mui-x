@@ -350,7 +350,9 @@ export const useGridColumnPinning = (
       const latestColumnFields = gridColumnFieldsSelector(apiRef);
 
       /**
-       * Represents the field at `targetIndex` before swapping
+       * When a column X is reordered to somewhere else, the column where this column X is dropped
+       * on must be moved to left or right to make room for X. The ^^^ below represents the column
+       * which gave space to receive X.
        *
        * | A | B | C | D | -> | B | C | D | A | (e.g. A moved to after D, so delta=1)
        *              ^^^              ^^^
