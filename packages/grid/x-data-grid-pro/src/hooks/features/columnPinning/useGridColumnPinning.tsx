@@ -347,10 +347,7 @@ export const useGridColumnPinning = (
       const { field, targetIndex, oldIndex } = params;
       const delta = targetIndex > oldIndex ? 1 : -1;
 
-      const latestColumnFields = gridColumnFieldsSelector(
-        apiRef.current.state,
-        apiRef.current.instanceId,
-      );
+      const latestColumnFields = gridColumnFieldsSelector(apiRef);
 
       /**
        * Represents the field at `targetIndex` before swapping
