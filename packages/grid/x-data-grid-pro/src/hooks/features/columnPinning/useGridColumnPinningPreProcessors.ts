@@ -91,17 +91,12 @@ export const useGridColumnPinningPreProcessors = (
         // The fields remaining are those that're neither pinnned nor were unpinned
         // For these, we spread them across both arrays making sure to not override existing values
         let i = 0;
-        let j = 0;
         remainingFields.forEach((field) => {
           while (newOrderedFieldsBeforePinningColumns[i] !== null) {
             i += 1;
           }
           newOrderedFieldsBeforePinningColumns[i] = field;
-
-          while (newOrderedFields[j] !== null) {
-            j += 1;
-          }
-          newOrderedFields[j] = field;
+          newOrderedFields[i] = field;
         });
 
         orderedFieldsBeforePinningColumns.current = newOrderedFieldsBeforePinningColumns;
