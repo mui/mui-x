@@ -1,3 +1,4 @@
+import { nbNO as nbNOCore } from '@mui/material/locale';
 import { GridLocaleText } from '@mui/x-data-grid';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
