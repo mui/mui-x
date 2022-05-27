@@ -15,6 +15,4 @@ const trTRPickers: PickersLocaleText = {
   end: 'Bitiş',
 };
 
-export const DEFAULT_LOCALE = trTRPickers;
-
 export const trTR = getPickersLocalization(trTRPickers);
