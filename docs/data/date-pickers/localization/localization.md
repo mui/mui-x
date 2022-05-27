@@ -106,7 +106,6 @@ import bgLocale from 'date-fns/locale/bg';
 | German                  | de-DE               | `deDE`      |
 | Turkish                 | tr-TR               | `trTr`      |
 
-
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-date-pickers/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
