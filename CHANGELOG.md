@@ -36,6 +36,7 @@ TODO INSERT HIGHLIGHTS
 - [docs] Fix typo on rows docs (#4952) @jamesRadicl
 - [docs] New WAI-ARIA guidelines location (#4957) @oliviertassinari
 - [docs] Add "Slots" section to the right nav in the API pages (#4993) @DanailH
+- [docs] Fix docs feedback widget not working (#4905) @cherniavskii
 
 ### Core
 
