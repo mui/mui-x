@@ -9,10 +9,8 @@ import { filterColumns } from '../../../components/DataGridProVirtualScroller';
 export const useGridColumnPinningPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: DataGridProProcessedProps,
-  internalState: { orderedFieldsBeforePinningColumns: React.MutableRefObject<string[] | null> },
 ) => {
   const { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState } = props;
-  const { orderedFieldsBeforePinningColumns } = internalState;
 
   let pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
   if (pinnedColumns == null) {
@@ -42,7 +40,9 @@ export const useGridColumnPinningPreProcessors = (
       let newOrderedFields: string[];
       const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];
 
-      if (orderedFieldsBeforePinningColumns.current) {
+      const { orderedFieldsBeforePinningColumns } = apiRef.current.unstable_caches.columnPinning;
+
+      if (orderedFieldsBeforePinningColumns) {
         newOrderedFields = new Array(columnsState.all.length).fill(null);
         const newOrderedFieldsBeforePinningColumns = [...newOrderedFields];
 
@@ -54,7 +54,7 @@ export const useGridColumnPinningPreProcessors = (
         prevAllPinnedColumns.current!.forEach((field) => {
           if (!allPinnedColumns.includes(field) && columnsState.lookup[field]) {
             // Get the position before pinning
-            const index = orderedFieldsBeforePinningColumns.current!.indexOf(field);
+            const index = orderedFieldsBeforePinningColumns.indexOf(field);
             newOrderedFields[index] = field;
             newOrderedFieldsBeforePinningColumns[index] = field;
             // This field was already consumed so we prevent from being added again
@@ -64,7 +64,7 @@ export const useGridColumnPinningPreProcessors = (
 
         // For columns still pinned, we keep stored their original positions
         allPinnedColumns.forEach((field) => {
-          let index = orderedFieldsBeforePinningColumns.current!.indexOf(field);
+          let index = orderedFieldsBeforePinningColumns.indexOf(field);
           // If index = -1, the pinned field didn't exist in the last processing, it's possibly being added now
           // If index >= newOrderedFieldsBeforePinningColumns.length, then one or more columns were removed
           // In both cases, use the position from the columns array
@@ -99,10 +99,13 @@ export const useGridColumnPinningPreProcessors = (
           newOrderedFields[i] = field;
         });
 
-        orderedFieldsBeforePinningColumns.current = newOrderedFieldsBeforePinningColumns;
+        apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns =
+          newOrderedFieldsBeforePinningColumns;
       } else {
         newOrderedFields = [...columnsState.all];
-        orderedFieldsBeforePinningColumns.current = [...columnsState.all];
+        apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns = [
+          ...columnsState.all,
+        ];
       }
 
       prevAllPinnedColumns.current = allPinnedColumns;
@@ -116,7 +119,7 @@ export const useGridColumnPinningPreProcessors = (
         all: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       };
     },
-    [disableColumnPinning, orderedFieldsBeforePinningColumns, pinnedColumns],
+    [apiRef, disableColumnPinning, pinnedColumns],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);

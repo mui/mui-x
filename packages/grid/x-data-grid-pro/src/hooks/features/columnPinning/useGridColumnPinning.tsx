@@ -34,7 +34,11 @@ const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} /
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
-> = (state, props) => {
+> = (state, props, apiRef) => {
+  apiRef.current.unstable_caches.columnPinning = {
+    orderedFieldsBeforePinningColumns: null,
+  };
+
   let model: GridPinnedColumns;
   if (props.disableColumnPinning) {
     model = {};
@@ -62,7 +66,6 @@ export const useGridColumnPinning = (
     DataGridProProcessedProps,
     'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
   >,
-  internalState: { orderedFieldsBeforePinningColumns: React.MutableRefObject<string[] | null> },
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
 
@@ -335,11 +338,9 @@ export const useGridColumnPinning = (
   };
   useGridApiMethod(apiRef, columnPinningApi, 'columnPinningApi');
 
-  const handleColumnOrderChange = React.useCallback<
-    GridEventListener<'columnOrderChange'>
-  >(
+  const handleColumnOrderChange = React.useCallback<GridEventListener<'columnOrderChange'>>(
     (params) => {
-      if (!internalState.orderedFieldsBeforePinningColumns.current) {
+      if (!apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns) {
         return;
       }
 
@@ -362,7 +363,7 @@ export const useGridColumnPinning = (
       const siblingField = latestColumnFields[targetIndex - delta];
 
       const newOrderedFieldsBeforePinningColumns = [
-        ...internalState.orderedFieldsBeforePinningColumns.current,
+        ...apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns,
       ];
 
       // The index to start swapping fields
@@ -390,11 +391,11 @@ export const useGridColumnPinning = (
         j = i + delta;
       }
 
-      internalState.orderedFieldsBeforePinningColumns.current =
+      apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns =
         newOrderedFieldsBeforePinningColumns;
     },
 
-    [apiRef, internalState.orderedFieldsBeforePinningColumns],
+    [apiRef],
   );
 
   useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnOrderChange);
