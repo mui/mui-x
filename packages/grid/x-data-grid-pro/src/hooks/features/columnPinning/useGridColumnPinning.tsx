@@ -352,10 +352,10 @@ export const useGridColumnPinning = (
       /**
        * Represents the field at `targetIndex` before swapping
        *
-       * | A | B | C | D | -> | B | C | D | A | (e.g. A swapped with D, so delta=1)
+       * | A | B | C | D | -> | B | C | D | A | (e.g. A moved to after D, so delta=1)
        *              ^^^              ^^^
        *
-       * | A | B | C | D | -> | D | A | B | C | (e.g. D swapped with A, so delta=-1)
+       * | A | B | C | D | -> | D | A | B | C | (e.g. D moved before A, so delta=-1)
        *  ^^^                      ^^^
        */
       const siblingField = latestColumnFields[targetIndex - delta];
