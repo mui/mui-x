@@ -336,7 +336,7 @@ export const useGridColumnPinning = (
   useGridApiMethod(apiRef, columnPinningApi, 'columnPinningApi');
 
   const handleColumnOrderChange = React.useCallback<
-    GridEventListener<GridEvents.columnOrderChange>
+    GridEventListener<'columnOrderChange'>
   >(
     (params) => {
       if (!internalState.orderedFieldsBeforePinningColumns.current) {
@@ -397,7 +397,7 @@ export const useGridColumnPinning = (
     [apiRef, internalState.orderedFieldsBeforePinningColumns],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.columnOrderChange, handleColumnOrderChange);
+  useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnOrderChange);
 
   React.useEffect(() => {
     if (props.pinnedColumns) {
