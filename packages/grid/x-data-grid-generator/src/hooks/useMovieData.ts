@@ -23,7 +23,7 @@ const COLUMNS: GridColumns = [
       if (!value) {
         return '';
       }
-      return `${value.toLocaleString()}$`;
+      return `$${value.toLocaleString('en-US')}`;
     },
   } as GridColDef<any, number, string>,
   {
