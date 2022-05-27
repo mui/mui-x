@@ -9,7 +9,10 @@ _May 27, 2022_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- ⚠️ Remove deprecated row grouping feature from `@mui/x-data-grid-pro`. Row grouping is available through the `@mui/x-data-grid-premium` package - see [Premium plan release blogpost](https://mui.com/blog/premium-plan-release/)
+- ⚠️ Remove deprecated row grouping feature from `@mui/x-data-grid-pro`
+
+  Row grouping is available through the `@mui/x-data-grid-premium` package - see [Premium plan release blogpost](https://mui.com/blog/premium-plan-release/).
+
 - 🐞 Bug fixes and improvements
 
 ### `@mui/x-data-grid@v5.12.0` / `@mui/x-data-grid-pro@v5.12.0` / `@mui/x-data-grid-premium@v5.12.0`
