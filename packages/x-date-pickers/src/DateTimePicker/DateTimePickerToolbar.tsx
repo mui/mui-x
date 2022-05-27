@@ -2,37 +2,60 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { generateUtilityClasses } from '@mui/material';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
-import { PickersToolbar } from '../internals/components/PickersToolbar';
+import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { DateTimePickerTabs } from './DateTimePickerTabs';
 import { useUtils } from '../internals/hooks/useUtils';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
-const classes = generateUtilityClasses('PrivateDateTimePickerToolbar', ['penIcon']);
+export const dateTimePickerToolbarClasses = generateUtilityClasses('MuiDateTimePickerToolbar', [
+  'root',
+  'dateContainer',
+  'timeContainer',
+  'separator',
+]);
 
-const DateTimePickerToolbarRoot = styled(PickersToolbar)({
+const DateTimePickerToolbarRoot = styled(PickersToolbar, {
+  name: 'MuiDateTimePickerToolbar',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{ ownerState: BaseToolbarProps<any, any> }>({
   paddingLeft: 16,
   paddingRight: 16,
   justifyContent: 'space-around',
-  [`& .${classes.penIcon}`]: {
+  [`& .${pickersToolbarClasses.penIconButton}`]: {
     position: 'absolute',
     top: 8,
     right: 8,
   },
 });
 
-const DateTimePickerToolbarDateContainer = styled('div')({
+const DateTimePickerToolbarDateContainer = styled('div', {
+  name: 'MuiDateTimePickerToolbar',
+  slot: 'DateContainer',
+  overridesResolver: (props, styles) => styles.dateContainer,
+})<{ ownerState: BaseToolbarProps<any, any> }>({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
 });
 
-const DateTimePickerToolbarTimeContainer = styled('div')({
+const DateTimePickerToolbarTimeContainer = styled('div', {
+  name: 'MuiDateTimePickerToolbar',
+  slot: 'TimeContainer',
+  overridesResolver: (props, styles) => styles.timeContainer,
+})<{ ownerState: BaseToolbarProps<any, any> }>({
   display: 'flex',
 });
 
-const DateTimePickerToolbarSeparator = styled(PickersToolbarText)({
+const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
+  name: 'MuiDateTimePickerToolbar',
+  slot: 'Separator',
+  overridesResolver: (props, styles) => styles.separator,
+})<{
+  ownerState: BaseToolbarProps<any, any>;
+}>({
   margin: '0 4px 0 2px',
   cursor: 'default',
 });
@@ -40,10 +63,12 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText)({
 /**
  * @ignore - internal component.
  */
-export const DateTimePickerToolbar = <TDate extends unknown>(props: BaseToolbarProps<TDate>) => {
+export const DateTimePickerToolbar = <TDate extends unknown>(
+  props: BaseToolbarProps<TDate, TDate | null>,
+) => {
   const {
     ampm,
-    date,
+    parsedValue,
     dateRangeIcon,
     hideTabs,
     isMobileKeyboardViewOpen,
@@ -69,29 +94,35 @@ export const DateTimePickerToolbar = <TDate extends unknown>(props: BaseToolbarP
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
 
   const dateText = React.useMemo(() => {
-    if (!date) {
+    if (!parsedValue) {
       return toolbarPlaceholder;
     }
 
     if (toolbarFormat) {
-      return utils.formatByString(date, toolbarFormat);
+      return utils.formatByString(parsedValue, toolbarFormat);
     }
 
-    return utils.format(date, 'shortDate');
-  }, [date, toolbarFormat, toolbarPlaceholder, utils]);
+    return utils.format(parsedValue, 'shortDate');
+  }, [parsedValue, toolbarFormat, toolbarPlaceholder, utils]);
+
+  const ownerState = props;
 
   return (
     <React.Fragment>
       {wrapperVariant !== 'desktop' && (
         <DateTimePickerToolbarRoot
           toolbarTitle={toolbarTitle}
-          penIconClassName={classes.penIcon}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
+          className={dateTimePickerToolbarClasses.root}
           {...other}
           isLandscape={false}
+          ownerState={ownerState}
         >
-          <DateTimePickerToolbarDateContainer>
+          <DateTimePickerToolbarDateContainer
+            className={dateTimePickerToolbarClasses.dateContainer}
+            ownerState={ownerState}
+          >
             {views.includes('year') && (
               <PickersToolbarButton
                 tabIndex={-1}
@@ -99,7 +130,7 @@ export const DateTimePickerToolbar = <TDate extends unknown>(props: BaseToolbarP
                 data-mui-test="datetimepicker-toolbar-year"
                 onClick={() => setOpenView('year')}
                 selected={openView === 'year'}
-                value={date ? utils.format(date, 'year') : '–'}
+                value={parsedValue ? utils.format(parsedValue, 'year') : '–'}
               />
             )}
             {views.includes('day') && (
@@ -113,37 +144,50 @@ export const DateTimePickerToolbar = <TDate extends unknown>(props: BaseToolbarP
               />
             )}
           </DateTimePickerToolbarDateContainer>
-          <DateTimePickerToolbarTimeContainer>
+          <DateTimePickerToolbarTimeContainer
+            className={dateTimePickerToolbarClasses.timeContainer}
+            ownerState={ownerState}
+          >
             {views.includes('hours') && (
               <PickersToolbarButton
                 variant="h3"
                 data-mui-test="hours"
                 onClick={() => setOpenView('hours')}
                 selected={openView === 'hours'}
-                value={date ? formatHours(date) : '--'}
+                value={parsedValue ? formatHours(parsedValue) : '--'}
               />
             )}
             {views.includes('minutes') && (
               <React.Fragment>
-                <DateTimePickerToolbarSeparator variant="h3" value=":" />
+                <DateTimePickerToolbarSeparator
+                  variant="h3"
+                  value=":"
+                  className={dateTimePickerToolbarClasses.separator}
+                  ownerState={ownerState}
+                />
                 <PickersToolbarButton
                   variant="h3"
                   data-mui-test="minutes"
                   onClick={() => setOpenView('minutes')}
                   selected={openView === 'minutes'}
-                  value={date ? utils.format(date, 'minutes') : '--'}
+                  value={parsedValue ? utils.format(parsedValue, 'minutes') : '--'}
                 />
               </React.Fragment>
             )}
             {views.includes('seconds') && (
               <React.Fragment>
-                <DateTimePickerToolbarSeparator variant="h3" value=":" />
+                <DateTimePickerToolbarSeparator
+                  variant="h3"
+                  value=":"
+                  className={dateTimePickerToolbarClasses.separator}
+                  ownerState={ownerState}
+                />
                 <PickersToolbarButton
                   variant="h3"
                   data-mui-test="seconds"
                   onClick={() => setOpenView('seconds')}
                   selected={openView === 'seconds'}
-                  value={date ? utils.format(date, 'seconds') : '--'}
+                  value={parsedValue ? utils.format(parsedValue, 'seconds') : '--'}
                 />
               </React.Fragment>
             )}

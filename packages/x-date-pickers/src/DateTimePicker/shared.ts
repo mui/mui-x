@@ -2,29 +2,43 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { pick12hOr24hFormat } from '../internals/utils/text-field-helper';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import {
+  CalendarPickerSlotsComponent,
+  ExportedCalendarPickerProps,
+} from '../CalendarPicker/CalendarPicker';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
-import { ParseableDate } from '../internals/models/parseableDate';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
-import { ExportedDateInputProps } from '../internals/components/PureDateInput';
+import {
+  DateInputSlotsComponent,
+  ExportedDateInputProps,
+} from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
+import { PickerStateValueManager } from '../internals/hooks/usePickerState';
+import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
-export interface BaseDateTimePickerProps<TDate>
+export interface DateTimePickerSlotsComponent
+  extends CalendarPickerSlotsComponent,
+    DateInputSlotsComponent {}
+
+export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
     ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<ParseableDate<TDate>, TDate | null>,
-    ValidationProps<DateTimeValidationError, ParseableDate<TDate>>,
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
+    BasePickerProps<TInputDate | null, TDate | null>,
+    ValidationProps<DateTimeValidationError, TInputDate | null>,
+    ExportedDateInputProps<TInputDate, TDate> {
+  /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm?: boolean;
   /**
    * The components used for each slot.
    * Either a string to use an HTML element or a component.
    * @default {}
    */
-  components?: ExportedCalendarPickerProps<TDate>['components'] &
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null>['components'];
+  components?: Partial<DateTimePickerSlotsComponent>;
   /**
    * To show tabs.
    */
@@ -58,7 +72,7 @@ export interface BaseDateTimePickerProps<TDate>
    * Component that will replace default toolbar renderer.
    * @default DateTimePickerToolbar
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate | null>>;
+  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date & time'
@@ -69,6 +83,11 @@ export interface BaseDateTimePickerProps<TDate>
    */
   toolbarFormat?: string;
   /**
+   * Mobile picker date value placeholder, displaying if `value` === `null`.
+   * @default '–'
+   */
+  toolbarPlaceholder?: React.ReactNode;
+  /**
    * Array of views to show.
    */
   views?: readonly CalendarOrClockPickerView[];
@@ -77,59 +96,53 @@ export interface BaseDateTimePickerProps<TDate>
 type DefaultizedProps<Props> = Props & { inputFormat: string };
 
 export function useDateTimePickerDefaultizedProps<
+  TInputDate,
   TDate,
-  Props extends BaseDateTimePickerProps<TDate>,
+  Props extends BaseDateTimePickerProps<TInputDate, TDate>,
 >(
-  {
-    ampm,
-    inputFormat,
-    maxDate: maxDateProp,
-    maxDateTime,
-    maxTime,
-    minDate: minDateProp,
-    minDateTime,
-    minTime,
-    openTo = 'day',
-    orientation = 'portrait',
-    views = ['year', 'day', 'hours', 'minutes'],
-    ...other
-  }: Props,
+  props: Props,
   name: string,
-): DefaultizedProps<Props> & Required<Pick<BaseDateTimePickerProps<TDate>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props> &
+  Required<Pick<BaseDateTimePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
+  // This is technically unsound if the type parameters appear in optional props.
+  // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
+  const themeProps = useThemeProps({
+    props,
+    name,
+  });
+
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const minDate = minDateProp ?? defaultDates.minDate;
-  const maxDate = maxDateProp ?? defaultDates.maxDate;
-  const willUseAmPm = ampm ?? utils.is12HourCycleInCurrentLocale();
+  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  if (orientation !== 'portrait') {
+  if (themeProps.orientation != null && themeProps.orientation !== 'portrait') {
     throw new Error('We are not supporting custom orientation for DateTimePicker yet :(');
   }
 
-  return useThemeProps({
-    props: {
-      openTo,
-      views,
-      ampm: willUseAmPm,
-      ampmInClock: true,
-      orientation,
-      showToolbar: true,
-      allowSameDateSelection: true,
-      minDate: minDateTime ?? minDate,
-      minTime: minDateTime ?? minTime,
-      maxDate: maxDateTime ?? maxDate,
-      maxTime: maxDateTime ?? maxTime,
-      disableIgnoringDatePartForTimeValidation: Boolean(minDateTime || maxDateTime),
-      acceptRegex: willUseAmPm ? /[\dap]/gi : /\d/gi,
-      mask: '__/__/____ __:__',
-      disableMaskedInput: willUseAmPm,
-      inputFormat: pick12hOr24hFormat(inputFormat, willUseAmPm, {
-        localized: utils.formats.keyboardDateTime,
-        '12h': utils.formats.keyboardDateTime12h,
-        '24h': utils.formats.keyboardDateTime24h,
-      }),
-      ...(other as Props),
-    },
-    name,
-  });
+  return {
+    ampm,
+    orientation: 'portrait',
+    openTo: 'day',
+    views: ['year', 'day', 'hours', 'minutes'],
+    ampmInClock: true,
+    mask: ampm ? '__/__/____ __:__ _m' : '__/__/____ __:__',
+    acceptRegex: ampm ? /[\dap]/gi : /\d/gi,
+    disableMaskedInput: false,
+    inputFormat: ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h,
+    disableIgnoringDatePartForTimeValidation: Boolean(
+      themeProps.minDateTime || themeProps.maxDateTime,
+    ),
+    ...themeProps,
+    minDate: themeProps.minDateTime ?? themeProps.minDate ?? defaultDates.minDate,
+    maxDate: themeProps.maxDateTime ?? themeProps.maxDate ?? defaultDates.maxDate,
+    minTime: themeProps.minDateTime ?? themeProps.minTime,
+    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+  };
 }
+
+export const dateTimePickerValueManager: PickerStateValueManager<any, any, any> = {
+  emptyValue: null,
+  getTodayValue: (utils) => utils.date()!,
+  parseInput: parsePickerInputValue,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+};

@@ -25,11 +25,17 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} active filters` : `${count} active filter`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Search...',
+  toolbarQuickFilterLabel: 'Search',
+  toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Download as CSV',
   toolbarExportPrint: 'Print',
+  toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
@@ -132,4 +138,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Used core components translation keys
   MuiTablePagination: {},
+
+  // Row reordering text
+  rowReorderingHeaderName: 'Row reordering',
 };

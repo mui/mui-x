@@ -1,37 +1,12 @@
+import * as React from 'react';
 import { useValidation, ValidationProps, Validator } from './useValidation';
+import { DayValidationProps } from './models';
+import { useLocalizationContext } from '../useUtils';
 
-export interface ExportedDateValidationProps<TDate> {
-  /**
-   * Disable past dates.
-   * @default false
-   */
-  disablePast?: boolean;
-  /**
-   * Disable future dates.
-   * @default false
-   */
-  disableFuture?: boolean;
-  /**
-   * Min selectable date. @DateIOType
-   * @default Date(1900-01-01)
-   */
-  minDate?: TDate;
-  /**
-   * Max selectable date. @DateIOType
-   * @default Date(2099-31-12)
-   */
-  maxDate?: TDate;
-  /**
-   * Disable specific date. @DateIOType
-   * @template TDate
-   * @param {TDate} day The date to test.
-   * @returns {boolean} Return `true` if the date should be disabled.
-   */
-  shouldDisableDate?: (day: TDate) => boolean;
-}
+export interface ExportedDateValidationProps<TDate> extends DayValidationProps<TDate> {}
 
-export interface DateValidationProps<TDate>
-  extends ValidationProps<DateValidationError, TDate>,
+export interface DateValidationProps<TInputDate, TDate>
+  extends ValidationProps<DateValidationError, TInputDate | null>,
     ExportedDateValidationProps<TDate> {}
 
 export type DateValidationError =
@@ -43,35 +18,43 @@ export type DateValidationError =
   | 'maxDate'
   | null;
 
-export const validateDate: Validator<any, DateValidationProps<any>> = (
-  utils,
+export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
+  props,
   value,
-  { disablePast, disableFuture, minDate, maxDate, shouldDisableDate },
-): DateValidationError => {
-  const now = utils.date()!;
-  const date = utils.date(value);
+  adapter,
+}): DateValidationError => {
+  const now = adapter.utils.date()!;
+  const date = adapter.utils.date(value);
+
+  const {
+    shouldDisableDate,
+    minDate = adapter.defaultDates.minDate,
+    maxDate = adapter.defaultDates.maxDate,
+    disableFuture,
+    disablePast,
+  } = props;
 
   if (date === null) {
     return null;
   }
 
   switch (true) {
-    case !utils.isValid(value):
+    case !adapter.utils.isValid(value):
       return 'invalidDate';
 
     case Boolean(shouldDisableDate && shouldDisableDate(date)):
       return 'shouldDisableDate';
 
-    case Boolean(disableFuture && utils.isAfterDay(date, now)):
+    case Boolean(disableFuture && adapter.utils.isAfterDay(date, now)):
       return 'disableFuture';
 
-    case Boolean(disablePast && utils.isBeforeDay(date, now)):
+    case Boolean(disablePast && adapter.utils.isBeforeDay(date, now)):
       return 'disablePast';
 
-    case Boolean(minDate && utils.isBeforeDay(date, minDate)):
+    case Boolean(minDate && adapter.utils.isBeforeDay(date, minDate)):
       return 'minDate';
 
-    case Boolean(maxDate && utils.isAfterDay(date, maxDate)):
+    case Boolean(maxDate && adapter.utils.isAfterDay(date, maxDate)):
       return 'maxDate';
 
     default:
@@ -79,8 +62,34 @@ export const validateDate: Validator<any, DateValidationProps<any>> = (
   }
 };
 
+export const useIsDayDisabled = <TDate>({
+  shouldDisableDate,
+  minDate,
+  maxDate,
+  disableFuture,
+  disablePast,
+}: DayValidationProps<TDate>) => {
+  const adapter = useLocalizationContext<TDate>();
+
+  return React.useCallback(
+    (day: TDate | null) =>
+      validateDate({
+        adapter,
+        value: day,
+        props: {
+          shouldDisableDate,
+          minDate,
+          maxDate,
+          disableFuture,
+          disablePast,
+        },
+      }) !== null,
+    [adapter, shouldDisableDate, minDate, maxDate, disableFuture, disablePast],
+  );
+};
+
 const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
-export const useDateValidation = <TDate>(
-  props: DateValidationProps<TDate> & ValidationProps<DateValidationError, TDate>,
+export const useDateValidation = <TInputDate, TDate>(
+  props: DateValidationProps<TInputDate, TDate>,
 ): DateValidationError => useValidation(props, validateDate, isSameDateError);

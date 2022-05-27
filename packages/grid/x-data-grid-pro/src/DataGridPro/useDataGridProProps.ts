@@ -22,10 +22,9 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   treeData: false,
   defaultGroupingExpansionDepth: 0,
   disableColumnPinning: false,
-  disableRowGrouping: false,
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
-  rowGroupingColumnMode: 'single',
+  rowReordering: false,
   getDetailPanelHeight: () => 500,
 };
 
@@ -59,8 +58,6 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
     () => ({
       ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
       ...themedProps,
-      disableRowGrouping:
-        themedProps.disableRowGrouping || !themedProps.experimentalFeatures?.rowGrouping,
       localeText,
       components,
       signature: 'DataGridPro',

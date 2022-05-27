@@ -7,7 +7,6 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  GridEvents,
   GridRenderCellParams,
 } from '@mui/x-data-grid';
 import { isNavigationKey } from '@mui/x-data-grid/internals';
@@ -55,7 +54,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
       event.stopPropagation();
     }
     if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
     }
   };
 
@@ -114,6 +113,19 @@ GridTreeDataGroupingCell.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
+  /**
+   * A ref allowing to set imperative focus.
+   * It can be passed to the element that should receive focus.
+   * @ignore - do not document.
+   */
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        focus: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */

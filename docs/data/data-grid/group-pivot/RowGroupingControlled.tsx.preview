@@ -1,8 +1,0 @@
-<DataGridPro
-  {...data}
-  rowGroupingModel={rowGroupingModel}
-  onRowGroupingModelChange={(model) => setRowGroupingModel(model)}
-  experimentalFeatures={{
-    rowGrouping: true,
-  }}
-/>

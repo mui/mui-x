@@ -9,7 +9,6 @@ import {
   gridVisibleColumnFieldsSelector,
   gridRowsMetaSelector,
   useGridApiEventHandler,
-  GridEvents,
   GridRowId,
 } from '@mui/x-data-grid';
 import {
@@ -104,7 +103,9 @@ const VirtualScrollerDetailPanels = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanels',
   overridesResolver: (props, styles) => styles.detailPanels,
-})({});
+})({
+  position: 'relative',
+});
 
 const VirtualScrollerDetailPanel = styled(Box, {
   name: 'MuiDataGrid',
@@ -115,6 +116,7 @@ const VirtualScrollerDetailPanel = styled(Box, {
   width: '100%',
   position: 'absolute',
   backgroundColor: theme.palette.background.default,
+  overflow: 'auto',
 }));
 
 const VirtualScrollerPinnedColumns = styled('div', {
@@ -210,8 +212,9 @@ const DataGridProVirtualScroller = React.forwardRef<
     }
   }, [renderContext, updateRenderZonePosition]);
 
-  useGridApiEventHandler(apiRef, GridEvents.columnWidthChange, refreshRenderZonePosition);
-  useGridApiEventHandler(apiRef, GridEvents.columnOrderChange, refreshRenderZonePosition);
+  useGridApiEventHandler(apiRef, 'columnWidthChange', refreshRenderZonePosition);
+  useGridApiEventHandler(apiRef, 'columnOrderChange', refreshRenderZonePosition);
+  useGridApiEventHandler(apiRef, 'rowOrderChange', refreshRenderZonePosition);
 
   const leftRenderContext =
     renderContext && leftPinnedColumns.length > 0

@@ -18,7 +18,7 @@ This prop has the same format as the returned value of `apiRef.current.exportSta
 
 {{"demo": "InitialState.js", "bg": "inline"}}
 
-## Access the state [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Access the state [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 The state is exposed on the `apiRef` object.
 It is strongly advised not to access the state values directly because the state itself is not considered a public API and its structure can change.
@@ -72,7 +72,7 @@ It can then be restored by either passing the returned value to the `initialStat
 Watch out for controlled models and their callbacks (`onFilterModelChange` if you use `filterModel`, for instance), as the grid will call those callbacks when restoring the state.
 But if the callback is not defined or if calling it does not update the prop value, then the restored value will not be applied.
 
-> ⚠️ To avoid breaking changes, the grid only saves the column visibility if you are using the [new api](/x/react-data-grid/columns/#initialize-the-visible-columns)
+> ⚠️ To avoid breaking changes, the grid only saves the column visibility if you are using the [new api](/x/react-data-grid/column-visibility/#initialize-the-visible-columns)
 > Make sure to initialize `props.initialState.columns.columnVisibilityModel` or to control `props.columnVisibilityModel`.
 >
 > The easier way is to initialize the model with an empty object:
@@ -94,7 +94,7 @@ In the demo below, clicking on **Recreate the 2nd grid** will re-mount the 2nd g
 
 {{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 You can pass the state returned by `apiRef.current.exportState()` to the `apiRef.current.restoreState` method.
 In the demo below, clicking on **Save current view** will create a snapshot of the changes made in the state, considering the initial state.

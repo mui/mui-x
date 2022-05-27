@@ -41,6 +41,7 @@ interface ReactApi extends ReactDocgenApi {
   styles: Styles;
   displayName: string;
   slots: Record<string, { default: string | undefined; type: { name: string | undefined } }>;
+  packages: string[];
 }
 
 /**
@@ -182,6 +183,7 @@ function parseComponentSource(src: string, componentObject: { filename: string }
 const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
+  projects: Projects;
   documentationRoot: string;
   documentedInterfaces: DocumentedInterfaces;
   pagesMarkdown: ReadonlyArray<{
@@ -190,7 +192,7 @@ const buildComponentDocumentation = async (options: {
     pathname: string;
   }>;
 }) => {
-  const { filename, project, documentationRoot, documentedInterfaces } = options;
+  const { filename, project, documentationRoot, documentedInterfaces, projects } = options;
 
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
@@ -220,6 +222,9 @@ const buildComponentDocumentation = async (options: {
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
       demos.push(['/x/react-data-grid#commercial-version', 'DataGridPro']);
     }
+    if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/x/react-data-grid#commercial-version', 'DataGridPremium']);
+    }
   } else {
     if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
       demos.push(['/components/data-grid#mit-version', 'DataGrid']);
@@ -227,15 +232,26 @@ const buildComponentDocumentation = async (options: {
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
       demos.push(['/components/data-grid#commercial-version', 'DataGridPro']);
     }
+    if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/components/data-grid#commercial-version', 'DataGridPremium']);
+    }
   }
   reactApi.demos = demos;
 
   reactApi.styles = await parseStyles(reactApi, project.program as any);
-  reactApi.styles.name = `Mui${reactApi.name.replace(/Pro$/, '')}`;
+  reactApi.styles.name = reactApi.name.startsWith('Grid')
+    ? 'MuiDataGrid' // TODO: Read from @slot annotation
+    : `Mui${reactApi.name.replace(/Pro$/, '')}`;
   reactApi.styles.classes.forEach((key) => {
     const globalClass = generateUtilityClass(reactApi.styles.name!, key);
     reactApi.styles.globalClasses[key] = globalClass;
   });
+
+  const allProjectsName = Array.from(projects.keys());
+  const projectsWithThisComponent = allProjectsName.filter(
+    (projectName) => !!projects.get(projectName)!.exports[reactApi.name],
+  );
+  reactApi.packages = projectsWithThisComponent.map((projectName) => `@mui/${projectName}`);
 
   const componentApi: {
     componentDescription: string;
@@ -433,6 +449,7 @@ const buildComponentDocumentation = async (options: {
     filename: toGithubPath(reactApi.filename, project.workspaceRoot),
     inheritance: reactApi.inheritance,
     demos: generateDemoList(reactApi.demos),
+    packages: reactApi.packages.sort((a, b) => b.length - a.length), // Display the imports from the pro packages above imports from the community packages
   };
 
   // docs/pages/component-name.json
@@ -516,6 +533,7 @@ export default async function buildComponentsDocumentation(
         return await buildComponentDocumentation({
           filename,
           project,
+          projects,
           documentationRoot,
           pagesMarkdown,
           documentedInterfaces,

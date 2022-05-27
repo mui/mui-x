@@ -18,11 +18,12 @@ renderRating.propTypes = {
 function RatingEditInputCell(props) {
   const { id, value, api, field } = props;
 
-  const handleChange = async (event) => {
-    api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
+  const handleChange = async (event, newValue) => {
+    api.setEditCellValue({ id, field, value: Number(newValue) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
-    if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
+    const nativeEvent = event.nativeEvent;
+    if (nativeEvent.clientX !== 0 && nativeEvent.clientY !== 0) {
       // Wait for the validation to run
       const isValid = await api.commitCellChange({ id, field });
       if (isValid) {
@@ -33,7 +34,9 @@ function RatingEditInputCell(props) {
 
   const handleRef = (element) => {
     if (element) {
-      element.querySelector(`input[value="${value}"]`).focus();
+      const input = element.querySelector(`input[value="${value}"]`);
+
+      input?.focus();
     }
   };
 
@@ -70,9 +73,9 @@ RatingEditInputCell.propTypes = {
   value: PropTypes.number,
 };
 
-function renderRatingEditInputCell(params) {
+const renderRatingEditInputCell = (params) => {
   return <RatingEditInputCell {...params} />;
-}
+};
 
 export default function RenderRatingEditCellGrid() {
   return (

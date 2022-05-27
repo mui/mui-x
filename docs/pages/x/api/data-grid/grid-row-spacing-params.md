@@ -5,6 +5,8 @@
 ## Import
 
 ```js
+import { GridRowSpacingParams } from '@mui/x-data-grid-premium';
+// or
 import { GridRowSpacingParams } from '@mui/x-data-grid-pro';
 // or
 import { GridRowSpacingParams } from '@mui/x-data-grid';

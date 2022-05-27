@@ -51,7 +51,7 @@ Users can start editing a cell (or row if `editMode="row"`) with any of the foll
   apiRef.current.startCellEditMode({ id: 1, field: 'name' });
   ```
 
-- Calling `apiRef.current.startRowEditMode` passing the ID of the row (only available if `editMode="row"`)
+- Calling `apiRef.current.startRowEditMode` passing the ID of the row (only available if `editMode="row"`).
 
   ```tsx
   apiRef.current.startRowEditMode({ id: 1 });
@@ -157,17 +157,58 @@ The object also contains a `reason` param that specifies which type of interacti
 The following demo shows how to prevent the user from exiting edit mode when clicking outside of a cell.
 To do this, the `onCellEditStop` prop is used to check if the `reason` is `'cellFocusOut'`.
 If that condition is true, it [disables](/x/react-data-grid/events/#disabling-the-default-behavior) the default event behavior.
-In this scenario, the user can only stop editing a cell by pressing <kbd class="key">Enter</kbd>, <kbd class="key">Escape</kbd> or <kbd class="key">Tab</kbd>.
+In this context, the user can only stop editing a cell by pressing <kbd class="key">Enter</kbd>, <kbd class="key">Escape</kbd> or <kbd class="key">Tab</kbd>.
 
 {{"demo": "DisableStopEditModeOnFocusOut.js", "bg": "inline"}}
 
-### Disabling default start and stop behavior
+## Controlled mode
 
-The following demo shows how external buttons can be used to start and stop edit mode.
-To do this, the default behavior of the `onCellEditXXX` events is disabled.
-To edit a cell, click on it, then click **Edit**.
+Each cell and row has two modes: `edit` and `view`.
+You can control the active mode using the props `cellModesModel` and `rowModesModel` (only works if `editMode="row"`).
+
+The `cellModesModel` prop accepts an object containing the `mode` (and additional options) for a given column field, in a given row, as in the following example.
+The options accepted are the same available in [`apiRef.current.startCellEditMode`](#start-editing) and [`apiRef.current.stopCellEditMode`](#stop-editing).
+
+```tsx
+// Changes the mode of field=name from row with id=1 to "edit"
+<DataGrid
+  cellModesModel={{ 1: { name: { mode: GridCellModes.Edit } } }}
+/>
+
+// Changes the mode of field=name from row with id=1 to "view", ignoring modifications made
+<DataGrid
+  cellModesModel={{ 1: { name: { mode: GridCellModes.View, ignoreModifications: true } } }}
+/>
+```
+
+For row editing, the `rowModesModel` props work in a similar manner.
+The options accepted are the same available in [`apiRef.current.startRowEditMode`](#start-editing) and [`apiRef.current.stopRowEditMode`](#stop-editing).
+
+```tsx
+// Changes the mode of the row with id=1 to "edit"
+<DataGrid
+  editMode="row"
+  rowModesModel={{ 1: { mode: GridRowModes.Edit } }}
+/>
+
+// Changes the mode of the row with id=1 to "view", ignoring modifications made
+<DataGrid
+  editMode="row"
+  rowModesModel={{ 1: { mode: GridRowModes.View, ignoreModifications: true } }}
+/>
+```
+
+Additionally, the callback props `onCellModesModelChange` and `onRowModesModelChange` (only works if `editMode="row"`) are available.
+Use them to update the respective prop.
+
+In the demo below, `cellModesModel` is used to control the mode of selected cell using the external buttons.
+For an example using row editing check the [full-featured CRUD component](#full-featured-crud-component).
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+> ⚠ The options passed to both model props only take effect when `mode` changes.
+> Updating the params of a cell or row, but keeping the same `mode`, makes the cell or row to stay in the same mode.
+> Also, removing one field or row ID from the object will not cause the missing cell or row to go to `"view"` mode.
 
 ## Validation
 
@@ -256,7 +297,7 @@ This property works like the `renderCell` property, which is rendered while cell
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
-  return <input type="text" value={params.value} onChange={...}>;
+  return <input type="text" value={params.value} onValueChange={...}>;
 }
 
 const columns: GridColDef[] = [
@@ -286,12 +327,12 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value; // The new value entered by the user
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  return <input type="text" value={value} onChange={handleChange}>;
+  return <input type="text" value={value} onValueChange={handleValueChange}>;
 }
 ```
 
@@ -388,6 +429,18 @@ The user can [start](#start-editing) and [stop](#stop-editing) editing a row usi
 > This lets you apply conditional validation where the value of a cell impacts the validation status of another cell in the same row.
 > If you only want to run validation when the value has changed, check if the `hasChanged` param is `true`.
 
+### Full-featured CRUD component
+
+Row editing makes it possible to create a full-featured CRUD (Create, Read, Update, Delete) component similar to those found in enterprise applications.
+In the following demo, the typical ways to start and stop editing are all disabled.
+Instead, use the buttons available in each row or in the toolbar.
+
+{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Advanced use cases
+
+In the next sections, there examples of how the props provided by editing API can be used to implement complex use cases commonly found in applications.
+
 ### Conditional validation
 
 When all cells in a row are in edit mode, you can validate fields by comparing their values against one another.
@@ -399,17 +452,80 @@ Once at the least one field has the `error` attribute set to a truthy value, the
 
 The following demo requires a value for the **Payment method** column only if the **Is paid?** column is checked:
 
-{{"demo": "ConditionalValidationGrid.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "ConditionalValidationGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Full-featured CRUD component [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Linked fields
 
-Row editing makes it possible to create a full-featured CRUD (Create, Read, Update, Delete) component similar to those found in enterprise applications.
-In the following demo, the typical ways to start and stop editing are all disabled.
-Instead, use the buttons available in each row or in the toolbar.
+The options available for one field may depend on the value of another field.
+For instance, if the `singleSelect` column is used, you can provide a function to `valueOptions` returning the relevant options for the value selected in another field, as exemplified below.
 
-{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "disableAd": true, "defaultCodeOpen": false}}
+```tsx
+const columns: GridColDef[] = [
+  {
+    field: 'account',
+    type: 'singleSelect',
+    valueOptions: ({ row }) => {
+      if (!row) {
+        // The row is not available when filtering this column
+        return ['Sales', 'Investments', 'Ads', 'Taxes', 'Payroll', 'Utilities'];
+      }
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+      return row.type === 'Income' // Gets the value of the "type" field
+        ? ['Sales', 'Investments', 'Ads']
+        : ['Taxes', 'Payroll', 'Utilities'];
+    },
+  },
+];
+```
+
+The code above is already enough to display different options in the **Account** column based on the value selected in the **Type** column.
+The only task left is to reset the account once the type is changed.
+This is needed because the previously selected account will not exist now in the options.
+To solve that, you can create a custom edit component, reusing the built-in one, and pass a function to the `onValueChange` prop.
+This function should call `apiRef.current.setEditCellValue` to reset the value of the other field.
+
+```tsx
+const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
+  const apiRef = useGridApiContext();
+
+  const handleValueChange = async () => {
+    await apiRef.current.setEditCellValue({
+      id: props.id,
+      field: 'account',
+      value: '',
+    });
+  };
+
+  return <GridEditSingleSelectCell onValueChange={handleValueChange} {...props} />;
+};
+```
+
+The demo below combines the steps showed above.
+You can experiment it by changing the value of any cell in the **Type** column.
+The **Account** column is automatically updated with the correct options.
+
+{{"demo": "LinkedFieldsRowEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+
+> ⚠ The call to `apiRef.current.setEditCellValue` returns a promise that must be awaited.
+> For instance, if the `singleSelect` column type is used, not awaiting will cause the other column to be rendered with a `value` that is not in the options.
+>
+> ```ts
+> const handleChange = async () => {
+>   await apiRef.current.setEditCellValue({
+>     id: props.id,
+>     field: 'account',
+>     value: '',
+>   });
+> };
+> ```
+
+A similar behavior can be reproduced with cell editing.
+Instead of `apiRef.current.setEditCellValue`, the `rows` prop must be updated or `apiRef.current.updateRows` be used.
+Note that the `onCellEditStart` and `onCellEditStop` props also have to be used to revert the value of the cell changed, in case the user cancels the edit.
+
+{{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

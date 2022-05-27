@@ -27,11 +27,17 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} فیلترهای فعال` : `${count} فیلتر فعال`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'خروجی',
   toolbarExportLabel: 'خروجی',
   toolbarExportCSV: 'دانلود به صورت CSV',
   toolbarExportPrint: 'چاپ',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'پیداکردن ستون',
@@ -133,6 +139,9 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'بازکردن پنل جزئیات',
   collapseDetailPanel: 'بستن پنل جزئیات',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);

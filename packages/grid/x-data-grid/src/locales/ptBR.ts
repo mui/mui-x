@@ -27,11 +27,17 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     `${count} ${count !== 1 ? 'filtros' : 'filtro'} ${count !== 1 ? 'ativos' : 'ativo'}`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Baixar como CSV',
   toolbarExportPrint: 'Print',
+  toolbarExportExcel: 'Baixar como Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Localizar coluna',
@@ -133,6 +139,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Master/detail
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Esconder',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

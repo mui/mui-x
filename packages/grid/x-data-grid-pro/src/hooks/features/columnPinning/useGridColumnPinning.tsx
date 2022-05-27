@@ -7,7 +7,6 @@ import {
   gridColumnPositionsSelector,
   gridVisibleColumnFieldsSelector,
   gridClasses,
-  GridEvents,
   useGridApiMethod,
   useGridApiEventHandler,
   GridEventListener,
@@ -106,22 +105,22 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns.left, pinnedColumns.right, props.disableColumnPinning],
   );
 
-  const handleMouseEnter = React.useCallback<GridEventListener<GridEvents.rowMouseEnter>>(
+  const handleMouseEnter = React.useCallback<GridEventListener<'rowMouseEnter'>>(
     (params, event) => {
       updateHoveredClassOnSiblingRows(event);
     },
     [updateHoveredClassOnSiblingRows],
   );
 
-  const handleMouseLeave = React.useCallback<GridEventListener<GridEvents.rowMouseLeave>>(
+  const handleMouseLeave = React.useCallback<GridEventListener<'rowMouseLeave'>>(
     (params, event) => {
       updateHoveredClassOnSiblingRows(event);
     },
     [updateHoveredClassOnSiblingRows],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.rowMouseEnter, handleMouseEnter);
-  useGridApiEventHandler(apiRef, GridEvents.rowMouseLeave, handleMouseLeave);
+  useGridApiEventHandler(apiRef, 'rowMouseEnter', handleMouseEnter);
+  useGridApiEventHandler(apiRef, 'rowMouseLeave', handleMouseLeave);
 
   /**
    * PRE-PROCESSING
@@ -251,7 +250,7 @@ export const useGridColumnPinning = (
     propModel: props.pinnedColumns,
     propOnChange: props.onPinnedColumnsChange,
     stateSelector: gridPinnedColumnsSelector,
-    changeEvent: GridEvents.pinnedColumnsChange,
+    changeEvent: 'pinnedColumnsChange',
   });
 
   const checkIfEnabled = React.useCallback(

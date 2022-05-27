@@ -27,11 +27,17 @@ export interface GridLocaleText {
   toolbarFiltersTooltipShow: React.ReactNode;
   toolbarFiltersTooltipActive: (count: number) => React.ReactNode;
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: string;
+  toolbarQuickFilterLabel: string;
+  toolbarQuickFilterDeleteIconLabel: string;
+
   // Export selector toolbar button text
   toolbarExport: React.ReactNode;
   toolbarExportLabel: string;
   toolbarExportCSV: React.ReactNode;
   toolbarExportPrint: React.ReactNode;
+  toolbarExportExcel: string;
 
   // Columns panel text
   columnsPanelTextFieldLabel: string;
@@ -132,6 +138,9 @@ export interface GridLocaleText {
     ComponentsPropsList['MuiTablePagination'],
     'page' | 'count' | 'onChangePage' | 'rowsPerPage' | 'onPageChange'
   >;
+
+  // Row reordering text
+  rowReorderingHeaderName: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

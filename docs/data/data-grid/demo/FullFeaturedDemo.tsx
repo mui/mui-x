@@ -269,7 +269,7 @@ export default function FullFeaturedDemo() {
     return isAntDesign ? 'ant' : 'default';
   };
 
-  const handleApplyClick = (settings) => {
+  const handleApplyClick: GridToolbarContainerProps['onApply'] = (settings) => {
     if (size !== settings.size) {
       setSize(settings.size);
     }
@@ -325,6 +325,9 @@ export default function FullFeaturedDemo() {
         {...data}
         components={{
           Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          toolbar: { showQuickFilter: true },
         }}
         loading={loading}
         checkboxSelection

@@ -1,10 +1,6 @@
 import { expect } from 'chai';
 import { adapterToUse } from '../../../../../test/utils/pickers-utils';
-import {
-  maskedDateFormatter,
-  pick12hOr24hFormat,
-  checkMaskIsValidForCurrentFormat,
-} from './text-field-helper';
+import { maskedDateFormatter, checkMaskIsValidForCurrentFormat } from './text-field-helper';
 
 describe('text-field-helper', () => {
   it('maskedDateFormatter for date', () => {
@@ -18,6 +14,7 @@ describe('text-field-helper', () => {
     expect(formatterFn('21/12/2010')).to.equal('21/12/2010');
     expect(formatterFn('21-12-2010')).to.equal('21/12/2010');
     expect(formatterFn('2f')).to.equal('2');
+    expect(formatterFn('21/1g2/2010')).to.equal('21/12/2010');
   });
 
   it('maskedDateFormatter for time', () => {
@@ -26,22 +23,6 @@ describe('text-field-helper', () => {
     expect(formatterFn('10')).to.equal('10:');
     expect(formatterFn('10:00')).to.equal('10:00 ');
     expect(formatterFn('10:00 A')).to.equal('10:00 AM');
-  });
-
-  it('pick12hOr24hFormat', () => {
-    expect(
-      pick12hOr24hFormat(undefined, true, { localized: 'T', '12h': 'hh:mm a', '24h': 'HH:mm' }),
-    ).to.equal('hh:mm a');
-    expect(
-      pick12hOr24hFormat(undefined, undefined, {
-        localized: 'T',
-        '12h': 'hh:mm a',
-        '24h': 'HH:mm',
-      }),
-    ).to.equal('T');
-    expect(
-      pick12hOr24hFormat(undefined, false, { localized: 'T', '12h': 'hh:mm a', '24h': 'HH:mm' }),
-    ).to.equal('HH:mm');
   });
 
   [
@@ -66,7 +47,10 @@ describe('text-field-helper', () => {
         expect(runMaskValidation()).to.be.equal(true);
       } else {
         expect(runMaskValidation).toWarnDev(
-          `The mask "${mask}" you passed is not valid for the format used ${format}. Falling down to uncontrolled not-masked input.`,
+          [
+            `The mask "${mask}" you passed is not valid for the format used ${format}.`,
+            `Falling down to uncontrolled no-mask input.`,
+          ].join('\n'),
         );
       }
     });

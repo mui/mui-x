@@ -3,7 +3,7 @@ title: Componente React para Data e Hora
 components: TextField
 githubLabel: 'component: DatePicker'
 materialDesign: https://material.io/components/date-pickers
-waiAria: https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
+waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -35,9 +35,9 @@ Um exemplo de seletor de data nativo com `type="date"`.
 // date-fns
 npm install @date-io/date-fns
 // or for Day.js
-npm install -s @date-io/dayjs
+npm install @date-io/dayjs
 // or for Luxon
-npm install -s @date-io/luxon
+npm install @date-io/luxon
 // or for Moment.js
 npm install @date-io/moment
 ```
@@ -56,7 +56,9 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 function App({ children }) {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>{children}</LocalizationProvider>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      {children}
+    </LocalizationProvider>
   );
 }
 ```

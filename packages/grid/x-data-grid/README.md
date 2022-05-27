@@ -1,6 +1,6 @@
 # @mui/x-data-grid
 
-This package is the community edition of the data grid component.
+This package is the Community Plan edition of the data grid component.
 It's part of MUI X, an open core extension of MUI, with advanced components.
 
 ## Installation
@@ -15,12 +15,13 @@ npm install @mui/x-data-grid
 yarn add @mui/x-data-grid
 ```
 
-This component has three peer dependencies that you will need to install as well.
+This component has the following peer dependencies that you will need to install as well.
 
 ```json
 "peerDependencies": {
-  "@mui/material": "^5.0.0",
-  "react": "^17.0.0"
+  "@mui/material": "^5.4.1",
+  "@mui/system": "^5.4.1",
+  "react": "^17.0.2 || ^18.0.0"
 },
 ```
 

@@ -4,7 +4,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridRowEventLookup, GridEvents } from '../models/events';
+import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import {
   GridEditModes,
@@ -26,6 +26,9 @@ import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GridRenderEditCellParams } from '../models/params/gridCellParams';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
+import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
+import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -113,6 +116,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
+  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
     hasScrollY: false,
@@ -172,7 +177,12 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         }
 
         // User opened a detail panel
-        if (field === '__detail_panel_toggle__') {
+        if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+          return;
+        }
+
+        // User reorders a row
+        if (field === '__reorder__') {
           return;
         }
 
@@ -188,7 +198,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         }
       }
 
-      publish(GridEvents.rowClick, onClick)(event);
+      publish('rowClick', onClick)(event);
     },
     [apiRef, onClick, publish, rowId],
   );
@@ -241,6 +251,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
     const classNames: string[] = [];
 
+    const disableDragEvents =
+      (rootProps.disableColumnReorder && column.disableReorder) ||
+      (!(rootProps as any).rowReordering &&
+        !!sortModel.length &&
+        treeDepth > 1 &&
+        Object.keys(editRowsState).length > 0);
+
     if (column.cellClassName) {
       classNames.push(
         clsx(
@@ -263,8 +280,15 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     }
 
     if (editCellState != null && column.renderEditCell) {
+      let updatedRow = row;
+      if (apiRef.current.unstable_getRowWithUpdatedValues) {
+        // Only the new editing API has this method
+        updatedRow = apiRef.current.unstable_getRowWithUpdatedValues(rowId, column.field);
+      }
+
       const params: GridRenderEditCellParams = {
         ...cellParams,
+        row: updatedRow,
         ...editCellState,
         api: apiRef.current,
       };
@@ -316,6 +340,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           tabIndex={tabIndex}
           className={clsx(classNames)}
           colSpan={colSpan}
+          disableDragEvents={disableDragEvents}
           {...rootProps.componentsProps?.cell}
         >
           {content}
@@ -336,9 +361,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       aria-selected={selected}
       style={style}
       onClick={publishClick}
-      onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
-      onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
-      onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
+      onDoubleClick={publish('rowDoubleClick', onDoubleClick)}
+      onMouseEnter={publish('rowMouseEnter', onMouseEnter)}
+      onMouseLeave={publish('rowMouseLeave', onMouseLeave)}
       {...other}
     >
       {cells}

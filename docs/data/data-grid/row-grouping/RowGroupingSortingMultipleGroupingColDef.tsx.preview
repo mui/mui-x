@@ -1,0 +1,16 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  disableSelectionOnClick
+  defaultGroupingExpansionDepth={-1}
+  initialState={initialState}
+  rowGroupingColumnMode="multiple"
+  groupingColDef={(params) =>
+    params.fields.includes('director')
+      ? {
+          leafField: 'title',
+          mainGroupingCriteria: 'director',
+        }
+      : {}
+  }
+/>

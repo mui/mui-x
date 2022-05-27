@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridEvents } from '../../models/events';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -21,6 +20,7 @@ export function useGridApiInitialization<Api extends GridApiCommon>(
   if (!apiRef.current) {
     apiRef.current = {
       unstable_eventManager: new EventManager(),
+      unstable_caches: {} as Api['unstable_caches'],
       state: {} as Api['state'],
       instanceId: globalId,
     } as Api;
@@ -57,7 +57,7 @@ export function useGridApiInitialization<Api extends GridApiCommon>(
 
   const showError = React.useCallback<GridCoreApi['showError']>(
     (args) => {
-      apiRef.current.publishEvent(GridEvents.componentError, args);
+      apiRef.current.publishEvent('componentError', args);
     },
     [apiRef],
   );
@@ -68,7 +68,7 @@ export function useGridApiInitialization<Api extends GridApiCommon>(
     const api = apiRef.current;
 
     return () => {
-      api.publishEvent(GridEvents.unmount);
+      api.publishEvent('unmount');
     };
   }, [apiRef]);
 

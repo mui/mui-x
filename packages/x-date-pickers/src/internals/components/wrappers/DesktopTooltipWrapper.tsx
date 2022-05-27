@@ -10,10 +10,16 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
     children,
     DateInputProps,
     KeyboardDateInputComponent,
-    onDismiss,
     open,
     PopperProps,
     TransitionComponent,
+    onClear,
+    onDismiss,
+    onCancel,
+    onAccept,
+    onSetToday,
+    components,
+    componentsProps,
   } = props;
   const inputContainerRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
@@ -45,6 +51,12 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
         PopperProps={PopperProps}
         onBlur={handleBlur}
         onClose={onDismiss}
+        onClear={onClear}
+        onCancel={onCancel}
+        onAccept={onAccept}
+        onSetToday={onSetToday}
+        components={components}
+        componentsProps={componentsProps}
       >
         {children}
       </PickersPopper>

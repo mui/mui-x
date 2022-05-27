@@ -1,8 +1,7 @@
 <DataGrid
-  rows={rows}
-  columns={data.columns}
+  rows={data}
+  columns={columns}
   sortingMode="server"
-  sortModel={sortModel}
   onSortModelChange={handleSortModelChange}
-  loading={loading}
+  loading={isLoading}
 />

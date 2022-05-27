@@ -7,26 +7,31 @@ import {
 } from '../../features/statePersistence/gridStatePersistenceInterface';
 import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry } from '../../../models/gridRows';
+import { GridHydrateRowsValue } from '../../features/rows/gridRowsState';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
 export interface GridPipeProcessingLookup {
+  columnMenu: { value: React.ReactNode[]; context: GridColDef };
+  exportState: { value: GridInitialStateCommunity };
   hydrateColumns: {
     value: GridHydrateColumnsValue;
   };
-  scrollToIndexes: {
-    value: Partial<GridScrollParams>;
-    context: Partial<GridCellIndexCoordinates>;
+  hydrateRows: {
+    value: GridHydrateRowsValue;
   };
-  columnMenu: { value: React.ReactNode[]; context: GridColDef };
-  exportState: { value: GridInitialStateCommunity };
+  exportMenu: { value: { component: React.ReactElement; componentName: string }[]; context: any };
+  preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;
     context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
   };
   rowHeight: { value: Record<string, number>; context: GridRowEntry };
-  preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
+  scrollToIndexes: {
+    value: Partial<GridScrollParams>;
+    context: Partial<GridCellIndexCoordinates>;
+  };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (

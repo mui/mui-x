@@ -1,4 +1,4 @@
-import { GridColDef, GridColumns, GridRowModel } from '@mui/x-data-grid-pro';
+import { GridColDef, GridColumns, GridRowModel } from '@mui/x-data-grid-premium';
 
 export type Movie = {
   id: number;
@@ -39,6 +39,7 @@ const COLUMNS: GridColumns = [
   {
     field: 'year',
     headerName: 'Year',
+    type: 'number',
   },
   {
     field: 'cinematicUniverse',

@@ -1,13 +1,10 @@
-import {
-  GridRowId,
-  GridRowsLookup,
-  GridRowsProp,
-  GridRowTreeConfig,
-} from '../../../models/gridRows';
+import { GridRowId, GridRowsLookup, GridRowTreeConfig } from '../../../models/gridRows';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export interface GridRowTreeCreationParams {
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
+  idToIdLookup: Record<string, GridRowId>;
   previousTree: GridRowTreeConfig | null;
 }
 
@@ -21,23 +18,19 @@ export interface GridRowTreeCreationValue {
   treeDepth: number;
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
+  idToIdLookup: Record<string, GridRowId>;
 }
 
-export type GridRowInternalCacheValue = Omit<GridRowTreeCreationParams, 'previousTree'>;
-
-export interface GridRowsInternalCacheState {
-  value: GridRowInternalCacheValue;
+export interface GridRowsInternalCache extends Omit<GridRowTreeCreationParams, 'previousTree'> {
   /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
    */
-  rowsBeforePartialUpdates: GridRowsProp;
-}
-
-export interface GridRowsInternalCache {
-  state: GridRowsInternalCacheState;
-  timeout: NodeJS.Timeout | null;
-  lastUpdateMs: number;
+  rowsBeforePartialUpdates: DataGridProcessedProps['rows'];
+  /**
+   * The value of the `loading` prop since the last time that the rows state was updated.
+   */
+  loadingPropBeforePartialUpdates: DataGridProcessedProps['loading'];
 }
 
 export interface GridRowsState extends GridRowTreeCreationValue {
@@ -55,4 +48,11 @@ export interface GridRowsState extends GridRowTreeCreationValue {
    * It does not count the expanded children rows.
    */
   totalTopLevelRowCount: number;
+  /**
+   * Tree returned by the `rowTreeCreation` strategy processor.
+   * It is used to re-apply the `hydrateRows` pipe processor without having to recreate the tree.
+   */
+  groupingResponseBeforeRowHydration: GridRowTreeCreationValue;
 }
+
+export type GridHydrateRowsValue = GridRowTreeCreationValue;
