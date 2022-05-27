@@ -142,4 +142,4 @@ const nbNOGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Rad reorganisering',
 };
 
-export const nbNO: Localization = getGridLocalization(nbNOGrid);
+export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);
