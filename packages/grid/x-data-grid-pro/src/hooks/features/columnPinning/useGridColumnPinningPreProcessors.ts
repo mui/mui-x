@@ -49,10 +49,10 @@ export const useGridColumnPinningPreProcessors = (
         // Contains the fields not added to the orderedFields array yet
         const remainingFields = [...columnsState.all];
 
-        // First, we check if a column was unpinned since the last processing
-        // If there's one, we need to move it back to the same position it was before pinning
+        // First, we check if the column was unpinned since the last processing.
+        // If yes and it still exists, we move it back to the same position it was before pinning
         prevAllPinnedColumns.current!.forEach((field) => {
-          if (!allPinnedColumns.includes(field)) {
+          if (!allPinnedColumns.includes(field) && columnsState.lookup[field]) {
             // Get the position before pinning
             const index = orderedFieldsBeforePinningColumns.current!.indexOf(field);
             newOrderedFields[index] = field;

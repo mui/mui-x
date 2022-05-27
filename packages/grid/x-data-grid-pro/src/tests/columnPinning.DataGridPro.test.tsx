@@ -616,5 +616,22 @@ describe('<DataGridPro /> - Column pinning', () => {
       setProps({ pinnedColumns: { right: ['currencyPair'] } });
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M', 'currencyPair']);
     });
+
+    it('should not crash when removing a pinned column', () => {
+      const { setProps } = render(
+        <TestCase
+          nbCols={3}
+          columns={[{ field: 'id' }, { field: 'currencyPair' }, { field: 'price1M' }]}
+          pinnedColumns={{ right: ['currencyPair'] }}
+          disableVirtualization
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M', 'currencyPair']);
+      setProps({
+        pinnedColumns: { right: [] },
+        columns: [{ field: 'id' }, { field: 'price1M' }],
+      });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M']);
+    });
   });
 });
