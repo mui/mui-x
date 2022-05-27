@@ -20,7 +20,7 @@ TODO INSERT HIGHLIGHTS
 - [DataGrid] Better reflect the dependency on Material UI (#4795) @oliviertassinari
 - [DataGridPro] Remove experimental row grouping from Pro plan (#4949) @flaviendelangle
 - [DataGridPro] Allow to scroll detail panel content if it overflows the panel (#4979) @cherniavskii
-- [DataGridPro] Do call setRowIndex when dragging a column over a row (#4987) @flaviendelangle
+- [DataGridPro] Do not call `setRowIndex` when dragging a column over a row (#4987) @flaviendelangle
 
 ### `@mui/x-date-pickers@5.0.0-alpha.5` / `@mui/x-date-pickers-pro@5.0.0-alpha.5`
 
@@ -29,13 +29,13 @@ TODO INSERT HIGHLIGHTS
 
 ### Docs
 
-- [docs] Add doc sections / pages for upcoming features on pickers (#4603) @flaviendelangle
+- [docs] Add docs sections / pages for upcoming features on pickers (#4603) @flaviendelangle
 - [docs] Add docs for filter panel components (#4919) @m4theushw
 - [docs] Explain how to manage focus with `renderCell` (#4254) @alexfauquette
 - [docs] Fix navigation links (#4956) @oliviertassinari
 - [docs] Fix typo on rows docs (#4952) @jamesRadicl
 - [docs] New WAI-ARIA guidelines location (#4957) @oliviertassinari
-- [docs] Add Slots section to the right nav in the api pages (#4993) @DanailH
+- [docs] Add "Slots" section to the right nav in the API pages (#4993) @DanailH
 
 ### Core
 
