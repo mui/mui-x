@@ -115,7 +115,7 @@
     "chai": "^4.3.6",
     "chai-dom": "^1.11.0",
     "compression-webpack-plugin": "^9.2.0",
-    "concurrently": "^7.2.0",
+    "concurrently": "^7.2.1",
     "cross-env": "^7.0.3",
     "danger": "^11.0.2",
     "enzyme": "^3.11.0",
