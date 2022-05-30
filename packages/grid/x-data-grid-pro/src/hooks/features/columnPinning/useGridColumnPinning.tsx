@@ -350,15 +350,21 @@ export const useGridColumnPinning = (
       const latestColumnFields = gridColumnFieldsSelector(apiRef);
 
       /**
-       * When a column X is reordered to somewhere else, the column where this column X is dropped
-       * on must be moved to left or right to make room for X. The ^^^ below represents the column
+       * When a column X is reordered to somewhere else, the position where this column X is dropped
+       * on must be moved to left or right to make room for it. The ^^^ below represents the column
        * which gave space to receive X.
        *
-       * | A | B | C | D | -> | B | C | D | A | (e.g. A moved to after D, so delta=1)
+       * | X | B | C | D | -> | B | C | D | X | (e.g. X moved to after D, so delta=1)
        *              ^^^              ^^^
        *
-       * | A | B | C | D | -> | D | A | B | C | (e.g. D moved before A, so delta=-1)
+       * | A | B | C | X | -> | X | A | B | C | (e.g. X moved before A, so delta=-1)
        *  ^^^                      ^^^
+       *
+       * If column P is pinned, it will not move to provide space. However, it will jump to the next
+       * non-pinned column.
+       *
+       * | X | B | P | D | -> | B | D | P | X | (e.g. X moved to after D, with P pinned)
+       *              ^^^          ^^^
        */
       const siblingField = latestColumnFields[targetIndex - delta];
 
