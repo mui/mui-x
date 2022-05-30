@@ -88,7 +88,7 @@ export function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
         onClear={onClear}
         onCancel={onCancel}
         onSetToday={onSetToday}
-        actions={['cancel', 'accept']}
+        actions={displayStaticWrapperAs === 'desktop' ? [] : ['cancel', 'accept']}
         {...componentsProps?.actionBar}
       />
     </WrapperVariantContext.Provider>

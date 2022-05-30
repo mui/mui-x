@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { createRenderer, describeConformance } from '@mui/monorepo/test/utils';
-import { PickerStaticWrapper } from './PickerStaticWrapper';
+import { describeConformance } from '@mui/monorepo/test/utils';
+import { PickerStaticWrapper } from '@mui/x-date-pickers';
 import { pickerStaticWrapperClasses as classes } from './pickerStaticWrapperClasses';
+import { createPickerRenderer, wrapPickerMount } from '../../../../../../test/utils/pickers-utils';
 
 describe('<PickerStaticWrapper />', () => {
-  const { render } = createRenderer();
+  const { render } = createPickerRenderer();
 
   describeConformance(
     <PickerStaticWrapper
@@ -18,9 +19,10 @@ describe('<PickerStaticWrapper />', () => {
     />,
     () => ({
       classes,
-      muiName: 'MuiPickerStaticWrapper',
       refInstanceof: undefined,
+      wrapMount: wrapPickerMount,
       render,
+      muiName: 'MuiPickerStaticWrapper',
       skip: [
         'componentProp',
         'componentsProp',
@@ -28,6 +30,7 @@ describe('<PickerStaticWrapper />', () => {
         'propsSpread',
         'refForwarding',
         'rootClass',
+        'reactTestRenderer',
       ],
     }),
   );
