@@ -219,7 +219,7 @@ const usdPrice: GridColTypeDef = {
 {{"demo": "CustomColumnTypesGrid.js", "bg": "inline"}}
 
 :::info
-If an unsupported column type is used the `string` column type will be used instead.
+If an unsupported column type is used, the `string` column type will be used instead.
 :::
 
 ## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
