@@ -10,7 +10,11 @@
   },
   "slots": {},
   "name": "PickerStaticWrapper",
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiPickerStaticWrapper" },
+  "styles": {
+    "classes": ["root", "content"],
+    "globalClasses": {},
+    "name": "MuiPickerStaticWrapper"
+  },
   "spread": false,
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers/src/internals/components/PickerStaticWrapper/PickerStaticWrapper.tsx",
