@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
@@ -15,6 +16,7 @@ const useUtilityClasses = (ownerState: PickerStaticWrapperProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
+    content: ['content'],
   };
 
   return composeClasses(slots, getStaticWrapperUtilityClass, classes);
@@ -54,6 +56,15 @@ const PickerStaticWrapperRoot = styled('div', {
   name: 'MuiPickerStaticWrapper',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
+})({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+const PickerStaticWrapperContent = styled('div', {
+  name: 'MuiPickerStaticWrapper',
+  slot: 'Content',
+  overridesResolver: (props, styles) => styles.content,
 })(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
@@ -62,7 +73,7 @@ const PickerStaticWrapperRoot = styled('div', {
   backgroundColor: theme.palette.background.paper,
 }));
 
-export function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
+function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerStaticWrapper' });
   const {
     displayStaticWrapperAs,
@@ -82,15 +93,51 @@ export function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
 
   return (
     <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-      <PickerStaticWrapperRoot className={classes.root} {...other} />
-      <ActionBar
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-        actions={displayStaticWrapperAs === 'desktop' ? [] : ['cancel', 'accept']}
-        {...componentsProps?.actionBar}
-      />
+      <PickerStaticWrapperRoot className={classes.root}>
+        <PickerStaticWrapperContent className={classes.content} {...other} />
+        <ActionBar
+          onAccept={onAccept}
+          onClear={onClear}
+          onCancel={onCancel}
+          onSetToday={onSetToday}
+          actions={displayStaticWrapperAs === 'desktop' ? [] : ['cancel', 'accept']}
+          {...componentsProps?.actionBar}
+        />
+      </PickerStaticWrapperRoot>
     </WrapperVariantContext.Provider>
   );
 }
+
+PickerStaticWrapper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps: PropTypes.object,
+  /**
+   * Force static wrapper inner components to be rendered in mobile or desktop mode.
+   */
+  displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']).isRequired,
+  onAccept: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onClear: PropTypes.func.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  onSetToday: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+} as any;
+
+export { PickerStaticWrapper };
