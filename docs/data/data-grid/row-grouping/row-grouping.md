@@ -2,7 +2,7 @@
 title: Data Grid - Row Grouping
 ---
 
-# Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 <p class="description">Group your rows according to some column values.</p>
 
@@ -273,7 +273,7 @@ const rows = apiRef.current.getRowGroupChildren({
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

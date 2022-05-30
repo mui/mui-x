@@ -73,7 +73,7 @@ The value generated is only used for rendering purposes.
 Filtering and sorting do not rely on the formatted value.
 Use the [`valueParser`](/x/react-data-grid/cells/#value-parser) to support filtering.
 
-## Rendering content
+## Rendering cells
 
 By default, the grid renders the value as a string in the cell.
 It resolves the rendered output in the following order:
@@ -214,7 +214,7 @@ const usdPrice: GridColTypeDef = {
 
 > ⚠ If an unsupported column type is used the `string` column type will be used instead.
 
-## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 ### Visible columns
 

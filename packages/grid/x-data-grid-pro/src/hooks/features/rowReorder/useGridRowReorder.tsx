@@ -87,6 +87,10 @@ export const useGridRowReorder = (
 
   const handleDragOver = React.useCallback<GridEventListener<'cellDragOver' | 'rowDragOver'>>(
     (params, event) => {
+      if (dragRowId === '') {
+        return;
+      }
+
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.
@@ -105,7 +109,7 @@ export const useGridRowReorder = (
     (params, event): void => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
-      if (isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
+      if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
 

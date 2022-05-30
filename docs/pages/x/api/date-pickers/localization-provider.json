@@ -20,5 +20,6 @@
   "name": "LocalizationProvider",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLocalizationProvider" },
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

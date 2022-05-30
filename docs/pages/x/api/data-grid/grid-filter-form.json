@@ -1,0 +1,38 @@
+{
+  "props": {
+    "applyFilterChanges": { "type": { "name": "func" }, "required": true },
+    "applyMultiFilterOperatorChanges": { "type": { "name": "func" }, "required": true },
+    "deleteFilter": { "type": { "name": "func" }, "required": true },
+    "hasMultipleFilters": { "type": { "name": "bool" }, "required": true },
+    "item": {
+      "type": {
+        "name": "shape",
+        "description": "{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }"
+      },
+      "required": true
+    },
+    "columnInputProps": { "type": { "name": "any" }, "default": "{}" },
+    "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
+    "deleteIconProps": { "type": { "name": "any" }, "default": "{}" },
+    "disableMultiFilterOperator": { "type": { "name": "bool" } },
+    "focusElementRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "linkOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
+    "linkOperators": {
+      "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
+      "default": "[GridLinkOperator.And, GridLinkOperator.Or]"
+    },
+    "multiFilterOperator": {
+      "type": { "name": "enum", "description": "'and'<br>&#124;&nbsp;'or'" }
+    },
+    "operatorInputProps": { "type": { "name": "any" }, "default": "{}" },
+    "showMultiFilterOperators": { "type": { "name": "bool" } },
+    "valueInputProps": { "type": { "name": "any" }, "default": "{}" }
+  },
+  "slots": {},
+  "name": "GridFilterForm",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterForm.tsx",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid#commercial-version\">DataGridPremium</a></li></ul>",
+  "packages": ["@mui/x-data-grid-premium", "@mui/x-data-grid-pro", "@mui/x-data-grid"]
+}

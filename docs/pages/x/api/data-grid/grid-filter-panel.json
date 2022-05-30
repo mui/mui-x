@@ -1,0 +1,28 @@
+{
+  "props": {
+    "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
+    "filterFormProps": {
+      "type": {
+        "name": "shape",
+        "description": "{ columnInputProps?: any, columnsSort?: 'asc'<br>&#124;&nbsp;'desc', deleteIconProps?: any, linkOperatorInputProps?: any, operatorInputProps?: any, valueInputProps?: any }"
+      }
+    },
+    "linkOperators": {
+      "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
+      "default": "[GridLinkOperator.And, GridLinkOperator.Or]"
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    }
+  },
+  "slots": {},
+  "name": "GridFilterPanel",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterPanel.tsx",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid#commercial-version\">DataGridPremium</a></li></ul>",
+  "packages": ["@mui/x-data-grid-premium", "@mui/x-data-grid-pro", "@mui/x-data-grid"]
+}

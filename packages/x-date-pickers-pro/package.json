@@ -46,7 +46,7 @@
     "@date-io/dayjs": "^2.14.0",
     "@date-io/luxon": "^2.14.0",
     "@date-io/moment": "^2.14.0",
-    "@mui/utils": "^5.7.0",
+    "@mui/utils": "^5.4.1",
     "@mui/x-date-pickers": "5.0.0-alpha.4",
     "@mui/x-license-pro": "5.11.1",
     "clsx": "^1.1.1",
@@ -55,8 +55,8 @@
     "rifm": "^0.12.1"
   },
   "peerDependencies": {
-    "@mui/material": "^5.2.3",
-    "@mui/system": "^5.2.3",
+    "@mui/material": "^5.4.1",
+    "@mui/system": "^5.4.1",
     "date-fns": "^2.25.0",
     "dayjs": "^1.10.7",
     "luxon": "^1.28.0 || ^2.0.0",

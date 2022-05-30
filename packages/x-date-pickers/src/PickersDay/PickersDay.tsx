@@ -33,7 +33,7 @@ export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
    */
   disabled?: boolean;
   /**
-   * If `true`, todays date is rendering without highlighting with circle.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
   disableHighlightToday?: boolean;
@@ -374,7 +374,7 @@ PickersDayRaw.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true`, todays date is rendering without highlighting with circle.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,

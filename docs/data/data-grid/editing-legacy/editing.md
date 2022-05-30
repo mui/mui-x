@@ -141,13 +141,13 @@ The demo lets you edit the ratings by double-clicking the cell.
 
 {{"demo": "RenderRatingEditCellGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Edit using external button [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Edit using external button [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 You can override the default [start editing](#start-editing) triggers using the [`event.defaultMuiPrevented`](/x/react-data-grid/events/#disabling-the-default-behavior) on the synthetic React events.
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "disableAd": true}}
 
-### Events [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Events [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 The editing feature leverages the event capability of the grid and the apiRef.
 You can import the following events to customize the editing experience:
@@ -208,7 +208,7 @@ You can handle the `onEditRowsModelChange` callback to control the `GridEditRows
 
 {{"demo": "RowEditControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Conditional validation [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Conditional validation [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 Having all cells of a row in edit mode allows validating a field based on the value of another one
 To do this, you will first need to add a `preProcessEditCellProps` callback to the [column definition](/x/api/data-grid/grid-col-def/).
@@ -229,7 +229,7 @@ The following demo requires a value for the **Payment method** column if the **I
 > This approach can be used in the free version of the DataGrid.
 > The only limitation is that it does not work with the `singleSelect` column type.
 
-### Control with external buttons [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Control with external buttons [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 You can [disable the default behavior](/x/react-data-grid/events/#disabling-the-default-behavior) of the grid and control the row edit using external buttons.
 
@@ -243,7 +243,7 @@ You can save columns that make use of `valueGetter` by adding a `valueSetter`.
 The same [approach](/x/react-data-grid/editing/#saving-nested-structures) from the cell editing mode can be used here.
 Note that the `valueSetter` will be called for each field.
 
-### Server-side persistence [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Server-side persistence [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 If you want to send the updated data to your server, you can use `onRowEditCommit` which is fired just before committing the new cell value to the grid.
 
@@ -253,7 +253,7 @@ You can then decide if you want to send the whole row or only the modified field
 
 {{"demo": "RowEditServerSidePersistence.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
 
-### Events [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Events [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 You can import the following events to customize the editing experience:
 
@@ -262,7 +262,7 @@ You can import the following events to customize the editing experience:
 - `rowEditCommit`: triggered when new row values are committed.
 - `editCellPropsChange`: triggered when the props passed to the edit cell component are changed.
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 > ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
