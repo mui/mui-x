@@ -1,7 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
-const deDEPickers: Partial<PickersLocaleText> = {
+const deDEPickers: Partial<PickersLocaleText<any>> = {
   previousMonth: 'Letzter Monat',
   nextMonth: 'Nächster Monat',
   openPreviousView: 'Letzte Ansicht öffnen',
