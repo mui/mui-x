@@ -1,1 +1,5 @@
-<DataGridPremium {...data} disableAggregation agg />
+<DataGridPremium
+  {...data}
+  disableAggregation
+  initialState={{ aggregation: { model: { gross: 'sum' } } }}
+/>
