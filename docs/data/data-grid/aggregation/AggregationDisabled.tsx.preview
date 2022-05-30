@@ -1,1 +1,1 @@
-<DataGridPremium {...data} disableAggregation />
+<DataGridPremium {...data} disableAggregation agg />

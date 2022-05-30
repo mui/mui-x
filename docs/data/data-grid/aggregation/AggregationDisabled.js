@@ -7,11 +7,7 @@ export default function AggregationDisabled() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPremium
-        {...data}
-        disableAggregation
-        initialState={{ aggregation: { model: { gross: 'sum' } } }}
-      />
+      <DataGridPremium {...data} disableAggregation agg />
     </div>
   );
 }
