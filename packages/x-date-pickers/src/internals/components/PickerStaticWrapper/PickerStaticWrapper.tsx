@@ -83,6 +83,7 @@ function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
     onDismiss,
     onSetToday,
     open,
+    children,
     components,
     componentsProps,
     ...other
@@ -93,8 +94,10 @@ function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
 
   return (
     <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-      <PickerStaticWrapperRoot className={classes.root}>
-        <PickerStaticWrapperContent className={classes.content} {...other} />
+      <PickerStaticWrapperRoot className={classes.root} {...other}>
+        <PickerStaticWrapperContent className={classes.content}>
+          {children}
+        </PickerStaticWrapperContent>
         <ActionBar
           onAccept={onAccept}
           onClear={onClear}
