@@ -72,9 +72,33 @@ function GridFilterDateInput(props: GridFilterInputValueProps) {
   );
 }
 
+function GridFilterDateTimeInput(props: GridFilterInputValueProps) {
+  const { item, applyValue, apiRef } = props;
+
+  const handleFilterChange = (newValue: unknown) => {
+    applyValue({ ...item, value: newValue });
+  };
+
+  return (
+    <DateTimePicker
+      value={item.value || null}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        />
+      )}
+      onChange={handleFilterChange}
+      ampm={false}
+    />
+  );
+}
+
 function buildApplyDateFilterFn(
   filterItem: GridFilterItem,
   compareFn: (value1: number, value2: number) => boolean,
+  showTime: boolean = false,
 ) {
   if (!filterItem.value) {
     return null;
@@ -82,33 +106,41 @@ function buildApplyDateFilterFn(
 
   const filterValueMs = filterItem.value.getTime();
 
-  return ({ value }: GridCellParams<string | number | Date, any, any>): boolean => {
+  return ({ value }: GridCellParams<Date, any, any>): boolean => {
     if (!value) {
       return false;
     }
 
     // Make a copy of the date to not reset the hours in the original object
     const dateCopy = new Date(value);
-    dateCopy.setHours(0, 0, 0, 0);
+    dateCopy.setHours(
+      showTime ? value.getHours() : 0,
+      showTime ? value.getMinutes() : 0,
+      0,
+      0,
+    );
     const cellValueMs = dateCopy.getTime();
 
     return compareFn(cellValueMs, filterValueMs);
   };
 }
 
-const dateColumnType: GridColTypeDef = {
-  ...GRID_DATE_COL_DEF,
-  renderEditCell: renderDateEditCell,
-  filterOperators: [
+function getDateFilterOperators(
+  showTime: boolean = false,
+): GridColTypeDef['filterOperators'] {
+  const InputComponent = showTime ? GridFilterDateTimeInput : GridFilterDateInput;
+
+  return [
     {
       value: 'is',
       getApplyFilterFn: (filterItem) => {
         return buildApplyDateFilterFn(
           filterItem,
           (value1, value2) => value1 === value2,
+          showTime,
         );
       },
-      InputComponent: GridFilterDateInput,
+      InputComponent,
     },
     {
       value: 'not',
@@ -116,9 +148,10 @@ const dateColumnType: GridColTypeDef = {
         return buildApplyDateFilterFn(
           filterItem,
           (value1, value2) => value1 !== value2,
+          showTime,
         );
       },
-      InputComponent: GridFilterDateInput,
+      InputComponent,
     },
     {
       value: 'after',
@@ -126,9 +159,10 @@ const dateColumnType: GridColTypeDef = {
         return buildApplyDateFilterFn(
           filterItem,
           (value1, value2) => value1 > value2,
+          showTime,
         );
       },
-      InputComponent: GridFilterDateInput,
+      InputComponent,
     },
     {
       value: 'onOrAfter',
@@ -136,9 +170,10 @@ const dateColumnType: GridColTypeDef = {
         return buildApplyDateFilterFn(
           filterItem,
           (value1, value2) => value1 >= value2,
+          showTime,
         );
       },
-      InputComponent: GridFilterDateInput,
+      InputComponent,
     },
     {
       value: 'before',
@@ -146,9 +181,10 @@ const dateColumnType: GridColTypeDef = {
         return buildApplyDateFilterFn(
           filterItem,
           (value1, value2) => value1 < value2,
+          showTime,
         );
       },
-      InputComponent: GridFilterDateInput,
+      InputComponent,
     },
     {
       value: 'onOrBefore',
@@ -156,9 +192,10 @@ const dateColumnType: GridColTypeDef = {
         return buildApplyDateFilterFn(
           filterItem,
           (value1, value2) => value1 <= value2,
+          showTime,
         );
       },
-      InputComponent: GridFilterDateInput,
+      InputComponent,
     },
     {
       value: 'isEmpty',
@@ -176,7 +213,13 @@ const dateColumnType: GridColTypeDef = {
         };
       },
     },
-  ],
+  ];
+}
+
+const dateColumnType: GridColTypeDef = {
+  ...GRID_DATE_COL_DEF,
+  renderEditCell: renderDateEditCell,
+  filterOperators: getDateFilterOperators(),
 };
 
 function GridEditDateTimeCell({
@@ -204,9 +247,10 @@ const renderDateTimeEditCell: GridColDef['renderEditCell'] = (params) => {
   return <GridEditDateTimeCell {...params} />;
 };
 
-const dateTimeColumnType = {
+const dateTimeColumnType: GridColTypeDef = {
   ...GRID_DATETIME_COL_DEF,
   renderEditCell: renderDateTimeEditCell,
+  filterOperators: getDateFilterOperators(true),
 };
 
 const columns: GridColumns = [
