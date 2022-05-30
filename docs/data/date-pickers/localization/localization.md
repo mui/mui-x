@@ -19,7 +19,7 @@ Use `LocalizationProvider` to change the date-engine locale that is used to rend
 ## Translation keys
 
 As the rest of MUI components, you can modify text and translations.
-You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
+You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
 in the GitHub repository.
 
 You can set the locale text by using the theme provider.
@@ -105,7 +105,7 @@ import bgLocale from 'date-fns/locale/bg';
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
 
-You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-date-pickers/src/locales) in the GitHub repository.
+You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Data grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.

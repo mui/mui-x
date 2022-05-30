@@ -4,29 +4,12 @@ import { useTheme, styled, useThemeProps as useThemProps } from '@mui/material/s
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import clsx from 'clsx';
 import { PickersYear } from './PickersYear';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
-import { PickerOnChangeFn } from '../internals/hooks/useViews';
-import { findClosestEnabledDate } from '../internals/utils/date-utils';
+import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
+import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
-
-export interface ExportedYearPickerProps<TDate> {
-  /**
-   * Callback firing on year change @DateIOType.
-   * @template TDate
-   * @param {TDate} year The new year.
-   */
-  onYearChange?: (year: TDate) => void;
-  /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
-   * @template TDate
-   * @param {TDate} year The year to test.
-   * @returns {boolean} Return `true` if the year should be disabled.
-   */
-  shouldDisableYear?: (year: TDate) => boolean;
-}
+import { YearValidationProps } from '../internals/hooks/validation/models';
 
 const useUtilityClasses = (ownerState: any) => {
   const { classes } = ownerState;
@@ -51,18 +34,13 @@ const YearPickerRoot = styled('div', {
   margin: '0 4px',
 });
 
-export interface YearPickerProps<TDate> extends ExportedYearPickerProps<TDate> {
+export interface YearPickerProps<TDate> extends YearValidationProps<TDate> {
   autoFocus?: boolean;
   className?: string;
   classes?: YearPickerClasses;
   date: TDate | null;
   disabled?: boolean;
-  disableFuture?: boolean | null;
-  disablePast?: boolean | null;
-  isDateDisabled: (day: TDate) => boolean;
-  minDate: TDate;
-  maxDate: TDate;
-  onChange: PickerOnChangeFn<TDate>;
+  onChange: NonNullablePickerChangeHandler<TDate>;
   onFocusedDayChange?: (day: TDate) => void;
   readOnly?: boolean;
 }
@@ -75,6 +53,11 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   inProps: YearPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const now = useNow<TDate>();
+  const theme = useTheme();
+  const utils = useUtils<TDate>();
+  const defaultProps = useDefaultDates<TDate>();
+
   const props = useThemProps({ props: inProps, name: 'MuiYearPicker' });
   const {
     autoFocus,
@@ -83,22 +66,15 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     disabled,
     disableFuture,
     disablePast,
-    isDateDisabled,
-    maxDate,
-    minDate,
+    maxDate = defaultProps.maxDate,
+    minDate = defaultProps.minDate,
     onChange,
-    onFocusedDayChange,
-    onYearChange,
     readOnly,
     shouldDisableYear,
   } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
-
-  const now = useNow<TDate>();
-  const theme = useTheme();
-  const utils = useUtils<TDate>();
 
   const selectedDate = date || now;
   const currentYear = utils.getYear(selectedDate);
@@ -137,34 +113,9 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
       return;
     }
 
-    const submitDate = (newDate: TDate) => {
-      onChange(newDate, isFinish);
-
-      if (onFocusedDayChange) {
-        onFocusedDayChange(newDate || now);
-      }
-
-      if (onYearChange) {
-        onYearChange(newDate);
-      }
-    };
-
     const newDate = utils.setYear(selectedDate, year);
-    if (isDateDisabled(newDate)) {
-      const closestEnabledDate = findClosestEnabledDate({
-        utils,
-        date: newDate,
-        minDate,
-        maxDate,
-        disablePast: Boolean(disablePast),
-        disableFuture: Boolean(disableFuture),
-        shouldDisableDate: isDateDisabled,
-      });
 
-      submitDate(closestEnabledDate || now);
-    } else {
-      submitDate(newDate);
-    }
+    onChange(newDate, isFinish);
   };
 
   const focusYear = React.useCallback(
@@ -236,26 +187,33 @@ YearPicker.propTypes = {
   className: PropTypes.string,
   date: PropTypes.any,
   disabled: PropTypes.bool,
+  /**
+   * If `true` future days are disabled.
+   * @default false
+   */
   disableFuture: PropTypes.bool,
+  /**
+   * If `true` past days are disabled.
+   * @default false
+   */
   disablePast: PropTypes.bool,
-  isDateDisabled: PropTypes.func.isRequired,
-  maxDate: PropTypes.any.isRequired,
-  minDate: PropTypes.any.isRequired,
+  /**
+   * Maximal selectable date. @DateIOType
+   */
+  maxDate: PropTypes.any,
+  /**
+   * Minimal selectable date. @DateIOType
+   */
+  minDate: PropTypes.any,
   onChange: PropTypes.func.isRequired,
   onFocusedDayChange: PropTypes.func,
-  /**
-   * Callback firing on year change @DateIOType.
-   * @template TDate
-   * @param {TDate} year The new year.
-   */
-  onYearChange: PropTypes.func,
   readOnly: PropTypes.bool,
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Return `true` if the year should be disabled.
+   * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
 } as any;
