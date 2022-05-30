@@ -2,11 +2,11 @@ import { MuiPickersAdapter } from '../models';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
-  disableFuture: boolean;
-  disablePast: boolean;
+  disableFuture?: boolean;
+  disablePast?: boolean;
   maxDate: TDate;
   minDate: TDate;
-  shouldDisableDate: (date: TDate) => boolean;
+  isDateDisabled: (date: TDate) => boolean;
   utils: MuiPickersAdapter<TDate>;
 }
 
@@ -16,7 +16,7 @@ export const findClosestEnabledDate = <TDate>({
   disablePast,
   maxDate,
   minDate,
-  shouldDisableDate,
+  isDateDisabled,
   utils,
 }: FindClosestDateParams<TDate>) => {
   const today = utils.startOfDay(utils.date()!);
@@ -53,21 +53,21 @@ export const findClosestEnabledDate = <TDate>({
     }
 
     if (forward) {
-      if (!shouldDisableDate(forward)) {
+      if (!isDateDisabled(forward)) {
         return forward;
       }
       forward = utils.addDays(forward, 1);
     }
 
     if (backward) {
-      if (!shouldDisableDate(backward)) {
+      if (!isDateDisabled(backward)) {
         return backward;
       }
       backward = utils.addDays(backward, -1);
     }
   }
 
-  return today;
+  return null;
 };
 
 export const parsePickerInputValue = <TDate>(

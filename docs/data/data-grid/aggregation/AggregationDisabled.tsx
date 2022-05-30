@@ -7,7 +7,7 @@ export default function AggregationDisabled() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPremium {...data} disableAggregation />
+      <DataGridPremium {...data} disableAggregation agg />
     </div>
   );
 }

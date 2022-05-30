@@ -83,7 +83,7 @@ TODO
 
 When the row grouping is enabled, the aggregated values can be displayed in two positions:
 
-1. `footer` - the grid will add a root level footer to aggregate all the rows and one footer per group to aggregate its rows
+1. `footer` - the grid will add a root-level footer to aggregate all the rows and one footer per group to aggregate its rows
 
 2. `inline` - the grid will display aggregation on the grouping rows
 
@@ -111,13 +111,13 @@ Both positions can be used simultaneously with different aggregation function as
 
 {{"demo": "AggregationRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Only aggregate some groups
+### Aggregate specific groups
 
-You can limit aggregation to some groups with the `isGroupAggregated` prop.
+You can limit aggregation to specific groups with the `isGroupAggregated` prop.
 This function receives two parameters:
 
 1. The group from which the grid is trying to aggregate or `null` if trying to aggregate the root group.
-2. The position on which the grid is trying to aggregate.
+2. The position where the grid is aggregating.
 
 ```tsx
 // Will aggregate all the groups but not the root
@@ -133,24 +133,24 @@ isGroupAggregated={(groupNode) =>
   groupNode?.groupingKey === 'Universal Pictures'
 }
 
-// Will aggregate on the grouping rows and on the top level footee
+// Will aggregate on the grouping rows and on the top-level footer
 isGroupAggregated={(groupNode, position) => position === 'inline' || groupNode == null}
 ```
 
-The demo below shows the _sum_ aggregation on both the grouping rows and the top level footer.
+The demo below shows the _sum_ aggregation on both the grouping rows and the top-level footer:
 
 {{"demo": "AggregationIsGroupAggregated.js", "bg": "inline"}}
 
 ## Usage with tree data
 
-Like for row grouping, you can display the aggregated values either in the footer or in the grouping row.
+As with row grouping, you can display the aggregated values either in the footer or in the grouping row.
 
 :::info
 If the aggregated value is displayed in the grouping row, it will always have priority over the row data.
-This means that the data from groups explicitly provided in your dataset will be ignored in favour of their aggregated values.  
+This means that the data from groups explicitly provided in your dataset will be ignored in favor of their aggregated values.  
 :::
 
-The demo below shows the _sum_ aggregation on the "Size" column and the _max_ aggregation on the "Last modification" column.
+The demo below shows the _sum_ aggregation on the **Size** column and the _max_ aggregation on the **Last modification** column.
 
 {{"demo": "AggregationTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -173,7 +173,7 @@ The full typing details can be found on the [GridAggregationFunction API page](/
 
 ### Built-in functions
 
-The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions to cover the basic use-cases:
+The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions to cover the basic use cases:
 
 | Name   | Behavior                                                   | Supported column types       |
 | ------ | ---------------------------------------------------------- | ---------------------------- |
@@ -189,13 +189,15 @@ The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation 
 
 You can remove some aggregation functions for all columns by passing a filtered object to the `aggregationFunctions` prop.
 
-In the example below, the `sum` aggregation function has been removed.
+In the example below, the `sum` aggregation function has been removed:
 
 {{"demo": "AggregationRemoveFunctionAllColumns.js", "bg": "inline"}}
 
 #### Remove a built-in function for one column
 
-You can remove some aggregation function for one column by passing a `availableAggregationFunctions` property to the column definition.
+You can limit the aggregation options in a given column by passing the `availableAggregationFunctions` property to the column definition.
+
+This lets you specify which options will be available, as shown below:
 
 ```ts
 const column = {
@@ -205,11 +207,11 @@ const column = {
 };
 ```
 
-In the example below, the **Year** column can be aggregated using the `max` and `min` functions, whereas all functions are available for the **Gross** column
+In the example below, the **Year** column can be aggregated using the `max` and `min` functions, whereas all functions are available for the **Gross** column:
 
 {{"demo": "AggregationRemoveFunctionOneColumn.js", "bg": "inline"}}
 
-### Create a custom functions
+### Create custom functions
 
 You can pass custom aggregation functions to the `aggregationFunctions` prop.
 
@@ -237,7 +239,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
   };
 ```
 
-In the example below, the grid have two additional custom aggregation functions for `string` columns: `firstAlphabetical` `lastAlphabetical`.
+In the example below, the grid has two additional custom aggregation functions for `string` columns—`firstAlphabetical` and `lastAlphabetical`:
 
 {{"demo": "AggregationCustomFunction.js", "bg": "inline", "defaultCodeOpen": false}}
 
