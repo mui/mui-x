@@ -26,7 +26,7 @@ import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
 import { buildWarning } from '../../../utils/warning';
-import { gridRowsIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import {
   GridCellEditStartParams,
   GridCellEditStopParams,
@@ -487,7 +487,7 @@ export const useGridCellEditing = (
   }, [cellModesModelProp, updateCellModesModel]);
 
   React.useEffect(() => {
-    const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopCellEditMode may change it later
     const copyOfPrevCellModes = prevCellModesModel.current;

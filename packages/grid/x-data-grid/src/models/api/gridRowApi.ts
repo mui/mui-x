@@ -44,7 +44,7 @@ export interface GridRowApi {
   getRowsCount: () => number;
   /**
    * Gets the list of row ids.
-   * TODO: Rename or remove ?
+   * TODO rows v6: Rename or remove ?
    * @returns {GridRowId[]} A list of ids.
    */
   getAllRowIds: () => GridRowId[];
@@ -72,7 +72,7 @@ export interface GridRowApi {
   getRow: <R extends GridValidRowModel = any>(id: GridRowId) => R | null;
   /**
    * Gets the row node from the internal tree structure.
-   * TODO: Rename `getTreeNode`
+   * TODO rows v6: Rename `getTreeNode`
    * @param {GridRowId} id The id of the row.
    * @returns {GridTreeNode} The tree node.
    */
