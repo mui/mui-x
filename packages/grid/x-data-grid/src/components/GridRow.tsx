@@ -162,9 +162,10 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
     const resizeObserver = new ResizeObserver((entries) => {
       const [entry] = entries;
-      const height = entry.borderBoxSize
-        ? entry.borderBoxSize[0].blockSize
-        : entry.contentRect.height;
+      const height =
+        entry.borderBoxSize && entry.borderBoxSize.length > 0
+          ? entry.borderBoxSize[0].blockSize
+          : entry.contentRect.height;
       apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
     });
 
