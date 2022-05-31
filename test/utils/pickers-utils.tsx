@@ -3,12 +3,43 @@ import { createRenderer, screen, RenderOptions, userEvent } from '@mui/monorepo/
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-// TODO make possible to pass here any utils using cli
-export class AdapterClassToUse extends AdapterDateFns { }
+// Add parameter `--date-adapter luxon` to use AdapterLuxon for running tests
+// adapter available : date-fns (default one), day-js, luxon, moment
+const argv = require('yargs/yargs')(process.argv.slice(2)).argv;
 
-export const adapterToUse = new AdapterDateFns();
+const availableAdapters = ['date-fns', 'day-js', 'luxon', 'moment'];
+
+const adapter =
+  argv['date-adapter'] && availableAdapters.includes(argv['date-adapter'])
+    ? argv['date-adapter']
+    : 'date-fns';
+
+let AdapterClassToExtend;
+switch (adapter) {
+  case 'day-js':
+    AdapterClassToExtend = AdapterDayjs;
+    break;
+
+  case 'luxon':
+    AdapterClassToExtend = AdapterLuxon;
+    break;
+
+  case 'moment':
+    AdapterClassToExtend = AdapterMoment;
+    break;
+
+  default:
+    AdapterClassToExtend = AdapterDateFns;
+    break;
+}
+export class AdapterClassToUse extends AdapterClassToExtend {}
+
+export const adapterToUse = new AdapterClassToUse();
 
 export const FakeTransitionComponent = React.forwardRef<HTMLDivElement, TransitionProps>(
   function FakeTransitionComponent({ children }, ref) {
@@ -22,8 +53,8 @@ export const FakeTransitionComponent = React.forwardRef<HTMLDivElement, Transiti
 );
 
 interface CreatePickerRendererOptions extends CreateRendererOptions {
-  // object for date-fns, string for other adapters
-  locale?: string | object;
+  // Set-up locale with date-fns object. Other are deduced from `locale.code`
+  locale?: Locale;
 }
 
 export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
@@ -37,9 +68,14 @@ export function createPickerRenderer({
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer(createRendererOptions);
 
+  let adapterLocale = adapterToUse.lib === 'date-fns' ? locale : locale?.code;
+
+  if (typeof adapterLocale === 'string' && adapterLocale.length > 2) {
+    adapterLocale = adapterLocale.slice(0, 2);
+  }
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (
-      <LocalizationProvider adapterLocale={locale} dateAdapter={AdapterClassToUse}>
+      <LocalizationProvider adapterLocale={adapterLocale} dateAdapter={AdapterClassToUse}>
         {children}
       </LocalizationProvider>
     );
@@ -55,14 +91,14 @@ export function createPickerRenderer({
 
 type OpenPickerParams =
   | {
-    type: 'date' | 'date-time' | 'time';
-    variant: 'mobile' | 'desktop';
-  }
+      type: 'date' | 'date-time' | 'time';
+      variant: 'mobile' | 'desktop';
+    }
   | {
-    type: 'date-range';
-    variant: 'mobile' | 'desktop';
-    initialFocus: 'start' | 'end';
-  };
+      type: 'date-range';
+      variant: 'mobile' | 'desktop';
+      initialFocus: 'start' | 'end';
+    };
 
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
@@ -115,28 +151,28 @@ export const withPickerControls =
   <TValue, Props extends { value: TValue; onChange: Function }>(
     Component: React.ComponentType<Props>,
   ) =>
-    <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
+  <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
+    return (
+      props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
+        Partial<DefaultProps> & {
+          initialValue: TValue;
+          onChange?: any;
+        },
+    ) => {
+      const { initialValue, onChange, ...other } = props;
+
+      const [value, setValue] = React.useState<TValue>(initialValue);
+
+      const handleChange = React.useCallback(
+        (newValue: TValue, keyboardInputValue?: string) => {
+          setValue(newValue);
+          onChange?.(newValue, keyboardInputValue);
+        },
+        [onChange],
+      );
+
       return (
-        props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
-          Partial<DefaultProps> & {
-            initialValue: TValue;
-            onChange?: any;
-          },
-      ) => {
-        const { initialValue, onChange, ...other } = props;
-
-        const [value, setValue] = React.useState<TValue>(initialValue);
-
-        const handleChange = React.useCallback(
-          (newValue: TValue, keyboardInputValue?: string) => {
-            setValue(newValue);
-            onChange?.(newValue, keyboardInputValue);
-          },
-          [onChange],
-        );
-
-        return (
-          <Component {...defaultProps} {...(other as any)} value={value} onChange={handleChange} />
-        );
-      };
+        <Component {...defaultProps} {...(other as any)} value={value} onChange={handleChange} />
+      );
     };
+  };

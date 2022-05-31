@@ -22,7 +22,7 @@ const WrappedDesktopDateTimePicker = withPickerControls(DesktopDateTimePicker)({
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({
     clock: 'fake',
-    clockConfig: adapterToUse.date('2018-01-01T00:00:00.000').getTime(),
+    clockConfig: new Date('2018-01-01T00:00:00.000'),
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {
