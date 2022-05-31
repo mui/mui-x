@@ -45,7 +45,6 @@ export const useGridAggregation = (
     | 'isGroupAggregated'
     | 'aggregationFunctions'
     | 'aggregatedRows'
-    | 'aggregationFooterLabel'
     | 'disableAggregation'
     | 'rowGroupingColumnMode'
     | 'aggregationFooterLabelField'

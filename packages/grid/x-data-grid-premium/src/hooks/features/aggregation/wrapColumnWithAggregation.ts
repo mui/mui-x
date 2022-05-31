@@ -186,14 +186,12 @@ const getAggregationLabelWrappedValueGetter = ({
   valueGetter,
   getCellAggregationPosition,
   aggregationRules,
-  aggregationFooterLabel,
   shouldRenderLabel,
 }: {
   apiRef: React.MutableRefObject<GridApiPremium>;
   valueGetter: GridColDef['valueGetter'];
   getCellAggregationPosition: (id: GridRowId) => GridAggregationPosition | null;
   aggregationRules: GridAggregationRules;
-  aggregationFooterLabel: DataGridPremiumProcessedProps['aggregationFooterLabel'];
   shouldRenderLabel: (groupNode: GridRowTreeNodeConfig | null) => boolean;
 }): AggregationWrappedColDefProperty<'valueGetter'> => {
   const wrappedValueGetter: AggregationWrappedColDefProperty<'valueGetter'> = (params) => {
@@ -203,7 +201,6 @@ const getAggregationLabelWrappedValueGetter = ({
         footerNode: params.rowNode,
         apiRef,
         aggregationRules,
-        aggregationFooterLabel,
         shouldRenderLabel,
       });
     }
@@ -298,14 +295,12 @@ export const wrapColumnWithAggregationLabel = ({
   apiRef,
   aggregationRules,
   isGroupAggregated,
-  aggregationFooterLabel,
   shouldRenderLabel,
 }: {
   column: GridColDef;
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationRules: GridAggregationRules;
   isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
-  aggregationFooterLabel: DataGridPremiumProcessedProps['aggregationFooterLabel'];
   shouldRenderLabel: (groupNode: GridRowTreeNodeConfig | null) => boolean;
 }): GridColDef => {
   const getCellAggregationPosition = (id: GridRowId): GridAggregationPosition | null => {
@@ -337,7 +332,6 @@ export const wrapColumnWithAggregationLabel = ({
       getCellAggregationPosition,
       aggregationRules,
       shouldRenderLabel,
-      aggregationFooterLabel,
     }),
     filterOperators: getWrappedFilterOperators({
       filterOperators: column.filterOperators,

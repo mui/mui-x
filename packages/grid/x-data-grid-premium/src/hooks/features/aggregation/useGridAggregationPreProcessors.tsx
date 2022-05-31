@@ -36,7 +36,6 @@ export const useGridAggregationPreProcessors = (
     | 'aggregationFunctions'
     | 'isGroupAggregated'
     | 'disableAggregation'
-    | 'aggregationFooterLabel'
     | 'aggregationFooterLabelField'
     | 'rowGroupingColumnMode'
   >,
@@ -91,7 +90,6 @@ export const useGridAggregationPreProcessors = (
       footerLabelColumns.forEach((footerLabelColumn, footerLabelColumnIndex) => {
         columnsState.lookup[footerLabelColumn.field] = wrapColumnWithAggregationLabel({
           column: columnsState.lookup[footerLabelColumn.field],
-          aggregationFooterLabel: props.aggregationFooterLabel,
           apiRef,
           isGroupAggregated: props.isGroupAggregated,
           aggregationRules,
@@ -122,7 +120,6 @@ export const useGridAggregationPreProcessors = (
       props.aggregationFunctions,
       props.disableAggregation,
       props.isGroupAggregated,
-      props.aggregationFooterLabel,
       props.aggregationFooterLabelField,
     ],
   );

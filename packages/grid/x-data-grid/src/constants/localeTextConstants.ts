@@ -146,7 +146,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   aggregationMenuItemHeader: 'Aggregation',
   aggregationMenuItemFooterLabel: 'Footer',
   aggregationMenuItemInlineLabel: 'Inline',
-  aggregationMultiFunctionLabel: 'Aggregation',
+  aggregationMultiFunctionLabel: (groupingKey) =>
+    groupingKey == null ? 'Result' : `Result ${groupingKey}`,
   aggregationFunctionLabelSum: (groupingKey) =>
     groupingKey == null ? 'Total' : `Total ${groupingKey}`,
   aggregationFunctionLabelAvg: (groupingKey) =>

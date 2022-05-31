@@ -69,13 +69,43 @@ In the example below, the `title` and `year` columns are blocked from being aggr
 
 ## Aggregation label
 
-### Choose the column for the label
+### Label of the footer row
+
+When aggregating on a footer row,
+you can add a label automatically describing the current aggregation function currently applied on the rows.
+
+#### Choose the column
 
 Use the `aggregationFooterLabelField` prop to choose which column to render the aggregation label on.
 
 {{"demo": "AggregationLabelColumn.js", "bg": "inline"}}
 
-### Customize the content of the label
+#### Customize the content
+
+##### When all aggregated columns use the same aggregation function
+
+If we have a single column currently aggregated on the footer or if all columns currently aggregated on the footer have the same aggregation function,
+then we can have a label describing the aggregation function being used.
+
+For built-in aggregation functions, the label are handled by our [localization](/x/react-data-grid/localization/).
+You can override these labels by providing a custom locale text to the grid.
+The name of the key is `aggregationFunctionLabel${capitalize(aggregationFunctionName)}`
+In the demo below, the aggregation label of the _sum_ aggregation function has been replaced by "Sum" instead of "Total":
+
+{{"demo": "AggregationLabelSingleLocaleText.js", "bg": "inline"}}
+
+For custom aggregation functions, the label must be provided inside the aggregation function object
+(see the [dedicated section](#create-custom-functions) for more information)
+
+##### When several columns are aggregated
+
+If several aggregation function are being used at the same time,
+then we have a generic label which is "Result" by default.
+You can override this label by providing a custom `aggregationMultiFunctionLabel` local text.
+
+{{"demo": "AggregationLabelMultiLocaleText.js", "bg": "inline"}}
+
+### Label of the column header
 
 TODO
 
