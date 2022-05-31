@@ -15,7 +15,7 @@ These components are significantly more complex than anything found in the MUI C
 > MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 > See [Licensing](/x/getting-started/licensing/) for details.
 >
-> Thoughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/) and [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-premium/) icons, respectively.
+> Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/) and [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-premium/) icons, respectively.
 
 ## Advantages of MUI X
 
