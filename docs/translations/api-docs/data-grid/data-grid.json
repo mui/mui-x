@@ -31,8 +31,9 @@
     "filterModel": "Set the filter model of the grid.",
     "getCellClassName": "Function that applies CSS classes dynamically on cells.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the cell.",
     "getDetailPanelContent": "Function that returns the element to render in row detail.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; JSX.Element</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (JSX.Element): The row detail element.",
+    "getEstimatedRowHeight": "Function that returns the estimated height for a row. Only works if dynamic row height is used. Once the row height is measured this value is discarded.<br><br><strong>Signature:</strong><br><code>function(params: GridRowHeightParams) =&gt; number | null</code><br><em>params:</em> With all properties from GridRowHeightParams.<br> <em>returns</em> (number | null): The estimated row height value. If <code>null</code> or <code>undefined</code> then the default row height, based on the density, is applied.",
     "getRowClassName": "Function that applies CSS classes dynamically on rows.<br><br><strong>Signature:</strong><br><code>function(params: GridRowClassNameParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-class-name-params/\">GridRowClassNameParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the row.",
-    "getRowHeight": "Function that sets the row height per row.<br><br><strong>Signature:</strong><br><code>function(params: GridRowHeightParams) =&gt; GridRowHeightReturnValue</code><br><em>params:</em> With all properties from GridRowHeightParams.<br> <em>returns</em> (GridRowHeightReturnValue): The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied.",
+    "getRowHeight": "Function that sets the row height per row.<br><br><strong>Signature:</strong><br><code>function(params: GridRowHeightParams) =&gt; GridRowHeightReturnValue</code><br><em>params:</em> With all properties from GridRowHeightParams.<br> <em>returns</em> (GridRowHeightReturnValue): The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If &quot;auto&quot; then the row height is calculated based on the content.",
     "getRowId": "Return the id of a given GridRowModel.",
     "getRowSpacing": "Function that allows to specify the spacing between rows.<br><br><strong>Signature:</strong><br><code>function(params: GridRowSpacingParams) =&gt; GridRowSpacing</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-spacing-params/\">GridRowSpacingParams</a>.<br> <em>returns</em> (GridRowSpacing): The row spacing values.",
     "headerHeight": "Set the height in pixel of the column headers in the grid.",
@@ -467,6 +468,11 @@
     "row--lastVisible": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the last visible row element on every page of the grid"
+    },
+    "row--dynamicHeight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the row",
+      "conditions": "it has dynamic row height"
     },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "rowCount": {

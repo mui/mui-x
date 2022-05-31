@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -11,12 +11,16 @@ import {
   GridActionsCellItem,
   GridRowIdGetter,
   GridRowClassNameParams,
+  GridRowModel,
+  GridRenderCellParams,
 } from '@mui/x-data-grid';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
+const nativeSetTimeout = setTimeout;
 
 describe('<DataGrid /> - Rows', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -414,68 +418,294 @@ describe('<DataGrid /> - Rows', () => {
       }
     });
 
-    const ROW_HEIGHT = 52;
-    const TestCase = (props: Partial<DataGridProps>) => {
-      const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
-        </div>
-      );
-    };
+    describe('static row height', () => {
+      const ROW_HEIGHT = 52;
+      const TestCase = (props: Partial<DataGridProps>) => {
+        const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
+          </div>
+        );
+      };
 
-    it('should set each row height whe rowHeight prop is used', () => {
-      const { setProps } = render(<TestCase />);
+      it('should set each row height whe rowHeight prop is used', () => {
+        const { setProps } = render(<TestCase />);
 
-      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
 
-      setProps({ rowHeight: 30 });
+        setProps({ rowHeight: 30 });
 
-      expect(getRow(0).clientHeight).to.equal(30);
-      expect(getRow(1).clientHeight).to.equal(30);
-      expect(getRow(2).clientHeight).to.equal(30);
+        expect(getRow(0).clientHeight).to.equal(30);
+        expect(getRow(1).clientHeight).to.equal(30);
+        expect(getRow(2).clientHeight).to.equal(30);
+      });
+
+      it('should set the second row to have a different row height than the others', () => {
+        render(<TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />);
+
+        expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+      });
+
+      it('should set density to all but the row with variable row height', () => {
+        const { setProps } = render(
+          <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
+        );
+
+        expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+
+        setProps({ density: 'compact' });
+
+        expect(getRow(0).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
+      });
+
+      it('should set the correct rowHeight and variable row height', () => {
+        const { setProps } = render(
+          <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
+        );
+
+        expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+
+        setProps({ rowHeight: 30 });
+
+        expect(getRow(0).clientHeight).to.equal(30);
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(30);
+      });
     });
 
-    it('should set the second row to have a different row height than the others', () => {
-      render(<TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />);
+    describe('dynamic row height', () => {
+      const TestCase = (
+        props: Partial<DataGridProps> & {
+          getBioContentHeight: (row: GridRowModel) => number;
+          height?: number;
+          width?: number;
+        },
+      ) => {
+        const { getBioContentHeight, width = 300, height = 300, ...other } = props;
 
-      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
-    });
+        const customCellRenderer = React.useCallback(
+          ({ row }: GridRenderCellParams) => (
+            <div style={{ width: 100, height: getBioContentHeight(row) }} />
+          ),
+          [getBioContentHeight],
+        );
 
-    it('should set density to all but the row with variable row height', () => {
-      const { setProps } = render(
-        <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
-      );
+        const columns = React.useMemo(
+          () => [{ field: 'clientId' }, { field: 'bio', renderCell: customCellRenderer }],
+          [customCellRenderer],
+        );
 
-      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+        return (
+          <div style={{ width, height }}>
+            <DataGrid
+              {...baselineProps}
+              columns={columns}
+              getRowId={(row) => `${row.clientId}`}
+              hideFooter
+              {...other}
+            />
+          </div>
+        );
+      };
 
-      setProps({ density: 'compact' });
+      it('should measure all rows and update the content size', async () => {
+        // Swallow "ResizeObserver loop limit exceeded" errors
+        // See https://github.com/WICG/resize-observer/issues/38
+        const originalErrorHandler = window.onerror;
+        window.onerror = () => {};
 
-      expect(getRow(0).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
-    });
+        const border = 1;
+        const contentHeight = 100;
+        render(<TestCase getBioContentHeight={() => contentHeight} getRowHeight={() => 'auto'} />);
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        );
+        const expectedHeight = baselineProps.rows.length * (contentHeight + border);
+        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${expectedHeight}px`,
+        });
 
-    it('should set the correct rowHeight and variable row height', () => {
-      const { setProps } = render(
-        <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
-      );
+        window.onerror = originalErrorHandler;
+      });
 
-      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+      it('should use the default row height to calculate the content size when the row has not been measured yet', async () => {
+        const headerHeight = 50;
+        const border = 1;
+        const defaultRowHeight = 52;
+        const measuredRowHeight = 101;
+        render(
+          <TestCase
+            headerHeight={headerHeight}
+            height={headerHeight + 20 + border * 2} // Force to only measure the first row
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+          />,
+        );
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        );
+        const expectedHeight =
+          measuredRowHeight +
+          border + // Measured rows also include the border
+          (baselineProps.rows.length - 1) * defaultRowHeight;
+        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${expectedHeight}px`,
+        });
+      });
 
-      setProps({ rowHeight: 30 });
+      it('should use the value from getEstimatedRowHeight to estimate the content size', async () => {
+        const headerHeight = 50;
+        const border = 1;
+        const measuredRowHeight = 100;
+        const estimatedRowHeight = 90;
+        render(
+          <TestCase
+            headerHeight={headerHeight}
+            height={headerHeight + 20 + border * 2} // Force to only measure the first row
+            getBioContentHeight={() => measuredRowHeight}
+            getEstimatedRowHeight={() => estimatedRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+          />,
+        );
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        );
+        const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
+        const expectedHeight =
+          firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
+        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${expectedHeight}px`,
+        });
+      });
 
-      expect(getRow(0).clientHeight).to.equal(30);
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(30);
+      it('should recalculate the content size when the rows prop changes', async () => {
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={(row) => (row.expanded ? 200 : 100)}
+            rows={[{ clientId: 'c1', expanded: false }]}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+          />,
+        );
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        );
+        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: '101px',
+        });
+        setProps({ rows: [{ clientId: 'c1', expanded: true }] }); // Wait for ResizeObserver to send dimensions
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: '201px',
+        });
+      });
+
+      it('should set minHeight to "auto" in all rows with dynamic row height', () => {
+        render(
+          <TestCase
+            getBioContentHeight={() => 50}
+            getRowHeight={({ id }) => (id === 'c3' ? 100 : 'auto')}
+            rowBuffer={0}
+          />,
+        );
+        expect(getRow(0)).toHaveInlineStyle({ minHeight: 'auto' });
+        expect(getRow(1)).toHaveInlineStyle({ minHeight: 'auto' });
+        expect(getRow(2)).toHaveInlineStyle({ minHeight: '100px' });
+      });
+
+      it('should not virtualize columns if a row has auto height', () => {
+        render(
+          <TestCase
+            rows={baselineProps.rows.slice(0, 1)}
+            getBioContentHeight={() => 100}
+            getRowHeight={() => 'auto'}
+            columnBuffer={0}
+            columnThreshold={0}
+            width={100}
+          />,
+        );
+        expect(document.querySelectorAll('.MuiDataGrid-cell')).to.have.length(2);
+      });
+
+      it('should measure all rows before rendering a new row', async () => {
+        const headerHeight = 50;
+        const border = 1;
+        render(
+          <TestCase
+            getBioContentHeight={() => 100}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            height={headerHeight + 52 + border * 2}
+          />,
+        );
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        await waitFor(() => {
+          expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
+        });
+        virtualScroller.scrollTop = 10e6; // Scroll to the bottom
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101); // Ensure that all rows before the last were measured
+      });
+
+      it('should allow to mix rows with dynamic row height and default row height', async () => {
+        // Swallow "ResizeObserver loop limit exceeded" errors
+        // See https://github.com/WICG/resize-observer/issues/38
+        const originalErrorHandler = window.onerror;
+        window.onerror = () => {};
+
+        const headerHeight = 50;
+        const densityFactor = 1.3;
+        const rowHeight = 52;
+        const border = 1;
+        const measuredRowHeight = 100;
+        const expectedHeight = measuredRowHeight + border + rowHeight * densityFactor;
+        render(
+          <TestCase
+            getBioContentHeight={({ clientId }) => (clientId === 'c1' ? measuredRowHeight : 0)}
+            getRowHeight={({ id }) => (id === 'c1' ? 'auto' : null)}
+            density="comfortable"
+            rows={baselineProps.rows.slice(0, 2)}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+          />,
+        );
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        )!;
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${Math.floor(expectedHeight)}px`,
+          });
+        });
+
+        window.onerror = originalErrorHandler;
+      });
     });
   });
 
