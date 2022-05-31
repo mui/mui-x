@@ -2,12 +2,12 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/introduction/',
-    scopePathnames: ['/x/introduction/'],
+    pathname: '/x/introduction',
+    scopePathnames: ['/x/introduction'],
     title: 'Introduction',
     icon: 'DescriptionIcon',
     children: [
-      { pathname: `/x/introduction/`, title: 'Overview' },
+      { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
       { pathname: `/x/introduction/roadmap` },
