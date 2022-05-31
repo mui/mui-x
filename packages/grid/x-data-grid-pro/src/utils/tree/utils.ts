@@ -1,4 +1,4 @@
-import { GridRowId, GridRowTreeConfig, GridTreeNode } from '@mui/x-data-grid';
+import { GridGroupNode, GridRowId, GridRowTreeConfig, GridTreeNode } from '@mui/x-data-grid';
 import { RowTreeBuilderGroupingCriterion } from './models';
 
 export const getGroupRowIdFromPath = (path: RowTreeBuilderGroupingCriterion[]) => {
@@ -33,15 +33,37 @@ export const removeNodeFromTree = ({
 
 export const insertNodeInTree = ({
   node,
-  id,
   tree,
   treeDepths,
 }: {
   node: GridTreeNode;
-  id: GridRowId;
   tree: GridRowTreeConfig;
   treeDepths: { [depth: number]: number };
 }) => {
-  tree[id] = node;
+  tree[node.id] = node;
   treeDepths[node.depth] = (treeDepths[node.depth] ?? 0) + 1;
+
+  const parentNode = tree[node.parent!] as GridGroupNode;
+
+  if (node.type === 'footer') {
+    tree[node.parent] = {
+      ...parentNode,
+      footerId: node.id,
+    };
+  } else {
+    const groupingField = (node as GridGroupNode).groupingField ?? '__no_field__';
+    const groupingKey = node.groupingKey ?? '__no_key__';
+
+    tree[node.parent!] = {
+      ...parentNode,
+      childrenFromPath: {
+        ...parentNode.childrenFromPath,
+        [groupingField]: {
+          ...parentNode.childrenFromPath?.[groupingField],
+          [groupingKey.toString()]: node.id,
+        },
+      },
+      children: [...parentNode.children, node.id],
+    };
+  }
 };

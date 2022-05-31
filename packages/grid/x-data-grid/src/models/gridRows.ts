@@ -87,9 +87,9 @@ export interface GridGroupNode extends GridTreeBasicNode {
   /**
    * The id of the children nodes, grouped by grouping field and grouping key.
    * Only contains the children of type "group" and "leaf".
-   * Not defined for flat tree.
+   * Empty for flat tree.
    */
-  childrenFromPath?: GridChildrenFromPathLookup;
+  childrenFromPath: GridChildrenFromPathLookup;
   /**
    * If `true`, the children of this group are not visible.
    * @default false

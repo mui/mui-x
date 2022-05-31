@@ -201,16 +201,10 @@ export const addFooterRows = (
         };
 
         insertNodeInTree({
-          id: footerId,
           node: footerNode,
           tree,
           treeDepths,
         });
-
-        tree[groupNode.id] = {
-          ...(tree[groupNode.id] as GridGroupNode),
-          footerId,
-        };
       }
     } else if (groupNode.footerId != null) {
       removeNodeFromTree({ id: groupNode.footerId, tree, treeDepths });
