@@ -14,7 +14,6 @@ import {
   getAggregationRules,
   mergeStateWithAggregationModel,
   getAggregationFooterLabelColumns,
-  hasAggregationRulesChanged,
 } from './gridAggregationUtils';
 import {
   wrapColumnWithAggregationValue,
