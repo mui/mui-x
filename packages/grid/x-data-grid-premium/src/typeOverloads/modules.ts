@@ -1,5 +1,8 @@
 import { GridKeyValue, GridValidRowModel } from '@mui/x-data-grid-pro';
-import type { GridControlledStateEventLookupPro } from '@mui/x-data-grid-pro/typeOverloads';
+import type {
+  GridControlledStateEventLookupPro,
+  GridApiCachesPro,
+} from '@mui/x-data-grid-pro/typeOverloads';
 import type { GridGroupingValueGetterParams } from '../models';
 import type { GridRowGroupingModel, GridAggregationModel, GridAggregationCellMeta } from '../hooks';
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
@@ -43,7 +46,7 @@ export interface GridRenderCellParamsPremium<V = any, R extends GridValidRowMode
   aggregation?: GridAggregationCellMeta;
 }
 
-export interface GridApiCachesPremium {
+export interface GridApiCachesPremium extends GridApiCachesPro {
   rowGrouping: GridRowGroupingInternalCache;
   aggregation: GridAggregationInternalCache;
 }

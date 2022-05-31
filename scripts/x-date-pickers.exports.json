@@ -79,6 +79,7 @@
   { "name": "StaticTimePickerProps", "kind": "TypeAlias" },
   { "name": "TimePicker", "kind": "Variable" },
   { "name": "TimePickerProps", "kind": "Interface" },
+  { "name": "trTR", "kind": "Variable" },
   { "name": "YearPicker", "kind": "Variable" },
   { "name": "yearPickerClasses", "kind": "Variable" },
   { "name": "YearPickerClasses", "kind": "Interface" },
