@@ -6,19 +6,8 @@
  * @author ocodia
  */
 
-<<<<<<< HEAD
 code[class*='language-'],
 pre[class*='language-'] {
-=======
-/* inline code */
-code {
-  padding: 0.1em;
-  border-radius: 0.3em;
-  white-space: normal;
-}
-
-code[class*='language-'] {
->>>>>>> master
   color: #f8f8f2;
   background: none;
   text-shadow: 0 1px rgba(0, 0, 0, 0.3);
@@ -41,7 +30,6 @@ code[class*='language-'] {
   hyphens: none;
 }
 
-<<<<<<< HEAD
 /* Code blocks */
 pre[class*='language-'] {
   padding: 1em;
@@ -62,8 +50,6 @@ pre[class*='language-'] {
   white-space: normal;
 }
 
-=======
->>>>>>> master
 .token.comment,
 .token.prolog,
 .token.doctype,
@@ -130,6 +116,7 @@ pre[class*='language-'] {
 .token.bold {
   font-weight: bold;
 }
+
 .token.italic {
   font-style: italic;
 }
@@ -140,12 +127,8 @@ pre[class*='language-'] {
 
 /* Overrides to reach AA, copied from https://reactjs.org */
 
-<<<<<<< HEAD
 code[class*='language-'],
 pre[class*='language-'] {
-=======
-code[class*='language-'] {
->>>>>>> master
   text-shadow: none;
 }
 
