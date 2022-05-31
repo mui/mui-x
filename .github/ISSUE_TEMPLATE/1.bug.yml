@@ -35,7 +35,8 @@ body:
       label: Steps to reproduce 🕹
       description: |
         Please provide a link to a live example and an unambiguous set of steps to reproduce this bug.
-        You can use use codesandbox.io to build a reproduction case. 
+        
+        You can use codesandbox.io to build a reproduction case.
         As a starting point, we recommend you browse our [documentation](https://mui.com/x/advanced-components/), and fork the closest example to your use case.
 
         If you have an issue concerning TypeScript please start from this TypeScript playground: https://mui.com/r/ts-issue-template.
