@@ -34,4 +34,4 @@ These libraries are open source, MIT-licensed, and free forever.
 Most of MUI X's components are available for free with an MIT license, but more advanced features require a Pro or Premium commercial license.
 
 MUI X components are fully compatible with MUI Core.
-X can extend the functionality of UIs built with Material UI or MUI Base, but its components can also stand on their own.
+MUI X can extend the functionality of UIs built with Material UI or MUI Base, but its components can also stand on their own, or be used with another React component library.
