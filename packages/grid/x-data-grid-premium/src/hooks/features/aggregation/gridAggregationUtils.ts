@@ -10,9 +10,11 @@ import {
 } from '@mui/x-data-grid-pro';
 import {
   GridColumnRawLookup,
-  GridRowTreeCreationValue,
+  GridHydrateRowsValue,
+  insertNodeInTree,
   isDeepEqual,
   isFunction,
+  removeNodeFromTree,
 } from '@mui/x-data-grid-pro/internals';
 import {
   GridAggregationFunction,
@@ -171,41 +173,52 @@ export const getAggregationRules = ({
 /**
  * Add a footer for each group that has at least one column with an aggregated value.
  */
-export const addFooterRows = ({
-  groupingParams,
-  aggregationRules,
-  isGroupAggregated,
-}: {
-  groupingParams: GridRowTreeCreationValue;
-  aggregationRules: GridAggregationRules;
-  isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
-}) => {
-  if (Object.keys(aggregationRules).length === 0) {
-    return groupingParams;
-  }
-
-  const tree = { ...groupingParams.tree };
+export const addFooterRows = (
+  params: GridHydrateRowsValue & {
+    hasFooterAggregation: boolean;
+    isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
+  },
+) => {
+  const tree = { ...params.tree };
+  const treeDepths = { ...params.treeDepths };
 
   const addGroupFooter = (groupNode: GridGroupNode) => {
-    if (!isGroupAggregated || isGroupAggregated(groupNode, 'footer')) {
+    if (
+      params.hasFooterAggregation &&
+      (!params.isGroupAggregated || params.isGroupAggregated(groupNode, 'footer'))
+    ) {
       const footerId = getAggregationFooterRowIdFromGroupId(groupNode.id);
       if (groupNode.footerId !== footerId) {
         if (groupNode.footerId != null) {
-          delete tree[groupNode.footerId];
+          removeNodeFromTree({ id: groupNode.footerId, tree, treeDepths });
         }
 
-        tree[footerId] = {
+        const footerNode: GridFooterNode = {
           id: footerId,
           parent: groupNode.id,
           depth: groupNode ? groupNode.depth + 1 : 0,
           type: 'footer',
         };
 
+        insertNodeInTree({
+          id: footerId,
+          node: footerNode,
+          tree,
+          treeDepths,
+        });
+
         tree[groupNode.id] = {
           ...(tree[groupNode.id] as GridGroupNode),
           footerId,
         };
       }
+    } else if (groupNode.footerId != null) {
+      removeNodeFromTree({ id: groupNode.footerId, tree, treeDepths });
+
+      tree[groupNode.id] = {
+        ...(tree[groupNode.id] as GridGroupNode),
+        footerId: null,
+      };
     }
 
     groupNode.children.forEach((childId) => {
@@ -219,8 +232,8 @@ export const addFooterRows = ({
   addGroupFooter(tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
 
   return {
-    ...groupingParams,
     tree,
+    treeDepths,
   };
 };
 

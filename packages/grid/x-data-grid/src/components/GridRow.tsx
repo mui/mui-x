@@ -28,7 +28,7 @@ import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
-import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
+import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -117,7 +117,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
     hasScrollY: false,

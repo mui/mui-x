@@ -3,7 +3,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   GridRenderCellParams,
   GridRowEventLookup,
-  gridRowTreeDepthSelector,
+  gridRowMaximumTreeDepthSelector,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,
@@ -33,7 +33,7 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   // eslint-disable-next-line no-underscore-dangle
   const cellValue = params.row.__reorder__ || params.id;

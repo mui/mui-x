@@ -282,8 +282,14 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowTreeDepthSelector",
+    "name": "gridRowMaximumTreeDepthSelector",
     "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowTreeDepthsSelector",
+    "returnType": "{ [depth: number]: number }",
     "description": "",
     "supportsApiRef": true
   },

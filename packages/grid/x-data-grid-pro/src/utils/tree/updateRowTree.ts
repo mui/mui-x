@@ -38,6 +38,7 @@ const getNodePathInTree = (
 
 interface UpdateRowTreeParams {
   previousTree: GridRowTreeConfig;
+  previousTreeDepth: { [depth: number]: number };
   nodes: UpdateRowTreeNodes;
   defaultGroupingExpansionDepth: number;
   isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
@@ -51,21 +52,18 @@ interface UpdateRowTreeParams {
 
 export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationValue => {
   const tree = { ...params.previousTree };
-
-  // TODO: Retrieve previous tree depth
-  let treeDepth = 1;
+  const treeDepths = { ...params.previousTreeDepth };
 
   for (let i = 0; i < params.nodes.inserted.length; i += 1) {
     const node = params.nodes.inserted[i];
 
     insertDataRowInTree({
       tree,
+      treeDepths,
       id: node.id,
       path: node.path,
       onDuplicatePath: params.onDuplicatePath,
     });
-
-    treeDepth = Math.max(treeDepth, node.path.length);
   }
 
   for (let i = 0; i < params.nodes.removed.length; i += 1) {
@@ -73,6 +71,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
 
     removeDataRowFromTree({
       tree,
+      treeDepths,
       id: nodeId,
     });
   }
@@ -86,17 +85,17 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
     if (!isInSameGroup) {
       removeDataRowFromTree({
         tree,
+        treeDepths,
         id: node.id,
       });
 
       insertDataRowInTree({
         tree,
+        treeDepths,
         id: node.id,
         path: node.path,
         onDuplicatePath: params.onDuplicatePath,
       });
-
-      treeDepth = Math.max(treeDepth, node.path.length);
     }
   }
 
@@ -104,7 +103,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
 
   return {
     tree,
-    treeDepth,
+    treeDepths,
     groupingName: params.groupingName,
     dataRowIds,
   };

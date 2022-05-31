@@ -16,6 +16,7 @@ import {
   GridRowsInternalCache,
   GridRowsPartialUpdates,
   GridRowsState,
+  GridRowTreeCreationParams,
 } from './gridRowsInterfaces';
 
 export const GRID_ROOT_GROUP_ID: GridRowId = `auto-generated-group-node-root`;
@@ -99,13 +100,11 @@ export const getRowsStateFromCache = ({
   rowCountProp,
   loadingProp,
   previousTree,
-  previousTreeDepth,
-}: {
+  previousTreeDepths,
+}: Pick<GridRowTreeCreationParams, 'previousTree' | 'previousTreeDepths'> & {
   apiRef: React.MutableRefObject<GridApiCommunity>;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
-  previousTree: GridRowTreeConfig | null;
-  previousTreeDepth: number | null;
 }): GridRowsState => {
   const { rowsBeforePartialUpdates, ...cacheForGrouping } = apiRef.current.unstable_caches.rows;
   const rowCount = rowCountProp ?? 0;
@@ -113,16 +112,16 @@ export const getRowsStateFromCache = ({
   const groupingResponse = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
     ...cacheForGrouping,
     previousTree,
-    previousTreeDepth,
+    previousTreeDepths,
   });
 
-  const processedGroupingResponse = apiRef.current.unstable_applyPipeProcessors(
+  const processingResponse = apiRef.current.unstable_applyPipeProcessors(
     'hydrateRows',
     groupingResponse,
   );
 
-  const rootGroupNode = processedGroupingResponse.tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
-  const datasetSize = processedGroupingResponse.dataRowIds.length;
+  const rootGroupNode = processingResponse.tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+  const datasetSize = groupingResponse.dataRowIds.length;
   const dataTopLevelRowCount =
     rootGroupNode.children.length + (rootGroupNode.footerId == null ? 0 : 1);
 
@@ -132,8 +131,10 @@ export const getRowsStateFromCache = ({
   };
 
   return {
-    ...processedGroupingResponse,
-    groupingResponseBeforeRowHydration: groupingResponse,
+    groupingName: groupingResponse.groupingName,
+    dataRowIds: groupingResponse.dataRowIds,
+    tree: processingResponse.tree,
+    treeDepths: processingResponse.treeDepths,
     loading: loadingProp,
     totalRowCount: Math.max(rowCount, datasetSize),
     totalTopLevelRowCount: Math.max(rowCount, dataTopLevelRowCount),

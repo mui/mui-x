@@ -180,6 +180,7 @@ export const useGridRowGroupingPreProcessors = (
           removed: params.updates.actions.remove,
         },
         previousTree: params.previousTree!,
+        previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: ROW_GROUPING_STRATEGY,

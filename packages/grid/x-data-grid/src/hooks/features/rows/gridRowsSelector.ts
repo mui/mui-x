@@ -36,10 +36,25 @@ export const gridRowGroupingNameSelector = createSelector(
   (rows) => rows.groupingName,
 );
 
-export const gridRowTreeDepthSelector = createSelector(
+export const gridRowTreeDepthsSelector = createSelector(
   gridRowsStateSelector,
-  (rows) => rows.treeDepth,
+  (rows) => rows.treeDepths,
 );
+
+export const gridRowMaximumTreeDepthSelector = createSelector(gridRowsStateSelector, (rows) => {
+  const entries = Object.entries(rows.treeDepths);
+
+  if (entries.length === 0) {
+    return 1;
+  }
+
+  return (
+    entries
+      .filter(([, nodeCount]) => nodeCount > 0)
+      .map(([depth]) => Number(depth))
+      .sort((a, b) => b - a)[0] + 1
+  );
+});
 
 export const gridDataRowIdsSelector = createSelector(
   gridRowsStateSelector,

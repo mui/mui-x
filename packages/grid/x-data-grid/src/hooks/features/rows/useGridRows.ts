@@ -11,7 +11,7 @@ import {
   gridRowsLookupSelector,
   gridRowTreeSelector,
   gridRowGroupingNameSelector,
-  gridRowTreeDepthSelector,
+  gridRowTreeDepthsSelector,
   gridDataRowIdsSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -50,7 +50,7 @@ export const rowsStateInitializer: GridStateInitializer<
       rowCountProp: props.rowCount,
       loadingProp: props.loading,
       previousTree: null,
-      previousTreeDepth: null,
+      previousTreeDepths: null,
     }),
   };
 };
@@ -120,7 +120,7 @@ export const useGridRows = (
             rowCountProp: props.rowCount,
             loadingProp: props.loading,
             previousTree: gridRowTreeSelector(apiRef),
-            previousTreeDepth: gridRowTreeDepthSelector(apiRef),
+            previousTreeDepths: gridRowTreeDepthsSelector(apiRef),
           }),
         }));
         apiRef.current.publishEvent('rowsSet');
@@ -512,10 +512,10 @@ export const useGridRows = (
    */
   const applyHydrateRowsProcessor = React.useCallback(() => {
     apiRef.current.setState((state) => {
-      const response = apiRef.current.unstable_applyPipeProcessors(
-        'hydrateRows',
-        state.rows.groupingResponseBeforeRowHydration,
-      );
+      const response = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
+        tree: gridRowTreeSelector(state, apiRef.current.instanceId),
+        treeDepths: gridRowTreeDepthsSelector(state, apiRef.current.instanceId),
+      });
 
       return {
         ...state,

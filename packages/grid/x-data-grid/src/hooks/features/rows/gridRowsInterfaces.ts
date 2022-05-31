@@ -3,7 +3,7 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
 
 export interface GridRowTreeCreationParams {
   previousTree: GridRowTreeConfig | null;
-  previousTreeDepth: number | null;
+  previousTreeDepths: { [depth: number]: number } | null;
   updates: GridRowsPartialUpdates | GridRowsFullUpdate;
   dataRowIdToModelLookup: GridRowsLookup;
   dataRowIdToIdLookup: Record<string, GridRowId>;
@@ -16,7 +16,10 @@ export interface GridRowTreeCreationValue {
    */
   groupingName: string;
   tree: GridRowTreeConfig;
-  treeDepth: number;
+  /**
+   * Amount of nodes at each depth (including auto-generated ones)
+   */
+  treeDepths: { [depth: number]: number };
   dataRowIds: GridRowId[];
 }
 
@@ -50,16 +53,11 @@ export interface GridRowsState extends GridRowTreeCreationValue {
    * It does not count the expanded children rows.
    */
   totalTopLevelRowCount: number;
-  /**
-   * Tree returned by the `rowTreeCreation` strategy processor.
-   * It is used to re-apply the `hydrateRows` pipe processor without having to recreate the tree.
-   */
-  groupingResponseBeforeRowHydration: GridRowTreeCreationValue;
   dataRowIdToModelLookup: GridRowsLookup;
   dataRowIdToIdLookup: Record<string, GridRowId>;
 }
 
-export type GridHydrateRowsValue = GridRowTreeCreationValue;
+export type GridHydrateRowsValue = Pick<GridRowTreeCreationValue, 'tree' | 'treeDepths'>;
 
 export type GridRowsPartialUpdateAction = 'insert' | 'modify' | 'remove';
 

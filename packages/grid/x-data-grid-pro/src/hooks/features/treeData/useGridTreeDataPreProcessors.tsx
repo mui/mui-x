@@ -161,6 +161,7 @@ export const useGridTreeDataPreProcessors = (
           removed: params.updates.actions.remove,
         },
         previousTree: params.previousTree!,
+        previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: TREE_DATA_STRATEGY,

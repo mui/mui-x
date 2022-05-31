@@ -54,6 +54,7 @@ export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreP
 export type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
+  GridHydrateRowsValue,
   GridRowsPartialUpdates,
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants } from '../hooks/features/rows/gridRowsUtils';

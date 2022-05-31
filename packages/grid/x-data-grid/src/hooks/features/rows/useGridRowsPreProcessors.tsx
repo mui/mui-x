@@ -40,7 +40,7 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = (par
     return {
       groupingName: GRID_DEFAULT_STRATEGY,
       tree,
-      treeDepth: 1,
+      treeDepths: { 0: params.updates.rows.length },
       dataRowIds: params.updates.rows,
     };
   }
@@ -79,7 +79,7 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = (par
   return {
     groupingName: GRID_DEFAULT_STRATEGY,
     tree,
-    treeDepth: 1,
+    treeDepths: { 0: rootGroupChildren.length },
     dataRowIds: rootGroupChildren,
   };
 };

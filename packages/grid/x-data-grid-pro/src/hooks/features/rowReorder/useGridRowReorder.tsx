@@ -7,7 +7,7 @@ import {
   getDataGridUtilityClass,
   useGridSelector,
   gridSortModelSelector,
-  gridRowTreeDepthSelector,
+  gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
   GridRowId,
   gridEditRowsStateSelector,
@@ -38,7 +38,7 @@ export const useGridRowReorder = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const dragRowNode = React.useRef<HTMLElement | null>(null);
   const originRowIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<any>();

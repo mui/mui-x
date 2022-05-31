@@ -55,7 +55,7 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
       parent: null,
     },
   };
-  let treeDepth = 1;
+  const treeDepths: GridRowTreeCreationValue['treeDepths'] = {};
 
   const isGroupExpandedByDefault = (node: GridGroupNode) => {
     if (node.id === GRID_ROOT_GROUP_ID) {
@@ -86,9 +86,8 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
       id: node.id,
       path: node.path,
       onDuplicatePath: params.onDuplicatePath,
+      treeDepths,
     });
-
-    treeDepth = Math.max(treeDepth, node.path.length);
   }
 
   const addChildrenExpansionToGroups = (nodeId: GridRowId) => {
@@ -109,7 +108,7 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
 
   return {
     tree,
-    treeDepth,
+    treeDepths,
     groupingName: params.groupingName,
     dataRowIds,
   };

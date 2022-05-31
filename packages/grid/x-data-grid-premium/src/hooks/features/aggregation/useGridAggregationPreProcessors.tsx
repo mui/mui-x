@@ -1,11 +1,10 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
 import ListSubheader from '@mui/material/ListSubheader';
-import { gridColumnLookupSelector, gridRowTreeDepthSelector } from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, gridRowMaximumTreeDepthSelector } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
-  GridRowTreeCreationValue,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
@@ -15,6 +14,7 @@ import {
   getAggregationRules,
   mergeStateWithAggregationModel,
   getAggregationFooterLabelColumns,
+  hasAggregationRulesChanged,
 } from './gridAggregationUtils';
 import {
   wrapColumnWithAggregationValue,
@@ -25,7 +25,6 @@ import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumPr
 import { GridAggregationColumnMenuItem } from '../../../components/GridAggregationColumnMenuItem';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { GridAggregationRules } from './gridAggregationInterfaces';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -128,45 +127,39 @@ export const useGridAggregationPreProcessors = (
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
-    (groupingParams) => {
-      let newGroupingParams: GridRowTreeCreationValue;
-      let rulesOnLastRowHydration: GridAggregationRules;
-
-      if (props.disableAggregation) {
-        newGroupingParams = groupingParams;
-        rulesOnLastRowHydration = {};
-      } else {
-        const aggregationRules = getAggregationRules({
-          columnsLookup: gridColumnLookupSelector(apiRef),
-          aggregationModel: gridAggregationModelSelector(apiRef),
-          aggregationFunctions: props.aggregationFunctions,
-        });
-
-        rulesOnLastRowHydration = aggregationRules;
-
-        // If no column have a footer aggregation rule
-        // Then don't create the footer rows
-        if (
-          Object.values(aggregationRules).every(
-            (columnAggregationRules) => !columnAggregationRules.footer,
-          )
-        ) {
-          newGroupingParams = groupingParams;
-        } else {
-          newGroupingParams = addFooterRows({
-            groupingParams,
-            aggregationRules,
-            isGroupAggregated: props.isGroupAggregated,
+    (value) => {
+      const aggregationRules = props.disableAggregation
+        ? {}
+        : getAggregationRules({
+            columnsLookup: gridColumnLookupSelector(apiRef),
+            aggregationModel: gridAggregationModelSelector(apiRef),
+            aggregationFunctions: props.aggregationFunctions,
           });
-        }
+
+      const hasFooterAggregation = Object.values(aggregationRules).some(
+        (columnRules) => !!columnRules.footer,
+      );
+
+      // If we did not have any aggregation footer before, and we still don't have any
+      // Then we can skip this step
+      if (
+        Object.keys(apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration).length ===
+          0 &&
+        Object.keys(aggregationRules).length === 0
+      ) {
+        return value;
       }
 
       apiRef.current.unstable_caches.aggregation = {
         ...apiRef.current.unstable_caches.aggregation,
-        rulesOnLastRowHydration,
+        rulesOnLastRowHydration: aggregationRules,
       };
 
-      return newGroupingParams;
+      return addFooterRows({
+        ...value,
+        hasFooterAggregation,
+        isGroupAggregated: props.isGroupAggregated,
+      });
     },
     [apiRef, props.disableAggregation, props.isGroupAggregated, props.aggregationFunctions],
   );
@@ -186,7 +179,7 @@ export const useGridAggregationPreProcessors = (
         return initialValue;
       }
 
-      const treeDepth = gridRowTreeDepthSelector(apiRef);
+      const treeDepth = gridRowMaximumTreeDepthSelector(apiRef);
       const items: React.ReactNode[] = [<Divider />];
 
       if (treeDepth > 1) {
