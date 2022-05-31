@@ -15,7 +15,7 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -221,7 +221,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     });
   });
 
-  it.only('should not hide column when resizing a column after hiding it and showing it again ', () => {
+  it('should not hide column when resizing a column after hiding it and showing it again ', () => {
     const { getByText } = render(
       <TestDataGridPro
         initialState={{
