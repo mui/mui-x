@@ -10,6 +10,7 @@ _May 31, 2022_
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Introduce support for [dynamic row height](https://mui.com/x/react-data-grid/rows/#dynamic-row-height) (#4859) @m4theushw
+
   <img src="https://user-images.githubusercontent.com/42154031/171183167-718d7bcd-ec0f-459e-97fe-0f650abb4a99.gif" width="800">
 
 - ⚠️ Remove deprecated row grouping feature from `@mui/x-data-grid-pro`
@@ -75,9 +76,11 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [core] Use new cache api for the row grouping last model tracking (#4980) @flaviendelangle
 - [core] Ensure that PRs have atleast 1 label (#5011) @DanailH
 - [core] Fix trailing-space @oliviertassinari
+- [core] Stop Renovate PR updates when PR is on hold (#5020) @cherniavskii
 - [license] Remove support for UTF-8 (#4893) @oliviertassinari
 - [license] Tweak error messages (#4907) @mbrookes
 - [test] Skip Safari and Firefox on broken tests (#4994) @alexfauquette
+- [test] Make argos screenshots stable (#5061) @m4theushw
 
 ## v5.11.1
 
