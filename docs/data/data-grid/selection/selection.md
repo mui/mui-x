@@ -77,15 +77,19 @@ The following demo shows the prop in action:
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
-> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
+:::warning
+Only use this API as the last option. Give preference to the props to control the grid.
+:::
 
 {{"demo": "SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Range selection [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #208](https://github.com/mui/mui-x/issues/208) if you want to see it land faster.
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #208](https://github.com/mui/mui-x/issues/208) if you want to see it land faster.
+:::
 
 With this feature, you will be able to select ranges of cells across the Grid.
 

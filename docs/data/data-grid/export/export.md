@@ -92,8 +92,10 @@ There are a few ways to include or hide other columns.
 
 ## Exported rows
 
-> ⚠️ This section only applies to the CSV and the Excel export.
-> The print export always prints rows in their current state.
+:::warning
+This section only applies to the CSV and the Excel export.
+The print export always prints rows in their current state.
+:::
 
 By default, the grid exports the selected rows if there are any.
 If not, it exports all rows (filtered and sorted rows, according to active rules), including the collapsed ones.
@@ -201,9 +203,11 @@ By default, the print export display all the DataGrid. It is possible to remove 
 
 For more option to customize the print export, please visit the [`printOptions` api page](/x/api/data-grid/grid-print-export-options/).
 
-> ⚠️ Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
->
-> In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN`.
+:::warning
+Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
+
+In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN`.
+:::
 
 ## Custom export format
 
@@ -318,14 +322,18 @@ In the following demo, both methods are used to set a custom header and a custom
 
 ## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #199](https://github.com/mui/mui-x/issues/199) if you want to see it land faster.
-> You will be able to copy and paste items to and from the grid using the system clipboard.
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #199](https://github.com/mui/mui-x/issues/199) if you want to see it land faster.
+You will be able to copy and paste items to and from the grid using the system clipboard.
+:::
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
+:::warning
+Only use this API as the last option. Give preference to the props to control the grid.
+:::
 
 ### CSV
 

@@ -216,10 +216,12 @@ When all cells in a row are in edit mode, you can validate fields by comparing t
 Return a new object contaning `params.props` and the `error` attribute with the validation status.
 Once at the least one field has the `error` attribute equals to true no new value will be committed.
 
-> ⚠ Server-side validation works like [client-side validation](#client-side-validation).
-> The only difference is that when you call `preProcessEditCellProps`, you must return a promise.
-> Once the value is validated in the server, the promise should be resolved with a new object containing the `error` attribute set to true or false.
-> The grid will wait for the promise to be resolved before exiting the edit mode.
+:::warning
+Server-side validation works like [client-side validation](#client-side-validation).
+The only difference is that when you call `preProcessEditCellProps`, you must return a promise.
+Once the value is validated in the server, the promise should be resolved with a new object containing the `error` attribute set to true or false.
+The grid will wait for the promise to be resolved before exiting the edit mode.
+:::
 
 The following demo requires a value for the **Payment method** column if the **Is paid?** column is checked.
 
@@ -264,7 +266,9 @@ You can import the following events to customize the editing experience:
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
+:::warning
+Only use this API as the last option. Give preference to the props to control the grid.
+:::
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

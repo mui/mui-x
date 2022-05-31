@@ -2,7 +2,11 @@ import * as React from 'react';
 import { DataGrid, GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
+import {
+  randomInt,
+  randomUserName,
+  randomArrayItem,
+} from '@mui/x-data-grid-generator';
 
 const lines = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -58,7 +62,7 @@ for (let i = 0; i < 10; i += 1) {
   const bio = [];
 
   for (let j = 0; j < randomInt(3, 8); j += 1) {
-    bio.push(lines[Math.floor(Math.random() * (lines.length - 1))]);
+    bio.push(randomArrayItem(lines));
   }
 
   rows.push({

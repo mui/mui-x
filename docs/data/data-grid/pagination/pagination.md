@@ -6,10 +6,13 @@ title: Data Grid - Pagination
 
 <p class="description">Easily paginate your rows and only fetch what you need.</p>
 
-> ⚠️ The default pagination behavior depends on your plan.
->
-> - On the `DataGrid`, pagination is enabled by default and can't be disabled
-> - On the `DataGridPro`, pagination is disabled by default, use the `pagination` prop to enable it
+:::warning
+The default pagination behavior depends on your plan.
+
+- On the `DataGrid`, pagination is enabled by default and can't be disabled
+- On the `DataGridPro`, pagination is disabled by default, use the `pagination` prop to enable it
+
+:::
 
 ## Size of the page
 
@@ -28,7 +31,9 @@ You can configure the page size the user can choose from with the `rowsPerPageOp
 
 Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
 
-> ⚠️ You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the grid according to the `pageSize`.
+:::warning
+You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the grid according to the `pageSize`.
+:::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
 
@@ -88,7 +93,9 @@ By default, the pagination is handled on the client.
 This means you have to give the rows of all pages to the grid.
 If your dataset is too big, and you only want to fetch the current page, you can use server-side pagination.
 
-**Note**: For more information regarding server-side pagination in combination with controlled selection check [here](/x/react-data-grid/selection/#usage-with-server-side-pagination)
+:::info
+For more information regarding server-side pagination in combination with controlled selection check [here](/x/react-data-grid/selection/#usage-with-server-side-pagination)
+:::
 
 ### Basic implementation
 
@@ -125,7 +132,9 @@ You can customize the rendering of the pagination in the footer following [the c
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
+:::warning
+Only use this API as the last option. Give preference to the props to control the grid.
+:::
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}
 
