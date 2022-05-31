@@ -4,7 +4,6 @@ import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
   datePickerValueManager,
-  DatePickerSlotsComponent,
 } from '../DatePicker/shared';
 import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
@@ -13,26 +12,35 @@ import {
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
-import {
-  CalendarOrClockPicker,
-  CalendarOrClockPickerSlotsComponentsProps,
-} from '../internals/components/CalendarOrClockPicker';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import {
+  CalendarPickerSlotsComponent,
+  CalendarPickerSlotsComponentsProps,
+} from '../CalendarPicker';
 
 export interface DesktopDatePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
-    DatePickerSlotsComponent {}
+    CalendarPickerSlotsComponent {}
 
 export interface DesktopDatePickerSlotsComponentsProps
   extends DesktopWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps {}
+    CalendarPickerSlotsComponentsProps {}
 
 export interface DesktopDatePickerProps<TInputDate, TDate>
-  extends BaseDatePickerProps<TInputDate, TDate>,
+  extends Omit<BaseDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
     DesktopWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<DesktopDatePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<DesktopDatePickerSlotsComponentsProps>;
 }
 
@@ -130,12 +138,13 @@ DesktopDatePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps: PropTypes.object,
   /**

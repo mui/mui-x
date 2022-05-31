@@ -39,13 +39,12 @@ export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'> {
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components?: Partial<DateRangePickerViewSlotsComponent>;
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps>;

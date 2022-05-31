@@ -45,6 +45,7 @@ export interface BaseTimePickerProps<TInputDate, TDate>
    * Array of views to show.
    */
   views?: readonly ClockPickerView[];
+  components?: any;
 }
 
 function getTextFieldAriaText<TDate>(value: any, utils: MuiPickersAdapter<TDate>) {

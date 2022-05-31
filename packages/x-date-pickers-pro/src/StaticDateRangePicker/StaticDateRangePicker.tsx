@@ -5,9 +5,16 @@ import {
   PickerStaticWrapper,
   usePickerState,
   StaticPickerProps,
+  PickersStaticWrapperSlotsComponent,
+  DateInputSlotsComponent,
+  PickersStaticWrapperSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
-import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
+import {
+  DateRangePickerView,
+  DateRangePickerViewSlotsComponent,
+  DateRangePickerViewSlotsComponentsProps,
+} from '../DateRangePicker/DateRangePickerView';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   useDateRangePickerDefaultizedProps,
@@ -17,9 +24,29 @@ import {
 
 const releaseInfo = getReleaseInfo();
 
+export interface StaticDateRangePickerSlotsComponent
+  extends PickersStaticWrapperSlotsComponent,
+    DateRangePickerViewSlotsComponent,
+    DateInputSlotsComponent {}
+
+export interface StaticDateRangePickersSlotsComponentsProps
+  extends PickersStaticWrapperSlotsComponentsProps,
+    DateRangePickerViewSlotsComponentsProps {}
+
 export type StaticDateRangePickerProps<TInputDate, TDate> = StaticPickerProps<
   BaseDateRangePickerProps<TInputDate, TDate>
->;
+> & {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<StaticDateRangePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<StaticDateRangePickersSlotsComponentsProps>;
+};
 
 type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -58,7 +85,14 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     dateRangePickerValueManager,
   );
 
-  const { displayStaticWrapperAs = 'mobile', value, onChange, ...other } = props;
+  const {
+    displayStaticWrapperAs = 'mobile',
+    value,
+    onChange,
+    components,
+    componentsProps,
+    ...other
+  } = props;
 
   const DateInputProps = {
     ...inputProps,
@@ -66,16 +100,25 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     currentlySelectingRangeEnd,
     setCurrentlySelectingRangeEnd,
     validationError,
+    components,
+    componentsProps,
     ref,
   };
 
   return (
-    <PickerStaticWrapper displayStaticWrapperAs={displayStaticWrapperAs}>
+    <PickerStaticWrapper
+      displayStaticWrapperAs={displayStaticWrapperAs}
+      components={components}
+      componentsProps={componentsProps}
+      {...wrapperProps}
+    >
       <DateRangePickerView
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}
         setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+        components={components}
+        componentsProps={componentsProps}
         {...pickerProps}
         {...other}
       />
@@ -109,13 +152,12 @@ StaticDateRangePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps: PropTypes.object,

@@ -23,8 +23,8 @@ export interface DateInputProps<TInputDate, TDate> {
    */
   acceptRegex?: RegExp;
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components?: Partial<DateInputSlotsComponent>;
   disabled?: boolean;
@@ -108,6 +108,7 @@ export type ExportedDateInputProps<TInputDate, TDate> = Omit<
   | 'rawValue'
   | 'TextFieldProps'
   | 'validationError'
+  | 'components'
 >;
 
 // TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?

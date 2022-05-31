@@ -1,0 +1,17 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
+    "components": "Overrideable components.",
+    "componentsProps": "The props used for each component slot.",
+    "displayStaticWrapperAs": "Force static wrapper inner components to be rendered in mobile or desktop mode."
+  },
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "content": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the content element"
+    }
+  },
+  "slotDescriptions": {}
+}

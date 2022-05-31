@@ -6,15 +6,44 @@ import {
   timePickerValueManager,
 } from '../TimePicker/shared';
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
-import { PickerStaticWrapper } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
+import {
+  ClockPickerSlotsComponent,
+  ClockPickerSlotsComponentsProps,
+} from '../ClockPicker/ClockPicker';
+import {
+  PickersStaticWrapperSlotsComponent,
+  PickersStaticWrapperSlotsComponentsProps,
+  PickerStaticWrapper,
+} from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
+import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+
+export interface StaticTimePickerSlotsComponents
+  extends PickersStaticWrapperSlotsComponent,
+    ClockPickerSlotsComponent,
+    DateInputSlotsComponent {}
+
+export interface StaticTimePickerSlotsComponentsProps
+  extends PickersStaticWrapperSlotsComponentsProps,
+    ClockPickerSlotsComponentsProps {}
 
 export type StaticTimePickerProps<TInputDate, TDate> = StaticPickerProps<
   BaseTimePickerProps<TInputDate, TDate>
->;
+> & {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<StaticTimePickerSlotsComponents>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<StaticTimePickerSlotsComponentsProps>;
+};
 
 type StaticTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -45,22 +74,37 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
     onChange,
     ToolbarComponent = TimePickerToolbar,
     value,
+    components,
+    componentsProps,
     ...other
   } = props;
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps } = usePickerState(props, timePickerValueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
 
-  const DateInputProps = { ...inputProps, ...other, ref, validationError };
+  const DateInputProps = {
+    ...inputProps,
+    ...other,
+    ref,
+    validationError,
+    components,
+    componentsProps,
+  };
 
   return (
-    <PickerStaticWrapper displayStaticWrapperAs={displayStaticWrapperAs}>
-      {/* @ts-ignore time picker has no component slot for the calendar header */}
+    <PickerStaticWrapper
+      displayStaticWrapperAs={displayStaticWrapperAs}
+      components={components}
+      componentsProps={componentsProps}
+      {...wrapperProps}
+    >
       <CalendarOrClockPicker
         {...pickerProps}
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </PickerStaticWrapper>
@@ -97,10 +141,14 @@ StaticTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    */
-  components: PropTypes.object,
+  components: PropTypes.any,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
