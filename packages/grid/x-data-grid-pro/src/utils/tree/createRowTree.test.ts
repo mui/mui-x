@@ -192,7 +192,7 @@ describe('createRowTree', () => {
       defaultGroupingExpansionDepth: 0,
     });
 
-    expect(response.treeDepth).to.equal(3);
+    expect(response.treeDepths).to.deep.equal({ 0: 1, 1: 1, 2: 2 });
   });
 
   it('should add auto generated row when missing parent', () => {
@@ -215,7 +215,11 @@ describe('createRowTree', () => {
     expect(response).to.deep.equal({
       groupingName: '',
       dataRowIds: [0, 1],
-      treeDepth: 3,
+      treeDepths: {
+        0: 1,
+        1: 1,
+        2: 1,
+      },
       tree: {
         [GRID_ROOT_GROUP_ID]: {
           type: 'group',
