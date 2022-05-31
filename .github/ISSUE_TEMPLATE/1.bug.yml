@@ -43,8 +43,9 @@ body:
 
         Issues that we can't reproduce will be closed.
       value: |
-        Steps:
-
+        Link to reproduction case:
+        
+        Reproduction steps:
         1.
         2.
         3.
