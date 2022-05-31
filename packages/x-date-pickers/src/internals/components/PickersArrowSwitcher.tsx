@@ -20,13 +20,12 @@ export interface PickersArrowSwitcherSlotsComponentsProps {
 
 export interface ExportedArrowSwitcherProps {
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components?: Partial<PickersArrowSwitcherSlotsComponent>;
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps?: Partial<PickersArrowSwitcherSlotsComponentsProps>;

@@ -4,7 +4,6 @@ import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
   dateTimePickerValueManager,
-  DateTimePickerSlotsComponent,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import {
@@ -15,15 +14,18 @@ import {
 } from '../internals/components/wrappers/DesktopWrapper';
 import {
   CalendarOrClockPicker,
+  CalendarOrClockPickerSlotsComponent,
   CalendarOrClockPickerSlotsComponentsProps,
 } from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 
 export interface DesktopDateTimePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
-    DateTimePickerSlotsComponent {}
+    CalendarOrClockPickerSlotsComponent,
+    DateInputSlotsComponent {}
 
 export interface DesktopDateTimePickerSlotsComponentsProps
   extends DesktopWrapperSlotsComponentsProps,
@@ -32,7 +34,15 @@ export interface DesktopDateTimePickerSlotsComponentsProps
 export interface DesktopDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate>,
     DesktopWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<DesktopDateTimePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<DesktopDateTimePickerSlotsComponentsProps>;
 }
 
@@ -144,12 +154,13 @@ DesktopDateTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps: PropTypes.object,
   /**

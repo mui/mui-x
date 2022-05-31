@@ -12,27 +12,37 @@ import {
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
-import {
-  CalendarOrClockPicker,
-  CalendarOrClockPickerSlotsComponent,
-  CalendarOrClockPickerSlotsComponentsProps,
-} from '../internals/components/CalendarOrClockPicker';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import {
+  ClockPickerSlotsComponent,
+  ClockPickerSlotsComponentsProps,
+} from '../ClockPicker/ClockPicker';
+import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 
 export interface DesktopTimePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent {}
+    ClockPickerSlotsComponent,
+    DateInputSlotsComponent {}
 
 export interface DesktopTimePickerSlotsComponentsProps
   extends DesktopWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps {}
+    ClockPickerSlotsComponentsProps {}
 
 export interface DesktopTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate>,
     DesktopWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<DesktopTimePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<DesktopTimePickerSlotsComponentsProps>;
 }
 
@@ -94,7 +104,6 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
       components={components}
       componentsProps={componentsProps}
     >
-      {/* @ts-ignore time picker has no component slot for the calendar header */}
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
@@ -140,10 +149,14 @@ DesktopTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.

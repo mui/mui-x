@@ -2,18 +2,46 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { DesktopDateTimePicker, DesktopDateTimePickerProps } from '../DesktopDateTimePicker';
-import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTimePicker';
+import {
+  DesktopDateTimePicker,
+  DesktopDateTimePickerProps,
+  DesktopDateTimePickerSlotsComponent,
+  DesktopDateTimePickerSlotsComponentsProps,
+} from '../DesktopDateTimePicker';
+import {
+  MobileDateTimePicker,
+  MobileDateTimePickerProps,
+  MobileDateTimePickerSlotsComponent,
+  MobileDateTimePickerSlotsComponentsProps,
+} from '../MobileDateTimePicker';
+
+export interface DateTimePickerSlotsComponent
+  extends MobileDateTimePickerSlotsComponent,
+    DesktopDateTimePickerSlotsComponent {}
+
+export interface DateTimePickerSlotsComponentsProps
+  extends MobileDateTimePickerSlotsComponentsProps,
+    DesktopDateTimePickerSlotsComponentsProps {}
 
 export interface DateTimePickerProps<TInputDate, TDate>
-  extends DesktopDateTimePickerProps<TInputDate, TDate>,
-    MobileDateTimePickerProps<TInputDate, TDate> {
+  extends Omit<DesktopDateTimePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileDateTimePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery?: string;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<DateTimePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<DateTimePickerSlotsComponentsProps>;
 }
 
 type DateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
@@ -92,12 +120,13 @@ DateTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps: PropTypes.object,
   /**

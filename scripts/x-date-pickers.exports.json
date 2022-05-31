@@ -70,6 +70,7 @@
   { "name": "PickersDayClassKey", "kind": "TypeAlias" },
   { "name": "PickersDayProps", "kind": "Interface" },
   { "name": "PickersLocaleText", "kind": "Interface" },
+  { "name": "PickerStaticWrapper", "kind": "Function" },
   { "name": "PickersTranslationKeys", "kind": "TypeAlias" },
   { "name": "StaticDatePicker", "kind": "Variable" },
   { "name": "StaticDatePickerProps", "kind": "TypeAlias" },

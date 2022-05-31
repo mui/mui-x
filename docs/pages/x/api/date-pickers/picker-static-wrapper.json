@@ -1,0 +1,24 @@
+{
+  "props": {
+    "displayStaticWrapperAs": {
+      "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" } },
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": {},
+  "name": "PickerStaticWrapper",
+  "styles": {
+    "classes": ["root", "content"],
+    "globalClasses": {},
+    "name": "MuiPickerStaticWrapper"
+  },
+  "spread": false,
+  "forwardsRefTo": "undefined",
+  "filename": "/packages/x-date-pickers/src/internals/components/PickerStaticWrapper/PickerStaticWrapper.tsx",
+  "inheritance": null,
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+}
