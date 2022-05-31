@@ -1,5 +1,5 @@
 ---
-title: MUI X - Overview
+title: Overview
 ---
 
 # MUI X - Overview

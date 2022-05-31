@@ -2,15 +2,15 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/getting-started/overview',
-    scopePathnames: ['/x/getting-started/'],
-    title: 'Getting started',
+    pathname: '/x/introduction/',
+    scopePathnames: ['/x/introduction/'],
+    title: 'Introduction',
     icon: 'DescriptionIcon',
     children: [
-      { pathname: `/x/getting-started/overview` },
-      { pathname: `/x/getting-started/licensing` },
-      { pathname: `/x/getting-started/support` },
-      { pathname: `/x/getting-started/roadmap` },
+      { pathname: `/x/introduction/`, title: 'Overview' },
+      { pathname: `/x/introduction/licensing` },
+      { pathname: `/x/introduction/support` },
+      { pathname: `/x/introduction/roadmap` },
     ],
   },
   {

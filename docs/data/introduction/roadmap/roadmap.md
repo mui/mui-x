@@ -1,5 +1,5 @@
 ---
-title: MUI X - Roadmap
+title: Roadmap
 ---
 
 # MUI X - Roadmap

@@ -4,7 +4,7 @@ import {
   demos,
   docs,
   demoComponents,
-} from 'docsx/data/getting-started/licensing/licensing.md?@mui/markdown';
+} from 'docsx/data/introduction/overview/overview.md?@mui/markdown';
 
 export default function Page() {
   return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;

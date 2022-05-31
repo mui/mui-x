@@ -1,5 +1,5 @@
 ---
-title: MUI X - Support
+title: Support
 ---
 
 # MUI X - Support
