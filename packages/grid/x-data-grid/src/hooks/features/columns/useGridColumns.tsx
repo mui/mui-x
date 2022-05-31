@@ -251,7 +251,8 @@ export function useGridColumns(
       logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
 
       const updatedColumns = [...allColumns];
-      updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
+      const fieldRemoved = updatedColumns.splice(oldIndexPosition, 1)[0];
+      updatedColumns.splice(targetIndexPosition, 0, fieldRemoved);
       setGridColumnsState({ ...gridColumnsSelector(apiRef.current.state), all: updatedColumns });
 
       const params: GridColumnOrderChangeParams = {

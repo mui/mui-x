@@ -1,5 +1,8 @@
 import { GridKeyValue, GridValidRowModel } from '@mui/x-data-grid-pro';
-import type { GridControlledStateEventLookupPro } from '@mui/x-data-grid-pro/typeOverloads';
+import type {
+  GridControlledStateEventLookupPro,
+  GridApiCachesPro,
+} from '@mui/x-data-grid-pro/typeOverloads';
 import type { GridGroupingValueGetterParams } from '../models';
 import type { GridRowGroupingModel } from '../hooks';
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
@@ -23,7 +26,7 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
   ) => GridKeyValue | null | undefined;
 }
 
-export interface GridApiCachesPremium {
+export interface GridApiCachesPremium extends GridApiCachesPro {
   rowGrouping: GridRowGroupingInternalCache;
 }
 
