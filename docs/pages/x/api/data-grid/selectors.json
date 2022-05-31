@@ -294,8 +294,8 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowsIdToIdLookupSelector",
-    "returnType": "{ [x: string]: GridRowId }",
+    "name": "gridRowsDataRowIdToIdLookupSelector",
+    "returnType": "Record<string, GridRowId>",
     "description": "",
     "supportsApiRef": true
   },

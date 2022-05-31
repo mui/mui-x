@@ -55,7 +55,6 @@ export type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
   GridRowsPartialUpdates,
-  GridRowsLookups,
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
