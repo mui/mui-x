@@ -10,6 +10,7 @@ _May 27, 2022_
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add support for [Dynamic row height](http://localhost:3001/x/react-data-grid/rows/#dynamic-row-height) (#4859) @m4theushw
+
   GIF GOES HERE
 
 - ⚠️ Remove deprecated row grouping feature from `@mui/x-data-grid-pro`
@@ -39,6 +40,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - [pickers] Add German (de-DE) translations (#4974) @felixh10r
 - [pickers] Restructure props in `MonthPicker` / `YearPicker` and `DayPicker` (#4814) @flaviendelangle
+- [pickers] Support action bar on static pickers and improve typing (#5015) @flaviendelangle
 
 ### Docs
 
