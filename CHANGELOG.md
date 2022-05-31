@@ -65,6 +65,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [docs] New WAI-ARIA guidelines location (#4957) @oliviertassinari
 - [docs] Add "Slots" section to the right nav in the API pages (#4993) @DanailH
 - [docs] Fix docs feedback widget not working (#4905) @cherniavskii
+- [docs] Replace custom notes and warning with callouts (#5008) @flaviendelangle
 
 ### Core
 
