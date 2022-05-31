@@ -27,8 +27,6 @@ When using dataset without a unique `id` property, you can use the `getRowId` pr
 <DataGrid getRowId={(row) => row.internalId} />
 ```
 
-:::
-
 {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Updating rows
@@ -96,15 +94,17 @@ If you need some rows to have different row heights this can be achieved using t
 :::warning
 Changing the `DataGrid` density does not affect the rows with variable row height.
 You can access the density factor from the params provided to the `getRowHeight` prop
+:::
 
+:::warning
 Always memoize the function provided to `getRowHeight`.
 The grid bases on the referential value of these props to cache their values and optimize the rendering.
 
-````tsx
+```tsx
 const getRowHeight = React.useCallback(() => { ... }, []);
 
 <DataGridPro getRowHeight={getRowHeight} />
-> ```
+```
 
 ### Dynamic row height
 
@@ -113,13 +113,13 @@ To do so, return `"auto`" on the function passed to the `getRowHeight` prop.
 
 ```tsx
 <DataGrid getRowHeight={() => 'auto'} />
-````
+```
 
-The following demo demonstrates this option in action:
+The following demo demonstrantes this option in action:
 
 {{"demo": "DynamicRowHeightGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-The dynamic row height implementation is based on a lazy approach, which means that the rows are measured as they are rendered.
+The dynamic row height implementaion is based on a lazy approach, which means that the rows are measured as they are rendered.
 Because of this, you may see the size of the scrollbar thumb changing during scroll.
 This side effect happens because a row height estimation is used while a row is not rendered, then this value is replaced once the true measurement is obtained.
 You can configure the estimated value used by passing a function to the `getEstimatedRowHeight` prop.
@@ -133,20 +133,19 @@ Note that, due to the implementation adopted, the virtualization of the columns 
 
 {{"demo": "ExpandableCells.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ When the height of a row is set to `"auto"`, the final height will follow exactly the content size and ignore the density.
-> Add padding to the cells to increase the space between the content and the cell borders.
->
-> ```tsx
-> <DataGrid
->   sx={{
->     '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
->     '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
->     '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
->   }}
-> />
-> ```
+:::warning
+When the height of a row is set to `"auto"`, the final height will follow exactly the content size and ignore the density.
+Add padding to the cells to increase the space between the content and the cell borders.
 
-````
+```tsx
+<DataGrid
+  sx={{
+    '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
+    '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+    '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+  }}
+/>
+```
 
 :::
 
@@ -162,7 +161,7 @@ const getRowSpacing = React.useCallback((params: GridRowSpacingParams) => {
     bottom: params.isLastVisible ? 0 : 5,
   };
 }, []);
-````
+```
 
 {{"demo": "RowMarginGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -177,8 +176,8 @@ To add a border instead, set `rowSpacingType` to `"border"` and customize the co
 />
 ```
 
-:::warning
-Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/master-detail/) is not recommended because the detail panel relies on the bottom margin to work.
+:::info
+⚠ Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/master-detail/) is not recommended because the detail panel relies on the bottom margin to work.
 
 As an alternative, you can use the top spacing to define the space between rows.
 It's easier to always increase the next row spacing no matter if the detail panel is expanded or not, but you can use `gridDetailPanelExpandedRowIdsSelector` to apply a spacing depending on the open state.
