@@ -8,6 +8,7 @@
   "rebaseWhen": "conflicted",
   "ignoreDeps": [],
   "labels": ["dependencies"],
+  "stopUpdatingLabel": "On hold",
   "packageRules": [
     {
       "matchDepTypes": ["peerDependencies"],
