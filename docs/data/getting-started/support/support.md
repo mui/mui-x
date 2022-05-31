@@ -20,7 +20,7 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 
 ## Professional support
 
-When purchasing an MUI X Pro or Premium license you get access to professional support for a limited duration.
+When purchasing an MUI X Pro or Premium license you get access to professional support for the duration of you license.
 Support is available on multiple channels, but the recommended channel is GitHub issues.
 You can also reach us by email at x@mui.com if you need to share private information.
 
