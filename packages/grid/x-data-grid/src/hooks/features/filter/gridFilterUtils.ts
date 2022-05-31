@@ -24,7 +24,7 @@ type GridFilterItemApplier = {
  * @return {GridFilterItem} The clean filter item with an uniq ID and an always-defined operatorValue.
  * TODO: Make the typing reflect the different between GridFilterInputItem and GridFilterItem.
  */
-const cleanFilterItem = (
+export const cleanFilterItem = (
   item: GridFilterItem,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => {

@@ -95,9 +95,49 @@ If you need some rows to have different row heights this can be achieved using t
 > The grid bases on the referential value of these props to cache their values and optimize the rendering.
 >
 > ```tsx
-> const handleGetRowHeight = React.useCallback(() => { ... }, []);
+> const getRowHeight = React.useCallback(() => { ... }, []);
 >
-> <DataGridPro getRowHeight={handleGetRowHeight} />
+> <DataGridPro getRowHeight={getRowHeight} />
+> ```
+
+### Dynamic row height
+
+Instead of a fixed row height, you can let the grid calculate the height of each row based on its content.
+To do so, return `"auto`" on the function passed to the `getRowHeight` prop.
+
+```tsx
+<DataGrid getRowHeight={() => 'auto'} />
+```
+
+The following demo demonstrantes this option in action:
+
+{{"demo": "DynamicRowHeightGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The dynamic row height implementaion is based on a lazy approach, which means that the rows are measured as they are rendered.
+Because of this, you may see the size of the scrollbar thumb changing during scroll.
+This side effect happens because a row height estimation is used while a row is not rendered, then this value is replaced once the true measurement is obtained.
+You can configure the estimated value used by passing a function to the `getEstimatedRowHeight` prop.
+If not provided, the default row height of `52px` is used as estimation.
+It's recommended to pass this prop if the content deviates too much from the default value.
+Note that, due to the implementation adopted, the virtualization of the columns is also disabled to force all columns to be rendered at the same time.
+
+```tsx
+<DataGrid getRowHeight={() => 'auto'} getEstimatedRowHeight={() => 200} />
+```
+
+{{"demo": "ExpandableCells.js", "bg": "inline", "defaultCodeOpen": false}}
+
+> ⚠ When the height of a row is set to `"auto"`, the final height will follow exactly the content size and ignore the density.
+> Add padding to the cells to increase the space between the content and the cell borders.
+>
+> ```tsx
+> <DataGrid
+>   sx={{
+>     '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
+>     '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+>     '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+>   }}
+> />
 > ```
 
 ## Row spacing
