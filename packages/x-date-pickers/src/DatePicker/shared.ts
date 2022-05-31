@@ -81,7 +81,6 @@ const getFormatAndMaskByViews = <TDate>(
 ): { disableMaskedInput?: boolean; inputFormat: string; mask?: string } => {
   if (isYearOnlyView(views)) {
     return {
-      mask: '____',
       inputFormat: utils.formats.year,
     };
   }
@@ -94,7 +93,6 @@ const getFormatAndMaskByViews = <TDate>(
   }
 
   return {
-    mask: '__/__/____',
     inputFormat: utils.formats.keyboardDate,
   };
 };

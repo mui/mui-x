@@ -75,10 +75,7 @@ export function useDateRangePickerDefaultizedProps<
   name: string,
 ): DefaultizedProps<Props> &
   Required<
-    Pick<
-      BaseDateRangePickerProps<TInputDate, TDate>,
-      'calendars' | 'mask' | 'startText' | 'endText'
-    >
+    Pick<BaseDateRangePickerProps<TInputDate, TDate>, 'calendars' | 'startText' | 'endText'>
   > {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates();
@@ -102,7 +99,6 @@ export function useDateRangePickerDefaultizedProps<
 
   return {
     calendars: 2,
-    mask: '__/__/____',
     inputFormat: utils.formats.keyboardDate,
     minDate: defaultDates.minDate,
     maxDate: defaultDates.maxDate,
