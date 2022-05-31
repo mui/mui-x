@@ -5,13 +5,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## v5.12.0
 
-_May 27, 2022_
+_May 31, 2022_
 
-We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Add support for [Dynamic row height](http://localhost:3001/x/react-data-grid/rows/#dynamic-row-height) (#4859) @m4theushw
-
-  GIF GOES HERE
+- 🎁 Introduce support for [dynamic row height](https://mui.com/x/react-data-grid/rows/#dynamic-row-height) (#4859) @m4theushw
+  <img src="https://user-images.githubusercontent.com/42154031/171183167-718d7bcd-ec0f-459e-97fe-0f650abb4a99.gif" width="800">
 
 - ⚠️ Remove deprecated row grouping feature from `@mui/x-data-grid-pro`
 
@@ -38,8 +37,21 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 ### `@mui/x-date-pickers@5.0.0-alpha.5` / `@mui/x-date-pickers-pro@5.0.0-alpha.5`
 
-- [pickers] Add German (de-DE) translations (#4974) @felixh10r
+#### Breaking changes
+
 - [pickers] Restructure props in `MonthPicker` / `YearPicker` and `DayPicker` (#4814) @flaviendelangle
+
+  The props of `MonthPicker` / `YearPicker` and `DayPicker` have been reworked to make them more consistent for a standalone usage (#4814) @flaviendelangle
+
+  **MonthPicker**: The prop `onMonthChange` has been removed, you can use `onChange` instead since every change is a month change
+
+  **YearPicker**: The prop `onYearPicker` has been removed, you can use `onChange` instead since every change is a year change
+
+  **DayPicker**: The prop `isDateDisabled` has been removed, you can now use the same validation props as for the other components (`maxDate`, `minDate`, `shouldDisableDate`, `disableFuture` and `disablePast`)
+
+#### Changes
+
+- [pickers] Add German (de-DE) translations (#4974) @felixh10r
 - [pickers] Support action bar on static pickers and improve typing (#5015) @flaviendelangle
 
 ### Docs
