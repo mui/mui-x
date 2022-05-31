@@ -31,7 +31,10 @@ import {
   gridDetailPanelExpandedRowIdsSelector,
 } from '../hooks/features/detailPanel';
 
-export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
+export const filterColumns = (
+  pinnedColumns: GridPinnedColumns,
+  columns: string[],
+): [string[], string[]] => {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
     return [[], []];
   }
