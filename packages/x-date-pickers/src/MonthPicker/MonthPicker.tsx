@@ -5,29 +5,12 @@ import { SxProps } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersMonth } from './PickersMonth';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
-import { PickerOnChangeFn } from '../internals/hooks/useViews';
+import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
+import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { MonthPickerClasses, getMonthPickerUtilityClass } from './monthPickerClasses';
+import { MonthValidationProps } from '../internals/hooks/validation/models';
 
-export interface ExportedMonthPickerProps<TDate> {
-  /**
-   * Callback firing on month change @DateIOType.
-   * @template TDate
-   * @param {TDate} month The new year.
-   * @returns {void|Promise} -
-   */
-  onMonthChange?: (month: TDate) => void | Promise<void>;
-  /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
-   * @template TDate
-   * @param {TDate} month The month to check.
-   * @returns {boolean} If `true` the month will be disabled.
-   */
-  shouldDisableMonth?: (month: TDate) => boolean;
-}
-
-export interface MonthPickerProps<TDate> extends ExportedMonthPickerProps<TDate> {
+export interface MonthPickerProps<TDate> extends MonthValidationProps<TDate> {
   /**
    * className applied to the root element.
    */
@@ -36,22 +19,12 @@ export interface MonthPickerProps<TDate> extends ExportedMonthPickerProps<TDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<MonthPickerClasses>;
-
   /** Date value for the MonthPicker */
   date: TDate | null;
   /** If `true` picker is disabled */
   disabled?: boolean;
-  /** If `true` past days are disabled. */
-  disablePast?: boolean | null;
-  /** If `true` future days are disabled. */
-  disableFuture?: boolean | null;
-  /** Minimal selectable date. */
-  minDate: TDate;
-  /** Maximal selectable date. */
-  maxDate: TDate;
   /** Callback fired on date change. */
-  onChange: PickerOnChangeFn<TDate>;
-
+  onChange: NonNullablePickerChangeHandler<TDate>;
   /** If `true` picker is readonly */
   readOnly?: boolean;
   /**
@@ -90,6 +63,10 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
   inProps: MonthPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const utils = useUtils<TDate>();
+  const now = useNow<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+
   const props = useThemeProps<Theme, MonthPickerProps<TDate>, 'MuiMonthPicker'>({
     props: inProps,
     name: 'MuiMonthPicker',
@@ -97,14 +74,13 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 
   const {
     className,
-    date,
+    date: propDate,
     disabled,
     disableFuture,
     disablePast,
-    maxDate,
-    minDate,
+    maxDate = defaultDates.maxDate,
+    minDate = defaultDates.minDate,
     onChange,
-    onMonthChange,
     shouldDisableMonth,
     readOnly,
     ...other
@@ -112,9 +88,8 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const utils = useUtils<TDate>();
-  const now = useNow<TDate>();
-  const currentMonth = utils.getMonth(date || now);
+  const currentDate = propDate ?? now;
+  const currentMonth = utils.getMonth(currentDate);
 
   const isMonthDisabled = (month: TDate) => {
     const firstEnabledMonth = utils.startOfMonth(
@@ -145,12 +120,8 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       return;
     }
 
-    const newDate = utils.setMonth(date || now, month);
-
+    const newDate = utils.setMonth(currentDate, month);
     onChange(newDate, 'finish');
-    if (onMonthChange) {
-      onMonthChange(newDate);
-    }
   };
 
   return (
@@ -160,7 +131,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       ownerState={ownerState}
       {...other}
     >
-      {utils.getMonthArray(date || now).map((month) => {
+      {utils.getMonthArray(currentDate).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
 
@@ -203,31 +174,26 @@ MonthPicker.propTypes = {
   disabled: PropTypes.bool,
   /**
    * If `true` future days are disabled.
+   * @default false
    */
   disableFuture: PropTypes.bool,
   /**
    * If `true` past days are disabled.
+   * @default false
    */
   disablePast: PropTypes.bool,
   /**
-   * Maximal selectable date.
+   * Maximal selectable date. @DateIOType
    */
-  maxDate: PropTypes.any.isRequired,
+  maxDate: PropTypes.any,
   /**
-   * Minimal selectable date.
+   * Minimal selectable date. @DateIOType
    */
-  minDate: PropTypes.any.isRequired,
+  minDate: PropTypes.any,
   /**
    * Callback fired on date change.
    */
   onChange: PropTypes.func.isRequired,
-  /**
-   * Callback firing on month change @DateIOType.
-   * @template TDate
-   * @param {TDate} month The new year.
-   * @returns {void|Promise} -
-   */
-  onMonthChange: PropTypes.func,
   /**
    * If `true` picker is readonly
    */

@@ -33,7 +33,8 @@ To avoid confusing grid layout, consider disabling the following features for th
 - [column reorder](/x/react-data-grid/column-ordering/)
 - [hiding columns](/x/react-data-grid/column-visibility/)
 - [column pinning](/x/react-data-grid/column-pinning/#blocking-column-unpinning)
-  :::
+
+:::
 
 ## Number signature
 

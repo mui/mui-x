@@ -134,6 +134,7 @@
   { "name": "GridColumnMenuState", "kind": "Interface" },
   { "name": "GridColumnOrderChangeParams", "kind": "Interface" },
   { "name": "GridColumnPinningApi", "kind": "Interface" },
+  { "name": "GridColumnPinningInternalCache", "kind": "Interface" },
   { "name": "GridColumnPinningMenuItems", "kind": "Variable" },
   { "name": "GridColumnPinningState", "kind": "TypeAlias" },
   { "name": "gridColumnPositionsSelector", "kind": "Variable" },

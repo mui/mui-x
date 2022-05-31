@@ -451,6 +451,7 @@ export const useGridRowEditing = (
       );
 
       if (isSomeFieldProcessingProps) {
+        prevRowModesModel.current[id].mode = GridRowModes.Edit;
         return;
       }
 
@@ -459,6 +460,7 @@ export const useGridRowEditing = (
       );
 
       if (hasSomeFieldWithError) {
+        prevRowModesModel.current[id].mode = GridRowModes.Edit;
         return;
       }
 
@@ -466,6 +468,8 @@ export const useGridRowEditing = (
 
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
+          prevRowModesModel.current[id].mode = GridRowModes.Edit;
+
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else {
@@ -656,8 +660,13 @@ export const useGridRowEditing = (
 
   React.useEffect(() => {
     const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+
+    // Update the ref here because updateStateToStopRowEditMode may change it later
+    const copyOfPrevRowModesModel = prevRowModesModel.current;
+    prevRowModesModel.current = rowModesModel;
+
     Object.entries(rowModesModel).forEach(([id, params]) => {
-      const prevMode = prevRowModesModel.current[id]?.mode || GridRowModes.View;
+      const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;
       const originalId = idToIdLookup[id] ?? id;
       if (params.mode === GridRowModes.Edit && prevMode === GridRowModes.View) {
         updateStateToStartRowEditMode({ id: originalId, ...params });
@@ -665,6 +674,5 @@ export const useGridRowEditing = (
         updateStateToStopRowEditMode({ id: originalId, ...params });
       }
     });
-    prevRowModesModel.current = rowModesModel;
   }, [apiRef, rowModesModel, updateStateToStartRowEditMode, updateStateToStopRowEditMode]);
 };

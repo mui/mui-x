@@ -11,7 +11,8 @@ The default pagination behavior depends on your plan.
 
 - On the `DataGrid`, pagination is enabled by default and can't be disabled
 - On the `DataGridPro`, pagination is disabled by default, use the `pagination` prop to enable it
-  :::
+
+:::
 
 ## Size of the page
 

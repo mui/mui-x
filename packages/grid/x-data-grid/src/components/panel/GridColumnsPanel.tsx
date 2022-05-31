@@ -77,8 +77,18 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
 
   const toggleAllColumns = React.useCallback(
     (isVisible: boolean) => {
-      // TODO v6: call `setColumnVisibilityModel` directly
-      apiRef.current.updateColumns(
+      if (apiRef.current.unstable_caches.columns.isUsingColumnVisibilityModel) {
+        if (isVisible) {
+          return apiRef.current.setColumnVisibilityModel({});
+        }
+
+        return apiRef.current.setColumnVisibilityModel(
+          Object.fromEntries(columns.map((col) => [col.field, false])),
+        );
+      }
+
+      // TODO v6: Remove
+      return apiRef.current.updateColumns(
         columns.map((col) => {
           if (col.hideable !== false) {
             return { field: col.field, hide: !isVisible };

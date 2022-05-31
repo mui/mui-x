@@ -1,15 +1,14 @@
 {
   "props": {
     "date": { "type": { "name": "any" }, "required": true },
-    "maxDate": { "type": { "name": "any" }, "required": true },
-    "minDate": { "type": { "name": "any" }, "required": true },
     "onChange": { "type": { "name": "func" }, "required": true },
     "classes": { "type": { "name": "object" } },
     "className": { "type": { "name": "string" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
-    "onMonthChange": { "type": { "name": "func" } },
+    "maxDate": { "type": { "name": "any" } },
+    "minDate": { "type": { "name": "any" } },
     "readOnly": { "type": { "name": "bool" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "sx": {

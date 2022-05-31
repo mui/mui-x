@@ -4,7 +4,7 @@ import {
   MuiPickersAdapterContextValue,
 } from '../../LocalizationProvider/LocalizationProvider';
 
-const useLocalizationContext = <T>() => {
+export const useLocalizationContext = <T>() => {
   const localization = React.useContext(MuiPickersAdapterContext);
   if (localization === null) {
     throw new Error(

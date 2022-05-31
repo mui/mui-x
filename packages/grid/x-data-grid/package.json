@@ -47,14 +47,14 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.2",
-    "@mui/utils": "^5.7.0",
+    "@mui/utils": "^5.4.1",
     "clsx": "^1.1.1",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.5"
   },
   "peerDependencies": {
-    "@mui/material": "^5.2.8",
-    "@mui/system": "^5.2.8",
+    "@mui/material": "^5.4.1",
+    "@mui/system": "^5.4.1",
     "react": "^17.0.2 || ^18.0.0"
   },
   "setupFiles": [

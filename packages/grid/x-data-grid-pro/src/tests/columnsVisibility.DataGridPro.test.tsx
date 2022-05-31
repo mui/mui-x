@@ -2,17 +2,20 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import {
   DataGridPro,
-  useGridApiRef,
   DataGridProProps,
-  GridRowsProp,
-  GridColumns,
-  gridColumnLookupSelector,
-  gridColumnVisibilityModelSelector,
   GridApi,
+  gridClasses,
+  gridColumnLookupSelector,
+  GridColumns,
+  gridColumnVisibilityModelSelector,
+  GridPreferencePanelsValue,
+  GridRowsProp,
+  useGridApiRef,
 } from '@mui/x-data-grid-pro';
+import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -216,5 +219,28 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
     });
+  });
+
+  it('should not hide column when resizing a column after hiding it and showing it again ', () => {
+    const { getByText } = render(
+      <TestDataGridPro
+        initialState={{
+          columns: { columnVisibilityModel: {} },
+          preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.columns },
+        }}
+      />,
+    );
+
+    fireEvent.click(getByText('Hide all'));
+    expect(getColumnHeadersTextContent()).to.deep.equal([]);
+    fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+
+    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+    fireEvent.mouseDown(separator, { clientX: 100 });
+    fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
+    fireEvent.mouseUp(separator);
+
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
   });
 });

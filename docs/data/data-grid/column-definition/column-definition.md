@@ -119,7 +119,8 @@ If the type of the value returned by `valueGetter` does not correspond to the co
 
 - handle [sorting](/x/react-data-grid/sorting/#custom-comparator) by providing `sortComparator` to the column.
 - set a `valueFormatter` providing a representation for the value to be used when [exporting](/x/react-data-grid/export/#exported-cells) the data.
-  :::
+
+:::
 
 ### Styling cells
 

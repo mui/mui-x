@@ -38,7 +38,7 @@ export interface GridRowProps {
    * If some rows above have expanded children, this index also take those children into account.
    */
   index: number;
-  rowHeight: number;
+  rowHeight: number | 'auto';
   containerWidth: number;
   row: GridRowModel;
   firstColumnToRender: number;
@@ -60,10 +60,11 @@ type OwnerState = Pick<GridRowProps, 'selected'> & {
   editing: boolean;
   isLastVisible: boolean;
   classes?: DataGridProcessedProps['classes'];
+  rowHeight: GridRowProps['rowHeight'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { editable, editing, selected, isLastVisible, classes } = ownerState;
+  const { editable, editing, selected, isLastVisible, rowHeight, classes } = ownerState;
   const slots = {
     root: [
       'row',
@@ -71,18 +72,19 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       editable && 'row--editable',
       editing && 'row--editing',
       isLastVisible && 'row--lastVisible',
+      rowHeight === 'auto' && 'row--dynamicHeight',
     ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const EmptyCell = ({ width, height }: { width: number; height: number }) => {
-  if (!width || !height) {
+const EmptyCell = ({ width }: { width: number }) => {
+  if (!width) {
     return null;
   }
 
-  const style = { width, height };
+  const style = { width };
 
   return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 };
@@ -113,6 +115,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   } = props;
   const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
+  const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
@@ -129,9 +132,46 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     classes: rootProps.classes,
     editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
     editable: rootProps.editMode === GridEditModes.Row,
+    rowHeight,
   };
 
   const classes = useUtilityClasses(ownerState);
+
+  React.useLayoutEffect(() => {
+    if (rowHeight === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
+      // Fallback for IE
+      apiRef.current.unstable_storeRowHeightMeasurement(rowId, ref.current.clientHeight);
+    }
+  });
+
+  React.useLayoutEffect(() => {
+    if (currentPage.range) {
+      // The index prop is relative to the rows from all pages. As example, the index prop of the
+      // first row is 5 if pageSize=5 and page=1. However, the index used by the virtualization
+      // doesn't care about pagination and considers the rows from the current page only, so the
+      // first row always has index=0. We need to subtract the index of the first row to make it
+      // compatible with the index used by the virtualization.
+      apiRef.current.unstable_setLastMeasuredRowIndex(index - currentPage.range.firstRowIndex);
+    }
+
+    const rootElement = ref.current;
+    const hasFixedHeight = rowHeight !== 'auto';
+    if (!rootElement || hasFixedHeight || typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const [entry] = entries;
+      const height = entry.borderBoxSize
+        ? entry.borderBoxSize[0].blockSize
+        : entry.contentRect.height;
+      apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
+    });
+
+    resizeObserver.observe(rootElement);
+
+    return () => resizeObserver.disconnect();
+  }, [apiRef, currentPage.range, index, rowHeight, rowId]);
 
   const publish = React.useCallback(
     (
@@ -205,7 +245,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   const style = {
     ...styleProp,
-    maxHeight: rowHeight,
+    maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
     minHeight: rowHeight,
   };
 
@@ -353,6 +393,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   return (
     <div
+      ref={ref}
       data-id={rowId}
       data-rowindex={index}
       role="row"
@@ -367,7 +408,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       {...other}
     >
       {cells}
-      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} height={rowHeight} />}
+      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
     </div>
   );
 }
@@ -391,7 +432,7 @@ GridRow.propTypes = {
   lastColumnToRender: PropTypes.number.isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.any.isRequired,
-  rowHeight: PropTypes.number.isRequired,
+  rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,

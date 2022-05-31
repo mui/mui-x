@@ -11,9 +11,12 @@ import {
   SlideDirection,
   SlideTransitionProps,
 } from './PickersSlideTransition';
+import { DayValidationProps } from '../internals/hooks/validation/models';
+import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
 
 export interface ExportedDayPickerProps<TDate>
-  extends Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
+  extends DayValidationProps<TDate>,
+    Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
   autoFocus?: boolean;
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
@@ -50,7 +53,6 @@ export interface DayPickerProps<TDate> extends ExportedDayPickerProps<TDate> {
   onSelectedDaysChange: PickerOnChangeFn<TDate>;
   disabled?: boolean;
   focusedDay: TDate | null;
-  isDateDisabled: (day: TDate) => boolean;
   isMonthSwitchingAnimating: boolean;
   onFocusedDayChange: (newFocusedDay: TDate) => void;
   onMonthSwitchingAnimationEnd: () => void;
@@ -102,6 +104,8 @@ const PickersCalendarWeek = styled('div')({
  * @ignore - do not document.
  */
 export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
+  const now = useNow<TDate>();
+  const utils = useUtils<TDate>();
   const {
     autoFocus,
     onFocusedDayChange,
@@ -111,7 +115,6 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     disabled,
     disableHighlightToday,
     focusedDay,
-    isDateDisabled,
     isMonthSwitchingAnimating,
     loading,
     onSelectedDaysChange,
@@ -123,10 +126,21 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     showDaysOutsideCurrentMonth,
     slideDirection,
     TransitionProps,
+    disablePast,
+    disableFuture,
+    minDate,
+    maxDate,
+    shouldDisableDate,
   } = props;
 
-  const now = useNow<TDate>();
-  const utils = useUtils<TDate>();
+  const isDateDisabled = useIsDayDisabled({
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disablePast,
+    disableFuture,
+  });
+
   const handleDaySelect = React.useCallback(
     (day: TDate, isFinish: PickerSelectionState = 'finish') => {
       if (readOnly) {
