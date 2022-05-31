@@ -44,13 +44,12 @@ export interface ExportedCalendarOrClockPickerProps<TDate, View extends Calendar
    */
   views: readonly View[];
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components?: Partial<CalendarOrClockPickerSlotsComponent>;
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps?: Partial<CalendarOrClockPickerSlotsComponentsProps>;
@@ -112,8 +111,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
   const isLandscape = useIsLandscape(views, orientation);
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
-  const toShowToolbar =
-    typeof showToolbar === 'undefined' ? wrapperVariant !== 'desktop' : showToolbar;
+  const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
 
   const handleDateChange = React.useCallback<PickerOnChangeFn<TDate>>(
     (newDate, selectionState) => {

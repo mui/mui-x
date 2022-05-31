@@ -40,8 +40,8 @@ Community Plan packages:
 The MUI X Pro Plan expands on the limitations of the Community Plan with more advanced features such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; and the date range picker.
 
 The Pro Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
-This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components.
-The price of the plan is designed to be accessible to most professionals.
+This plan contains the features that are at the limit of what the open-source model can sustain.
+For instance, providing support for handling massive amounts of data, in a flexible data grid integrated with a comprehensive set of components.
 
 Pro Plan packages:
 
@@ -61,17 +61,22 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
 
 The MUI X Premium Plan contains the most advanced features of the data grid, such as row grouping, Excel export, aggregation, as well as everything that's included in the Pro Plan.
 
-The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
-This plan contains the most advanced features, ones that we haven't seen any open-source libraries able to deliver well.
+The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+This plan contains highly complex features that can be useful to analyze and group data without the use of an external application.
+The price of the plan targets small to medium-size teams.
 
-The Premium Plan is not available yet (🚧) but will soon be available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+Premium Plan package:
+
+- [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
+
+The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
 
 ## Evaluation (trial) licenses
 
-In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use our Pro and Premium components without a commercial license as long as they are not used for the **development** of a feature intended for production.
+In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
 You do not need to contact us to use these components for evaluation purposes.
 
-You will need to purchase a commercial license in order to remove the watermarks and console warnings.
+You will need to purchase a commercial license in order to remove the watermarks and console warnings, or after the given 30 days period of evaluation.
 
 ## License key installation
 
@@ -81,9 +86,7 @@ This key removes all watermarks and console warnings.
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
 
-LicenseInfo.setLicenseKey(
-  '61628ce74db2c1b62783a6d438593bc5Tz1NVUktRG9jLEU9MTY4MzQ0NzgyMTI4NCxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
-);
+LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
 ### Where to install the key?

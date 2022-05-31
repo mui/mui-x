@@ -1,0 +1,10 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  getRowHeight={() => 'auto'}
+  sx={{
+    '& .MuiDataGrid-cell': {
+      py: '8px',
+    },
+  }}
+/>

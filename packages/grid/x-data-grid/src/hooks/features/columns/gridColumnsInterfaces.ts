@@ -19,6 +19,10 @@ export interface GridColumnsState {
   columnVisibilityModel: GridColumnVisibilityModel;
 }
 
+export interface GridColumnsInternalCache {
+  isUsingColumnVisibilityModel: boolean;
+}
+
 export type GridColumnDimensions = { [key in GridColumnDimensionProperties]?: number };
 
 export interface GridColumnsInitialState {

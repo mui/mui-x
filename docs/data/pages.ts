@@ -1,4 +1,6 @@
-const pages = [
+import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+
+const pages: MuiPage[] = [
   {
     pathname: '/x/getting-started/overview',
     scopePathnames: ['/x/getting-started/'],
@@ -24,6 +26,7 @@ const pages = [
       { pathname: '/x/react-data-grid/layout' },
       {
         pathname: '/x/react-data-grid/columns',
+        scopePathnames: ['/x/react-data-grid/column-'],
         children: [
           { pathname: '/x/react-data-grid/column-definition' },
           { pathname: '/x/react-data-grid/column-dimensions' },
@@ -79,9 +82,11 @@ const pages = [
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
+          { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
           { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
           { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
           { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
+          { pathname: '/x/api/data-grid/grid-filter-panel', title: 'GridFilterPanel' },
           {
             pathname: '/x/api/data-grid/grid-row-class-name-params',
             title: 'GridRowClassNameParams',
@@ -116,6 +121,17 @@ const pages = [
       },
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
+      { pathname: '/x/react-date-pickers/localization' },
+      {
+        pathname: '/x/react-date-pickers/date-time-range-picker',
+        title: 'Date time range picker 🚧',
+        plan: 'pro',
+      },
+      {
+        pathname: '/x/react-date-pickers/time-range-picker',
+        title: 'Time range picker 🚧',
+        plan: 'pro',
+      },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',

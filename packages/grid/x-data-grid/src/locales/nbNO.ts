@@ -1,0 +1,145 @@
+import { nbNO as nbNOCore } from '@mui/material/locale';
+import { GridLocaleText } from '@mui/x-data-grid';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+
+const nbNOGrid: Partial<GridLocaleText> = {
+  // Root
+  noRowsLabel: 'Ingen rader',
+  noResultsOverlayLabel: 'Fant ingen resultat.',
+  errorOverlayDefaultLabel: 'Det skjedde en feil.',
+
+  // Density selector toolbar button text
+  toolbarDensity: 'Tetthet',
+  toolbarDensityLabel: 'Tetthet',
+  toolbarDensityCompact: 'Kompakt',
+  toolbarDensityStandard: 'Standard',
+  toolbarDensityComfortable: 'Komfortabelt',
+
+  // Columns selector toolbar button text
+  toolbarColumns: 'Kolonner',
+  toolbarColumnsLabel: 'Velg kolonner',
+
+  // Filters toolbar button text
+  toolbarFilters: 'Filter',
+  toolbarFiltersLabel: 'Vis filter',
+  toolbarFiltersTooltipHide: 'Skjul fitler',
+  toolbarFiltersTooltipShow: 'Vis filter',
+  toolbarFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
+
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Søk...',
+  toolbarQuickFilterLabel: 'Søk',
+  toolbarQuickFilterDeleteIconLabel: 'Slett',
+
+  // Export selector toolbar button text
+  toolbarExport: 'Eksporter',
+  toolbarExportLabel: 'Eksporter',
+  toolbarExportCSV: 'Last ned som CSV',
+  toolbarExportPrint: 'Skriv ut',
+  toolbarExportExcel: 'Last ned som Excel',
+
+  // Columns panel text
+  columnsPanelTextFieldLabel: 'Finn kolonne',
+  columnsPanelTextFieldPlaceholder: 'Kolonne tittel',
+  columnsPanelDragIconLabel: 'Reorganiser kolonne',
+  columnsPanelShowAllButton: 'Vis alle',
+  columnsPanelHideAllButton: 'Skjul alle',
+
+  // Filter panel text
+  filterPanelAddFilter: 'Legg til filter',
+  filterPanelDeleteIconLabel: 'Slett',
+  filterPanelLinkOperator: 'Logisk operator',
+  filterPanelOperators: 'Operatører',
+
+  // TODO v6: rename to filterPanelOperator
+  filterPanelOperatorAnd: 'Og',
+  filterPanelOperatorOr: 'Eller',
+  filterPanelColumns: 'Kolonner',
+  filterPanelInputLabel: 'Verdi',
+  filterPanelInputPlaceholder: 'Filter verdi',
+
+  // Filter operators text
+  filterOperatorContains: 'inneholder',
+  filterOperatorEquals: 'er lik',
+  filterOperatorStartsWith: 'starter med',
+  filterOperatorEndsWith: 'slutter med',
+  filterOperatorIs: 'er',
+  filterOperatorNot: 'er ikke',
+  filterOperatorAfter: 'er etter',
+  filterOperatorOnOrAfter: 'er på eller etter',
+  filterOperatorBefore: 'er før',
+  filterOperatorOnOrBefore: 'er på eller før',
+  filterOperatorIsEmpty: 'er tom',
+  filterOperatorIsNotEmpty: 'er ikke tom',
+  filterOperatorIsAnyOf: 'er en av',
+
+  // Filter values text
+  filterValueAny: 'noen',
+  filterValueTrue: 'sant',
+  filterValueFalse: 'usant',
+
+  // Column menu text
+  columnMenuLabel: 'Meny',
+  columnMenuShowColumns: 'Vis kolonner',
+  columnMenuFilter: 'Filter',
+  columnMenuHideColumn: 'Skjul',
+  columnMenuUnsort: 'Usorter',
+  columnMenuSortAsc: 'Sorter ØKENDE',
+  columnMenuSortDesc: 'Sorter SYNKENDE',
+
+  // Column header text
+  columnHeaderFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
+  columnHeaderFiltersLabel: 'Vis filter',
+  columnHeaderSortIconLabel: 'Sorter',
+
+  // Rows selected footer text
+  footerRowSelected: (count) =>
+    count !== 1 ? `${count.toLocaleString()} rader valgt` : `${count.toLocaleString()} rad valgt`,
+
+  // Total row amount footer text
+  footerTotalRows: 'Totalt antall rader:',
+
+  // Total visible row amount footer text
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} av ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'Avmerkingsboks valgt',
+  checkboxSelectionSelectAllRows: 'Velg alle rader',
+  checkboxSelectionUnselectAllRows: 'Velg bort alle rader',
+  checkboxSelectionSelectRow: 'Velg rad',
+  checkboxSelectionUnselectRow: 'Velg bort rad',
+
+  // Boolean cell text
+  booleanCellTrueLabel: 'sant',
+  booleanCellFalseLabel: 'usant',
+
+  // Actions cell more text
+  actionsCellMore: 'mer',
+
+  // Column pinning text
+  pinToLeft: 'Fest til venstre',
+  pinToRight: 'Fest til høyre',
+  unpin: 'Løsne',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'Grupper',
+  treeDataExpand: 'se barn',
+  treeDataCollapse: 'skjul barn',
+
+  // Grouping columns
+  groupingColumnHeaderName: 'Grupper',
+  groupColumn: (name) => `Grupper på ${name}`,
+  unGroupColumn: (name) => `Stopp å grupper på ${name}`,
+
+  // Master/detail
+  expandDetailPanel: 'Utvid',
+  collapseDetailPanel: 'Kollaps',
+
+  // Row reordering text
+  rowReorderingHeaderName: 'Rad reorganisering',
+};
+
+export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);

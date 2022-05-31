@@ -22,29 +22,6 @@ const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
 describe('<MobileDatePicker />', () => {
   const { clock, render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
 
-  it('selects the closest enabled date if selected date is disabled', () => {
-    const onChangeMock = spy();
-
-    render(
-      <MobileDatePicker
-        open
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={onChangeMock}
-        renderInput={(params) => <TextField {...params} />}
-        maxDate={adapterToUse.date('2018-01-01T00:00:00.000')}
-      />,
-    );
-
-    expect(screen.getAllByMuiTest('calendar-month-and-year-text')[0]).to.have.text('January 2018');
-
-    // onChange must be dispatched with newly selected date
-    expect(onChangeMock.callCount).to.equal(
-      // Strict Effects run mount effects twice
-      React.version.startsWith('18') ? 2 : 1,
-    );
-    expect(onChangeMock.args[0][0]).toEqualDateTime(adapterToUse.date('2018-01-01T00:00:00.000'));
-  });
-
   it('allows to change only year', () => {
     const onChangeMock = spy();
     render(
@@ -221,12 +198,11 @@ describe('<MobileDatePicker />', () => {
     render(
       <MobileDatePicker
         renderInput={(params) => <TextField {...params} />}
-        showTodayButton
-        cancelText="stream"
         onClose={onCloseMock}
         onChange={handleChange}
         value={adapterToUse.date('2018-01-01T00:00:00.000')}
         DialogProps={{ TransitionComponent: FakeTransitionComponent }}
+        componentsProps={{ actionBar: { actions: ['today'] } }}
       />,
     );
     const start = adapterToUse.date();
@@ -446,7 +422,7 @@ describe('<MobileDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -472,7 +448,7 @@ describe('<MobileDatePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={null}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 

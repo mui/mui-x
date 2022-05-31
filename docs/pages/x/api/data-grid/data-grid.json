@@ -48,11 +48,12 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or' }"
+        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
     },
     "getCellClassName": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },
+    "getEstimatedRowHeight": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
@@ -64,6 +65,7 @@
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": { "type": { "name": "func" } },
     "isRowSelectable": { "type": { "name": "func" } },
+    "keepNonExistentRowsSelected": { "type": { "name": "bool" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -110,6 +112,8 @@
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
+    "onMenuClose": { "type": { "name": "func" } },
+    "onMenuOpen": { "type": { "name": "func" } },
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
     "onPreferencePanelClose": { "type": { "name": "func" } },
@@ -242,6 +246,7 @@
     "Pagination": { "default": "Pagination", "type": { "name": "elementType | null" } },
     "Panel": { "default": "GridPanel", "type": { "name": "elementType" } },
     "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
+    "QuickFilterIcon": { "default": "GridSearchIcon", "type": { "name": "elementType" } },
     "Row": { "default": "GridRow", "type": { "name": "elementType" } },
     "RowReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
@@ -331,10 +336,14 @@
       "pinnedColumnHeaders--left",
       "pinnedColumnHeaders--right",
       "root",
+      "root--densityStandard",
+      "root--densityComfortable",
+      "root--densityCompact",
       "row--editable",
       "row--editing",
       "row--dragging",
       "row--lastVisible",
+      "row--dynamicHeight",
       "row",
       "rowCount",
       "rowReorderCellContainer",
@@ -358,5 +367,6 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>",
+  "packages": ["@mui/x-data-grid"]
 }

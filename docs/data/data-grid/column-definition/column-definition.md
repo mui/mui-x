@@ -22,10 +22,12 @@ interface GridColDef {
 
 {{"demo": "BasicColumnsGrid.js", "bg": "inline"}}
 
-> ⚠️ The `columns` prop should keep the same reference between two renders.
-> The columns are designed to be definitions, to never change once the component is mounted.
-> Otherwise, you take the risk of losing elements like column width or order.
-> You can create the array outside the render function or memoize it.
+:::warning
+The `columns` prop should keep the same reference between two renders.
+The columns are designed to be definitions, to never change once the component is mounted.
+Otherwise, you take the risk of losing elements like column width or order.
+You can create the array outside the render function or memoize it.
+:::
 
 ## Providing content
 
@@ -73,7 +75,7 @@ The value generated is only used for rendering purposes.
 Filtering and sorting do not rely on the formatted value.
 Use the [`valueParser`](/x/react-data-grid/cells/#value-parser) to support filtering.
 
-## Rendering content
+## Rendering cells
 
 By default, the grid renders the value as a string in the cell.
 It resolves the rendered output in the following order:
@@ -99,6 +101,7 @@ const columns: GridColDef[] = [
           color="primary"
           size="small"
           style={{ marginLeft: 16 }}
+          tabIndex={params.hasFocus ? 0 : -1}
         >
           Open
         </Button>
@@ -108,17 +111,25 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "RenderCellGrid.js", "bg": "inline"}}
+{{"demo": "RenderCellGrid.js", "bg": "inline", "defaultCodeOpen": false }}
 
-**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/x/react-data-grid/export/#exported-cells) the data.
+:::warning
+Using `renderCell`, requires paying attention to the following points.
+If the type of the value returned by `valueGetter` does not correspond to the column's `type`, you should:
 
-> ⚠️ When using `renderCell` with object cell values
-> remember to handle [sorting](/x/react-data-grid/sorting/#custom-comparator).
-> Otherwise, sorting won't work.
+- handle [sorting](/x/react-data-grid/sorting/#custom-comparator) by providing `sortComparator` to the column.
+- set a `valueFormatter` providing a representation for the value to be used when [exporting](/x/react-data-grid/export/#exported-cells) the data.
+
+:::
 
 ### Styling cells
 
 You can check the [styling cells](/x/react-data-grid/style/#styling-cells) section for more information.
+
+### Making accessible cells
+
+Cell content should not be in the tab sequence except if cell is focused.
+You can check the [tab sequence](/x/react-data-grid/accessibility/#tab-sequence) section for more information.
 
 ### Expand cell renderer
 
@@ -171,7 +182,9 @@ However, some types require additional properties to be set to make them work co
   }
   ```
 
-  > ⚠️ When using objects values for `valueOptions` you need to provide `value` and `label` fields for each option: `{ value: string, label: string }`
+  :::warning
+  When using objects values for `valueOptions` you need to provide `value` and `label` fields for each option: `{ value: string, label: string }`
+  :::
 
 - If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
   You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.
@@ -206,9 +219,11 @@ const usdPrice: GridColTypeDef = {
 
 {{"demo": "CustomColumnTypesGrid.js", "bg": "inline"}}
 
-> ⚠ If an unsupported column type is used the `string` column type will be used instead.
+:::info
+If an unsupported column type is used, the `string` column type will be used instead.
+:::
 
-## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 ### Visible columns
 

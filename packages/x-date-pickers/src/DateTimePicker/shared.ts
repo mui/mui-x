@@ -2,25 +2,15 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import {
-  CalendarPickerSlotsComponent,
-  ExportedCalendarPickerProps,
-} from '../CalendarPicker/CalendarPicker';
+import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import {
-  DateInputSlotsComponent,
-  ExportedDateInputProps,
-} from '../internals/components/PureDateInput';
+import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
-
-export interface DateTimePickerSlotsComponent
-  extends CalendarPickerSlotsComponent,
-    DateInputSlotsComponent {}
 
 export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -29,11 +19,10 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
     ValidationProps<DateTimeValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
-   * @default {}
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
-  components?: Partial<DateTimePickerSlotsComponent>;
+  ampm?: boolean;
   /**
    * To show tabs.
    */
@@ -120,8 +109,6 @@ export function useDateTimePickerDefaultizedProps<
     openTo: 'day',
     views: ['year', 'day', 'hours', 'minutes'],
     ampmInClock: true,
-    showToolbar: false,
-    allowSameDateSelection: true,
     mask: ampm ? '__/__/____ __:__ _m' : '__/__/____ __:__',
     acceptRegex: ampm ? /[\dap]/gi : /\d/gi,
     disableMaskedInput: false,

@@ -322,6 +322,18 @@ export interface GridClasses {
    */
   root: string;
   /**
+   * Styles applied to the root element if density is "standard" (default).
+   */
+  'root--densityStandard': string;
+  /**
+   * Styles applied to the root element if density is "comfortable".
+   */
+  'root--densityComfortable': string;
+  /**
+   * Styles applied to the root element if density is "compact".
+   */
+  'root--densityCompact': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -337,6 +349,10 @@ export interface GridClasses {
    * Styles applied to the last visible row element on every page of the grid.
    */
   'row--lastVisible': string;
+  /**
+   * Styles applied to the row if it has dynamic row height.
+   */
+  'row--dynamicHeight': string;
   /**
    * Styles applied to the row element.
    */
@@ -484,11 +500,15 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'menuList',
   'overlay',
   'root',
+  'root--densityStandard',
+  'root--densityComfortable',
+  'root--densityCompact',
   'row',
   'row--editable',
   'row--editing',
   'row--lastVisible',
   'row--dragging',
+  'row--dynamicHeight',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',

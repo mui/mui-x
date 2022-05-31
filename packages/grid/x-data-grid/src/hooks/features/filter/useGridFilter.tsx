@@ -25,8 +25,10 @@ import {
   buildAggregatedFilterApplier,
   sanitizeFilterModel,
   mergeStateWithFilterModel,
+  cleanFilterItem,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { isDeepEqual } from '../../../utils/utils';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
@@ -147,9 +149,12 @@ export const useGridFilter = (
         if (filterItemOnTarget) {
           newFilterItems = filterItemsWithValue;
         } else if (props.disableMultipleColumnsFiltering) {
-          newFilterItems = [{ columnField: targetColumnField }];
+          newFilterItems = [cleanFilterItem({ columnField: targetColumnField }, apiRef)];
         } else {
-          newFilterItems = [...filterItemsWithValue, { columnField: targetColumnField }];
+          newFilterItems = [
+            ...filterItemsWithValue,
+            cleanFilterItem({ columnField: targetColumnField }, apiRef),
+          ];
         }
 
         apiRef.current.setFilterModel({
@@ -176,6 +181,20 @@ export const useGridFilter = (
       apiRef.current.setFilterModel({
         ...filterModel,
         linkOperator,
+      });
+    },
+    [apiRef],
+  );
+
+  const setQuickFilterValues = React.useCallback<GridFilterApi['setQuickFilterValues']>(
+    (values) => {
+      const filterModel = gridFilterModelSelector(apiRef);
+      if (isDeepEqual(filterModel.quickFilterValues, values)) {
+        return;
+      }
+      apiRef.current.setFilterModel({
+        ...filterModel,
+        quickFilterValues: [...values],
       });
     },
     [apiRef],
@@ -209,6 +228,7 @@ export const useGridFilter = (
     showFilterPanel,
     hideFilterPanel,
     getVisibleRowModels,
+    setQuickFilterValues,
   };
 
   useGridApiMethod(apiRef, filterApi, 'GridFilterApi');

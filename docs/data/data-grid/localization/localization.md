@@ -48,6 +48,7 @@ The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG } from '@mui/x-data-grid';
+import { bgBG as pickersBgBG } from '@mui/x-date-pickers';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 
 const theme = createTheme(
@@ -56,8 +57,9 @@ const theme = createTheme(
       primary: { main: '#1976d2' },
     },
   },
-  bgBG,
-  coreBgBG,
+  bgBG, // x-data-grid translations
+  pickersBgBG, // x-date-pickers translations
+  coreBgBG, // core translations
 );
 
 <ThemeProvider theme={theme}>
@@ -92,6 +94,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Italian                 | it-IT               | `itIT`      |
 | Japanese                | ja-JP               | `jaJP`      |
 | Korean                  | ko-KR               | `koKR`      |
+| Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
 | Persian                 | fa-IR               | `faIR`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |

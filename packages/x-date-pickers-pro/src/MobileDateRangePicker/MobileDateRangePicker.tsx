@@ -6,9 +6,16 @@ import {
   MobileWrapperProps,
   usePickerState,
   DateInputPropsLike,
+  MobileWrapperSlotsComponent,
+  MobileWrapperSlotsComponentsProps,
+  DateInputSlotsComponent,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
-import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
+import {
+  DateRangePickerView,
+  DateRangePickerViewSlotsComponent,
+  DateRangePickerViewSlotsComponentsProps,
+} from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
@@ -21,9 +28,29 @@ const releaseInfo = getReleaseInfo();
 
 const PureDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
 
+export interface MobileDateRangePickerSlotsComponent
+  extends MobileWrapperSlotsComponent,
+    DateRangePickerViewSlotsComponent,
+    DateInputSlotsComponent {}
+
+export interface MobileDateRangePickerSlotsComponentsProps
+  extends MobileWrapperSlotsComponentsProps,
+    DateRangePickerViewSlotsComponentsProps {}
+
 export interface MobileDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {}
+    MobileWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<MobileDateRangePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<MobileDateRangePickerSlotsComponentsProps>;
+}
 
 type MobileDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: MobileDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -51,7 +78,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     MobileDateRangePickerProps<TInputDate, TDate>
   >(inProps, 'MuiMobileDateRangePicker');
 
-  const { value, onChange, clearText, clearable, ...other } = props;
+  const { value, onChange, components, componentsProps, ...other } = props;
 
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
     'start' | 'end'
@@ -73,6 +100,8 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
   const DateInputProps = {
     ...inputProps,
     ...other,
+    components,
+    componentsProps,
     currentlySelectingRangeEnd,
     setCurrentlySelectingRangeEnd,
     validationError,
@@ -85,8 +114,8 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
       {...wrapperProps}
       DateInputProps={DateInputProps}
       PureDateInputComponent={PureDateInputComponent}
-      clearText={clearText}
-      clearable={clearable}
+      components={components}
+      componentsProps={componentsProps}
     >
       <DateRangePickerView
         open={wrapperProps.open}
@@ -94,6 +123,8 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}
         setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
         {...pickerProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </MobileWrapper>
@@ -110,50 +141,29 @@ MobileDateRangePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars that render on **desktop**.
    * @default 2
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
-  /**
-   * Cancel text message.
-   * @default 'Cancel'
-   */
-  cancelText: PropTypes.node,
   children: PropTypes.node,
   /**
    * className applied to the root component.
    */
   className: PropTypes.string,
   /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   */
-  clearText: PropTypes.node,
-  /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps: PropTypes.object,
@@ -176,11 +186,12 @@ MobileDateRangePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true` future days are disabled.
    * @default false
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, todays date is rendering without highlighting with circle.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -195,12 +206,14 @@ MobileDateRangePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
+   * If `true` past days are disabled.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   endText: PropTypes.node,
   /**
@@ -240,6 +253,7 @@ MobileDateRangePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -254,18 +268,13 @@ MobileDateRangePicker.propTypes = {
    */
   mask: PropTypes.string,
   /**
-   * Max selectable date. @DateIOType
+   * Maximal selectable date. @DateIOType
    */
   maxDate: PropTypes.any,
   /**
-   * Min selectable date. @DateIOType
+   * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
-  /**
-   * Ok button text.
-   * @default 'OK'
-   */
-  okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
@@ -300,7 +309,7 @@ MobileDateRangePicker.propTypes = {
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
-   * @param {TDate} month The new year.
+   * @param {TDate} month The new month.
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
@@ -377,13 +386,14 @@ MobileDateRangePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate
-   * @param {TDate} day The date to check.
-   * @returns {boolean} If `true` the day will be disabled.
+   * @param {TDate} day The date to test.
+   * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
@@ -399,7 +409,7 @@ MobileDateRangePicker.propTypes = {
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Return `true` if the year should be disabled.
+   * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -408,24 +418,15 @@ MobileDateRangePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the today button is displayed. **Note** that `showClearButton` has a higher priority.
-   * @default false
-   */
-  showTodayButton: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   startText: PropTypes.node,
-  /**
-   * Today text message.
-   * @default 'Today'
-   */
-  todayText: PropTypes.node,
   /**
    * Date format, that is displaying in toolbar.
    */

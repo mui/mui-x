@@ -26,12 +26,17 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Filtreleri göster',
   toolbarFiltersTooltipActive: (count) => `${count} aktif filtre`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Ara...',
+  toolbarQuickFilterLabel: 'Ara',
+  toolbarQuickFilterDeleteIconLabel: 'Temizle',
+
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
   toolbarExportCSV: 'CSV olarak aktar',
   toolbarExportPrint: 'Yazdır',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Excel olarak aktar',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Sütun ara',
@@ -69,9 +74,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorIsAnyOf: 'herhangi biri',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'herhangi',
+  filterValueTrue: 'doğru',
+  filterValueFalse: 'yanlış',
 
   // Column menu text
   columnMenuLabel: 'Menü',

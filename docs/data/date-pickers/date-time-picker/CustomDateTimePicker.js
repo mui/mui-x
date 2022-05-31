@@ -19,8 +19,6 @@ export default function CustomDateTimePicker() {
         <DateTimePicker
           disableFuture
           hideTabs
-          showTodayButton
-          todayText="now"
           openTo="hours"
           value={value}
           onChange={(newValue) => {
@@ -53,7 +51,6 @@ export default function CustomDateTimePicker() {
           renderInput={(params) => <TextField {...params} />}
         />
         <DateTimePicker
-          clearable
           value={clearedDate}
           onChange={(newValue) => setClearedDate(newValue)}
           renderInput={(params) => (

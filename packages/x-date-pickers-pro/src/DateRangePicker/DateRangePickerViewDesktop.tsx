@@ -3,12 +3,14 @@ import { styled } from '@mui/material/styles';
 import {
   useDefaultDates,
   useUtils,
+  useLocaleText,
   ExportedDateValidationProps,
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
   DayPicker,
+  buildDeprecatedPropsWarning,
   DayPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
@@ -36,7 +38,7 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate, DateRange<TDate>>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
@@ -82,6 +84,10 @@ function getCalendarsArray(calendars: ExportedDesktopDateRangeCalendarProps<unkn
   }
 }
 
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
+
 /**
  * @ignore - internal component.
  */
@@ -96,14 +102,24 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     parsedValue,
     disableFuture,
     disablePast,
-    leftArrowButtonText = 'Previous month',
+    leftArrowButtonText: leftArrowButtonTextProp,
     maxDate: maxDateProp,
     minDate: minDateProp,
-    onChange,
+    onSelectedDaysChange,
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
-    rightArrowButtonText = 'Next month',
+    rightArrowButtonText: rightArrowButtonTextProp,
     ...other
   } = props;
+
+  deprecatedPropsWarning({
+    leftArrowButtonText: leftArrowButtonTextProp,
+    rightArrowButtonText: rightArrowButtonTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
+  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
 
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -122,12 +138,12 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     currentlySelectingRangeEnd,
   });
 
-  const handleDayChange = React.useCallback(
-    (day: TDate | null) => {
+  const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+    (day) => {
       setRangePreviewDay(null);
-      onChange(day);
+      onSelectedDaysChange(day);
     },
-    [onChange],
+    [onSelectedDaysChange],
   );
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
@@ -174,12 +190,12 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
             >
               {utils.format(monthOnIteration, 'monthAndYear')}
             </DateRangePickerViewDesktopArrowSwitcher>
-            <DateRangePickerViewDesktopCalendar<TDate, DateRange<TDate>>
+            <DateRangePickerViewDesktopCalendar<TDate>
               {...other}
               key={index}
-              date={parsedValue}
+              selectedDays={parsedValue}
               onFocusedDayChange={doNothing}
-              onChange={handleDayChange}
+              onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
               TransitionProps={CalendarTransitionProps}
               renderDay={(day, __, DayProps) =>

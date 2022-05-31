@@ -9,6 +9,7 @@ import {
   ExportedCalendarPickerProps,
   useCalendarState,
   PickerStatePickerProps,
+  DayPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
@@ -38,13 +39,12 @@ export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'> {
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components?: Partial<DateRangePickerViewSlotsComponent>;
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps>;
@@ -185,8 +185,8 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     scrollToDayIfNeeded(currentlySelectingRangeEnd === 'start' ? start : end);
   }, [currentlySelectingRangeEnd, parsedValue]); // eslint-disable-line
 
-  const handleChange = React.useCallback(
-    (newDate: TDate | null) => {
+  const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+    (newDate) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
         utils,
@@ -218,9 +218,8 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const renderView = () => {
     const sharedCalendarProps = {
       parsedValue,
-      isDateDisabled,
       changeFocusedDay,
-      onChange: handleChange,
+      onSelectedDaysChange: handleSelectedDayChange,
       reduceAnimations,
       disableHighlightToday,
       onMonthSwitchingAnimationEnd,

@@ -28,6 +28,8 @@ export function useGridEvents(
     | 'onRowClick'
     | 'onError'
     | 'onStateChange'
+    | 'onMenuOpen'
+    | 'onMenuClose'
   >,
 ): void {
   useGridApiOptionHandler(apiRef, 'columnHeaderClick', props.onColumnHeaderClick);
@@ -45,6 +47,9 @@ export function useGridEvents(
 
   useGridApiOptionHandler(apiRef, 'preferencePanelClose', props.onPreferencePanelClose);
   useGridApiOptionHandler(apiRef, 'preferencePanelOpen', props.onPreferencePanelOpen);
+
+  useGridApiOptionHandler(apiRef, 'menuOpen', props.onMenuOpen);
+  useGridApiOptionHandler(apiRef, 'menuClose', props.onMenuClose);
 
   useGridApiOptionHandler(apiRef, 'rowDoubleClick', props.onRowDoubleClick);
   useGridApiOptionHandler(apiRef, 'rowClick', props.onRowClick);

@@ -234,6 +234,7 @@ function ApiDocs(props) {
     spread,
     slots,
     styles: componentStyles,
+    packages,
   } = pageContent;
 
   const {
@@ -270,6 +271,7 @@ function ApiDocs(props) {
     ...componentDescriptionToc,
     componentStyles.name && createTocEntry('component-name'),
     createTocEntry('props'),
+    Object.keys(slots).length && createTocEntry('slots'),
     componentStyles.classes.length > 0 && createTocEntry('css'),
     createTocEntry('demos'),
   ].filter(Boolean);
@@ -297,7 +299,19 @@ function ApiDocs(props) {
     inheritanceSuffix = t('api-docs.inheritanceSuffixTransition');
   }
 
-  //
+  const imports = [];
+
+  if (source === '@mui/x-date-pickers' || source === '@mui/x-date-pickers-pro') {
+    packages.forEach((pkg) => {
+      // e.g. import DatePicker from '@mui/x-date-pickers/DatePicker';
+      imports.push(`import ${componentName} from '${pkg}/${componentName}';`);
+    });
+  }
+
+  packages.forEach((pkg) => {
+    // e.g. import { DatePicker } from '@mui/x-date-pickers';
+    imports.push(`import { ${componentName} } from '${pkg}';`);
+  });
 
   return (
     <AppLayoutDocs
@@ -314,17 +328,7 @@ function ApiDocs(props) {
           {description}
         </Typography>
         <Heading hash="import" />
-        <HighlightedCode
-          code={
-            source.includes('grid')
-              ? `import { ${componentName} } from '${source}';`
-              : `
-import ${componentName} from '${source}/${componentName}';
-// ${t('or')}
-import { ${componentName} } from '${source}';`
-          }
-          language="jsx"
-        />
+        <HighlightedCode code={imports.join(`\n// ${t('or')}\n`)} language="jsx" />
         <span dangerouslySetInnerHTML={{ __html: t('api-docs.importDifference') }} />
         {componentDescription ? (
           <React.Fragment>

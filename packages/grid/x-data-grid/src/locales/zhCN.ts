@@ -26,6 +26,11 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: '显示筛选器',
   toolbarFiltersTooltipActive: (count) => `${count} 个筛选器`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: '导出',
   toolbarExportLabel: '导出',
