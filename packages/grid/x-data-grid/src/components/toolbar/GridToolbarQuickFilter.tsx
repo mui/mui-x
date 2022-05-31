@@ -79,6 +79,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   const [searchValue, setSearchValue] = React.useState(
     quickFilterFormatter(quickFilterValues ?? []),
   );
+
   const [prevQuickFilterValues, setPrevQuickFilterValues] = React.useState(quickFilterValues);
 
   React.useEffect(() => {
