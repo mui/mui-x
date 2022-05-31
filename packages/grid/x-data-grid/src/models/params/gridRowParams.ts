@@ -63,7 +63,7 @@ export interface GridRowHeightParams extends GridRowEntry {
 /**
  * The getRowHeight return value.
  */
-export type GridRowHeightReturnValue = number | null | undefined;
+export type GridRowHeightReturnValue = number | null | undefined | 'auto';
 
 enum GridRowEditStartReasons {
   enterKeyDown = 'enterKeyDown',
