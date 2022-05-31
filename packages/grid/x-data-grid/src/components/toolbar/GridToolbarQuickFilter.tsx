@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import { debounce } from '@mui/material/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -16,11 +17,25 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
 })(({ theme }) => ({
   width: 'auto',
   paddingBottom: theme.spacing(0.5),
-  '& .MuiSvgIcon-root': {
-    marginRight: theme.spacing(0.5),
+  '& input': {
+    marginLeft: theme.spacing(0.5),
   },
   '& .MuiInput-underline:before': {
     borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  [`& input[type=search]::-ms-clear,
+& input[type=search]::-ms-reveal`]: {
+    /* clears the 'X' icon from IE */
+    display: 'none',
+    width: 0,
+    height: 0,
+  },
+  [`& input[type="search"]::-webkit-search-decoration,
+  & input[type="search"]::-webkit-search-cancel-button,
+  & input[type="search"]::-webkit-search-results-button,
+  & input[type="search"]::-webkit-search-results-decoration`]: {
+    /* clears the 'X' icon from Chrome */
+    display: 'none',
   },
 }));
 
@@ -104,6 +119,11 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     [debouncedUpdateSearchValue],
   );
 
+  const handleSearchReset = React.useCallback(() => {
+    setSearchValue('');
+    updateSearchValue('');
+  }, [updateSearchValue]);
+
   return (
     <GridToolbarQuickFilterRoot
       as={rootProps.components.BaseTextField}
@@ -115,6 +135,16 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       type="search"
       InputProps={{
         startAdornment: <rootProps.components.QuickFilterIcon fontSize="small" />,
+        endAdornment: (
+          <IconButton
+            aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
+            size="small"
+            sx={{ visibility: searchValue ? 'visible' : 'hidden' }}
+            onClick={handleSearchReset}
+          >
+            <rootProps.components.QuickFilterClearIcon fontSize="small" />
+          </IconButton>
+        ),
       }}
       {...other}
       {...rootProps.componentsProps?.baseTextField}
