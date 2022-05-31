@@ -99,6 +99,7 @@ You can access the density factor from the params provided to the `getRowHeight`
 :::warning
 Always memoize the function provided to `getRowHeight`.
 The grid bases on the referential value of these props to cache their values and optimize the rendering.
+:::
 
 ```tsx
 const getRowHeight = React.useCallback(() => { ... }, []);
