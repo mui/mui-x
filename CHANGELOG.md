@@ -9,6 +9,9 @@ _May 27, 2022_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
+- 🎁 Add support for [Dynamic row height](http://localhost:3001/x/react-data-grid/rows/#dynamic-row-height) (#4859) @m4theushw
+  GIF GOES HERE
+
 - ⚠️ Remove deprecated row grouping feature from `@mui/x-data-grid-pro`
 
   Row grouping is available through the `@mui/x-data-grid-premium` package - see [Premium plan release blogpost](https://mui.com/blog/premium-plan-release/).
@@ -17,14 +20,20 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 ### `@mui/x-data-grid@v5.12.0` / `@mui/x-data-grid-pro@v5.12.0` / `@mui/x-data-grid-premium@v5.12.0`
 
+- [DataGrid] Support dynamic row height (#4859) @m4theushw
 - [DataGrid] Add `onMenuOpen` and `onMenuClose` props (#4825) @DanailH
 - [DataGrid] Add generics to `GridActionsColDef` to match `GridColDef` (#4982) @subvertallchris
 - [DataGrid] Disable drag event handlers when row or column reorder are disabled (#4857) @DanailH
 - [DataGrid] Allow other attempts to stop edit mode if the first failed (#5016) @m4theushw
 - [DataGrid] Better reflect the dependency on Material UI (#4795) @oliviertassinari
+- [DataGrid] Add an id to the filter item created when opening the filter panel (#5014) @flaviendelangle
+- [DataGrid] Use column visibility model on Hide All / Show All when enabled (#5050) @flaviendelangle
+- [DataGridPro] Unpin columns back to original position (#4512) @m4theushw
 - [DataGridPro] Remove experimental row grouping from Pro plan (#4949) @flaviendelangle
 - [DataGridPro] Allow to scroll detail panel content if it overflows the panel (#4979) @cherniavskii
 - [DataGridPro] Do not call `setRowIndex` when dragging a column over a row (#4987) @flaviendelangle
+- [l10n] Add Norwegian (Bokmål) (nb-NO) locale (#5001) @spiftire
+- [l10n] Add Turkish (tr-TR) locale (#5026) @Rassilion
 
 ### `@mui/x-date-pickers@5.0.0-alpha.5` / `@mui/x-date-pickers-pro@5.0.0-alpha.5`
 
@@ -36,6 +45,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [docs] Add docs sections / pages for upcoming features on pickers (#4603) @flaviendelangle
 - [docs] Add docs for filter panel components (#4919) @m4theushw
 - [docs] Explain how to manage focus with `renderCell` (#4254) @alexfauquette
+- [docs] Fix broken links to GitHub source (#5003) @Edwardveb
 - [docs] Fix navigation links (#4956) @oliviertassinari
 - [docs] Fix typo on rows docs (#4952) @jamesRadicl
 - [docs] New WAI-ARIA guidelines location (#4957) @oliviertassinari
@@ -49,6 +59,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [core] Remove dead code on row grouping tree creation (#4945) @flaviendelangle
 - [core] Use new cache api for the row grouping last model tracking (#4980) @flaviendelangle
 - [core] Ensure that PRs have atleast 1 label (#5011) @DanailH
+- [core] Fix trailing-space @oliviertassinari
 - [license] Remove support for UTF-8 (#4893) @oliviertassinari
 - [license] Tweak error messages (#4907) @mbrookes
 - [test] Skip Safari and Firefox on broken tests (#4994) @alexfauquette
