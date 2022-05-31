@@ -12,27 +12,35 @@ import {
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/MobileWrapper';
-import {
-  CalendarOrClockPicker,
-  CalendarOrClockPickerSlotsComponent,
-  CalendarOrClockPickerSlotsComponentsProps,
-} from '../internals/components/CalendarOrClockPicker';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import {
+  CalendarPickerSlotsComponent,
+  CalendarPickerSlotsComponentsProps,
+} from '../CalendarPicker/CalendarPicker';
 
 export interface MobileDatePickerSlotsComponent
   extends MobileWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent {}
+    CalendarPickerSlotsComponent {}
 
 export interface MobileDatePickerSlotsComponentsProps
   extends MobileWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps {}
+    CalendarPickerSlotsComponentsProps {}
 
 export interface MobileDatePickerProps<TInputDate, TDate>
   extends BaseDatePickerProps<TInputDate, TDate>,
     MobileWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<MobileDatePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<MobileDatePickerSlotsComponentsProps>;
 }
 
@@ -127,12 +135,13 @@ MobileDatePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps: PropTypes.object,
   /**

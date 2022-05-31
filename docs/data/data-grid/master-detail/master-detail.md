@@ -26,23 +26,26 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 
 {{"demo": "BasicDetailPanels.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
-> The grid depends on the referential value of these props to cache their values and optimize the rendering.
->
-> ```tsx
-> const getDetailPanelContent = React.useCallback(() => { ... }, []);
->
-> <DataGridPro getDetailPanelContent={getDetailPanelContent} />
-> ```
->
-> ⚠ Depending on the height of the detail panel, you may see a blank space when scrolling.
-> This is caused by the grid using a lazy approach to update the rendered rows.
-> Set `rowThreshold` to 0 to force new rows to be rendered more often to fill the blank space.
-> Note that this may reduce the performance.
->
-> ```tsx
-> <DataGridPro rowThreshold={0} />
-> ```
+:::warning
+Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
+The grid depends on the referential value of these props to cache their values and optimize the rendering.
+
+```tsx
+const getDetailPanelContent = React.useCallback(() => { ... }, []);
+
+<DataGridPro getDetailPanelContent={getDetailPanelContent} />
+```
+
+Depending on the height of the detail panel, you may see a blank space when scrolling.
+This is caused by the grid using a lazy approach to update the rendered rows.
+Set `rowThreshold` to 0 to force new rows to be rendered more often to fill the blank space.
+Note that this may reduce the performance.
+
+```tsx
+<DataGridPro rowThreshold={0} />
+```
+
+:::
 
 ## Controlling expanded detail panels
 
@@ -111,7 +114,9 @@ This approach can also be used to change the location of the toggle column, as s
 
 {{"demo": "CustomizeDetailPanelToggle.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> **Note**: As any ordinary cell renderer, the `value` prop is also available and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
+:::info
+As any ordinary cell renderer, the `value` prop is also available, and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
+:::
 
 ## Disable detail panel content scroll
 

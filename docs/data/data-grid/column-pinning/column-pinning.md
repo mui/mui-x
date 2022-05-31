@@ -29,14 +29,19 @@ The following demos illustrates how this approach works:
 
 {{"demo": "BasicColumnPinning.js", "disableAd": true, "bg": "inline"}}
 
-**Note:** The column pinning feature can be completely disabled with `disableColumnPinning`.
+:::info
+The column pinning feature can be completely disabled with `disableColumnPinning`.
 
 ```tsx
 <DataGridPro disableColumnPinning />
 ```
 
-> You may encounter issues if the sum of the widths of the pinned columns is larger than the width of the grid.
-> Make sure that the grid can accommodate properly, at least, these columns.
+:::
+
+:::warning
+You may encounter issues if the sum of the widths of the pinned columns is larger than the width of the grid.
+Make sure that the grid can accommodate properly, at least, these columns.
+:::
 
 ## Controlling the pinned columns
 
@@ -62,7 +67,9 @@ This can be done in two ways:
 
 {{"demo": "DisableColumnPinningButtons.js", "disableAd": true, "bg": "inline"}}
 
-**Note:** Using the `disableColumnMenu` prop also works, however, you disable completely the column menu with this approach.
+:::info
+Using the `disableColumnMenu` prop also works, however, you disable completely the column menu with this approach.
+:::
 
 ## Pinning the checkbox selection column
 

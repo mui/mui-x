@@ -6,9 +6,11 @@ title: Data Grid - Pivoting
 
 <p class="description">Turn a column values into columns.</p>
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #214](https://github.com/mui/mui-x/issues/214) if you want to see it land faster.
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #214](https://github.com/mui/mui-x/issues/214) if you want to see it land faster.
+:::
 
 Pivoting will allow you to take a columns values and turn them into columns.
 

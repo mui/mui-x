@@ -8,6 +8,7 @@ import {
   DesktopWrapperProps,
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
+  DateInputSlotsComponent,
 } from '@mui/x-date-pickers/internals';
 import {
   DateRangePickerView,
@@ -29,7 +30,9 @@ const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<D
 
 export interface DesktopDateRangePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
-    DateRangePickerViewSlotsComponent {}
+    DateRangePickerViewSlotsComponent,
+    DateInputSlotsComponent {}
+
 export interface DesktopDateRangePickerSlotsComponentsProps
   extends DesktopWrapperSlotsComponentsProps,
     DateRangePickerViewSlotsComponentsProps {}
@@ -37,7 +40,15 @@ export interface DesktopDateRangePickerSlotsComponentsProps
 export interface DesktopDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate>,
     DesktopWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<DesktopDateRangePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<DesktopDateRangePickerSlotsComponentsProps>;
 }
 
@@ -149,12 +160,13 @@ DesktopDateRangePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps: PropTypes.object,
   /**

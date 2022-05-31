@@ -350,6 +350,10 @@ export interface GridClasses {
    */
   'row--lastVisible': string;
   /**
+   * Styles applied to the row if it has dynamic row height.
+   */
+  'row--dynamicHeight': string;
+  /**
    * Styles applied to the row element.
    */
   row: string;
@@ -504,6 +508,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--editing',
   'row--lastVisible',
   'row--dragging',
+  'row--dynamicHeight',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',

@@ -20,9 +20,11 @@ _See [the dedicated section](#customize-the-operators) to learn how to create yo
 
 ## Single and multi-filtering
 
-> ⚠️ The `DataGrid` can only filter the rows according to one criterion at the time.
->
-> To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+:::warning
+The `DataGrid` can only filter the rows according to one criterion at the time.
+
+To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+:::
 
 ## Multi-filtering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
@@ -47,7 +49,9 @@ A filter item represents a filtering rule and is composed of several elements:
 - `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
 - `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)): only useful when multiple filters are used.
 
-**Note**: Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
+:::info
+Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
+:::
 
 #### The `linkOperator` [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
@@ -182,9 +186,13 @@ const operator: GridFilterOperator = {
 };
 ```
 
-**Note**: The [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) is only used for rendering purposes.
+:::info
+The [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) is only used for rendering purposes.
+:::
 
-**Note**: If the column has a [`valueGetter`](/x/react-data-grid/column-definition/#value-getter), then `params.value` will be the resolved value.
+:::info
+If the column has a [`valueGetter`](/x/react-data-grid/column-definition/#value-getter), then `params.value` will be the resolved value.
+:::
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
 
@@ -385,7 +393,9 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
+:::warning
+Only use this API as the last option. Give preference to the props to control the grid.
+:::
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
