@@ -191,6 +191,9 @@ export const GridRootStyles = styled('div', {
       [`&.${gridClasses['columnSeparator--resizing']}`]: {
         color: theme.palette.text.primary,
       },
+      '& svg': {
+        pointerEvents: 'none',
+      },
     },
     [`& .${gridClasses.iconSeparator}`]: {
       color: 'inherit',
