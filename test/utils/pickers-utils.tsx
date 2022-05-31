@@ -8,16 +8,20 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-// Add parameter `--date-adapter luxon` to use AdapterLuxon for running tests
-// adapter available : date-fns (default one), day-js, luxon, moment
-const argv = require('yargs/yargs')(process.argv.slice(2)).argv;
-
 const availableAdapters = ['date-fns', 'day-js', 'luxon', 'moment'];
+let adapter = 'date-fns';
 
-const adapter =
-  argv['date-adapter'] && availableAdapters.includes(argv['date-adapter'])
-    ? argv['date-adapter']
-    : 'date-fns';
+// Check if we are in unit tests
+if (typeof window === 'undefined') {
+  // Add parameter `--date-adapter luxon` to use AdapterLuxon for running tests
+  // adapter available : date-fns (default one), day-js, luxon, moment
+  const args = process.argv.slice(2);
+  const flagIndex = args.findIndex((element) => element === '--date-adapter');
+  const potentialAdapter = flagIndex + 1 < args.length ? args[flagIndex + 1] : null;
+  if (potentialAdapter && availableAdapters.includes(potentialAdapter)) {
+    adapter = potentialAdapter;
+  }
+}
 
 let AdapterClassToExtend;
 switch (adapter) {
