@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { parseISO } from 'date-fns';
 import { createRenderer, screen, RenderOptions, userEvent } from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { TransitionProps } from '@mui/material/transitions';
@@ -7,29 +6,9 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 // TODO make possible to pass here any utils using cli
-/**
- * Wrapper around `@date-io/date-fns` that resolves https://github.com/dmtrKovalenko/date-io/issues/479.
- * We're not using `adapter.date` in the implementation which means the implementation is safe.
- * But we do use it in tests where usage of ISO dates without timezone is problematic
- */
-export class AdapterClassToUse extends AdapterDateFns {
-  // Inlined AdapterDateFns#date which is not an instance method but instance property
-  // eslint-disable-next-line class-methods-use-this
-  date = (value?: any): Date => {
-    if (typeof value === 'string') {
-      return parseISO(value);
-    }
-    if (typeof value === 'undefined') {
-      return new Date();
-    }
-    if (value === null) {
-      // @ts-expect-error AdapterDateFns#date says it returns NotNullable but that's not true
-      return null;
-    }
-    return new Date(value);
-  };
-}
-export const adapterToUse = new AdapterClassToUse();
+export class AdapterClassToUse extends AdapterDateFns { }
+
+export const adapterToUse = new AdapterDateFns();
 
 export const FakeTransitionComponent = React.forwardRef<HTMLDivElement, TransitionProps>(
   function FakeTransitionComponent({ children }, ref) {
@@ -76,14 +55,14 @@ export function createPickerRenderer({
 
 type OpenPickerParams =
   | {
-      type: 'date' | 'date-time' | 'time';
-      variant: 'mobile' | 'desktop';
-    }
+    type: 'date' | 'date-time' | 'time';
+    variant: 'mobile' | 'desktop';
+  }
   | {
-      type: 'date-range';
-      variant: 'mobile' | 'desktop';
-      initialFocus: 'start' | 'end';
-    };
+    type: 'date-range';
+    variant: 'mobile' | 'desktop';
+    initialFocus: 'start' | 'end';
+  };
 
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
@@ -136,28 +115,28 @@ export const withPickerControls =
   <TValue, Props extends { value: TValue; onChange: Function }>(
     Component: React.ComponentType<Props>,
   ) =>
-  <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
-    return (
-      props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
-        Partial<DefaultProps> & {
-          initialValue: TValue;
-          onChange?: any;
-        },
-    ) => {
-      const { initialValue, onChange, ...other } = props;
-
-      const [value, setValue] = React.useState<TValue>(initialValue);
-
-      const handleChange = React.useCallback(
-        (newValue: TValue, keyboardInputValue?: string) => {
-          setValue(newValue);
-          onChange?.(newValue, keyboardInputValue);
-        },
-        [onChange],
-      );
-
+    <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
       return (
-        <Component {...defaultProps} {...(other as any)} value={value} onChange={handleChange} />
-      );
+        props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
+          Partial<DefaultProps> & {
+            initialValue: TValue;
+            onChange?: any;
+          },
+      ) => {
+        const { initialValue, onChange, ...other } = props;
+
+        const [value, setValue] = React.useState<TValue>(initialValue);
+
+        const handleChange = React.useCallback(
+          (newValue: TValue, keyboardInputValue?: string) => {
+            setValue(newValue);
+            onChange?.(newValue, keyboardInputValue);
+          },
+          [onChange],
+        );
+
+        return (
+          <Component {...defaultProps} {...(other as any)} value={value} onChange={handleChange} />
+        );
+      };
     };
-  };
