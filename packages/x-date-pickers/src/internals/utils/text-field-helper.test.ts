@@ -70,12 +70,7 @@ describe('text-field-helper', () => {
       if (isValid) {
         expect(runMaskValidation()).to.be.equal(true);
       } else {
-        expect(runMaskValidation).toWarnDev(
-          [
-            `The mask "${mask}" you passed is not valid for the format used ${format}.`,
-            `Falling down to uncontrolled no-mask input.`,
-          ].join('\n'),
-        );
+        expect(runMaskValidation).toWarnDev('Falling down to uncontrolled no-mask input.');
       }
     });
   });
