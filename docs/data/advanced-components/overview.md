@@ -97,7 +97,6 @@ To use the v2 licenses, you'll need to update the MUI X packages to the latest o
 If updating is not practicable or viable, please contact our support at sales@mui.com
 :::
 
-
 ### How and where to install the key?
 
 ```jsx
