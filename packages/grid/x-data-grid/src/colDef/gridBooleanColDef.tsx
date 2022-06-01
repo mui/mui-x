@@ -24,5 +24,5 @@ export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   filterOperators: getGridBooleanOperators(),
   getApplyQuickFilterFn: undefined,
   // @ts-ignore
-  aggregatable: false,
+  aggregable: false,
 };

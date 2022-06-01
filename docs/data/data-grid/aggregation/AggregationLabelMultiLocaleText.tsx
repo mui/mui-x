@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const COLUMNS = [
+const COLUMNS: GridColDef[] = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
     field: 'gross',
@@ -17,9 +17,15 @@ const COLUMNS = [
       return `${value.toLocaleString()}$`;
     },
   },
+  {
+    field: 'year',
+    headerName: 'Year',
+    type: 'number',
+    availableAggregationFunctions: ['max', 'min'],
+  },
 ];
 
-export default function AggregationBasic() {
+export default function AggregationLabelMultiLocaleText() {
   const data = useMovieData();
 
   return (
@@ -28,6 +34,21 @@ export default function AggregationBasic() {
       rows={data.rows.slice(0, 3)}
       autoHeight
       columns={COLUMNS}
+      initialState={{
+        aggregation: {
+          model: {
+            gross: 'sum',
+            year: 'max',
+          },
+        },
+      }}
+      aggregationFooterLabelField="title"
+      localeText={{
+        aggregationMultiFunctionLabel: (groupingKey) =>
+          groupingKey == null
+            ? 'Aggregation value'
+            : `Aggregation value ${groupingKey}`,
+      }}
     />
   );
 }

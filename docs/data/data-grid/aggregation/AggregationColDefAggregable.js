@@ -8,7 +8,7 @@ const COLUMNS = [
     headerName: 'Title',
     width: 200,
     groupable: false,
-    aggregatable: false,
+    aggregable: false,
   },
   {
     field: 'gross',
@@ -27,7 +27,7 @@ const COLUMNS = [
     field: 'year',
     headerName: 'Year',
     type: 'number',
-    aggregatable: false,
+    aggregable: false,
   },
 ];
 
@@ -40,6 +40,14 @@ export default function AggregationColDefAggregable() {
       rows={data.rows.slice(0, 3)}
       autoHeight
       columns={COLUMNS}
+      initialState={{
+        aggregation: {
+          model: {
+            gross: 'sum',
+            year: 'sum',
+          },
+        },
+      }}
     />
   );
 }

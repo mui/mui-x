@@ -142,7 +142,10 @@ export interface GridLocaleText {
   aggregationMenuItemHeader: string;
   aggregationMenuItemFooterLabel: string;
   aggregationMenuItemInlineLabel: string;
-  aggregationMultiFunctionLabel: string;
+  aggregationMultiFunctionLabel: (
+    groupingKey: GridKeyValue | null,
+    aggregationFunctions: { field: string; aggregationFunctionName: string }[],
+  ) => string;
   aggregationFunctionLabelSum: (groupingKey: GridKeyValue | null) => string;
   aggregationFunctionLabelAvg: (groupingKey: GridKeyValue | null) => string;
   aggregationFunctionLabelMin: (groupingKey: GridKeyValue | null) => string;

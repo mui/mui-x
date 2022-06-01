@@ -11,7 +11,7 @@ const COLUMNS = [
     headerName: 'Title',
     width: 200,
     groupable: false,
-    aggregatable: false,
+    aggregable: false,
   },
   {
     field: 'director',

@@ -44,7 +44,7 @@ export default function AggregationFiltering() {
           },
         },
       }}
-      aggregatedRows="all"
+      aggregationRowsScope="all"
     />
   );
 }

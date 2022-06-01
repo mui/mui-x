@@ -13,7 +13,6 @@ import {
   GridHydrateRowsValue,
   insertNodeInTree,
   isDeepEqual,
-  isFunction,
   removeNodeFromTree,
 } from '@mui/x-data-grid-pro/internals';
 import {
@@ -54,7 +53,7 @@ const canColumnHaveAggregationFunction = ({
   aggregationFunctionName: string;
   aggregationFunction: GridAggregationFunction | undefined;
 }): boolean => {
-  if (!column || !column.aggregatable) {
+  if (!column || !column.aggregable) {
     return false;
   }
 
@@ -313,23 +312,20 @@ export const getAggregationFooterLabelColumns = ({
 /**
  * Returns the label to render for the current footer
  * The priority is as follows:
- * 1. props.aggregationFooterLabel (if defined)
- * 2. l10n `aggregationMultiFunctionLabel` (if several aggregation function used)
- * 3. aggregationFunction.label (if defined)
- * 4. l10n `aggregationFunctionLabel${capitalize(aggregationFunctionName)}` (if defined)
- * 5. ''
+ * 1. l10n `aggregationMultiFunctionLabel` (if several aggregation function used)
+ * 2. aggregationFunction.label (if defined)
+ * 3. l10n `aggregationFunctionLabel${capitalize(aggregationFunctionName)}` (if defined)
+ * 4. ''
  */
 export const getAggregationFooterLabel = ({
   footerNode,
   apiRef,
   shouldRenderLabel,
-  aggregationFooterLabel,
   aggregationRules,
 }: {
   footerNode: GridFooterNode;
   apiRef: React.MutableRefObject<GridApiPremium>;
   shouldRenderLabel: (groupNode: GridGroupNode) => boolean;
-  aggregationFooterLabel: DataGridPremiumProcessedProps['aggregationFooterLabel'];
   aggregationRules: GridAggregationRules;
 }) => {
   const groupNode = apiRef.current.getRowNode<GridGroupNode>(footerNode.parent)!;
@@ -348,36 +344,26 @@ export const getAggregationFooterLabel = ({
       }));
   };
 
-  // 1. props.aggregationFooterLabel
-  if (aggregationFooterLabel != null) {
-    if (isFunction(aggregationFooterLabel)) {
-      return aggregationFooterLabel({
-        groupNode,
-        aggregationFunctions: getAggregationFunctionsAppliedOnCurrentGroup(),
-      });
-    }
-
-    return aggregationFooterLabel;
-  }
-
   const aggregationFunctions = getAggregationFunctionsAppliedOnCurrentGroup();
   const aggregationFunctionNames = Array.from(
     new Set(aggregationFunctions.map((el) => el.aggregationFunctionName)).values(),
   );
 
-  // 2. l10n `aggregationMultiFunctionLabel` (if several aggregation function used)
+  // 1. l10n `aggregationMultiFunctionLabel` (if several aggregation function used)
   if (aggregationFunctionNames.length > 1) {
-    return apiRef.current.getLocaleText('aggregationMultiFunctionLabel');
+    const locale = apiRef.current.getLocaleText('aggregationMultiFunctionLabel');
+
+    return locale(groupNode?.groupingKey ?? null, aggregationFunctions);
   }
 
-  // 3. aggregationFunction.label
+  // 2. aggregationFunction.label
   const aggregationFunctionLabel =
     aggregationRules[aggregationFunctions[0].field].footer!.aggregationFunction.label;
   if (aggregationFunctionLabel != null) {
     return aggregationFunctionLabel;
   }
 
-  // 4. l10n `aggregationFunctionLabel${capitalize(aggregationFunctionName)}`
+  // 3. l10n `aggregationFunctionLabel${capitalize(aggregationFunctionName)}`
   if (aggregationFunctionNames.length === 1) {
     // TODO: Remove try / catch
     try {
@@ -394,6 +380,6 @@ export const getAggregationFooterLabel = ({
     }
   }
 
-  // 5. ''
+  // 4. ''
   return '';
 };

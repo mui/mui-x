@@ -5,14 +5,19 @@
       "required": true
     },
     "rows": { "type": { "name": "array" }, "required": true },
-    "aggregationFooterLabel": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" }
-    },
     "aggregationFooterLabelField": {
       "type": { "name": "string" },
       "default": "If tree data or row grouping are enabled, use their grouping column, if not then do not render any label."
     },
+    "aggregationFunctions": {
+      "type": { "name": "object" },
+      "default": "GRID_AGGREGATION_FUNCTIONS"
+    },
     "aggregationModel": { "type": { "name": "object" } },
+    "aggregationRowsScope": {
+      "type": { "name": "enum", "description": "'all'<br>&#124;&nbsp;'filtered'" },
+      "default": "\"filtered\""
+    },
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -84,6 +89,7 @@
     "getCellClassName": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },
     "getDetailPanelHeight": { "type": { "name": "func" }, "default": "\"() => 500\"" },
+    "getEstimatedRowHeight": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
@@ -246,6 +252,7 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "aggregationCell",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -332,6 +339,7 @@
       "row--editing",
       "row--dragging",
       "row--lastVisible",
+      "row--dynamicHeight",
       "row",
       "rowCount",
       "rowReorderCellContainer",

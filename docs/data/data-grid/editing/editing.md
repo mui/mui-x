@@ -6,19 +6,21 @@ title: Data Grid - Editing
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
-> ⚠️ This page refers to the new editing API, which is not enabled by default.
-> To use it, add the following flag:
->
-> ```tsx
-> <DataGrid experimentalFeatures={{ newEditingApi: true }} />
-> ```
->
-> This additional step is required because the default editing API has a couple of issues that can only be fixed with breaking changes, that will only be possible in v6.
-> To avoid having to wait for the next major release window, all breaking changes needed were included inside this flag.
->
-> If you are looking for the documentation for the default editing API, visit [this page](/x/react-data-grid/editing-legacy/).
-> Note that it is encouraged to migrate to the new editing API since it will be enabled by default in v6.
-> Although it says "experimental," you can consider it stable.
+:::warning
+This page refers to the new editing API, which is not enabled by default.
+To use it, add the following flag:
+
+```tsx
+<DataGrid experimentalFeatures={{ newEditingApi: true }} />
+```
+
+This additional step is required because the default editing API has a couple of issues that can only be fixed with breaking changes, that will only be possible in v6.
+To avoid having to wait for the next major release window, all breaking changes needed were included inside this flag.
+
+If you are looking for the documentation for the default editing API, visit [this page](/x/react-data-grid/editing-legacy/).
+Note that it is encouraged to migrate to the new editing API since it will be enabled by default in v6.
+Although it says "experimental," you can consider it stable.
+:::
 
 ## Making a column editable
 
@@ -206,9 +208,11 @@ For an example using row editing check the [full-featured CRUD component](#full-
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ The options passed to both model props only take effect when `mode` changes.
-> Updating the params of a cell or row, but keeping the same `mode`, makes the cell or row to stay in the same mode.
-> Also, removing one field or row ID from the object will not cause the missing cell or row to go to `"view"` mode.
+:::warning
+The options passed to both model props only take effect when `mode` changes.
+Updating the params of a cell or row, but keeping the same `mode`, makes the cell or row to stay in the same mode.
+Also, removing one field or row ID from the object will not cause the missing cell or row to go to `"view"` mode.
+:::
 
 ## Validation
 
@@ -238,7 +242,9 @@ const columns: GridColDef[] = [
 ];
 ```
 
-> ⚠ Changing `props.value` inside the callback has no effect. To pre-process it, use a [value parser](#value-parser-and-value-setter).
+:::warning
+Changing `props.value` inside the callback has no effect. To pre-process it, use a [value parser](#value-parser-and-value-setter).
+:::
 
 The demo below contains an example of server-side data validation.
 In this case, the callback returns a promise that resolves to the modified props.
@@ -247,9 +253,11 @@ While the promise is not resolved, the edit component will receive an `isProcess
 
 {{"demo": "ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ If the user performs an action that saves changes and exits edit mode (e.g. pressing <kbd class="key">Enter</kbd>) while the props are still being processed, the changes will be discarded upon exit.
-> To avoid this, it is important to communicate to users when the processing is still occurring.
-> You can use the `isProcessingProps` prop to show a loader while waiting for the server to respond.
+:::warning
+If the user performs an action that saves changes and exits edit mode (e.g. pressing <kbd class="key">Enter</kbd>) while the props are still being processed, the changes will be discarded upon exit.
+To avoid this, it is important to communicate to users when the processing is still occurring.
+You can use the `isProcessingProps` prop to show a loader while waiting for the server to respond.
+:::
 
 ## Persistence
 
@@ -407,8 +415,10 @@ The following demo implements an edit component with auto-stop, based on a nativ
 
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ We don't recommend using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
-> Instead, use the provided interactions to exit edit mode.
+:::warning
+We don't recommend using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+Instead, use the provided interactions to exit edit mode.
+:::
 
 ## Row editing
 
@@ -425,9 +435,11 @@ The user can [start](#start-editing) and [stop](#stop-editing) editing a row usi
 
 {{"demo": "BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ By design, when changing the value of a cell all `preProcessEditCellProps` callbacks from other columns are also called.
-> This lets you apply conditional validation where the value of a cell impacts the validation status of another cell in the same row.
-> If you only want to run validation when the value has changed, check if the `hasChanged` param is `true`.
+:::warning
+By design, when changing the value of a cell all `preProcessEditCellProps` callbacks from other columns are also called.
+This lets you apply conditional validation where the value of a cell impacts the validation status of another cell in the same row.
+If you only want to run validation when the value has changed, check if the `hasChanged` param is `true`.
+:::
 
 ### Full-featured CRUD component
 
@@ -506,18 +518,21 @@ The **Account** column is automatically updated with the correct options.
 
 {{"demo": "LinkedFieldsRowEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ The call to `apiRef.current.setEditCellValue` returns a promise that must be awaited.
-> For instance, if the `singleSelect` column type is used, not awaiting will cause the other column to be rendered with a `value` that is not in the options.
->
-> ```ts
-> const handleChange = async () => {
->   await apiRef.current.setEditCellValue({
->     id: props.id,
->     field: 'account',
->     value: '',
->   });
-> };
-> ```
+:::warning
+The call to `apiRef.current.setEditCellValue` returns a promise that must be awaited.
+For instance, if the `singleSelect` column type is used, not awaiting will cause the other column to be rendered with a `value` that is not in the options.
+
+```ts
+const handleChange = async () => {
+  await apiRef.current.setEditCellValue({
+    id: props.id,
+    field: 'account',
+    value: '',
+  });
+};
+```
+
+:::
 
 A similar behavior can be reproduced with cell editing.
 Instead of `apiRef.current.setEditCellValue`, the `rows` prop must be updated or `apiRef.current.updateRows` be used.

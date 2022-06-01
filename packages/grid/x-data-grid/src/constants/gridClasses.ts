@@ -6,6 +6,10 @@ export interface GridClasses {
    */
   actionsCell: string;
   /**
+   * Styles applied to the root element of the cell displayed the aggregated value.
+   */
+  aggregationCell: string;
+  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -350,6 +354,10 @@ export interface GridClasses {
    */
   'row--lastVisible': string;
   /**
+   * Styles applied to the row if it has dynamic row height.
+   */
+  'row--dynamicHeight': string;
+  /**
    * Styles applied to the row element.
    */
   row: string;
@@ -428,6 +436,7 @@ export function getDataGridUtilityClass(slot: string): string {
 
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'actionsCell',
+  'aggregationCell',
   'autoHeight',
   'booleanCell',
   'cell--editable',
@@ -504,6 +513,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--editing',
   'row--lastVisible',
   'row--dragging',
+  'row--dynamicHeight',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',

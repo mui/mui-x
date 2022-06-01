@@ -8,6 +8,7 @@ import {
   DateInputPropsLike,
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
+  DateInputSlotsComponent,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import {
@@ -29,7 +30,9 @@ const PureDateInputComponent = DateRangePickerInput as unknown as React.FC<DateI
 
 export interface MobileDateRangePickerSlotsComponent
   extends MobileWrapperSlotsComponent,
-    DateRangePickerViewSlotsComponent {}
+    DateRangePickerViewSlotsComponent,
+    DateInputSlotsComponent {}
+
 export interface MobileDateRangePickerSlotsComponentsProps
   extends MobileWrapperSlotsComponentsProps,
     DateRangePickerViewSlotsComponentsProps {}
@@ -37,7 +40,15 @@ export interface MobileDateRangePickerSlotsComponentsProps
 export interface MobileDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate>,
     MobileWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<MobileDateRangePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<MobileDateRangePickerSlotsComponentsProps>;
 }
 
@@ -147,12 +158,13 @@ MobileDateRangePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps: PropTypes.object,
   /**

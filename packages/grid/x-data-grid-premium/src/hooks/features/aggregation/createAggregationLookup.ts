@@ -23,19 +23,19 @@ const getAggregationCellValue = ({
   groupId,
   field,
   aggregationFunction,
-  aggregatedRows,
+  aggregationRowsScope,
 }: {
   apiRef: React.MutableRefObject<GridApiPremium>;
   groupId: GridRowId;
   field: string;
   aggregationFunction: GridAggregationFunction;
-  aggregatedRows: DataGridPremiumProcessedProps['aggregatedRows'];
+  aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
 }) => {
   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
   let rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
 
-  if (aggregatedRows === 'filtered') {
+  if (aggregationRowsScope === 'filtered') {
     rowIds = rowIds.filter((rowId) => filteredRowsLookup[rowId] !== false);
   }
 
@@ -47,14 +47,14 @@ const getAggregationCellValue = ({
 const getGroupAggregatedValue = ({
   groupId,
   apiRef,
-  aggregatedRows,
+  aggregationRowsScope,
   aggregatedFields,
   aggregationRules,
   isGroupAggregated,
 }: {
   groupId: GridRowId;
   apiRef: React.MutableRefObject<GridApiPremium>;
-  aggregatedRows: DataGridPremiumProcessedProps['aggregatedRows'];
+  aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   aggregatedFields: string[];
   aggregationRules: GridAggregationRules;
   isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
@@ -76,7 +76,7 @@ const getGroupAggregatedValue = ({
         groupId,
         field: aggregatedField,
         aggregationFunction: columnAggregationRules.inline.aggregationFunction,
-        aggregatedRows,
+        aggregationRowsScope,
       });
     }
 
@@ -89,7 +89,7 @@ const getGroupAggregatedValue = ({
         groupId,
         field: aggregatedField,
         aggregationFunction: columnAggregationRules.footer.aggregationFunction,
-        aggregatedRows,
+        aggregationRowsScope,
       });
     }
 
@@ -102,12 +102,12 @@ const getGroupAggregatedValue = ({
 export const createAggregationLookup = ({
   apiRef,
   aggregationFunctions,
-  aggregatedRows,
+  aggregationRowsScope,
   isGroupAggregated,
 }: {
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationFunctions: Record<string, GridAggregationFunction>;
-  aggregatedRows: DataGridPremiumProcessedProps['aggregatedRows'];
+  aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
 }): GridAggregationLookup => {
   const aggregationRules = getAggregationRules({
@@ -140,7 +140,7 @@ export const createAggregationLookup = ({
         groupId: groupNode.id,
         apiRef,
         aggregatedFields,
-        aggregatedRows,
+        aggregationRowsScope,
         aggregationRules,
         isGroupAggregated,
       });

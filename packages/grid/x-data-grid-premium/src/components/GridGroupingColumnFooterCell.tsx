@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { GridFooterCell } from './GridFooterCell';
 
 const GridGroupingColumnFooterCell = (props: GridRenderCellParams) => {
   const { rowNode } = props;
@@ -17,7 +17,7 @@ const GridGroupingColumnFooterCell = (props: GridRenderCellParams) => {
     marginLeft = rowNode.depth * 2;
   }
 
-  return <Box sx={{ ml: marginLeft }}>{props.formattedValue ?? props.value}</Box>;
+  return <GridFooterCell sx={{ ml: marginLeft }} {...props} />;
 };
 
 export { GridGroupingColumnFooterCell };

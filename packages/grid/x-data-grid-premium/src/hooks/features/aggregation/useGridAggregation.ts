@@ -44,8 +44,7 @@ export const useGridAggregation = (
     | 'aggregationModel'
     | 'isGroupAggregated'
     | 'aggregationFunctions'
-    | 'aggregatedRows'
-    | 'aggregationFooterLabel'
+    | 'aggregationRowsScope'
     | 'disableAggregation'
     | 'rowGroupingColumnMode'
     | 'aggregationFooterLabelField'
@@ -78,14 +77,14 @@ export const useGridAggregation = (
       apiRef,
       isGroupAggregated: props.isGroupAggregated,
       aggregationFunctions: props.aggregationFunctions,
-      aggregatedRows: props.aggregatedRows,
+      aggregationRowsScope: props.aggregationRowsScope,
     });
 
     apiRef.current.setState((state) => ({
       ...state,
       aggregation: { ...state.aggregation, lookup: aggregationLookup },
     }));
-  }, [apiRef, props.isGroupAggregated, props.aggregationFunctions, props.aggregatedRows]);
+  }, [apiRef, props.isGroupAggregated, props.aggregationFunctions, props.aggregationRowsScope]);
 
   const aggregationApi: GridAggregationApi = {
     setAggregationModel,

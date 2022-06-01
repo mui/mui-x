@@ -145,7 +145,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // aggregationMenuItemHeader: 'Aggregation',
   // aggregationMenuItemFooterLabel: 'Footer',
   // aggregationMenuItemInlineLabel: 'Inline',
-  // aggregationMultiFunctionLabel: 'Aggregation',
+  // aggregationMultiFunctionLabel: groupingKey => groupingKey == null ? 'Result' : `Result ${groupingKey}`,
   // aggregationFunctionLabelSum: groupingKey => groupingKey == null ? 'Total' : `Total ${groupingKey}`,
   // aggregationFunctionLabelAvg: groupingKey => groupingKey == null ? 'Average' : `Average ${groupingKey}`,
   // aggregationFunctionLabelMin: groupingKey => groupingKey == null ? 'Minimum' : `Minimum ${groupingKey}`,

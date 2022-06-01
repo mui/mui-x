@@ -64,20 +64,12 @@ DataGridPremiumRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * @default "filtered"
-   */
-  aggregatedRows: PropTypes.oneOf(['all', 'filtered']),
-  /**
-   * Returns the aggregation label of a group.
-   * This label will be rendered on the 1st grouping column.
-   */
-  aggregationFooterLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  /**
    * Field of the column on which we want to render the footer aggregation labels.
    * @default If tree data or row grouping are enabled, use their grouping column, if not then do not render any label.
    */
   aggregationFooterLabelField: PropTypes.string,
   /**
+   * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: PropTypes.object,
@@ -85,6 +77,13 @@ DataGridPremiumRaw.propTypes = {
    * Set the aggregation model of the grid.
    */
   aggregationModel: PropTypes.object,
+  /**
+   * Rows used to generate the aggregated value.
+   * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
+   * If `all`, the aggregated values will be generated using all the rows.
+   * @default "filtered"
+   */
+  aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
@@ -339,6 +338,14 @@ DataGridPremiumRaw.propTypes = {
    */
   getDetailPanelHeight: PropTypes.func,
   /**
+   * Function that returns the estimated height for a row.
+   * Only works if dynamic row height is used.
+   * Once the row height is measured this value is discarded.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
+   */
+  getEstimatedRowHeight: PropTypes.func,
+  /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
@@ -347,7 +354,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
-   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied. If "auto" then the row height is calculated based on the content.
    */
   getRowHeight: PropTypes.func,
   /**

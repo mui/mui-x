@@ -10,19 +10,22 @@ title: Data Grid - Rows
 
 The rows can be defined with the `rows` prop, which expects an array of objects.
 
-> ⚠️ The `rows` prop should keep the same reference between two renders except when you want to apply new rows.
-> Otherwise, the grid will re-apply heavy work like sorting and filtering.
+:::warning
+The `rows` prop should keep the same reference between two renders except when you want to apply new rows.
+Otherwise, the grid will re-apply heavy work like sorting and filtering.
+:::
 
 {{"demo": "RowsGrid.js", "bg": "inline"}}
 
-> ⚠️ Each row object should have a field that uniquely identifies the row.
-> By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/column-definition) for `id` field is not required.
->
-> When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
->
-> ```tsx
-> <DataGrid getRowId={(row) => row.internalId} />
-> ```
+:::warning
+Each row object should have a field that uniquely identifies the row.
+By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/column-definition) for `id` field is not required.
+
+When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
+
+```tsx
+<DataGrid getRowId={(row) => row.internalId} />
+```
 
 {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -88,17 +91,64 @@ If you need some rows to have different row heights this can be achieved using t
 
 {{"demo": "VariableRowHeightGrid.js", "bg": "inline"}}
 
-> ⚠ Changing the `DataGrid` density does not affect the rows with variable row height.
-> You can access the density factor from the params provided to the `getRowHeight` prop
->
-> ⚠ Always memoize the function provided to `getRowHeight`.
-> The grid bases on the referential value of these props to cache their values and optimize the rendering.
->
-> ```tsx
-> const handleGetRowHeight = React.useCallback(() => { ... }, []);
->
-> <DataGridPro getRowHeight={handleGetRowHeight} />
-> ```
+:::warning
+Changing the `DataGrid` density does not affect the rows with variable row height.
+You can access the density factor from the params provided to the `getRowHeight` prop
+:::
+
+:::warning
+Always memoize the function provided to `getRowHeight`.
+The grid bases on the referential value of these props to cache their values and optimize the rendering.
+:::
+
+```tsx
+const getRowHeight = React.useCallback(() => { ... }, []);
+
+<DataGridPro getRowHeight={getRowHeight} />
+```
+
+### Dynamic row height
+
+Instead of a fixed row height, you can let the grid calculate the height of each row based on its content.
+To do so, return `"auto`" on the function passed to the `getRowHeight` prop.
+
+```tsx
+<DataGrid getRowHeight={() => 'auto'} />
+```
+
+The following demo demonstrantes this option in action:
+
+{{"demo": "DynamicRowHeightGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The dynamic row height implementaion is based on a lazy approach, which means that the rows are measured as they are rendered.
+Because of this, you may see the size of the scrollbar thumb changing during scroll.
+This side effect happens because a row height estimation is used while a row is not rendered, then this value is replaced once the true measurement is obtained.
+You can configure the estimated value used by passing a function to the `getEstimatedRowHeight` prop.
+If not provided, the default row height of `52px` is used as estimation.
+It's recommended to pass this prop if the content deviates too much from the default value.
+Note that, due to the implementation adopted, the virtualization of the columns is also disabled to force all columns to be rendered at the same time.
+
+```tsx
+<DataGrid getRowHeight={() => 'auto'} getEstimatedRowHeight={() => 200} />
+```
+
+{{"demo": "ExpandableCells.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+When the height of a row is set to `"auto"`, the final height will follow exactly the content size and ignore the density.
+Add padding to the cells to increase the space between the content and the cell borders.
+
+```tsx
+<DataGrid
+  sx={{
+    '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
+    '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+    '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+  }}
+/>
+```
+
+:::
 
 ## Row spacing
 
@@ -207,15 +257,19 @@ To already start with a few suggested options configured, spread `GRID_REORDER_C
 
 This approach can also be used to change the location of the toggle column.
 
-> ⚠️ For now, row reordering is disabled if sorting is applied to the grid.
->
-> In addition, if row grouping or tree data is being used, the row reordering is also disabled.
+:::warning
+For now, row reordering is disabled if sorting is applied to the grid.
+
+In addition, if row grouping or tree data is being used, the row reordering is also disabled.
+:::
 
 ## 🚧 Row spanning
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
+:::
 
 Each cell takes up the width of one row.
 Row spanning allows to change this default behavior.
@@ -224,9 +278,11 @@ This is very close to the "row spanning" in an HTML `<table>`.
 
 ## 🚧 Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #1251](https://github.com/mui/mui-x/issues/1251) if you want to see it land faster.
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #1251](https://github.com/mui/mui-x/issues/1251) if you want to see it land faster.
+:::
 
 Pinned (or frozen, locked, or sticky) rows are rows that are visible at all times while the user scrolls the grid vertically.
 

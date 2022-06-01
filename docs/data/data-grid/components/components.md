@@ -29,7 +29,9 @@ As an example, you could override the column menu and pass additional props as b
 />
 ```
 
-**Note**: The casing is different between the `components` (ColumnMenu) and `componentsProps` (columnMenu) props.
+:::info
+The casing is different between the `components` (ColumnMenu) and `componentsProps` (columnMenu) props.
+:::
 
 ### Interacting with the grid
 
@@ -143,7 +145,9 @@ In the following demo, an illustration is added on top of the default "No Rows" 
 
 {{"demo": "CustomEmptyOverlayGrid.js", "bg": "inline"}}
 
-**Note**: As the no rows overlay, the grid allows to override the no results overlay with the `NoResultsOverlay` slot.
+:::info
+As the no rows overlay, the grid allows to override the no results overlay with the `NoResultsOverlay` slot.
+:::
 
 ### Row
 

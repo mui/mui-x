@@ -34,10 +34,13 @@ The first column will be 200px wide, leaving 300px remaining. The column with `f
 
 To set a minimum and maximum width for a `flex` column set the `minWidth` and the `maxWidth` property in `GridColDef`.
 
-**Note**
+:::info
+Before using fluid width, note that:
 
 - `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
 - `flex` doesn't work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
+
+:::
 
 {{"demo": "ColumnFluidWidthGrid.js", "bg": "inline"}}
 

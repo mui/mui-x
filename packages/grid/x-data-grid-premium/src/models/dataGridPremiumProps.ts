@@ -12,7 +12,6 @@ import type {
   GridAggregationModel,
   GridAggregationFunction,
   GridAggregationPosition,
-  GridAggregationFooterLabelParams,
 } from '../hooks/features/aggregation';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
@@ -69,13 +68,17 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    */
   rowGroupingColumnMode: 'single' | 'multiple';
   /**
+   * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: Record<string, GridAggregationFunction>;
   /**
+   * Rows used to generate the aggregated value.
+   * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
+   * If `all`, the aggregated values will be generated using all the rows.
    * @default "filtered"
    */
-  aggregatedRows: 'filtered' | 'all';
+  aggregationRowsScope: 'filtered' | 'all';
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -117,11 +120,6 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
    */
   isGroupAggregated?: (groupNode: GridGroupNode, position: GridAggregationPosition) => boolean;
-  /**
-   * Returns the aggregation label of a group.
-   * This label will be rendered on the 1st grouping column.
-   */
-  aggregationFooterLabel?: string | ((params: GridAggregationFooterLabelParams) => string);
   /**
    * Field of the column on which we want to render the footer aggregation labels.
    * @default If tree data or row grouping are enabled, use their grouping column, if not then do not render any label.

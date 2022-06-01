@@ -88,12 +88,13 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    */
   classes?: Partial<ClockPickerClasses>;
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components?: Partial<ClockPickerSlotsComponent>;
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps?: Partial<ClockPickerSlotsComponentsProps>;
   /**
@@ -507,12 +508,13 @@ ClockPicker.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps: PropTypes.object,
   /**
