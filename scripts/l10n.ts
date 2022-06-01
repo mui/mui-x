@@ -294,7 +294,6 @@ async function updateIssue(githubToken, newMessage) {
 
 Run \`yarn l10n --report\` to update the list below ⬇️
 
-## DataGrid / DataGridPro
 ${newMessage}
 `;
   await octokit
