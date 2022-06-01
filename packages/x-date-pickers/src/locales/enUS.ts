@@ -29,7 +29,8 @@ const enUSPickers: PickersLocaleText<any> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
+    `Select ${view}. ${
+      time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} hours`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
