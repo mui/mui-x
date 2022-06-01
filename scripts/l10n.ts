@@ -214,8 +214,8 @@ function injectTranslations(
 function countryToFlag(isoCode: string) {
   return typeof String.fromCodePoint !== 'undefined' && isoCode
     ? isoCode
-        .toUpperCase()
-        .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
+      .toUpperCase()
+      .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
     : isoCode;
 }
 
@@ -293,7 +293,8 @@ async function updateIssue(githubToken, newMessage) {
   const requestBody = `You can check below all of the localization files that contain at least one missing translation. If you are a fluent speaker of any of these languages, feel free to submit a pull request. Any help is welcome to make the X components to reach new cultures.
 
 Run \`yarn l10n --report\` to update the list below ⬇️
-  
+
+## DataGrid / DataGridPro
 ${newMessage}
 `;
   await octokit

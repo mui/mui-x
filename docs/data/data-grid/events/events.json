@@ -168,6 +168,18 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "name": "menuClose",
+    "description": "Fired when the grid menu is closed.",
+    "params": "GridMenuParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "menuOpen",
+    "description": "Fired when the menu is opened.",
+    "params": "GridMenuParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "pageChange",
     "description": "Fired when the page changes.",
     "params": "number",

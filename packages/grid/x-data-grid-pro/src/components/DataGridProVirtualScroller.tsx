@@ -31,7 +31,10 @@ import {
   gridDetailPanelExpandedRowIdsSelector,
 } from '../hooks/features/detailPanel';
 
-export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
+export const filterColumns = (
+  pinnedColumns: GridPinnedColumns,
+  columns: string[],
+): [string[], string[]] => {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
     return [[], []];
   }
@@ -113,6 +116,7 @@ const VirtualScrollerDetailPanel = styled(Box, {
   width: '100%',
   position: 'absolute',
   backgroundColor: theme.palette.background.default,
+  overflow: 'auto',
 }));
 
 const VirtualScrollerPinnedColumns = styled('div', {
@@ -293,6 +297,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: leftRenderContext.firstColumnIndex,
               maxLastColumn: leftRenderContext.lastColumnIndex,
               availableSpace: 0,
+              ignoreAutoHeight: true,
             })}
           </VirtualScrollerPinnedColumns>
         )}
@@ -311,6 +316,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
               availableSpace: 0,
+              ignoreAutoHeight: true,
             })}
           </VirtualScrollerPinnedColumns>
         )}

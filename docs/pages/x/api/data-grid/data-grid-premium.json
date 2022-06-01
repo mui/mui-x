@@ -59,7 +59,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, rowGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -75,6 +75,7 @@
     "getCellClassName": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },
     "getDetailPanelHeight": { "type": { "name": "func" }, "default": "\"() => 500\"" },
+    "getEstimatedRowHeight": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
@@ -143,6 +144,8 @@
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
+    "onMenuClose": { "type": { "name": "func" } },
+    "onMenuOpen": { "type": { "name": "func" } },
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
     "onPinnedColumnsChange": { "type": { "name": "func" } },
@@ -312,10 +315,14 @@
       "pinnedColumnHeaders--left",
       "pinnedColumnHeaders--right",
       "root",
+      "root--densityStandard",
+      "root--densityComfortable",
+      "root--densityCompact",
       "row--editable",
       "row--editing",
       "row--dragging",
       "row--lastVisible",
+      "row--dynamicHeight",
       "row",
       "rowCount",
       "rowReorderCellContainer",
@@ -339,5 +346,6 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid#commercial-version\">DataGridPremium</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-data-grid#commercial-version\">DataGridPremium</a></li></ul>",
+  "packages": ["@mui/x-data-grid-premium"]
 }

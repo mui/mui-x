@@ -6,6 +6,8 @@
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [GridFilterForm](/x/api/data-grid/grid-filter-form/)
+- [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
 
 ## Interfaces
 

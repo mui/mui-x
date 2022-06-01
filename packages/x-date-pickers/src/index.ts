@@ -18,3 +18,5 @@ export * from './StaticTimePicker';
 export * from './TimePicker';
 export * from './YearPicker';
 export * from './locales';
+
+export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';

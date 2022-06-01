@@ -1,7 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
-const frFRPickers: Partial<PickersLocaleText> = {
+const frFRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Mois précédent',
   nextMonth: 'Mois suivant',

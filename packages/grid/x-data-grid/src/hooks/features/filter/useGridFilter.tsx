@@ -25,6 +25,7 @@ import {
   buildAggregatedFilterApplier,
   sanitizeFilterModel,
   mergeStateWithFilterModel,
+  cleanFilterItem,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
@@ -148,9 +149,12 @@ export const useGridFilter = (
         if (filterItemOnTarget) {
           newFilterItems = filterItemsWithValue;
         } else if (props.disableMultipleColumnsFiltering) {
-          newFilterItems = [{ columnField: targetColumnField }];
+          newFilterItems = [cleanFilterItem({ columnField: targetColumnField }, apiRef)];
         } else {
-          newFilterItems = [...filterItemsWithValue, { columnField: targetColumnField }];
+          newFilterItems = [
+            ...filterItemsWithValue,
+            cleanFilterItem({ columnField: targetColumnField }, apiRef),
+          ];
         }
 
         apiRef.current.setFilterModel({

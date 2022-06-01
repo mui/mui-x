@@ -25,7 +25,3 @@ export type { DataGridProProps, GridExperimentalProFeatures } from './models/dat
 
 export { useGridApiContext, useGridApiRef, useGridRootProps } from './typeOverloads/reexports';
 export type { GridApiRef, GridApi, GridInitialState, GridState } from './typeOverloads/reexports';
-
-// We export them from here to avoid export duplication between pro and premium
-export * from './hooks/features/rowGrouping';
-export * from './models/gridGroupingValueGetterParams';

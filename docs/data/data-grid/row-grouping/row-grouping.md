@@ -2,7 +2,7 @@
 title: Data Grid - Row Grouping
 ---
 
-# Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 <p class="description">Group your rows according to some column values.</p>
 
@@ -141,9 +141,11 @@ return (
 );
 ```
 
-> ⚠️ This hook is only compatible with the deprecated column property `hide` or with the controlled `columnVisibilityModel` prop.
->
-> You must use the `columnVisibilityModel` in the `initialState` instead.
+:::warning
+This hook is only compatible with the deprecated column property `hide` or with the controlled `columnVisibilityModel` prop.
+
+You must use the `columnVisibilityModel` in the `initialState` instead.
+:::
 
 {{"demo": "RowGroupingUseKeepGroupedColumnsHidden.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -181,7 +183,9 @@ const columns: GridColumns = [
 
 {{"demo": "RowGroupingGroupingValueGetter.js", "bg": "inline", "defaultCodeOpen": false}}
 
-**Note**: If your column also has a `valueGetter` property, the value passed to the `groupingValueGetter` method will still be the row value from the `row[field]`.
+:::info
+If your column also has a `valueGetter` property, the value passed to the `groupingValueGetter` method will still be the row value from the `row[field]`.
+:::
 
 ## Rows with missing groups
 
@@ -221,7 +225,9 @@ If you are rendering leaves with the `leafField` property of `groupColDef`, the 
 
 In both cases, you can force the sorting and filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupColDef`
 
-> ⚠️ This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`
+:::warning
+This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`
+:::
 
 {{"demo": "RowGroupingSortingSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -240,7 +246,9 @@ In the example below:
 
 {{"demo": "RowGroupingSortingMultipleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠️ If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not automatically be cleaned-up and the sorting/filtering will not be re-applied.
+:::warning
+If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not automatically be cleaned-up and the sorting/filtering will not be re-applied.
+:::
 
 ## Get the rows in a group
 
@@ -273,7 +281,7 @@ const rows = apiRef.current.getRowGroupChildren({
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

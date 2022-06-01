@@ -1,11 +1,23 @@
 export { DesktopTooltipWrapper } from './components/wrappers/DesktopTooltipWrapper';
-export type { DesktopWrapperProps } from './components/wrappers/DesktopWrapper';
+export type {
+  DesktopWrapperProps,
+  DesktopWrapperSlotsComponent,
+  DesktopWrapperSlotsComponentsProps,
+} from './components/wrappers/DesktopWrapper';
 export { MobileWrapper } from './components/wrappers/MobileWrapper';
-export type { MobileWrapperProps } from './components/wrappers/MobileWrapper';
+export type {
+  MobileWrapperProps,
+  MobileWrapperSlotsComponent,
+  MobileWrapperSlotsComponentsProps,
+} from './components/wrappers/MobileWrapper';
 export { MobileKeyboardInputView } from './components/CalendarOrClockPicker/CalendarOrClockPicker';
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
 export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
+export type {
+  PickersStaticWrapperSlotsComponent,
+  PickersStaticWrapperSlotsComponentsProps,
+} from './components/PickerStaticWrapper/PickerStaticWrapper';
 export { PickersToolbar, pickersToolbarClasses } from './components/PickersToolbar';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 export type {

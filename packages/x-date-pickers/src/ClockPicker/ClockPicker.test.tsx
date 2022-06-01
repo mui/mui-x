@@ -194,7 +194,11 @@ describe('<ClockPicker />', () => {
     expect(Math.max(...hours)).to.equal(23);
   });
 
-  it('should display options, but not update value when readOnly prop is passed', () => {
+  it('should display options, but not update value when readOnly prop is passed', function test() {
+    // Only run in supported browsers
+    if (typeof Touch === 'undefined') {
+      this.skip();
+    }
     const selectEvent = {
       changedTouches: [
         {
@@ -224,7 +228,11 @@ describe('<ClockPicker />', () => {
     expect(disabledHours.length).to.equal(0);
   });
 
-  it('should display disabled options when disabled prop is passed', () => {
+  it('should display disabled options when disabled prop is passed', function test() {
+    // Only run in supported browsers
+    if (typeof Touch === 'undefined') {
+      this.skip();
+    }
     const selectEvent = {
       changedTouches: [
         {

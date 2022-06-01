@@ -20,7 +20,7 @@ export function useGridApiInitialization<Api extends GridApiCommon>(
   if (!apiRef.current) {
     apiRef.current = {
       unstable_eventManager: new EventManager(),
-      unstable_caches: {},
+      unstable_caches: {} as Api['unstable_caches'],
       state: {} as Api['state'],
       instanceId: globalId,
     } as Api;

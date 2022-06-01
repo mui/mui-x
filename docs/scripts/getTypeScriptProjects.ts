@@ -173,7 +173,11 @@ export const getTypeScriptProjects = () => {
         files: ['src/DataGrid/DataGrid.tsx'],
       }),
       getComponentsWithApiDoc: getComponentPaths({
-        files: ['src/DataGrid/DataGrid.tsx'],
+        files: [
+          'src/DataGrid/DataGrid.tsx',
+          'src/components/panel/filterPanel/GridFilterForm.tsx',
+          'src/components/panel/filterPanel/GridFilterPanel.tsx',
+        ],
       }),
     }),
   );

@@ -527,4 +527,111 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
     });
   });
+
+  describe('restore column position after unpinning', () => {
+    it('should restore the position when unpinning existing columns', () => {
+      const { setProps } = render(<TestCase nbCols={4} checkboxSelection disableVirtualization />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['', 'id', 'Currency Pair', '1M', '2M']);
+      setProps({ pinnedColumns: { left: ['currencyPair', 'id'], right: ['__check__'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M', '2M', '']);
+      setProps({ pinnedColumns: { left: [], right: [] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['', 'id', 'Currency Pair', '1M', '2M']);
+    });
+
+    it('should restore the position when unpinning a column added after the first pinned column', () => {
+      const { setProps } = render(<TestCase nbCols={2} disableVirtualization />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
+      setProps({ pinnedColumns: { left: ['currencyPair'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id']);
+      apiRef.current.updateColumns([{ field: 'foo' }, { field: 'bar' }]);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', 'foo', 'bar']);
+      setProps({ pinnedColumns: { left: ['currencyPair', 'foo'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'foo', 'id', 'bar']);
+      setProps({ pinnedColumns: {} });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', 'foo', 'bar']);
+    });
+
+    it('should restore the position of a column pinned before it is added', () => {
+      const { setProps } = render(
+        <TestCase nbCols={2} pinnedColumns={{ left: ['foo'] }} disableVirtualization />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
+      apiRef.current.updateColumns([{ field: 'foo' }, { field: 'bar' }]);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['foo', 'id', 'Currency Pair', 'bar']);
+      setProps({ pinnedColumns: {} });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', 'foo', 'bar']);
+    });
+
+    it('should restore the position of a column unpinned after a column is removed', () => {
+      const { setProps } = render(
+        <TestCase
+          nbCols={3}
+          columns={[{ field: 'id' }, { field: 'currencyPair' }, { field: 'price1M' }]}
+          pinnedColumns={{ left: ['price1M'] }}
+          disableVirtualization
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal(['price1M', 'id', 'currencyPair']);
+      setProps({ columns: [{ field: 'id' }, { field: 'price1M' }] });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['price1M', 'id']);
+      setProps({ pinnedColumns: {}, columns: [{ field: 'id' }, { field: 'price1M' }] });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M']);
+    });
+
+    it('should restore the position when the neighboring columns are reordered', () => {
+      const { setProps } = render(<TestCase nbCols={4} disableVirtualization />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', '1M', '2M']); // price1M's index = 2
+      setProps({ pinnedColumns: { left: ['price1M'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['1M', 'id', 'Currency Pair', '2M']);
+      apiRef.current.setColumnIndex('id', 2);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['1M', 'Currency Pair', 'id', '2M']);
+      setProps({ pinnedColumns: {} });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M', '2M']); // price1M's index = 2
+    });
+
+    it('should not crash when unpinning the first column', () => {
+      const { setProps } = render(
+        <TestCase
+          nbCols={3}
+          columns={[{ field: 'id' }, { field: 'currencyPair' }, { field: 'price1M' }]}
+          pinnedColumns={{ left: ['id', 'currencyPair'] }}
+          disableVirtualization
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'currencyPair', 'price1M']);
+      setProps({ pinnedColumns: { left: ['currencyPair'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['currencyPair', 'id', 'price1M']);
+    });
+
+    it('should not crash when unpinning the last column', () => {
+      const { setProps } = render(
+        <TestCase
+          nbCols={3}
+          columns={[{ field: 'id' }, { field: 'currencyPair' }, { field: 'price1M' }]}
+          pinnedColumns={{ right: ['currencyPair', 'price1M'] }}
+          disableVirtualization
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'currencyPair', 'price1M']);
+      setProps({ pinnedColumns: { right: ['currencyPair'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M', 'currencyPair']);
+    });
+
+    it('should not crash when removing a pinned column', () => {
+      const { setProps } = render(
+        <TestCase
+          nbCols={3}
+          columns={[{ field: 'id' }, { field: 'currencyPair' }, { field: 'price1M' }]}
+          pinnedColumns={{ right: ['currencyPair'] }}
+          disableVirtualization
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M', 'currencyPair']);
+      setProps({
+        pinnedColumns: { right: [] },
+        columns: [{ field: 'id' }, { field: 'price1M' }],
+      });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M']);
+    });
+  });
 });
