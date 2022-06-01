@@ -2,23 +2,22 @@ import {
   useValidation,
   ValidationProps,
   Validator,
-  DateValidationProps,
   DateValidationError,
   validateDate,
   ExportedDateValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { isRangeValid } from '../../utils/date-utils';
+import { isRangeValid, parseRangeInputValue } from '../../utils/date-utils';
 import { DateRange } from '../../models';
 
 export interface DateRangeValidationProps<TInputDate, TDate>
   extends ExportedDateValidationProps<TDate>,
     ValidationProps<DateRangeValidationError, DateRange<TInputDate>> {}
 
-export const validateDateRange: Validator<any, DateRangeValidationProps<any, any>> = (
-  utils,
+export const validateDateRange: Validator<any, DateRangeValidationProps<any, any>> = ({
+  props,
   value,
-  dateValidationProps,
-) => {
+  adapter,
+}) => {
   const [start, end] = value;
 
   // for partial input
@@ -27,15 +26,15 @@ export const validateDateRange: Validator<any, DateRangeValidationProps<any, any
   }
 
   const dateValidations: [DateRangeValidationErrorValue, DateRangeValidationErrorValue] = [
-    validateDate(utils, start, dateValidationProps as DateValidationProps<any, any>),
-    validateDate(utils, end, dateValidationProps as DateValidationProps<any, any>),
+    validateDate({ adapter, value: start, props }),
+    validateDate({ adapter, value: end, props }),
   ];
 
   if (dateValidations[0] || dateValidations[1]) {
     return dateValidations;
   }
 
-  if (!isRangeValid(utils, [utils.date(start), utils.date(end)])) {
+  if (!isRangeValid(adapter.utils, parseRangeInputValue(adapter.utils, value))) {
     return ['invalidRange', 'invalidRange'];
   }
 

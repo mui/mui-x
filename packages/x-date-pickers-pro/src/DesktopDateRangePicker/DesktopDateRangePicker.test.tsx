@@ -272,6 +272,32 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
   });
 
+  it('componentsProps `actionBar` - allows to renders clear button in Desktop mode', () => {
+    function DesktopDateRangePickerClearable() {
+      return (
+        <WrappedDesktopDateRangePicker
+          initialValue={[
+            adapterToUse.date('2018-01-01T00:00:00.000'),
+            adapterToUse.date('2018-01-31T00:00:00.000'),
+          ]}
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
+        />
+      );
+    }
+    render(<DesktopDateRangePickerClearable />);
+
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+    expect(screen.getAllByRole('textbox')[0]).to.have.value('01/01/2018');
+    expect(screen.getAllByRole('textbox')[1]).to.have.value('01/31/2018');
+
+    fireEvent.click(screen.getByText('Clear'));
+
+    expect(screen.getAllByRole('textbox')[0]).to.have.value('');
+    expect(screen.getAllByRole('textbox')[1]).to.have.value('');
+    expect(screen.queryByRole('dialog')).to.equal(null);
+  });
+
   describe('prop: PopperProps', () => {
     it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
@@ -666,7 +692,7 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -693,7 +719,7 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={initialValue}
-          clearable
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 

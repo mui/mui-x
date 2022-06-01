@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license-pro",
-  "version": "5.11.0",
+  "version": "5.12.0",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -34,7 +34,8 @@
     "directory": "packages/x-license-pro"
   },
   "dependencies": {
-    "@mui/utils": "^5.7.0",
+    "@babel/runtime": "^7.17.2",
+    "@mui/utils": "^5.4.1",
     "esm": "^3.2.25",
     "yargs": "^17.5.1"
   },

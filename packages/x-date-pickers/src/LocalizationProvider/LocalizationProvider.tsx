@@ -12,7 +12,7 @@ export interface MuiPickersAdapterContextValue<TDate> {
   };
 
   utils: MuiPickersAdapter<TDate>;
-  localeText: PickersLocaleText;
+  localeText: PickersLocaleText<TDate>;
 }
 
 export const MuiPickersAdapterContext =
@@ -44,7 +44,7 @@ export interface LocalizationProviderProps {
   /**
    * Locale for components texts
    */
-  localeText?: Partial<PickersLocaleText>;
+  localeText?: Partial<PickersLocaleText<unknown>>;
 }
 
 let warnedOnce = false;

@@ -167,7 +167,7 @@ Support is available on multiple channels, but the recommended channels are:
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
 - Email (**only if your issue requires sharing private information**): You can [open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to x@mui.com.
 
-Your OrderId on the issue helps us prioritize the issues based on the following support levels:
+Your Order ID on the issue helps us prioritize the issues based on the following support levels:
 
 1. **MUI X Pro**: MUI's maintainers give these issues more attention than the ones from the Community plan.
 2. **MUI X Premium**: Same as MUI X Pro, but with priority over Pro.
@@ -177,8 +177,10 @@ Your OrderId on the issue helps us prioritize the issues based on the following 
 
 To learn more about our plans and goals for the MUI X product line, visit our [public roadmap](https://github.com/mui/mui-x/projects/1).
 
-> ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change.
-> The information provided is intended to outline the general framework direction, for informational purposes only.
-> We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards.
-> The development, releases, and timing of any features or functionality remains at the sole discretion of MUI.
-> The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+:::warning
+**Disclaimer**: We operate in a dynamic environment, and things are subject to change.
+The information provided is intended to outline the general framework direction, for informational purposes only.
+We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards.
+The development, releases, and timing of any features or functionality remains at the sole discretion of MUI.
+The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+:::

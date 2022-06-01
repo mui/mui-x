@@ -90,7 +90,6 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   return (
     <Autocomplete
       multiple
-      freeSolo={false}
       limitTags={1}
       options={resolvedValueOptions as any} // TODO: avoid `any`?
       isOptionEqualToValue={isOptionEqualToValue}

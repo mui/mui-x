@@ -9,6 +9,11 @@ export type PickerOnChangeFn<TDate> = (
   selectionState?: PickerSelectionState,
 ) => void;
 
+export type NonNullablePickerChangeHandler<TDate> = (
+  date: TDate,
+  selectionState?: PickerSelectionState,
+) => void;
+
 interface UseViewsOptions<TDate, View extends CalendarOrClockPickerView> {
   onChange: PickerOnChangeFn<TDate>;
   onViewChange?: (newView: View) => void;

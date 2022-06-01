@@ -43,4 +43,11 @@ export interface GridColumnPinningApi {
   isColumnPinned: (field: string) => GridPinnedPosition | false;
 }
 
+export interface GridColumnPinningInternalCache {
+  /**
+   * Stores the fields in their original position, before being pinned.
+   */
+  orderedFieldsBeforePinningColumns: string[] | null;
+}
+
 export { GridPinnedPosition };

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useUtils } from '../useUtils';
-import { MuiPickersAdapter } from '../../models';
+import { useLocalizationContext } from '../useUtils';
+import { MuiPickersAdapterContextValue } from '../../../LocalizationProvider/LocalizationProvider';
 
 export interface ValidationProps<TError, TInputValue> {
   /**
@@ -21,11 +21,11 @@ export interface ValidationProps<TError, TInputValue> {
 type InferError<Props> = Props extends ValidationProps<infer TError, any> ? TError : never;
 type InferDate<Props> = Props extends ValidationProps<any, infer TDate> ? TDate : never;
 
-export type Validator<TDate, TProps> = (
-  utils: MuiPickersAdapter<TDate>,
-  value: InferDate<TProps>,
-  props: Omit<TProps, 'value'>,
-) => InferError<TProps>;
+export type Validator<TDate, TProps> = (params: {
+  adapter: MuiPickersAdapterContextValue<TDate>;
+  value: InferDate<TProps>;
+  props: Omit<TProps, 'value' | 'onError'>;
+}) => InferError<TProps>;
 
 export function useValidation<TDate, TProps extends ValidationProps<any, any>>(
   props: TProps,
@@ -33,10 +33,10 @@ export function useValidation<TDate, TProps extends ValidationProps<any, any>>(
   isSameError: (a: InferError<TProps>, b: InferError<TProps> | null) => boolean,
 ): InferError<TProps> {
   const { value, onError } = props;
-  const utils = useUtils<TDate>();
+  const adapter = useLocalizationContext<TDate>();
   const previousValidationErrorRef = React.useRef<InferError<TProps> | null>(null);
 
-  const validationError = validate(utils, value, props);
+  const validationError = validate({ adapter, value, props });
 
   React.useEffect(() => {
     if (onError && !isSameError(validationError, previousValidationErrorRef.current)) {

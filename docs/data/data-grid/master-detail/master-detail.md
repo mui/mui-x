@@ -2,7 +2,7 @@
 title: Data Grid - Master detail
 ---
 
-# Data Grid - Master detail [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data Grid - Master detail [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 <p class="description">Expand your rows to display additional information.</p>
 
@@ -26,23 +26,26 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 
 {{"demo": "BasicDetailPanels.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
-> The grid depends on the referential value of these props to cache their values and optimize the rendering.
->
-> ```tsx
-> const getDetailPanelContent = React.useCallback(() => { ... }, []);
->
-> <DataGridPro getDetailPanelContent={getDetailPanelContent} />
-> ```
->
-> ⚠ Depending on the height of the detail panel, you may see a blank space when scrolling.
-> This is caused by the grid using a lazy approach to update the rendered rows.
-> Set `rowThreshold` to 0 to force new rows to be rendered more often to fill the blank space.
-> Note that this may reduce the performance.
->
-> ```tsx
-> <DataGridPro rowThreshold={0} />
-> ```
+:::warning
+Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
+The grid depends on the referential value of these props to cache their values and optimize the rendering.
+
+```tsx
+const getDetailPanelContent = React.useCallback(() => { ... }, []);
+
+<DataGridPro getDetailPanelContent={getDetailPanelContent} />
+```
+
+Depending on the height of the detail panel, you may see a blank space when scrolling.
+This is caused by the grid using a lazy approach to update the rendered rows.
+Set `rowThreshold` to 0 to force new rows to be rendered more often to fill the blank space.
+Note that this may reduce the performance.
+
+```tsx
+<DataGridPro rowThreshold={0} />
+```
+
+:::
 
 ## Controlling expanded detail panels
 
@@ -81,7 +84,7 @@ To change the icon used for the toggle, you can provide a different component fo
 If this is not sufficient, the entire toggle component can be overridden.
 To fully customize it, add another column with `field: GRID_DETAIL_PANEL_TOGGLE_FIELD` to your set of columns.
 The grid will detect that there is already a toggle column defined and it will not add another toggle in the default position.
-The new toggle component can be provided via [`renderCell`](/x/react-data-grid/cells/#render-cell) in the same as any other column.
+The new toggle component can be provided via [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells) in the same as any other column.
 By only setting the `field`, is up to you to configure the remaining options (e.g. disable the column menu, filtering, sorting).
 To already start with a few suggested options configured, spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column.
 
@@ -111,7 +114,9 @@ This approach can also be used to change the location of the toggle column, as s
 
 {{"demo": "CustomizeDetailPanelToggle.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> **Note**: As any ordinary cell renderer, the `value` prop is also available and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
+:::info
+As any ordinary cell renderer, the `value` prop is also available, and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
+:::
 
 ## Disable detail panel content scroll
 

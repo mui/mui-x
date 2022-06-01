@@ -6,15 +6,44 @@ import {
   timePickerValueManager,
 } from '../TimePicker/shared';
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
-import { MobileWrapper, MobileWrapperProps } from '../internals/components/wrappers/MobileWrapper';
+import {
+  MobileWrapper,
+  MobileWrapperProps,
+  MobileWrapperSlotsComponent,
+  MobileWrapperSlotsComponentsProps,
+} from '../internals/components/wrappers/MobileWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
-import { PureDateInput } from '../internals/components/PureDateInput';
+import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import {
+  ClockPickerSlotsComponent,
+  ClockPickerSlotsComponentsProps,
+} from '../ClockPicker/ClockPicker';
+
+export interface MobileTimePickerSlotsComponent
+  extends MobileWrapperSlotsComponent,
+    ClockPickerSlotsComponent,
+    DateInputSlotsComponent {}
+
+export interface MobileTimePickerSlotsComponentsProps
+  extends MobileWrapperSlotsComponentsProps,
+    ClockPickerSlotsComponentsProps {}
 
 export interface MobileTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {}
+    MobileWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<MobileTimePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<MobileTimePickerSlotsComponentsProps>;
+}
 
 type MobileTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: MobileTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -45,8 +74,22 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const { ToolbarComponent = TimePickerToolbar, value, onChange, ...other } = props;
-  const DateInputProps = { ...inputProps, ...other, ref, validationError };
+  const {
+    ToolbarComponent = TimePickerToolbar,
+    value,
+    onChange,
+    components,
+    componentsProps,
+    ...other
+  } = props;
+  const DateInputProps = {
+    ...inputProps,
+    ...other,
+    components,
+    componentsProps,
+    ref,
+    validationError,
+  };
 
   return (
     <MobileWrapper
@@ -54,14 +97,17 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
       {...wrapperProps}
       DateInputProps={DateInputProps}
       PureDateInputComponent={PureDateInput}
+      components={components}
+      componentsProps={componentsProps}
     >
-      {/* @ts-ignore time picker has no component slot for the calendar header */}
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </MobileWrapper>
@@ -88,38 +134,26 @@ MobileTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
-  /**
-   * Cancel text message.
-   * @default 'Cancel'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  cancelText: PropTypes.node,
   children: PropTypes.node,
   /**
    * className applied to the root component.
    */
   className: PropTypes.string,
   /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
-   * Clear text message.
-   * @default 'Clear'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  clearText: PropTypes.node,
-  /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps: PropTypes.object,
   /**
    * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
    */
@@ -151,6 +185,7 @@ MobileTimePicker.propTypes = {
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
    * @returns {string} The clock label.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    * @default <TDate extends any>(
    *   view: ClockView,
    *   time: TDate | null,
@@ -209,12 +244,6 @@ MobileTimePicker.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
-  /**
-   * Ok button text.
-   * @default 'OK'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  okText: PropTypes.node,
   /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
@@ -303,20 +332,9 @@ MobileTimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the today button is displayed. **Note** that `showClearButton` has a higher priority.
-   * @default false
-   */
-  showTodayButton: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Today text message.
-   * @default 'Today'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  todayText: PropTypes.node,
   /**
    * Component that will replace default toolbar renderer.
    * @default TimePickerToolbar
