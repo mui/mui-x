@@ -8,7 +8,11 @@
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
-    "getViewSwitchingButtonText": { "type": { "name": "func" } },
+    "getViewSwitchingButtonText": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
     "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },

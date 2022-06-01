@@ -2,7 +2,7 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
-const trTRPickers: PickersLocaleText = {
+const trTRPickers: Partial<PickersLocaleText<any>> = {
   previousMonth: 'Önceki ay',
   nextMonth: 'Sonraki ay',
   openPreviousView: 'sonraki görünüm',
