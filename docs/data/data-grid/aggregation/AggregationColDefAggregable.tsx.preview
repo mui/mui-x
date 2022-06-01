@@ -7,8 +7,8 @@
     aggregation: {
       model: {
         gross: 'sum',
-        year: 'sum'
-      }
-    }
+        year: 'sum',
+      },
+    },
   }}
 />

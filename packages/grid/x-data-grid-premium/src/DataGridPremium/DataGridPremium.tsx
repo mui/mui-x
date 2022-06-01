@@ -64,10 +64,6 @@ DataGridPremiumRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * @default "filtered"
-   */
-  aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
-  /**
    * Field of the column on which we want to render the footer aggregation labels.
    * @default If tree data or row grouping are enabled, use their grouping column, if not then do not render any label.
    */
@@ -80,6 +76,10 @@ DataGridPremiumRaw.propTypes = {
    * Set the aggregation model of the grid.
    */
   aggregationModel: PropTypes.object,
+  /**
+   * @default "filtered"
+   */
+  aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
