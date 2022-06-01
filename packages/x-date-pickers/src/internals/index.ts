@@ -30,7 +30,7 @@ export type { DateInputPropsLike } from './components/wrappers/WrapperProps';
 export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
 export type { WrapperVariant } from './components/wrappers/WrapperVariantContext';
 
-export { DAY_MARGIN, DAY_SIZE } from './constants/dimensions';
+export { DAY_MARGIN } from './constants/dimensions';
 
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
