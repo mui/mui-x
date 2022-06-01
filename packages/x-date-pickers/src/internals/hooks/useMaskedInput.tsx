@@ -60,9 +60,9 @@ export const useMaskedInput = <TInputDate, TDate>({
   const parsedValue = rawValue === null ? null : utils.date(rawValue);
 
   // Track the value of the input
-  const [innerInputValue, setInnerInputValue] = React.useState(parsedValue);
+  const [innerInputValue, setInnerInputValue] = React.useState<TDate | null>(parsedValue);
   // control the input text
-  const [innerDisplayedInputValue, setInnerDisplayedInputValue] = React.useState(
+  const [innerDisplayedInputValue, setInnerDisplayedInputValue] = React.useState<string>(
     getDisplayDate(utils, rawValue, inputFormat),
   );
 
