@@ -68,29 +68,8 @@ describe('<DesktopDatePicker />', () => {
 
   it('allows to change selected date from the input according to `format`', () => {
     const onChangeMock = spy();
-    const Test = () => {
-      const [value, setValue] = React.useState<Date | null>(
-        adapterToUse.date('2018-01-01T00:00:00.000Z'),
-      );
 
-      return (
-        <DesktopDatePicker
-          renderInput={(props) => <TextField placeholder="10/10/2018" {...props} />}
-          label="Masked input"
-          inputFormat="dd/MM/yyyy"
-          value={value}
-          onChange={(newDate) => {
-            onChangeMock(newDate);
-            setValue(newDate);
-          }}
-          InputAdornmentProps={{
-            disableTypography: true,
-          }}
-        />
-      );
-    };
-
-    render(<Test />);
+    render(<WrappedDesktopDatePicker onChange={onChangeMock} initialValue={null} />);
 
     fireEvent.change(screen.getByRole('textbox'), {
       target: {

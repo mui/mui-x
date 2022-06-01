@@ -48,22 +48,13 @@ describe('<DesktopDateTimePicker />', () => {
   });
 
   it('prop: mask – should take the mask prop into account', () => {
-    const Test = () => {
-      const [value, setValue] = React.useState(null);
-
-      return (
-        <DesktopDateTimePicker
-          renderInput={(params) => <TextField autoFocus {...params} />}
-          ampm={false}
-          inputFormat="mm.dd.yyyy hh:mm"
-          mask="__.__.____ __:__"
-          value={value}
-          onChange={setValue}
-        />
-      );
-    };
-
-    render(<Test />);
+    render(
+      <WrappedDesktopDateTimePicker
+        initialValue={null}
+        inputFormat="mm.dd.yyyy hh:mm"
+        mask="__.__.____ __:__"
+      />,
+    );
 
     const textbox = screen.getByRole('textbox') as HTMLInputElement;
     fireEvent.change(textbox, {
