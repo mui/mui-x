@@ -69,6 +69,7 @@ DataGridPremiumRaw.propTypes = {
    */
   aggregationFooterLabelField: PropTypes.string,
   /**
+   * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: PropTypes.object,
@@ -77,6 +78,9 @@ DataGridPremiumRaw.propTypes = {
    */
   aggregationModel: PropTypes.object,
   /**
+   * Rows used to generate the aggregated value.
+   * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
+   * If `all`, the aggregated values will be generated using all the rows.
    * @default "filtered"
    */
   aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),

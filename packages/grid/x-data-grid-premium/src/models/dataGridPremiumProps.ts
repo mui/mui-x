@@ -72,10 +72,14 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    */
   rowGroupingColumnMode: 'single' | 'multiple';
   /**
+   * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS
    */
   aggregationFunctions: Record<string, GridAggregationFunction>;
   /**
+   * Rows used to generate the aggregated value.
+   * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
+   * If `all`, the aggregated values will be generated using all the rows.
    * @default "filtered"
    */
   aggregationRowsScope: 'filtered' | 'all';
