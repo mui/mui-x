@@ -2,8 +2,9 @@ import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
-import { GridColumnMenuApi } from '../../../models';
+import { GridColumnMenuApi, GridEventListener } from '../../../models';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { gridClasses } from '../../../constants/gridClasses';
 
 export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -86,7 +87,32 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
   /**
    * EVENTS
    */
+  const handleColumnHeaderFocus = React.useCallback<GridEventListener<'columnHeaderFocus'>>(
+    (params, event) => {
+      // Check if the column menu button received focus
+      if (!event.target.classList.contains(gridClasses.menuIconButton)) {
+        return;
+      }
+
+      // Check if there's an element which lost focus
+      if (!event.relatedTarget) {
+        return;
+      }
+
+      // `true` if the focus was on the column menu itself, not on any item
+      const columnMenuLostFocus = event.relatedTarget.classList.contains(gridClasses.menuList);
+      // `true` if the focus was on an item from the column menu
+      const columnMenuItemLostFocus = event.relatedTarget.getAttribute('role') === 'menuitem';
+
+      if (columnMenuLostFocus || columnMenuItemLostFocus) {
+        apiRef.current.setColumnHeaderFocus(params.field);
+      }
+    },
+    [apiRef],
+  );
+
   useGridApiEventHandler(apiRef, 'columnResizeStart', hideColumnMenu);
+  useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
   useGridApiEventHandler(apiRef, 'virtualScrollerWheel', apiRef.current.hideColumnMenu);
   useGridApiEventHandler(apiRef, 'virtualScrollerTouchMove', apiRef.current.hideColumnMenu);
 };
