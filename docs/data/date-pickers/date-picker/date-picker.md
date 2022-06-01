@@ -50,8 +50,6 @@ The date picker component can be disabled or read-only.
 
 Use `LocalizationProvider` to change the date-engine locale that is used to render the date picker. Here is an example of changing the locale for the `date-fns` adapter:
 
-{{"demo": "LocalizedDatePicker.js"}}
-
 ## Jalali calendar system
 
 Install `date-fns-jalali` and use `@date-io/date-fns-jalali` adapter to support [Jalali calendar](https://en.wikipedia.org/wiki/Jalali_calendar).
