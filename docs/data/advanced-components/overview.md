@@ -86,16 +86,25 @@ You will need to purchase a commercial license in order to remove the watermarks
 
 ## License key installation
 
-When you purchase a commercial license, you'll receive a license key by email.
+When you purchase a commercial license, you'll receive your license key by email.
 This key removes all watermarks and console warnings.
+
+:::warning
+⚠️ If you purchased your license **after May 13, 2022**, You'll obtain a **v2** license key.
+
+To use the v2 licenses, you'll need to update the MUI X packages to the latest or at least the `5.11` version.
+
+If updating is not practicable or viable, please contact our support at sales@mui.com
+:::
+
+
+### How and where to install the key?
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
 
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
-
-### Where to install the key?
 
 You must call `setLicenseKey` before React renders the first component.
 You only need to install the key once in your application.
@@ -143,7 +152,7 @@ But you will not be able to install a newer version released two years from now,
 
 #### Invalid license key
 
-This error indicates that your license key doesn't match what was issued by MUI—this is likely a typo.
+This error indicates that your license key doesn't match what was issued by MUI (this is likely a typo) or that you may be trying to validate a [v2 license key with an older package](#license-key-installation).
 
 ## Support
 
