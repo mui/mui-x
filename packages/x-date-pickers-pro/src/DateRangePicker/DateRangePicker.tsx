@@ -4,20 +4,48 @@ import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
-import { DesktopDateRangePicker, DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
-import { MobileDateRangePicker, MobileDateRangePickerProps } from '../MobileDateRangePicker';
+import {
+  DesktopDateRangePicker,
+  DesktopDateRangePickerProps,
+  DesktopDateRangePickerSlotsComponent,
+  DesktopDateRangePickerSlotsComponentsProps,
+} from '../DesktopDateRangePicker';
+import {
+  MobileDateRangePicker,
+  MobileDateRangePickerProps,
+  MobileDateRangePickerSlotsComponent,
+  MobileDateRangePickerSlotsComponentsProps,
+} from '../MobileDateRangePicker';
 
 const releaseInfo = getReleaseInfo();
 
+export interface DateRangePickerSlotsComponent
+  extends MobileDateRangePickerSlotsComponent,
+    DesktopDateRangePickerSlotsComponent {}
+
+export interface DateRangePickerSlotsComponentsProps
+  extends MobileDateRangePickerSlotsComponentsProps,
+    DesktopDateRangePickerSlotsComponentsProps {}
+
 export interface DateRangePickerProps<TInputDate, TDate>
-  extends DesktopDateRangePickerProps<TInputDate, TDate>,
-    MobileDateRangePickerProps<TInputDate, TDate> {
+  extends Omit<DesktopDateRangePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileDateRangePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery?: string;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<DateRangePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<DateRangePickerSlotsComponentsProps>;
 }
 
 type DateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
@@ -92,12 +120,13 @@ DateRangePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps: PropTypes.object,
   /**
@@ -168,6 +197,7 @@ DateRangePicker.propTypes = {
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,

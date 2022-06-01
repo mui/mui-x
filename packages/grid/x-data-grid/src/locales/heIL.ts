@@ -28,16 +28,16 @@ const heILGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} מסננים פעילים` : `מסנן אחד פעיל`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'חיפוש...',
+  toolbarQuickFilterLabel: 'חיפוש',
+  toolbarQuickFilterDeleteIconLabel: 'ניקוי',
 
   // Export selector toolbar button text
   toolbarExport: 'ייצוא',
   toolbarExportLabel: 'ייצוא',
-  toolbarExportCSV: 'הורדה כ- CSV',
+  toolbarExportCSV: 'ייצוא ל- CSV',
   toolbarExportPrint: 'הדפסה',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'ייצוא ל- Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'חפש עמודה',
@@ -49,7 +49,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
   filterPanelDeleteIconLabel: 'מחק',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLinkOperator: 'אופרטור לוגי',
   filterPanelOperators: 'אופרטור',
 
   // TODO v6: rename to filterPanelOperator
@@ -139,7 +139,7 @@ const heILGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'כווץ',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'סידור שורות',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

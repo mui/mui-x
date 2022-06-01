@@ -4,7 +4,6 @@ import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
   dateTimePickerValueManager,
-  DateTimePickerSlotsComponent,
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import {
@@ -15,15 +14,18 @@ import {
 } from '../internals/components/wrappers/DesktopWrapper';
 import {
   CalendarOrClockPicker,
+  CalendarOrClockPickerSlotsComponent,
   CalendarOrClockPickerSlotsComponentsProps,
 } from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 
 export interface DesktopDateTimePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
-    DateTimePickerSlotsComponent {}
+    CalendarOrClockPickerSlotsComponent,
+    DateInputSlotsComponent {}
 
 export interface DesktopDateTimePickerSlotsComponentsProps
   extends DesktopWrapperSlotsComponentsProps,
@@ -32,7 +34,15 @@ export interface DesktopDateTimePickerSlotsComponentsProps
 export interface DesktopDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate>,
     DesktopWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<DesktopDateTimePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<DesktopDateTimePickerSlotsComponentsProps>;
 }
 
@@ -144,12 +154,13 @@ DesktopDateTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
+   * @default {}
    */
   componentsProps: PropTypes.object,
   /**
@@ -202,6 +213,7 @@ DesktopDateTimePicker.propTypes = {
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
    * @returns {string} The clock label.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    * @default <TDate extends any>(
    *   view: ClockView,
    *   time: TDate | null,
@@ -225,6 +237,7 @@ DesktopDateTimePicker.propTypes = {
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**

@@ -32,7 +32,15 @@ export interface TimePickerProps<TInputDate, TDate>
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery?: string;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<TimePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<TimePickerSlotsComponentsProps>;
 }
 
@@ -110,7 +118,15 @@ TimePicker.propTypes = {
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps: PropTypes.object,
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
@@ -149,6 +165,7 @@ TimePicker.propTypes = {
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
    * @returns {string} The clock label.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    * @default <TDate extends any>(
    *   view: ClockView,
    *   time: TDate | null,

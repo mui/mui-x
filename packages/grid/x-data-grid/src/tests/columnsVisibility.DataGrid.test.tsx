@@ -129,7 +129,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
       fireEvent.click(screen.getByText('Show all'));
       expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({ idBis: true });
+      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
     });
   });
 

@@ -8,6 +8,7 @@ import {
   WrapperVariant,
 } from '../internals/components/wrappers/WrapperVariantContext';
 import { CalendarOrClockPickerView } from '../internals/models';
+import { useLocaleText } from '../internals/hooks/useUtils';
 
 type TabValue = 'date' | 'time';
 
@@ -56,6 +57,8 @@ const DateTimePickerTabsRoot = styled(Tabs)<{ ownerState: OwnerState }>(
 export const DateTimePickerTabs = (props: DateTimePickerTabsProps) => {
   const { dateRangeIcon = <DateRange />, onChange, timeIcon = <Time />, view } = props;
 
+  const localeText = useLocaleText();
+
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const ownerState = { ...props, wrapperVariant };
 
@@ -72,10 +75,14 @@ export const DateTimePickerTabs = (props: DateTimePickerTabsProps) => {
     >
       <Tab
         value="date"
-        aria-label="pick date"
+        aria-label={localeText.dateTableLabel}
         icon={<React.Fragment>{dateRangeIcon}</React.Fragment>}
       />
-      <Tab value="time" aria-label="pick time" icon={<React.Fragment>{timeIcon}</React.Fragment>} />
+      <Tab
+        value="time"
+        aria-label={localeText.timeTableLabel}
+        icon={<React.Fragment>{timeIcon}</React.Fragment>}
+      />
     </DateTimePickerTabsRoot>
   );
 };

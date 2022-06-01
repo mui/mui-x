@@ -4,6 +4,7 @@ import Dialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/mater
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
+import { PickerStateWrapperProps } from '../hooks/usePickerState';
 
 export interface PickersModalDialogSlotsComponent {
   ActionBar: React.ElementType<PickersActionBarProps>;
@@ -19,14 +20,16 @@ export interface ExportedPickerModalProps {
   DialogProps?: Partial<MuiDialogProps>;
 }
 
-export interface PickersModalDialogProps extends ExportedPickerModalProps {
-  onAccept: () => void;
-  onClear: () => void;
-  onDismiss: () => void;
-  onCancel: () => void;
-  onSetToday: () => void;
-  open: boolean;
+export interface PickersModalDialogProps extends ExportedPickerModalProps, PickerStateWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: Partial<PickersModalDialogSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: Partial<PickersModalDialogSlotsComponentsProps>;
 }
 
@@ -61,6 +64,7 @@ export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDi
   } = props;
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+
   return (
     <PickersModalDialogRoot open={open} onClose={onDismiss} {...DialogProps}>
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
