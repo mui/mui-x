@@ -131,7 +131,11 @@ const getAggregationValueWrappedRenderCell = ({
     const cellAggregationPosition = getCellAggregationPosition(params.id);
     if (cellAggregationPosition && columnAggregationRules[cellAggregationPosition]) {
       if (!renderCell) {
-        return <GridFooterCell {...params} />;
+        if (cellAggregationPosition === 'footer') {
+          return <GridFooterCell {...params} />;
+        }
+
+        return params.formattedValue;
       }
 
       const aggregationMeta: GridAggregationCellMeta = {
@@ -231,19 +235,15 @@ const getAggregationLabelWrappedRenderCell = ({
   getCellAggregationPosition: (id: GridRowId) => GridAggregationPosition | null;
 }): AggregationWrappedColDefProperty<'renderCell'> => {
   const wrappedRenderCell: AggregationWrappedColDefProperty<'renderCell'> = (params) => {
-    if (getCellAggregationPosition(params.id) === 'footer') {
-      if (!renderCell) {
-        return <GridFooterCell {...params} />;
-      }
-
+    if (renderCell) {
       return renderCell(params);
     }
 
-    if (!renderCell) {
-      return params.formattedValue;
+    if (getCellAggregationPosition(params.id) === 'footer') {
+      return <GridFooterCell {...params} />;
     }
 
-    return renderCell(params);
+    return params.formattedValue;
   };
 
   wrappedRenderCell.isWrappedWithAggregation = true;
