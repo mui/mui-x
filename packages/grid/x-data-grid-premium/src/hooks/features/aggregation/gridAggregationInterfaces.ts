@@ -1,7 +1,26 @@
-import { GridValueFormatterParams, GridRowId, GridRowTreeNodeConfig } from '@mui/x-data-grid-pro';
+import { GridValueFormatterParams, GridRowId } from '@mui/x-data-grid-pro';
 
-interface GridAggregationParams<V = any> {
-  values: (V | undefined)[];
+export interface GridAggregationState {
+  model: GridAggregationModel;
+  lookup: GridAggregationLookup;
+}
+
+export interface GridAggregationInitialState {
+  model?: GridAggregationModel;
+}
+
+export interface GridAggregationInternalCache {
+  rulesOnLastColumnHydration: GridAggregationRules;
+  rulesOnLastRowHydration: GridAggregationRules;
+  footerLabelColumnOnLastColumnHydration: AggregationFooterLabelColumn[];
+}
+
+export interface GridAggregationApi {
+  /**
+   * Sets the aggregation rules.
+   * @param {GridAggregationModel} model The aggregated columns.
+   */
+  setAggregationModel: (model: GridAggregationModel) => void;
 }
 
 /**
@@ -46,6 +65,10 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
   hasCellUnit?: boolean;
 }
 
+interface GridAggregationParams<V = any> {
+  values: (V | undefined)[];
+}
+
 /**
  * Describes which aggregation function should be applied on the footer and on the grouping row of each group.
  * If a string is passed, it will be used on the top level footer.
@@ -67,29 +90,6 @@ export type GridAggregationLookup = {
     };
   };
 };
-
-export interface GridAggregationState {
-  model: GridAggregationModel;
-  lookup: GridAggregationLookup;
-}
-
-export interface GridAggregationInitialState {
-  model?: GridAggregationModel;
-}
-
-export interface GridAggregationInternalCache {
-  rulesOnLastColumnHydration: GridAggregationRules;
-  rulesOnLastRowHydration: GridAggregationRules;
-  footerLabelColumnOnLastColumnHydration: AggregationFooterLabelColumn[];
-}
-
-export interface GridAggregationApi {
-  /**
-   * Sets the aggregation rules.
-   * @param {GridAggregationModel} model The aggregated columns.
-   */
-  setAggregationModel: (model: GridAggregationModel) => void;
-}
 
 export type GridAggregationPosition = 'inline' | 'footer';
 
@@ -121,16 +121,11 @@ export interface GridColumnAggregationRules {
  * Object containing all the aggregation rules that must be applied to the current columns.
  * Unlike the aggregation model, those rules are sanitized and do not contain:
  * - items for non-existing columns
- * - items for non-aggregatable columns (GridColDef.aggregatable = false)
+ * - items for non-aggregable columns (GridColDef.aggregable = false)
  * - items for non-existing aggregation function
  * - items for non-available aggregation function on the column (GridColDef.availableAggregationFunctions)
  */
 export type GridAggregationRules = { [field: string]: GridColumnAggregationRules };
-
-export interface GridAggregationFooterLabelParams {
-  groupNode: GridRowTreeNodeConfig | null;
-  aggregationFunctions: { field: string; aggregationFunctionName: string }[];
-}
 
 export interface AggregationFooterLabelColumn {
   groupingCriteria?: string[];

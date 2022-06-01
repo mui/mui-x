@@ -10,6 +10,7 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { getAggregationFooterLabel } from './gridAggregationUtils';
+import { GridFooterCell } from '../../../components/GridFooterCell';
 
 const AGGREGATION_WRAPPABLE_PROPERTIES = [
   'valueGetter',
@@ -125,14 +126,14 @@ const getAggregationValueWrappedRenderCell = ({
   renderCell: GridColDef['renderCell'];
   columnAggregationRules: GridColumnAggregationRules;
   getCellAggregationPosition: (id: GridRowId) => GridAggregationPosition | null;
-}): AggregationWrappedColDefProperty<'renderCell'> | undefined => {
-  if (!renderCell) {
-    return undefined;
-  }
-
+}): AggregationWrappedColDefProperty<'renderCell'> => {
   const wrappedRenderCell: AggregationWrappedColDefProperty<'renderCell'> = (params) => {
     const cellAggregationPosition = getCellAggregationPosition(params.id);
     if (cellAggregationPosition && columnAggregationRules[cellAggregationPosition]) {
+      if (!renderCell) {
+        return <GridFooterCell {...params} />;
+      }
+
       const aggregationMeta: GridAggregationCellMeta = {
         hasCellUnit:
           columnAggregationRules[cellAggregationPosition]!.aggregationFunction.hasCellUnit ?? true,
@@ -143,8 +144,13 @@ const getAggregationValueWrappedRenderCell = ({
       return renderCell({ ...params, aggregation: aggregationMeta });
     }
 
+    if (!renderCell) {
+      return params.formattedValue;
+    }
+
     return renderCell(params);
   };
+
   wrappedRenderCell.isWrappedWithAggregation = true;
   wrappedRenderCell.originalMethod = renderCell;
 
@@ -195,8 +201,7 @@ const getAggregationLabelWrappedValueGetter = ({
   shouldRenderLabel: (groupNode: GridRowTreeNodeConfig | null) => boolean;
 }): AggregationWrappedColDefProperty<'valueGetter'> => {
   const wrappedValueGetter: AggregationWrappedColDefProperty<'valueGetter'> = (params) => {
-    const cellAggregationPosition = getCellAggregationPosition(params.id);
-    if (cellAggregationPosition === 'footer') {
+    if (getCellAggregationPosition(params.id) === 'footer') {
       return getAggregationFooterLabel({
         footerNode: params.rowNode,
         apiRef,
@@ -216,6 +221,35 @@ const getAggregationLabelWrappedValueGetter = ({
   wrappedValueGetter.originalMethod = valueGetter;
 
   return wrappedValueGetter;
+};
+
+const getAggregationLabelWrappedRenderCell = ({
+  renderCell,
+  getCellAggregationPosition,
+}: {
+  renderCell: GridColDef['renderCell'];
+  getCellAggregationPosition: (id: GridRowId) => GridAggregationPosition | null;
+}): AggregationWrappedColDefProperty<'renderCell'> => {
+  const wrappedRenderCell: AggregationWrappedColDefProperty<'renderCell'> = (params) => {
+    if (getCellAggregationPosition(params.id) === 'footer') {
+      if (!renderCell) {
+        return <GridFooterCell {...params} />;
+      }
+
+      return renderCell(params);
+    }
+
+    if (!renderCell) {
+      return params.formattedValue;
+    }
+
+    return renderCell(params);
+  };
+
+  wrappedRenderCell.isWrappedWithAggregation = true;
+  wrappedRenderCell.originalMethod = renderCell;
+
+  return wrappedRenderCell;
 };
 
 /**
@@ -335,6 +369,10 @@ export const wrapColumnWithAggregationLabel = ({
     }),
     filterOperators: getWrappedFilterOperators({
       filterOperators: column.filterOperators,
+      getCellAggregationPosition,
+    }),
+    renderCell: getAggregationLabelWrappedRenderCell({
+      renderCell: column.renderCell,
       getCellAggregationPosition,
     }),
   };

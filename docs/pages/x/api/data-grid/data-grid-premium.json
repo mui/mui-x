@@ -5,9 +5,6 @@
       "required": true
     },
     "rows": { "type": { "name": "array" }, "required": true },
-    "aggregationFooterLabel": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" }
-    },
     "aggregationFooterLabelField": {
       "type": { "name": "string" },
       "default": "If tree data or row grouping are enabled, use their grouping column, if not then do not render any label."
@@ -247,6 +244,7 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "aggregationCell",
       "autoHeight",
       "booleanCell",
       "cell--editable",

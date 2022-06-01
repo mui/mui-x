@@ -98,7 +98,7 @@ The print export always prints rows in their current state.
 :::
 
 By default, the grid exports the selected rows if there are any.
-If not, it exports all rows (filtered and sorted rows, according to active rules), including the collapsed ones.
+If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:

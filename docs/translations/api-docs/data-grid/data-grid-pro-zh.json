@@ -141,6 +141,10 @@
     "actionsCell": {
       "description": "Styles applied to the root element of the cell with type=\"actions\""
     },
+    "aggregationCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell displayed the aggregated value"
+    },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",

@@ -302,6 +302,7 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "aggregationCell",
       "autoHeight",
       "booleanCell",
       "cell--editable",

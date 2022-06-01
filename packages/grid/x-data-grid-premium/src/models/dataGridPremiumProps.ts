@@ -16,7 +16,6 @@ import type {
   GridAggregationModel,
   GridAggregationFunction,
   GridAggregationPosition,
-  GridAggregationFooterLabelParams,
 } from '../hooks/features/aggregation';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
@@ -79,7 +78,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
   /**
    * @default "filtered"
    */
-  aggregatedRows: 'filtered' | 'all';
+  aggregationRowsScope: 'filtered' | 'all';
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>

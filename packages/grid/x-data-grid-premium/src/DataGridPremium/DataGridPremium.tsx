@@ -66,7 +66,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * @default "filtered"
    */
-  aggregatedRows: PropTypes.oneOf(['all', 'filtered']),
+  aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
   /**
    * Field of the column on which we want to render the footer aggregation labels.
    * @default If tree data or row grouping are enabled, use their grouping column, if not then do not render any label.

@@ -6,7 +6,7 @@ title: Data Grid - Aggregation
 
 <p class="description">Use aggregation functions to combine your row values.</p>
 
-The aggregation can be modified through the grid interface by opening the column menu and selecting an item on the _Aggregation_ select.
+You can aggregate rows through the grid interface by opening the column menu and selecting from the items under **Aggregation**.
 
 The aggregated values will be rendered in a footer row at the bottom of the grid.
 
@@ -14,13 +14,15 @@ The aggregated values will be rendered in a footer row at the bottom of the grid
 The footer row will be pinned at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
 :::
 
-{{"demo": "AggregationBasic.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "AggregationInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Pass aggregation to the grid
 
 ### Structure of the model
 
-The aggregation model is a lookup where the keys are the columns, and the values are aggregation items, containing the functions defining the aggregation behavior, and where the aggregated values should be displayed.
+The aggregation model is an object.
+The keys correspond to the columns, and the values are aggregation items.
+The values contain the name of the functions that define the aggregation behavior, and where the aggregated values are displayed.
 
 An aggregation item is an object where `item.footer` contains the name of the aggregation function to apply on the footers
 and `item.inline` contains the name of the aggregation function to apply on the grouping rows.
@@ -38,7 +40,7 @@ const model: GridAggregationModel = { gross: 'sum' };
 
 ### Initialize aggregation
 
-To initialize aggregation without controlling it, provide the model to the `initialState` prop.
+To initialize aggregation without controlling its state, provide the model to the `initialState` prop.
 
 {{"demo": "AggregationInitialState.js", "bg": "inline"}}
 
@@ -62,7 +64,7 @@ It will disable all features related to aggregation, even if a model is provided
 
 ### For some columns
 
-In case you need to disable aggregation on specific column(s), set the `aggregatable` property on the respective column definition (`GridColDef`) to `false`.
+In case you need to disable aggregation on specific column(s), set the `aggregable` property on the respective column definition (`GridColDef`) to `false`.
 In the example below, the `title` and `year` columns are blocked from being aggregated:
 
 {{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -100,7 +102,7 @@ For custom aggregation functions, the label must be provided inside the aggregat
 ##### When several columns are aggregated
 
 If several aggregation function are being used at the same time,
-then we have a generic label which is "Result" by default.
+then display a generic label ("Result" by default).
 You can override this label by providing a custom `aggregationMultiFunctionLabel` local text.
 
 {{"demo": "AggregationLabelMultiLocaleText.js", "bg": "inline"}}
@@ -117,7 +119,7 @@ When the row grouping is enabled, the aggregated values can be displayed in two 
 
 2. `inline` - the grid will display aggregation on the grouping rows
 
-Both positions can be used simultaneously with different aggregation function as shown in the example below:
+Both positions can be used simultaneously with different aggregation functions, as shown in the example below:
 
 ```tsx
 <DataGridPremium
@@ -146,7 +148,7 @@ Both positions can be used simultaneously with different aggregation function as
 You can limit aggregation to specific groups with the `isGroupAggregated` prop.
 This function receives two parameters:
 
-1. The group from which the grid is trying to aggregate or `null` if trying to aggregate the root group.
+1. The group that the grid is aggregating (or `null` if aggregating the root group).
 2. The position where the grid is aggregating.
 
 ```tsx
@@ -187,7 +189,7 @@ The demo below shows the _sum_ aggregation on the **Size** column and the _max_ 
 ## Filtering
 
 By default, aggregation only uses the filtered rows.
-You can set the `aggregatedRows` to `"all"` to use all rows.
+You can set the `aggregationRowsScope` to `"all"` to use all rows.
 
 In the example below, the movie _Avatar_ is not passing the filters but is still used for the **max** aggregation of the `gross` column.
 
@@ -198,6 +200,15 @@ In the example below, the movie _Avatar_ is not passing the filters but is still
 ### Basic structure
 
 An aggregation function is an object describing how to combine a given set of values.
+
+```ts
+const minAgg: GridAggregationFunction<number | Date> = {
+  // Aggregates the `values` into a single value.
+  apply: ({ values }) => Math.min(...values.filter((value) => value != null)),
+  // This aggregation function is only compatible with numerical values.
+  columnTypes: ['number'],
+};
+```
 
 The full typing details can be found on the [GridAggregationFunction API page](/x/api/data-grid/grid-aggregation-function/).
 

@@ -1,7 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "aggregationFooterLabel": "Returns the aggregation label of a group. This label will be rendered on the 1st grouping column.",
     "aggregationFooterLabelField": "Field of the column on which we want to render the footer aggregation labels.",
     "aggregationModel": "Set the aggregation model of the grid.",
     "apiRef": "The ref object that allows grid manipulation. Can be instantiated with useGridApiRef().",
@@ -150,6 +149,10 @@
   "classDescriptions": {
     "actionsCell": {
       "description": "Styles applied to the root element of the cell with type=\"actions\""
+    },
+    "aggregationCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell displayed the aggregated value"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
