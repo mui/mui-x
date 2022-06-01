@@ -69,22 +69,20 @@ In the example below, the `title` and `year` columns are blocked from being aggr
 
 {{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Aggregation label
-
-### Label of the footer row
+## Label of the footer row
 
 When aggregating on a footer row,
 you can add a label automatically describing the current aggregation function currently applied on the rows.
 
-#### Choose the column
+### Choose the column
 
 Use the `aggregationFooterLabelField` prop to choose which column to render the aggregation label on.
 
 {{"demo": "AggregationLabelColumn.js", "bg": "inline"}}
 
-#### Customize the content
+### Customize the content
 
-##### When all aggregated columns use the same aggregation function
+#### When all aggregated columns use the same aggregation function
 
 If we have a single column currently aggregated on the footer or if all columns currently aggregated on the footer have the same aggregation function,
 then we can have a label describing the aggregation function being used.
@@ -99,17 +97,13 @@ In the demo below, the aggregation label of the _sum_ aggregation function has b
 For custom aggregation functions, the label must be provided inside the aggregation function object
 (see the [dedicated section](#create-custom-functions) for more information)
 
-##### When several columns are aggregated
+#### When several columns are aggregated
 
 If several aggregation function are being used at the same time,
 then display a generic label ("Result" by default).
 You can override this label by providing a custom `aggregationMultiFunctionLabel` local text.
 
 {{"demo": "AggregationLabelMultiLocaleText.js", "bg": "inline"}}
-
-### Label of the column header
-
-TODO
 
 ## Usage with row grouping
 
