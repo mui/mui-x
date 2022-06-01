@@ -257,7 +257,6 @@
   "styles": {
     "classes": [
       "actionsCell",
-      "aggregationCell",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -301,6 +300,7 @@
       "detailPanels",
       "detailPanelToggleCell",
       "detailPanelToggleCell--expanded",
+      "footerCell",
       "panel",
       "panelHeader",
       "panelWrapper",

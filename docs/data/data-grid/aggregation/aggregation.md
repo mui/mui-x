@@ -173,6 +173,7 @@ As with row grouping, you can display the aggregated values either in the footer
 
 :::info
 If the aggregated value is displayed in the grouping row, it will always have priority over the row data.
+
 This means that the data from groups explicitly provided in your dataset will be ignored in favor of their aggregated values.  
 :::
 

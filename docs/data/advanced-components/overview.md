@@ -65,7 +65,7 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
 
 ### Premium Plan <span class="plan-premium"></span>
 
-The MUI X Premium Plan contains the most advanced features such as Row grouping, Excel export, Aggregation (🚧), as well as everything that's included in the Pro Plan.
+The MUI X Premium Plan contains the most advanced features such as Row grouping, Excel export, Aggregation, as well as everything that's included in the Pro Plan.
 
 The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
 This plan contains highly complex features that can be useful to analyze and group data without the use of an external application.

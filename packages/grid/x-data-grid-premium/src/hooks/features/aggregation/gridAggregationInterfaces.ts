@@ -17,8 +17,8 @@ export interface GridAggregationInternalCache {
 
 export interface GridAggregationApi {
   /**
-   * Sets the aggregation rules.
-   * @param {GridAggregationModel} model The aggregated columns.
+   * Sets the aggregation model to the one given by `model`.
+   * @param {GridAggregationModel} model The aggregation model.
    */
   setAggregationModel: (model: GridAggregationModel) => void;
 }
@@ -34,20 +34,17 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
    * @returns {AV} The aggregated value.
    */
   apply: (params: GridAggregationParams<V>) => AV | null | undefined;
-
   /**
    * Label of the aggregation function.
    * Will be used to add a label on the footer of the grouping column when this aggregation function is the only one being used.
    * @default `apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})`
    */
   label?: string;
-
   /**
    * Column types supported by this aggregation function.
    * If not defined, all types are supported (in most cases this property should be defined).
    */
   columnTypes?: string[];
-
   /**
    * Function that allows to apply a formatter to the aggregated value.
    * If not defined, the grid will use the formatter of the column.
@@ -56,7 +53,6 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
    * @returns {F} The formatted value.
    */
   valueFormatter?: (params: GridValueFormatterParams<AV>) => FAV;
-
   /**
    * Indicates if the aggregated value have the same unit as the cells used to generate it.
    * It can be used to apply a custom cell renderer only if the aggregated value has the same unit.
