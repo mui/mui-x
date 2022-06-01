@@ -140,6 +140,17 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Rad reorganisering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationMenuItemFooterLabel: 'Footer',
+  // aggregationMenuItemInlineLabel: 'Inline',
+  // aggregationMultiFunctionLabel: groupingKey => groupingKey == null ? 'Result' : `Result ${groupingKey}`,
+  // aggregationFunctionLabelSum: groupingKey => groupingKey == null ? 'Total' : `Total ${groupingKey}`,
+  // aggregationFunctionLabelAvg: groupingKey => groupingKey == null ? 'Average' : `Average ${groupingKey}`,
+  // aggregationFunctionLabelMin: groupingKey => groupingKey == null ? 'Minimum' : `Minimum ${groupingKey}`,
+  // aggregationFunctionLabelMax: groupingKey => groupingKey == null ? 'Maximum' : `Maximum ${groupingKey}`,
+  // aggregationFunctionLabelSize: groupingKey => groupingKey == null ? 'Size' : `Size ${groupingKey}`,
 };
 
 export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);
