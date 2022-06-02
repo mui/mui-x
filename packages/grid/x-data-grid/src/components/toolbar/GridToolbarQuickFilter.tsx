@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import { debounce } from '@mui/material/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
 import { GridFilterModel } from '../../models/gridFilterModel';
 import { isDeepEqual } from '../../utils/utils';
@@ -74,9 +75,9 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const quickFilterValues = gridQuickFilterValuesSelector(apiRef);
+  const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
 
-  const [searchValue, setSearchValue] = React.useState(
+  const [searchValue, setSearchValue] = React.useState(() =>
     quickFilterFormatter(quickFilterValues ?? []),
   );
 
@@ -86,18 +87,15 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     if (!isDeepEqual(prevQuickFilterValues, quickFilterValues)) {
       // The model of quick filter value has been updated
       setPrevQuickFilterValues(quickFilterValues);
-      if (!isDeepEqual(quickFilterParser(searchValue), quickFilterValues)) {
-        // The input value and the new model are un-sync so we will update the input
-        setSearchValue(quickFilterFormatter(quickFilterValues ?? []));
-      }
+
+      // Update the input value if needed to match the new model
+      setSearchValue((prevSearchValue) =>
+        isDeepEqual(quickFilterParser(prevSearchValue), quickFilterValues)
+          ? prevSearchValue
+          : quickFilterFormatter(quickFilterValues ?? []),
+      );
     }
-  }, [
-    prevQuickFilterValues,
-    quickFilterValues,
-    searchValue,
-    quickFilterFormatter,
-    quickFilterParser,
-  ]);
+  }, [prevQuickFilterValues, quickFilterValues, quickFilterFormatter, quickFilterParser]);
 
   const updateSearchValue = React.useCallback(
     (newSearchValue) => {
