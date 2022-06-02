@@ -368,6 +368,8 @@ The values used by the quick filter are obtained by splitting with space.
 If you want to implement a more advanced logic, the `<GridToolbarQuickFilter/>` component accepts a prop `quickFilterParser`.
 This function takes the string from the search text field and returns an array of values.
 
+If you control the `quickFilterValues` either by controlling `filterModel` or with the initial state, you should provide a `quickFilterFormatter` which will be used to update the content of the input.
+
 For example, the following parser allows to search words containing a space by using the `','` to split values.
 
 ```jsx
@@ -375,6 +377,7 @@ For example, the following parser allows to search words containing a space by u
   quickFilterParser={(searchInput) =>
     searchInput.split(',').map((value) => value.trim())
   }
+  quickFilterFormatter={(quickFilterValues) => quickFilterValues.join(', ')}
   debounceMs={200} // time before applying the new quick filter value
 />
 ```
