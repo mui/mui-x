@@ -19,12 +19,13 @@ export default function CustomDateTimePicker() {
         <LocalizationProvider
           dateAdapter={AdapterDateFns}
           localeText={{
-            previousMonth: 'Open previous month',
-            nextMonth: 'Open next month',
+            openPreviousView: 'Open previous view',
+            openNextView: 'Open next view',
           }}
         >
           <DateTimePicker
             disableFuture
+            hideTabs
             openTo="hours"
             value={value}
             onChange={(newValue) => {
