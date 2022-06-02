@@ -47,7 +47,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
       : 'Escolha uma hora',
 
   // Table labels
-  timeTableLabel: 'escolha um hora',
+  timeTableLabel: 'escolha uma hora',
   dateTableLabel: 'escolha uma data',
 
 };
