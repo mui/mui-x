@@ -162,9 +162,9 @@ GridToolbarQuickFilter.propTypes = {
    */
   debounceMs: PropTypes.number,
   /**
-   * Function responsible for formatting values of quick filter in a string when the model is modified
-   * @param {any[]} values The new values passed to the quick filter model
-   * @returns {string} The string to display in the text field
+   * Function responsible for formatting values of the quick filter into a string when the model is modified.
+   * @param {any[]} values The new values passed to the quick filter model.
+   * @returns {string} The string to display in the text field.
    */
   quickFilterFormatter: PropTypes.func,
   /**
