@@ -9,10 +9,11 @@ export default function BasicDateRangePicker() {
   const [value, setValue] = React.useState([null, null]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider
+      dateAdapter={AdapterDateFns}
+      localeText={{ start: 'Check-in', end: 'Check-out' }}
+    >
       <DateRangePicker
-        startText="Check-in"
-        endText="Check-out"
         value={value}
         onChange={(newValue) => {
           setValue(newValue);

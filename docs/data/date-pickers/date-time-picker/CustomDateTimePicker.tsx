@@ -18,28 +18,34 @@ export default function CustomDateTimePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Stack spacing={3}>
-        <DateTimePicker
-          disableFuture
-          hideTabs
-          openTo="hours"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
+        <LocalizationProvider
+          dateAdapter={AdapterDateFns}
+          localeText={{
+            openPreviousView: 'Open previous view',
+            openNextView: 'Open next view',
           }}
-          minDate={new Date('2018-01-01')}
-          components={{
-            LeftArrowIcon: AlarmIcon,
-            RightArrowIcon: SnoozeIcon,
-            OpenPickerIcon: ClockIcon,
-          }}
-          leftArrowButtonText="Open previous month"
-          rightArrowButtonText="Open next month"
-          minTime={new Date(0, 0, 0, 9)}
-          maxTime={new Date(0, 0, 0, 20)}
-          renderInput={(params) => (
-            <TextField {...params} helperText="Hardcoded helper text" />
-          )}
-        />
+        >
+          <DateTimePicker
+            disableFuture
+            hideTabs
+            openTo="hours"
+            value={value}
+            onChange={(newValue) => {
+              setValue(newValue);
+            }}
+            minDate={new Date('2018-01-01')}
+            components={{
+              LeftArrowIcon: AlarmIcon,
+              RightArrowIcon: SnoozeIcon,
+              OpenPickerIcon: ClockIcon,
+            }}
+            minTime={new Date(0, 0, 0, 9)}
+            maxTime={new Date(0, 0, 0, 20)}
+            renderInput={(params) => (
+              <TextField {...params} helperText="Hardcoded helper text" />
+            )}
+          />
+        </LocalizationProvider>
         <MobileDateTimePicker
           value={value}
           onChange={(newValue) => {
