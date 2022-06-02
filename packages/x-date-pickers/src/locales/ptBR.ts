@@ -10,7 +10,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'Abrir próxima seleção',
   openNextView: 'Abrir seleção anterior',
-  // calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+
   calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
     view === 'year'
       ? 'Seleção de ano está aberta, alternando para seleção de calendário'
