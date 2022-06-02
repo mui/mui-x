@@ -57,6 +57,7 @@ describe('<DataGrid /> - Quick Filter', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
     });
+
     it('should allows to customize input splitting', () => {
       const onFilterModelChange = spy();
 
@@ -84,6 +85,60 @@ describe('<DataGrid /> - Quick Filter', () => {
         quickFilterValues: ['adid', 'nik'],
         quickFilterLogicOperator: 'and',
       });
+    });
+
+    it('should no prettify user input', () => {
+      const { container } = render(<TestCase />);
+
+      fireEvent.change(container.querySelector('input[type=search]'), {
+        target: { value: 'adidas   nike' },
+      });
+      clock.runToLast();
+
+      expect(container.querySelector('input[type=search]').value).to.equal('adidas   nike');
+    });
+
+    it('should update input when the state is modified', () => {
+      const { container, setProps } = render(<TestCase />);
+
+      expect(container.querySelector('input[type=search]').value).to.equal('');
+
+      setProps({
+        filterModel: {
+          items: [],
+          quickFilterValues: ['adidas', 'nike'],
+        },
+      });
+      expect(container.querySelector('input[type=search]').value).to.equal('adidas nike');
+
+      setProps({
+        filterModel: {
+          items: [],
+          quickFilterValues: [],
+        },
+      });
+      expect(container.querySelector('input[type=search]').value).to.equal('');
+    });
+
+    it('should allows to customize input formatting', () => {
+      const { container, setProps } = render(
+        <TestCase
+          componentsProps={{
+            toolbar: {
+              quickFilterFormatter: (quickFilterValues: string[]) => quickFilterValues.join(', '),
+            },
+          }}
+        />,
+      );
+
+      expect(container.querySelector('input[type=search]').value).to.equal('');
+      setProps({
+        filterModel: {
+          items: [],
+          quickFilterValues: ['adidas', 'nike'],
+        },
+      });
+      expect(container.querySelector('input[type=search]').value).to.equal('adidas, nike');
     });
   });
 
