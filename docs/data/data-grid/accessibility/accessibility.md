@@ -47,7 +47,7 @@ The grid responds to keyboard interactions from the user and emits events when k
 
 ### Tab sequence
 
-According to [WCAG](https://www.w3.org/TR/wai-aria-practices-1.1/#grid), only one of the focusable elements contained by the grid should be included in the page tab sequence.
+According to [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by the grid should be included in the page tab sequence.
 For an element to be included in the tab sequence, it needs to have a `tabIndex` value of zero or greater.
 
 When a cell of the grid is focused, the first inner element with `tabIndex=0` will receive the focus.
