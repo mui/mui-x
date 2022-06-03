@@ -58,7 +58,7 @@ This behavior makes it complicated to navigate between elements when using large
 
 {{"demo": "FocusManagement.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If you are customizing cell rendering with the [`renderCell`](/x/react-data-grid/columns/#render-cell) method, you become responsible for removing focusable elements from the page tab sequence.
+If you are customizing cell rendering with the [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells) method, you become responsible for removing focusable elements from the page tab sequence.
 To do so, use the `tabIndex` prop passed to the `renderCell` params to know if the rendered cell has focus and so if the inner elements should be removed from the tab sequence.
 
 ```jsx
