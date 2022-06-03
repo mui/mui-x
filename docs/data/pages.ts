@@ -57,9 +57,9 @@ const pages: MuiPage[] = [
           '/x/react-data-grid/pivoting',
         ],
         children: [
-          { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping', plan: 'premium' },
-          { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data', plan: 'pro' },
-          { pathname: '/x/react-data-grid/master-detail', title: 'Master Detail', plan: 'pro' },
+          { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
+          { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
+          { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
           { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧', plan: 'premium' },
         ],

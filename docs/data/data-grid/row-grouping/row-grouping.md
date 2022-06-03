@@ -1,5 +1,5 @@
 ---
-title: Data Grid - Row Grouping
+title: Data Grid - Row grouping
 ---
 
 # Data grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
