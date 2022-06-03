@@ -315,7 +315,7 @@ DataGridPremiumRaw.propTypes = {
   }),
   /**
    * Determines the position of an aggregated value.
-   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
+   * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
    * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'.
    */
@@ -430,7 +430,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @param {GridGroupNode} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
   isGroupExpandedByDefault: PropTypes.func,
