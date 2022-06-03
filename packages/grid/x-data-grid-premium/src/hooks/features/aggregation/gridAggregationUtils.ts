@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { capitalize } from '@mui/material';
 import { GridColDef, GridRowId, GridRowTreeNodeConfig } from '@mui/x-data-grid-pro';
 import {
   GridColumnRawLookup,
@@ -7,10 +9,12 @@ import {
 import {
   GridAggregationFunction,
   GridAggregationModel,
+  GridAggregationRule,
   GridAggregationRules,
 } from './gridAggregationInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 
 export const GRID_AGGREGATION_ROOT_FOOTER_ROW_ID = 'auto-generated-group-footer-root';
 
@@ -201,4 +205,26 @@ export const hasAggregationRulesChanged = (
 
     return false;
   });
+};
+
+export const getAggregationFunctionLabel = ({
+  apiRef,
+  aggregationRule,
+}: {
+  apiRef: React.MutableRefObject<GridApiPremium>;
+  aggregationRule: GridAggregationRule;
+}): string => {
+  if (aggregationRule.aggregationFunction.label != null) {
+    return aggregationRule.aggregationFunction.label;
+  }
+
+  try {
+    return apiRef.current.getLocaleText(
+      `aggregationFunctionLabel${capitalize(
+        aggregationRule.aggregationFunctionName,
+      )}` as 'aggregationFunctionLabelSum',
+    );
+  } catch (e) {
+    return aggregationRule.aggregationFunctionName;
+  }
 };
