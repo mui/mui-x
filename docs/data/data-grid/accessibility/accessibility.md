@@ -50,8 +50,8 @@ The grid responds to keyboard interactions from the user and emits events when k
 According to [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by the grid should be included in the page tab sequence.
 For an element to be included in the tab sequence, it needs to have a `tabIndex` value of zero or greater.
 
-When a cell of the grid is focused, the first inner element with `tabIndex=0` will receive the focus.
-If there is no element with `tabIndex=0`, the focus is set on the cell itself.
+When a cell of the grid is focused, the first inner element with `tabIndex={0}` will receive the focus.
+If there is no element with `tabIndex={0}`, the focus is set on the cell itself.
 
 In the example below, the first grid does not remove links from the tab sequence, which implies having to pass through all the links before accessing the pagination controls.
 This behavior makes it complicated to navigate between elements when using large datasets.
