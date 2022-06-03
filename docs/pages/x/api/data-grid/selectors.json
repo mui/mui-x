@@ -234,6 +234,13 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridQuickFilterValuesSelector",
+    "returnType": "any[] | undefined",
+    "category": "Filtering",
+    "description": "Get the current quick filter values.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridResizingColumnFieldSelector",
     "returnType": "string",
     "description": "",
