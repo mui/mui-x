@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ComponentsPropsList } from '@mui/material/styles';
-import { GridKeyValue } from '../colDef/gridColDef';
 
 /**
  * Set the types of the texts in the grid.
