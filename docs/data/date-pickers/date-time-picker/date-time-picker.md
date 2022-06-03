@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
 ---
 
-# Date Time Picker
+# Date time picker
 
 <p class="description">This component combines the date & time pickers.</p>
 
