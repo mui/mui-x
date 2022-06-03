@@ -19,7 +19,7 @@ Otherwise, the grid will re-apply heavy work like sorting and filtering.
 
 :::warning
 Each row object should have a field that uniquely identifies the row.
-By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/column-definition) for `id` field is not required.
+By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/column-definition/) for `id` field is not required.
 
 When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
 
