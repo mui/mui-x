@@ -83,6 +83,15 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * @default "filtered"
    */
   aggregationRowsScope: 'filtered' | 'all';
+  /**
+   * Determines the position of an aggregated value.
+   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
+   * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
+   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'.
+   */
+  getAggregationPosition: (
+    groupNode: GridRowTreeNodeConfig | null,
+  ) => GridAggregationPosition | null;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -117,19 +126,4 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
-  /**
-   * Determines in a group of rows should be aggregated.
-   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
-   * @param {GridAggregationPosition} position The position on which aggregation has to be done.
-   * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
-   */
-  isGroupAggregated?: (
-    groupNode: GridRowTreeNodeConfig | null,
-    position: GridAggregationPosition,
-  ) => boolean;
-  /**
-   * Field of the column on which we want to render the footer aggregation labels.
-   * @default If tree data or row grouping are enabled, use their grouping column, if not then do not render any label.
-   */
-  aggregationFooterLabelField?: string;
 }

@@ -140,12 +140,8 @@ export default function AggregationTreeData() {
         initialState={{
           aggregation: {
             model: {
-              size: {
-                inline: 'sum',
-              },
-              updatedAt: {
-                inline: 'max',
-              },
+              size: 'sum',
+              updatedAt: 'max',
             },
           },
         }}

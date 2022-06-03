@@ -6,9 +6,7 @@
   initialState={{
     aggregation: {
       model: {
-        imdbRating: {
-          footer: 'avg',
-        },
+        imdbRating: 'avg',
       },
     },
   }}

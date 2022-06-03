@@ -40,9 +40,7 @@ export default function AggregationRemoveFunctionAllColumns() {
       initialState={{
         aggregation: {
           model: {
-            gross: {
-              footer: 'max',
-            },
+            gross: 'max',
           },
         },
       }}

@@ -5,10 +5,6 @@
       "required": true
     },
     "rows": { "type": { "name": "array" }, "required": true },
-    "aggregationFooterLabelField": {
-      "type": { "name": "string" },
-      "default": "If tree data or row grouping are enabled, use their grouping column, if not then do not render any label."
-    },
     "aggregationFunctions": {
       "type": { "name": "object" },
       "default": "GRID_AGGREGATION_FUNCTIONS"
@@ -86,6 +82,10 @@
         "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
     },
+    "getAggregationPosition": {
+      "type": { "name": "func" },
+      "default": "`(groupNode) => groupNode == null ? 'footer' : 'inline'."
+    },
     "getCellClassName": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },
     "getDetailPanelHeight": { "type": { "name": "func" }, "default": "\"() => 500\"" },
@@ -106,7 +106,6 @@
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": { "type": { "name": "func" } },
-    "isGroupAggregated": { "type": { "name": "func" } },
     "isGroupExpandedByDefault": { "type": { "name": "func" } },
     "isRowSelectable": { "type": { "name": "func" } },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" } },

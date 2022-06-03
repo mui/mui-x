@@ -143,14 +143,11 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationMenuItemFooterLabel: 'Footer',
-  // aggregationMenuItemInlineLabel: 'Inline',
-  // aggregationMultiFunctionLabel: groupingKey => groupingKey == null ? 'Result' : `Result ${groupingKey}`,
-  // aggregationFunctionLabelSum: groupingKey => groupingKey == null ? 'Total' : `Total ${groupingKey}`,
-  // aggregationFunctionLabelAvg: groupingKey => groupingKey == null ? 'Average' : `Average ${groupingKey}`,
-  // aggregationFunctionLabelMin: groupingKey => groupingKey == null ? 'Minimum' : `Minimum ${groupingKey}`,
-  // aggregationFunctionLabelMax: groupingKey => groupingKey == null ? 'Maximum' : `Maximum ${groupingKey}`,
-  // aggregationFunctionLabelSize: groupingKey => groupingKey == null ? 'Size' : `Size ${groupingKey}`,
+  // aggregationFunctionLabelSum: 'Total',
+  // aggregationFunctionLabelAvg: 'Average',
+  // aggregationFunctionLabelMin: 'Minimum',
+  // aggregationFunctionLabelMax: 'Maximum',
+  // aggregationFunctionLabelSize: 'Size',
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);

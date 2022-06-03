@@ -21,22 +21,8 @@ The footer row will be pinned at the bottom of the grid once [#1251](https://git
 ### Structure of the model
 
 The aggregation model is an object.
-The keys correspond to the columns, and the values are aggregation items.
+The keys correspond to the columns, and the values are the name of the aggregation function to use.
 The values contain the name of the functions that define the aggregation behavior, and where the aggregated values are displayed.
-
-An aggregation item is an object where `item.footer` contains the name of the aggregation function to apply on the footers
-and `item.inline` contains the name of the aggregation function to apply on the grouping rows.
-
-:::info
-If you only need to aggregate in the footer, you can use the short notation:
-
-```ts
-const model: GridAggregationModel = { gross: { footer: 'sum' } };
-// can be replaced by
-const model: GridAggregationModel = { gross: 'sum' };
-```
-
-:::
 
 ### Initialize aggregation
 
@@ -69,103 +55,52 @@ In the example below, the `title` and `year` columns are blocked from being aggr
 
 {{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Label of the footer row
-
-When aggregating on a footer row,
-you can add a label automatically describing the current aggregation function currently applied on the rows.
-
-### Choose the column
-
-Use the `aggregationFooterLabelField` prop to choose which column to render the aggregation label on.
-
-{{"demo": "AggregationLabelColumn.js", "bg": "inline"}}
-
-### Customize the content
-
-#### When all aggregated columns use the same aggregation function
-
-If we have a single column currently aggregated on the footer or if all columns currently aggregated on the footer have the same aggregation function,
-then we can have a label describing the aggregation function being used.
-
-For built-in aggregation functions, the label are handled by our [localization](/x/react-data-grid/localization/).
-You can override these labels by providing a custom locale text to the grid.
-The name of the key is `aggregationFunctionLabel${capitalize(aggregationFunctionName)}`
-In the demo below, the aggregation label of the _sum_ aggregation function has been replaced by "Sum" instead of "Total":
-
-{{"demo": "AggregationLabelSingleLocaleText.js", "bg": "inline"}}
-
-For custom aggregation functions, the label must be provided inside the aggregation function object
-(see the [dedicated section](#create-custom-functions) for more information)
-
-#### When several columns are aggregated
-
-If several aggregation function are being used at the same time,
-then display a generic label ("Result" by default).
-You can override this label by providing a custom `aggregationMultiFunctionLabel` local text.
-
-{{"demo": "AggregationLabelMultiLocaleText.js", "bg": "inline"}}
-
 ## Usage with row grouping
 
-When the row grouping is enabled, the aggregated values can be displayed in two positions:
+When the row grouping is enabled, the aggregated values will be displayed
 
-1. `footer` - the grid will add a root-level footer to aggregate all the rows and one footer per group to aggregate its rows
+1. On the top-level footer - like without row grouping, the grid will add a top-level footer to aggregate all the rows
 
-2. `inline` - the grid will display aggregation on the grouping rows
-
-Both positions can be used simultaneously with different aggregation functions, as shown in the example below:
-
-```tsx
-<DataGridPremium
-  initialState={{
-    rowGrouping: {
-      model: ['company'],
-    },
-    aggregation: {
-      model: {
-        gross: {
-          // Aggregation displayed on the footers
-          footer: 'max',
-          // Aggregation displayed on the grouping rows
-          inline: 'sum',
-        },
-      },
-    },
-  }}
-/>
-```
+2. On the grouping rows - the grid will display each group aggregated value on its grouping row
 
 {{"demo": "AggregationRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Aggregate specific groups
+You can customize this behavior using the `getAggregationPosition` prop.
 
-You can limit aggregation to specific groups with the `isGroupAggregated` prop.
-This function receives two parameters:
+This function takes the current group node as an argument (`null` for the root group) and returns the position of the aggregated value.
+This position must be one of the three following values:
 
-1. The group that the grid is aggregating (or `null` if aggregating the root group).
-2. The position where the grid is aggregating.
+1. `"footer"` - the grid will add a footer to the group to aggregate its rows
+
+2. `"inline"` - the grid will disable aggregation on the grouping row
+
+3 `null` - the grid will not aggregate the group
 
 ```tsx
-// Will aggregate all the groups but not the root
-isGroupAggregated={(groupNode) => groupNode != null}
+// Will aggregate the root group on the top-level footer and the other groups on their grouping row
+// (default behavior)
+getAggregationPosition=(groupNode) => (groupNode == null ? 'footer' : 'inline'),
 
-// Will only aggregate the company groups
+// Will aggregate all the groups on their grouping row except the root group which will not be aggregated
+getAggregationPosition={(groupNode) => groupNode == null ? null : 'inline'}
+
+// Will only aggregate the company groups on the grouping row
 // Director groups and the root will not be aggregated
-isGroupAggregated={(groupNode) => groupNode?.groupingField === 'company'}
+getAggregationPosition={(groupNode) => groupNode?.groupingField === 'company' ? 'inline' : null}
 
-// Will only aggregate the company group "Universal Pictures"
-isGroupAggregated={(groupNode) =>
-  groupNode?.groupingField === 'company' &&
-  groupNode?.groupingKey === 'Universal Pictures'
+// Will only aggregate the company group "Universal Pictures" on the grouping row
+getAggregationPosition={(groupNode) =>
+(groupNode?.groupingField === 'company' &&
+  groupNode?.groupingKey === 'Universal Pictures') ? 'inline' : null
 }
 
-// Will aggregate on the grouping rows and on the top-level footer
-isGroupAggregated={(groupNode, position) => position === 'inline' || groupNode == null}
+// Will only aggregate the root group on the top-level footer
+getAggregationPosition={(groupNode) => groupNode == null ? 'footer' : null}
 ```
 
-The demo below shows the _sum_ aggregation on both the grouping rows and the top-level footer:
+The demo below shows the _sum_ aggregation on the groups footers but not the top-level footer:
 
-{{"demo": "AggregationIsGroupAggregated.js", "bg": "inline"}}
+{{"demo": "AggregationGetAggregationPosition.js", "bg": "inline"}}
 
 ## Usage with tree data
 

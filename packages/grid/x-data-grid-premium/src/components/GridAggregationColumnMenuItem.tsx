@@ -9,19 +9,18 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
   getAvailableAggregationFunctions,
-  getColumnAggregationRules,
+  canColumnHaveAggregationFunction,
 } from '../hooks/features/aggregation/gridAggregationUtils';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
-import { GridAggregationPosition } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregationInterfaces';
 
 interface GridAggregationColumnMenuItemsProps {
   column: GridColDef;
-  position: GridAggregationPosition;
   label: string;
 }
 
 export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuItemsProps) => {
-  const { column, position, label } = props;
+  const { column, label } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const id = useId();
@@ -34,30 +33,35 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
       })
     : [];
 
-  const aggregationRules = column
-    ? getColumnAggregationRules({
-        columnItem: aggregationModel[column.field],
+  const cleanAggregationItem = React.useMemo(() => {
+    if (!column || !aggregationModel[column.field]) {
+      return '';
+    }
+
+    const aggregationFunctionName = aggregationModel[column.field];
+    if (
+      canColumnHaveAggregationFunction({
         column,
-        aggregationFunctions: rootProps.aggregationFunctions,
+        aggregationFunctionName,
+        aggregationFunction: rootProps.aggregationFunctions[aggregationFunctionName],
       })
-    : {};
+    ) {
+      return aggregationFunctionName;
+    }
+
+    return '';
+  }, [rootProps.aggregationFunctions, aggregationModel, column]);
 
   const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
-    const newPositionValue = event.target.value || undefined;
+    const newAggregationItem = event.target.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
-
     const { [column.field]: columnItem, ...otherColumnItems } = currentModel;
+    const newModel: GridAggregationModel =
+      newAggregationItem == null
+        ? otherColumnItems
+        : { ...otherColumnItems, [column.field]: newAggregationItem };
 
-    const newColumnItem = {
-      footer: aggregationRules.footer?.aggregationFunctionName ?? null,
-      inline: aggregationRules.inline?.aggregationFunctionName ?? null,
-      [position]: newPositionValue,
-    };
-
-    apiRef.current.setAggregationModel({
-      ...otherColumnItems,
-      [column.field]: newColumnItem,
-    });
+    apiRef.current.setAggregationModel(newModel);
     apiRef.current.hideColumnMenu();
   };
 
@@ -68,7 +72,7 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
         <Select
           labelId={`${id}-label`}
           id={`${id}-input`}
-          value={aggregationRules[position]?.aggregationFunctionName ?? ''}
+          value={cleanAggregationItem}
           label={label}
           onChange={handleAggregationItemChange}
           onBlur={(e) => e.stopPropagation()}

@@ -60,9 +60,7 @@ export default function AggregationValueFormatter() {
       initialState={{
         aggregation: {
           model: {
-            director: {
-              footer: 'firstAlphabetical',
-            },
+            director: 'firstAlphabetical',
           },
         },
       }}

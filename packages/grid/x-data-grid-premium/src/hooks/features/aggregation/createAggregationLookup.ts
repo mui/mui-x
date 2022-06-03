@@ -11,6 +11,7 @@ import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumPr
 import {
   GridAggregationFunction,
   GridAggregationLookup,
+  GridAggregationPosition,
   GridAggregationRules,
 } from './gridAggregationInterfaces';
 import { getAggregationRules } from './gridAggregationUtils';
@@ -56,50 +57,31 @@ const getGroupAggregatedValue = ({
   aggregationRowsScope,
   aggregatedFields,
   aggregationRules,
-  isGroupAggregated,
+  position,
 }: {
   groupId: GridRowId;
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   aggregatedFields: string[];
   aggregationRules: GridAggregationRules;
-  isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
+  position: GridAggregationPosition;
 }) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
-  const groupNode = apiRef.current.getRowNode(groupId)!;
 
   for (let j = 0; j < aggregatedFields.length; j += 1) {
     const aggregatedField = aggregatedFields[j];
     const columnAggregationRules = aggregationRules[aggregatedField];
-    const columnAggregationLookup: GridAggregationLookup[GridRowId][string] = {};
 
-    if (
-      columnAggregationRules.inline &&
-      (!isGroupAggregated || isGroupAggregated(groupNode, 'inline'))
-    ) {
-      columnAggregationLookup.inline = getAggregationCellValue({
+    groupAggregationLookup[aggregatedField] = {
+      position,
+      value: getAggregationCellValue({
         apiRef,
         groupId,
         field: aggregatedField,
-        aggregationFunction: columnAggregationRules.inline.aggregationFunction,
+        aggregationFunction: columnAggregationRules.aggregationFunction,
         aggregationRowsScope,
-      });
-    }
-
-    if (
-      columnAggregationRules.footer &&
-      (!isGroupAggregated || isGroupAggregated(groupNode, 'footer'))
-    ) {
-      columnAggregationLookup.footer = getAggregationCellValue({
-        apiRef,
-        groupId,
-        field: aggregatedField,
-        aggregationFunction: columnAggregationRules.footer.aggregationFunction,
-        aggregationRowsScope,
-      });
-    }
-
-    groupAggregationLookup[aggregatedField] = columnAggregationLookup;
+      }),
+    };
   }
 
   return groupAggregationLookup;
@@ -109,12 +91,12 @@ export const createAggregationLookup = ({
   apiRef,
   aggregationFunctions,
   aggregationRowsScope,
-  isGroupAggregated,
+  getAggregationPosition,
 }: {
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationFunctions: Record<string, GridAggregationFunction>;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
-  isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
+  getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
 }): GridAggregationLookup => {
   const aggregationRules = getAggregationRules({
     columnsLookup: gridColumnLookupSelector(apiRef),
@@ -133,31 +115,38 @@ export const createAggregationLookup = ({
 
   for (let i = 0; i < rowIds.length; i += 1) {
     const rowId = rowIds[i];
-    const hasChildren = rowTree[rowId].children?.some(
+    const node = rowTree[rowId];
+    const hasChildren = node.children?.some(
       (childId) => (rowTree[childId].position ?? 'body') === 'body',
     );
 
     if (hasChildren) {
-      aggregationLookup[rowId] = getGroupAggregatedValue({
-        groupId: rowId,
-        apiRef,
-        aggregatedFields,
-        aggregationRowsScope,
-        aggregationRules,
-        isGroupAggregated,
-      });
+      const position = getAggregationPosition(node);
+      if (position != null) {
+        aggregationLookup[rowId] = getGroupAggregatedValue({
+          groupId: rowId,
+          apiRef,
+          aggregatedFields,
+          aggregationRowsScope,
+          aggregationRules,
+          position,
+        });
+      }
     }
   }
 
   // TODO: Add custom root id
-  aggregationLookup[''] = getGroupAggregatedValue({
-    groupId: '',
-    apiRef,
-    aggregatedFields,
-    aggregationRowsScope,
-    aggregationRules,
-    isGroupAggregated,
-  });
+  const position = getAggregationPosition(null);
+  if (position != null) {
+    aggregationLookup[''] = getGroupAggregatedValue({
+      groupId: '',
+      apiRef,
+      aggregatedFields,
+      aggregationRowsScope,
+      aggregationRules,
+      position,
+    });
+  }
 
   return aggregationLookup;
 };

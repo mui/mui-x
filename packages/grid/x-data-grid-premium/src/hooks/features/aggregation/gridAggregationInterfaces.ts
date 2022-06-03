@@ -12,7 +12,6 @@ export interface GridAggregationInitialState {
 export interface GridAggregationInternalCache {
   rulesOnLastColumnHydration: GridAggregationRules;
   rulesOnLastRowHydration: GridAggregationRules;
-  footerLabelColumnOnLastColumnHydration: AggregationFooterLabelColumn[];
 }
 
 export interface GridAggregationApi {
@@ -65,24 +64,15 @@ interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
 }
 
-/**
- * Describes which aggregation function should be applied on the footer and on the grouping row of each group.
- * If a string is passed, it will be used on the top level footer.
- */
-export type GridAggregationItem =
-  | string
-  | null
-  | { footer?: string | null; inline?: string | null };
-
 export type GridAggregationModel = {
-  [field: string]: GridAggregationItem;
+  [field: string]: string;
 };
 
 export type GridAggregationLookup = {
   [rowId: GridRowId]: {
     [field: string]: {
-      footer?: any;
-      inline?: any;
+      position: GridAggregationPosition;
+      value: any;
     };
   };
 };
@@ -108,11 +98,6 @@ export interface GridAggregationRule {
   aggregationFunction: GridAggregationFunction;
 }
 
-export interface GridColumnAggregationRules {
-  inline?: GridAggregationRule;
-  footer?: GridAggregationRule;
-}
-
 /**
  * Object containing all the aggregation rules that must be applied to the current columns.
  * Unlike the aggregation model, those rules are sanitized and do not contain:
@@ -121,7 +106,7 @@ export interface GridColumnAggregationRules {
  * - items for non-existing aggregation function
  * - items for non-available aggregation function on the column (GridColDef.availableAggregationFunctions)
  */
-export type GridAggregationRules = { [field: string]: GridColumnAggregationRules };
+export type GridAggregationRules = { [field: string]: GridAggregationRule };
 
 export interface AggregationFooterLabelColumn {
   groupingCriteria?: string[];

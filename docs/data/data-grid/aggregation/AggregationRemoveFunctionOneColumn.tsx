@@ -37,12 +37,8 @@ export default function AggregationRemoveFunctionOneColumn() {
       initialState={{
         aggregation: {
           model: {
-            year: {
-              footer: 'max',
-            },
-            gross: {
-              footer: 'max',
-            },
+            year: 'max',
+            gross: 'max',
           },
         },
       }}

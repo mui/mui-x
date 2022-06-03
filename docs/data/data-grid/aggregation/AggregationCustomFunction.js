@@ -75,13 +75,10 @@ export default function AggregationCustomFunction() {
         firstAlphabetical: firstAlphabeticalAggregation,
         lastAlphabetical: lastAlphabeticalAggregation,
       }}
-      aggregationFooterLabelField="title"
       initialState={{
         aggregation: {
           model: {
-            director: {
-              footer: 'firstAlphabetical',
-            },
+            director: 'firstAlphabetical',
           },
         },
       }}

@@ -34,7 +34,7 @@ const COLUMNS: GridColDef[] = [
   },
 ];
 
-export default function AggregationIsGroupAggregated() {
+export default function AggregationGetAggregationPosition() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
@@ -46,10 +46,7 @@ export default function AggregationIsGroupAggregated() {
       },
       aggregation: {
         model: {
-          gross: {
-            footer: 'sum',
-            inline: 'sum',
-          },
+          gross: 'sum',
         },
       },
     },
@@ -63,9 +60,7 @@ export default function AggregationIsGroupAggregated() {
         columns={COLUMNS}
         disableSelectionOnClick
         initialState={initialState}
-        isGroupAggregated={(groupNode, position) =>
-          position === 'inline' || groupNode == null
-        }
+        getAggregationPosition={(groupNode) => (groupNode == null ? null : 'footer')}
       />
     </div>
   );
