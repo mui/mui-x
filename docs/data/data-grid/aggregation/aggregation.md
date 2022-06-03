@@ -74,14 +74,15 @@ This position must be one of the three following values:
 
 2. `"inline"` - the grid will disable aggregation on the grouping row
 
-3 `null` - the grid will not aggregate the group
+3. `null` - the grid will not aggregate the group
 
 ```tsx
 // Will aggregate the root group on the top-level footer and the other groups on their grouping row
 // (default behavior)
 getAggregationPosition=(groupNode) => (groupNode == null ? 'footer' : 'inline'),
 
-// Will aggregate all the groups on their grouping row except the root group which will not be aggregated
+// Will aggregate all the groups on their grouping row
+// The root will not be aggregated
 getAggregationPosition={(groupNode) => groupNode == null ? null : 'inline'}
 
 // Will only aggregate the company groups on the grouping row
