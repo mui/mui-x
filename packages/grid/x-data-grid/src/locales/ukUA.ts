@@ -174,11 +174,11 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'Total',
-  // aggregationFunctionLabelAvg: 'Average',
-  // aggregationFunctionLabelMin: 'Minimum',
-  // aggregationFunctionLabelMax: 'Maximum',
-  // aggregationFunctionLabelSize: 'Size',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

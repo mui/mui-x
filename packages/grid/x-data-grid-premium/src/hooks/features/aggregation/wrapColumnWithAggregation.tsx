@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { capitalize } from '@mui/material';
 import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -10,7 +9,7 @@ import {
 } from './gridAggregationInterfaces';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { GridFooterCell } from '../../../components/GridFooterCell';
-import { getAggregationFunctionLabel } from '@mui/x-data-grid-premium/hooks/features/aggregation/gridAggregationUtils';
+import { getAggregationFunctionLabel } from './gridAggregationUtils';
 
 const AGGREGATION_WRAPPABLE_PROPERTIES = [
   'valueGetter',
