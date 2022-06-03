@@ -11,6 +11,13 @@ export type Movie = {
   cinematicUniverse?: string;
 };
 
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
 const COLUMNS: GridColumns = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
@@ -23,7 +30,7 @@ const COLUMNS: GridColumns = [
       if (!value) {
         return '';
       }
-      return `$${value.toLocaleString('en-US')}`;
+      return currencyFormatter.format(value);
     },
   } as GridColDef<any, number, string>,
   {
