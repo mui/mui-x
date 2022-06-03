@@ -11,7 +11,6 @@ materialDesign: https://material.io/components/time-pickers
 
 <p class="description">Time pickers allow the user to select a single time.</p>
 
-Time pickers allow the user to select a single time (in the hours:minutes format).
 The selected time is indicated by the filled circle at the end of the clock hand.
 
 ## Basic usage

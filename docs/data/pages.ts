@@ -9,7 +9,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-data-grid',
     scopePathnames: ['/x/api/data-grid'],
-    title: 'Data Grid',
+    title: 'Data grid',
     icon: 'TableViewIcon',
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
@@ -102,7 +102,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
-    title: 'Date and Time Pickers',
+    title: 'Date and Time pickers',
     icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },

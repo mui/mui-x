@@ -2,7 +2,7 @@
 title: Data Grid - Rows
 ---
 
-# Data Grid - Rows
+# Data grid - Rows
 
 <p class="description">This section goes in details on the aspects of the rows you need to know.</p>
 

@@ -2,7 +2,7 @@
 title: Data Grid - Row Grouping
 ---
 
-# Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+# Data grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 <p class="description">Group your rows according to some column values.</p>
 
