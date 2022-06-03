@@ -41,12 +41,7 @@ export default function AggregationRowGrouping() {
       },
       aggregation: {
         model: {
-          gross: {
-            // Aggregation displayed on the footers
-            footer: 'max',
-            // Aggregation displayed on the grouping rows
-            inline: 'sum',
-          },
+          gross: 'sum',
         },
       },
     },

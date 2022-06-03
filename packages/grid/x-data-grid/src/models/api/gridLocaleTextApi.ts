@@ -140,17 +140,11 @@ export interface GridLocaleText {
 
   // Aggregation
   aggregationMenuItemHeader: string;
-  aggregationMenuItemFooterLabel: string;
-  aggregationMenuItemInlineLabel: string;
-  aggregationMultiFunctionLabel: (
-    groupingKey: GridKeyValue | null,
-    aggregationFunctions: { field: string; aggregationFunctionName: string }[],
-  ) => string;
-  aggregationFunctionLabelSum: (groupingKey: GridKeyValue | null) => string;
-  aggregationFunctionLabelAvg: (groupingKey: GridKeyValue | null) => string;
-  aggregationFunctionLabelMin: (groupingKey: GridKeyValue | null) => string;
-  aggregationFunctionLabelMax: (groupingKey: GridKeyValue | null) => string;
-  aggregationFunctionLabelSize: (groupingKey: GridKeyValue | null) => string;
+  aggregationFunctionLabelSum: string;
+  aggregationFunctionLabelAvg: string;
+  aggregationFunctionLabelMin: string;
+  aggregationFunctionLabelMax: string;
+  aggregationFunctionLabelSize: string;
 
   // Used core components translation keys
   MuiTablePagination: Omit<

@@ -79,6 +79,7 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 - [Selection](/x/react-data-grid/selection/)
 - [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization) and [rows virtualization](/x/react-data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
 - [Row grouping](/x/react-data-grid/row-grouping/) <span class="plan-premium"></span>
+- [Aggregation](/x/react-data-grid/aggregation/) <span class="plan-premium"></span>
 - [Excel export](/x/react-data-grid/export/#excel-export) <span class="plan-premium"></span>
 - [Tree data](/x/react-data-grid/tree-data/) <span class="plan-pro"></span>
 - [Master detail](/x/react-data-grid/master-detail/) <span class="plan-pro"></span>
@@ -96,7 +97,6 @@ While development of the data grid component is moving fast, there are still man
 
 - Headless (hooks only)
 - [Range selection](/x/react-data-grid/selection/#range-selection) <span class="plan-premium"></span>
-- [Aggregation](/x/react-data-grid/aggregation/) <span class="plan-premium"></span>
 - [Pivoting](/x/react-data-grid/pivoting/) <span class="plan-premium"></span>
 
 You can find more details on, the [feature comparison](/x/react-data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui/mui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui/mui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).

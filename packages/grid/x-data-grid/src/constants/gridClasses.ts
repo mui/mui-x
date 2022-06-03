@@ -6,10 +6,6 @@ export interface GridClasses {
    */
   actionsCell: string;
   /**
-   * Styles applied to the root element of the cell displayed the aggregated value.
-   */
-  aggregationCell: string;
-  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -181,6 +177,10 @@ export interface GridClasses {
    * Styles applied to the detail panel toggle cell element if expanded.
    */
   'detailPanelToggleCell--expanded': string;
+  /**
+   * Styles applied to the root element of the cell inside a footer row.
+   */
+  footerCell: string;
   /**
    * Styles applied to the panel element.
    */
@@ -436,7 +436,6 @@ export function getDataGridUtilityClass(slot: string): string {
 
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'actionsCell',
-  'aggregationCell',
   'autoHeight',
   'booleanCell',
   'cell--editable',
@@ -479,6 +478,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'detailPanels',
   'detailPanelToggleCell',
   'detailPanelToggleCell--expanded',
+  'footerCell',
   'panel',
   'panelHeader',
   'panelWrapper',

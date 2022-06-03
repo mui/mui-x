@@ -4,7 +4,7 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
 } from '@mui/x-data-grid-pro';
-import { GridStateInitializer, isDeepEqual } from '@mui/x-data-grid-pro/internals';
+import { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
@@ -13,7 +13,6 @@ import {
   getAggregationRules,
   mergeStateWithAggregationModel,
   hasAggregationRulesChanged,
-  getAggregationFooterLabelColumns,
 } from './gridAggregationUtils';
 import { createAggregationLookup } from './createAggregationLookup';
 
@@ -24,7 +23,6 @@ export const aggregationStateInitializer: GridStateInitializer<
   apiRef.current.unstable_caches.aggregation = {
     rulesOnLastColumnHydration: {},
     rulesOnLastRowHydration: {},
-    footerLabelColumnOnLastColumnHydration: [],
   };
 
   return {
@@ -42,12 +40,11 @@ export const useGridAggregation = (
     | 'onAggregationModelChange'
     | 'initialState'
     | 'aggregationModel'
-    | 'isGroupAggregated'
+    | 'getAggregationPosition'
     | 'aggregationFunctions'
     | 'aggregationRowsScope'
     | 'disableAggregation'
     | 'rowGroupingColumnMode'
-    | 'aggregationFooterLabelField'
   >,
 ) => {
   apiRef.current.unstable_updateControlState({
@@ -75,7 +72,7 @@ export const useGridAggregation = (
   const applyAggregation = React.useCallback(() => {
     const aggregationLookup = createAggregationLookup({
       apiRef,
-      isGroupAggregated: props.isGroupAggregated,
+      getAggregationPosition: props.getAggregationPosition,
       aggregationFunctions: props.aggregationFunctions,
       aggregationRowsScope: props.aggregationRowsScope,
     });
@@ -84,7 +81,12 @@ export const useGridAggregation = (
       ...state,
       aggregation: { ...state.aggregation, lookup: aggregationLookup },
     }));
-  }, [apiRef, props.isGroupAggregated, props.aggregationFunctions, props.aggregationRowsScope]);
+  }, [
+    apiRef,
+    props.getAggregationPosition,
+    props.aggregationFunctions,
+    props.aggregationRowsScope,
+  ]);
 
   const aggregationApi: GridAggregationApi = {
     setAggregationModel,
@@ -96,22 +98,13 @@ export const useGridAggregation = (
    * EVENTS
    */
   const checkAggregationRulesDiff = React.useCallback(() => {
-    const {
-      rulesOnLastRowHydration,
-      rulesOnLastColumnHydration,
-      footerLabelColumnOnLastColumnHydration,
-    } = apiRef.current.unstable_caches.aggregation;
+    const { rulesOnLastRowHydration, rulesOnLastColumnHydration } =
+      apiRef.current.unstable_caches.aggregation;
 
     const aggregationRules = getAggregationRules({
       columnsLookup: gridColumnLookupSelector(apiRef),
       aggregationModel: gridAggregationModelSelector(apiRef),
       aggregationFunctions: props.aggregationFunctions,
-    });
-
-    const footerLabelColumns = getAggregationFooterLabelColumns({
-      apiRef,
-      columnsLookup: gridColumnLookupSelector(apiRef),
-      aggregationFooterLabelField: props.aggregationFooterLabelField,
     });
 
     // Re-apply the row hydration to add / remove the aggregation footers
@@ -121,13 +114,10 @@ export const useGridAggregation = (
     }
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
-    if (
-      hasAggregationRulesChanged(rulesOnLastColumnHydration, aggregationRules) ||
-      !isDeepEqual(footerLabelColumnOnLastColumnHydration, footerLabelColumns)
-    ) {
+    if (hasAggregationRulesChanged(rulesOnLastColumnHydration, aggregationRules)) {
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
     }
-  }, [apiRef, applyAggregation, props.aggregationFunctions, props.aggregationFooterLabelField]);
+  }, [apiRef, applyAggregation, props.aggregationFunctions]);
 
   useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);

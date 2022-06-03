@@ -64,11 +64,6 @@ DataGridPremiumRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Field of the column on which we want to render the footer aggregation labels.
-   * @default If tree data or row grouping are enabled, use their grouping column, if not then do not render any label.
-   */
-  aggregationFooterLabelField: PropTypes.string,
-  /**
    * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS
    */
@@ -319,6 +314,13 @@ DataGridPremiumRaw.propTypes = {
     quickFilterValues: PropTypes.array,
   }),
   /**
+   * Determines the position of an aggregated value.
+   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
+   * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
+   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'.
+   */
+  getAggregationPosition: PropTypes.func,
+  /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
@@ -426,16 +428,9 @@ DataGridPremiumRaw.propTypes = {
    */
   isCellEditable: PropTypes.func,
   /**
-   * Determines in a group of rows should be aggregated.
-   * @param {GridGroupNode} groupNode The current group.
-   * @param {GridAggregationPosition} position The position on which aggregation has to be done.
-   * @returns {boolean} A boolean indicating if the group of rows should be aggregated.
-   */
-  isGroupAggregated: PropTypes.func,
-  /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {GridGroupNode} node The node of the group to test.
+   * @param {GridRowTreeNodeConfig} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
   isGroupExpandedByDefault: PropTypes.func,

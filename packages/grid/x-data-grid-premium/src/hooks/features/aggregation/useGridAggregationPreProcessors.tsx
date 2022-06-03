@@ -1,7 +1,6 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
-import ListSubheader from '@mui/material/ListSubheader';
-import { gridColumnLookupSelector, gridRowMaximumTreeDepthSelector } from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
@@ -13,12 +12,10 @@ import {
   addFooterRows,
   getAggregationRules,
   mergeStateWithAggregationModel,
-  getAggregationFooterLabelColumns,
 } from './gridAggregationUtils';
 import {
   wrapColumnWithAggregationValue,
   unwrapColumnFromAggregation,
-  wrapColumnWithAggregationLabel,
 } from './wrapColumnWithAggregation';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationColumnMenuItem } from '../../../components/GridAggregationColumnMenuItem';
@@ -31,28 +28,17 @@ export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    | 'aggregationFunctions'
-    | 'isGroupAggregated'
-    | 'disableAggregation'
-    | 'aggregationFooterLabelField'
-    | 'rowGroupingColumnMode'
+    'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition'
   >,
 ) => {
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      const { rulesOnLastColumnHydration, footerLabelColumnOnLastColumnHydration } =
-        apiRef.current.unstable_caches.aggregation;
+      const { rulesOnLastColumnHydration } = apiRef.current.unstable_caches.aggregation;
 
       const aggregationRules = getAggregationRules({
         columnsLookup: columnsState.lookup,
         aggregationModel: gridAggregationModelSelector(apiRef),
         aggregationFunctions: props.aggregationFunctions,
-      });
-
-      const footerLabelColumns = getAggregationFooterLabelColumns({
-        apiRef,
-        columnsLookup: columnsState.lookup,
-        aggregationFooterLabelField: props.aggregationFooterLabelField,
       });
 
       columnsState.all.forEach((field) => {
@@ -70,56 +56,22 @@ export const useGridAggregationPreProcessors = (
         if (shouldHaveAggregationValue) {
           column = wrapColumnWithAggregationValue({
             column,
-            columnAggregationRules: aggregationRules[field],
+            aggregationRule: aggregationRules[field],
             apiRef,
-            isGroupAggregated: props.isGroupAggregated,
           });
         }
 
         columnsState.lookup[field] = column;
       });
 
-      footerLabelColumnOnLastColumnHydration?.forEach((footerLabelColumn) => {
-        columnsState.lookup[footerLabelColumn.field] = unwrapColumnFromAggregation({
-          column: columnsState.lookup[footerLabelColumn.field],
-        });
-      });
-
-      footerLabelColumns.forEach((footerLabelColumn, footerLabelColumnIndex) => {
-        columnsState.lookup[footerLabelColumn.field] = wrapColumnWithAggregationLabel({
-          column: columnsState.lookup[footerLabelColumn.field],
-          apiRef,
-          isGroupAggregated: props.isGroupAggregated,
-          aggregationRules,
-          shouldRenderLabel: (groupNode) => {
-            if (!footerLabelColumn.groupingCriteria) {
-              return true;
-            }
-
-            if (groupNode?.groupingField == null) {
-              return footerLabelColumnIndex === 0;
-            }
-
-            return footerLabelColumn.groupingCriteria.includes(groupNode.groupingField);
-          },
-        });
-      });
-
       apiRef.current.unstable_caches.aggregation = {
         ...apiRef.current.unstable_caches.aggregation,
         rulesOnLastColumnHydration: aggregationRules,
-        footerLabelColumnOnLastColumnHydration: footerLabelColumns,
       };
 
       return columnsState;
     },
-    [
-      apiRef,
-      props.aggregationFunctions,
-      props.disableAggregation,
-      props.isGroupAggregated,
-      props.aggregationFooterLabelField,
-    ],
+    [apiRef, props.aggregationFunctions, props.disableAggregation],
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
@@ -132,16 +84,14 @@ export const useGridAggregationPreProcessors = (
             aggregationFunctions: props.aggregationFunctions,
           });
 
-      const hasFooterAggregation = Object.values(aggregationRules).some(
-        (columnRules) => !!columnRules.footer,
-      );
+      const hasAggregationRule = Object.keys(aggregationRules).length > 0;
 
       // If we did not have any aggregation footer before, and we still don't have any
       // Then we can skip this step
       if (
         Object.keys(apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration).length ===
           0 &&
-        Object.keys(aggregationRules).length === 0
+        !hasAggregationRule
       ) {
         return value;
       }
@@ -153,11 +103,11 @@ export const useGridAggregationPreProcessors = (
 
       return addFooterRows({
         ...value,
-        hasFooterAggregation,
-        isGroupAggregated: props.isGroupAggregated,
+        getAggregationPosition: props.getAggregationPosition,
+        hasAggregationRule,
       });
     },
-    [apiRef, props.disableAggregation, props.isGroupAggregated, props.aggregationFunctions],
+    [apiRef, props.disableAggregation, props.getAggregationPosition, props.aggregationFunctions],
   );
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
@@ -175,37 +125,14 @@ export const useGridAggregationPreProcessors = (
         return initialValue;
       }
 
-      const treeDepth = gridRowMaximumTreeDepthSelector(apiRef);
-      const items: React.ReactNode[] = [<Divider />];
-
-      if (treeDepth > 1) {
-        items.push(
-          <ListSubheader disableSticky>
-            {apiRef.current.getLocaleText('aggregationMenuItemHeader')}
-          </ListSubheader>,
-        );
-        items.push(
-          <GridAggregationColumnMenuItem
-            column={column}
-            position="inline"
-            label={apiRef.current.getLocaleText('aggregationMenuItemInlineLabel')}
-          />,
-        );
-      }
-
-      items.push(
+      return [
+        ...initialValue,
+        <Divider />,
         <GridAggregationColumnMenuItem
           column={column}
-          position="footer"
-          label={
-            treeDepth > 1
-              ? apiRef.current.getLocaleText('aggregationMenuItemFooterLabel')
-              : apiRef.current.getLocaleText('aggregationMenuItemHeader')
-          }
+          label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
         />,
-      );
-
-      return [...initialValue, ...items];
+      ];
     },
     [apiRef, props.aggregationFunctions, props.disableAggregation],
   );
@@ -217,19 +144,8 @@ export const useGridAggregationPreProcessors = (
       }
 
       const aggregationModelToExport = gridAggregationModelSelector(apiRef);
-      const isModelEmpty = Object.values(aggregationModelToExport).every((item) => {
-        if (item == null) {
-          return true;
-        }
 
-        if (typeof item === 'string') {
-          return false;
-        }
-
-        return item.inline == null && item.footer == null;
-      });
-
-      if (isModelEmpty) {
+      if (Object.values(aggregationModelToExport).length === 0) {
         return prevState;
       }
 

@@ -61,7 +61,7 @@ export function renderProgress(params: GridRenderCellParams<number, any, any>) {
     return '';
   }
 
-  // If the aggregated value don't have the same unit as the other cell
+  // If the aggregated value does not have the same unit as the other cell
   // Then we fall back to the default rendering based on `valueGetter` instead of rendering a progress bar.
   if (params.aggregation && !params.aggregation.hasCellUnit) {
     return null;

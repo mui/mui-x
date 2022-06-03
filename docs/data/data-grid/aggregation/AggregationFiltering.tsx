@@ -31,9 +31,7 @@ export default function AggregationFiltering() {
       initialState={{
         aggregation: {
           model: {
-            gross: {
-              footer: 'max',
-            },
+            gross: 'max',
           },
         },
         filter: {

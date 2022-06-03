@@ -1,18 +1,19 @@
 import * as React from 'react';
 import {
-  GRID_ROOT_GROUP_ID,
   gridColumnLookupSelector,
   gridFilteredRowsLookupSelector,
+  GridRowId,
   GridGroupNode,
   GridLeafNode,
-  GridRowId,
   gridRowTreeSelector,
+  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   GridAggregationFunction,
   GridAggregationLookup,
+  GridAggregationPosition,
   GridAggregationRules,
 } from './gridAggregationInterfaces';
 import { getAggregationRules } from './gridAggregationUtils';
@@ -50,50 +51,31 @@ const getGroupAggregatedValue = ({
   aggregationRowsScope,
   aggregatedFields,
   aggregationRules,
-  isGroupAggregated,
+  position,
 }: {
   groupId: GridRowId;
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   aggregatedFields: string[];
   aggregationRules: GridAggregationRules;
-  isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
+  position: GridAggregationPosition;
 }) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
-  const groupNode = apiRef.current.getRowNode<GridGroupNode>(groupId)!;
 
   for (let j = 0; j < aggregatedFields.length; j += 1) {
     const aggregatedField = aggregatedFields[j];
     const columnAggregationRules = aggregationRules[aggregatedField];
-    const columnAggregationLookup: GridAggregationLookup[GridRowId][string] = {};
 
-    if (
-      columnAggregationRules.inline &&
-      (!isGroupAggregated || isGroupAggregated(groupNode, 'inline'))
-    ) {
-      columnAggregationLookup.inline = getAggregationCellValue({
+    groupAggregationLookup[aggregatedField] = {
+      position,
+      value: getAggregationCellValue({
         apiRef,
         groupId,
         field: aggregatedField,
-        aggregationFunction: columnAggregationRules.inline.aggregationFunction,
+        aggregationFunction: columnAggregationRules.aggregationFunction,
         aggregationRowsScope,
-      });
-    }
-
-    if (
-      columnAggregationRules.footer &&
-      (!isGroupAggregated || isGroupAggregated(groupNode, 'footer'))
-    ) {
-      columnAggregationLookup.footer = getAggregationCellValue({
-        apiRef,
-        groupId,
-        field: aggregatedField,
-        aggregationFunction: columnAggregationRules.footer.aggregationFunction,
-        aggregationRowsScope,
-      });
-    }
-
-    groupAggregationLookup[aggregatedField] = columnAggregationLookup;
+      }),
+    };
   }
 
   return groupAggregationLookup;
@@ -103,12 +85,12 @@ export const createAggregationLookup = ({
   apiRef,
   aggregationFunctions,
   aggregationRowsScope,
-  isGroupAggregated,
+  getAggregationPosition,
 }: {
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationFunctions: Record<string, GridAggregationFunction>;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
-  isGroupAggregated: DataGridPremiumProcessedProps['isGroupAggregated'];
+  getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
 }): GridAggregationLookup => {
   const aggregationRules = getAggregationRules({
     columnsLookup: gridColumnLookupSelector(apiRef),
@@ -136,14 +118,17 @@ export const createAggregationLookup = ({
 
     const hasAggregableChildren = groupNode.children.length;
     if (hasAggregableChildren) {
-      aggregationLookup[groupNode.id] = getGroupAggregatedValue({
-        groupId: groupNode.id,
-        apiRef,
-        aggregatedFields,
-        aggregationRowsScope,
-        aggregationRules,
-        isGroupAggregated,
-      });
+      const position = getAggregationPosition(groupNode);
+      if (position != null) {
+        aggregationLookup[groupNode.id] = getGroupAggregatedValue({
+          groupId: groupNode.id,
+          apiRef,
+          aggregatedFields,
+          aggregationRowsScope,
+          aggregationRules,
+          position,
+        });
+      }
     }
   };
 
