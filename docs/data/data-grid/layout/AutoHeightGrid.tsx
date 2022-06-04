@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -15,14 +16,19 @@ export default function AutoHeightGrid() {
   });
 
   return (
-    <div style={{ width: '100%' }}>
+    <Stack spacing={1} sx={{ width: '100%', alignItems: 'flex-start' }}>
       <Button variant="outlined" onClick={removeRow}>
         Remove a row
       </Button>
       <Button variant="outlined" onClick={addRow}>
         Add a row
       </Button>
-      <DataGrid autoHeight {...data} rows={data.rows.slice(0, nbRows)} />
-    </div>
+      <DataGrid
+        autoHeight
+        sx={{ width: '100%' }}
+        {...data}
+        rows={data.rows.slice(0, nbRows)}
+      />
+    </Stack>
   );
 }
