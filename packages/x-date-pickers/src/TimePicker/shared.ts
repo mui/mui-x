@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { Clock } from '../internals/components/icons';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
-import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
+import { ClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
@@ -48,12 +48,6 @@ export interface BaseTimePickerProps<TInputDate, TDate>
   components?: any;
 }
 
-function getTextFieldAriaText<TDate>(value: any, utils: MuiPickersAdapter<TDate>) {
-  return value && utils.isValid(utils.date(value))
-    ? `Choose time, selected time is ${utils.format(utils.date(value) as TDate, 'fullTime')}`
-    : 'Choose time';
-}
-
 type DefaultizedProps<Props> = Props & { inputFormat: string };
 export function useTimePickerDefaultizedProps<
   TInputDate,
@@ -71,6 +65,10 @@ export function useTimePickerDefaultizedProps<
   const utils = useUtils<TDate>();
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
+  const localeText = useLocaleText();
+
+  const getOpenDialogAriaText = localeText.openTimePickerDialogue;
+
   return {
     ampm,
     openTo: 'hours',
@@ -78,7 +76,7 @@ export function useTimePickerDefaultizedProps<
     acceptRegex: ampm ? /[\dapAP]/gi : /\d/gi,
     mask: ampm ? '__:__ _m' : '__:__',
     disableMaskedInput: false,
-    getOpenDialogAriaText: getTextFieldAriaText,
+    getOpenDialogAriaText,
     inputFormat: ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h,
     ...themeProps,
     components: {
