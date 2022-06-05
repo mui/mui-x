@@ -8,8 +8,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
-  getAvailableAggregationFunctions,
   canColumnHaveAggregationFunction,
+  getAggregationFunctionLabel,
 } from '../hooks/features/aggregation/gridAggregationUtils';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregationInterfaces';
@@ -17,23 +17,17 @@ import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregat
 interface GridAggregationColumnMenuItemsProps {
   column: GridColDef;
   label: string;
+  availableAggregationFunctions: string[];
 }
 
 export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuItemsProps) => {
-  const { column, label } = props;
+  const { column, label, availableAggregationFunctions } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const id = useId();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
 
-  const availableAggregationFunctions = column
-    ? getAvailableAggregationFunctions({
-        aggregationFunctions: rootProps.aggregationFunctions,
-        column,
-      })
-    : [];
-
-  const cleanAggregationItem = React.useMemo(() => {
+  const selectedAggregationRule = React.useMemo(() => {
     if (!column || !aggregationModel[column.field]) {
       return '';
     }
@@ -72,7 +66,7 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
         <Select
           labelId={`${id}-label`}
           id={`${id}-input`}
-          value={cleanAggregationItem}
+          value={selectedAggregationRule}
           label={label}
           onChange={handleAggregationItemChange}
           onBlur={(e) => e.stopPropagation()}
@@ -81,7 +75,13 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
           <MenuItem value="">...</MenuItem>
           {availableAggregationFunctions.map((aggFunc) => (
             <MenuItem key={aggFunc} value={aggFunc}>
-              {aggFunc}
+              {getAggregationFunctionLabel({
+                apiRef,
+                aggregationRule: {
+                  aggregationFunctionName: aggFunc,
+                  aggregationFunction: rootProps.aggregationFunctions[aggFunc],
+                },
+              })}
             </MenuItem>
           ))}
         </Select>

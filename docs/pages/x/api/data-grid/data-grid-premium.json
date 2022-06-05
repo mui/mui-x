@@ -84,7 +84,7 @@
     },
     "getAggregationPosition": {
       "type": { "name": "func" },
-      "default": "`(groupNode) => groupNode == null ? 'footer' : 'inline'."
+      "default": "`(groupNode) => groupNode == null ? 'footer' : 'inline'`"
     },
     "getCellClassName": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },

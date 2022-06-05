@@ -122,12 +122,12 @@ export const useGridAggregationPreProcessors = (
         return initialValue;
       }
 
-      const availableAggregationFunction = getAvailableAggregationFunctions({
+      const availableAggregationFunctions = getAvailableAggregationFunctions({
         aggregationFunctions: props.aggregationFunctions,
         column,
       });
 
-      if (availableAggregationFunction.length === 0) {
+      if (availableAggregationFunctions.length === 0) {
         return initialValue;
       }
 
@@ -137,6 +137,7 @@ export const useGridAggregationPreProcessors = (
         <GridAggregationColumnMenuItem
           column={column}
           label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
+          availableAggregationFunctions={availableAggregationFunctions}
         />,
       ];
     },

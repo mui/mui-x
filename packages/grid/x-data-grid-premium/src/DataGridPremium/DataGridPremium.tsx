@@ -317,7 +317,7 @@ DataGridPremiumRaw.propTypes = {
    * Determines the position of an aggregated value.
    * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
-   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'.
+   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
    */
   getAggregationPosition: PropTypes.func,
   /**

@@ -40,8 +40,8 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
 
       return sortedValue[0];
     },
+    label: 'firstAlphabetical',
     columnTypes: ['string'],
-    valueFormatter: (params) => `Agg: ${params.value}`,
   };
 
 export default function AggregationValueFormatter() {
