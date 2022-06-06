@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
+import { GridColDef, GridColumnHeaderTitle, GridRowId } from '@mui/x-data-grid-pro';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -15,8 +15,8 @@ const AGGREGATION_WRAPPABLE_PROPERTIES = [
   'valueGetter',
   'valueFormatter',
   'renderCell',
+  'renderHeader',
   'filterOperators',
-  'headerName',
 ] as const;
 
 type WrappableColumnProperty = typeof AGGREGATION_WRAPPABLE_PROPERTIES[number];
@@ -151,16 +151,29 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
 /**
  * Add the aggregation method around the header name
  */
-const getWrappedHeaderName: ColumnPropertyWrapper<'headerName'> = ({
+const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
   apiRef,
-  value,
-  colDef,
+  value: renderHeader,
   aggregationRule,
 }) => {
-  const headerName = value ?? colDef.field;
-  const aggregationLabel = getAggregationFunctionLabel({ apiRef, aggregationRule });
+  const wrappedRenderCell: GridColDef['renderHeader'] = (params) => {
+    const baseHeaderLabel = params.colDef.headerName ?? params.colDef.field;
+    const aggregationLabel = getAggregationFunctionLabel({ apiRef, aggregationRule });
 
-  return `${aggregationLabel}(${headerName})`;
+    if (!renderHeader) {
+      return (
+        <GridColumnHeaderTitle
+          label={`${aggregationLabel}(${baseHeaderLabel})`}
+          description={params.colDef.description}
+          columnWidth={params.colDef.computedWidth}
+        />
+      );
+    }
+
+    return renderHeader(params);
+  };
+
+  return wrappedRenderCell;
 };
 
 /**
@@ -235,8 +248,8 @@ export const wrapColumnWithAggregationValue = ({
   wrapColumnProperty('valueGetter', getAggregationValueWrappedValueGetter);
   wrapColumnProperty('valueFormatter', getAggregationValueWrappedValueFormatter);
   wrapColumnProperty('renderCell', getAggregationValueWrappedRenderCell);
+  wrapColumnProperty('renderHeader', getWrappedRenderHeader);
   wrapColumnProperty('filterOperators', getWrappedFilterOperators);
-  wrapColumnProperty('headerName', getWrappedHeaderName);
 
   if (Object.keys(aggregationWrappedProperties).length === 0) {
     return column;
