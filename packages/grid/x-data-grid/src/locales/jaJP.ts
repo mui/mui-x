@@ -27,16 +27,16 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: '検索...',
+  toolbarQuickFilterLabel: '検索',
+  toolbarQuickFilterDeleteIconLabel: 'クリア',
 
   // Export selector toolbar button text
   toolbarExport: 'エクスポート',
   toolbarExportLabel: 'エクスポート',
   toolbarExportCSV: 'CSVダウンロード',
-  // toolbarExportPrint: 'Print',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportPrint: '印刷',
+  toolbarExportExcel: 'Excelダウンロード',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '列検索',
@@ -71,7 +71,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: '...以前',
   filterOperatorIsEmpty: '...空である',
   filterOperatorIsNotEmpty: '...空でない',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: '...のいずれか',
 
   // Filter values text
   // filterValueAny: 'any',
@@ -104,10 +104,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'チェックボックス',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'すべての行を選択',
+  checkboxSelectionUnselectAllRows: 'すべての行選択を解除',
+  checkboxSelectionSelectRow: '行を選択',
+  checkboxSelectionUnselectRow: '行選択を解除',
 
   // Boolean cell text
   booleanCellTrueLabel: '真',
@@ -117,26 +117,26 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // actionsCellMore: 'more',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: '左側に固定',
+  pinToRight: '右側に固定',
+  unpin: '固定解除',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'グループ',
+  treeDataExpand: '展開',
+  treeDataCollapse: '折りたたみ',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'グループ',
+  groupColumn: (name) => `${name}でグループ化`,
+  unGroupColumn: (name) => `${name}のグループを解除`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: '展開',
+  collapseDetailPanel: '折りたたみ',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: '行並び替え',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);
