@@ -81,6 +81,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
     }
   }
 
+  // TODO rows v6: Avoid walking the whole tree, we should be able to generate the new list only using slices.
   const dataRowIds = getTreeNodeDescendants(tree, GRID_ROOT_GROUP_ID, true);
 
   return {
