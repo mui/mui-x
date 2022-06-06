@@ -70,6 +70,7 @@ import { useGridDetailPanelCache } from '../hooks/features/detailPanel/useGridDe
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -88,6 +89,7 @@ export const useDataGridProComponent = (
   // Because it changes the order of the columns.
   useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
+  useGridLazyLoaderPreProcessors(apiRef, props);
 
   /**
    * Register all state initializers here.

@@ -6,6 +6,7 @@ import {
   GridRowParams,
   GridRowId,
   GridValidRowModel,
+  GridFeatureMode,
 } from '@mui/x-data-grid';
 import {
   GridExperimentalFeatures,
@@ -21,6 +22,7 @@ import {
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
+import { GridFetchRowsParams } from './gridFetchRowsParams';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
@@ -107,6 +109,13 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   rowReordering: boolean;
+  /**
+   * Loading rows can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle the infnite loading on the client-side.
+   * Set it to 'server' if you would like to handle the infnite loading on the server-side.
+   * * @default "client"
+   */
+  rowsLoadingMode: GridFeatureMode;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -192,4 +201,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowOrderChange?: GridEventListener<'rowOrderChange'>;
+  /**
+   * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
+   * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onFetchRows?: (params: GridFetchRowsParams, details: GridCallbackDetails) => void;
 }

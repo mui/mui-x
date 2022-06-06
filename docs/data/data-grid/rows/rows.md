@@ -15,7 +15,7 @@ The `rows` prop should keep the same reference between two renders except when y
 Otherwise, the grid will re-apply heavy work like sorting and filtering.
 :::
 
-{{"demo": "RowsGrid.js", "bg": "inline"}}
+<!-- {{"demo": "RowsGrid.js", "bg": "inline"}} -->
 
 :::warning
 Each row object should have a field that uniquely identifies the row.
@@ -26,8 +26,9 @@ When using dataset without a unique `id` property, you can use the `getRowId` pr
 ```tsx
 <DataGrid getRowId={(row) => row.internalId} />
 ```
+:::
 
-{{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
+<!-- {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}} -->
 
 ## Updating rows
 
@@ -39,13 +40,13 @@ It replaces the previous values. This approach has some drawbacks:
 - You need to provide all the rows.
 - You might create a performance bottleneck when preparing the rows array to provide to the grid.
 
-{{"demo": "UpdateRowsProp.js", "bg": "inline", "disableAd": true}}
+<!-- {{"demo": "UpdateRowsProp.js", "bg": "inline", "disableAd": true}} -->
 
 ### The `updateRows` method [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
 
-{{"demo": "UpdateRowsApiRef.js", "bg": "inline", "disableAd": true}}
+<!-- {{"demo": "UpdateRowsApiRef.js", "bg": "inline", "disableAd": true}} -->
 
 The default behavior of `updateRows` API is to upsert rows.
 So if a row has an id that is not in the current list of rows then it will be added to the grid.
@@ -62,7 +63,21 @@ The grid provides a `onRowsScrollEnd` prop that can be used to load additional r
 
 In addition, the area in which `onRowsScrollEnd` is called can be changed using `scrollEndThreshold`.
 
-{{"demo": "InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
+<!-- {{"demo": "InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}} -->
+
+### Lazy loading [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+
+By default, infinite loading works on the client-side.
+
+To switch it to server-side, set `rowsLoadingMode="server"`.
+Then the `rowCount` needs to be set and the number of initially loaded rows needs to be less than the `rowCount` value.
+In addition, you need to handle the `onFetchRows` callback to fetch the rows for the corresponding index.
+Finally, you need to use the `apiRef.current.insertRows()` to tell the DataGrid where to insert the newly fetched rows.
+
+**Note**: in order for the filtering and sorting to work you need to set their modes to `server`.
+You can find out more information about how to do that on the [server-side filter page](/components/data-grid/filtering/#server-side-filter) and on the [server-side sorting page](/components/data-grid/sorting/#server-side-sorting).
+
+{{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
 ### High frequency [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
@@ -72,7 +87,7 @@ When receiving updates more frequently than this threshold, the grid will wait b
 
 The following demo updates the rows every 10ms, but they are only applied every 2 seconds.
 
-{{"demo": "ThrottledRowsGrid.js", "bg": "inline"}}
+<!-- {{"demo": "ThrottledRowsGrid.js", "bg": "inline"}} -->
 
 ## Row height
 
@@ -83,13 +98,13 @@ If you want to create a more / less compact grid and not only set the row height
 
 To change the row height for the whole grid, set the `rowHeight` prop:
 
-{{"demo": "DenseHeightGrid.js", "bg": "inline"}}
+<!-- {{"demo": "DenseHeightGrid.js", "bg": "inline"}} -->
 
 ### Variable row height
 
 If you need some rows to have different row heights this can be achieved using the `getRowHeight` prop. This function is called for each visible row and if the return value is a `number` then that `number` will be set as that row's `rowHeight`. If the return value is `null` or `undefined` then the `rowHeight` prop will take effect for the given row.
 
-{{"demo": "VariableRowHeightGrid.js", "bg": "inline"}}
+<!-- {{"demo": "VariableRowHeightGrid.js", "bg": "inline"}} -->
 
 :::warning
 Changing the `DataGrid` density does not affect the rows with variable row height.
@@ -118,7 +133,7 @@ To do so, return `"auto`" on the function passed to the `getRowHeight` prop.
 
 The following demo demonstrantes this option in action:
 
-{{"demo": "DynamicRowHeightGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+<!-- {{"demo": "DynamicRowHeightGrid.js", "bg": "inline", "defaultCodeOpen": false}} -->
 
 The dynamic row height implementaion is based on a lazy approach, which means that the rows are measured as they are rendered.
 Because of this, you may see the size of the scrollbar thumb changing during scroll.
@@ -132,7 +147,7 @@ Note that, due to the implementation adopted, the virtualization of the columns 
 <DataGrid getRowHeight={() => 'auto'} getEstimatedRowHeight={() => 200} />
 ```
 
-{{"demo": "ExpandableCells.js", "bg": "inline", "defaultCodeOpen": false}}
+<!-- {{"demo": "ExpandableCells.js", "bg": "inline", "defaultCodeOpen": false}} -->
 
 :::warning
 When the height of a row is set to `"auto"`, the final height will follow exactly the content size and ignore the density.
@@ -164,7 +179,7 @@ const getRowSpacing = React.useCallback((params: GridRowSpacingParams) => {
 }, []);
 ```
 
-{{"demo": "RowMarginGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+<!-- {{"demo": "RowMarginGrid.js", "bg": "inline", "defaultCodeOpen": false}} -->
 
 By default, setting `getRowSpacing` will change the `marginXXX` CSS properties of each row.
 To add a border instead, set `rowSpacingType` to `"border"` and customize the color and style.
@@ -199,7 +214,7 @@ To enable it, you need to add the `rowReordering` prop.
 <DataGridPro rowReordering />
 ```
 
-{{"demo": "RowOrderingGrid.js", "disableAd": true, "bg": "inline"}}
+<!-- {{"demo": "RowOrderingGrid.js", "disableAd": true, "bg": "inline"}} -->
 
 To capture changes in the order of the dragged row, you can pass a callback to the `onRowOrderChange` prop. This callback is called with a `GridRowOrderChangeParams` object.
 

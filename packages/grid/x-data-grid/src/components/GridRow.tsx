@@ -29,6 +29,7 @@ import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
+import { randomNumberBetween } from '../utils/utils';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -79,7 +80,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const EmptyCell = ({ width }: { width: number }) => {
+export const EmptyCell = ({ width }: { width: number }) => {
   if (!width) {
     return null;
   }
@@ -276,6 +277,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     rowClassName = rootProps.getRowClassName(rowParams);
   }
 
+  const randomNumber = randomNumberBetween(10000, 20, 80);
   const cells: JSX.Element[] = [];
 
   for (let i = 0; i < renderedColumns.length; i += 1) {
@@ -288,109 +290,140 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       ? rootProps.showCellRightBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
 
-    const cellParams = apiRef.current.getCellParams(rowId, column.field);
+    if (row) {
+      const cellParams = apiRef.current.getCellParams(rowId, column.field);
 
-    const classNames: string[] = [];
+      const classNames: string[] = [];
 
-    const disableDragEvents =
-      (rootProps.disableColumnReorder && column.disableReorder) ||
-      (!(rootProps as any).rowReordering &&
-        !!sortModel.length &&
-        treeDepth > 1 &&
-        Object.keys(editRowsState).length > 0);
+      const disableDragEvents =
+        (rootProps.disableColumnReorder && column.disableReorder) ||
+        (!(rootProps as any).rowReordering &&
+          !!sortModel.length &&
+          treeDepth > 1 &&
+          Object.keys(editRowsState).length > 0);
 
-    if (column.cellClassName) {
-      classNames.push(
-        clsx(
-          typeof column.cellClassName === 'function'
-            ? column.cellClassName(cellParams)
-            : column.cellClassName,
-        ),
-      );
-    }
-
-    const editCellState = editRowsState[rowId] ? editRowsState[rowId][column.field] : null;
-    let content: React.ReactNode = null;
-
-    if (editCellState == null && column.renderCell) {
-      content = column.renderCell({ ...cellParams, api: apiRef.current });
-      // TODO move to GridCell
-      classNames.push(
-        clsx(gridClasses['cell--withRenderer'], rootProps.classes?.['cell--withRenderer']),
-      );
-    }
-
-    if (editCellState != null && column.renderEditCell) {
-      let updatedRow = row;
-      if (apiRef.current.unstable_getRowWithUpdatedValues) {
-        // Only the new editing API has this method
-        updatedRow = apiRef.current.unstable_getRowWithUpdatedValues(rowId, column.field);
+      if (column.cellClassName) {
+        classNames.push(
+          clsx(
+            typeof column.cellClassName === 'function'
+              ? column.cellClassName(cellParams)
+              : column.cellClassName,
+          ),
+        );
       }
 
-      const params: GridRenderEditCellParams = {
-        ...cellParams,
-        row: updatedRow,
-        ...editCellState,
-        api: apiRef.current,
-      };
+      const editCellState = editRowsState[rowId] ? editRowsState[rowId][column.field] : null;
+      let content: React.ReactNode = null;
 
-      content = column.renderEditCell(params);
-      // TODO move to GridCell
-      classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));
-    }
+      if (editCellState == null && column.renderCell) {
+        content = column.renderCell({ ...cellParams, api: apiRef.current });
+        // TODO move to GridCell
+        classNames.push(
+          clsx(gridClasses['cell--withRenderer'], rootProps.classes?.['cell--withRenderer']),
+        );
+      }
 
-    if (rootProps.getCellClassName) {
-      // TODO move to GridCell
-      classNames.push(rootProps.getCellClassName(cellParams));
-    }
+      if (editCellState != null && column.renderEditCell) {
+        let updatedRow = row;
+        if (apiRef.current.unstable_getRowWithUpdatedValues) {
+          // Only the new editing API has this method
+          updatedRow = apiRef.current.unstable_getRowWithUpdatedValues(rowId, column.field);
+        }
 
-    const hasFocus =
-      cellFocus !== null && cellFocus.id === rowId && cellFocus.field === column.field;
+        const params: GridRenderEditCellParams = {
+          ...cellParams,
+          row: updatedRow,
+          ...editCellState,
+          api: apiRef.current,
+        };
 
-    const tabIndex =
-      cellTabIndex !== null &&
-      cellTabIndex.id === rowId &&
-      cellTabIndex.field === column.field &&
-      cellParams.cellMode === 'view'
-        ? 0
-        : -1;
+        content = column.renderEditCell(params);
+        // TODO move to GridCell
+        classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));
+      }
 
-    const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
-      rowId,
-      indexRelativeToAllColumns,
-    );
+      if (rootProps.getCellClassName) {
+        // TODO move to GridCell
+        classNames.push(rootProps.getCellClassName(cellParams));
+      }
 
-    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
-      const { colSpan, width } = cellColSpanInfo.cellProps;
+      const hasFocus =
+        cellFocus !== null && cellFocus.id === rowId && cellFocus.field === column.field;
 
-      cells.push(
-        <rootProps.components.Cell
-          key={column.field}
-          value={cellParams.value}
-          field={column.field}
-          width={width}
-          rowId={rowId}
-          height={rowHeight}
-          showRightBorder={showRightBorder}
-          formattedValue={cellParams.formattedValue}
-          align={column.align || 'left'}
-          cellMode={cellParams.cellMode}
-          colIndex={indexRelativeToAllColumns}
-          isEditable={cellParams.isEditable}
-          hasFocus={hasFocus}
-          tabIndex={tabIndex}
-          className={clsx(classNames)}
-          colSpan={colSpan}
-          disableDragEvents={disableDragEvents}
-          {...rootProps.componentsProps?.cell}
-        >
-          {content}
-        </rootProps.components.Cell>,
+      const tabIndex =
+        cellTabIndex !== null &&
+        cellTabIndex.id === rowId &&
+        cellTabIndex.field === column.field &&
+        cellParams.cellMode === 'view'
+          ? 0
+          : -1;
+
+      const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+        rowId,
+        indexRelativeToAllColumns,
       );
+
+      if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+        const { colSpan, width } = cellColSpanInfo.cellProps;
+
+        cells.push(
+          <rootProps.components.Cell
+            key={column.field}
+            value={cellParams.value}
+            field={column.field}
+            width={width}
+            rowId={rowId}
+            height={rowHeight}
+            showRightBorder={showRightBorder}
+            formattedValue={cellParams.formattedValue}
+            align={column.align || 'left'}
+            cellMode={cellParams.cellMode}
+            colIndex={indexRelativeToAllColumns}
+            isEditable={cellParams.isEditable}
+            hasFocus={hasFocus}
+            tabIndex={tabIndex}
+            className={clsx(classNames)}
+            colSpan={colSpan}
+            disableDragEvents={disableDragEvents}
+            {...rootProps.componentsProps?.cell}
+          >
+            {content}
+          </rootProps.components.Cell>,
+        );
+      }
+    } else {
+      const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+        rowId,
+        indexRelativeToAllColumns,
+      );
+
+      if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+        const { width } = cellColSpanInfo.cellProps;
+        const contentWidth = Math.round(randomNumber());
+
+        cells.push(
+          <rootProps.components.SkeletonCell
+            key={`col-${column.field}-${i}`}
+            width={width}
+            contentWidth={contentWidth}
+            field={column.field}
+            align={column.align}
+          />,
+        );
+      }
     }
   }
 
   const emptyCellWidth = containerWidth - columnsTotalWidth;
+
+  const eventHandlers = row
+    ? null
+    : {
+        onClick: publishClick,
+        onDoubleClick: publish('rowDoubleClick', onDoubleClick),
+        onMouseEnter: publish('rowMouseEnter', onMouseEnter),
+        onMouseLeave: publish('rowMouseLeave', onMouseLeave),
+      };
 
   return (
     <div
@@ -402,10 +435,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
-      onClick={publishClick}
-      onDoubleClick={publish('rowDoubleClick', onDoubleClick)}
-      onMouseEnter={publish('rowMouseEnter', onMouseEnter)}
-      onMouseLeave={publish('rowMouseLeave', onMouseLeave)}
+      {...eventHandlers}
       {...other}
     >
       {cells}

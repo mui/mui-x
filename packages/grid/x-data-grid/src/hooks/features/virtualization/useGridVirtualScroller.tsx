@@ -354,6 +354,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       buffer: rowBuffer,
     });
 
+    console.log(currentPage)
+    console.log(firstRowToRender)
+    console.log(lastRowToRender)
+
     const renderedRows: GridRowEntry[] = [];
 
     for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
