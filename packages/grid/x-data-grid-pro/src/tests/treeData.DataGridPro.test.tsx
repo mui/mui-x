@@ -287,8 +287,8 @@ describe('<DataGridPro /> - Tree Data', () => {
 
       render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
       expect(isGroupExpandedByDefault.callCount).to.equal(8); // Should not be called on leaves
-      const { childrenExpanded, children, ...node } = apiRef.current.state.rows.tree
-        .A as GridGroupNode;
+      const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current.state.rows
+        .tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault
         .getCalls()
         .find((call) => call.firstArg.id === node.id)!;

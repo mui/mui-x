@@ -8,6 +8,7 @@ import {
   GridTreeNode,
 } from '@mui/x-data-grid';
 import { RowTreeBuilderGroupingCriterion } from './models';
+import { DataGridProProps } from '../../models/dataGridProProps';
 
 export const getGroupRowIdFromPath = (path: RowTreeBuilderGroupingCriterion[]) => {
   const pathStr = path
@@ -37,6 +38,31 @@ export const getNodePathInTree = ({
   }
 
   return path;
+};
+
+export const addGroupDefaultExpansion = ({
+  node,
+  isGroupExpandedByDefault,
+  defaultGroupingExpansionDepth,
+}: {
+  node: GridGroupNode;
+  isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'];
+  defaultGroupingExpansionDepth: number;
+}) => {
+  let childrenExpanded: boolean;
+  if (node.id === GRID_ROOT_GROUP_ID) {
+    childrenExpanded = true;
+  } else if (isGroupExpandedByDefault) {
+    childrenExpanded = isGroupExpandedByDefault(node);
+  } else {
+    childrenExpanded =
+      defaultGroupingExpansionDepth === -1 || defaultGroupingExpansionDepth > node.depth;
+  }
+
+  return {
+    ...node,
+    childrenExpanded,
+  };
 };
 
 /**

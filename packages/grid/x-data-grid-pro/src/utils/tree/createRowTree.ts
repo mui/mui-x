@@ -1,44 +1,19 @@
-import { GridRowId, GridGroupNode, GridTreeNode, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import { GridRowId, GridTreeNode, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
 import { GridRowTreeCreationValue } from '@mui/x-data-grid/internals';
 import { RowTreeBuilderNode, GridTreePathDuplicateHandler } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
+import { DataGridProProps } from '../../models/dataGridProProps';
 
 interface CreateRowTreeParams {
   nodes: RowTreeBuilderNode[];
   defaultGroupingExpansionDepth: number;
-  isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
+  isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'];
   groupingName: string;
   onDuplicatePath?: GridTreePathDuplicateHandler;
 }
 
 /**
  * Transform a list of rows into a tree structure where each row references its parent and children.
- * If a row have a parent which does not exist in the input rows, creates an auto generated row
- *
- ```
- params = {
-   ids: [0, 1, 2],
-   idRowsLookup: { 0: {...}, 1: {...}, 2: {...} },
-   rows: [
-     { id: 0, path: ['A'] },
-     { id: 1, path: ['B', 'A'] },
-     { id: 2, path: ['B', 'A', 'A'] }
-   ],
-   defaultGroupingExpansionDepth: 0,
- }
- Returns:
- {
-   ids: [0, 1, 2, 'auto-generated-row-B'],
-   idRowsLookup: { 0: {...}, 1: {...}, 2: {...}, 'auto-generated-row-B': {} },
-   tree: {
-     '0': { id: 0, parent: null, childrenExpanded: false, depth: 0, groupingKey: 'A' },
-     'auto-generated-row-B': { id: 'auto-generated-row-B', parent: null, childrenExpanded: false, depth: 0, groupingKey: 'B' },
-     '1': { id: 1, parent: 'auto-generated-row-B', childrenExpanded: false, depth: 1, groupingKey: 'A' },
-     '2': { id: 2, parent: 1, childrenExpanded: false, depth: 2, groupingKey: 'A' },
-   },
-   treeDepth: 3,
- }
- ```
  */
 export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationValue => {
   const dataRowIds: GridRowId[] = [];
@@ -57,28 +32,8 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
   };
   const treeDepths: GridRowTreeCreationValue['treeDepths'] = {};
 
-  const isGroupExpandedByDefault = (node: GridGroupNode) => {
-    if (node.id === GRID_ROOT_GROUP_ID) {
-      return true;
-    }
-
-    if (node.children.length === 0) {
-      return false;
-    }
-
-    if (params.isGroupExpandedByDefault) {
-      return params.isGroupExpandedByDefault(node);
-    }
-
-    return (
-      params.defaultGroupingExpansionDepth === -1 ||
-      params.defaultGroupingExpansionDepth > node.depth
-    );
-  };
-
   for (let i = 0; i < params.nodes.length; i += 1) {
     const node = params.nodes[i];
-
     dataRowIds.push(node.id);
 
     insertDataRowInTree({
@@ -87,24 +42,10 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
       path: node.path,
       onDuplicatePath: params.onDuplicatePath,
       treeDepths,
+      isGroupExpandedByDefault: params.isGroupExpandedByDefault,
+      defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
     });
   }
-
-  const addChildrenExpansionToGroups = (nodeId: GridRowId) => {
-    const node = tree[nodeId];
-    if (node.type === 'group') {
-      tree[nodeId] = {
-        ...node,
-        childrenExpanded: isGroupExpandedByDefault(node),
-      };
-
-      for (let i = 0; i < node.children.length; i += 1) {
-        addChildrenExpansionToGroups(node.children[i]);
-      }
-    }
-  };
-
-  addChildrenExpansionToGroups(GRID_ROOT_GROUP_ID);
 
   return {
     tree,

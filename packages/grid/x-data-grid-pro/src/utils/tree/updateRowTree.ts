@@ -7,34 +7,13 @@ import {
 import { RowTreeBuilderGroupingCriterion, RowTreeBuilderNode } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
 import { removeDataRowFromTree } from './removeDataRowFromTree';
+import { getNodePathInTree } from './utils';
 
 export interface UpdateRowTreeNodes {
   inserted: RowTreeBuilderNode[];
   modified: RowTreeBuilderNode[];
   removed: GridRowId[];
 }
-
-const getNodePathInTree = (
-  tree: GridRowTreeConfig,
-  id: GridRowId,
-): RowTreeBuilderGroupingCriterion[] => {
-  const node = tree[id];
-
-  const parentPath =
-    node.parent == null || node.parent === GRID_ROOT_GROUP_ID
-      ? []
-      : getNodePathInTree(tree, node.parent);
-
-  if (node.type === 'footer') {
-    return [...parentPath, { key: '', field: null }];
-  }
-
-  if (node.type === 'group') {
-    return [...parentPath, { key: node.groupingKey ?? '', field: node.groupingField }];
-  }
-
-  return [...parentPath, { key: node.groupingKey ?? '', field: null }];
-};
 
 interface UpdateRowTreeParams {
   previousTree: GridRowTreeConfig;
@@ -63,6 +42,8 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
       id: node.id,
       path: node.path,
       onDuplicatePath: params.onDuplicatePath,
+      isGroupExpandedByDefault: params.isGroupExpandedByDefault,
+      defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
     });
   }
 
@@ -78,8 +59,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
 
   for (let i = 0; i < params.nodes.modified.length; i += 1) {
     const node = params.nodes.modified[i];
-
-    const pathInPreviousTree = getNodePathInTree(params.previousTree, node.id);
+    const pathInPreviousTree = getNodePathInTree({ tree, id: node.id });
     const isInSameGroup = isDeepEqual(pathInPreviousTree, node.path);
 
     if (!isInSameGroup) {
@@ -95,6 +75,8 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
         id: node.id,
         path: node.path,
         onDuplicatePath: params.onDuplicatePath,
+        isGroupExpandedByDefault: params.isGroupExpandedByDefault,
+        defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
       });
     }
   }

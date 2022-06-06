@@ -80,7 +80,7 @@ const removeNodeAndCleanParent = ({
 
 /**
  * Removed a data row from the tree.
- * If the node is a group, replace it with an auto-generated group o be able to keep displaying its children
+ * If the node is a group, replace it with an auto-generated group to be able to keep displaying its children.
  * If not, remove it and recursively clean its parent with the following rules:
  * - An empty auto-generated should be removed from the tree
  * - An empty non-auto-generated should be turned into a leaf
