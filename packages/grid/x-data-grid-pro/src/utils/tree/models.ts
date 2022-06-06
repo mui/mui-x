@@ -2,7 +2,7 @@ import { GridKeyValue, GridRowId } from '@mui/x-data-grid';
 
 export interface RowTreeBuilderGroupingCriterion {
   field: string | null;
-  key: GridKeyValue;
+  key: GridKeyValue | null;
 }
 
 export interface RowTreeBuilderNode {

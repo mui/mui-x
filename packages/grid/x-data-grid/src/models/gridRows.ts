@@ -53,7 +53,6 @@ export interface GridLeafNode extends GridTreeBasicNode {
   parent: GridRowId;
   /**
    * The key used to group the children of this row.
-   * Only used in the tree data, may-be renamed leafKey.
    */
   groupingKey: GridKeyValue | null;
 }

@@ -131,7 +131,7 @@ export const addFooterRows = (
       const footerId = getAggregationFooterRowIdFromGroupId(groupNode.id);
       if (groupNode.footerId !== footerId) {
         if (groupNode.footerId != null) {
-          removeNodeFromTree({ id: groupNode.footerId, tree, treeDepths });
+          removeNodeFromTree({ node: tree[groupNode.footerId], tree, treeDepths });
         }
 
         const footerNode: GridFooterNode = {
@@ -148,7 +148,7 @@ export const addFooterRows = (
         });
       }
     } else if (groupNode.footerId != null) {
-      removeNodeFromTree({ id: groupNode.footerId, tree, treeDepths });
+      removeNodeFromTree({ node: tree[groupNode.footerId], tree, treeDepths });
 
       tree[groupNode.id] = {
         ...(tree[groupNode.id] as GridGroupNode),
