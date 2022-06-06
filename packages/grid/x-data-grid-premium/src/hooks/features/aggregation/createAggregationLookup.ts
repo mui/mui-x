@@ -36,13 +36,15 @@ const getAggregationCellValue = ({
 
   let rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
 
-  if (aggregationRowsScope === 'filtered') {
-    rowIds = rowIds.filter((rowId) => filteredRowsLookup[rowId] !== false);
-  }
-
-  return aggregationFunction.apply({
-    values: rowIds.map((rowId) => apiRef.current.getCellValue(rowId, field)),
+  const values: any[] = [];
+  rowIds.forEach((rowId) => {
+    if (aggregationRowsScope === 'filtered' && filteredRowsLookup[rowId] === false) {
+      return;
+    }
+    values.push(apiRef.current.getCellValue(rowId, field));
   });
+
+  return aggregationFunction.apply({ values });
 };
 
 const getGroupAggregatedValue = ({

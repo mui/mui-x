@@ -37,8 +37,8 @@ const firstAlphabeticalAggregation = {
 
     return sortedValue[0];
   },
+  label: 'firstAlphabetical',
   columnTypes: ['string'],
-  valueFormatter: (params) => `Agg: ${params.value}`,
 };
 
 export default function AggregationValueFormatter() {

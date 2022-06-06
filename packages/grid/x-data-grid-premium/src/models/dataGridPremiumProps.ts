@@ -83,7 +83,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
-   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'.
+   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
 }

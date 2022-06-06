@@ -12,7 +12,7 @@ They can be pinned either to the left or right side and cannot be reordered.
 To pin a column, there are a few ways:
 
 - Using the `initialState` prop
-- [Controlling](/#controlling-the-pinned-columns) the `pinnedColumns` and `onPinnedColumnsChange` props
+- [Controlling](#controlling-the-pinned-columns) the `pinnedColumns` and `onPinnedColumnsChange` props
 - Dedicated buttons in the column menu
 - Accessing the [imperative](#apiref) API
 

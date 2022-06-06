@@ -197,6 +197,7 @@ DateRangePicker.propTypes = {
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,

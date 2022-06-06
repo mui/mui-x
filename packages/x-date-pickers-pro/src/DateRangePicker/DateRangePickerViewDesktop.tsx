@@ -192,6 +192,10 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
             </DateRangePickerViewDesktopArrowSwitcher>
             <DateRangePickerViewDesktopCalendar<TDate>
               {...other}
+              minDate={minDate}
+              maxDate={maxDate}
+              disablePast={disablePast}
+              disableFuture={disableFuture}
               key={index}
               selectedDays={parsedValue}
               onFocusedDayChange={doNothing}

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useRifm } from 'rifm';
 import { useUtils } from './useUtils';
-import { createDelegatedEventHandler } from '../utils/utils';
 import { DateInputProps, MuiTextFieldProps } from '../components/PureDateInput';
 import {
   maskedDateFormatter,
@@ -39,7 +38,6 @@ export const useMaskedInput = <TInputDate, TDate>({
   validationError,
 }: MaskedInputProps<TInputDate, TDate>): MuiTextFieldProps => {
   const utils = useUtils<TDate>();
-  const [isFocused, setIsFocused] = React.useState(false);
 
   const formatHelperText = utils.getFormatHelperText(inputFormat);
 
@@ -59,36 +57,38 @@ export const useMaskedInput = <TInputDate, TDate>({
   );
 
   // TODO: Implement with controlled vs uncontrolled `rawValue`
-  const currentInputValue = getDisplayDate(utils, rawValue, inputFormat);
-  const [innerInputValue, setInnerInputValue] = React.useState(currentInputValue);
-  const previousInputValueRef = React.useRef(currentInputValue);
-  React.useEffect(() => {
-    previousInputValueRef.current = currentInputValue;
-  }, [currentInputValue]);
-  const notTyping = !isFocused;
-  const valueChanged = previousInputValueRef.current !== currentInputValue;
-  // Update the input value only if the value changed outside of typing
-  if (notTyping && valueChanged && (rawValue === null || utils.isValid(rawValue))) {
-    if (currentInputValue !== innerInputValue) {
-      setInnerInputValue(currentInputValue);
-    }
+  const parsedValue = rawValue === null ? null : utils.date(rawValue);
+
+  // Track the value of the input
+  const [innerInputValue, setInnerInputValue] = React.useState<TDate | null>(parsedValue);
+  // control the input text
+  const [innerDisplayedInputValue, setInnerDisplayedInputValue] = React.useState<string>(
+    getDisplayDate(utils, rawValue, inputFormat),
+  );
+
+  const isAcceptedValue = rawValue === null || utils.isValid(parsedValue);
+  if (isAcceptedValue && !utils.isEqual(innerInputValue, parsedValue)) {
+    // When dev set a new valid value, we trust them
+    const newDisplayDate = getDisplayDate(utils, rawValue, inputFormat);
+    setInnerInputValue(parsedValue);
+    setInnerDisplayedInputValue(newDisplayDate);
   }
 
   const handleChange = (text: string) => {
     const finalString = text === '' || text === mask ? '' : text;
-    setInnerInputValue(finalString);
+    setInnerDisplayedInputValue(finalString);
 
     const date = finalString === null ? null : utils.parse(finalString, inputFormat);
-
     if (ignoreInvalidInputs && !utils.isValid(date)) {
       return;
     }
 
+    setInnerInputValue(date);
     onChange(date, finalString || undefined);
   };
 
   const rifmProps = useRifm({
-    value: innerInputValue,
+    value: innerDisplayedInputValue,
     onChange: handleChange,
     format: rifmFormatter || formatter,
   });
@@ -96,7 +96,7 @@ export const useMaskedInput = <TInputDate, TDate>({
   const inputStateArgs = shouldUseMaskedInput
     ? rifmProps
     : {
-        value: innerInputValue,
+        value: innerDisplayedInputValue,
         onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
           handleChange(event.currentTarget.value);
         },
@@ -113,12 +113,6 @@ export const useMaskedInput = <TInputDate, TDate>({
       readOnly,
       type: shouldUseMaskedInput ? 'tel' : 'text',
       ...inputProps,
-      onFocus: createDelegatedEventHandler(() => {
-        setIsFocused(true);
-      }, inputProps?.onFocus),
-      onBlur: createDelegatedEventHandler(() => {
-        setIsFocused(false);
-      }, inputProps?.onBlur),
     },
     ...TextFieldProps,
   };

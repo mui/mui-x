@@ -74,14 +74,15 @@ This position must be one of the three following values:
 
 2. `"inline"` - the grid will disable aggregation on the grouping row
 
-3 `null` - the grid will not aggregate the group
+3. `null` - the grid will not aggregate the group
 
 ```tsx
 // Will aggregate the root group on the top-level footer and the other groups on their grouping row
 // (default behavior)
 getAggregationPosition=(groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
 
-// Will aggregate all the groups on their grouping row except the root group which will not be aggregated
+// Will aggregate all the groups on their grouping row
+// The root will not be aggregated
 getAggregationPosition={(groupNode) => groupNode.depth === -1 ? null : 'inline'}
 
 // Will only aggregate the company groups on the grouping row
@@ -201,8 +202,8 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
 
       return sortedValue[0];
     },
-    // The `label` property defined the label rendered when this aggregation function is the only one being used.
-    label: 'First in alphabet',
+    // The `label` property defines the label displayed in the column header when this aggregation is being used.
+    label: 'firstAlphabetical',
     // The `types` property defines which type of columns can use this aggregation function.
     // Here, we only want to propose this aggregation function for `string` columns.
     // If not defined, aggregation will be available for all column types.
@@ -248,4 +249,5 @@ In the example below, you can see that all the aggregation functions are rendere
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
 - [GridAggregationFunction](/x/api/data-grid/grid-aggregation-function/)

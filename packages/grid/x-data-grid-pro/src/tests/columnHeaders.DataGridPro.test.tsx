@@ -214,5 +214,57 @@ describe('<DataGridPro /> - Column Headers', () => {
       clock.runToLast(); // Wait for the transition to run
       expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
     });
+
+    it('should restore focus to the column header when dismissing the menu by selecting any item', () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro
+              {...baselineProps}
+              columns={[{ field: 'brand' }]}
+              initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }}
+              {...props}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      fireEvent.click(menuIconButton);
+      clock.runToLast();
+
+      const menu = screen.queryByRole('menu');
+      const unsortMenuitem = screen.queryByRole('menuitem', { name: /unsort/i });
+      expect(menu).toHaveFocus();
+
+      fireEvent.keyDown(menu, { key: 'ArrowDown' });
+      expect(unsortMenuitem).toHaveFocus();
+      fireEvent.keyDown(unsortMenuitem, { key: 'Enter' });
+
+      expect(columnCell).toHaveFocus();
+    });
+
+    it('should restore focus to the column header when dismissing the menu without selecting any item', () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} {...props} />
+          </div>
+        );
+      };
+      render(<Test />);
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      fireEvent.click(menuIconButton);
+      clock.runToLast();
+
+      const menu = screen.queryByRole('menu');
+      expect(menu).toHaveFocus();
+      fireEvent.keyDown(menu, { key: 'Escape' });
+
+      expect(menu).not.toHaveFocus();
+      expect(columnCell).toHaveFocus();
+    });
   });
 });

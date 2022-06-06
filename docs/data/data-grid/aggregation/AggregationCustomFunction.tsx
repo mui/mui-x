@@ -46,7 +46,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
 
       return sortedValue[0];
     },
-    label: 'First in alphabet',
+    label: 'firstAlphabetical',
     columnTypes: ['string'],
   };
 
@@ -60,7 +60,7 @@ const lastAlphabeticalAggregation: GridAggregationFunction<string, string | null
 
     return sortedValue[sortedValue.length - 1];
   },
-  label: 'Last in alphabet',
+  label: 'alphabeticalLast',
   columnTypes: ['string'],
 };
 
