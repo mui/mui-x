@@ -33,8 +33,7 @@ const getAggregationCellValue = ({
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
 }) => {
   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-
-  let rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
+  const rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
 
   const values: any[] = [];
   rowIds.forEach((rowId) => {
