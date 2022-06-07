@@ -49,13 +49,10 @@ describe('<DesktopDateTimePicker />', () => {
 
   it('prop: mask – should take the mask prop into account', () => {
     render(
-      <DesktopDateTimePicker
-        renderInput={(params) => <TextField autoFocus {...params} />}
-        ampm={false}
+      <WrappedDesktopDateTimePicker
+        initialValue={null}
         inputFormat="mm.dd.yyyy hh:mm"
         mask="__.__.____ __:__"
-        onChange={() => {}}
-        value={null}
       />,
     );
 
@@ -117,6 +114,7 @@ describe('<DesktopDateTimePicker />', () => {
       fireEvent.change(screen.getByRole('textbox'), {
         target: { value: '12/01/1999 10:12' },
       });
+      expect(onChange.callCount).to.equal(1);
       expect(adapterToUse.isValid(onChange.lastCall.args[0])).to.equal(!ampm);
 
       // Call `onChange` with a 12h date-time. The mask will remove the am/pm

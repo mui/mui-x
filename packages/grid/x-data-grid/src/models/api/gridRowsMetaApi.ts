@@ -25,4 +25,28 @@ export interface GridRowsMetaApi {
    * @ignore - do not document.
    */
   unstable_setRowHeight: (id: GridRowId, height: number) => void;
+  /**
+   * Stores the row height measurement and triggers an hydration, if needed.
+   * @param {GridRowId} id The id of the row.
+   * @param {number} height The new height.
+   * @ignore - do not document.
+   */
+  unstable_storeRowHeightMeasurement: (id: GridRowId, height: number) => void;
+  /**
+   * Determines if the height of a row is "auto".
+   * @ignore - do not document.
+   */
+  unstable_rowHasAutoHeight: (id: GridRowId) => boolean;
+  /**
+   * Returns the index of the last row measured.
+   * The value considers only the rows reachable by scroll, e.g. first row has index=0 in all pages.
+   * @ignore - do not document.
+   */
+  unstable_getLastMeasuredRowIndex: () => number;
+  /**
+   * Updates the index of the last row measured.
+   * @param {number} index The row index.
+   * @ignore - do not document.
+   */
+  unstable_setLastMeasuredRowIndex: (index: number) => void;
 }

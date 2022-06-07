@@ -27,7 +27,7 @@ export interface GridCellProps<V = any, F = V> {
   rowId: GridRowId;
   formattedValue?: F;
   hasFocus?: boolean;
-  height: number;
+  height: number | 'auto';
   isEditable?: boolean;
   showRightBorder?: boolean;
   value?: V;
@@ -163,7 +163,7 @@ function GridCell(props: GridCellProps) {
     minWidth: width,
     maxWidth: width,
     minHeight: height,
-    maxHeight: height,
+    maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
   };
 
   React.useLayoutEffect(() => {
@@ -279,7 +279,7 @@ GridCell.propTypes = {
   field: PropTypes.string.isRequired,
   formattedValue: PropTypes.any,
   hasFocus: PropTypes.bool,
-  height: PropTypes.number.isRequired,
+  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isEditable: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,

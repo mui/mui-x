@@ -24,13 +24,17 @@ interface GridColDef {
 }
 ```
 
-> ⚠ When using `colSpan`, some other features may be pointless or may not work as expected (depending on the data model). To avoid confusing grid layout, consider disabling the following features for the column(s) that are affected by `colSpan`:
->
-> - [sorting](/x/react-data-grid/sorting/#disable-the-sorting)
-> - [filtering](/x/react-data-grid/filtering/#disable-the-filters)
-> - [column reorder](/x/react-data-grid/column-ordering/)
-> - [hiding columns](/x/react-data-grid/column-visibility/)
-> - [column pinning](/x/react-data-grid/column-pinning/#blocking-column-unpinning)
+:::warning
+When using `colSpan`, some other features may be pointless or may not work as expected (depending on the data model).
+To avoid confusing grid layout, consider disabling the following features for the column(s) that are affected by `colSpan`:
+
+- [sorting](/x/react-data-grid/sorting/#disable-the-sorting)
+- [filtering](/x/react-data-grid/filtering/#disable-the-filters)
+- [column reorder](/x/react-data-grid/column-ordering/)
+- [hiding columns](/x/react-data-grid/column-visibility/)
+- [column pinning](/x/react-data-grid/column-pinning/#blocking-column-unpinning)
+
+:::
 
 ## Number signature
 

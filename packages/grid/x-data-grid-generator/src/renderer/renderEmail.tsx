@@ -5,5 +5,9 @@ import { DemoLink } from './renderLink';
 export function renderEmail(params: GridRenderCellParams<string, any, any>) {
   const email = params.value ?? '';
 
-  return <DemoLink href={`mailto:${email}`}>{email}</DemoLink>;
+  return (
+    <DemoLink href={`mailto:${email}`} tabIndex={params.tabIndex}>
+      {email}
+    </DemoLink>
+  );
 }

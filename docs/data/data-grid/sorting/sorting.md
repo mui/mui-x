@@ -14,9 +14,11 @@ Following clicks change the column's sorting direction. You can see the applied 
 
 ## Single and multi-sorting
 
-> ⚠️ The `DataGrid` can only sort the rows according to one criterion at a time.
->
-> To use multi-sorting, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+:::warning
+The `DataGrid` can only sort the rows according to one criterion at a time.
+
+To use multi-sorting, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+:::
 
 ## Multi-sorting [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
@@ -138,7 +140,9 @@ Sorting can be run server-side by setting the `sortingMode` prop to `server`, an
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
+:::warning
+Only use this API as the last option. Give preference to the props to control the grid.
+:::
 
 {{"demo": "SortingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

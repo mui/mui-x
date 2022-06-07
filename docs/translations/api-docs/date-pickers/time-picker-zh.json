@@ -6,6 +6,8 @@
     "ampmInClock": "Display ampm controls under the clock (instead of in the toolbar).",
     "className": "className applied to the root component.",
     "closeOnSelect": "If <code>true</code> the popup or dialog will immediately close after submitting full date.",
+    "components": "Overrideable components.",
+    "componentsProps": "The props used for each component slot.",
     "desktopModeMediaQuery": "CSS media query when <code>Mobile</code> mode will be changed to <code>Desktop</code>.",
     "DialogProps": "Props applied to the <a href=\"https://mui.com/material-ui/api/dialog/\"><code>Dialog</code></a> element.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",

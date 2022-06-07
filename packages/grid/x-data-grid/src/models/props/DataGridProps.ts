@@ -380,9 +380,17 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
-   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied. If "auto" then the row height is calculated based on the content.
    */
   getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
+  /**
+   * Function that returns the estimated height for a row.
+   * Only works if dynamic row height is used.
+   * Once the row height is measured this value is discarded.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
+   */
+  getEstimatedRowHeight?: (params: GridRowHeightParams) => number | null;
   /**
    * Function that allows to specify the spacing between rows.
    * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].

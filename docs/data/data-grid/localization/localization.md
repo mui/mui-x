@@ -17,6 +17,25 @@ In the following example, the labels of the density selector are customized.
 
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
 
+:::warning
+It's important to note that because the data grid uses components from the Material UI library some translation keys need to be accessed using that component key.
+
+One example is the table pagination component used in the grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [`TablePagination`](/material-ui/api/table-pagination/) component.
+
+```jsx
+<DataGrid
+  {...data}
+  localeText={{
+    MuiTablePagination: {
+      labelDisplayedRows: ({ from, to, count }) =>
+        `${from} - ${to} of more than ${count}`,
+    },
+  }}
+/>
+```
+
+:::
+
 ## Locale text
 
 The default locale of MUI is English (United States).
@@ -94,6 +113,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Italian                 | it-IT               | `itIT`      |
 | Japanese                | ja-JP               | `jaJP`      |
 | Korean                  | ko-KR               | `koKR`      |
+| Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
 | Persian                 | fa-IR               | `faIR`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |

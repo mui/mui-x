@@ -6,7 +6,6 @@ import {
   CursorCoordinates,
   GridColumnHeaderSeparatorSides,
   GridColumnResizeParams,
-  GridColumnHeaderSeparatorProps,
   useGridApiEventHandler,
   useGridApiOptionHandler,
   useGridNativeEventListener,
@@ -18,6 +17,7 @@ import {
   findParentElementFromClassName,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
+import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
   getFieldFromHeaderElem,
@@ -25,6 +25,8 @@ import {
 } from '../../../utils/domUtils';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+
+type ResizeDirection = keyof typeof GridColumnHeaderSeparatorSides;
 
 // TODO: remove support for Safari < 13.
 // https://caniuse.com/#search=touch-action
@@ -73,10 +75,10 @@ function computeNewWidth(
   initialOffsetToSeparator: number,
   clickX: number,
   columnBounds: DOMRect,
-  separatorSide: GridColumnHeaderSeparatorProps['side'],
+  resizeDirection: ResizeDirection,
 ) {
   let newWidth = initialOffsetToSeparator;
-  if (separatorSide === GridColumnHeaderSeparatorSides.Right) {
+  if (resizeDirection === 'Right') {
     newWidth += clickX - columnBounds.left;
   } else {
     newWidth += columnBounds.right - clickX;
@@ -87,18 +89,30 @@ function computeNewWidth(
 function computeOffsetToSeparator(
   clickX: number,
   columnBounds: DOMRect,
-  separatorSide: GridColumnHeaderSeparatorProps['side'],
+  resizeDirection: ResizeDirection,
 ) {
-  if (separatorSide === GridColumnHeaderSeparatorSides.Left) {
+  if (resizeDirection === 'Left') {
     return clickX - columnBounds.left;
   }
   return columnBounds.right - clickX;
 }
 
-function getSeparatorSide(element: HTMLElement) {
-  return element.classList.contains(gridClasses['columnSeparator--sideRight'])
-    ? GridColumnHeaderSeparatorSides.Right
-    : GridColumnHeaderSeparatorSides.Left;
+function flipResizeDirection(side: ResizeDirection) {
+  if (side === 'Right') {
+    return 'Left';
+  }
+  return 'Right';
+}
+
+function getResizeDirection(element: HTMLElement, direction: Direction) {
+  const side = element.classList.contains(gridClasses['columnSeparator--sideRight'])
+    ? 'Right'
+    : 'Left';
+  if (direction === 'rtl') {
+    // Resizing logic should be mirrored in the RTL case
+    return flipResizeDirection(side);
+  }
+  return side;
 }
 
 export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
@@ -119,12 +133,13 @@ export const useGridColumnResize = (
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
   const colCellElementsRef = React.useRef<Element[]>();
+  const theme = useTheme();
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
   // This ref stores the offset between the click and the separator.
   const initialOffsetToSeparator = React.useRef<number>();
-  const separatorSide = React.useRef<GridColumnHeaderSeparatorProps['side']>();
+  const resizeDirection = React.useRef<ResizeDirection>();
 
   const stopResizeEventTimeout = React.useRef<any>();
   const touchId = React.useRef<number>();
@@ -199,7 +214,7 @@ export const useGridColumnResize = (
       initialOffsetToSeparator.current!,
       nativeEvent.clientX,
       colElementRef.current!.getBoundingClientRect(),
-      separatorSide.current!,
+      resizeDirection.current!,
     );
 
     newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
@@ -245,12 +260,12 @@ export const useGridColumnResize = (
       const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
 
-      separatorSide.current = getSeparatorSide(event.currentTarget);
+      resizeDirection.current = getResizeDirection(event.currentTarget, theme.direction);
 
       initialOffsetToSeparator.current = computeOffsetToSeparator(
         event.clientX,
         colElementRef.current!.getBoundingClientRect(),
-        separatorSide.current,
+        resizeDirection.current,
       );
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
@@ -295,7 +310,7 @@ export const useGridColumnResize = (
       initialOffsetToSeparator.current!,
       (finger as CursorCoordinates).x,
       colElementRef.current!.getBoundingClientRect(),
-      separatorSide.current!,
+      resizeDirection.current!,
     );
 
     newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
@@ -346,12 +361,12 @@ export const useGridColumnResize = (
     ) as HTMLDivElement;
     colCellElementsRef.current = findGridCellElementsFromCol(colElementRef.current, apiRef.current);
 
-    separatorSide.current = getSeparatorSide(event.target);
+    resizeDirection.current = getResizeDirection(event.target, theme.direction);
 
     initialOffsetToSeparator.current = computeOffsetToSeparator(
       touch.clientX,
       colElementRef.current!.getBoundingClientRect(),
-      separatorSide.current!,
+      resizeDirection.current!,
     );
 
     const doc = ownerDocument(event.currentTarget as HTMLElement);

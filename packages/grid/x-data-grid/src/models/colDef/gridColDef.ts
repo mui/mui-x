@@ -249,7 +249,8 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
 }
 
-export interface GridActionsColDef extends GridColDef {
+export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
+  extends GridColDef<R, V, F> {
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
    * @default 'actions'
@@ -260,12 +261,12 @@ export interface GridActionsColDef extends GridColDef {
    * @param {GridRowParams} params The params for each row.
    * @returns {React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
    */
-  getActions: (params: GridRowParams) => React.ReactElement<GridActionsCellItemProps>[];
+  getActions: (params: GridRowParams<R>) => React.ReactElement<GridActionsCellItemProps>[];
 }
 
 export type GridEnrichedColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridColDef<R, V, F>
-  | GridActionsColDef;
+  | GridActionsColDef<R, V, F>;
 
 export type GridColumns<R extends GridValidRowModel = any> = GridEnrichedColDef<R>[];
 

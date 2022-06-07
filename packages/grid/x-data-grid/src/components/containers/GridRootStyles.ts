@@ -248,9 +248,11 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.cell}`]: {
       display: 'flex',
       alignItems: 'center',
+      borderBottom: `1px solid ${borderColor}`,
+    },
+    [`& .${gridClasses.row}:not(.${gridClasses['row--dynamicHeight']}) > .${gridClasses.cell}`]: {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
-      borderBottom: `1px solid ${borderColor}`,
     },
     [`& .${gridClasses.cellContent}`]: {
       overflow: 'hidden',

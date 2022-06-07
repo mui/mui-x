@@ -40,13 +40,12 @@ export interface CalendarPickerProps<TDate>
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components?: Partial<CalendarPickerSlotsComponent>;
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps?: Partial<CalendarPickerSlotsComponentsProps>;
@@ -126,6 +125,8 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'currentMonth'
   | 'className'
   | 'classes'
+  | 'components'
+  | 'componentsProps'
 >;
 
 const useUtilityClasses = (
@@ -454,13 +455,12 @@ CalendarPicker.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps: PropTypes.object,
@@ -493,6 +493,7 @@ CalendarPicker.propTypes = {
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**

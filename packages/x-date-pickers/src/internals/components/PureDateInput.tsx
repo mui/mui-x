@@ -4,8 +4,8 @@ import { TextFieldProps as MuiTextFieldPropsType } from '@mui/material/TextField
 import { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { onSpaceOrEnter } from '../utils/utils';
-import { useUtils } from '../hooks/useUtils';
-import { getDisplayDate, getTextFieldAriaText } from '../utils/text-field-helper';
+import { useLocaleText, useUtils } from '../hooks/useUtils';
+import { getDisplayDate } from '../utils/text-field-helper';
 import { MuiPickersAdapter } from '../models';
 
 // TODO: make `variant` optional.
@@ -23,8 +23,8 @@ export interface DateInputProps<TInputDate, TDate> {
    */
   acceptRegex?: RegExp;
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
+   * @default {}
    */
   components?: Partial<DateInputSlotsComponent>;
   disabled?: boolean;
@@ -108,6 +108,7 @@ export type ExportedDateInputProps<TInputDate, TDate> = Omit<
   | 'rawValue'
   | 'TextFieldProps'
   | 'validationError'
+  | 'components'
 >;
 
 // TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?
@@ -117,7 +118,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
 ) {
   const {
     disabled,
-    getOpenDialogAriaText = getTextFieldAriaText,
+    getOpenDialogAriaText: getOpenDialogAriaTextProp,
     inputFormat,
     InputProps,
     inputRef,
@@ -128,6 +129,12 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     TextFieldProps = {},
     validationError,
   } = props;
+
+  const localeText = useLocaleText();
+
+  // The prop can not be deprecated
+  // Default is "Choose date, ...", but time pickers override it with "Choose time, ..."
+  const getOpenDialogAriaText = getOpenDialogAriaTextProp ?? localeText.openDatePickerDialogue;
 
   const utils = useUtils<TDate>();
   const PureDateInputProps = React.useMemo(

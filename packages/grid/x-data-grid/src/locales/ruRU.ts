@@ -47,7 +47,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Экспорт',
   toolbarExportCSV: 'Скачать в формате CSV',
   toolbarExportPrint: 'Печать',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Скачать в формате Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Найти столбец',
@@ -82,7 +82,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'меньше или равно',
   filterOperatorIsEmpty: 'пустой',
   filterOperatorIsNotEmpty: 'не пустой',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'любой из',
 
   // Filter values text
   filterValueAny: 'любой',
@@ -165,8 +165,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Разгруппировать по ${name}`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'Развернуть',
+  collapseDetailPanel: 'Свернуть',
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
