@@ -145,6 +145,7 @@
   { "name": "GridComparatorFn", "kind": "TypeAlias" },
   { "name": "GridContextProvider", "kind": "Variable" },
   { "name": "GridControlledStateEventLookup", "kind": "Interface" },
+  { "name": "GridControlledStateReasonLookup", "kind": "Interface" },
   { "name": "GridCoreApi", "kind": "Interface" },
   { "name": "GridCsvExportApi", "kind": "Interface" },
   { "name": "GridCsvExportMenuItem", "kind": "Variable" },

@@ -109,7 +109,7 @@ export const useGridDetailPanel = (
 
   useGridRegisterPipeProcessor(apiRef, 'rowHeight', addDetailHeight);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'detailPanels',
     propModel: props.detailPanelExpandedRowIds,
     propOnChange: props.onDetailPanelExpandedRowIdsChange,

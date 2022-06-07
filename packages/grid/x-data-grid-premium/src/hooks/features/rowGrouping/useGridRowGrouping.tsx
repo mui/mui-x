@@ -65,7 +65,7 @@ export const useGridRowGrouping = (
     | 'disableRowGrouping'
   >,
 ) => {
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'rowGrouping',
     propModel: props.rowGroupingModel,
     propOnChange: props.onRowGroupingModelChange,
