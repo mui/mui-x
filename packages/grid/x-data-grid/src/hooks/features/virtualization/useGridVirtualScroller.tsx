@@ -23,7 +23,7 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 
 // Uses binary search to avoid looping through all possible positions
-export function getIndexFromScroll(
+export function binarySearch(
   offset: number,
   positions: number[],
   sliceStart = 0,
@@ -40,8 +40,19 @@ export function getIndexFromScroll(
   const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
   const itemOffset = positions[pivot];
   return offset <= itemOffset
-    ? getIndexFromScroll(offset, positions, sliceStart, pivot)
-    : getIndexFromScroll(offset, positions, pivot + 1, sliceEnd);
+    ? binarySearch(offset, positions, sliceStart, pivot)
+    : binarySearch(offset, positions, pivot + 1, sliceEnd);
+}
+
+function exponentialSearch(offset: number, positions: number[], index: number): number {
+  let interval = 1;
+
+  while (index < positions.length && positions[index] < offset) {
+    index += interval;
+    interval *= 2;
+  }
+
+  return binarySearch(offset, positions, Math.floor(index / 2), Math.min(index, positions.length));
 }
 
 export const getRenderableIndexes = ({
@@ -104,6 +115,18 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
+  const getNearestIndexToRender = React.useCallback(
+    (offset) => {
+      const lastMeasuredIndex = Math.max(0, apiRef.current.unstable_getLastMeasuredRowIndex());
+      const allRowsMeasured = lastMeasuredIndex === Infinity;
+
+      return allRowsMeasured || rowsMeta.positions[lastMeasuredIndex] >= offset
+        ? binarySearch(offset, rowsMeta.positions)
+        : exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndex);
+    },
+    [apiRef, rowsMeta.positions],
+  );
+
   const computeRenderContext = React.useCallback(() => {
     if (disableVirtualization) {
       return {
@@ -116,13 +139,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const { top, left } = scrollPosition.current!;
 
-    const firstRowIndex = Math.min(
-      Math.max(0, apiRef.current.unstable_getLastMeasuredRowIndex()),
-      getIndexFromScroll(top, rowsMeta.positions),
-    );
+    // Clamp the value because the search may return an index out of bounds.
+    // In the last index, this is not needed because Array.slice doesn't include it.
+    const firstRowIndex = Math.min(getNearestIndexToRender(top), rowsMeta.positions.length - 1);
+
     const lastRowIndex = rootProps.autoHeight
       ? firstRowIndex + currentPage.rows.length
-      : getIndexFromScroll(top + rootRef.current!.clientHeight!, rowsMeta.positions);
+      : getNearestIndexToRender(top + rootRef.current!.clientHeight!);
 
     let hasRowWithAutoHeight = false;
     let firstColumnIndex = 0;
@@ -142,8 +165,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     if (!hasRowWithAutoHeight) {
-      firstColumnIndex = getIndexFromScroll(left, columnPositions);
-      lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnPositions);
+      firstColumnIndex = binarySearch(left, columnPositions);
+      lastColumnIndex = binarySearch(left + containerWidth!, columnPositions);
     }
 
     return {
@@ -154,7 +177,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     };
   }, [
     disableVirtualization,
-    rowsMeta.positions,
+    getNearestIndexToRender,
+    rowsMeta.positions.length,
     rootProps.autoHeight,
     rootProps.rowBuffer,
     currentPage.rows,

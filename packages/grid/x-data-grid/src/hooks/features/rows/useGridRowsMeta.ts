@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { debounce } from '@mui/material/utils';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -186,6 +187,11 @@ export const useGridRowsMeta = (
     [hydrateRowsMeta],
   );
 
+  const debouncedHydrateRowsMeta = React.useMemo(
+    () => debounce(hydrateRowsMeta),
+    [hydrateRowsMeta],
+  );
+
   const storeMeasuredRowHeight = React.useCallback<
     GridRowsMetaApi['unstable_storeRowHeightMeasurement']
   >(
@@ -201,10 +207,10 @@ export const useGridRowsMeta = (
       rowsHeightLookup.current[id].sizes.base = height;
 
       if (needsHydration) {
-        hydrateRowsMeta();
+        debouncedHydrateRowsMeta();
       }
     },
-    [hydrateRowsMeta],
+    [debouncedHydrateRowsMeta],
   );
 
   const rowHasAutoHeight = React.useCallback<GridRowsMetaApi['unstable_rowHasAutoHeight']>((id) => {
@@ -220,7 +226,7 @@ export const useGridRowsMeta = (
   const setLastMeasuredRowIndex = React.useCallback<
     GridRowsMetaApi['unstable_setLastMeasuredRowIndex']
   >((index) => {
-    if (hasRowWithAutoHeight.current) {
+    if (hasRowWithAutoHeight.current && index > lastMeasuredRowIndex.current) {
       lastMeasuredRowIndex.current = index;
     }
   }, []);
