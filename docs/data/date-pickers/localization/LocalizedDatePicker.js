@@ -31,8 +31,9 @@ const dateMaskMap = {
 
 export default function LocalizedDatePicker() {
   const [locale, setLocale] = React.useState('ru');
-  const [dateValue, setDateValue] = React.useState(new Date());
-  const [timeValue, setTimeValue] = React.useState(new Date());
+  const [datePickerValue, setDatePickerValue] = React.useState(new Date());
+
+  const [timePickerValue, setTimePickerValue] = React.useState(new Date());
 
   const selectLocale = (newLocale) => {
     setLocale(newLocale);
@@ -57,13 +58,13 @@ export default function LocalizedDatePicker() {
         </ToggleButtonGroup>
         <DatePicker
           mask={dateMaskMap[locale]}
-          value={dateValue}
-          onChange={(newValue) => setDateValue(newValue)}
+          value={datePickerValue}
+          onChange={(newValue) => setDatePickerValue(newValue)}
           renderInput={(params) => <TextField {...params} />}
         />
         <TimePicker
-          value={timeValue}
-          onChange={(newValue) => setTimeValue(newValue)}
+          value={timePickerValue}
+          onChange={(newValue) => setTimePickerValue(newValue)}
           renderInput={(params) => <TextField {...params} />}
         />
       </Stack>
