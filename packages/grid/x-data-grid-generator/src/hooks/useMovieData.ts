@@ -41,7 +41,6 @@ const COLUMNS: GridColumns = [
     field: 'year',
     headerName: 'Year',
     type: 'number',
-    availableAggregationFunctions: ['max', 'min'],
   },
   {
     field: 'cinematicUniverse',
@@ -124,8 +123,8 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 8.3,
     cinematicUniverse: 'Marvel Cinematic Universe',
     composer: {
-      name: 'Michael Giacchino'
-    }
+      name: 'Michael Giacchino',
+    },
   },
   {
     id: 6,
@@ -341,8 +340,8 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 7.8,
     cinematicUniverse: 'Marvel Cinematic Universe',
     composer: {
-      name: 'Henry Jackman'
-    }
+      name: 'Henry Jackman',
+    },
   },
   {
     id: 23,
@@ -354,8 +353,8 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 6.8,
     cinematicUniverse: 'DC Cinematic Universe',
     composer: {
-      name: 'Rupert Gregson-Williams'
-    }
+      name: 'Rupert Gregson-Williams',
+    },
   },
   {
     id: 24,
@@ -368,7 +367,7 @@ const ROWS: GridRowModel<Movie>[] = [
     cinematicUniverse: 'The Lord of the Rings',
     composer: {
       name: 'Howard Shore',
-    }
+    },
   },
   {
     id: 25,
@@ -380,8 +379,8 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 7.4,
     cinematicUniverse: 'Marvel Cinematic Universe',
     composer: {
-      name: 'Michael Giacchino'
-    }
+      name: 'Michael Giacchino',
+    },
   },
   {
     id: 26,
@@ -393,8 +392,8 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 6.8,
     cinematicUniverse: 'Marvel Cinematic Universe',
     composer: {
-      name: 'Pinar Toprak'
-    }
+      name: 'Pinar Toprak',
+    },
   },
   {
     id: 27,
@@ -406,8 +405,8 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 6.2,
     cinematicUniverse: 'Transformers',
     composer: {
-      name: 'Steve Jablonsky'
-    }
+      name: 'Steve Jablonsky',
+    },
   },
   {
     id: 28,
@@ -419,8 +418,8 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 7.8,
     cinematicUniverse: 'James Bond',
     composer: {
-      name: 'Thomas Newman'
-    }
+      name: 'Thomas Newman',
+    },
   },
   {
     id: 29,
@@ -432,8 +431,8 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 5.6,
     cinematicUniverse: 'Transformers',
     composer: {
-      name: 'Steve Jablonsky'
-    }
+      name: 'Steve Jablonsky',
+    },
   },
   {
     id: 30,
@@ -446,7 +445,7 @@ const ROWS: GridRowModel<Movie>[] = [
     cinematicUniverse: 'Batman',
     composer: {
       name: 'Hans Zimmer',
-    }
+    },
   },
   {
     id: 31,
@@ -458,8 +457,8 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 8.4,
     cinematicUniverse: 'Batman',
     composer: {
-      name: 'Hildur Guðnadóttir'
-    }
+      name: 'Hildur Guðnadóttir',
+    },
   },
   {
     id: 32,
@@ -484,7 +483,7 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 7.7,
     cinematicUniverse: 'Toy Story',
     composer: {
-      name: 'Randy Newman'
+      name: 'Randy Newman',
     },
   },
   {
@@ -497,7 +496,7 @@ const ROWS: GridRowModel<Movie>[] = [
     imdbRating: 8.3,
     cinematicUniverse: 'Toy Story',
     composer: {
-      name: 'Randy Newman'
+      name: 'Randy Newman',
     },
   },
 ];
