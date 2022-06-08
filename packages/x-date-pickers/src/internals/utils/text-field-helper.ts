@@ -66,13 +66,15 @@ export function getMaskFromCurrentFormat(
     return inferredFormatPatternWith1Digits;
   }
 
-  console.warn(
-    [
-      `Mask does not support numbers with variable length such as 'M'.`,
-      `Either use numbers with fix length or disable mask feature with 'disableMaskedInput' prop`,
-      `Falling down to uncontrolled no-mask input.`,
-    ].join('\n'),
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    console.warn(
+      [
+        `Mask does not support numbers with variable length such as 'M'.`,
+        `Either use numbers with fix length or disable mask feature with 'disableMaskedInput' prop`,
+        `Falling down to uncontrolled no-mask input.`,
+      ].join('\n'),
+    );
+  }
   return '';
 }
 
