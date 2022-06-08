@@ -676,7 +676,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onFilterModelChange?: (model: GridFilterModel, details: GridCallbackDetails) => void;
+  onFilterModelChange?: (model: GridFilterModel, details: GridCallbackDetails<'filter'>) => void;
   /**
    * Set the selection model of the grid.
    */
