@@ -11,6 +11,15 @@ You can aggregate rows through the grid interface by opening the column menu and
 The aggregated values will be rendered in a footer row at the bottom of the grid.
 
 :::warning
+This feature is experimental, it needs to be explicitly activated using the `aggregation` experimental feature flag.
+
+```tsx
+<DataGridPremium experimentalFeatures={{ aggregation: true }} {...otherProps} />
+```
+
+:::
+
+:::warning
 The footer row will be pinned at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
 :::
 

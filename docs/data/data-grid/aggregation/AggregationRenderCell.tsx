@@ -52,6 +52,9 @@ export default function AggregationRenderCell() {
           },
         },
       }}
+      experimentalFeatures={{
+        aggregation: true,
+      }}
     />
   );
 }

@@ -61,6 +61,9 @@ export default function AggregationGetAggregationPosition() {
         disableSelectionOnClick
         initialState={initialState}
         getAggregationPosition={(groupNode) => (groupNode == null ? null : 'footer')}
+        experimentalFeatures={{
+          aggregation: true,
+        }}
       />
     </div>
   );

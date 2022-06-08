@@ -44,6 +44,9 @@ export default function AggregationRemoveFunctionAllColumns() {
           },
         },
       }}
+      experimentalFeatures={{
+        aggregation: true,
+      }}
     />
   );
 }

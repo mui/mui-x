@@ -48,6 +48,9 @@ export default function AggregationColDefAggregable() {
           },
         },
       }}
+      experimentalFeatures={{
+        aggregation: true,
+      }}
     />
   );
 }

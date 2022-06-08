@@ -101,11 +101,13 @@ export const useGridAggregation = (
     const { rulesOnLastRowHydration, rulesOnLastColumnHydration } =
       apiRef.current.unstable_caches.aggregation;
 
-    const aggregationRules = getAggregationRules({
-      columnsLookup: gridColumnLookupSelector(apiRef),
-      aggregationModel: gridAggregationModelSelector(apiRef),
-      aggregationFunctions: props.aggregationFunctions,
-    });
+    const aggregationRules = props.disableAggregation
+      ? {}
+      : getAggregationRules({
+          columnsLookup: gridColumnLookupSelector(apiRef),
+          aggregationModel: gridAggregationModelSelector(apiRef),
+          aggregationFunctions: props.aggregationFunctions,
+        });
 
     // Re-apply the row hydration to add / remove the aggregation footers
     if (hasAggregationRulesChanged(rulesOnLastRowHydration, aggregationRules)) {
@@ -117,7 +119,7 @@ export const useGridAggregation = (
     if (hasAggregationRulesChanged(rulesOnLastColumnHydration, aggregationRules)) {
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
     }
-  }, [apiRef, applyAggregation, props.aggregationFunctions]);
+  }, [apiRef, applyAggregation, props.aggregationFunctions, props.disableAggregation]);
 
   useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);

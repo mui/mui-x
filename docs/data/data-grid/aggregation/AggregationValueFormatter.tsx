@@ -64,6 +64,9 @@ export default function AggregationValueFormatter() {
           },
         },
       }}
+      experimentalFeatures={{
+        aggregation: true,
+      }}
     />
   );
 }
