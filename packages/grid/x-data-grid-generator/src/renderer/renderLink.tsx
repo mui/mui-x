@@ -5,6 +5,7 @@ import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 interface DemoLinkProps {
   href: string;
   children: string;
+  tabIndex: number;
 }
 
 const Link = styled('a')({
@@ -21,7 +22,7 @@ export const DemoLink = React.memo(function DemoLink(props: DemoLinkProps) {
   };
 
   return (
-    <Link tabIndex={-1} onClick={handleClick} href={props.href}>
+    <Link tabIndex={props.tabIndex} onClick={handleClick} href={props.href}>
       {props.children}
     </Link>
   );
@@ -32,5 +33,9 @@ export function renderLink(params: GridRenderCellParams<string, any, any>) {
     return '';
   }
 
-  return <DemoLink href={params.value}>{params.value}</DemoLink>;
+  return (
+    <DemoLink href={params.value} tabIndex={params.tabIndex}>
+      {params.value}
+    </DemoLink>
+  );
 }

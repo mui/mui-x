@@ -11,16 +11,20 @@ import { MakeOptional } from '../internals/models/helpers';
 function TestKeyboardDatePicker(
   PickerProps: MakeOptional<DesktopDatePickerProps<any, any>, 'value' | 'onChange' | 'renderInput'>,
 ) {
+  const { onChange: propsOnChange, value: propsValue, ...other } = PickerProps;
   const [value, setValue] = React.useState<unknown>(
-    PickerProps.value ?? adapterToUse.date('2019-01-01T00:00:00.000'),
+    propsValue ?? adapterToUse.date('2019-01-01T00:00:00.000'),
   );
 
   return (
     <DesktopDatePicker
       value={value}
-      onChange={(newDate) => setValue(newDate)}
+      onChange={(newDate) => {
+        propsOnChange?.(newDate);
+        setValue(newDate);
+      }}
       renderInput={(props) => <TextField placeholder="10/10/2018" {...props} />}
-      {...PickerProps}
+      {...other}
     />
   );
 }
@@ -165,7 +169,7 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
         const onErrorMock = spy();
         // we are running validation on value change
         function DatePickerInput() {
-          const [date, setDate] = React.useState<Date | null>(null);
+          const [date, setDate] = React.useState<number | Date | null>(null);
 
           return (
             <DesktopDatePicker

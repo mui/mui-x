@@ -68,17 +68,17 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
         }
 
         // The row might have been deleted
-        if (!apiRef.current.getRow(params.row.id)) {
+        if (!apiRef.current.getRow(params.id)) {
           return;
         }
 
-        apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(params.row.id), event);
+        apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(params.id), event);
 
         if (propHandler) {
           propHandler(event);
         }
       },
-    [apiRef, params.row.id],
+    [apiRef, params.id],
   );
 
   const draggableEventHandlers = isDraggable

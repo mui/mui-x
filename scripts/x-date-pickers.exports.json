@@ -72,6 +72,7 @@
   { "name": "PickersLocaleText", "kind": "Interface" },
   { "name": "PickerStaticWrapper", "kind": "Function" },
   { "name": "PickersTranslationKeys", "kind": "TypeAlias" },
+  { "name": "ptBR", "kind": "Variable" },
   { "name": "StaticDatePicker", "kind": "Variable" },
   { "name": "StaticDatePickerProps", "kind": "TypeAlias" },
   { "name": "StaticDateTimePicker", "kind": "Variable" },
