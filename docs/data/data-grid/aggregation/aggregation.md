@@ -21,8 +21,7 @@ The footer row will be pinned at the bottom of the grid once [#1251](https://git
 ### Structure of the model
 
 The aggregation model is an object.
-The keys correspond to the columns, and the values are the name of the aggregation function to use.
-The values contain the name of the functions that define the aggregation behavior, and where the aggregated values are displayed.
+The keys correspond to the columns, and the values are the name of the aggregation functions to use.
 
 ### Initialize aggregation
 
@@ -57,11 +56,11 @@ In the example below, the `title` and `year` columns are blocked from being aggr
 
 ## Usage with row grouping
 
-When the row grouping is enabled, the aggregated values will be displayed
+When the row grouping is enabled, the aggregated values will be displayed in two places:
 
-1. On the top-level footer - like without row grouping, the grid will add a top-level footer to aggregate all the rows
+1. On the grouping rows - the grid will display each group aggregated value on its grouping row
 
-2. On the grouping rows - the grid will display each group aggregated value on its grouping row
+2. On the top-level footer - the grid will add a top-level footer to aggregate all the rows, as it would with a flat row list
 
 {{"demo": "AggregationRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -99,7 +98,7 @@ getAggregationPosition={(groupNode) =>
 getAggregationPosition={(groupNode) => groupNode == null ? 'footer' : null}
 ```
 
-The demo below shows the _sum_ aggregation on the groups footers but not the top-level footer:
+The demo below shows the _sum_ aggregation on the footer of each group but not on the top-level footer:
 
 {{"demo": "AggregationGetAggregationPosition.js", "bg": "inline"}}
 
@@ -237,7 +236,7 @@ const aggregationFunction: GridAggregationFunction = {
 
 ## Custom rendering
 
-If the column used to display aggregation have a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide how you want to render it.
+If the column used to display aggregation has a `renderCell` property, the aggregated cell will call it with a `params.aggregation` object to let you decide how you want to render it.
 
 This object contains a `hasCellUnit` which lets you know if the current aggregation has the same unit as the rest of the column's data—for instance, if your column is in `$`, is the aggregated value is also in `$`?
 
