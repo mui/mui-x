@@ -26,18 +26,42 @@ describe('text-field-helper', () => {
   });
 
   [
-    { mask: '__.__.____', format: adapterToUse.formats.keyboardDate, isValid: false },
-    { mask: '__/__/____', format: adapterToUse.formats.keyboardDate, isValid: true },
-    { mask: '__:__ _m', format: adapterToUse.formats.fullTime, isValid: false },
-    { mask: '__/__/____ __:__ _m', format: adapterToUse.formats.keyboardDateTime, isValid: false },
-    { mask: '__/__/____ __:__', format: adapterToUse.formats.keyboardDateTime24h, isValid: true },
-    { mask: '__/__/____', format: 'MM/dd/yyyy', isValid: true },
-    { mask: '__/__/____', format: 'MMMM yyyy', isValid: false },
+    // Time picker
+    // - with ampm = true
+    { mask: '__:__ _m', format: adapterToUse.formats.fullTime12h, isValid: true },
+    // - with ampm=false
+    { mask: '__:__', format: adapterToUse.formats.fullTime24h, isValid: true },
+    // Date Picker
+    {
+      mask: '__/__/____',
+      format: adapterToUse.formats.keyboardDate,
+      isValid: true,
+    },
+    // - with year only
+    {
+      mask: '____',
+      format: adapterToUse.formats.year,
+      isValid: true,
+    },
+    // DateTimePicker
+    // - with ampm=true
     {
       mask: '__/__/____ __:__ _m',
       format: adapterToUse.formats.keyboardDateTime12h,
       isValid: true,
     },
+    // - with ampm=false
+    {
+      mask: '__/__/____ __:__',
+      format: adapterToUse.formats.keyboardDateTime24h,
+      isValid: true,
+    },
+    // Test rejections
+    { mask: '__.__.____', format: adapterToUse.formats.keyboardDate, isValid: false },
+    { mask: '__:__ _m', format: adapterToUse.formats.fullTime, isValid: false },
+    { mask: '__/__/____ __:__ _m', format: adapterToUse.formats.keyboardDateTime, isValid: false },
+    { mask: '__/__/____', format: 'MM/dd/yyyy', isValid: adapterToUse.lib === 'date-fns' }, // only pass with date-fns
+    { mask: '__/__/____', format: 'MMMM yyyy', isValid: false },
   ].forEach(({ mask, format, isValid }, index) => {
     it(`checkMaskIsValidFormat returns ${isValid} for mask #${index} '${mask}' and format ${format}`, () => {
       const runMaskValidation = () =>
