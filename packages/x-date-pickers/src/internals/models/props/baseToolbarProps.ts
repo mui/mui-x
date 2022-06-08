@@ -11,7 +11,6 @@ export interface BaseToolbarProps<TDate, TValue>
     Omit<PickerStatePickerProps<TValue>, 'onDateChange'> {
   ampmInClock?: boolean;
   dateRangeIcon?: React.ReactNode;
-  getMobileKeyboardInputViewButtonText?: () => string;
   hideTabs?: boolean;
   isLandscape: boolean;
   onChange: PickerOnChangeFn<TDate>;
