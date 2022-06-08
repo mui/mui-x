@@ -47,7 +47,7 @@ export const useGridAggregation = (
     | 'rowGroupingColumnMode'
   >,
 ) => {
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'aggregation',
     propModel: props.aggregationModel,
     propOnChange: props.onAggregationModelChange,
