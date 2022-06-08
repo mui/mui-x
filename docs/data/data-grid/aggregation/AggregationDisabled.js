@@ -11,6 +11,9 @@ export default function AggregationDisabled() {
         {...data}
         disableAggregation
         initialState={{ aggregation: { model: { gross: 'sum' } } }}
+        experimentalFeatures={{
+          aggregation: true,
+        }}
       />
     </div>
   );
