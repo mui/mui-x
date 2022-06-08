@@ -182,7 +182,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
   });
 
-  it('should trigger onFilterModelChange when the link operator changes but not change the state', () => {
+  it("should call onFilterModelChange with reason=changeLogicOperator when the logic operator changes but doesn't change the state", () => {
     const onFilterModelChange = spy();
     const newModel: GridFilterModel = {
       items: [
@@ -219,10 +219,11 @@ describe('<DataGridPro /> - Filter', () => {
     ];
     fireEvent.change(select, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
+    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('changeLogicOperator');
     expect(getColumnValues(0)).to.deep.equal([]);
   });
 
-  it('should call onFilterModelChange when the value is emptied', () => {
+  it('should call onFilterModelChange with reason=upsertFilterItem when the value is emptied', () => {
     const onFilterModelChange = spy();
     render(
       <TestCase
@@ -246,6 +247,74 @@ describe('<DataGridPro /> - Filter', () => {
     fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), { target: { value: '' } });
     clock.tick(500);
     expect(onFilterModelChange.callCount).to.equal(1);
+    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItem');
+  });
+
+  it('should call onFilterModelChange with reason=deleteFilterItem when a filter is removed', () => {
+    const onFilterModelChange = spy();
+    render(
+      <TestCase
+        onFilterModelChange={onFilterModelChange}
+        filterModel={{
+          items: [
+            {
+              id: 1,
+              columnField: 'brand',
+              value: 'a',
+              operatorValue: 'contains',
+            },
+            {
+              id: 2,
+              columnField: 'brand',
+              value: 'a',
+              operatorValue: 'endsWith',
+            },
+          ],
+        }}
+        initialState={{
+          preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+        }}
+      />,
+    );
+    expect(onFilterModelChange.callCount).to.equal(0);
+    fireEvent.click(screen.queryAllByRole('button', { name: 'Delete' })[0]);
+    expect(onFilterModelChange.callCount).to.equal(1);
+    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('deleteFilterItem');
+  });
+
+  it('should call onFilterModelChange with reason=upsertFilterItems when a filter is added', () => {
+    const onFilterModelChange = spy();
+    render(
+      <TestCase
+        onFilterModelChange={onFilterModelChange}
+        filterModel={{
+          items: [{ id: 1, columnField: 'brand', value: 'a', operatorValue: 'contains' }],
+        }}
+        initialState={{
+          preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+        }}
+      />,
+    );
+    expect(onFilterModelChange.callCount).to.equal(0);
+    fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
+    expect(onFilterModelChange.callCount).to.equal(1);
+    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItems');
+  });
+
+  it('should publish filterModelChange with the reason whenever the model changes', () => {
+    const listener = spy();
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+        }}
+      />,
+    );
+    apiRef.current.subscribeEvent('filterModelChange', listener);
+    expect(listener.callCount).to.equal(0);
+    fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
+    expect(listener.callCount).to.equal(1);
+    expect(listener.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
 
   it('should only select visible rows', () => {

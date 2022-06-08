@@ -35,14 +35,16 @@ export const useGridAggregationPreProcessors = (
     (columnsState) => {
       const { rulesOnLastColumnHydration } = apiRef.current.unstable_caches.aggregation;
 
-      const aggregationRules = getAggregationRules({
-        columnsLookup: columnsState.lookup,
-        aggregationModel: gridAggregationModelSelector(apiRef),
-        aggregationFunctions: props.aggregationFunctions,
-      });
+      const aggregationRules = props.disableAggregation
+        ? {}
+        : getAggregationRules({
+            columnsLookup: columnsState.lookup,
+            aggregationModel: gridAggregationModelSelector(apiRef),
+            aggregationFunctions: props.aggregationFunctions,
+          });
 
       columnsState.all.forEach((field) => {
-        const shouldHaveAggregationValue = !props.disableAggregation && !!aggregationRules[field];
+        const shouldHaveAggregationValue = !!aggregationRules[field];
         const haveAggregationColumnValue = !!rulesOnLastColumnHydration[field];
 
         let column = columnsState.lookup[field];

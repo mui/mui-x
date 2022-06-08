@@ -53,7 +53,7 @@ export function useGridEditing(
     {},
   );
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'editRows',
     propModel: props.editRowsModel,
     propOnChange: props.onEditRowsModelChange,

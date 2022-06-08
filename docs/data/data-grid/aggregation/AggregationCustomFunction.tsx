@@ -85,6 +85,9 @@ export default function AggregationCustomFunction() {
           },
         },
       }}
+      experimentalFeatures={{
+        aggregation: true,
+      }}
     />
   );
 }

@@ -7,9 +7,9 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
-const GridAggregationCellRoot = styled(Box, {
+const GridFooterCellRoot = styled(Box, {
   name: 'MuiDataGrid',
-  slot: 'AggregationCell',
+  slot: 'FooterCell',
   overridesResolver: (_, styles) => styles.footerCell,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   fontWeight: theme.typography.fontWeightMedium,
@@ -34,16 +34,32 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 const GridFooterCell = (props: GridFooterCellProps) => {
-  const { sx, formattedValue } = props;
+  const {
+    formattedValue,
+    colDef,
+    cellMode,
+    row,
+    api,
+    getValue,
+    id,
+    value,
+    rowNode,
+    field,
+    focusElementRef,
+    hasFocus,
+    tabIndex,
+    isEditable,
+    ...other
+  } = props;
   const rootProps = useGridRootProps();
 
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <GridAggregationCellRoot ownerState={ownerState} sx={sx} className={classes.root}>
+    <GridFooterCellRoot ownerState={ownerState} className={classes.root} {...other}>
       {formattedValue}
-    </GridAggregationCellRoot>
+    </GridFooterCellRoot>
   );
 };
 

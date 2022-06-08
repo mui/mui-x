@@ -145,6 +145,9 @@ export default function AggregationTreeData() {
             },
           },
         }}
+        experimentalFeatures={{
+          aggregation: true,
+        }}
       />
     </div>
   );

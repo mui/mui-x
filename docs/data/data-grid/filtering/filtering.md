@@ -280,7 +280,7 @@ You can customize the rendering of the filter panel as shown in [the component s
 
 ### Customize the filter panel content
 
-The customization of the filter panel content can be performed by passing props to the default [`<GridFilterPanel />`](/x/api/data-grid/grid-filter-panel) component.
+The customization of the filter panel content can be performed by passing props to the default [`<GridFilterPanel />`](/x/api/data-grid/grid-filter-panel/) component.
 The available props allow overriding:
 
 - The `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
