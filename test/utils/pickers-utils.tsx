@@ -12,7 +12,7 @@ const availableAdapters = ['date-fns', 'day-js', 'luxon', 'moment'];
 let adapter = 'date-fns';
 
 // Check if we are in unit tests
-if (typeof window === 'undefined') {
+if (/jsdom/.test(window.navigator.userAgent)) {
   // Add parameter `--date-adapter luxon` to use AdapterLuxon for running tests
   // adapter available : date-fns (default one), day-js, luxon, moment
   const args = process.argv.slice(2);
