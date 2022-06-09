@@ -10,16 +10,29 @@ The master detail feature allows expanding a row to display additional informati
 To use this feature, pass a function to the `getDetailPanelContent` prop with the content to be rendered inside the panel.
 Any valid React element can be used as the row detail, even another grid.
 
-The height of the detail panel content needs to be provided upfront.
-The grid assumes the value of 500px by default however this can be configured by passing a function to the `getDetailPanelHeight` prop that returns the required height.
-Both props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/) object, allowing you to return a different value for each row.
+By default, the detail panel height is 500px.
+However, this can be customized by passing a function to the `getDetailPanelHeight` prop.
+This function must return a number or the `"auto"` string.
+Returning a number means that the panel will use as height exactly the value provided.
+With `"auto"`, the height is [derived](#infer-height-from-the-content) from the content.
 
 ```tsx
 <DataGridPro
   getDetailPanelContent={({ row }) => <div>Row ID: {row.id}</div>}
   getDetailPanelHeight={({ row }) => 100} // Optional, default is 500px.
 />
+
+// or
+
+<DataGridPro
+  getDetailPanelContent={({ row }) => <div>Row ID: {row.id}</div>}
+  getDetailPanelHeight={({ row }) => 'auto'} // Height based on the content.
+/>
 ```
+
+:::info
+Both props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/) object, allowing you to return a different value for each row.
+:::
 
 To expand a row, click on the `+` icon or press <kbd class="key">Space</kbd> inside the detail toggle column.
 Returning `null` or `undefined` as the value of `getDetailPanelContent` will prevent the respective row from being expanded.
@@ -46,6 +59,19 @@ Note that this may reduce the performance.
 ```
 
 :::
+
+## Infer height from the content
+
+Like [dynamic row height](/x/react-data-grid/rows/#dynamic-row-height), you can also derive the detail panel height from its content.
+For this, pass a function to the `getDetailPanelHeight` prop returning `"auto"`, as below:
+
+```tsx
+<DataGridPro getDetailPanelHeight={() => 'auto'} />
+```
+
+The following example demonstrantes this option in action.
+
+{{"demo": "DetailPanelAutoHeight.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Controlling expanded detail panels
 
