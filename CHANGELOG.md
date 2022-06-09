@@ -34,7 +34,7 @@ TODO INSERT HIGHLIGHTS
 - [pickers] Manage input value without using the focus (#4486) @alexfauquette
 - [pickers] Use new localization for doc examples (#5097) @flaviendelangle
 - [pickers] Fix `shouldDisableDate` in range pickers (#5123) @flaviendelangle
-- [l10n] Add Brazilian Portuguese (`pt-BR`) locale for date pickers (#5100) @jardelnovaes
+- [l10n] Add Brazilian Portuguese (pt-BR) locale (#5100) @jardelnovaes
 - [l10n] Use `localText` for remaining texts (#4986) @alexfauquette
 
 ### Docs
