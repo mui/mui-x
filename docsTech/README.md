@@ -45,20 +45,20 @@ const row = apiRef.current.getRow(id);
 
 ### Updating state
 
-To update the state, the component can either call a setter or publish an event. Here are examples with updating cell editing by setter, and handling cell key down by dispatching `GridEvents.cellKeyDown` event.
+To update the state, the component can either call a setter or publish an event. Here are examples with updating cell editing by setter, and handling cell key down by dispatching `"cellKeyDown"` event.
 
 ```js
 apiRef.current.setEditCellValue(newParams, event);
 // or
-apiRef.current.publishEvent(GridEvents.cellKeyDown, params, event as any);
+apiRef.current.publishEvent('cellKeyDown', params, event as any);
 ```
 
 An event can be consumed by multiple listeners.
-For example, `GridEvents.cellKeyDown` is listened by the focus, edit, selection, and navigation feature hooks.
+For example, `"cellKeyDown"` is listened by the focus, edit, selection, and navigation feature hooks.
 Each of them defines an event handler responsible for modifying their sub-state.
 
 ```js
-useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 ```
 
 The other interest of events is that developers can listen to them by [subscribing to the event](https://mui.com/x/react-data-grid/events/#subscribing-to-events) or by providing a `on<Event>` prop such as `onEditCellPropsChange`.
