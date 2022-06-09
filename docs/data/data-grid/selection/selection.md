@@ -33,6 +33,21 @@ To activate checkbox selection set `checkboxSelection={true}`.
 
 {{"demo": "CheckboxSelectionGrid.js", "bg": "inline"}}
 
+### Custom checkbox column
+
+If you provide a custom checkbox column to the grid with the `GRID_CHECKBOX_SELECTION_FIELD` field, the grid will not add its own.
+
+We strongly recommend to use the `GRID_CHECKBOX_SELECTION_COL_DEF` variable instead of re-defining all the custom properties yourself.
+
+In the following demo, the checkbox column has been moved to the right and its width has been increased to 100px.
+
+{{"demo": "CheckboxSelectionCustom.js", "bg": "inline"}}
+
+:::warning
+Always set the `checkboxSelection` prop to `true` even when providing a custom checkbox column.
+Otherwise, the grid might remove your column.
+:::
+
 ## Disable selection on click
 
 You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableSelectionOnClick` prop in this case.
