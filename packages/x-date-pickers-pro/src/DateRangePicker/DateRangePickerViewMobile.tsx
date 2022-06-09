@@ -93,6 +93,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
       />
       <DayPicker<TDate>
         {...other}
+        minDate={minDate}
+        maxDate={maxDate}
         disabled={disabled}
         readOnly={readOnly}
         selectedDays={parsedValue}
