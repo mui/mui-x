@@ -131,6 +131,40 @@ You can check the [styling cells](/x/react-data-grid/style/#styling-cells) secti
 Cell content should not be in the tab sequence except if cell is focused.
 You can check the [tab sequence](/x/react-data-grid/accessibility/#tab-sequence) section for more information.
 
+### Using hooks inside a renderer
+
+The `renderCell` property is a function returning a React node, not a React component.
+
+If you can to use React hooks inside your renderer, you should wrap them inside a component.
+
+```tsx
+// ❌ Not valid
+const column = {
+  // ...other properties,
+  renderCell: () => {
+    const [count, setCount] = React.useState(0);
+
+    return (
+      <Button onClick={() => setCount((prev) => prev + 1)}>{count} click(s)</Button>
+    );
+  },
+};
+
+// ✅ Valid
+const CountButton = () => {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <Button onClick={() => setCount((prev) => prev + 1)}>{count} click(s)</Button>
+  );
+};
+
+const column = {
+  // ...other properties,
+  renderCell: () => <CountButton />,
+};
+```
+
 ### Expand cell renderer
 
 By default, the grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
