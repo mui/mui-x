@@ -21,7 +21,7 @@ const WrappedMobileDateTimePicker = withPickerControls(MobileDateTimePicker)({
 describe('<MobileDateTimePicker />', () => {
   const { render } = createPickerRenderer({
     clock: 'fake',
-    clockConfig: adapterToUse.date('2018-01-01T00:00:00.000').getTime(),
+    clockConfig: new Date('2018-01-01T00:00:00.000'),
   });
 
   it('prop: open – overrides open state', () => {

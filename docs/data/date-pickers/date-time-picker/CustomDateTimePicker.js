@@ -30,8 +30,6 @@ export default function CustomDateTimePicker() {
             RightArrowIcon: SnoozeIcon,
             OpenPickerIcon: ClockIcon,
           }}
-          leftArrowButtonText="Open previous month"
-          rightArrowButtonText="Open next month"
           minTime={new Date(0, 0, 0, 9)}
           maxTime={new Date(0, 0, 0, 20)}
           renderInput={(params) => (

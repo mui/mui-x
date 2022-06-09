@@ -20,6 +20,15 @@ export const gridFilterModelSelector = createSelector(
 );
 
 /**
+ * Get the current quick filter values.
+ * @category Filtering
+ */
+export const gridQuickFilterValuesSelector = createSelector(
+  gridFilterModelSelector,
+  (filterModel) => filterModel.quickFilterValues,
+);
+
+/**
  * @category Filtering
  * @ignore - do not document.
  */

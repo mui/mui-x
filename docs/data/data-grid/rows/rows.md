@@ -19,7 +19,7 @@ Otherwise, the grid will re-apply heavy work like sorting and filtering.
 
 :::warning
 Each row object should have a field that uniquely identifies the row.
-By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/column-definition) for `id` field is not required.
+By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/column-definition/) for `id` field is not required.
 
 When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
 
@@ -110,13 +110,13 @@ const getRowHeight = React.useCallback(() => { ... }, []);
 ### Dynamic row height
 
 Instead of a fixed row height, you can let the grid calculate the height of each row based on its content.
-To do so, return `"auto`" on the function passed to the `getRowHeight` prop.
+To do so, return `"auto"` on the function passed to the `getRowHeight` prop.
 
 ```tsx
 <DataGrid getRowHeight={() => 'auto'} />
 ```
 
-The following demo demonstrantes this option in action:
+The following demo shows this feature in action:
 
 {{"demo": "DynamicRowHeightGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
