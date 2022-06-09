@@ -39,7 +39,7 @@ TODO INSERT HIGHLIGHTS
 
 ### Docs
 
-- [docs] Data grid demo implement the focus management on links (#5070) @alexfauquette
+- [docs] Implement the focus management on data grid demo links (#5070) @alexfauquette
 - [docs] Fix `301` link to render cell (#5106) @oliviertassinari
 - [docs] Fix broken anchor link @oliviertassinari
 - [docs] Improve movie dataset (#5142) @flaviendelangle
