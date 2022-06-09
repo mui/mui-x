@@ -45,7 +45,7 @@ TODO INSERT HIGHLIGHTS
 - [docs] Improve movie dataset (#5142) @flaviendelangle
 - [docs] Move all localization documentation in a unique page (#5072) @alexfauquette
 - [docs] Section for overwriting core components i18n keys (#4998) @DanailH
-- [docs] Small grammar and format fixes for Dynamic row height section (#5098) @samuelsycamore
+- [docs] Small grammar and format fixes for Dynamic Row Height section (#5098) @samuelsycamore
 
 ### Core
 
