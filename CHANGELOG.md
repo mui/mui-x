@@ -22,8 +22,8 @@ TODO INSERT HIGHLIGHTS
 - [DataGrid] Support `getRowId` in row reordering (#5093) @flaviendelangle
 - [DataGridPro] Fix column resizing in RTL mode (#4989) @cherniavskii
 - [DataGridPro] Fix column resizing on touchscreen (#5056) @cherniavskii
-- [l10n] Update `jaJP` locale (#5122) @hikotq
-- [l10n] Update `ruRU` locale (#5069) @Artboomy
+- [l10n] Update Japanese (ja-JP) locale (#5122) @hikotq
+- [l10n] Update Russian (ru-RU) locale (#5069) @Artboomy
 
 ### `@mui/x-date-pickers@5.0.0-alpha.6` / `@mui/x-date-pickers-pro@5.0.0-alpha.6`
 
