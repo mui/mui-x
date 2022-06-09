@@ -9,7 +9,10 @@ _Jun 9, 2022_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🎁 Add `reason` to `onFilterModelChange` (#4938) @m4theushw
+- 🔎 Control quick filter input value via model prop (#5013) @alexfauquette
+- 📚 Documentation improvements
+- 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.12.1` / `@mui/x-data-grid-pro@v5.12.1` / `@mui/x-data-grid-premium@v5.12.1`
 
