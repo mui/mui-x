@@ -17,17 +17,26 @@ Otherwise, the grid will re-apply heavy work like sorting and filtering.
 
 {{"demo": "RowsGrid.js", "bg": "inline"}}
 
-:::warning
-Each row object should have a field that uniquely identifies the row.
-By default, the grid will use the `id` property of the row. Note that [column definition](/x/react-data-grid/column-definition/) for `id` field is not required.
+## Row identifier
 
-When using dataset without a unique `id` property, you can use the `getRowId` prop to specify a custom id for each row.
+Each row must have a unique id.
+
+This id is used internally to identify the row in the various models (for instance the row selection model) and to track the row across updates.
+By default, the grid will use the `id` property of the row.
+
+When using a dataset without a unique `id` property, you can use the `getRowId` prop to specify the id of each row.
+This can be useful if your id is stored in another property like shown below:
 
 ```tsx
 <DataGrid getRowId={(row) => row.internalId} />
 ```
 
 {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+Just like the `rows` prop, the `getRowId` prop should keep the same reference between two renders.
+Otherwise, the grid will re-apply heavy work like sorting and filtering.
+:::
 
 ## Updating rows
 
