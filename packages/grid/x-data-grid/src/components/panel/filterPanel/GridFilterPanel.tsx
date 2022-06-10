@@ -96,7 +96,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       if (!defaultItem) {
         return;
       }
-      apiRef.current.setFilterModel({ ...filterModel, items: [...items, defaultItem] });
+      apiRef.current.upsertFilterItems([...items, defaultItem]);
     };
 
     const deleteFilter = React.useCallback(

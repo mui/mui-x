@@ -16,6 +16,13 @@ Use `LocalizationProvider` to change the date-engine locale that is used to rend
 
 {{"demo": "LocalizedDatePicker.js"}}
 
+### 12h/24h format
+
+The time picker will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
+This can be overridden by using the `ampm` prop.
+
+{{"demo": "LocalizedTimePicker.js"}}
+
 ## Translation keys
 
 As the rest of MUI components, you can modify text and translations.

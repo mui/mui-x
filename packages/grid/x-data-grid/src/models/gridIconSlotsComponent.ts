@@ -125,4 +125,9 @@ export interface GridIconSlotsComponent {
    * @default GridSearchIcon
    */
   QuickFilterIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed on the quick filter reset input.
+   * @default GridCloseIcon
+   */
+  QuickFilterClearIcon: React.JSXElementConstructor<any>;
 }

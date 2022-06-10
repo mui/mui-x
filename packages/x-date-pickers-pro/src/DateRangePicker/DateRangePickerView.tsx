@@ -229,6 +229,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
       disablePast,
       minDate,
       maxDate,
+      shouldDisableDate,
       ...calendarState,
       ...other,
     };

@@ -64,7 +64,7 @@ export const useGridSorting = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridSorting');
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'sortModel',
     propModel: props.sortModel,
     propOnChange: props.onSortModelChange,
