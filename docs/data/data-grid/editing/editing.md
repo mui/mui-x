@@ -542,6 +542,10 @@ Note that the `onCellEditStart` and `onCellEditStop` props also have to be used 
 
 ### Usage with `@mui/x-date-pickers`
 
+By default, data grid uses native browser inputs for editing `date` and `dateTime` columns.
+
+While [MUI X Date / Time Pickers](/x/react-date-pickers/getting-started/) are not supported by data grid out of the box yet, the example below shows how to integrate them with data grid:
+
 {{"demo": "EditingWithDatePickers.js", "bg": "inline", "defaultCodeOpen": false }}
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
