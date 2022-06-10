@@ -21,11 +21,13 @@ Otherwise, the grid will re-apply heavy work like sorting and filtering.
 
 Each row must have a unique identifier.
 
-This id is used internally to identify the row in the various models (for instance the row selection model) and to track the row across updates.
-By default, the grid will use the `id` property of the row.
+This identifier is used internally to identify the row in the various models—for instance, the row selection model—and to track the row across updates.
 
-When using a dataset without a unique `id` property, you can use the `getRowId` prop to specify the id of each row.
-This can be useful if your id is stored in another property like shown below:
+By default, the data grid looks for a property named `id` in the data set to get that identifier.
+
+If the row's identifier is not called `id`, then you need to use the `getRowId` prop to tell the grid where it's located.
+
+The following demo shows how to use `getRowId` to grab the unique identifier from a property named `internalId`:
 
 ```tsx
 <DataGrid getRowId={(row) => row.internalId} />
