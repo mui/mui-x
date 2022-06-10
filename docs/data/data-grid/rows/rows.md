@@ -19,7 +19,7 @@ Otherwise, the grid will re-apply heavy work like sorting and filtering.
 
 ## Row identifier
 
-Each row must have a unique id.
+Each row must have a unique identifier.
 
 This id is used internally to identify the row in the various models (for instance the row selection model) and to track the row across updates.
 By default, the grid will use the `id` property of the row.
