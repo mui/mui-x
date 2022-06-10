@@ -34,7 +34,7 @@ async function findMuiXRemote() {
       return { name, url, method };
     })
     .find((remote) => {
-      // test: https://regex101.com/r/fBVJUX/1
+      // To test the regexp, go to: https://regex101.com/r/fBVJUX/1
       // matching:
       // - https://github.com/mui/mui-x
       // - git@github.com:mui/mui-x.git
