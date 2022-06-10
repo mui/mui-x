@@ -2,7 +2,6 @@ import { GridRowId, GridRowTreeConfig, GridValidRowModel } from '../../../models
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export interface GridRowsInternalCache {
-  updates: GridRowsPartialUpdates | GridRowsFullUpdate;
   /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
@@ -12,8 +11,21 @@ export interface GridRowsInternalCache {
    * The value of the `loading` prop since the last time that the rows state was updated.
    */
   loadingPropBeforePartialUpdates: DataGridProcessedProps['loading'];
+  /**
+   * Lookup containing the latest model at all time (even those not stored in the state yet).
+   */
   dataRowIdToModelLookup: GridRowIdToModelLookup;
+  /**
+   * Lookup containing the latest ids at all time (even those not stored in the state yet).
+   */
   dataRowIdToIdLookup: GridRowIdToIdLookup;
+  /**
+   * List of updates (partial or full) applied since the last time the state was synced with the cache.
+   * It is used to build the tree.
+   * If the update is a full update, we rebuild the tree from scratch.
+   * If the update is a partial update, we only modify the impacted nodes.
+   */
+  updates: GridRowsPartialUpdates | GridRowsFullUpdate;
 }
 
 export interface GridRowsState {

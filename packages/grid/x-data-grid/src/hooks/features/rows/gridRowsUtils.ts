@@ -70,16 +70,6 @@ export const getRowIdFromRowModel = (
   return id;
 };
 
-export const getEmptyRowPartialUpdate = (): GridRowsPartialUpdates => ({
-  type: 'partial',
-  actions: {
-    insert: [],
-    modify: [],
-    remove: [],
-  },
-  idToActionLookup: {},
-});
-
 export const createRowsInternalCache = ({
   rows,
   getRowId,
@@ -112,7 +102,7 @@ export const createRowsInternalCache = ({
 
 export const getRowsStateFromCache = ({
   apiRef,
-  rowCountProp,
+  rowCountProp = 0,
   loadingProp,
   previousTree,
   previousTreeDepths,
@@ -122,9 +112,14 @@ export const getRowsStateFromCache = ({
   loadingProp: boolean | undefined;
 }): GridRowsState => {
   const cache = apiRef.current.unstable_caches.rows;
-  const rowCount = rowCountProp ?? 0;
 
-  const groupingResponse = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
+  // 1. Apply the "rowTreeCreation" family processing.
+  const {
+    tree: unProcessedTree,
+    treeDepths: unProcessedTreeDepths,
+    groupingName,
+    dataRowIds,
+  } = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
     previousTree,
     previousTreeDepths,
     updates: cache.updates,
@@ -132,29 +127,42 @@ export const getRowsStateFromCache = ({
     dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
   });
 
-  const processingResponse = apiRef.current.unstable_applyPipeProcessors(
-    'hydrateRows',
-    groupingResponse,
-  );
+  // 2. Apply the "hydrateRows" pipe-processing on the tree / treeDepths.
+  const { tree, treeDepths } = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
+    tree: unProcessedTree,
+    treeDepths: unProcessedTreeDepths,
+  });
 
-  const rootGroupNode = processingResponse.tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
-
+  // 3. Reset the cache updates
   apiRef.current.unstable_caches.rows = {
-    ...apiRef.current.unstable_caches.rows,
-    updates: getEmptyRowPartialUpdate(),
+    ...cache,
+    updates: {
+      type: 'partial',
+      actions: {
+        insert: [],
+        modify: [],
+        remove: [],
+      },
+      idToActionLookup: {},
+    },
   };
 
+  const rootGroupNode = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+  const totalTopLevelRowCount = Math.max(
+    rowCountProp,
+    rootGroupNode.children.length + (rootGroupNode.footerId == null ? 0 : 1),
+  );
+
+  const totalRowCount = Math.max(rowCountProp, dataRowIds.length);
+
   return {
-    groupingName: groupingResponse.groupingName,
-    dataRowIds: groupingResponse.dataRowIds,
-    tree: processingResponse.tree,
-    treeDepths: processingResponse.treeDepths,
+    tree,
+    treeDepths,
+    totalRowCount,
+    totalTopLevelRowCount,
+    groupingName,
+    dataRowIds,
     loading: loadingProp,
-    totalRowCount: Math.max(rowCount, groupingResponse.dataRowIds.length),
-    totalTopLevelRowCount: Math.max(
-      rowCount,
-      rootGroupNode.children.length + (rootGroupNode.footerId == null ? 0 : 1),
-    ),
     dataRowIdToIdLookup: cache.dataRowIdToIdLookup,
     dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
   };
@@ -209,7 +217,8 @@ export const updateCacheWithNewRows = ({
     throw new Error('MUI: Unable to prepare a partial update if a full update is not applied yet');
   }
 
-  // we remove duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
+  // Remove duplicate updates.
+  // A server can batch updates, and send several updates for the same row in one fn call.
   const uniqUpdates = new Map<GridRowId, GridRowModel>();
 
   updates.forEach((update) => {
@@ -226,8 +235,6 @@ export const updateCacheWithNewRows = ({
     }
   });
 
-  const deletedRowIdLookup: Record<GridRowId, true> = {};
-
   const partialUpdates: GridRowsPartialUpdates = {
     type: 'partial',
     actions: {
@@ -240,63 +247,93 @@ export const updateCacheWithNewRows = ({
   const dataRowIdToModelLookup = { ...previousCache.dataRowIdToModelLookup };
   const dataRowIdToIdLookup = { ...previousCache.dataRowIdToIdLookup };
 
-  const alreadyAppliedActionsToRemove: {
-    [action in GridRowsPartialUpdateAction]: { [id: GridRowId]: true };
-  } = { insert: {}, modify: {}, remove: {} };
+  const alreadyAppliedActionsToRemove: Record<
+    GridRowsPartialUpdateAction,
+    { [id: GridRowId]: true }
+  > = { insert: {}, modify: {}, remove: {} };
 
+  // Depending on the action already applied to the data row,
+  // We might want drop the already-applied-update.
+  // For instance:
+  // - if you delete then insert, then you don't want to apply the deletion in the tree.
+  // - if you insert, then modify, then you just want to apply the insertion in the tree.
   uniqUpdates.forEach((partialRow, id) => {
     const actionAlreadyAppliedToRow = partialUpdates.idToActionLookup[id];
 
+    // Action === "delete"
     // eslint-disable-next-line no-underscore-dangle
     if (partialRow._action === 'delete') {
-      // Action === "delete"
+      // If the data row has been removed since the last state update,
+      // Then do nothing.
       if (actionAlreadyAppliedToRow === 'remove' || !dataRowIdToModelLookup[id]) {
         return;
       }
+
+      // If the data row has been inserted / modified since the last state update,
+      // Then drop this "insert" / "modify" update.
       if (actionAlreadyAppliedToRow != null) {
         alreadyAppliedActionsToRemove[actionAlreadyAppliedToRow][id] = true;
       }
-      partialUpdates.actions.remove.push(id);
 
-      deletedRowIdLookup[id] = true;
+      // Remove the data row from the lookups and add it to the "delete" update.
+      partialUpdates.actions.remove.push(id);
       delete dataRowIdToModelLookup[id];
       delete dataRowIdToIdLookup[id];
       return;
     }
 
     const oldRow = dataRowIdToModelLookup[id];
+
+    // Action === "modify"
     if (oldRow) {
-      // Action === "modify"
+      // If the data row has been removed since the last state update,
+      // Then drop this "remove" update and add it to the "modify" update instead.
       if (actionAlreadyAppliedToRow === 'remove') {
         alreadyAppliedActionsToRemove.remove[id] = true;
         partialUpdates.actions.modify.push(id);
-      } else if (actionAlreadyAppliedToRow == null) {
+      }
+      // If the date has not been inserted / modified since the last state update,
+      // Then add it to the "modify" update (if it has been inserted it should just remain "inserted").
+      else if (actionAlreadyAppliedToRow == null) {
         partialUpdates.actions.modify.push(id);
       }
 
+      // Update the data row lookups.
       dataRowIdToModelLookup[id] = { ...oldRow, ...partialRow };
       return;
     }
 
     // Action === "insert"
+    // If the data row has been removed since the last state update,
+    // Then drop the "remove" update and add it to the "insert" update instead.
     if (actionAlreadyAppliedToRow === 'remove') {
       alreadyAppliedActionsToRemove.remove[id] = true;
       partialUpdates.actions.insert.push(id);
-    } else if (actionAlreadyAppliedToRow == null) {
+    }
+    // If the data row has not been inserted since the last state update,
+    // Then add it to the "insert" update.
+    // `actionAlreadyAppliedToRow` can't be equal to "modify", otherwise we would have an `oldRow` above.
+    else if (actionAlreadyAppliedToRow == null) {
       partialUpdates.actions.insert.push(id);
     }
 
+    // Update the data row lookups.
     dataRowIdToModelLookup[id] = partialRow;
     dataRowIdToIdLookup[id] = id;
   });
 
-  Object.entries(alreadyAppliedActionsToRemove).forEach(([action, idsToRemove]) => {
+  const actionTypeWithActionsToRemove = Object.keys(
+    alreadyAppliedActionsToRemove,
+  ) as GridRowsPartialUpdateAction[];
+  for (let i = 0; i < actionTypeWithActionsToRemove.length; i += 1) {
+    const actionType = actionTypeWithActionsToRemove[i];
+    const idsToRemove = alreadyAppliedActionsToRemove[actionType];
     if (Object.keys(idsToRemove).length > 0) {
-      partialUpdates.actions[action as GridRowsPartialUpdateAction] = partialUpdates.actions[
-        action as GridRowsPartialUpdateAction
-      ].filter((id) => !idsToRemove[id]);
+      partialUpdates.actions[actionType] = partialUpdates.actions[actionType].filter(
+        (id) => !idsToRemove[id],
+      );
     }
-  });
+  }
 
   return {
     dataRowIdToModelLookup,
