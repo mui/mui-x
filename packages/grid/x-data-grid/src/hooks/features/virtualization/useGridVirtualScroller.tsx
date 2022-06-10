@@ -120,9 +120,17 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const lastMeasuredIndex = Math.max(0, apiRef.current.unstable_getLastMeasuredRowIndex());
       const allRowsMeasured = lastMeasuredIndex === Infinity;
 
-      return allRowsMeasured || rowsMeta.positions[lastMeasuredIndex] >= offset
-        ? binarySearch(offset, rowsMeta.positions)
-        : exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndex);
+      if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndex] >= offset) {
+        // If all rows were measured (when no row has "auto" as height) or all rows before the offset
+        // were measured, then use a binary search because it's faster.
+        return binarySearch(offset, rowsMeta.positions);
+      }
+
+      // Otherwise, use an exponential search.
+      // If rows have "auto" as height, their positions will be based on estimated heights.
+      // In this case, we can skip several steps until we find a position higher than the offset.
+      // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
+      return exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndex);
     },
     [apiRef, rowsMeta.positions],
   );
