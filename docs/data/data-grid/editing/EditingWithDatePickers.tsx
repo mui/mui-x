@@ -4,7 +4,6 @@ import {
   GridColumns,
   GridRowsProp,
   useGridApiContext,
-  GridColDef,
   GridRenderEditCellParams,
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
@@ -26,74 +25,6 @@ import {
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import TextField from '@mui/material/TextField';
 import locale from 'date-fns/locale/en-US';
-
-function GridEditDateCell({
-  id,
-  field,
-  value,
-}: GridRenderEditCellParams<Date | null>) {
-  const apiRef = useGridApiContext();
-
-  function handleChange(newValue: unknown) {
-    apiRef.current.setEditCellValue({ id, field, value: newValue });
-  }
-
-  return (
-    <DatePicker
-      value={value}
-      renderInput={(params) => <TextField {...params} />}
-      onChange={handleChange}
-    />
-  );
-}
-
-const renderDateEditCell: GridColDef['renderEditCell'] = (params) => {
-  return <GridEditDateCell {...params} />;
-};
-
-function GridFilterDateInput(props: GridFilterInputValueProps) {
-  const { item, applyValue, apiRef } = props;
-
-  const handleFilterChange = (newValue: unknown) => {
-    applyValue({ ...item, value: newValue });
-  };
-
-  return (
-    <DatePicker
-      value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      onChange={handleFilterChange}
-    />
-  );
-}
-
-function GridFilterDateTimeInput(props: GridFilterInputValueProps) {
-  const { item, applyValue, apiRef } = props;
-
-  const handleFilterChange = (newValue: unknown) => {
-    applyValue({ ...item, value: newValue });
-  };
-
-  return (
-    <DateTimePicker
-      value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      onChange={handleFilterChange}
-    />
-  );
-}
 
 function buildApplyDateFilterFn(
   filterItem: GridFilterItem,
@@ -218,14 +149,81 @@ function getDateFilterOperators(
 
 const dateAdapter = new AdapterDateFns({ locale });
 
+/**
+ * `date` column
+ */
+
 const dateColumnType: GridColTypeDef = {
   ...GRID_DATE_COL_DEF,
   resizable: false,
-  renderEditCell: renderDateEditCell,
+  renderEditCell: (params) => {
+    return <GridEditDateCell {...params} />;
+  },
   filterOperators: getDateFilterOperators(),
   valueFormatter: (params) => {
     if (params.value) {
       return dateAdapter.format(params.value, 'keyboardDate');
+    }
+    return '';
+  },
+};
+
+function GridEditDateCell({
+  id,
+  field,
+  value,
+}: GridRenderEditCellParams<Date | null>) {
+  const apiRef = useGridApiContext();
+
+  function handleChange(newValue: unknown) {
+    apiRef.current.setEditCellValue({ id, field, value: newValue });
+  }
+
+  return (
+    <DatePicker
+      value={value}
+      renderInput={(params) => <TextField {...params} />}
+      onChange={handleChange}
+    />
+  );
+}
+
+function GridFilterDateInput(props: GridFilterInputValueProps) {
+  const { item, applyValue, apiRef } = props;
+
+  const handleFilterChange = (newValue: unknown) => {
+    applyValue({ ...item, value: newValue });
+  };
+
+  return (
+    <DatePicker
+      value={item.value || null}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        />
+      )}
+      onChange={handleFilterChange}
+    />
+  );
+}
+
+/**
+ * `dateTime` column
+ */
+
+const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
+  ...GRID_DATETIME_COL_DEF,
+  resizable: false,
+  renderEditCell: (params) => {
+    return <GridEditDateTimeCell {...params} />;
+  },
+  filterOperators: getDateFilterOperators(true),
+  valueFormatter: (params) => {
+    if (params.value) {
+      return dateAdapter.format(params.value, 'keyboardDateTime');
     }
     return '';
   },
@@ -251,22 +249,27 @@ function GridEditDateTimeCell({
   );
 }
 
-const renderDateTimeEditCell: GridColDef['renderEditCell'] = (params) => {
-  return <GridEditDateTimeCell {...params} />;
-};
+function GridFilterDateTimeInput(props: GridFilterInputValueProps) {
+  const { item, applyValue, apiRef } = props;
 
-const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
-  ...GRID_DATETIME_COL_DEF,
-  resizable: false,
-  renderEditCell: renderDateTimeEditCell,
-  filterOperators: getDateFilterOperators(true),
-  valueFormatter: (params) => {
-    if (params.value) {
-      return dateAdapter.format(params.value, 'keyboardDateTime');
-    }
-    return '';
-  },
-};
+  const handleFilterChange = (newValue: unknown) => {
+    applyValue({ ...item, value: newValue });
+  };
+
+  return (
+    <DateTimePicker
+      value={item.value || null}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        />
+      )}
+      onChange={handleFilterChange}
+    />
+  );
+}
 
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
