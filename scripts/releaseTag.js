@@ -22,6 +22,7 @@ function execDry(command, options) {
  * Find the remote pointing to mui/mui-x.
  *
  * Conventionally this should be named `upstream` but some collaborators might've used a different naming scheme.
+ * Returns an object { name, url, method } 
  */
 async function findMuiXRemote() {
   const { stdout } = await execActual(['git', 'remote', '-v'].join(' '));
