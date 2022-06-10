@@ -80,6 +80,6 @@ You can use the following script in your browser console on any GitHub page to a
 })();
 ```
 
-## Manually create the release tag
+### Manually create the release tag
 
 If the `yarn release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
