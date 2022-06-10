@@ -18,138 +18,7 @@ import {
 } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import TextField from '@mui/material/TextField';
-
-function GridEditDateCell({ id, field, value }) {
-  const apiRef = useGridApiContext();
-
-  function handleChange(newValue) {
-    apiRef.current.setEditCellValue({ id, field, value: newValue });
-  }
-
-  return (
-    <DatePicker
-      value={value}
-      renderInput={(params) => <TextField {...params} />}
-      onChange={handleChange}
-    />
-  );
-}
-
-GridEditDateCell.propTypes = {
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value, but if the column has valueGetter, use getValue.
-   */
-  value: PropTypes.instanceOf(Date),
-};
-
-const renderDateEditCell = (params) => {
-  return <GridEditDateCell {...params} />;
-};
-
-function GridFilterDateInput(props) {
-  const { item, applyValue, apiRef } = props;
-
-  const handleFilterChange = (newValue) => {
-    applyValue({ ...item, value: newValue });
-  };
-
-  return (
-    <DatePicker
-      value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      onChange={handleFilterChange}
-    />
-  );
-}
-
-GridFilterDateInput.propTypes = {
-  apiRef: PropTypes.any.isRequired,
-  applyValue: PropTypes.func.isRequired,
-  item: PropTypes.shape({
-    /**
-     * The column from which we want to filter the rows.
-     */
-    columnField: PropTypes.string.isRequired,
-    /**
-     * Must be unique.
-     * Only useful when the model contains several items.
-     */
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    /**
-     * The name of the operator we want to apply.
-     * Will become required on `@mui/x-data-grid@6.X`.
-     */
-    operatorValue: PropTypes.string,
-    /**
-     * The filtering value.
-     * The operator filtering function will decide for each row if the row values is correct compared to this value.
-     */
-    value: PropTypes.any,
-  }).isRequired,
-};
-
-function GridFilterDateTimeInput(props) {
-  const { item, applyValue, apiRef } = props;
-
-  const handleFilterChange = (newValue) => {
-    applyValue({ ...item, value: newValue });
-  };
-
-  return (
-    <DateTimePicker
-      value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      onChange={handleFilterChange}
-      ampm={false}
-    />
-  );
-}
-
-GridFilterDateTimeInput.propTypes = {
-  apiRef: PropTypes.any.isRequired,
-  applyValue: PropTypes.func.isRequired,
-  item: PropTypes.shape({
-    /**
-     * The column from which we want to filter the rows.
-     */
-    columnField: PropTypes.string.isRequired,
-    /**
-     * Must be unique.
-     * Only useful when the model contains several items.
-     */
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    /**
-     * The name of the operator we want to apply.
-     * Will become required on `@mui/x-data-grid@6.X`.
-     */
-    operatorValue: PropTypes.string,
-    /**
-     * The filtering value.
-     * The operator filtering function will decide for each row if the row values is correct compared to this value.
-     */
-    value: PropTypes.any,
-  }).isRequired,
-};
+import locale from 'date-fns/locale/en-US';
 
 function buildApplyDateFilterFn(filterItem, compareFn, showTime = false) {
   if (!filterItem.value) {
@@ -267,10 +136,123 @@ function getDateFilterOperators(showTime = false) {
   ];
 }
 
+const dateAdapter = new AdapterDateFns({ locale });
+
+/**
+ * `date` column
+ */
+
 const dateColumnType = {
   ...GRID_DATE_COL_DEF,
-  renderEditCell: renderDateEditCell,
+  resizable: false,
+  renderEditCell: (params) => {
+    return <GridEditDateCell {...params} />;
+  },
   filterOperators: getDateFilterOperators(),
+  valueFormatter: (params) => {
+    if (params.value) {
+      return dateAdapter.format(params.value, 'keyboardDate');
+    }
+    return '';
+  },
+};
+
+function GridEditDateCell({ id, field, value }) {
+  const apiRef = useGridApiContext();
+
+  function handleChange(newValue) {
+    apiRef.current.setEditCellValue({ id, field, value: newValue });
+  }
+
+  return (
+    <DatePicker
+      value={value}
+      renderInput={(params) => <TextField {...params} />}
+      onChange={handleChange}
+    />
+  );
+}
+
+GridEditDateCell.propTypes = {
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.instanceOf(Date),
+};
+
+function GridFilterDateInput(props) {
+  const { item, applyValue, apiRef } = props;
+
+  const handleFilterChange = (newValue) => {
+    applyValue({ ...item, value: newValue });
+  };
+
+  return (
+    <DatePicker
+      value={item.value || null}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        />
+      )}
+      onChange={handleFilterChange}
+    />
+  );
+}
+
+/**
+ * `dateTime` column
+ */
+
+GridFilterDateInput.propTypes = {
+  apiRef: PropTypes.any.isRequired,
+  applyValue: PropTypes.func.isRequired,
+  item: PropTypes.shape({
+    /**
+     * The column from which we want to filter the rows.
+     */
+    columnField: PropTypes.string.isRequired,
+    /**
+     * Must be unique.
+     * Only useful when the model contains several items.
+     */
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    /**
+     * The name of the operator we want to apply.
+     * Will become required on `@mui/x-data-grid@6.X`.
+     */
+    operatorValue: PropTypes.string,
+    /**
+     * The filtering value.
+     * The operator filtering function will decide for each row if the row values is correct compared to this value.
+     */
+    value: PropTypes.any,
+  }).isRequired,
+};
+
+const dateTimeColumnType = {
+  ...GRID_DATETIME_COL_DEF,
+  resizable: false,
+  renderEditCell: (params) => {
+    return <GridEditDateTimeCell {...params} />;
+  },
+  filterOperators: getDateFilterOperators(true),
+  valueFormatter: (params) => {
+    if (params.value) {
+      return dateAdapter.format(params.value, 'keyboardDateTime');
+    }
+    return '';
+  },
 };
 
 function GridEditDateTimeCell({ id, field, value }) {
@@ -285,7 +267,6 @@ function GridEditDateTimeCell({ id, field, value }) {
       value={value}
       renderInput={(params) => <TextField {...params} />}
       onChange={handleChange}
-      ampm={false}
     />
   );
 }
@@ -305,14 +286,52 @@ GridEditDateTimeCell.propTypes = {
   value: PropTypes.instanceOf(Date),
 };
 
-const renderDateTimeEditCell = (params) => {
-  return <GridEditDateTimeCell {...params} />;
-};
+function GridFilterDateTimeInput(props) {
+  const { item, applyValue, apiRef } = props;
 
-const dateTimeColumnType = {
-  ...GRID_DATETIME_COL_DEF,
-  renderEditCell: renderDateTimeEditCell,
-  filterOperators: getDateFilterOperators(true),
+  const handleFilterChange = (newValue) => {
+    applyValue({ ...item, value: newValue });
+  };
+
+  return (
+    <DateTimePicker
+      value={item.value || null}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+        />
+      )}
+      onChange={handleFilterChange}
+    />
+  );
+}
+
+GridFilterDateTimeInput.propTypes = {
+  apiRef: PropTypes.any.isRequired,
+  applyValue: PropTypes.func.isRequired,
+  item: PropTypes.shape({
+    /**
+     * The column from which we want to filter the rows.
+     */
+    columnField: PropTypes.string.isRequired,
+    /**
+     * Must be unique.
+     * Only useful when the model contains several items.
+     */
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    /**
+     * The name of the operator we want to apply.
+     * Will become required on `@mui/x-data-grid@6.X`.
+     */
+    operatorValue: PropTypes.string,
+    /**
+     * The filtering value.
+     * The operator filtering function will decide for each row if the row values is correct compared to this value.
+     */
+    value: PropTypes.any,
+  }).isRequired,
 };
 
 const columns = [
@@ -329,7 +348,7 @@ const columns = [
     field: 'lastLogin',
     ...dateTimeColumnType,
     headerName: 'Last Login',
-    width: 220,
+    width: 230,
     editable: true,
   },
 ];
@@ -337,7 +356,7 @@ const columns = [
 export default function EditingWithDatePickers() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
         <DataGrid
           rows={rows}
           columns={columns}
