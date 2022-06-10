@@ -37,7 +37,7 @@ The following steps must be proposed as a pull request.
 - [ ] Make sure you have the latest dependencies installed: `yarn`.
 - [ ] Build the packages: `yarn release:build`.
 - [ ] Release the versions on npm: `yarn release:publish` (you need your 2FA device).
-- [ ] Push the newly created tag: `yarn release:tag`,
+- [ ] Push the newly created tag: `yarn release:tag`.
 
 ### Publish the documentation
 
@@ -80,4 +80,4 @@ You can use the following script in your browser console on any GitHub page to a
 
 ## Manually create the release tag
 
-If the `yarn release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`
+If the `yarn release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
