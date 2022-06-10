@@ -35,6 +35,11 @@ The following demo shows how to use `getRowId` to grab the unique identifier fro
 
 {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
 
+If no such unique identifier exists in the data set, then you must create it by some other means, but this scenario should be avoided because it leads to issues with other features of the grid.
+
+Note that it is not necessary to create a column to display the unique identifier data. 
+The data grid pulls this information directly from the data set itself, not from anything that is displayed on the screen.
+
 :::warning
 Just like the `rows` prop, the `getRowId` prop should keep the same reference between two renders.
 Otherwise, the grid will re-apply heavy work like sorting and filtering.
