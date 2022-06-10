@@ -4,7 +4,7 @@ import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { getDataGridUtilityClass } from '../../../constants';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef';
+import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -39,14 +39,21 @@ export const useGridSelectionPreProcessors = (
       };
 
       const shouldHaveSelectionColumn = props.checkboxSelection;
-      const haveSelectionColumn = columnsState.lookup[selectionColumn.field] != null;
+      const haveSelectionColumn = columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] != null;
 
       if (shouldHaveSelectionColumn && !haveSelectionColumn) {
-        columnsState.lookup[selectionColumn.field] = selectionColumn;
-        columnsState.all = [selectionColumn.field, ...columnsState.all];
+        columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] = selectionColumn;
+        columnsState.all = [GRID_CHECKBOX_SELECTION_FIELD, ...columnsState.all];
       } else if (!shouldHaveSelectionColumn && haveSelectionColumn) {
-        delete columnsState.lookup[selectionColumn.field];
-        columnsState.all = columnsState.all.filter((field) => field !== selectionColumn.field);
+        delete columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD];
+        columnsState.all = columnsState.all.filter(
+          (field) => field !== GRID_CHECKBOX_SELECTION_FIELD,
+        );
+      } else if (shouldHaveSelectionColumn && haveSelectionColumn) {
+        columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] = {
+          ...selectionColumn,
+          ...columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD],
+        };
       }
 
       return columnsState;
