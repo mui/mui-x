@@ -10,6 +10,9 @@ export interface RowTreeBuilderNode {
   path: RowTreeBuilderGroupingCriterion[];
 }
 
+/**
+ * Callback called when trying to insert a data row in the tree in place of an already existing data row.
+ */
 export type GridTreePathDuplicateHandler = (
   firstId: GridRowId,
   secondId: GridRowId,
