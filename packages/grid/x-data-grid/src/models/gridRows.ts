@@ -118,8 +118,6 @@ export type GridTreeNode = GridLeafNode | GridGroupNode | GridFooterNode;
 
 export type GridRowTreeConfig = Record<GridRowId, GridTreeNode>;
 
-export type GridRowsLookup<R extends GridValidRowModel = any> = Record<GridRowId, R>;
-
 /**
  * The type of Id supported by the grid.
  */

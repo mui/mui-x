@@ -3,8 +3,9 @@ import {
   GridGroupNode,
   GridLeafNode,
   GridRowId,
-  GridTreeNode,
+  GridRowTreeConfig,
 } from '@mui/x-data-grid';
+import { GridTreeDepths } from '@mui/x-data-grid/internals';
 import {
   addGroupDefaultExpansion,
   getGroupRowIdFromPath,
@@ -31,7 +32,7 @@ interface InsertDataRowInTreeParams {
    * - `tree[nodeId] = newNode` => valid
    * - `tree[nodeId].children.push(newNodeId)` => invalid
    */
-  tree: Record<GridRowId, GridTreeNode>;
+  tree: GridRowTreeConfig;
   /**
    * Amount of nodes at each depth of the tree.
    * This object can be mutated.
@@ -39,7 +40,7 @@ interface InsertDataRowInTreeParams {
    *
    * - `treeDepths[nodeDepth] = treeDepth[nodeDepth] + 1` => valid
    */
-  treeDepths: { [depth: number]: number };
+  treeDepths: GridTreeDepths;
   /**
    * Callback fired when trying to insert a data row for a path already populated by another data row.
    */

@@ -57,6 +57,7 @@ export type {
   GridHydrateRowsValue,
   GridRowsPartialUpdates,
   GridRowsPartialUpdateAction,
+  GridTreeDepths,
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';

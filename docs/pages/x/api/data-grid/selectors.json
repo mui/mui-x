@@ -296,7 +296,7 @@
   },
   {
     "name": "gridRowTreeDepthsSelector",
-    "returnType": "{ [depth: number]: number }",
+    "returnType": "GridTreeDepths",
     "description": "",
     "supportsApiRef": true
   },
@@ -308,7 +308,7 @@
   },
   {
     "name": "gridRowsDataRowIdToIdLookupSelector",
-    "returnType": "Record<string, GridRowId>",
+    "returnType": "GridRowIdToIdLookup",
     "description": "",
     "supportsApiRef": true
   },
@@ -320,7 +320,7 @@
   },
   {
     "name": "gridRowsLookupSelector",
-    "returnType": "GridRowsLookup<any>",
+    "returnType": "GridRowIdToModelLookup<any>",
     "description": "",
     "supportsApiRef": true
   },

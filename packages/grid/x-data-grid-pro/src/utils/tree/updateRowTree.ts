@@ -1,10 +1,11 @@
 import { GRID_ROOT_GROUP_ID, GridGroupNode, GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
 import {
   GridRowTreeCreationValue,
+  GridTreeDepths,
   isDeepEqual,
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
-import { RowTreeBuilderGroupingCriterion, RowTreeBuilderNode } from './models';
+import { GridTreePathDuplicateHandler, RowTreeBuilderNode } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
 import { removeDataRowFromTree } from './removeDataRowFromTree';
 import { getNodePathInTree } from './utils';
@@ -17,16 +18,12 @@ export interface UpdateRowTreeNodes {
 
 interface UpdateRowTreeParams {
   previousTree: GridRowTreeConfig;
-  previousTreeDepth: { [depth: number]: number };
+  previousTreeDepth: GridTreeDepths;
   nodes: UpdateRowTreeNodes;
   defaultGroupingExpansionDepth: number;
   isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
   groupingName: string;
-  onDuplicatePath?: (
-    firstId: GridRowId,
-    secondId: GridRowId,
-    path: RowTreeBuilderGroupingCriterion[],
-  ) => void;
+  onDuplicatePath?: GridTreePathDuplicateHandler;
 }
 
 export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationValue => {

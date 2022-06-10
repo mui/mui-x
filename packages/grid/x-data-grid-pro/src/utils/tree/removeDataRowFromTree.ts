@@ -5,6 +5,7 @@ import {
   GridRowTreeConfig,
   GridTreeNode,
 } from '@mui/x-data-grid';
+import { GridTreeDepths } from '@mui/x-data-grid/internals';
 import {
   getNodePathInTree,
   getGroupRowIdFromPath,
@@ -25,7 +26,7 @@ interface RemoveDataRowFromTreeParams {
    * - `tree[nodeId] = newNode` => valid
    * - `tree[nodeId].children.push(newNodeId)` => invalid
    */
-  tree: Record<GridRowId, GridTreeNode>;
+  tree: GridRowTreeConfig;
   /**
    * Amount of nodes at each depth of the tree.
    * This object can be mutated.
@@ -33,7 +34,7 @@ interface RemoveDataRowFromTreeParams {
    *
    * - `treeDepths[nodeDepth] = treeDepth[nodeDepth] + 1` => valid
    */
-  treeDepths: { [depth: number]: number };
+  treeDepths: GridTreeDepths;
 }
 
 const removeNodeAndCleanParent = ({
@@ -43,7 +44,7 @@ const removeNodeAndCleanParent = ({
 }: {
   node: GridTreeNode;
   tree: GridRowTreeConfig;
-  treeDepths: { [depth: number]: number };
+  treeDepths: GridTreeDepths;
 }) => {
   removeNodeFromTree({
     node,
