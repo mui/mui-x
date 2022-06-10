@@ -496,6 +496,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   if (!needsHorizontalScrollbar) {
     rootStyle.overflowX = 'hidden';
   }
+  if (rootProps.autoHeight) {
+    rootStyle.overflowY = 'hidden';
+  }
 
   const getRenderContext = React.useCallback((): GridRenderContext => {
     return prevRenderContext.current!;

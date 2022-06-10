@@ -66,7 +66,7 @@ export const useGridPage = (
 
   const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'page',
     propModel: props.page,
     propOnChange: props.onPageChange,
