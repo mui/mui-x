@@ -44,6 +44,7 @@
   { "name": "GRID_ACTIONS_COLUMN_TYPE", "kind": "Variable" },
   { "name": "GRID_BOOLEAN_COL_DEF", "kind": "Variable" },
   { "name": "GRID_CHECKBOX_SELECTION_COL_DEF", "kind": "Variable" },
+  { "name": "GRID_CHECKBOX_SELECTION_FIELD", "kind": "Variable" },
   { "name": "GRID_DATE_COL_DEF", "kind": "Variable" },
   { "name": "GRID_DATETIME_COL_DEF", "kind": "Variable" },
   { "name": "GRID_DEFAULT_LOCALE_TEXT", "kind": "Variable" },
