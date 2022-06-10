@@ -60,7 +60,9 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
 
 - [ ] Follow the instructions in https://mui-org.notion.site/Releases-7490ef9581b4447ebdbf86b13164272d.
 
-## Manual changelog generation
+## A script failed, what can I do?
+
+### Manual changelog generation
 
 Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
 
