@@ -20,8 +20,6 @@ import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-const nativeSetTimeout = setTimeout;
-
 describe('<DataGrid /> - Rows', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
@@ -532,10 +530,11 @@ describe('<DataGrid /> - Rows', () => {
           '.MuiDataGrid-virtualScrollerContent',
         );
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${expectedHeight}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${expectedHeight}px`,
+          });
         });
 
         window.onerror = originalErrorHandler;
@@ -562,10 +561,11 @@ describe('<DataGrid /> - Rows', () => {
           measuredRowHeight +
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${expectedHeight}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${expectedHeight}px`,
+          });
         });
       });
 
@@ -590,10 +590,11 @@ describe('<DataGrid /> - Rows', () => {
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${expectedHeight}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${expectedHeight}px`,
+          });
         });
       });
 
@@ -609,16 +610,18 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         );
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: '101px',
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: '101px',
+          });
         });
         setProps({ rows: [{ clientId: 'c1', expanded: true }] }); // Wait for ResizeObserver to send dimensions
-        await new Promise((resolve) => nativeSetTimeout(resolve));
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: '201px',
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: '201px',
+          });
         });
       });
 

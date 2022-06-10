@@ -29,17 +29,4 @@ export const executeInTheNextEventLoopTick = (fn: () => void) => {
   setTimeout(fn, 0);
 };
 
-export function createDelegatedEventHandler<TEvent>(
-  fn: (event: TEvent) => void,
-  onEvent?: (event: TEvent) => void,
-) {
-  return (event: TEvent) => {
-    fn(event);
-
-    if (onEvent) {
-      onEvent(event);
-    }
-  };
-}
-
 export const doNothing = () => {};

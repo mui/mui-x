@@ -23,7 +23,7 @@ test.describe('DataGrid docs', () => {
     test('should have correct link for API section', async ({ page }) => {
       await page.goto(`/x/react-data-grid/`);
 
-      const anchors = page.locator('div > h2#heading-api ~ ul a');
+      const anchors = page.locator('div > h2#api ~ ul a');
 
       const firstAnchor = anchors.first();
       const textContent = await firstAnchor.textContent();

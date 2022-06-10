@@ -1,6 +1,7 @@
 import { GridRowId, GridRowModel } from '../gridRows';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridFilterItem, GridLinkOperator } from '../gridFilterItem';
+import { GridControlledStateReasonLookup } from '../events';
 
 /**
  * The filter API interface that is available in the grid [[apiRef]].
@@ -21,6 +22,11 @@ export interface GridFilterApi {
    */
   upsertFilterItem: (item: GridFilterItem) => void;
   /**
+   * Updates or inserts many [[GridFilterItem]].
+   * @param {GridFilterItem[]} items The filters to update.
+   */
+  upsertFilterItems: (items: GridFilterItem[]) => void;
+  /**
    * Applies all filters on all rows.
    * @ignore - do not document.
    */
@@ -38,8 +44,12 @@ export interface GridFilterApi {
   /**
    * Sets the filter model to the one given by `model`.
    * @param {GridFilterModel} model The new filter model.
+   * @param {string} reason The reason for the model to have changed.
    */
-  setFilterModel: (model: GridFilterModel) => void;
+  setFilterModel: (
+    model: GridFilterModel,
+    reason?: GridControlledStateReasonLookup['filter'],
+  ) => void;
   /**
    * Returns a sorted `Map` containing only the visible rows.
    * @returns {Map<GridRowId, GridRowModel>} The sorted `Map`.

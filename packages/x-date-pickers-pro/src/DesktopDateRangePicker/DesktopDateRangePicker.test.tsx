@@ -27,7 +27,10 @@ const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)
 });
 
 describe('<DesktopDateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date('2018-01-10T00:00:00.000'),
+  });
 
   describeConformance(
     <DesktopDateRangePicker
@@ -787,6 +790,66 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
+    });
+  });
+
+  describe('disabled dates', () => {
+    it('should respect the disablePast prop', () => {
+      render(<WrappedDesktopDateRangePicker initialValue={[null, null]} disablePast />);
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      expect(screen.getByLabelText('Jan 8, 2018')).to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 9, 2018')).to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 10, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 11, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 11, 2018')).not.to.have.attribute('disabled');
+    });
+
+    it('should respect the disableFuture prop', () => {
+      render(<WrappedDesktopDateRangePicker initialValue={[null, null]} disableFuture />);
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      expect(screen.getByLabelText('Jan 8, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 9, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 10, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 11, 2018')).to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 12, 2018')).to.have.attribute('disabled');
+    });
+
+    it('should respect the minDate prop', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[null, null]}
+          minDate={adapterToUse.date('2018-01-15T00:00:00.000')}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      expect(screen.getByLabelText('Jan 13, 2018')).to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 14, 2018')).to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 15, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 16, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 17, 2018')).not.to.have.attribute('disabled');
+    });
+
+    it('should respect the maxDate prop', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[null, null]}
+          maxDate={adapterToUse.date('2018-01-15T00:00:00.000')}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      expect(screen.getByLabelText('Jan 13, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 14, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 15, 2018')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 16, 2018')).to.have.attribute('disabled');
+      expect(screen.getByLabelText('Jan 17, 2018')).to.have.attribute('disabled');
     });
   });
 });

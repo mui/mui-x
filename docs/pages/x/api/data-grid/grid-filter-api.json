@@ -21,7 +21,7 @@
     {
       "name": "setFilterModel",
       "description": "Sets the filter model to the one given by <code>model</code>.",
-      "type": "(model: GridFilterModel) => void"
+      "type": "(model: GridFilterModel, reason?: GridControlledStateReasonLookup['filter']) => void"
     },
     {
       "name": "setQuickFilterValues",
@@ -37,6 +37,11 @@
       "name": "upsertFilterItem",
       "description": "Updates or inserts a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
       "type": "(item: GridFilterItem) => void"
+    },
+    {
+      "name": "upsertFilterItems",
+      "description": "Updates or inserts many <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
+      "type": "(items: GridFilterItem[]) => void"
     }
   ]
 }
