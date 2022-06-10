@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v5.12.1
+
+_Jun 9, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `reason` to `onFilterModelChange` (#4938) @m4theushw
+- 🔎 Control quick filter input value via model prop (#5013) @alexfauquette
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.12.1` / `@mui/x-data-grid-pro@v5.12.1` / `@mui/x-data-grid-premium@v5.12.1`
+
+#### Changes
+
+- [DataGrid] Add `reason` to `onFilterModelChange` (#4938) @m4theushw
+- [DataGrid] Restore focus after dismissing the column menu (#5027) @m4theushw
+- [DataGrid] Update quick filter input when model is modified (#5013) @alexfauquette
+- [DataGrid] Fix implicit dependency on react-dom (#5121) @oliviertassinari
+- [DataGrid] Support `getRowId` in row reordering (#5093) @flaviendelangle
+- [DataGridPro] Fix column resizing in RTL mode (#4989) @cherniavskii
+- [DataGridPro] Fix column resizing on touchscreen (#5056) @cherniavskii
+- [l10n] Update Japanese (ja-JP) locale (#5122) @hikotq
+- [l10n] Update Russian (ru-RU) locale (#5069) @Artboomy
+
+### `@mui/x-date-pickers@5.0.0-alpha.6` / `@mui/x-date-pickers-pro@5.0.0-alpha.6`
+
+#### Changes
+
+- [pickers] Fix usage of `maxDate` / `minDate` / `disableFuture` and `disablePast` (#5081) @flaviendelangle
+- [pickers] Infer mask from `inputFormat` (#5060) @alexfauquette
+- [pickers] Manage input value without using the focus (#4486) @alexfauquette
+- [pickers] Use new localization for doc examples (#5097) @flaviendelangle
+- [pickers] Fix `shouldDisableDate` in range pickers (#5123) @flaviendelangle
+- [l10n] Add Brazilian Portuguese (pt-BR) locale (#5100) @jardelnovaes
+- [l10n] Use `localText` for remaining texts (#4986) @alexfauquette
+
+### Docs
+
+- [docs] Implement the focus management on data grid demo links (#5070) @alexfauquette
+- [docs] Fix `301` link to render cell (#5106) @oliviertassinari
+- [docs] Fix broken anchor link @oliviertassinari
+- [docs] Improve movie dataset (#5142) @flaviendelangle
+- [docs] Move all localization documentation in a unique page (#5072) @alexfauquette
+- [docs] Section for overwriting core components i18n keys (#4998) @DanailH
+- [docs] Small grammar and format fixes for Dynamic Row Height section (#5098) @samuelsycamore
+
+### Core
+
+- [core] Allows to run tests with different date adapters (#5055) @alexfauquette
+- [core] Prettify the l10n issue (#4928) @alexfauquette
+- [core] Set correct `apiRef` type in row reorder pre processors #5125 @DanailH
+- [core] Stop using `GridEvents` in technical doc (#5157) @flaviendelangle
+- [core] Upgrade monorepo (#5101) @oliviertassinari
+- [test] Fix dynamic row height test failing on Chrome (#5147) @m4theushw
+- [test] Remove delay on server demo for regression tests (#5131) @alexfauquette
+
 ## v5.12.0
 
 _May 31, 2022_
@@ -20,6 +77,8 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - 🐞 Bug fixes and improvements
 
 ### `@mui/x-data-grid@v5.12.0` / `@mui/x-data-grid-pro@v5.12.0` / `@mui/x-data-grid-premium@v5.12.0`
+
+#### Changes
 
 - [DataGrid] Support dynamic row height (#4859) @m4theushw
 - [DataGrid] Add `onMenuOpen` and `onMenuClose` props (#4825) @DanailH
