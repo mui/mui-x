@@ -25,6 +25,7 @@ import {
 } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import TextField from '@mui/material/TextField';
+import locale from 'date-fns/locale/en-US';
 
 function GridEditDateCell({
   id,
@@ -90,7 +91,6 @@ function GridFilterDateTimeInput(props: GridFilterInputValueProps) {
         />
       )}
       onChange={handleFilterChange}
-      ampm={false}
     />
   );
 }
@@ -216,10 +216,19 @@ function getDateFilterOperators(
   ];
 }
 
+const dateAdapter = new AdapterDateFns({ locale });
+
 const dateColumnType: GridColTypeDef = {
   ...GRID_DATE_COL_DEF,
+  resizable: false,
   renderEditCell: renderDateEditCell,
   filterOperators: getDateFilterOperators(),
+  valueFormatter: (params) => {
+    if (params.value) {
+      return dateAdapter.format(params.value, 'keyboardDate');
+    }
+    return '';
+  },
 };
 
 function GridEditDateTimeCell({
@@ -238,7 +247,6 @@ function GridEditDateTimeCell({
       value={value}
       renderInput={(params) => <TextField {...params} />}
       onChange={handleChange}
-      ampm={false}
     />
   );
 }
@@ -247,10 +255,17 @@ const renderDateTimeEditCell: GridColDef['renderEditCell'] = (params) => {
   return <GridEditDateTimeCell {...params} />;
 };
 
-const dateTimeColumnType: GridColTypeDef = {
+const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
   ...GRID_DATETIME_COL_DEF,
+  resizable: false,
   renderEditCell: renderDateTimeEditCell,
   filterOperators: getDateFilterOperators(true),
+  valueFormatter: (params) => {
+    if (params.value) {
+      return dateAdapter.format(params.value, 'keyboardDateTime');
+    }
+    return '';
+  },
 };
 
 const columns: GridColumns = [
@@ -267,7 +282,7 @@ const columns: GridColumns = [
     field: 'lastLogin',
     ...dateTimeColumnType,
     headerName: 'Last Login',
-    width: 220,
+    width: 230,
     editable: true,
   },
 ];
@@ -275,7 +290,7 @@ const columns: GridColumns = [
 export default function EditingWithDatePickers() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
         <DataGrid
           rows={rows}
           columns={columns}
