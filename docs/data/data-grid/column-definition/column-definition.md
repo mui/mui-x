@@ -2,7 +2,7 @@
 title: Data Grid - Column definition
 ---
 
-# Data Grid - Column definition
+# Data grid - Column definition
 
 <p class="description">Define your columns.</p>
 

@@ -2,7 +2,7 @@
 title: Data Grid - Tree data
 ---
 
-# Data Grid - Tree data [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Tree data [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 <p class="description">Use Tree data to handle rows with parent / child relationship.</p>
 

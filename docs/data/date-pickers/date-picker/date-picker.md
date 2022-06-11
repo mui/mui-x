@@ -7,11 +7,11 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
 ---
 
-# Date Picker
+# Date picker
 
-<p class="description">Date pickers let the user select a date.</p>
+<p class="description">The date picker let the user select a date.</p>
 
-Date pickers let the user select a date. Date pickers are displayed with:
+Date pickers are displayed with:
 
 - Dialogs on mobile
 - Text field dropdowns on desktop
