@@ -205,6 +205,13 @@ function GridFilterDateInput(props: GridFilterInputValueProps) {
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
         />
       )}
+      InputAdornmentProps={{
+        sx: {
+          '& .MuiButtonBase-root': {
+            marginRight: -1,
+          },
+        },
+      }}
       onChange={handleFilterChange}
     />
   );
