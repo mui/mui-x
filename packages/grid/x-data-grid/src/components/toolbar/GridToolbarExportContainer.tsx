@@ -45,7 +45,6 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
       <React.Fragment>
         <rootProps.components.BaseButton
           ref={handleRef}
-          color="primary"
           size="small"
           startIcon={<rootProps.components.ExportIcon />}
           aria-expanded={open ? 'true' : undefined}

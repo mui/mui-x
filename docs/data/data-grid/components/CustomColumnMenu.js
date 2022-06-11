@@ -87,14 +87,10 @@ export default function CustomColumnMenu() {
   const apiRef = useGridApiRef();
 
   return (
-    <div
-      style={{
-        width: '100%',
-      }}
-    >
+    <Box sx={{ width: '100%' }}>
       <Button
         color={color}
-        variant="outlined"
+        size="small"
         onClick={(event) => {
           event.stopPropagation();
           setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
@@ -103,7 +99,7 @@ export default function CustomColumnMenu() {
       >
         Toggle menu background
       </Button>
-      <div style={{ height: 250, width: '100%', marginTop: 16 }}>
+      <Box sx={{ height: 250, mt: 1 }}>
         <DataGridPro
           apiRef={apiRef}
           columns={[
@@ -132,7 +128,7 @@ export default function CustomColumnMenu() {
             columnMenu: { color },
           }}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

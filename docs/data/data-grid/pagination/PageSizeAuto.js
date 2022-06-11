@@ -27,7 +27,7 @@ export default function PageSizeAuto() {
         </InputLabel>
         <Select
           label="Main Grouping Criteria"
-          onChange={(e) => setHeight(Number(e.target.value))}
+          onChange={(event) => setHeight(Number(event.target.value))}
           value={height}
           id="main-grouping-criteria"
           labelId="main-grouping-criteria-label"
