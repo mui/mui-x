@@ -5,7 +5,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function AutoHeightGrid() {
-  const [nbRows, setNbRows] = React.useState(5);
+  const [nbRows, setNbRows] = React.useState(3);
   const removeRow = () => setNbRows((x) => Math.max(0, x - 1));
   const addRow = () => setNbRows((x) => Math.min(100, x + 1));
 
