@@ -197,7 +197,7 @@ export function useGridDimensions(
             'Please make sure that this element has an intrinsic height.',
             'The grid displays with a height of 0px.',
             '',
-            'More details: https://mui.com/r/x-grid-no-dimensions.',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
           ].join('\n'),
         );
         errorShown.current = true;
@@ -209,7 +209,7 @@ export function useGridDimensions(
             'Please make sure that this element has an intrinsic width.',
             'The grid displays with a width of 0px.',
             '',
-            'More details: https://mui.com/r/x-grid-no-dimensions.',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
           ].join('\n'),
         );
         errorShown.current = true;
