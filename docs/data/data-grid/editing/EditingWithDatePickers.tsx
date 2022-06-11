@@ -59,8 +59,6 @@ function buildApplyDateFilterFn(
 function getDateFilterOperators(
   showTime: boolean = false,
 ): GridColTypeDef['filterOperators'] {
-  const InputComponent = showTime ? GridFilterDateTimeInput : GridFilterDateInput;
-
   return [
     {
       value: 'is',
@@ -71,7 +69,8 @@ function getDateFilterOperators(
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'not',
@@ -82,7 +81,8 @@ function getDateFilterOperators(
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'after',
@@ -93,7 +93,8 @@ function getDateFilterOperators(
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'onOrAfter',
@@ -104,7 +105,8 @@ function getDateFilterOperators(
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'before',
@@ -115,7 +117,8 @@ function getDateFilterOperators(
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'onOrBefore',
@@ -126,7 +129,8 @@ function getDateFilterOperators(
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'isEmpty',
@@ -188,15 +192,19 @@ function GridEditDateCell({
   );
 }
 
-function GridFilterDateInput(props: GridFilterInputValueProps) {
-  const { item, applyValue, apiRef } = props;
+function GridFilterDateInput(
+  props: GridFilterInputValueProps & { showTime?: boolean },
+) {
+  const { item, showTime, applyValue, apiRef } = props;
+
+  const Component = showTime ? DateTimePicker : DatePicker;
 
   const handleFilterChange = (newValue: unknown) => {
     applyValue({ ...item, value: newValue });
   };
 
   return (
-    <DatePicker
+    <Component
       value={item.value || null}
       renderInput={(params) => (
         <TextField
@@ -252,28 +260,6 @@ function GridEditDateTimeCell({
       value={value}
       renderInput={(params) => <TextField {...params} />}
       onChange={handleChange}
-    />
-  );
-}
-
-function GridFilterDateTimeInput(props: GridFilterInputValueProps) {
-  const { item, applyValue, apiRef } = props;
-
-  const handleFilterChange = (newValue: unknown) => {
-    applyValue({ ...item, value: newValue });
-  };
-
-  return (
-    <DateTimePicker
-      value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      onChange={handleFilterChange}
     />
   );
 }
