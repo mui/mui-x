@@ -48,8 +48,6 @@ function buildApplyDateFilterFn(filterItem, compareFn, showTime = false) {
 }
 
 function getDateFilterOperators(showTime = false) {
-  const InputComponent = showTime ? GridFilterDateTimeInput : GridFilterDateInput;
-
   return [
     {
       value: 'is',
@@ -60,7 +58,8 @@ function getDateFilterOperators(showTime = false) {
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'not',
@@ -71,7 +70,8 @@ function getDateFilterOperators(showTime = false) {
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'after',
@@ -82,7 +82,8 @@ function getDateFilterOperators(showTime = false) {
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'onOrAfter',
@@ -93,7 +94,8 @@ function getDateFilterOperators(showTime = false) {
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'before',
@@ -104,7 +106,8 @@ function getDateFilterOperators(showTime = false) {
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'onOrBefore',
@@ -115,7 +118,8 @@ function getDateFilterOperators(showTime = false) {
           showTime,
         );
       },
-      InputComponent,
+      InputComponent: GridFilterDateInput,
+      InputComponentProps: { showTime },
     },
     {
       value: 'isEmpty',
@@ -189,14 +193,16 @@ GridEditDateCell.propTypes = {
 };
 
 function GridFilterDateInput(props) {
-  const { item, applyValue, apiRef } = props;
+  const { item, showTime, applyValue, apiRef } = props;
+
+  const Component = showTime ? DateTimePicker : DatePicker;
 
   const handleFilterChange = (newValue) => {
     applyValue({ ...item, value: newValue });
   };
 
   return (
-    <DatePicker
+    <Component
       value={item.value || null}
       renderInput={(params) => (
         <TextField
@@ -205,6 +211,13 @@ function GridFilterDateInput(props) {
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
         />
       )}
+      InputAdornmentProps={{
+        sx: {
+          '& .MuiButtonBase-root': {
+            marginRight: -1,
+          },
+        },
+      }}
       onChange={handleFilterChange}
     />
   );
@@ -238,6 +251,7 @@ GridFilterDateInput.propTypes = {
      */
     value: PropTypes.any,
   }).isRequired,
+  showTime: PropTypes.bool,
 };
 
 const dateTimeColumnType = {
@@ -284,54 +298,6 @@ GridEditDateTimeCell.propTypes = {
    * The cell value, but if the column has valueGetter, use getValue.
    */
   value: PropTypes.instanceOf(Date),
-};
-
-function GridFilterDateTimeInput(props) {
-  const { item, applyValue, apiRef } = props;
-
-  const handleFilterChange = (newValue) => {
-    applyValue({ ...item, value: newValue });
-  };
-
-  return (
-    <DateTimePicker
-      value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      onChange={handleFilterChange}
-    />
-  );
-}
-
-GridFilterDateTimeInput.propTypes = {
-  apiRef: PropTypes.any.isRequired,
-  applyValue: PropTypes.func.isRequired,
-  item: PropTypes.shape({
-    /**
-     * The column from which we want to filter the rows.
-     */
-    columnField: PropTypes.string.isRequired,
-    /**
-     * Must be unique.
-     * Only useful when the model contains several items.
-     */
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    /**
-     * The name of the operator we want to apply.
-     * Will become required on `@mui/x-data-grid@6.X`.
-     */
-    operatorValue: PropTypes.string,
-    /**
-     * The filtering value.
-     * The operator filtering function will decide for each row if the row values is correct compared to this value.
-     */
-    value: PropTypes.any,
-  }).isRequired,
 };
 
 const columns = [
