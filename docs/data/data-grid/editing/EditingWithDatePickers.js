@@ -160,9 +160,9 @@ const dateColumnType = {
 function GridEditDateCell({ id, field, value }) {
   const apiRef = useGridApiContext();
 
-  function handleChange(newValue) {
+  const handleChange = (newValue) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
-  }
+  };
 
   return (
     <DatePicker
@@ -258,9 +258,9 @@ const dateTimeColumnType = {
 function GridEditDateTimeCell({ id, field, value }) {
   const apiRef = useGridApiContext();
 
-  function handleChange(newValue) {
+  const handleChange = (newValue) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
-  }
+  };
 
   return (
     <DateTimePicker

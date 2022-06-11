@@ -179,9 +179,9 @@ function GridEditDateCell({
 }: GridRenderEditCellParams<Date | null>) {
   const apiRef = useGridApiContext();
 
-  function handleChange(newValue: unknown) {
+  const handleChange = (newValue: unknown) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
-  }
+  };
 
   return (
     <DatePicker
@@ -251,9 +251,9 @@ function GridEditDateTimeCell({
 }: GridRenderEditCellParams<Date | null>) {
   const apiRef = useGridApiContext();
 
-  function handleChange(newValue: unknown) {
+  const handleChange = (newValue: unknown) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
-  }
+  };
 
   return (
     <DateTimePicker
