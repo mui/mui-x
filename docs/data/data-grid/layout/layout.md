@@ -13,8 +13,7 @@ The grid will raise an error in the console if its container has no intrinsic di
 
 ## Percentage dimensions
 
-When using % (percentage) for your height or width.
-You need to make sure the container you are putting the grid into also has an intrinsic dimension.
+When using % (percentage) for your height or width, you need to make sure the container you are putting the grid into also has an intrinsic dimension.
 The browsers fit the element according to a percentage of the parent dimension.
 If the parent has no dimensions, then the % will be zero.
 
