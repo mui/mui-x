@@ -134,7 +134,6 @@ export const getRowsStateFromCache = ({
     treeDepths: unProcessedTreeDepths,
     groupingName,
     dataRowIds,
-    updatedGroups,
   } = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
     previousTree,
     previousTreeDepths,
@@ -142,8 +141,6 @@ export const getRowsStateFromCache = ({
     dataRowIdToIdLookup: cache.dataRowIdToIdLookup,
     dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
   });
-
-  console.log(updatedGroups);
 
   // 2. Apply the "hydrateRows" pipe-processing on the tree / treeDepths.
   const { tree, treeDepths } = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
