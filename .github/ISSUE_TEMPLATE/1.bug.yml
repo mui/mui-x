@@ -35,9 +35,10 @@ body:
       label: Steps to reproduce 🕹
       description: |
         Please provide a link to a live example and an unambiguous set of steps to reproduce this bug.
-        
-        You can use codesandbox.io to build a reproduction case.
-        As a starting point, we recommend you browse our [documentation](https://mui.com/x/advanced-components/), and fork the closest example to your use case.
+             
+        As a starting point we recommend you browse our [documentation](https://mui.com/x/advanced-components/), and [select](https://mui.com/static/x/forking-an-example.png) the closest example to your use case.
+
+        Or you can use a [basic template](https://codesandbox.io/s/mui-x-basic-template-uh3pm2?file=/src/App.tsx) to build a reproduction case.
 
         If you have an issue concerning TypeScript please start from this TypeScript playground: https://mui.com/r/ts-issue-template.
 
