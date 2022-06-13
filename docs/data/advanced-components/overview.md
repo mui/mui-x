@@ -90,14 +90,14 @@ When you purchase a commercial license, you'll receive your license key by email
 This key removes all watermarks and console warnings.
 
 :::warning
-⚠️ If you purchased your license **after May 13, 2022**, You'll obtain a **v2** license key.
+⚠️ All licenses purchased after **May 13, 2022** are _v2_ licenses.
 
-To use the v2 licenses, you'll need to update the MUI X packages to the latest or at least the `5.11` version.
+The v2 license key is only compatible with MUI X version `5.11` or later.
 
-If updating is not practicable or viable, please contact our support at sales@mui.com
+If this is not a viable solution for your use case, please contact sales@mui.com.
 :::
 
-### How and where to install the key?
+### How to install the key?
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -105,8 +105,10 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
+### Where to install the key?
+
 You must call `setLicenseKey` before React renders the first component.
-You only need to install the key once in your application.
+You only need to install the key **once** in your application.
 
 ### Does each developer need its own key?
 
