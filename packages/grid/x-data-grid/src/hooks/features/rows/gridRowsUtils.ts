@@ -100,6 +100,21 @@ export const createRowsInternalCache = ({
   };
 };
 
+export const getTopLevelRowCount = ({
+  tree,
+  rowCountProp = 0,
+}: {
+  tree: GridRowTreeConfig;
+  rowCountProp: DataGridProcessedProps['rowCount'];
+}) => {
+  const rootGroupNode = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+
+  return Math.max(
+    rowCountProp,
+    rootGroupNode.children.length + (rootGroupNode.footerId == null ? 0 : 1),
+  );
+};
+
 export const getRowsStateFromCache = ({
   apiRef,
   rowCountProp = 0,
@@ -147,19 +162,11 @@ export const getRowsStateFromCache = ({
     },
   };
 
-  const rootGroupNode = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
-  const totalTopLevelRowCount = Math.max(
-    rowCountProp,
-    rootGroupNode.children.length + (rootGroupNode.footerId == null ? 0 : 1),
-  );
-
-  const totalRowCount = Math.max(rowCountProp, dataRowIds.length);
-
   return {
     tree,
     treeDepths,
-    totalRowCount,
-    totalTopLevelRowCount,
+    totalRowCount: Math.max(rowCountProp, dataRowIds.length),
+    totalTopLevelRowCount: getTopLevelRowCount({ tree, rowCountProp }),
     groupingName,
     dataRowIds,
     loading: loadingProp,
