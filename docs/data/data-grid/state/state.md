@@ -2,7 +2,7 @@
 title: Data Grid - State
 ---
 
-# Data Grid - State
+# Data grid - State
 
 <p class="description">Initialize and read the state of the data grid.</p>
 

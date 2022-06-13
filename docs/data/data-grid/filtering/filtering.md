@@ -2,7 +2,7 @@
 title: Data Grid - Filtering
 ---
 
-# Data Grid - Filtering
+# Data grid - Filtering
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 

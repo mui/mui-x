@@ -4,4 +4,9 @@
 <Button variant="outlined" onClick={addRow}>
   Add a row
 </Button>
-<DataGrid autoHeight {...data} rows={data.rows.slice(0, nbRows)} />
+<DataGrid
+  autoHeight
+  sx={{ width: '100%' }}
+  {...data}
+  rows={data.rows.slice(0, nbRows)}
+/>

@@ -1,6 +1,6 @@
 ---
 product: date-pickers
-title: React date range picker component
+title: React Date Range Picker component
 components: DateRangePicker, DateRangePickerDay, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker
 githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers'
@@ -9,9 +9,7 @@ materialDesign: https://material.io/components/date-pickers
 
 # Date range picker [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-<p class="description">Date pickers let the user select a range of dates.</p>
-
-The date range pickers let the user select a range of dates.
+<p class="description">The date range picker let the user select a range of dates.</p>
 
 ## Basic usage
 

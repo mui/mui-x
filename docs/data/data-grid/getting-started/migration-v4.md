@@ -1,8 +1,4 @@
----
-title: MUI X - Migration from v4 to v5
----
-
-# MUI X - Migration from v4 to v5
+# Migration from v4 to v5
 
 <p class="description">MUI X v5 is now stable!</p>
 

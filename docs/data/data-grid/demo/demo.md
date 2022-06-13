@@ -2,7 +2,7 @@
 title: Data Grid - Demo
 ---
 
-# Data Grid - Demo
+# Data grid - Demo
 
 <p class="description">Use the demo below to explore the available features.</p>
 

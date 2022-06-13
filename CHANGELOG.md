@@ -4084,9 +4084,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ### Docs
 
-- [docs] Data Grid depends on side effects (#666) @oliviertassinari
+- [docs] Data grid depends on side effects (#666) @oliviertassinari
 - [docs] Clarify the purpose of x-grid-data-generator (#634) @Elius94
-- [docs] Data Grid is in the lab (#612) @oliviertassinari
+- [docs] Data grid is in the lab (#612) @oliviertassinari
 - [docs] Fix Demo app, downgrade webpack-cli, known issue in latest version (#647) @dtassone
 - [docs] Fix typo in columns.md @stojy
 - [docs] Reduce confusion on /export page (#646) @SerdarMustafa1

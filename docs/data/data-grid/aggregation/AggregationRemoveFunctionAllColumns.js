@@ -5,6 +5,13 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
 const COLUMNS = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
@@ -14,10 +21,10 @@ const COLUMNS = [
     width: 150,
     groupable: false,
     valueFormatter: ({ value }) => {
-      if (!value || typeof value !== 'number') {
+      if (!value) {
         return value;
       }
-      return `${value.toLocaleString()}$`;
+      return currencyFormatter.format(value);
     },
   },
 ];

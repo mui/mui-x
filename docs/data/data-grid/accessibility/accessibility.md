@@ -2,9 +2,9 @@
 title: Data Grid - Accessibility
 ---
 
-# Data Grid - Accessibility
+# Data grid - Accessibility
 
-<p class="description">The Data Grid has complete accessibility support. For instance, every cell is accessible using the keyboard.</p>
+<p class="description">The data grid has complete accessibility support. For instance, every cell is accessible using the keyboard.</p>
 
 ## Guidelines
 

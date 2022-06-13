@@ -2,7 +2,7 @@
 title: Data Grid - Editing
 ---
 
-# Data Grid - Editing
+# Data grid - Editing
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 

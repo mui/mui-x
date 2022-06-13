@@ -2,6 +2,13 @@ import * as React from 'react';
 import { DataGridPremium, GridColDef } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
 const COLUMNS: GridColDef[] = [
   {
     field: 'title',
@@ -17,10 +24,10 @@ const COLUMNS: GridColDef[] = [
     width: 150,
     groupable: false,
     valueFormatter: ({ value }) => {
-      if (!value || typeof value !== 'number') {
+      if (!value) {
         return value;
       }
-      return `${value.toLocaleString()}$`;
+      return currencyFormatter.format(value);
     },
   },
   {

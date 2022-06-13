@@ -2,7 +2,7 @@
 title: Data Grid - Column header
 ---
 
-# Data Grid - Column header
+# Data grid - Column header
 
 <p class="description">Customize your columns header.</p>
 
