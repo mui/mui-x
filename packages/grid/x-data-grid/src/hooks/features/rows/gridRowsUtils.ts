@@ -149,17 +149,14 @@ export const getRowsStateFromCache = ({
   });
 
   // 3. Reset the cache updates
-  apiRef.current.unstable_caches.rows = {
-    ...cache,
-    updates: {
-      type: 'partial',
-      actions: {
-        insert: [],
-        modify: [],
-        remove: [],
-      },
-      idToActionLookup: {},
+  apiRef.current.unstable_caches.rows.updates = {
+    type: 'partial',
+    actions: {
+      insert: [],
+      modify: [],
+      remove: [],
     },
+    idToActionLookup: {},
   };
 
   return {
