@@ -68,10 +68,7 @@ export const useGridAggregationPreProcessors = (
         columnsState.lookup[field] = column;
       });
 
-      apiRef.current.unstable_caches.aggregation = {
-        ...apiRef.current.unstable_caches.aggregation,
-        rulesOnLastColumnHydration: aggregationRules,
-      };
+      apiRef.current.unstable_caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
 
       return columnsState;
     },
@@ -108,10 +105,7 @@ export const useGridAggregationPreProcessors = (
         }
       }
 
-      apiRef.current.unstable_caches.aggregation = {
-        ...apiRef.current.unstable_caches.aggregation,
-        rulesOnLastRowHydration,
-      };
+      apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration = rulesOnLastRowHydration;
 
       return newGroupingParams;
     },
