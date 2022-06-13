@@ -89,6 +89,10 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
       }
     : null;
 
+  if ((params.rowNode.position ?? 'body') !== 'body') {
+    return null;
+  }
+
   return (
     <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
       <rootProps.components.RowReorderIcon />
