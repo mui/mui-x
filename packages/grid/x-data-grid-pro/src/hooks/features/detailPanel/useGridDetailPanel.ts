@@ -75,13 +75,10 @@ export const useGridDetailPanel = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    | 'initialState'
     | 'getDetailPanelContent'
     | 'getDetailPanelHeight'
     | 'detailPanelExpandedRowIds'
     | 'onDetailPanelExpandedRowIdsChange'
-    | 'pagination'
-    | 'paginationMode'
   >,
 ): void => {
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);

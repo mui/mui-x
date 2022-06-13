@@ -80,13 +80,11 @@ export function useGridColumns(
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'initialState'
     | 'columns'
     | 'onColumnVisibilityChange'
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
     | 'columnTypes'
-    | 'classes'
     | 'components'
     | 'componentsProps'
   >,
