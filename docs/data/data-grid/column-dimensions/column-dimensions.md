@@ -2,7 +2,7 @@
 title: Data Grid - Column dimensions
 ---
 
-# Data Grid - Column dimensions
+# Data grid - Column dimensions
 
 <p class="description">Customize the dimensions and resizing behavior of your columns.</p>
 

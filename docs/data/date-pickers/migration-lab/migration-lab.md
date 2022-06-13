@@ -1,10 +1,6 @@
----
-title: MUI X - Migration from the lab
----
+# Migration from the lab
 
-# MUI X - Migration from the lab
-
-<p class="description">MUI date and time pickers are now available on X!</p>
+<p class="description">MUI date and time pickers are now available on MUI X!</p>
 
 ## Introduction
 

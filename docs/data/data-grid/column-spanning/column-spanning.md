@@ -2,7 +2,7 @@
 title: Data Grid - Column spanning
 ---
 
-# Data Grid - Column spanning
+# Data grid - Column spanning
 
 <p class="description">Span cells across several columns.</p>
 

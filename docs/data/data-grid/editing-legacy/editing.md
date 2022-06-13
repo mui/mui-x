@@ -2,7 +2,7 @@
 title: Data Grid - Editing (legacy)
 ---
 
-# Data Grid - Editing (legacy)
+# Data grid - Editing (legacy)
 
 <p class="description">The data grid has built-in edit capabilities that you can customize to your needs.</p>
 

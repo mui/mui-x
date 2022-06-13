@@ -20,7 +20,6 @@ export {
   useGridDetailPanel,
   detailPanelStateInitializer,
 } from '../hooks/features/detailPanel/useGridDetailPanel';
-export { useGridDetailPanelCache } from '../hooks/features/detailPanel/useGridDetailPanelCache';
 export { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 export { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
 export { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
