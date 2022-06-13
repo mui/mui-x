@@ -89,7 +89,7 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
       }
     : null;
 
-  if ((params.rowNode.position ?? 'body') !== 'body') {
+  if (params.rowNode.type === 'footer') {
     return null;
   }
 
