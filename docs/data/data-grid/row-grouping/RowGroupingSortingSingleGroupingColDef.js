@@ -32,7 +32,7 @@ export default function RowGroupingSortingSingleGroupingColDef() {
       <FormControl fullWidth>
         <InputLabel
           htmlFor="main-grouping-criteria"
-          id="ain-grouping-criteria-label"
+          id="main-grouping-criteria-label"
         >
           Main grouping criteria
         </InputLabel>
