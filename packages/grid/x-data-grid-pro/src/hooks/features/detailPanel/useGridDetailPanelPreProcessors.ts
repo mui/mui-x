@@ -32,10 +32,13 @@ export const useGridDetailPanelPreProcessors = (
 
       // Othewise, add the toggle column at the beginning
       columnsState.all = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.all];
-      columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = GRID_DETAIL_PANEL_TOGGLE_COL_DEF;
+      columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = {
+        ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
+        headerName: apiRef.current.getLocaleText('detailPanelToggle'),
+      };
       return columnsState;
     },
-    [props.getDetailPanelContent],
+    [apiRef, props.getDetailPanelContent],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', addToggleColumn);
