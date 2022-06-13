@@ -30,7 +30,7 @@ export default function CustomFooter() {
     maxColumns: 6,
   });
   return (
-    <Box sx={{ width: 1 }}>
+    <Box sx={{ width: '100%' }}>
       <Box sx={{ height: 350, width: '100%', mb: 1 }}>
         <DataGrid
           {...data}
