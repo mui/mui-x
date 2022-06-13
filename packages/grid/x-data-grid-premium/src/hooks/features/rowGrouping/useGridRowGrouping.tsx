@@ -55,7 +55,6 @@ export const useGridRowGrouping = (
   apiRef: React.MutableRefObject<GridApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    | 'initialState'
     | 'rowGroupingModel'
     | 'onRowGroupingModelChange'
     | 'defaultGroupingExpansionDepth'
