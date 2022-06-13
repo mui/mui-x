@@ -68,10 +68,18 @@ export interface GridRowTreeCreationParams {
   dataRowIdToModelLookup: GridRowIdToModelLookup;
 }
 
+export type GridRowTreeUpdateGroupAction = 'removeChildren' | 'insertChildren' | 'modifyChildren';
+
+export type GridRowTreeUpdatedGroups = {
+  [groupId: GridRowId]: { [action in GridRowTreeUpdateGroupAction]?: boolean };
+};
+
 export type GridRowTreeCreationValue = Pick<
   GridRowsState,
   'groupingName' | 'tree' | 'treeDepths' | 'dataRowIds'
->;
+> & {
+  updatedGroups?: GridRowTreeUpdatedGroups;
+};
 
 export type GridHydrateRowsValue = Pick<GridRowsState, 'tree' | 'treeDepths'>;
 
