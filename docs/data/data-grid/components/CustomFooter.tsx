@@ -31,7 +31,7 @@ export default function CustomFooter() {
   });
   return (
     <Box sx={{ width: 1 }}>
-      <Box sx={{ height: 350, width: '100%', mb: 2 }}>
+      <Box sx={{ height: 350, width: '100%', mb: 1 }}>
         <DataGrid
           {...data}
           components={{
