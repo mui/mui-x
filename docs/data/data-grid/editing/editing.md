@@ -540,6 +540,21 @@ Note that the `onCellEditStart` and `onCellEditStop` props also have to be used 
 
 {{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Usage with `@mui/x-date-pickers`
+
+By default, the grid uses native browser inputs for editing `date` and `dateTime` columns.
+
+While [MUI X Date / Time Pickers](/x/react-date-pickers/getting-started/) are not supported by the grid out of the box yet, it is easy to integrate them by creating [custom edit components](/x/react-data-grid/editing/#create-your-own-edit-component) and [custom filter operators](/x/react-data-grid/filtering/#create-a-custom-operator).
+
+The example below uses `@mui/x-date-pickers` for both `date` and `dateTime` column types:
+
+{{"demo": "EditingWithDatePickers.js", "bg": "inline", "defaultCodeOpen": false }}
+
+:::warning
+You can change date format by importing different locale (`en-US` locale is used in the example above).
+See [Localization](/x/react-date-pickers/localization/) for more information.
+:::
+
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
