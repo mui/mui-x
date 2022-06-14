@@ -48,7 +48,7 @@ export default function StylingCellsGrid() {
     <Box
       sx={{
         height: 300,
-        width: 1,
+        width: '100%',
         '& .super-app-theme--cell': {
           backgroundColor: 'rgba(224, 183, 60, 0.55)',
           color: '#1a3e72',

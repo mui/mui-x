@@ -26,7 +26,6 @@ const RenderDate = (props: GridRenderCellParams<Date>) => {
         ref={buttonElement}
         touchRippleRef={rippleRef}
         variant="contained"
-        color="primary"
         size="small"
         style={{ marginLeft: 16 }}
         // Remove button from tab sequence when cell does not have focus
