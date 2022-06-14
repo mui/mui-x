@@ -109,8 +109,9 @@ export const DataGridProColumnHeaders = React.forwardRef<
       return;
     }
 
-    if (scrollbarSize !== rootDimensions.scrollBarSize) {
-      setScrollbarSize(rootDimensions.scrollBarSize);
+    const newScrollbarSize = rootDimensions.hasScrollY ? rootDimensions.scrollBarSize : 0;
+    if (scrollbarSize !== newScrollbarSize) {
+      setScrollbarSize(newScrollbarSize);
     }
   });
 
