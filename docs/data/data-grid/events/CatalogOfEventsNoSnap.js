@@ -58,7 +58,7 @@ useGridApiEventHandler('${event.name}', onEvent);
       return <span className="plan-premium" title="Premium plan" />;
     }
     return null;
-  }, []);
+  }, [event]);
 
   return (
     <React.Fragment>
