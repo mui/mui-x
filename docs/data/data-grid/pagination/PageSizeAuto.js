@@ -19,10 +19,7 @@ export default function PageSizeAuto() {
   return (
     <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
       <FormControl fullWidth>
-        <InputLabel
-          htmlFor="height-of-container"
-          id="height-of-container-label"
-        >
+        <InputLabel htmlFor="height-of-container" id="height-of-container-label">
           Height of the container
         </InputLabel>
         <Select
