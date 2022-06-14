@@ -137,6 +137,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Parar agrupamento por ${name}`,
 
   // Master/detail
+  detailPanelToggle: 'Painel de detalhes',
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Esconder',
 
