@@ -9,7 +9,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-data-grid',
     scopePathnames: ['/x/api/data-grid'],
-    title: 'Data Grid',
+    title: 'Data grid',
     icon: 'TableViewIcon',
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
@@ -57,9 +57,9 @@ const pages: MuiPage[] = [
           '/x/react-data-grid/pivoting',
         ],
         children: [
-          { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping', plan: 'premium' },
-          { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data', plan: 'pro' },
-          { pathname: '/x/react-data-grid/master-detail', title: 'Master Detail', plan: 'pro' },
+          { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
+          { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
+          { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
           { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧', plan: 'premium' },
         ],
@@ -102,7 +102,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
-    title: 'Date and Time Pickers',
+    title: 'Date and Time pickers',
     icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },

@@ -4,6 +4,7 @@ import {
   gridRowTreeSelector,
   useFirstRender,
   GridColDef,
+  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
@@ -94,7 +95,7 @@ export const useGridTreeDataPreProcessors = (
         }
         columnsState.lookup[groupingColDefField] = newGroupingColumn;
         if (prevGroupingColumn == null) {
-          const index = columnsState.all[0] === '__check__' ? 1 : 0;
+          const index = columnsState.all[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
           columnsState.all = [
             ...columnsState.all.slice(0, index),
             groupingColDefField,

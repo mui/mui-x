@@ -2,7 +2,7 @@
 title: Data Grid - Master detail
 ---
 
-# Data Grid - Master detail [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Master detail [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 <p class="description">Expand your rows to display additional information.</p>
 

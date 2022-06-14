@@ -2,9 +2,9 @@
 title: Data Grid - Localization
 ---
 
-# Data Grid - Localization
+# Data grid - Localization
 
-<p class="description">The Data Grid allows to support users from different locales, with formatting, RTL, and localized strings.</p>
+<p class="description">The data grid allows to support users from different locales, with formatting, RTL, and localized strings.</p>
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
