@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -594,9 +594,11 @@ describe('<DataGrid /> - Rows', () => {
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
         await new Promise((resolve) => nativeSetTimeout(resolve));
         clock.runToLast();
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${expectedHeight}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${expectedHeight}px`,
+          });
         });
       });
 
@@ -614,16 +616,20 @@ describe('<DataGrid /> - Rows', () => {
         );
         await new Promise((resolve) => nativeSetTimeout(resolve));
         clock.runToLast();
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: '101px',
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: '101px',
+          });
         });
         setProps({ rows: [{ clientId: 'c1', expanded: true }] }); // Wait for ResizeObserver to send dimensions
         await new Promise((resolve) => nativeSetTimeout(resolve));
         clock.runToLast();
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: '201px',
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: '201px',
+          });
         });
       });
 
@@ -709,9 +715,11 @@ describe('<DataGrid /> - Rows', () => {
         )!;
         await new Promise((resolve) => nativeSetTimeout(resolve));
         clock.runToLast();
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${Math.floor(expectedHeight)}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${Math.floor(expectedHeight)}px`,
+          });
         });
 
         window.onerror = originalErrorHandler;
