@@ -52,7 +52,7 @@ const renderSingleSelectOptions = (
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
-export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps {
+export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps<any> {
   type?: 'text' | 'number' | 'date' | 'datetime-local' | 'singleSelect';
 }
 
@@ -137,7 +137,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       value={filterValueState}
       onChange={onFilterChange}
       type={type || 'text'}
-      variant="standard"
       InputProps={InputProps}
       InputLabelProps={{
         shrink: true,
@@ -155,7 +154,9 @@ GridFilterInputValue.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  apiRef: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.any.isRequired,
+  }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,

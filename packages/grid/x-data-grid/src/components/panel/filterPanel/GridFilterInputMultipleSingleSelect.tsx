@@ -2,19 +2,16 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridFilterItem } from '../../../models/gridFilterItem';
 import { getValueFromOption } from './filterPanelUtils';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
+import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
 export type GridFilterInputMultipleSingleSelectProps = {
-  item: GridFilterItem;
-  applyValue: (value: GridFilterItem) => void;
-  apiRef: React.MutableRefObject<GridApiCommon>;
-  focusElementRef?: React.Ref<any>;
   type?: 'singleSelect';
-} & Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
+} & GridFilterInputValueProps<GridApiCommon> &
+  Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
 
 const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEqualToValue'] = (
   option,
@@ -25,7 +22,16 @@ const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
+  const TextFieldProps = {
+    color: other.color,
+    error: other.error,
+    helperText: other.helperText,
+    size: other.size,
+    variant: other.variant,
+  };
+
   const id = useId();
+  const rootProps = useGridRootProps();
 
   const resolvedColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
   const resolvedValueOptions = React.useMemo(() => {
@@ -108,8 +114,9 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
         ))
       }
       renderInput={(params) => (
-        <TextField
+        <rootProps.components.BaseTextField
           {...params}
+          {...TextFieldProps}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
           InputLabelProps={{
@@ -117,8 +124,8 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
             shrink: true,
           }}
           inputRef={focusElementRef}
-          type={'singleSelect'}
-          variant="standard"
+          type="singleSelect"
+          {...rootProps.componentsProps?.baseTextField}
         />
       )}
       {...other}

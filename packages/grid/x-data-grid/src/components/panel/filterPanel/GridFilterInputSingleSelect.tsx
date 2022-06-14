@@ -37,7 +37,7 @@ const renderSingleSelectOptions = (
   });
 };
 
-export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
+export type GridFilterInputSingleSelectProps = GridFilterInputValueProps<any> &
   TextFieldProps & { type?: 'singleSelect' };
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
@@ -97,7 +97,6 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       value={filterValueState}
       onChange={onFilterChange}
       type={type || 'text'}
-      variant="standard"
       InputLabelProps={{
         shrink: true,
       }}
@@ -124,7 +123,9 @@ GridFilterInputSingleSelect.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  apiRef: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.any.isRequired,
+  }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,

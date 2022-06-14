@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFieldProps) {
+export function GridFilterInputBoolean(props: GridFilterInputValueProps<any> & TextFieldProps) {
   const { item, applyValue, apiRef, focusElementRef, ...others } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const rootProps = useGridRootProps();
@@ -31,7 +31,6 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       value={filterValueState}
       onChange={onFilterChange}
-      variant="standard"
       select
       SelectProps={{
         native: isSelectNative,

@@ -338,6 +338,28 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       [currentOperator],
     );
 
+    // TODO v6: This is a hack to allows passing FormControl props to TextField in inputValue without having a breaking change. It should be removed
+    const valueInputTextFieldProps = React.useMemo(() => {
+      return {
+        color: baseFormControlProps?.color ?? valueInputProps?.color,
+        error: baseFormControlProps?.error ?? valueInputProps?.error,
+        helperText: baseFormControlProps?.helperText ?? valueInputProps?.helperText,
+        size: baseFormControlProps?.size ?? valueInputProps?.size,
+        variant: baseFormControlProps?.variant ?? valueInputProps?.variant ?? 'standard',
+      };
+    }, [
+      baseFormControlProps?.color,
+      valueInputProps?.color,
+      baseFormControlProps?.error,
+      valueInputProps?.error,
+      baseFormControlProps?.helperText,
+      valueInputProps?.helperText,
+      baseFormControlProps?.size,
+      valueInputProps?.size,
+      baseFormControlProps?.variant,
+      valueInputProps?.variant,
+    ]);
+
     return (
       <GridFilterFormRoot ref={ref} className={classes.root} {...other}>
         <FilterFormDeleteIcon
@@ -476,6 +498,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               applyValue={applyFilterChanges}
               focusElementRef={valueRef}
               {...currentOperator.InputComponentProps}
+              {...valueInputTextFieldProps}
             />
           ) : null}
         </FilterFormValueInput>

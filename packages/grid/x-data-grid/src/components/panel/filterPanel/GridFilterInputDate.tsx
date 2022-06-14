@@ -6,7 +6,7 @@ import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-export type GridFilterInputDateProps = GridFilterInputValueProps &
+export type GridFilterInputDateProps = GridFilterInputValueProps<any> &
   TextFieldProps & { type?: 'date' | 'datetime-local' };
 
 export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
@@ -54,7 +54,6 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       value={filterValueState}
       onChange={onFilterChange}
       type={type || 'text'}
-      variant="standard"
       InputLabelProps={{
         shrink: true,
       }}
@@ -78,7 +77,9 @@ GridFilterInputDate.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  apiRef: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.any.isRequired,
+  }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
