@@ -157,7 +157,7 @@ const dateAdapter = new AdapterDateFns({ locale });
  * `date` column
  */
 
-const dateColumnType: GridColTypeDef = {
+const dateColumnType: GridColTypeDef<Date | string, string> = {
   ...GRID_DATE_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
@@ -165,6 +165,9 @@ const dateColumnType: GridColTypeDef = {
   },
   filterOperators: getDateFilterOperators(),
   valueFormatter: (params) => {
+    if (typeof params.value === 'string') {
+      return params.value;
+    }
     if (params.value) {
       return dateAdapter.format(params.value, 'keyboardDate');
     }
@@ -176,7 +179,7 @@ function GridEditDateCell({
   id,
   field,
   value,
-}: GridRenderEditCellParams<Date | null>) {
+}: GridRenderEditCellParams<Date | string | null>) {
   const apiRef = useGridApiContext();
 
   const handleChange = (newValue: unknown) => {
@@ -237,6 +240,9 @@ const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
   },
   filterOperators: getDateFilterOperators(true),
   valueFormatter: (params) => {
+    if (typeof params.value === 'string') {
+      return params.value;
+    }
     if (params.value) {
       return dateAdapter.format(params.value, 'keyboardDateTime');
     }
@@ -248,7 +254,7 @@ function GridEditDateTimeCell({
   id,
   field,
   value,
-}: GridRenderEditCellParams<Date | null>) {
+}: GridRenderEditCellParams<Date | string | null>) {
   const apiRef = useGridApiContext();
 
   const handleChange = (newValue: unknown) => {

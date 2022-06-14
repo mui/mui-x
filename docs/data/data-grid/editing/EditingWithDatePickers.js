@@ -154,6 +154,9 @@ const dateColumnType = {
   },
   filterOperators: getDateFilterOperators(),
   valueFormatter: (params) => {
+    if (typeof params.value === 'string') {
+      return params.value;
+    }
     if (params.value) {
       return dateAdapter.format(params.value, 'keyboardDate');
     }
@@ -189,7 +192,7 @@ GridEditDateCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.instanceOf(Date),
+  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
 };
 
 function GridFilterDateInput(props) {
@@ -262,6 +265,9 @@ const dateTimeColumnType = {
   },
   filterOperators: getDateFilterOperators(true),
   valueFormatter: (params) => {
+    if (typeof params.value === 'string') {
+      return params.value;
+    }
     if (params.value) {
       return dateAdapter.format(params.value, 'keyboardDateTime');
     }
@@ -297,7 +303,7 @@ GridEditDateTimeCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.instanceOf(Date),
+  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
 };
 
 const columns = [
