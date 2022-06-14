@@ -44,3 +44,4 @@ This is not recommended for large datasets as row virtualization will not be abl
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

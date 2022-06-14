@@ -548,3 +548,4 @@ Note that the `onCellEditStart` and `onCellEditStop` props also have to be used 
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
