@@ -85,7 +85,7 @@ export const useGridAggregationPreProcessors = (
 
       const hasAggregationRule = Object.keys(aggregationRules).length > 0;
 
-      // If we did not have any aggregation footer before, and we still don't have any
+      // If we did not have any aggregation footer before, and we still don't have any,
       // Then we can skip this step
       if (
         Object.keys(apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration).length ===

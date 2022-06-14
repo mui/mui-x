@@ -114,15 +114,18 @@ export const getAggregationRules = ({
   return aggregationRules;
 };
 
+interface AddFooterRowsParams extends GridHydrateRowsValue {
+  getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
+  /**
+   * If `true`, there are some aggregation rules to apply
+   */
+  hasAggregationRule: boolean;
+}
+
 /**
  * Add a footer for each group that has at least one column with an aggregated value.
  */
-export const addFooterRows = (
-  params: GridHydrateRowsValue & {
-    getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
-    hasAggregationRule: boolean;
-  },
-) => {
+export const addFooterRows = (params: AddFooterRowsParams) => {
   const tree = { ...params.tree };
   const treeDepths = { ...params.treeDepths };
 
