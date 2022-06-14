@@ -21,13 +21,25 @@ const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEq
 const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    color,
+    error,
+    helperText,
+    size,
+    variant,
+    ...other
+  } = props;
   const TextFieldProps = {
-    color: other.color,
-    error: other.error,
-    helperText: other.helperText,
-    size: other.size,
-    variant: other.variant,
+    color,
+    error,
+    helperText,
+    size,
+    variant,
   };
 
   const id = useId();
