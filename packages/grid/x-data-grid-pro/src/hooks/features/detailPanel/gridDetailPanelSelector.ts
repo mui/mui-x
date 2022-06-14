@@ -11,7 +11,7 @@ export const gridDetailPanelExpandedRowsContentCacheSelector = (state: GridState
 export const gridDetailPanelRawHeightCacheSelector = (state: GridStatePro) =>
   state.detailPanel.heightCache;
 
-// TODO v6: Make this selector return the full object, including the autoFlag flag
+// TODO v6: Make this selector return the full object, including the autoHeight flag
 export const gridDetailPanelExpandedRowsHeightCacheSelector = createSelector(
   gridDetailPanelRawHeightCacheSelector,
   (heightCache) =>
