@@ -11,10 +11,10 @@ To use this feature, pass a function to the `getDetailPanelContent` prop with th
 Any valid React element can be used as the row detail, even another grid.
 
 By default, the detail panel height is 500px.
-However, this can be customized by passing a function to the `getDetailPanelHeight` prop.
-This function must return a number or the `"auto"` string.
-Returning a number means that the panel will use as height exactly the value provided.
-With `"auto"`, the height is [derived](#infer-height-from-the-content) from the content.
+You can customize it by passing a function to the `getDetailPanelHeight` prop.
+This function must return either a number or the `"auto"` string.
+If it returns a number, then the panel will use that value (in pixels) for the height.
+If it returns `"auto"`, then the height will be [derived](#infer-height-from-the-content) from the content.
 
 ```tsx
 <DataGridPro
@@ -31,10 +31,10 @@ With `"auto"`, the height is [derived](#infer-height-from-the-content) from the 
 ```
 
 :::info
-Both props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/) object, allowing you to return a different value for each row.
+Both props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/) object, which lets you return a different value for each row.
 :::
 
-To expand a row, click on the `+` icon or press <kbd class="key">Space</kbd> inside the detail toggle column.
+To expand a row, click on the **+** icon or press <kbd class="key">Space</kbd> inside the detail toggle column.
 Returning `null` or `undefined` as the value of `getDetailPanelContent` will prevent the respective row from being expanded.
 
 {{"demo": "BasicDetailPanels.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -69,7 +69,7 @@ For this, pass a function to the `getDetailPanelHeight` prop returning `"auto"`,
 <DataGridPro getDetailPanelHeight={() => 'auto'} />
 ```
 
-The following example demonstrantes this option in action.
+The following example demonstrates this option in action:
 
 {{"demo": "DetailPanelAutoHeight.js", "bg": "inline", "defaultCodeOpen": false}}
 
