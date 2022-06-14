@@ -47,7 +47,7 @@ function buildApplyFilterFn(
 
 export const getGridDateOperators = (
   showTime?: boolean,
-): GridFilterOperator<any, string | number | Date, any>[] => [
+): GridFilterOperator<any, string | Date, any>[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {
