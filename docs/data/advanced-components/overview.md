@@ -157,7 +157,7 @@ This error indicates that your license key doesn't match what was issued by MUI 
 
 #### Invalid license key (Error: extracting license expiry timestamp)
 
-This is a more specific version of the error above. If additionally to the invalid license message, you see an error on the console that looks like:
+This is a more specific situation of the error above. If additionally to the invalid license message, you see an error on the console that looks like:
 
 :::error
 Error extracting license expiry timestamp.
