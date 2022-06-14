@@ -66,7 +66,7 @@ function cacheContentAndHeight(
     const params = apiRef.current.getRowParams(id);
     const height = getDetailPanelHeight(params);
     const autoHeight = height === 'auto';
-    acc[id] = { autoHeight, height: !autoHeight ? height : previousHeightCache[id]?.height };
+    acc[id] = { autoHeight, height: autoHeight ? previousHeightCache[id]?.height : height };
     return acc;
   }, {});
 
