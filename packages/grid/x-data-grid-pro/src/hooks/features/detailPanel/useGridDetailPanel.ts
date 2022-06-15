@@ -288,10 +288,7 @@ export const useGridDetailPanel = (
 
       updateCachesIfNeeded();
 
-      const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(
-        apiRef.current.state,
-        apiRef.current.instanceId,
-      );
+      const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef);
 
       return {
         ...initialValue,
