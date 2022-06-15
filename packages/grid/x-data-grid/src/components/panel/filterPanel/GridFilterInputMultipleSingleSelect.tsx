@@ -9,18 +9,33 @@ import { getValueFromOption } from './filterPanelUtils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 import type { ValueOptions } from '../../../models/colDef/gridColDef';
 
-export type GridFilterInputMultipleSingleSelectProps = {
+export interface GridFilterInputMultipleSingleSelectProps
+  extends Omit<
+    AutocompleteProps<ValueOptions, true, false, true>,
+    | 'options'
+    | 'renderInput'
+    | 'onChange'
+    | 'value'
+    | 'id'
+    | 'filterOptions'
+    | 'isOptionEqualToValue'
+    | 'limitTags'
+    | 'multiple'
+  > {
   item: GridFilterItem;
   applyValue: (value: GridFilterItem) => void;
   apiRef: React.MutableRefObject<GridApiCommon>;
   focusElementRef?: React.Ref<any>;
   type?: 'singleSelect';
-} & Omit<AutocompleteProps<ValueOptions, true, false, true>, 'options' | 'renderInput'>;
+}
 
-const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEqualToValue'] = (
-  option,
-  value,
-) => getValueFromOption(option) === getValueFromOption(value);
+const isOptionEqualToValue: AutocompleteProps<
+  ValueOptions,
+  true,
+  false,
+  true
+>['isOptionEqualToValue'] = (option, value) =>
+  getValueFromOption(option) === getValueFromOption(value);
 
 const filter = createFilterOptions<any>();
 
