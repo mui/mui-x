@@ -2,7 +2,7 @@
 title: Data Grid - Sorting
 ---
 
-# Data Grid - Sorting
+# Data grid - Sorting
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 

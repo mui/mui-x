@@ -140,7 +140,6 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
         checked={isChecked}
         onChange={handleChange}
         className={classes.root}
-        color="primary"
         inputProps={{ 'aria-label': label }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}

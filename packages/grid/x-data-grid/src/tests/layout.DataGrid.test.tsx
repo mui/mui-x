@@ -203,7 +203,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     describe('warnings', () => {
-      it('should warn if the container has no intrinsic height', () => {
+      it('should error if the container has no intrinsic height', () => {
         expect(() => {
           render(
             <div style={{ width: 300, height: 0 }}>
@@ -212,10 +212,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           );
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
-        }).toWarnDev('MUI: useResizeContainer - The parent of the grid has an empty height.');
+        }).toErrorDev(
+          'MUI: useResizeContainer - The parent DOM element of the data grid has an empty height.',
+        );
       });
 
-      it('should warn if the container has no intrinsic width', () => {
+      it('should error if the container has no intrinsic width', () => {
         expect(() => {
           render(
             <div style={{ width: 0 }}>
@@ -226,7 +228,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           );
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
-        }).toWarnDev('MUI: useResizeContainer - The parent of the grid has an empty width.');
+        }).toErrorDev(
+          'MUI: useResizeContainer - The parent DOM element of the data grid has an empty width',
+        );
       });
 
       it('should warn when GridCellParams.valueGetter is called with a missing column', () => {
@@ -254,12 +258,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
     describe('swallow warnings', () => {
       beforeEach(() => {
-        stub(console, 'warn');
+        stub(console, 'error');
       });
 
       afterEach(() => {
         // @ts-expect-error beforeEach side effect
-        console.warn.restore();
+        console.error.restore();
       });
 
       it('should have a stable height if the parent container has no intrinsic height', () => {

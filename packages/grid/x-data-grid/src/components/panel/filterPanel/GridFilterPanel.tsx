@@ -152,7 +152,6 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
             <rootProps.components.BaseButton
               onClick={addNewFilter}
               startIcon={<GridAddIcon />}
-              color="primary"
               {...rootProps.componentsProps?.baseButton}
             >
               {apiRef.current.getLocaleText('filterPanelAddFilter')}

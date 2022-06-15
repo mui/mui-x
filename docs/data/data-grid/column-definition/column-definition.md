@@ -2,7 +2,7 @@
 title: Data Grid - Column definition
 ---
 
-# Data Grid - Column definition
+# Data grid - Column definition
 
 <p class="description">Define your columns.</p>
 
@@ -98,7 +98,6 @@ const columns: GridColDef[] = [
         {params.value.getFullYear()}
         <Button
           variant="contained"
-          color="primary"
           size="small"
           style={{ marginLeft: 16 }}
           tabIndex={params.hasFocus ? 0 : -1}

@@ -270,7 +270,7 @@ export type GridEnrichedColDef<R extends GridValidRowModel = any, V = any, F = V
 
 export type GridColumns<R extends GridValidRowModel = any> = GridEnrichedColDef<R>[];
 
-export type GridColTypeDef<V = any, F = V> = Omit<GridColDef<V, any, F>, 'field'> & {
+export type GridColTypeDef<V = any, F = V> = Omit<GridColDef<any, V, F>, 'field'> & {
   extendType?: GridNativeColTypes;
 };
 

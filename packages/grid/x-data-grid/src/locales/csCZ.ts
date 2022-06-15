@@ -169,6 +169,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Přestat zoskupovat podle ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 
