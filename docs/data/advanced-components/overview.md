@@ -90,7 +90,7 @@ When you purchase a commercial license, you'll receive your license key by email
 This key removes all watermarks and console warnings.
 
 :::warning
-⚠️ Licenses purchased after **May 13, 2022** are only compatible with MUI X version `5.11` or later.
+Licenses purchased after **May 13, 2022** are only compatible with MUI X version `5.11` or later.
 
 Please update your packages if you are using an earlier version.
 
