@@ -170,7 +170,6 @@ export default function FullFeaturedCrudGrid() {
               icon={<SaveIcon />}
               label="Save"
               onClick={handleSaveClick(id)}
-              color="primary"
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}

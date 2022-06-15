@@ -217,12 +217,7 @@ function SettingsPanel(props) {
           <MenuItem value="ant">Ant Design</MenuItem>
         </Select>
       </FormControl>
-      <Button
-        size="small"
-        variant="outlined"
-        color="primary"
-        onClick={handleApplyChanges}
-      >
+      <Button size="small" variant="outlined" onClick={handleApplyChanges}>
         <KeyboardArrowRightIcon fontSize="small" /> Apply
       </Button>
     </FormGroup>

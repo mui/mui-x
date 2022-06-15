@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
@@ -35,7 +35,7 @@ function ApiDocs(props) {
   const { api } = props;
 
   return (
-    <Box sx={{ width: 1 }}>
+    <Box sx={{ width: '100%' }}>
       {api.properties.map((property, index) => (
         <Accordion key={index}>
           <AccordionSummary
