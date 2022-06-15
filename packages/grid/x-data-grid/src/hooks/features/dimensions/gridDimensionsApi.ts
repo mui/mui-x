@@ -19,7 +19,7 @@ export interface GridDimensions {
   hasScrollY: boolean;
   /**
    * Size of the scrollbar used to scroll the rows in pixel.
-   * Is defined even when the scrollbar is currently not needed.
+   * It is defined even when the scrollbar is currently not needed.
    */
   scrollBarSize: number;
 }
