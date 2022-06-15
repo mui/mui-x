@@ -244,7 +244,7 @@
   { "name": "GridFilterInputDate", "kind": "Function" },
   { "name": "GridFilterInputDateProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputMultipleSingleSelect", "kind": "Function" },
-  { "name": "GridFilterInputMultipleSingleSelectProps", "kind": "TypeAlias" },
+  { "name": "GridFilterInputMultipleSingleSelectProps", "kind": "Interface" },
   { "name": "GridFilterInputMultipleValue", "kind": "Function" },
   { "name": "GridFilterInputMultipleValueProps", "kind": "TypeAlias" },
   { "name": "GridFilterInputSingleSelect", "kind": "Function" },
