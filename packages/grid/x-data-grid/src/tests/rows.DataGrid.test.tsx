@@ -507,10 +507,9 @@ describe('<DataGrid /> - Rows', () => {
       const originalResizeObserver = window.ResizeObserver;
 
       beforeEach(() => {
-        if (
-          window.navigator.userAgent.includes('Chrome') &&
-          !window.navigator.userAgent.includes('Headless')
-        ) {
+        const { userAgent } = window.navigator;
+
+        if (userAgent.includes('Chrome') && !userAgent.includes('Headless')) {
           // Only use the mock in non-headless Chrome
           window.ResizeObserver = ResizeObserverMock as any;
         }
