@@ -1,0 +1,9 @@
+<DataGridPro
+  {...data}
+  hideFooterPagination
+  rowCount={50}
+  sortingMode="server"
+  filterMode="server"
+  rowsLoadingMode="server"
+  onFetchRows={handleFetchRows}
+/>

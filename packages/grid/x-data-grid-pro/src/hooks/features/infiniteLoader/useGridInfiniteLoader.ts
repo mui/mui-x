@@ -7,6 +7,7 @@ import {
   useGridApiOptionHandler,
   gridVisibleColumnDefinitionsSelector,
   gridRowsMetaSelector,
+  GridFeatureModeConstant,
 } from '@mui/x-data-grid';
 import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import { GridRowScrollEndParams } from '../../../models';
@@ -22,7 +23,7 @@ export const useGridInfiniteLoader = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'
+    'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode' | 'rowsLoadingMode'
   >,
 ): void => {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
@@ -35,7 +36,9 @@ export const useGridInfiniteLoader = (
   const handleRowsScrollEnd = React.useCallback(
     (scrollPosition: GridScrollParams) => {
       const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
+
+      // Prevent the infite loading working in combination with lazy loading
+      if (!dimensions || props.rowsLoadingMode !== GridFeatureModeConstant.client) {
         return;
       }
 
@@ -59,7 +62,14 @@ export const useGridInfiniteLoader = (
         isInScrollBottomArea.current = true;
       }
     },
-    [contentHeight, props.scrollEndThreshold, visibleColumns, apiRef, currentPage.rows.length],
+    [
+      contentHeight,
+      props.scrollEndThreshold,
+      props.rowsLoadingMode,
+      visibleColumns,
+      apiRef,
+      currentPage.rows.length,
+    ],
   );
 
   const handleGridScroll = React.useCallback<GridEventListener<'rowsScroll'>>(

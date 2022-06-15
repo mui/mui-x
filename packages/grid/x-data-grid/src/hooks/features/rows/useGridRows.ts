@@ -12,6 +12,7 @@ import {
   gridRowTreeSelector,
   gridRowIdsSelector,
   gridRowGroupingNameSelector,
+  gridRowsIdToIdLookupSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -158,7 +159,7 @@ export const useGridRows = (
       }
 
       // we remove duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
-      const uniqUpdates = new Map<GridRowId, GridRowModel>();
+      const uniqueUpdates = new Map<GridRowId, GridRowModel>();
 
       updates.forEach((update) => {
         const id = getRowIdFromRowModel(
@@ -167,10 +168,10 @@ export const useGridRows = (
           'A row was provided without id when calling updateRows():',
         );
 
-        if (uniqUpdates.has(id)) {
-          uniqUpdates.set(id, { ...uniqUpdates.get(id), ...update });
+        if (uniqueUpdates.has(id)) {
+          uniqueUpdates.set(id, { ...uniqueUpdates.get(id), ...update });
         } else {
-          uniqUpdates.set(id, update);
+          uniqueUpdates.set(id, update);
         }
       });
 
@@ -185,7 +186,7 @@ export const useGridRows = (
         ids: [...prevCache.ids],
       };
 
-      uniqUpdates.forEach((partialRow, id) => {
+      uniqueUpdates.forEach((partialRow, id) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
           delete newCache.idRowsLookup[id];
@@ -325,6 +326,63 @@ export const useGridRows = (
     [apiRef, logger],
   );
 
+  const replaceRows = React.useCallback<GridRowApi['replaceRows']>(
+    (firstRowToRender, lastRowToRender, newRows) => {
+      if (props.signature === GridSignature.DataGrid) {
+        throw new Error(
+          [
+            "MUI: You can't replace rows using `apiRef.current.replaceRows` on the DataGrid.",
+            'You need to upgrade to the DataGridPro component to unlock this feature.',
+          ].join('\n'),
+        );
+      }
+
+      const newRowsIds = newRows.map((row) => row.id);
+      const allRows = gridRowIdsSelector(apiRef);
+      const updatedRows = [...allRows];
+      updatedRows.splice(firstRowToRender, lastRowToRender - firstRowToRender, ...newRowsIds);
+
+      const idRowsLookup = gridRowsLookupSelector(apiRef);
+      const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+      const tree = gridRowTreeSelector(apiRef);
+      const updatedIdRowsLookup = { ...idRowsLookup };
+      const updatedIdToIdLookup = { ...idToIdLookup };
+      const updatedTree = { ...tree };
+      const rowIdsToBeReplaced = allRows.slice(firstRowToRender, lastRowToRender);
+      rowIdsToBeReplaced.forEach((id) => {
+        delete updatedIdRowsLookup[id];
+        delete updatedIdToIdLookup[id];
+        delete updatedTree[id];
+      });
+
+      const newIdRowsLookup = newRows.reduce(
+        (acc, row) => Object.assign(acc, { [row.id]: row }),
+        updatedIdRowsLookup,
+      );
+      const newIdToIdLookup = newRows.reduce(
+        (acc, row) => Object.assign(acc, { [row.id]: row.id }),
+        updatedIdToIdLookup,
+      );
+      const newTree = newRows.reduce(
+        (acc, row) => Object.assign(acc, { [row.id]: row }),
+        updatedTree,
+      );
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          idRowsLookup: newIdRowsLookup,
+          idToIdLookup: newIdToIdLookup,
+          tree: newTree,
+          ids: updatedRows,
+        },
+      }));
+      apiRef.current.applySorting();
+    },
+    [apiRef, props.signature],
+  );
+
   const rowApi: GridRowApi = {
     getRow,
     getRowModels,
@@ -337,6 +395,7 @@ export const useGridRows = (
     getRowNode,
     getRowIndexRelativeToVisibleRows,
     getRowGroupChildren,
+    replaceRows,
   };
 
   /**

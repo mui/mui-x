@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import {
   useDemoData,
-  getRealData,
+  getRealGridData,
   getCommodityColumns,
 } from '@mui/x-data-grid-generator';
 
@@ -15,7 +15,7 @@ async function sleep(duration) {
 }
 
 const loadServerRows = async (newRowLength) => {
-  const newData = await getRealData(newRowLength, getCommodityColumns());
+  const newData = await getRealGridData(newRowLength, getCommodityColumns());
   // Simulate network throttle
   await sleep(Math.random() * 100 + 100);
 
@@ -29,14 +29,16 @@ export default function LazyLoadingGrid() {
     maxColumns: 6,
   });
 
-  const handleFetchRows = async (params) => {
-    const newRowsBatch = await loadServerRows(params.viewportPageSize);
+  const handleFetchRows = async (params, event, details) => {
+    const newRowsBatch = await loadServerRows(
+      params.lastRowToRender - params.firstRowToRender,
+    );
 
-    params.api.current.insertRows({
-      startIndex: params.startIndex,
-      pageSize: params.viewportPageSize,
-      newRows: newRowsBatch,
-    });
+    details.api.replaceRows(
+      params.firstRowToRender,
+      params.lastRowToRender,
+      newRowsBatch,
+    );
   };
 
   return (

@@ -94,4 +94,15 @@ export interface GridRowApi {
    * @returns {GridRowId[]} The id of each row in the grouping criteria.
    */
   getRowGroupChildren: (params: GridRowGroupChildrenGetterParams) => GridRowId[];
+  /**
+   * Replace a set of rows with new rows.
+   * @param {number} firstRowToReplace The index of the first row to be replaced.
+   * @param {number} lastRowToReplace The index of the last row to be replaced.
+   * @param {GridRowModel[]} newRows The new rows.
+   */
+  replaceRows: (
+    firstRowToReplace: number,
+    lastRowToReplace: number,
+    newRows: GridRowModel[],
+  ) => void;
 }

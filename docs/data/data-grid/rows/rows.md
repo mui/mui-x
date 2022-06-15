@@ -26,6 +26,7 @@ When using dataset without a unique `id` property, you can use the `getRowId` pr
 ```tsx
 <DataGrid getRowId={(row) => row.internalId} />
 ```
+
 :::
 
 <!-- {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}} -->

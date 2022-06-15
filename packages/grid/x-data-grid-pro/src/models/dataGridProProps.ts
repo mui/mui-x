@@ -22,7 +22,6 @@ import {
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
-import { GridFetchRowsParams } from './gridFetchRowsParams';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
@@ -204,7 +203,8 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
+   * * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onFetchRows?: (params: GridFetchRowsParams, details: GridCallbackDetails) => void;
+  onFetchRows?: GridEventListener<'fetchRows'>;
 }

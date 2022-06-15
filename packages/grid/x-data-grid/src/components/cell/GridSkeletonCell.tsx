@@ -16,19 +16,10 @@ const SkeletonCell = styled('div')(({ theme }) => ({
 }));
 
 function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkeletonCellProps) {
-  const {
-    field,
-    align,
-    width,
-    contentWidth,
-    ...other
-  } = props;
+  const { field, align, width, contentWidth, ...other } = props;
 
   return (
-    <SkeletonCell
-      sx={{ justifyContent: align, width }}
-      {...other}
-    >
+    <SkeletonCell sx={{ justifyContent: align, width }} {...other}>
       <Skeleton sx={{ mx: 1 }} width={`${contentWidth}%`} />
     </SkeletonCell>
   );

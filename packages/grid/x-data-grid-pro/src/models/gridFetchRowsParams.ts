@@ -1,17 +1,17 @@
-import { GridFilterModel, GridSortModel } from "@mui/x-data-grid/models";
+import { GridFilterModel, GridSortModel } from '@mui/x-data-grid/models';
 
 /**
  * Object passed as parameter to the [[onFetchRows]] option.
  */
 export interface GridFetchRowsParams {
   /**
-   * The start index from which rows needs to be loaded.
+   * The index of the first row to render
    */
-  startIndex: number;
+  firstRowToRender: number;
   /**
-   * The viewport page size.
+   * The index of the last row to render
    */
-  viewportPageSize: number;
+  lastRowToRender: number;
   /**
    * The sort model used to sort the grid.
    */
@@ -20,8 +20,4 @@ export interface GridFetchRowsParams {
    * The filter model.
    */
   filterModel: GridFilterModel;
-  /**
-   * GridApiRef that let you manipulate the grid.
-   */
-  api: any;
 }

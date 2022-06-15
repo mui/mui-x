@@ -156,6 +156,12 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "name": "fetchRows",
+    "description": "Fired when a new batch of rows is requested to be loaded. Called with a GridFetchRowsParams object.",
+    "params": "GridFetchRowsParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "filterModelChange",
     "description": "Fired when the filter model changes.",
     "params": "GridFilterModel",
@@ -201,6 +207,12 @@
     "name": "preferencePanelOpen",
     "description": "Fired when the preference panel is opened.",
     "params": "GridPreferencePanelParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "renderedRowsIntervalChange",
+    "description": "Fired when the rendered rows index interval changes. Called with a GridRenderedRowsIntervalChangeParams object.",
+    "params": "GridRenderedRowsIntervalChangeParams",
     "event": "MuiEvent<{}>"
   },
   {

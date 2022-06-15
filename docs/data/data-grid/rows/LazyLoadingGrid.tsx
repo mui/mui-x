@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GridFetchRowsParams, DataGridPro } from '@mui/x-data-grid-pro';
+import {
+  GridFetchRowsParams,
+  DataGridPro,
+  GridCallbackDetails,
+  MuiEvent,
+} from '@mui/x-data-grid-pro';
 import {
   useDemoData,
   getRealGridData,
@@ -29,14 +34,20 @@ export default function LazyLoadingGrid() {
     maxColumns: 6,
   });
 
-  const handleFetchRows = async (params: GridFetchRowsParams) => {
-    const newRowsBatch = await loadServerRows(params.viewportPageSize);
+  const handleFetchRows = async (
+    params: GridFetchRowsParams,
+    event: MuiEvent,
+    details: GridCallbackDetails,
+  ) => {
+    const newRowsBatch = await loadServerRows(
+      params.lastRowToRender - params.firstRowToRender,
+    );
 
-    params.api.current.insertRows({
-      startIndex: params.startIndex,
-      pageSize: params.viewportPageSize,
-      newRows: newRowsBatch,
-    });
+    details.api.replaceRows(
+      params.firstRowToRender,
+      params.lastRowToRender,
+      newRowsBatch,
+    );
   };
 
   return (
