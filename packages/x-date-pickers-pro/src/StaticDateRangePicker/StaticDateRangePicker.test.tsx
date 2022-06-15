@@ -4,11 +4,7 @@ import { isWeekend } from 'date-fns';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { describeConformance, screen } from '@mui/monorepo/test/utils';
-import {
-  wrapPickerMount,
-  createPickerRenderer,
-  adapterToUse,
-} from '../../../../test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
   <React.Fragment>
@@ -50,13 +46,10 @@ describe('<StaticDateRangePicker />', () => {
     render(
       <StaticDateRangePicker
         renderInput={defaultRangeRenderInput}
-        minDate={adapterToUse.date('2005-01-01T00:00:00.000')}
+        minDate={new Date(2005, 0, 1)}
         shouldDisableDate={isWeekend}
         onChange={() => {}}
-        value={[
-          adapterToUse.date('2018-01-01T00:00:00.000'),
-          adapterToUse.date('2018-01-31T00:00:00.000'),
-        ]}
+        value={[new Date(2018, 0, 1), new Date(2018, 0, 31)]}
       />,
     );
 
@@ -72,10 +65,7 @@ describe('<StaticDateRangePicker />', () => {
       <StaticDateRangePicker
         renderInput={defaultRangeRenderInput}
         onChange={() => {}}
-        value={[
-          adapterToUse.date('2018-01-01T00:00:00.000'),
-          adapterToUse.date('2018-01-31T00:00:00.000'),
-        ]}
+        value={[new Date(2018, 0, 1), new Date(2018, 0, 31)]}
       />,
     );
 

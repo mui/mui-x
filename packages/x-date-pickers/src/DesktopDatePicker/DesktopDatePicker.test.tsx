@@ -9,7 +9,6 @@ import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import {
   createPickerRenderer,
   FakeTransitionComponent,
-  adapterToUse,
   withPickerControls,
   openPicker,
 } from '../../../../test/utils/pickers-utils';
@@ -51,7 +50,7 @@ describe('<DesktopDatePicker />', () => {
       const handleOpen = spy();
       render(
         <DesktopDatePicker
-          value={adapterToUse.date('2019-01-01T00:00:00.000')}
+          value={new Date(2019, 0, 1)}
           {...{ [prop]: true }}
           onChange={() => {}}
           onOpen={handleOpen}
@@ -120,7 +119,7 @@ describe('<DesktopDatePicker />', () => {
         showToolbar
         onChange={() => {}}
         TransitionComponent={FakeTransitionComponent}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
+        value={new Date(2018, 0, 1)}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
@@ -136,7 +135,7 @@ describe('<DesktopDatePicker />', () => {
         showToolbar
         onChange={() => {}}
         TransitionComponent={FakeTransitionComponent}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
+        value={new Date(2018, 0, 1)}
         renderInput={(params) => <TextField {...params} />}
         onViewChange={handleViewChange}
       />,
@@ -255,7 +254,7 @@ describe('<DesktopDatePicker />', () => {
           <React.Fragment>
             <div style={{ height: '200vh' }}>Spacer</div>
             <DesktopDatePicker
-              value={adapterToUse.date('2018-01-01T00:00:00.000')}
+              value={new Date(2018, 0, 1)}
               OpenPickerButtonProps={{ ref: anchorElRef }}
               onChange={() => {}}
               onClose={handleClose}
@@ -293,7 +292,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+      const initialValue = new Date(2018, 0, 1);
 
       render(
         <WrappedDesktopDatePicker
@@ -313,9 +312,7 @@ describe('<DesktopDatePicker />', () => {
       // Change the date
       fireEvent.click(screen.getByLabelText('Jan 8, 2018'));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2018-01-08T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
     });
@@ -324,7 +321,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+      const initialValue = new Date(2018, 0, 1);
 
       render(
         <WrappedDesktopDatePicker
@@ -341,18 +338,14 @@ describe('<DesktopDatePicker />', () => {
       // Change the date
       userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2018-01-08T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the date
       userEvent.mousePress(screen.getByLabelText('Jan 6, 2018'));
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2018-01-06T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 6));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
@@ -361,7 +354,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+      const initialValue = new Date(2018, 0, 1);
 
       render(
         <WrappedDesktopDatePicker
@@ -383,9 +376,7 @@ describe('<DesktopDatePicker />', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2018-01-08T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -393,7 +384,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+      const initialValue = new Date(2018, 0, 1);
 
       render(
         <WrappedDesktopDatePicker
@@ -418,7 +409,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+      const initialValue = new Date(2018, 0, 1);
 
       render(
         <WrappedDesktopDatePicker
@@ -439,9 +430,7 @@ describe('<DesktopDatePicker />', () => {
       userEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2018-01-08T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -449,7 +438,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+      const initialValue = new Date(2018, 0, 1);
 
       render(
         <WrappedDesktopDatePicker
@@ -472,7 +461,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+      const initialValue = new Date(2018, 0, 1);
 
       render(
         <WrappedDesktopDatePicker
@@ -496,7 +485,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = adapterToUse.date('2018-01-01T00:00:00.000');
+      const initialValue = new Date(2018, 0, 1);
 
       render(
         <WrappedDesktopDatePicker
@@ -553,7 +542,7 @@ describe('<DesktopDatePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          initialValue={adapterToUse.date('2018-01-01T00:00:00.000')}
+          initialValue={new Date(2018, 0, 1)}
         />,
       );
 
@@ -576,7 +565,7 @@ describe('<DesktopDatePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          initialValue={adapterToUse.date('2018-01-01T00:00:00.000')}
+          initialValue={new Date(2018, 0, 1)}
           openTo="year"
         />,
       );
@@ -586,9 +575,7 @@ describe('<DesktopDatePicker />', () => {
       // Select year
       userEvent.mousePress(screen.getByRole('button', { name: '2025' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2025-01-01T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
@@ -596,9 +583,7 @@ describe('<DesktopDatePicker />', () => {
       userEvent.mousePress(screen.getByLabelText('Jan 1, 2025'));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2025-01-01T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onClose.callCount).to.equal(1);
     });
   });

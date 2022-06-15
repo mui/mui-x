@@ -48,14 +48,14 @@ describe('<ClockPicker />', () => {
   });
 
   it('has a name depending on the `date`', () => {
-    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
+    render(<ClockPicker date={new Date(2019, 0, 1, 4, 20)} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveAccessibleName('Select hours. Selected time is 4:20 AM');
   });
 
   it('renders the current value as an accessible option', () => {
-    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
+    render(<ClockPicker date={new Date(2019, 0, 1, 4, 20)} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     const selectedOption = within(listbox).getByRole('option', { selected: true });
@@ -82,7 +82,7 @@ describe('<ClockPicker />', () => {
   });
 
   it('selects the current date on mount', () => {
-    render(<ClockPicker date={adapterToUse.date('2019-01-01T04:20:00.000')} onChange={() => {}} />);
+    render(<ClockPicker date={new Date(2019, 0, 1, 4, 20)} onChange={() => {}} />);
 
     const selectedOption = screen.getByRole('option', { selected: true });
     expect(selectedOption).toHaveAccessibleName('4 hours');
@@ -90,13 +90,7 @@ describe('<ClockPicker />', () => {
 
   it('selects the first hour on Home press', () => {
     const handleChange = spy();
-    render(
-      <ClockPicker
-        autoFocus
-        date={adapterToUse.date('2019-01-01T04:20:00.000')}
-        onChange={handleChange}
-      />,
-    );
+    render(<ClockPicker autoFocus date={new Date(2019, 0, 1, 4, 20)} onChange={handleChange} />);
     const listbox = screen.getByRole('listbox');
 
     fireEvent.keyDown(listbox, { key: 'Home' });
@@ -104,7 +98,7 @@ describe('<ClockPicker />', () => {
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
     // TODO: Can't find the GH issue regarding this
-    // expect(newDate).toEqualDateTime(adapterToUse.date('2019-01-01T00:20:00.000'));
+    // expect(newDate).toEqualDateTime(new Date(2019, 0, 1, 0, 20));
     // but the year, mont, day is different
     expect(adapterToUse.getHours(newDate)).to.equal(0);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
@@ -113,13 +107,7 @@ describe('<ClockPicker />', () => {
 
   it('selects the last hour on End press', () => {
     const handleChange = spy();
-    render(
-      <ClockPicker
-        autoFocus
-        date={adapterToUse.date('2019-01-01T04:20:00.000')}
-        onChange={handleChange}
-      />,
-    );
+    render(<ClockPicker autoFocus date={new Date(2019, 0, 1, 4, 20)} onChange={handleChange} />);
     const listbox = screen.getByRole('listbox');
 
     fireEvent.keyDown(listbox, { key: 'End' });
@@ -133,13 +121,7 @@ describe('<ClockPicker />', () => {
 
   it('selects the next hour on ArrowUp press', () => {
     const handleChange = spy();
-    render(
-      <ClockPicker
-        autoFocus
-        date={adapterToUse.date('2019-01-01T04:20:00.000')}
-        onChange={handleChange}
-      />,
-    );
+    render(<ClockPicker autoFocus date={new Date(2019, 0, 1, 4, 20)} onChange={handleChange} />);
     const listbox = screen.getByRole('listbox');
 
     fireEvent.keyDown(listbox, { key: 'ArrowUp' });
@@ -153,13 +135,7 @@ describe('<ClockPicker />', () => {
 
   it('selects the previous hour on ArrowDown press', () => {
     const handleChange = spy();
-    render(
-      <ClockPicker
-        autoFocus
-        date={adapterToUse.date('2019-01-01T04:20:00.000')}
-        onChange={handleChange}
-      />,
-    );
+    render(<ClockPicker autoFocus date={new Date(2019, 0, 1, 4, 20)} onChange={handleChange} />);
     const listbox = screen.getByRole('listbox');
 
     fireEvent.keyDown(listbox, { key: 'ArrowDown' });
@@ -177,7 +153,7 @@ describe('<ClockPicker />', () => {
     render(
       <ClockPicker
         autoFocus
-        date={adapterToUse.date('2019-01-01T18:20:00.000')}
+        date={new Date(2019, 0, 1, 18, 20)}
         onChange={() => {}}
         shouldDisableTime={shouldDisableTime}
         ampm
@@ -208,13 +184,7 @@ describe('<ClockPicker />', () => {
       ],
     };
     const onChangeMock = spy();
-    render(
-      <ClockPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={onChangeMock}
-        readOnly
-      />,
-    );
+    render(<ClockPicker date={new Date(2019, 0, 1)} onChange={onChangeMock} readOnly />);
 
     fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
     expect(onChangeMock.callCount).to.equal(0);
@@ -242,13 +212,7 @@ describe('<ClockPicker />', () => {
       ],
     };
     const onChangeMock = spy();
-    render(
-      <ClockPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
-        onChange={onChangeMock}
-        disabled
-      />,
-    );
+    render(<ClockPicker date={new Date(2019, 0, 1)} onChange={onChangeMock} disabled />);
 
     fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
     expect(onChangeMock.callCount).to.equal(0);
@@ -310,9 +274,9 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date('2018-01-01T00:00:00.000')}
-          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
-          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          date={new Date(2018, 0, 1)}
+          minTime={new Date(2018, 0, 1, 12, 15)}
+          maxTime={new Date(2018, 0, 1, 15, 45, 30)}
           onChange={handleChange}
           onViewChange={handleViewChange}
         />,
@@ -322,7 +286,7 @@ describe('<ClockPicker />', () => {
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
-      expect(date).toEqualDateTime(adapterToUse.date('2018-01-01T13:00:00.000'));
+      expect(date).toEqualDateTime(new Date(2018, 0, 1, 13));
       expect(selectionState).to.equal('shallow');
       expect(handleViewChange.callCount).to.equal(0);
     });
@@ -333,9 +297,9 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date('2018-01-01T13:00:00.000')}
-          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
-          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          date={new Date(2018, 0, 1, 13)}
+          minTime={new Date(2018, 0, 1, 12, 15)}
+          maxTime={new Date(2018, 0, 1, 15, 45, 30)}
           onChange={handleChange}
           onViewChange={handleViewChange}
           view="minutes"
@@ -346,7 +310,7 @@ describe('<ClockPicker />', () => {
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
-      expect(date).toEqualDateTime(adapterToUse.date('2018-01-01T13:20:00.000'));
+      expect(date).toEqualDateTime(new Date(2018, 0, 1, 13, 20));
       expect(selectionState).to.equal('shallow');
       expect(handleViewChange.callCount).to.equal(0);
     });
@@ -356,9 +320,9 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date('2018-01-01T20:00:00.000')}
-          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
-          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          date={new Date(2018, 0, 1, 20)}
+          minTime={new Date(2018, 0, 1, 12, 15)}
+          maxTime={new Date(2018, 0, 1, 15, 45, 30)}
           onChange={handleChange}
           view="minutes"
         />,
@@ -375,8 +339,8 @@ describe('<ClockPicker />', () => {
         <ClockPicker
           ampm={false}
           date={null}
-          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
-          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          minTime={new Date(2018, 0, 1, 12, 15)}
+          maxTime={new Date(2018, 0, 1, 15, 45, 30)}
           onChange={handleChange}
           view="minutes"
         />,
@@ -392,9 +356,9 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date('2018-01-01T13:00:00.000')}
-          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
-          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          date={new Date(2018, 0, 1, 13)}
+          minTime={new Date(2018, 0, 1, 12, 15)}
+          maxTime={new Date(2018, 0, 1, 15, 45, 30)}
           onChange={handleChange}
           view="hours"
         />,
@@ -411,8 +375,8 @@ describe('<ClockPicker />', () => {
         <ClockPicker
           ampm={false}
           date={null}
-          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
-          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          minTime={new Date(2018, 0, 1, 12, 15)}
+          maxTime={new Date(2018, 0, 1, 15, 45, 30)}
           onChange={handleChange}
           view="hours"
         />,
@@ -427,7 +391,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date('2018-01-01T13:20:00.000')}
+          date={new Date(2018, 0, 1, 13, 20)}
           minutesStep={15}
           onChange={() => {}}
           view="minutes"
@@ -444,9 +408,9 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date('2018-01-01T13:20:00.000')}
-          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
-          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          date={new Date(2018, 0, 1, 13, 20)}
+          minTime={new Date(2018, 0, 1, 12, 15)}
+          maxTime={new Date(2018, 0, 1, 15, 45, 30)}
           onChange={handleChange}
           onViewChange={handleViewChange}
           view="seconds"
@@ -457,7 +421,7 @@ describe('<ClockPicker />', () => {
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
-      expect(date).toEqualDateTime(adapterToUse.date('2018-01-01T13:20:10.000'));
+      expect(date).toEqualDateTime(new Date(2018, 0, 1, 13, 20, 10));
       expect(selectionState).to.equal('shallow');
       expect(handleViewChange.callCount).to.equal(0);
     });
@@ -467,9 +431,9 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date('2018-01-01T00:00:00.000')}
-          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
-          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          date={new Date(2018, 0, 1)}
+          minTime={new Date(2018, 0, 1, 12, 15)}
+          maxTime={new Date(2018, 0, 1, 15, 45, 30)}
           onChange={handleChange}
           view="seconds"
         />,
@@ -486,8 +450,8 @@ describe('<ClockPicker />', () => {
         <ClockPicker
           ampm={false}
           date={null}
-          minTime={adapterToUse.date('2018-01-01T12:15:00.000')}
-          maxTime={adapterToUse.date('2018-01-01T15:45:30.000')}
+          minTime={new Date(2018, 0, 1, 12, 15)}
+          maxTime={new Date(2018, 0, 1, 15, 45, 30)}
           onChange={handleChange}
           view="seconds"
         />,
@@ -503,11 +467,7 @@ describe('<ClockPicker />', () => {
     it('if value is provided, keeps minutes and seconds when changing hour', () => {
       const handleChange = spy();
       render(
-        <ClockPicker
-          autoFocus
-          date={adapterToUse.date('2019-01-01T04:19:47.000')}
-          onChange={handleChange}
-        />,
+        <ClockPicker autoFocus date={new Date(2019, 0, 1, 4, 19, 47)} onChange={handleChange} />,
       );
       const listbox = screen.getByRole('listbox');
 

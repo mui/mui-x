@@ -9,7 +9,6 @@ import {
   createPickerRenderer,
   withPickerControls,
   FakeTransitionComponent,
-  adapterToUse,
   openPicker,
 } from '../../../../test/utils/pickers-utils';
 
@@ -78,10 +77,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
-      ];
+      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
 
       render(
         <WrappedMobileDateRangePicker
@@ -101,20 +97,14 @@ describe('<MobileDateRangePicker />', () => {
       // Change the start date
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
 
       // Change the end date
       userEvent.mousePress(screen.getByLabelText('Jan 5, 2018'));
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-05T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -124,10 +114,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
-      ];
+      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
 
       render(
         <WrappedMobileDateRangePicker
@@ -148,9 +135,7 @@ describe('<MobileDateRangePicker />', () => {
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
@@ -158,10 +143,7 @@ describe('<MobileDateRangePicker />', () => {
     it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', () => {
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
-      ];
+      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
 
       render(
         <WrappedMobileDateRangePicker
@@ -179,9 +161,7 @@ describe('<MobileDateRangePicker />', () => {
 
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -189,10 +169,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
-      ];
+      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
 
       render(
         <WrappedMobileDateRangePicker
@@ -222,10 +199,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
-      ];
+      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
 
       render(
         <WrappedMobileDateRangePicker
@@ -245,9 +219,7 @@ describe('<MobileDateRangePicker />', () => {
       userEvent.mousePress(screen.getByText(/ok/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
       expect(onClose.callCount).to.equal(1);
     });
@@ -256,10 +228,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
-      ];
+      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
 
       render(
         <WrappedMobileDateRangePicker

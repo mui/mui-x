@@ -14,8 +14,8 @@ describe('<MonthPicker />', () => {
 
   describeConformance(
     <MonthPicker
-      minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
-      maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
+      minDate={new Date(2019, 0, 1)}
+      maxDate={new Date(2029, 0, 1)}
       date={adapterToUse.date()}
       onChange={() => {}}
     />,
@@ -41,9 +41,9 @@ describe('<MonthPicker />', () => {
     const onChangeMock = spy();
     render(
       <MonthPicker
-        minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
-        maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-        date={adapterToUse.date('2019-02-02T00:00:00.000')}
+        minDate={new Date(2019, 0, 1)}
+        maxDate={new Date(2029, 0, 1)}
+        date={new Date(2019, 1, 2)}
         onChange={onChangeMock}
       />,
     );
@@ -56,9 +56,9 @@ describe('<MonthPicker />', () => {
     const onChangeMock = spy();
     render(
       <MonthPicker
-        minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
-        maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-        date={adapterToUse.date('2019-02-02T00:00:00.000')}
+        minDate={new Date(2019, 0, 1)}
+        maxDate={new Date(2029, 0, 1)}
+        date={new Date(2019, 1, 2)}
         onChange={onChangeMock}
         readOnly
       />,
@@ -79,9 +79,9 @@ describe('<MonthPicker />', () => {
     render(
       <form onSubmit={onSubmitMock}>
         <MonthPicker
-          minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
-          maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-          date={adapterToUse.date('2019-02-02T00:00:00.000')}
+          minDate={new Date(2019, 0, 1)}
+          maxDate={new Date(2029, 0, 1)}
+          date={new Date(2019, 1, 2)}
           onChange={() => {}}
         />
       </form>,
@@ -94,13 +94,7 @@ describe('<MonthPicker />', () => {
   describe('Disabled', () => {
     it('should disable all months if props.disabled = true', () => {
       const onChange = spy();
-      render(
-        <MonthPicker
-          date={adapterToUse.date('2019-02-15T00:00:00.000')}
-          onChange={onChange}
-          disabled
-        />,
-      );
+      render(<MonthPicker date={new Date(2019, 1, 15)} onChange={onChange} disabled />);
 
       screen.getAllByRole('button').forEach((monthButton) => {
         expect(monthButton).to.have.attribute('disabled');
@@ -113,9 +107,9 @@ describe('<MonthPicker />', () => {
       const onChange = spy();
       render(
         <MonthPicker
-          date={adapterToUse.date('2019-02-15T00:00:00.000')}
+          date={new Date(2019, 1, 15)}
           onChange={onChange}
-          minDate={adapterToUse.date('2019-02-12T00:00:00.000')}
+          minDate={new Date(2019, 1, 12)}
         />,
       );
 
@@ -136,9 +130,9 @@ describe('<MonthPicker />', () => {
       const onChange = spy();
       render(
         <MonthPicker
-          date={adapterToUse.date('2019-02-15T00:00:00.000')}
+          date={new Date(2019, 1, 15)}
           onChange={onChange}
-          maxDate={adapterToUse.date('2019-04-12T00:00:00.000')}
+          maxDate={new Date(2019, 3, 12)}
         />,
       );
 
@@ -159,7 +153,7 @@ describe('<MonthPicker />', () => {
       const onChange = spy();
       render(
         <MonthPicker
-          date={adapterToUse.date('2019-02-02T00:00:00.000')}
+          date={new Date(2019, 1, 2)}
           onChange={onChange}
           shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 3}
         />,
