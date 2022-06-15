@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridProProps,
   GridRowParams,
@@ -19,7 +19,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Detail panel', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = ({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) => {
     apiRef = useGridApiRef();
@@ -389,6 +389,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     fireEvent.click(getCell(1, 0).querySelector('button'));
     expect(screen.queryByText('Detail').offsetWidth).to.equal(50 + 400);
+  });
+
+  it('should add an accessible name to the toggle column', () => {
+    render(<TestCase getDetailPanelContent={() => <div />} />);
+    expect(screen.queryByRole('columnheader', { name: /detail panel toggle/i })).not.to.equal(null);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {

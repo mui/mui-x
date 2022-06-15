@@ -88,7 +88,7 @@ You can import `GridColDef` to see all column properties.
 Putting it together, this is all you need to get started, as you can see in this live and interactive demo:
 
 ```tsx
-import React from 'react';
+import * as React from 'react';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 
 const rows: GridRowsProp = [

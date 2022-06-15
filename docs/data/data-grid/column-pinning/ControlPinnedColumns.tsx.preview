@@ -1,11 +1,11 @@
-<Alert severity="info" style={{ marginBottom: 8 }}>
+<Alert severity="info">
   <code>pinnedColumns: {JSON.stringify(pinnedColumns)}</code>
 </Alert>
-<div style={{ height: 400, width: '100%' }}>
+<Box sx={{ height: 400, mt: 1 }}>
   <DataGridPro
     rows={rows}
     columns={columns}
     pinnedColumns={pinnedColumns}
     onPinnedColumnsChange={handlePinnedColumnsChange}
   />
-</div>
+</Box>
