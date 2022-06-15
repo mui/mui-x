@@ -32,7 +32,6 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
       <rootProps.components.BaseButton
         ref={ref}
         size="small"
-        color="primary"
         aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
         startIcon={<rootProps.components.ColumnSelectorIcon />}
         {...other}

@@ -8,11 +8,11 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 function CustomFooterStatusComponent(props) {
   return (
-    <Box sx={{ padding: '10px', display: 'flex' }}>
+    <Box sx={{ p: 1, display: 'flex' }}>
       <FiberManualRecordIcon
         fontSize="small"
         sx={{
-          mr: 2,
+          mr: 1,
           color: props.status === 'connected' ? '#4caf50' : '#d9182e',
         }}
       />
@@ -36,8 +36,8 @@ export default function CustomFooter() {
   });
 
   return (
-    <Box sx={{ width: 1 }}>
-      <Box sx={{ height: 350, width: 1, mb: 2 }}>
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ height: 350, width: '100%', mb: 1 }}>
         <DataGrid
           {...data}
           components={{
@@ -49,7 +49,6 @@ export default function CustomFooter() {
         />
       </Box>
       <Button
-        color="primary"
         variant="contained"
         onClick={() =>
           setStatus((current) =>

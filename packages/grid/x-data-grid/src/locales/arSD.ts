@@ -135,6 +135,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `إيقاف التجميع حسب ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'توسيع',
   collapseDetailPanel: 'طوي',
 

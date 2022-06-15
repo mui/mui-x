@@ -21,7 +21,7 @@ export default function StylingAllCells() {
     <Box
       sx={{
         height: 300,
-        width: 1,
+        width: '100%',
         '& .cold': {
           backgroundColor: '#b9d5ff91',
           color: '#1a3e72',
