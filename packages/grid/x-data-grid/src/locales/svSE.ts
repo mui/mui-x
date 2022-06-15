@@ -137,7 +137,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Sluta gruppera efter ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Växla mellan detaljpanel',
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Expandera',
   collapseDetailPanel: 'Kollapsa',
 
