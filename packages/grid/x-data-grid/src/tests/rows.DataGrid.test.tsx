@@ -532,7 +532,8 @@ describe('<DataGrid /> - Rows', () => {
           '.MuiDataGrid-virtualScrollerContent',
         );
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: `${expectedHeight}px`,
@@ -562,7 +563,8 @@ describe('<DataGrid /> - Rows', () => {
           measuredRowHeight +
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: `${expectedHeight}px`,
@@ -590,10 +592,13 @@ describe('<DataGrid /> - Rows', () => {
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${expectedHeight}px`,
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${expectedHeight}px`,
+          });
         });
       });
 
@@ -609,16 +614,22 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         );
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: '101px',
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: '101px',
+          });
         });
         setProps({ rows: [{ clientId: 'c1', expanded: true }] }); // Wait for ResizeObserver to send dimensions
         await new Promise((resolve) => nativeSetTimeout(resolve));
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: '201px',
+        clock.runToLast();
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: '201px',
+          });
         });
       });
 
@@ -649,7 +660,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(document.querySelectorAll('.MuiDataGrid-cell')).to.have.length(2);
       });
 
-      it('should measure all rows before rendering a new row', async () => {
+      it('should measure rows while scrolling', async () => {
         const headerHeight = 50;
         const border = 1;
         render(
@@ -663,10 +674,15 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        await waitFor(() => {
-          expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
-        });
-        virtualScroller.scrollTop = 10e6; // Scroll to the bottom
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
+        expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
+        virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
+        expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 52);
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
         expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101); // Ensure that all rows before the last were measured
       });
@@ -697,6 +713,8 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         )!;
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
         await waitFor(() => {
           expect(virtualScrollerContent).toHaveInlineStyle({
             width: 'auto',

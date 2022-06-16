@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom';
 
 // Get all the scenarios
 const requirePerfScenarios = require.context('./scenarios', true, /(js|ts|tsx)$/);

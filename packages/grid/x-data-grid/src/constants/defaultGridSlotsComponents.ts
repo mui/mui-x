@@ -71,6 +71,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   DetailPanelCollapseIcon: GridRemoveIcon,
   RowReorderIcon: GridDragIcon,
   QuickFilterIcon: GridSearchIcon,
+  QuickFilterClearIcon: GridCloseIcon,
 };
 
 /**

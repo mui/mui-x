@@ -96,7 +96,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       if (!defaultItem) {
         return;
       }
-      apiRef.current.setFilterModel({ ...filterModel, items: [...items, defaultItem] });
+      apiRef.current.upsertFilterItems([...items, defaultItem]);
     };
 
     const deleteFilter = React.useCallback(
@@ -152,7 +152,6 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
             <rootProps.components.BaseButton
               onClick={addNewFilter}
               startIcon={<GridAddIcon />}
-              color="primary"
               {...rootProps.componentsProps?.baseButton}
             >
               {apiRef.current.getLocaleText('filterPanelAddFilter')}

@@ -1,10 +1,10 @@
 ---
-title: Date and time pickers - Localization
+title: Date and Time pickers - Localization
 ---
 
-# Date and time pickers - Localization
+# Date and Time pickers - Localization
 
-<p class="description">Date and time pickers allow to support users from different locales, with formatting, RTL, and localized strings.</p>
+<p class="description">Date and Time pickers allow to support users from different locales, with formatting, RTL, and localized strings.</p>
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
@@ -15,6 +15,13 @@ Localization can impact pickers components rendering in two distincts ways: The 
 Use `LocalizationProvider` to change the date-engine locale that is used to render pickers. Here is an example of changing the locale for the `date-fns` adapter:
 
 {{"demo": "LocalizedDatePicker.js"}}
+
+### 12h/24h format
+
+The time picker will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
+This can be overridden by using the `ampm` prop.
+
+{{"demo": "LocalizedTimePicker.js"}}
 
 ## Translation keys
 

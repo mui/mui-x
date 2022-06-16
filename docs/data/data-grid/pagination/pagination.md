@@ -2,7 +2,7 @@
 title: Data Grid - Pagination
 ---
 
-# Data Grid - Pagination
+# Data grid - Pagination
 
 <p class="description">Easily paginate your rows and only fetch what you need.</p>
 

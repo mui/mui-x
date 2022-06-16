@@ -44,7 +44,7 @@ function EditStatus(props: GridRenderEditCellParams<string>) {
         onClose: handleClose,
       }}
       sx={{
-        height: 1,
+        height: '100%',
         '& .MuiSelect-select': {
           display: 'flex',
           alignItems: 'center',

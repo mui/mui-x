@@ -59,6 +59,7 @@ export interface PickersCalendarHeaderProps<TDate>
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText?: (currentView: CalendarPickerView) => string;
   onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
@@ -115,12 +116,6 @@ const PickersCalendarHeaderSwitchView = styled(ArrowDropDown)<{
   }),
 }));
 
-function getSwitchingViewAriaText(view: CalendarPickerView) {
-  return view === 'year'
-    ? 'year view is open, switch to calendar view'
-    : 'calendar view is open, switch to year view';
-}
-
 const deprecatedPropsWarning = buildDeprecatedPropsWarning(
   'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
 );
@@ -136,7 +131,7 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
     disabled,
     disableFuture,
     disablePast,
-    getViewSwitchingButtonText = getSwitchingViewAriaText,
+    getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
     leftArrowButtonText: leftArrowButtonTextProp,
     maxDate,
     minDate,
@@ -151,12 +146,15 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
   deprecatedPropsWarning({
     leftArrowButtonText: leftArrowButtonTextProp,
     rightArrowButtonText: rightArrowButtonTextProp,
+    getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
   });
 
   const localeText = useLocaleText();
 
   const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
   const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
+  const getViewSwitchingButtonText =
+    getViewSwitchingButtonTextProp ?? localeText.calendarViewSwitchingButtonAriaLabel;
 
   const utils = useUtils<TDate>();
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { debounce } from '@mui/material/utils';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -57,90 +58,88 @@ export const useGridRowsMeta = (
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
-    apiRef.current.setState((state) => {
-      const densityFactor = gridDensityFactorSelector(state, apiRef.current.instanceId);
+    const densityFactor = gridDensityFactorSelector(
+      apiRef.current.state,
+      apiRef.current.instanceId,
+    );
 
-      const positions: number[] = [];
-      const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
-        positions.push(acc);
+    const positions: number[] = [];
+    const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
+      positions.push(acc);
 
-        if (!rowsHeightLookup.current[row.id]) {
-          rowsHeightLookup.current[row.id] = {
-            sizes: { base: rowHeightFromDensity },
-            isResized: false,
-            autoHeight: false,
-            needsFirstMeasurement: true, // Assume all rows will need to be measured by default
-          };
-        }
+      if (!rowsHeightLookup.current[row.id]) {
+        rowsHeightLookup.current[row.id] = {
+          sizes: { base: rowHeightFromDensity },
+          isResized: false,
+          autoHeight: false,
+          needsFirstMeasurement: true, // Assume all rows will need to be measured by default
+        };
+      }
 
-        const { isResized, needsFirstMeasurement, sizes } = rowsHeightLookup.current[row.id];
-        let baseRowHeight = rowHeightFromDensity;
-        const existingBaseRowHeight = sizes.base;
+      const { isResized, needsFirstMeasurement, sizes } = rowsHeightLookup.current[row.id];
+      let baseRowHeight = rowHeightFromDensity;
+      const existingBaseRowHeight = sizes.base;
 
-        if (isResized) {
-          // Do not recalculate resized row height and use the value from the lookup
-          baseRowHeight = existingBaseRowHeight;
-        } else if (getRowHeightProp) {
-          const rowHeightFromUser = getRowHeightProp({ ...row, densityFactor });
+      if (isResized) {
+        // Do not recalculate resized row height and use the value from the lookup
+        baseRowHeight = existingBaseRowHeight;
+      } else if (getRowHeightProp) {
+        const rowHeightFromUser = getRowHeightProp({ ...row, densityFactor });
 
-          if (rowHeightFromUser === 'auto') {
-            if (needsFirstMeasurement) {
-              const estimatedRowHeight = getEstimatedRowHeight
-                ? getEstimatedRowHeight({ ...row, densityFactor })
-                : rowHeightFromDensity;
+        if (rowHeightFromUser === 'auto') {
+          if (needsFirstMeasurement) {
+            const estimatedRowHeight = getEstimatedRowHeight
+              ? getEstimatedRowHeight({ ...row, densityFactor })
+              : rowHeightFromDensity;
 
-              // If the row was not measured yet use the estimated row height
-              baseRowHeight = estimatedRowHeight ?? rowHeightFromDensity;
-            } else {
-              baseRowHeight = existingBaseRowHeight;
-            }
-
-            hasRowWithAutoHeight.current = true;
-            rowsHeightLookup.current[row.id].autoHeight = true;
+            // If the row was not measured yet use the estimated row height
+            baseRowHeight = estimatedRowHeight ?? rowHeightFromDensity;
           } else {
-            // Default back to base rowHeight if getRowHeight returns null or undefined.
-            baseRowHeight = rowHeightFromUser ?? rowHeightFromDensity;
-            rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
-            rowsHeightLookup.current[row.id].autoHeight = false;
+            baseRowHeight = existingBaseRowHeight;
           }
+
+          hasRowWithAutoHeight.current = true;
+          rowsHeightLookup.current[row.id].autoHeight = true;
         } else {
+          // Default back to base rowHeight if getRowHeight returns null or undefined.
+          baseRowHeight = rowHeightFromUser ?? rowHeightFromDensity;
           rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
+          rowsHeightLookup.current[row.id].autoHeight = false;
         }
+      } else {
+        rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
+      }
 
-        // We use an object to make simple to check if a height is already added or not
-        const initialHeights: Record<string, number> = { base: baseRowHeight };
+      // We use an object to make simple to check if a height is already added or not
+      const initialHeights: Record<string, number> = { base: baseRowHeight };
 
-        if (getRowSpacing) {
-          const indexRelativeToCurrentPage = apiRef.current.getRowIndexRelativeToVisibleRows(
-            row.id,
-          );
+      if (getRowSpacing) {
+        const indexRelativeToCurrentPage = apiRef.current.getRowIndexRelativeToVisibleRows(row.id);
 
-          const spacing = getRowSpacing({
-            ...row,
-            isFirstVisible: indexRelativeToCurrentPage === 0,
-            isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
-            indexRelativeToCurrentPage,
-          });
+        const spacing = getRowSpacing({
+          ...row,
+          isFirstVisible: indexRelativeToCurrentPage === 0,
+          isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+          indexRelativeToCurrentPage,
+        });
 
-          initialHeights.spacingTop = spacing.top ?? 0;
-          initialHeights.spacingBottom = spacing.bottom ?? 0;
-        }
+        initialHeights.spacingTop = spacing.top ?? 0;
+        initialHeights.spacingBottom = spacing.bottom ?? 0;
+      }
 
-        const processedSizes = apiRef.current.unstable_applyPipeProcessors(
-          'rowHeight',
-          initialHeights,
-          row,
-        ) as Record<string, number>;
+      const processedSizes = apiRef.current.unstable_applyPipeProcessors(
+        'rowHeight',
+        initialHeights,
+        row,
+      ) as Record<string, number>;
 
-        rowsHeightLookup.current[row.id].sizes = processedSizes;
+      rowsHeightLookup.current[row.id].sizes = processedSizes;
 
-        const finalRowHeight = Object.values(processedSizes).reduce(
-          (acc2, value) => acc2 + value,
-          0,
-        );
-        return acc + finalRowHeight;
-      }, 0);
+      const finalRowHeight = Object.values(processedSizes).reduce((acc2, value) => acc2 + value, 0);
+      return acc + finalRowHeight;
+    }, 0);
 
+    apiRef.current.setState((state) => {
       return {
         ...state,
         rowsMeta: {
@@ -186,6 +185,11 @@ export const useGridRowsMeta = (
     [hydrateRowsMeta],
   );
 
+  const debouncedHydrateRowsMeta = React.useMemo(
+    () => debounce(hydrateRowsMeta),
+    [hydrateRowsMeta],
+  );
+
   const storeMeasuredRowHeight = React.useCallback<
     GridRowsMetaApi['unstable_storeRowHeightMeasurement']
   >(
@@ -201,10 +205,10 @@ export const useGridRowsMeta = (
       rowsHeightLookup.current[id].sizes.base = height;
 
       if (needsHydration) {
-        hydrateRowsMeta();
+        debouncedHydrateRowsMeta();
       }
     },
-    [hydrateRowsMeta],
+    [debouncedHydrateRowsMeta],
   );
 
   const rowHasAutoHeight = React.useCallback<GridRowsMetaApi['unstable_rowHasAutoHeight']>((id) => {
@@ -220,7 +224,7 @@ export const useGridRowsMeta = (
   const setLastMeasuredRowIndex = React.useCallback<
     GridRowsMetaApi['unstable_setLastMeasuredRowIndex']
   >((index) => {
-    if (hasRowWithAutoHeight.current) {
+    if (hasRowWithAutoHeight.current && index > lastMeasuredRowIndex.current) {
       lastMeasuredRowIndex.current = index;
     }
   }, []);

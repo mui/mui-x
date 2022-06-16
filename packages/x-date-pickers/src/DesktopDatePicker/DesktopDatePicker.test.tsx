@@ -68,18 +68,8 @@ describe('<DesktopDatePicker />', () => {
 
   it('allows to change selected date from the input according to `format`', () => {
     const onChangeMock = spy();
-    render(
-      <DesktopDatePicker
-        renderInput={(props) => <TextField placeholder="10/10/2018" {...props} />}
-        label="Masked input"
-        inputFormat="dd/MM/yyyy"
-        value={adapterToUse.date('2018-01-01T00:00:00.000Z')}
-        onChange={onChangeMock}
-        InputAdornmentProps={{
-          disableTypography: true,
-        }}
-      />,
-    );
+
+    render(<WrappedDesktopDatePicker onChange={onChangeMock} initialValue={null} />);
 
     fireEvent.change(screen.getByRole('textbox'), {
       target: {
@@ -89,6 +79,38 @@ describe('<DesktopDatePicker />', () => {
 
     expect(screen.getByRole('textbox')).to.have.value('10/11/2018');
     expect(onChangeMock.callCount).to.equal(1);
+  });
+
+  it('should allow to switch from invalid date to null date in the input', () => {
+    const Test = () => {
+      const [value, setValue] = React.useState(null);
+
+      return (
+        <React.Fragment>
+          <DesktopDatePicker
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            renderInput={(inputProps) => <TextField {...inputProps} />}
+            inputFormat="dd/MM/yyyy"
+          />
+          <button data-mui-test="reset" onClick={() => setValue(null)}>
+            Clear
+          </button>
+        </React.Fragment>
+      );
+    };
+
+    render(<Test />);
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: {
+        value: '33/33/2022',
+      },
+    });
+    expect(screen.getByRole('textbox')).to.have.value('33/33/2022');
+
+    fireEvent.click(screen.getByMuiTest('reset'));
+    expect(screen.getByRole('textbox')).to.have.value('');
   });
 
   it('prop `showToolbar` – renders toolbar in desktop mode', () => {

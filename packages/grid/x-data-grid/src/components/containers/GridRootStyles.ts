@@ -131,7 +131,7 @@ export const GridRootStyles = styled('div', {
       minWidth: 0,
       flex: 1,
       whiteSpace: 'nowrap',
-      overflow: 'hidden',
+      overflowX: 'hidden',
     },
     [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
       overflow: 'hidden',
@@ -190,6 +190,9 @@ export const GridRootStyles = styled('div', {
       },
       [`&.${gridClasses['columnSeparator--resizing']}`]: {
         color: theme.palette.text.primary,
+      },
+      '& svg': {
+        pointerEvents: 'none',
       },
     },
     [`& .${gridClasses.iconSeparator}`]: {

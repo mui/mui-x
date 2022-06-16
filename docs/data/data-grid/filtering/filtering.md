@@ -2,7 +2,7 @@
 title: Data Grid - Filtering
 ---
 
-# Data Grid - Filtering
+# Data grid - Filtering
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 
@@ -280,7 +280,7 @@ You can customize the rendering of the filter panel as shown in [the component s
 
 ### Customize the filter panel content
 
-The customization of the filter panel content can be performed by passing props to the default [`<GridFilterPanel />`](/x/api/data-grid/grid-filter-panel) component.
+The customization of the filter panel content can be performed by passing props to the default [`<GridFilterPanel />`](/x/api/data-grid/grid-filter-panel/) component.
 The available props allow overriding:
 
 - The `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
@@ -376,6 +376,10 @@ The values used by the quick filter are obtained by splitting with space.
 If you want to implement a more advanced logic, the `<GridToolbarQuickFilter/>` component accepts a prop `quickFilterParser`.
 This function takes the string from the search text field and returns an array of values.
 
+If you control the `quickFilterValues` either by controlling `filterModel` or with the initial state, the content of the input must be updated to reflect the new values.
+By default, values are joint with a spaces. You can customize this behavior by providing `quickFilterFormatter`.
+This formatter can be seen as the inverse of the `quickFilterParser`.
+
 For example, the following parser allows to search words containing a space by using the `','` to split values.
 
 ```jsx
@@ -383,6 +387,7 @@ For example, the following parser allows to search words containing a space by u
   quickFilterParser={(searchInput) =>
     searchInput.split(',').map((value) => value.trim())
   }
+  quickFilterFormatter={(quickFilterValues) => quickFilterValues.join(', ')}
   debounceMs={200} // time before applying the new quick filter value
 />
 ```
