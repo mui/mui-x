@@ -89,6 +89,16 @@ You will need to purchase a commercial license in order to remove the watermarks
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
 
+:::warning
+Licenses purchased after **May 13, 2022** are only compatible with MUI X `v5.11.0` or later.
+
+Please update your packages if you are using an earlier version.
+
+If this is not a viable solution for your use case, please contact sales@mui.com.
+:::
+
+### How to install the key?
+
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
 
@@ -98,7 +108,7 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ### Where to install the key?
 
 You must call `setLicenseKey` before React renders the first component.
-You only need to install the key once in your application.
+You only need to install the key **once** in your application.
 
 ### Does each developer need its own key?
 
@@ -111,7 +121,7 @@ The license key is checked without making any network requests—it's designed t
 In fact, it's expected for the license key to be exposed in a JavaScript bundle.
 We just ask our licensed users not to publicize their license keys.
 
-### Validation errors
+### Validation failures
 
 If the validation of the license key fails, the component displays a watermark and provides a console warning in both development and production.
 End users can still use the component.
@@ -143,7 +153,21 @@ But you will not be able to install a newer version released two years from now,
 
 #### Invalid license key
 
-This error indicates that your license key doesn't match what was issued by MUI—this is likely a typo.
+This error indicates that your license key doesn't match what was issued by MUI (this is likely a typo).
+
+#### Invalid license key (TypeError: extracting license expiry timestamp)
+
+The following JavaScript exception indicates that you may be trying to validate [the new license's key format on an older version of the npm package](#license-key-installation).
+
+:::error
+Error extracting license expiry timestamp.
+
+TypeError: Cannot read properties of null (reading '1') at verifyLicense.
+:::
+
+It indicates that you may be trying to validate [the new license's key format on an older package](#license-key-installation).
+
+If your license key is correct, you can solve this error by updating MUI X to `v5.11.0` or later.
 
 ## Support
 
