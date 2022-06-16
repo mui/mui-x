@@ -39,8 +39,8 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [core] Improve inline code rendering within the details tag (#5166) @Harmouch101
 - [core] Remove unused props from plugin typing (#5185) @flaviendelangle
 - [core] Use the scrollbar size from `useGridDimensions` on `DataGridProColumnHeaders` (#5201) @flaviendelangle
-- [core] Fix GridColTypeDef type (#5167) @cherniavskii
-- [core] Fix GridColTypeDef usage in demo (#5197) @cherniavskii
+- [core] Fix `GridColTypeDef` type (#5167) @cherniavskii
+- [core] Fix `GridColTypeDef` usage in demo (#5197) @cherniavskii
 - [test] Add `waitFor` before asserting height (#5203) @m4theushw
 
 ## v5.12.1
