@@ -2600,6 +2600,16 @@
     prop-types "^15.7.2"
     reselect "^4.0.0"
 
+"@mui/x-license-pro@5.12.1":
+  version "5.12.1"
+  resolved "https://registry.yarnpkg.com/@mui/x-license-pro/-/x-license-pro-5.12.1.tgz#c0c0a175ebacd1a017fcd9bc25afe205ff6bd1f7"
+  integrity sha512-loiYFPr709tvWpIDLkDuNwsRoGVAkW1MlKDiurPlQaizVaS4w9YGw+oSHro7DTkXehuhkF2g2QTKorynazDu/Q==
+  dependencies:
+    "@babel/runtime" "^7.17.2"
+    "@mui/utils" "^5.4.1"
+    esm "^3.2.25"
+    yargs "^17.5.1"
+
 "@next/env@12.1.5":
   version "12.1.5"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-12.1.5.tgz#a21ba6708022d630402ca2b340316e69a0296dfc"
