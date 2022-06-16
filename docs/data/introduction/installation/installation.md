@@ -189,19 +189,3 @@ yarn
 ```sh
 yarn add @mui/x-date-pickers-pro
 ```
-
-### Premium Plan
-
-To install the Premium Plan, run:
-
-npm
-
-```sh
-npm install @mui/x-date-pickers-premium
-```
-
-yarn
-
-```sh
-yarn add @mui/x-date-pickers-premium
-```
