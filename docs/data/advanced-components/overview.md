@@ -149,7 +149,8 @@ However, when the term ends, you won't be licensed to access newer updates and u
 In these cases, the component will display a watermark and a console warning, stating that the license is no longer valid.
 
 For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next 12 months.
-Those versions will always be available for use in a deployed application. But you'll be required to renew your license if you need to update to a version released 18 months later or continue development with a version released in the first 12 months.
+Those versions will always be available for use in a deployed application.
+But you'll be required to renew your license if you need to update to a version released 18 months later or continue development with a version released in the first 12 months.
 
 #### Invalid license key
 
@@ -165,15 +166,15 @@ Error extracting license expiry timestamp.
 TypeError: Cannot read properties of null (reading '1') at verifyLicense.
 :::
 
-It indicates that you may be trying to validate [the new license's key format on an older package](#license-key-installation).
-
-If your license key is correct, you can solve this error by updating MUI X to `v5.11.0` or later.
+You can solve this error by updating MUI X to `v5.11.0` or later (assuming your license key is correct).
 
 ## Support
 
 ### GitHub
 
-We use GitHub issues as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
+We use GitHub issues as a bug and feature request tracker.
+If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed).
+You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 
 [Open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repo.
 
