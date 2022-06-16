@@ -208,12 +208,12 @@ describe('<DesktopTimePicker />', () => {
       { expectedError: 'invalidDate', props: { disableMaskedInput: true }, input: 'invalidText' },
       {
         expectedError: 'minTime',
-        props: { minTime: adapterToUse.date(`2000-01-01T08:00:00.000`) },
+        props: { minTime: new Date(2000, 0, 1, 8) },
         input: '03:00',
       },
       {
         expectedError: 'maxTime',
-        props: { maxTime: adapterToUse.date(`2000-01-01T08:00:00.000`) },
+        props: { maxTime: new Date(2000, 0, 1, 8) },
         input: '12:00',
       },
       { expectedError: 'shouldDisableTime-hours', props: { shouldDisableTime }, input: '10:00' },
