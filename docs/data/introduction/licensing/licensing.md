@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: Licensing
 ---
 
 # MUI X - Licensing
