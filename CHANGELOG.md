@@ -10,6 +10,7 @@ _Jun 16, 2022_
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Performance improvement for dynamic row height (#5135) @m4theushw
+- 🕒 Add demo of how to use the data grid with date pickers (#5053) @cherniavskii
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -28,11 +29,13 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [docs] Add example with custom checkbox column (#5161) @flaviendelangle
 - [docs] Batch small changes (#5177) @oliviertassinari
 - [docs] Fix demo currency format (#5034) @oliviertassinari
+- [docs] Fix outdated license description to match the EULA (#5219) @joserodolfofreitas
 - [docs] Fix redundant headers (#5104) @oliviertassinari
 - [docs] Fix some capitalization to match the guidelines (#5105) @oliviertassinari
 - [docs] Improve the `getRowId` doc section (#5156) @flaviendelangle
+- [docs] Instruction to deal with invalid license message (#5074) @joserodolfofreitas
 - [docs] Use redirection in the code (#5114) @oliviertassinari
-- [docs] Using data grid with date pickers (#5053) @cherniavskii
+- [docs] Add demo of how to use the data grid with date pickers (#5053) @cherniavskii
 
 ### Core
 
