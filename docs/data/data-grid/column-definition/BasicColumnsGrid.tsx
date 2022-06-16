@@ -1,9 +1,10 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 
 export default function BasicColumnsGrid() {
   return (
-    <div style={{ height: 250, width: '100%' }}>
+    <Box sx={{ height: 250, width: '100%' }}>
       <DataGrid
         columns={[{ field: 'username' }, { field: 'age' }]}
         rows={[
@@ -14,6 +15,6 @@ export default function BasicColumnsGrid() {
           },
         ]}
       />
-    </div>
+    </Box>
   );
 }

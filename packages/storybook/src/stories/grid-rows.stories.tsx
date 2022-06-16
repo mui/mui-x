@@ -253,7 +253,7 @@ const GridCellExpand = React.memo(function CellExpand(props: GridCellExpandProps
       <div
         ref={cellDiv}
         style={{
-          height: 1,
+          height: '100%',
           width,
           display: 'block',
           position: 'absolute',

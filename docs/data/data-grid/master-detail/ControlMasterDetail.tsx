@@ -27,13 +27,13 @@ export default function ControlMasterDetail() {
   );
 
   return (
-    <div style={{ width: '100%' }}>
-      <Alert severity="info" style={{ marginBottom: 8 }}>
+    <Box sx={{ width: '100%' }}>
+      <Alert severity="info">
         <code>
           detailPanelExpandedRowIds: {JSON.stringify(detailPanelExpandedRowIds)}
         </code>
       </Alert>
-      <div style={{ height: 400, width: '100%' }}>
+      <Box sx={{ height: 400, mt: 1 }}>
         <DataGridPro
           rows={rows}
           columns={columns}
@@ -45,8 +45,8 @@ export default function ControlMasterDetail() {
           detailPanelExpandedRowIds={detailPanelExpandedRowIds}
           onDetailPanelExpandedRowIdsChange={handleDetailPanelExpandedRowIdsChange}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

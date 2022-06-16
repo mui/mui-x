@@ -132,6 +132,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `${name}のグループを解除`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: '展開',
   collapseDetailPanel: '折りたたみ',
 

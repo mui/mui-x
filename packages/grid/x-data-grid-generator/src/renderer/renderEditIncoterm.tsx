@@ -40,7 +40,7 @@ function EditIncoterm(props: GridRenderEditCellParams<string | null>) {
         onClose: handleClose,
       }}
       sx={{
-        height: 1,
+        height: '100%',
         '& .MuiSelect-select': {
           display: 'flex',
           alignItems: 'center',
