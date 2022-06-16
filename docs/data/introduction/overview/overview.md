@@ -37,10 +37,3 @@ Most of MUI X's components are available for free with an MIT license, but more 
 
 MUI X components are fully compatible with MUI Core.
 MUI X can extend the functionality of UIs built with Material UI or MUI Base, but its components can also stand on their own, or be used with another React component library.
-
-## Getting started
-
-To start building with MUI X components, proceed to **Getting started**:
-
-- [Data Grid](/x/react-data-grid/getting-started/)
-- [Date and Time Pickers](/x/react-date-pickers/getting-started/)

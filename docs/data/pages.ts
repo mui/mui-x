@@ -8,6 +8,7 @@ const pages: MuiPage[] = [
     icon: 'DescriptionIcon',
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
+      { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
       { pathname: `/x/introduction/roadmap` },
