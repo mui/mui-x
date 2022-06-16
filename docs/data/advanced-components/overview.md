@@ -86,11 +86,11 @@ You will need to purchase a commercial license in order to remove the watermarks
 
 ## License key installation
 
-When you purchase a commercial license, you'll receive your license key by email.
+When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
 
 :::warning
-Licenses purchased after **May 13, 2022** are only compatible with MUI X version `5.11` or later.
+Licenses purchased after **May 13, 2022** are only compatible with MUI X `v5.11.0` or later.
 
 Please update your packages if you are using an earlier version.
 
@@ -155,9 +155,9 @@ But you will not be able to install a newer version released two years from now,
 
 This error indicates that your license key doesn't match what was issued by MUI (this is likely a typo).
 
-#### Invalid license key (Error: extracting license expiry timestamp)
+#### Invalid license key (TypeError: extracting license expiry timestamp)
 
-This is a more specific situation of the error above. If additionally to the invalid license message, you see an error on the console that looks like:
+The following JavaScript exception indicates that you may be trying to validate [the new license's key format on an older version of the npm package](#license-key-installation).
 
 :::error
 Error extracting license expiry timestamp.
@@ -167,7 +167,7 @@ TypeError: Cannot read properties of null (reading '1') at verifyLicense.
 
 It indicates that you may be trying to validate [the new license's key format on an older package](#license-key-installation).
 
-In this case, please update to MUI X `5.11` or later.
+If your license key is correct, you can solve this error by updating MUI X to `v5.11.0` or later.
 
 ## Support
 
