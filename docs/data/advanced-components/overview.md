@@ -1,5 +1,5 @@
 ---
-title: MUI X - Overview
+title: Overview
 ---
 
 # MUI X - Overview
@@ -143,13 +143,13 @@ If the license key is missing, the component will look something like this:
 
 #### License key expired
 
-Licenses are perpetual: the license key will work forever with the current version of the software.
+The license key will work **forever in a production environment** with any version released before your license term ends.
 
-But **access to updates and upgrades** is not perpetual.
-An expired license key will always work with the version of the component it was licensed to cover.
-But if you try to install a newer version of the component with an expired license, it will display a watermark and a console warning.
+However, when the term ends, you won't be licensed to access newer updates and upgrades, nor use the current or older versions in a **development environment**.
+In these cases, the component will display a watermark and a console warning, stating that the license is no longer valid.
+
 For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next 12 months.
-But you will not be able to install a newer version released two years from now, unless you purchase a new license to cover it.
+Those versions will always be available for use in a deployed application. But you'll be required to renew your license if you need to update to a version released 18 months later or continue development with a version released in the first 12 months.
 
 #### Invalid license key
 
