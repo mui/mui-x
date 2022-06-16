@@ -14,7 +14,7 @@ You can learn more about our ethos of stewardship in [this document from our com
 We offer commercial licenses to developers who need the most advanced features of our components that cannot be easily maintained by the open-source community.
 Commercial licenses enable us to support a full-time staff of engineers, which is simply not possible through the MIT model.
 
-Rest assured that when we release features commercially, it's only because we believe that you will not find a better alternative anywhere else.
+Rest assured that when we release features commercially, it's only because we believe that you will not find a better MIT-licensed alternative anywhere else.
 
 See the [Pricing](https://mui.com/pricing/) page for a detailed comparison of features.
 
