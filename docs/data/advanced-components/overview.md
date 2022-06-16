@@ -111,7 +111,7 @@ The license key is checked without making any network requests—it's designed t
 In fact, it's expected for the license key to be exposed in a JavaScript bundle.
 We just ask our licensed users not to publicize their license keys.
 
-### Validation errors
+### Validation failures
 
 If the validation of the license key fails, the component displays a watermark and provides a console warning in both development and production.
 End users can still use the component.
