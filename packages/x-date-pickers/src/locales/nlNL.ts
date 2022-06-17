@@ -1,6 +1,6 @@
-import { PickersLocaleText } from '@mui/x-date-pickers/locales/utils/pickersLocaleTextApi';
-import { getPickersLocalization } from '@mui/x-date-pickers/locales//utils/getPickersLocalization';
-import { CalendarPickerView } from '@mui/x-date-pickers/internals/models';
+import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import { getPickersLocalization } from './utils/getPickersLocalization';
+import { CalendarPickerView } from '../internals/models';
 
 const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
