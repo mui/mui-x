@@ -1,8 +1,4 @@
----
-title: Licensing
----
-
-# MUI X - Licensing
+# Licensing
 
 <p class="description">MUI X is an open-core, MIT-licensed library. Purchase a commercial license for advanced features and support.</p>
 

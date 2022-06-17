@@ -1,8 +1,4 @@
----
-title: Roadmap
----
-
-# MUI X - Roadmap
+# Roadmap
 
 <p class="description">Find out about our plans and goals for the MUI X product line.</p>
 

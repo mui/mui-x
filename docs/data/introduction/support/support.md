@@ -1,8 +1,4 @@
----
-title: Support
----
-
-# MUI X - Support
+# Support
 
 <p class="description">Learn how to get support for MUI X components, including feature requests, bug fixes, answers to how-to questions, and professional support from our team.</p>
 
