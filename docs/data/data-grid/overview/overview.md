@@ -66,7 +66,7 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 ### MIT vs. commercial
 
-> Please check the [Licenses section](/x/advanced-components/#licenses) for more details between the different versions.
+Please see the [Licensing](/x/introduction/licensing/) page for details.
 
 ## Features
 
