@@ -36,7 +36,7 @@ First you have to install the adapter package for the date-library you want to u
 
 ```sh
 // date-fns
-npm install @date-io/date-fns
+npm install @date-io/date-fns --> then "npm install --save date-fns"
 // or for Day.js
 npm install @date-io/dayjs
 // or for Luxon
