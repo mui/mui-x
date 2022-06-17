@@ -2095,6 +2095,27 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
         // "Cat A" & "Cat 2" groups are not tested against the "id" filter item
         expect(getColumnValues(0)).to.deep.equal(['Cat A (1)', 'Cat 2 (1)', '']);
       });
+
+      it.only('should apply quick filter without throwing error', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['B', '2'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Only row with id=3 contains 'cat B' and 'cat 2'
+        expect(getColumnValues(1)).to.deep.equal(['', '3']);
+      });
     });
 
     describe('prop: rowGroupingColumnMode = "multiple"', () => {
