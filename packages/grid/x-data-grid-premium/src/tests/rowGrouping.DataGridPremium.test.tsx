@@ -2104,7 +2104,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
               filter: {
                 filterModel: {
                   items: [],
-                  quickFilterValues: ['B', '2'],
+                  quickFilterValues: ['B'],
                 },
               },
             }}
@@ -2113,8 +2113,8 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
           />,
         );
 
-        // Only row with id=3 contains 'cat B' and 'cat 2'
-        expect(getColumnValues(1)).to.deep.equal(['', '3']);
+        // TODO: allows grouping filter to be more flexible when it is quick filter
+        expect(getColumnValues(1)).to.deep.equal(['', '3', '4']);
       });
     });
 
