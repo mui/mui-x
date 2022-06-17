@@ -2096,7 +2096,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
         expect(getColumnValues(0)).to.deep.equal(['Cat A (1)', 'Cat 2 (1)', '']);
       });
 
-      it.only('should apply quick filter without throwing error', () => {
+      it('should apply quick filter without throwing error', () => {
         render(
           <Test
             initialState={{
