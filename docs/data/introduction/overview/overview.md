@@ -10,13 +10,14 @@ title: Overview
 
 MUI X is a collection of advanced UI components, including our [Data Grid](/x/react-data-grid/) and [Date and Time Pickers](/x/react-date-pickers/getting-started/).
 
-These components are significantly more complex than anything found in the MUI Core libraries, and feature advanced functionality for data-rich applications and a wide range of other use cases.
+These components are significantly more complex than the ones found in the MUI Core libraries.
+They feature advanced functionality for data-rich applications and a wide range of other use cases.
 
 :::info
 MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 See [Licensing](/x/getting-started/licensing/) for details.
 
-Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/) and [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-premium/) icons, respectively.
+Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](https://mui.com/store/items/mui-pro/) and [<span class="plan-premium"></span>](https://mui.com/store/items/mui-premium/) icons, respectively.
 :::
 
 ## Advantages of MUI X
