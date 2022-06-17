@@ -135,6 +135,7 @@ const heILGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `הפסק לקבץ לפי ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
 

@@ -6,7 +6,7 @@ import {
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 export default function RowGroupingSetChildrenExpansion() {
@@ -35,16 +35,18 @@ export default function RowGroupingSetChildrenExpansion() {
   };
 
   return (
-    <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
-      <Button onClick={toggleSecondRow}>Toggle 2nd row expansion</Button>
-      <div style={{ height: 400, width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
+      <Button size="small" onClick={toggleSecondRow}>
+        Toggle 2nd row expansion
+      </Button>
+      <Box sx={{ height: 400, pt: 1 }}>
         <DataGridPremium
           {...data}
           apiRef={apiRef}
           disableSelectionOnClick
           initialState={initialState}
         />
-      </div>
-    </Stack>
+      </Box>
+    </Box>
   );
 }

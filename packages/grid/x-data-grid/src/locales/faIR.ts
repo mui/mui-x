@@ -137,6 +137,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `لغو گروه‌بندی براساس ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'بازکردن پنل جزئیات',
   collapseDetailPanel: 'بستن پنل جزئیات',
 

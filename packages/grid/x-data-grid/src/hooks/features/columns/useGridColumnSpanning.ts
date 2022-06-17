@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridColumnIndex, GridCellColSpanInfo } from '../../../models/gridColumnSpanning';
 import { GridRowId } from '../../../models/gridRows';

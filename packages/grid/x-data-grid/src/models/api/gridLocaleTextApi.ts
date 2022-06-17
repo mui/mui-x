@@ -131,6 +131,7 @@ export interface GridLocaleText {
   unGroupColumn: (name: string) => string;
 
   // Master/detail
+  detailPanelToggle: string;
   expandDetailPanel: string;
   collapseDetailPanel: string;
 

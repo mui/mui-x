@@ -135,6 +135,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Stopp å grupper på ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Utvid',
   collapseDetailPanel: 'Kollaps',
 

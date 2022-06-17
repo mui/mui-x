@@ -137,6 +137,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Arrêter de grouper par ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 

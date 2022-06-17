@@ -137,6 +137,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Stop groeperen op ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 

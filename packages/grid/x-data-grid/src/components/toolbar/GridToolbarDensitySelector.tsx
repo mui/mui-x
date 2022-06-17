@@ -95,7 +95,6 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
       <React.Fragment>
         <rootProps.components.BaseButton
           ref={handleRef}
-          color="primary"
           size="small"
           startIcon={startIcon}
           aria-label={apiRef.current.getLocaleText('toolbarDensityLabel')}

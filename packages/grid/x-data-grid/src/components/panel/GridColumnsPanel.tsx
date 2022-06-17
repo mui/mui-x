@@ -145,7 +145,6 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
                     checked={columnVisibilityModel[column.field] !== false}
                     onClick={toggleColumn}
                     name={column.field}
-                    color="primary"
                     size="small"
                     {...rootProps.componentsProps?.baseSwitch}
                   />
@@ -170,14 +169,12 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
       <GridPanelFooter>
         <rootProps.components.BaseButton
           onClick={() => toggleAllColumns(false)}
-          color="primary"
           {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
         </rootProps.components.BaseButton>
         <rootProps.components.BaseButton
           onClick={() => toggleAllColumns(true)}
-          color="primary"
           {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('columnsPanelShowAllButton')}
