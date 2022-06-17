@@ -64,28 +64,6 @@ describe('<DataGridPro /> - Rows', () => {
       );
     });
 
-    describe('updateRows', () => {
-      it('should apply getRowId before updating rows', () => {
-        const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
-        let apiRef: React.MutableRefObject<GridApi>;
-        const Test = () => {
-          apiRef = useGridApiRef();
-          return (
-            <div style={{ width: 300, height: 300 }}>
-              <DataGridPro {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
-            </div>
-          );
-        };
-        render(<Test />);
-        expect(getColumnValues(0)).to.deep.equal(['c1', 'c2', 'c3']);
-        apiRef!.current.updateRows([
-          { clientId: 'c2', age: 30 },
-          { clientId: 'c3', age: 31 },
-        ]);
-        expect(getColumnValues(2)).to.deep.equal(['11', '30', '31']);
-      });
-    });
-
     it('should allow to switch between cell mode', () => {
       let apiRef: React.MutableRefObject<GridApi>;
       const editableProps = { ...baselineProps };
@@ -277,6 +255,25 @@ describe('<DataGridPro /> - Rows', () => {
         { idField: 5, brand: 'Atari' },
       ]);
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
+    });
+
+    it('should not loose partial updates after a props.loading switch', () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+          </div>
+        );
+      };
+
+      const { setProps } = render(<Test />);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+      setProps({ loading: true });
+      apiRef.current.updateRows([{ id: 0, brand: 'Nike 2' }]);
+      setProps({ loading: false });
+      expect(getColumnValues(0)).to.deep.equal(['Nike 2', 'Adidas', 'Puma']);
     });
   });
 
