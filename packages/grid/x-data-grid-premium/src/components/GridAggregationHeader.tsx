@@ -23,6 +23,7 @@ const GridAggregationHeaderRoot = styled(Box, {
   overridesResolver: (_, styles) => styles.aggregationColumnHeader,
 })<{ ownerState: OwnerState }>({
   position: 'relative',
+  flex: 1,
 });
 
 const GridAggregationFunctionLabel = styled('div', {
@@ -37,7 +38,7 @@ const GridAggregationFunctionLabel = styled('div', {
     bottom: `calc(50% - ${theme.typography.fontSize}px / 2 - ${
       theme.typography.caption.fontSize
     } - ${isCompact ? '0px' : theme.spacing(0.5)})`,
-    right: 0,
+    left: 0,
     fontSize: theme.typography.caption.fontSize,
     lineHeight: theme.typography.caption.fontSize,
     fontWeight: theme.typography.fontWeightMedium,

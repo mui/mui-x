@@ -137,6 +137,7 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
+      flex: 1,
     },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
