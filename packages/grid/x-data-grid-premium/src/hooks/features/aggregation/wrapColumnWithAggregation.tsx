@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { GridColDef, GridColumnHeaderTitle, GridRowId } from '@mui/x-data-grid-pro';
+import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
+  GridAggregationHeaderMeta,
   GridAggregationLookup,
   GridAggregationPosition,
   GridAggregationRule,
 } from './gridAggregationInterfaces';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { GridFooterCell } from '../../../components/GridFooterCell';
-import { getAggregationFunctionLabel } from './gridAggregationUtils';
+import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
 
 const AGGREGATION_WRAPPABLE_PROPERTIES = [
   'valueGetter',
@@ -152,25 +153,19 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
  * Add the aggregation method around the header name
  */
 const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
-  apiRef,
   value: renderHeader,
   aggregationRule,
 }) => {
   const wrappedRenderCell: GridColDef['renderHeader'] = (params) => {
-    const baseHeaderLabel = params.colDef.headerName ?? params.colDef.field;
-    const aggregationLabel = getAggregationFunctionLabel({ apiRef, aggregationRule });
+    const aggregationMeta: GridAggregationHeaderMeta = {
+      aggregationRule,
+    };
 
     if (!renderHeader) {
-      return (
-        <GridColumnHeaderTitle
-          label={`${aggregationLabel}(${baseHeaderLabel})`}
-          description={params.colDef.description}
-          columnWidth={params.colDef.computedWidth}
-        />
-      );
+      return <GridAggregationHeader {...params} aggregation={aggregationMeta} />;
     }
 
-    return renderHeader(params);
+    return renderHeader({ ...params, aggregation: aggregationMeta });
   };
 
   return wrappedRenderCell;
