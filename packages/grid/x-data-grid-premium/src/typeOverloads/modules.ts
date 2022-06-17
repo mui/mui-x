@@ -51,6 +51,7 @@ export interface GridRenderCellParamsPremium<V = any, R extends GridValidRowMode
   aggregation?: GridAggregationCellMeta;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface GridColumnHeaderParamsPremium<V = any, R extends GridValidRowModel = any, F = V> {
   aggregation?: GridAggregationHeaderMeta;
 }
@@ -67,10 +68,8 @@ declare module '@mui/x-data-grid-pro' {
     extends GridControlledStateEventLookupPro,
       GridControlledStateEventLookupPremium {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface GridRenderCellParams<V, R, F> extends GridRenderCellParamsPremium<V, R, F> {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface GridColumnHeaderParams<V, R, F> extends GridColumnHeaderParamsPremium<V, R, F> {}
 
   interface GridApiCaches extends GridApiCachesPremium {}
