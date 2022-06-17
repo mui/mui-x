@@ -120,6 +120,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Russian                 | ru-RU               | `ruRU`      |
 | Slovak                  | sk-SK               | `skSK`      |
 | Spanish (Spain)         | es-ES               | `esES`      |
+| Swedish                 | sv-SE               | `svSE`      |
 | Turkish                 | tr-TR               | `trTR`      |
 | Ukraine                 | uk-UA               | `ukUA`      |
 | Simplified Chinese      | zh-CN               | `zhCN`      |

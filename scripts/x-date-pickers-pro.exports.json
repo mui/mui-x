@@ -100,6 +100,7 @@
   { "name": "StaticDateTimePickerProps", "kind": "TypeAlias" },
   { "name": "StaticTimePicker", "kind": "Variable" },
   { "name": "StaticTimePickerProps", "kind": "TypeAlias" },
+  { "name": "svSE", "kind": "Variable" },
   { "name": "TimePicker", "kind": "Variable" },
   { "name": "TimePickerProps", "kind": "Interface" },
   { "name": "trTR", "kind": "Variable" },
