@@ -106,5 +106,6 @@
   { "name": "yearPickerClasses", "kind": "Variable" },
   { "name": "YearPickerClasses", "kind": "Interface" },
   { "name": "YearPickerClassKey", "kind": "TypeAlias" },
-  { "name": "YearPickerProps", "kind": "Interface" }
+  { "name": "YearPickerProps", "kind": "Interface" },
+  { "name": "nlNL", "kind": "Variable" }
 ]
