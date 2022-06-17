@@ -7,6 +7,7 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -58,6 +59,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   } = props;
 
   const isDateTime = colDef.type === 'dateTime';
+  const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>();
 
   const valueTransformed = React.useMemo(() => {
@@ -114,9 +116,9 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       }
 
       setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
-      api.setEditCellValue({ id, field, value: newParsedDate }, event);
+      apiRef.current.setEditCellValue({ id, field, value: newParsedDate }, event);
     },
-    [api, field, id, onValueChange],
+    [apiRef, field, id, onValueChange],
   );
 
   React.useEffect(() => {

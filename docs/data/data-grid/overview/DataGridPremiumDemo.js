@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import {
   DataGridPremium,
   GridToolbar,
@@ -43,7 +44,7 @@ export default function DataGridPremiumDemo() {
   });
 
   return (
-    <div style={{ height: 520, width: '100%' }}>
+    <Box sx={{ height: 520, width: '100%' }}>
       <DataGridPremium
         {...data}
         apiRef={apiRef}
@@ -52,6 +53,6 @@ export default function DataGridPremiumDemo() {
         initialState={initialState}
         components={{ Toolbar: GridToolbar }}
       />
-    </div>
+    </Box>
   );
 }

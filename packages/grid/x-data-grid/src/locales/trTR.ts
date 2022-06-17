@@ -132,6 +132,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `${name} için gruplamayı kaldır`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Genişlet',
   collapseDetailPanel: 'Gizle',
 

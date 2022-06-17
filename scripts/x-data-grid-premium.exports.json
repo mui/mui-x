@@ -516,6 +516,7 @@
   { "name": "SortGridMenuItems", "kind": "Variable" },
   { "name": "SUBMIT_FILTER_DATE_STROKE_TIME", "kind": "Variable" },
   { "name": "SUBMIT_FILTER_STROKE_TIME", "kind": "Variable" },
+  { "name": "svSE", "kind": "Variable" },
   { "name": "trTR", "kind": "Variable" },
   { "name": "ukUA", "kind": "Variable" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
