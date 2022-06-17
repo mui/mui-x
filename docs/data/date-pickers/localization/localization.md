@@ -112,6 +112,7 @@ import bgLocale from 'date-fns/locale/bg';
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
 | Turkish                 | tr-TR               | `trTr`      |
+| Dutch                   | nl-NL               | `nlNL`      |
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
 

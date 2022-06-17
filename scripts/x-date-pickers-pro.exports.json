@@ -82,6 +82,7 @@
   { "name": "MonthPickerClassKey", "kind": "TypeAlias" },
   { "name": "MonthPickerProps", "kind": "Interface" },
   { "name": "MuiPickersAdapterContext", "kind": "Variable" },
+  { "name": "nlNL", "kind": "Variable" },
   { "name": "PickersDay", "kind": "Variable" },
   { "name": "pickersDayClasses", "kind": "Variable" },
   { "name": "PickersDayClasses", "kind": "Interface" },
