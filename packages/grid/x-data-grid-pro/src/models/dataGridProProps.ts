@@ -51,8 +51,6 @@ export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
 
 export type DataGridProForcedPropsKey = 'signature';
 
-type GridDetailPanelHeightReturnValue = number | 'auto';
-
 /**
  * The `DataGridPro` options with a default value overridable through props
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
@@ -100,10 +98,10 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {GridDetailPanelHeightReturnValue} The height in pixels or "auto" to use the content height.
+   * @returns {number | string} The height in pixels or "auto" to use the content height.
    * @default "() => 500"
    */
-  getDetailPanelHeight: (params: GridRowParams) => GridDetailPanelHeightReturnValue;
+  getDetailPanelHeight: (params: GridRowParams) => number | 'auto';
   /**
    * If `true`, the reordering of rows is enabled.
    * @default false
