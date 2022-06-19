@@ -125,6 +125,12 @@ export const useGridCellEditing = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
+        // Wait until IME is settled for Asian languages like Japanese and Chinese
+        // TODO: `event.which` is depricated but this is a temporary workaround
+        if (event.which === 229) {
+          return;
+        }
+
         let reason: GridCellEditStopReasons | undefined;
 
         if (event.key === 'Escape') {

@@ -728,6 +728,38 @@ describe('<DataGridPro /> - Row Editing', () => {
           deleteValue: true,
         });
       });
+
+      it(`should ignore keydown event until the IME is confirmed with a letter`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        const input = cell.querySelector('input')!;
+        fireEvent.change(input, { target: { value: 'あ' } });
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
+        expect(listener.callCount).to.equal(0);
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
+        expect(listener.callCount).to.equal(1);
+        expect(input.value).to.equal('あ');
+        expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
+      });
+
+      it(`should ignore keydown event until the IME is confirmed with multiple letters`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        const input = cell.querySelector('input')!;
+        fireEvent.change(input, { target: { value: 'ありがとう' } });
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
+        expect(listener.callCount).to.equal(0);
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
+        expect(listener.callCount).to.equal(1);
+        expect(input.value).to.equal('ありがとう');
+        expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
+      });
     });
   });
 
