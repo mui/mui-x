@@ -130,7 +130,7 @@
     "eslint-plugin-mocha": "^9.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.30.0",
-    "eslint-plugin-react-hooks": "^4.5.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
     "jsdom": "^19.0.0",
