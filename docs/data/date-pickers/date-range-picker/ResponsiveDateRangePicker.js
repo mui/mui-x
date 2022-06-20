@@ -14,7 +14,7 @@ export default function ResponsiveDateRangePicker() {
     <Stack spacing={3}>
       <LocalizationProvider
         dateAdapter={AdapterDateFns}
-        localeText={{ start: 'Mobile start', end: 'Desktop end' }}
+        localeText={{ start: 'Mobile start', end: 'Mobile end' }}
       >
         <MobileDateRangePicker
           value={value}
