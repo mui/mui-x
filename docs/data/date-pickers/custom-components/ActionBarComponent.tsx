@@ -15,16 +15,9 @@ const CustomActionBar = (props: PickersActionBarProps) => {
   const { onAccept, onClear, onCancel, onSetToday, actions } = props;
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const localeText = useLocaleText();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const id = useId();
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const actionsArray =
     typeof actions === 'function' ? actions(wrapperVariant) : actions;
@@ -97,7 +90,7 @@ const CustomActionBar = (props: PickersActionBarProps) => {
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
+        onClick={(event) => setAnchorEl(event.currentTarget)}
       >
         Actions
       </Button>
@@ -105,7 +98,7 @@ const CustomActionBar = (props: PickersActionBarProps) => {
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={() => setAnchorEl(null)}
         MenuListProps={{
           'aria-labelledby': `picker-actions-${id}`,
         }}
