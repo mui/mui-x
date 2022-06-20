@@ -7,7 +7,29 @@ title: Date and Time pickers - Custom components
 
 <p class="description">The date picker let the user select a date.</p>
 
-TOTO
+## Overriding components
+
+The picker components allows you to override internal components with the `components` prop.
+
+If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop.
+
+As an example, you could override the action bar and pass additional props as below.
+
+```jsx
+<DatePicker
+  {...otherProps}
+  components={{
+    ActionBar: CustomActionBar,
+  }}
+  componentsProps={{
+    actionBar: ['clear'],
+  }}
+/>
+```
+
+:::info
+The casing is different between the `components` (ActionBar) and `componentsProps` (actionBar) props.
+:::
 
 ## Action bar
 
