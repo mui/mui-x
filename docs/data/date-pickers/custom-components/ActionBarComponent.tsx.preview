@@ -4,7 +4,12 @@
     value={value}
     renderInput={(params) => <TextField {...params} />}
     components={{
-        ActionBar: CustomActionBar
+      ActionBar: CustomActionBar,
+    }}
+    componentsProps={{
+      actionBar: {
+        actions: ['today'],
+      },
     }}
   />
 </LocalizationProvider>

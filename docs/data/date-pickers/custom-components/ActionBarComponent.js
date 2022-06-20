@@ -2,18 +2,30 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import DialogActions from '@mui/material/DialogActions';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 
 import { useLocaleText, WrapperVariantContext } from '@mui/x-date-pickers/internals';
+import useId from '@mui/utils/useId';
 
 const CustomActionBar = (props) => {
   const { onAccept, onClear, onCancel, onSetToday, actions } = props;
   const wrapperVariant = React.useContext(WrapperVariantContext);
-
   const localeText = useLocaleText();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const id = useId();
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const actionsArray =
     typeof actions === 'function' ? actions(wrapperVariant) : actions;
@@ -22,42 +34,60 @@ const CustomActionBar = (props) => {
     return null;
   }
 
-  const buttons = actionsArray?.map((actionType) => {
+  const menuItems = actionsArray?.map((actionType) => {
     switch (actionType) {
       case 'clear':
         return (
-          <Button
+          <MenuItem
             data-mui-test="clear-action-button"
-            onClick={onClear}
+            onClick={() => {
+              onClear();
+              setAnchorEl(null);
+            }}
             key={actionType}
           >
             {localeText.clearButtonLabel}
-          </Button>
+          </MenuItem>
         );
 
       case 'cancel':
         return (
-          <Button onClick={onCancel} key={actionType}>
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              onCancel();
+            }}
+            key={actionType}
+          >
             {localeText.cancelButtonLabel}
-          </Button>
+          </MenuItem>
         );
 
       case 'accept':
         return (
-          <Button onClick={onAccept} key={actionType}>
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              onAccept();
+            }}
+            key={actionType}
+          >
             {localeText.okButtonLabel}
-          </Button>
+          </MenuItem>
         );
 
       case 'today':
         return (
-          <Button
+          <MenuItem
             data-mui-test="today-action-button"
-            onClick={onSetToday}
+            onClick={() => {
+              setAnchorEl(null);
+              onSetToday();
+            }}
             key={actionType}
           >
             {localeText.todayButtonLabel}
-          </Button>
+          </MenuItem>
         );
 
       default:
@@ -65,7 +95,30 @@ const CustomActionBar = (props) => {
     }
   });
 
-  return <DialogActions>{buttons}</DialogActions>;
+  return (
+    <DialogActions>
+      <Button
+        id={`picker-actions-${id}`}
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        Actions
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': `picker-actions-${id}`,
+        }}
+      >
+        {menuItems}
+      </Menu>
+    </DialogActions>
+  );
 };
 
 CustomActionBar.propTypes = {
@@ -95,6 +148,11 @@ export default function ActionBarComponent() {
         renderInput={(params) => <TextField {...params} />}
         components={{
           ActionBar: CustomActionBar,
+        }}
+        componentsProps={{
+          actionBar: {
+            actions: ['today'],
+          },
         }}
       />
     </LocalizationProvider>
