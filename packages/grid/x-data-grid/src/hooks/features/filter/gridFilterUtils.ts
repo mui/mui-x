@@ -10,7 +10,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridAggregatedFilterItemApplier } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
-import { gridColumnFieldsSelector } from '../columns';
+import { gridColumnFieldsSelector, gridColumnLookupSelector } from '../columns';
 
 type GridFilterItemApplier = {
   fn: (rowId: GridRowId) => boolean;
@@ -35,8 +35,9 @@ export const cleanFilterItem = (
   }
 
   if (cleanItem.operatorValue == null) {
-    // we select a default operator
-    const column = apiRef.current.getColumn(cleanItem.columnField);
+    // Selects a default operator
+    // We don't use `apiRef.current.getColumn` because it is not ready during state initialization
+    const column = gridColumnLookupSelector(apiRef)[cleanItem.columnField];
     cleanItem.operatorValue = column && column!.filterOperators![0].value!;
   }
 
