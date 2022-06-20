@@ -151,7 +151,7 @@ The component comes [in different plans](https://mui.com/pricing/):
 - **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/store/legal/mui-x-eula/).
 - **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/store/legal/mui-x-eula/).
 
-You can find more information about the plans on the [Licensing](/x/introduction/licensing/) page.
+You can find more information about the plans in [the Licensing page](/x/introduction/licensing/).
 
 ### Feature comparison
 

@@ -4,39 +4,39 @@
 
 ## MIT vs. commercial licenses
 
-MUI has been building MIT-licensed React components since 2014, and we are committed to the continued advancement of the open-source community.
-You can learn more about our ethos of stewardship in [this document from our company handbook](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+MUI has been building MIT-licensed React components since 2014, and we are committed to the continued advancement of the open-source libraries.
+You can learn more about our stewardship ethos in [this document from our company handbook](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 
-We offer commercial licenses to developers who need the most advanced features of our components that cannot be easily maintained by the open-source community.
+We offer commercial licenses to developers who need the most advanced features that cannot be easily maintained by the open-source community.
 Commercial licenses enable us to support a full-time staff of engineers, which is simply not possible through the MIT model.
 
 Rest assured that when we release features commercially, it's only because we believe that you will not find a better MIT-licensed alternative anywhere else.
 
-See the [Pricing](https://mui.com/pricing/) page for a detailed comparison of features.
+See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparison.
 
 ## Community Plan
 
-MUI X's Community Plan is published under an [MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
-This plan contains features that we believe are maintainable by the contributions of the open-source community.
+The free version of MUI X is [published under an MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
+This version contains features that we believe are maintainable by contributions from the open-source community.
 
-Community Plan packages:
+Free packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 
-## Pro Plan <span class="plan-pro"></span>
+## Pro version<span class="pro-version"></span>
 
-The MUI X Pro Plan expands on the limitations of the Community Plan with more advanced features such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
+The Pro version of MUI X expands on the features of the free version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
 
-The Pro Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
 
-Pro Plan packages:
+Pro version packages:
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
 
 :::info
-The features exclusive to the Pro Plan are marked with the <span class="plan-pro"></span> icon across our documentation.
+The features exclusive to the Pro version are marked with the <span class="pro-version"></span> icon throughout the documentation.
 :::
 
 <div class="only-light-mode">
@@ -46,26 +46,26 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
   <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
 </div>
 
-## Premium Plan <span class="plan-premium"></span>
+## Premium version<span class="premium-version"></span>
 
-The MUI X Premium Plan contains the most advanced features of the data grid, such as row grouping, Excel export, aggregation, as well as everything that's included in the Pro Plan.
+The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, aggregation, in addition to everything that's included in the Pro Plan.
 
-The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
 
-Premium Plan package:
+Premium version package:
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
 :::info
-The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
+The features exclusive to the Premium version are marked with the <span class="premium-version"></span> icon throughout the documentation.
 :::
 
 ## Evaluation (trial) licenses
 
 In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
-You do not need to contact us to use these components for evaluation purposes.
+You don't need to contact us to use these components for evaluation purposes.
 
-You will need to purchase a commercial license in order to remove the watermarks and console warnings, or after the 30-day evaluation period.
+You will need to purchase a commercial license in order to remove the watermarks and console warnings, and after the 30-day evaluation period.
 
 ## License key installation
 
@@ -75,9 +75,9 @@ This key removes all watermarks and console warnings.
 :::warning
 Licenses purchased after **May 13, 2022** are only compatible with MUI X `v5.11.0` or later.
 
-Please update your packages if you are using an earlier version.
+Please update your package if you're using an earlier version.
 
-If this is not a viable solution for your use case, please contact sales@mui.com.
+If this isn't possible, please contact sales@mui.com to request a compatible license key.
 :::
 
 ### How to install the key
@@ -90,19 +90,18 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 ### Where to install the key
 
-You must call `setLicenseKey` before React renders the first component.
+You need to call `setLicenseKey` before React renders the first component.
 You only need to install the key once in your application.
 
 ### Does each developer need their own key?
 
-No, you only need one key per project.
-The Plan you're using determines how many developer seats are available.
+No, you only need one key installed.
 
 ### Security
 
 The license key is checked without making any network requests—it's designed to be public.
-In fact, it's expected for the license key to be exposed in a JavaScript bundle.
-We just ask our licensed users not to publicize their license keys.
+It's expected that the license key will be exposed in a JavaScript bundle;
+we simply ask licensed users not to actively publicize their license key.
 
 ### Validation failures
 
@@ -128,18 +127,18 @@ Note that you are still allowed to use the component for [evaluation purposes](#
 
 #### License key expired
 
-The license key will work **forever in a production environment** with any version released before your license term ends.
+The license key will work **forever in production** with any version released before your license term ends.
 
-However, when the term ends, you won't be licensed to access newer updates and upgrades, nor use the current or older versions in a **development environment**.
-In these cases, the component will display a watermark and a console warning, stating that the license is no longer valid.
+However, when the term ends, you won't be able to use newer releases, nor use the current or older versions in **development**.
+In this case, the component will display a watermark and a console warning, stating that the license is no longer valid.
 
-For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next 12 months.
-Those versions will always be available for use in a deployed application.
-But you'll be required to renew your license if you need to update to a version released 18 months later or continue development with a version released in the first 12 months.
+For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next twelve months.
+Those versions will always be available for use in a deployed application,
+however you'll be required to renew your license if you need to continue development with a version released after twelve months.
 
 #### Invalid license key
 
-This error indicates that your license key doesn't match what was issued by MUI—this is likely a typo.
+This error indicates that your license key doesn't match what is expected. This is likely a typo.
 
 #### Invalid license key (TypeError: extracting license expiry timestamp)
 

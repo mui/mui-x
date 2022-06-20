@@ -2,10 +2,10 @@
 
 <p class="description">Install the necessary packages to start building with MUI X components.</p>
 
-MUI X packages are available through the (free, MIT-licensed) Community Plan, or the (commercially-licensed) Pro and Premium Plans.
-See [Licensing](/x/introduction/licensing/) for complete details.
+MUI X packages are available through the free MIT-licensed Community Plan, or the commercially-licensed Pro and Premium Plans.
+See [the licensing page](/x/introduction/licensing/) for complete details.
 
-Note that you only need to install the packages corresponding to the components you're using—e.g. Data Grid users do not need to install Date and Time Pickers.
+Note that you only need to install the packages corresponding to the components you're using—e.g. Data Grid users don't need to install Date and Time Pickers.
 
 ## Dependencies
 
@@ -24,7 +24,7 @@ yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
 
-Material UI uses Emotion as its default style engine.
+Material UI uses Emotion as its default style library.
 If you prefer styled-components, run:
 
 npm
@@ -41,9 +41,9 @@ yarn add @mui/material @mui/styled-engine-sc styled-components
 
 ## Data Grid
 
-### Community Plan
+### Free version
 
-To install the Community Plan, run:
+To install the free version of the data grid, run:
 
 npm
 
@@ -57,9 +57,9 @@ yarn
 yarn add @mui/x-data-grid
 ```
 
-### Pro Plan
+### Pro version
 
-To install the Pro Plan, run:
+To install the Pro version, run:
 
 npm
 
@@ -73,9 +73,9 @@ yarn
 yarn add @mui/x-data-grid-pro
 ```
 
-### Premium Plan
+### Premium version
 
-To install the Premium Plan, run:
+To install the Premium version, run:
 
 npm
 
@@ -154,9 +154,9 @@ yarn
 yarn add @date-io/moment
 ```
 
-### Community Plan
+### Free version
 
-To install the Community Plan, run:
+To install the free version, run:
 
 npm
 
@@ -170,9 +170,9 @@ yarn
 yarn add @mui/x-date-pickers
 ```
 
-### Pro Plan
+### Pro version
 
-To install the Pro Plan, run:
+To install the Pro version, run:
 
 npm
 
