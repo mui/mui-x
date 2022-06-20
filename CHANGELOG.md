@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v5.12.2
+
+_Jun 16, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Performance improvement for dynamic row height (#5135) @m4theushw
+- 🕒 Add demo of how to use the data grid with date pickers (#5053) @cherniavskii
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.12.2` / `@mui/x-data-grid-pro@v5.12.2` / `@mui/x-data-grid-premium@v5.12.2`
+
+#### Changes
+
+- [DataGrid] Fix for cosmetic bug on column filter badge (#5170) @simbahandiane
+- [DataGrid] Hide vertical scrollbar if `autoHeight` is enabled (#5164) @m4theushw
+- [DataGrid] Use exponential search to render non-measured rows (#5135) @m4theushw
+- [DataGridPro] Fix label of the detail panel toggle column (#5191) @m4theushw
+- [DataGridPro] Refresh detail panel caches when props change (#5110) @m4theushw
+
+### Docs
+
+- [docs] Add example with custom checkbox column (#5161) @flaviendelangle
+- [docs] Batch small changes (#5177) @oliviertassinari
+- [docs] Fix demo currency format (#5034) @oliviertassinari
+- [docs] Fix outdated license description to match the EULA (#5219) @joserodolfofreitas
+- [docs] Fix redundant headers (#5104) @oliviertassinari
+- [docs] Fix some capitalization to match the guidelines (#5105) @oliviertassinari
+- [docs] Improve the `getRowId` doc section (#5156) @flaviendelangle
+- [docs] Instruction to deal with invalid license message (#5074) @joserodolfofreitas
+- [docs] Use redirection in the code (#5114) @oliviertassinari
+- [docs] Add demo of how to use the data grid with date pickers (#5053) @cherniavskii
+
+### Core
+
+- [core] Improve inline code rendering within the details tag (#5166) @Harmouch101
+- [core] Remove unused props from plugin typing (#5185) @flaviendelangle
+- [core] Use the scrollbar size from `useGridDimensions` on `DataGridProColumnHeaders` (#5201) @flaviendelangle
+- [core] Fix `GridColTypeDef` type (#5167) @cherniavskii
+- [core] Fix `GridColTypeDef` usage in demo (#5197) @cherniavskii
+- [test] Add `waitFor` before asserting height (#5203) @m4theushw
+
 ## v5.12.1
 
 _Jun 9, 2022_

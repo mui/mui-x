@@ -165,6 +165,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Разгруппировать по ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Развернуть',
   collapseDetailPanel: 'Свернуть',
 

@@ -169,6 +169,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Prestať zoskupovať podľa ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 

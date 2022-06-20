@@ -137,6 +137,7 @@ const itITGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Annulla raggruppamento per ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 

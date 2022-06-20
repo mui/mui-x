@@ -7,6 +7,11 @@ const other = {
   showColumnRightBorder: true,
 };
 
+const rows = [
+  { id: 1, username: '@MUI', age: 20 },
+  { id: 2, username: '@MUI-X', age: 25 },
+];
+
 export default function ColumnSpanningNumber() {
   return (
     <div style={{ width: '100%' }}>
@@ -21,10 +26,7 @@ export default function ColumnSpanningNumber() {
           },
           { field: 'age', hideable: false },
         ]}
-        rows={[
-          { id: 1, username: '@MUI', age: 20 },
-          { id: 2, username: '@MUI-X', age: 25 },
-        ]}
+        rows={rows}
         {...other}
       />
     </div>

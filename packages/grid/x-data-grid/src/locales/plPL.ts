@@ -132,6 +132,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Rozgrupuj ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Rozwiń',
   collapseDetailPanel: 'Zwiń',
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import Box from '@mui/material/Box';
 

@@ -104,7 +104,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         checked={isChecked}
         onChange={handleChange}
         className={classes.root}
-        color="primary"
         inputProps={{ 'aria-label': label }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}

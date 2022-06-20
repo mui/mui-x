@@ -2,9 +2,17 @@ import { generateUtilityClasses, generateUtilityClass } from '@mui/material';
 
 export interface GridClasses {
   /**
-   * Styles applied to the root element of the cell with type="actions"
+   * Styles applied to the root element of the cell with type="actions".
    */
   actionsCell: string;
+  /**
+   * Styles applied to the root element of the column header when aggregated.
+   */
+  aggregationColumnHeader: string;
+  /**
+   * Styles applied to the aggregation label in the column header when aggregated.
+   */
+  aggregationColumnHeaderLabel: string;
   /**
    * Styles applied to the root element if `autoHeight={true}`.
    */

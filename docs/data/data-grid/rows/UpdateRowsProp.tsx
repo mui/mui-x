@@ -54,13 +54,8 @@ export default function UpdateRowsProp() {
   };
 
   return (
-    <div style={{ width: '100%' }}>
-      <Stack
-        sx={{ width: '100%', mb: 1 }}
-        direction="row"
-        alignItems="flex-start"
-        columnGap={1}
-      >
+    <Box sx={{ width: '100%' }}>
+      <Stack direction="row" spacing={1}>
         <Button size="small" onClick={handleUpdateRow}>
           Update a row
         </Button>
@@ -74,9 +69,9 @@ export default function UpdateRowsProp() {
           Add a row
         </Button>
       </Stack>
-      <Box sx={{ height: 400, bgcolor: 'background.paper' }}>
-        <DataGrid hideFooter rows={rows} columns={columns} />
+      <Box sx={{ height: 400, mt: 1 }}>
+        <DataGrid rows={rows} columns={columns} />
       </Box>
-    </div>
+    </Box>
   );
 }

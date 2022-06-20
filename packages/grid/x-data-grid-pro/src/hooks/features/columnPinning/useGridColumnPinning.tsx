@@ -64,7 +64,7 @@ export const useGridColumnPinning = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
+    'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);

@@ -98,7 +98,6 @@ const columns: GridColDef[] = [
         {params.value.getFullYear()}
         <Button
           variant="contained"
-          color="primary"
           size="small"
           style={{ marginLeft: 16 }}
           tabIndex={params.hasFocus ? 0 : -1}

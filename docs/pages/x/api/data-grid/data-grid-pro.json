@@ -303,6 +303,8 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "aggregationColumnHeader",
+      "aggregationColumnHeaderLabel",
       "autoHeight",
       "booleanCell",
       "cell--editable",

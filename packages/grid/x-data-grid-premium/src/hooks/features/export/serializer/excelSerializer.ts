@@ -12,7 +12,10 @@ import {
 import { buildWarning } from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
 
-const getExcelJs = () => import('exceljs');
+const getExcelJs = async () => {
+  const { default: excelJsDefault } = await import('exceljs');
+  return excelJsDefault;
+};
 
 const warnInvalidFormattedValue = buildWarning([
   'MUI: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',

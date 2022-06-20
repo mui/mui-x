@@ -165,9 +165,9 @@ With media query, you have to start your `sx` object with `@media print` key, su
 ```jsx
 <DataGrid
   sx={{
-    "@media print": {
-      ".MuiDataGrid-main": { color: 'rgba(0, 0, 0, 0.87)' }
-    }
+    '@media print': {
+      '.MuiDataGrid-main': { color: 'rgba(0, 0, 0, 0.87)' },
+    },
   }}
   {/* ... */}
 />
@@ -206,7 +206,7 @@ For more option to customize the print export, please visit the [`printOptions` 
 :::warning
 Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
 
-In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN`.
+In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN` or unset the `X-Frame-Options` header.
 :::
 
 ## Custom export format
@@ -232,16 +232,6 @@ The demo below shows how to add a JSON export.
 ## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
-To install it:
-
-```sh
- // with npm
- npm install exceljs
-
- // with yarn
- yarn add exceljs
-```
-
 The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
 
 Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/components/data-grid/columns/#converting-types) as needed.

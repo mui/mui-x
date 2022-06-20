@@ -93,6 +93,10 @@ export interface GridAggregationCellMeta {
   aggregationFunctionName: string;
 }
 
+export interface GridAggregationHeaderMeta {
+  aggregationRule: GridAggregationRule;
+}
+
 export interface GridAggregationRule {
   aggregationFunctionName: string;
   aggregationFunction: GridAggregationFunction;

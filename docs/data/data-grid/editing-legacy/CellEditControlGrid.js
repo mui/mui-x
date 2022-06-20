@@ -5,6 +5,7 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
+import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 
 export default function CellEditControlGrid() {
@@ -15,19 +16,19 @@ export default function CellEditControlGrid() {
   }, []);
 
   return (
-    <div style={{ width: '100%' }}>
-      <Alert severity="info" style={{ marginBottom: 8 }}>
+    <Box sx={{ width: '100%' }}>
+      <Alert severity="info">
         <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
       </Alert>
-      <div style={{ height: 400, width: '100%' }}>
+      <Box sx={{ height: 400, mt: 1 }}>
         <DataGrid
           rows={rows}
           columns={columns}
           editRowsModel={editRowsModel}
           onEditRowsModelChange={handleEditRowsModelChange}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

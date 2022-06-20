@@ -4,7 +4,12 @@ import type {
   GridApiCachesPro,
 } from '@mui/x-data-grid-pro/typeOverloads';
 import type { GridGroupingValueGetterParams } from '../models';
-import type { GridRowGroupingModel, GridAggregationModel, GridAggregationCellMeta } from '../hooks';
+import type {
+  GridRowGroupingModel,
+  GridAggregationModel,
+  GridAggregationCellMeta,
+  GridAggregationHeaderMeta,
+} from '../hooks';
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
 
@@ -46,6 +51,11 @@ export interface GridRenderCellParamsPremium<V = any, R extends GridValidRowMode
   aggregation?: GridAggregationCellMeta;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export interface GridColumnHeaderParamsPremium<V = any, R extends GridValidRowModel = any, F = V> {
+  aggregation?: GridAggregationHeaderMeta;
+}
+
 export interface GridApiCachesPremium extends GridApiCachesPro {
   rowGrouping: GridRowGroupingInternalCache;
   aggregation: GridAggregationInternalCache;
@@ -58,8 +68,9 @@ declare module '@mui/x-data-grid-pro' {
     extends GridControlledStateEventLookupPro,
       GridControlledStateEventLookupPremium {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface GridRenderCellParams<V, R, F> extends GridRenderCellParamsPremium {}
+  interface GridRenderCellParams<V, R, F> extends GridRenderCellParamsPremium<V, R, F> {}
+
+  interface GridColumnHeaderParams<V, R, F> extends GridColumnHeaderParamsPremium<V, R, F> {}
 
   interface GridApiCaches extends GridApiCachesPremium {}
 }

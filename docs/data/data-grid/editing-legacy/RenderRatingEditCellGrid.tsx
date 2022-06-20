@@ -1,25 +1,32 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating, { RatingProps } from '@mui/material/Rating';
-import { DataGrid, GridRenderCellParams, GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridRenderCellParams,
+  GridColDef,
+  useGridApiContext,
+} from '@mui/x-data-grid';
 
 function renderRating(params: GridRenderCellParams<number>) {
   return <Rating readOnly value={params.value} />;
 }
 
 function RatingEditInputCell(props: GridRenderCellParams<number>) {
-  const { id, value, api, field } = props;
+  const { id, value, field } = props;
+
+  const apiRef = useGridApiContext();
 
   const handleChange: RatingProps['onChange'] = async (event, newValue) => {
-    api.setEditCellValue({ id, field, value: Number(newValue) }, event);
+    apiRef.current.setEditCellValue({ id, field, value: Number(newValue) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
     const nativeEvent = event.nativeEvent as unknown as MouseEvent;
     if (nativeEvent.clientX !== 0 && nativeEvent.clientY !== 0) {
       // Wait for the validation to run
-      const isValid = await api.commitCellChange({ id, field });
+      const isValid = await apiRef.current.commitCellChange({ id, field });
       if (isValid) {
-        api.setCellMode(id, field, 'view');
+        apiRef.current.setCellMode(id, field, 'view');
       }
     }
   };

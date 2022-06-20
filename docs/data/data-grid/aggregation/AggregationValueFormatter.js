@@ -44,7 +44,7 @@ const firstAlphabeticalAggregation = {
 
     return sortedValue[0];
   },
-  label: 'firstAlphabetical',
+  label: 'first alphabetical',
   columnTypes: ['string'],
 };
 

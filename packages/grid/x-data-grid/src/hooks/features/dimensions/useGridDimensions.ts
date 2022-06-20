@@ -113,6 +113,7 @@ export function useGridDimensions(
       viewportInnerSize,
       hasScrollX,
       hasScrollY,
+      scrollBarSize,
     };
 
     const prevDimensions = fullDimensionsRef.current;

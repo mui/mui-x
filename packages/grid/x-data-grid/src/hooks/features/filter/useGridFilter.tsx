@@ -55,7 +55,6 @@ export const useGridFilter = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'initialState'
     | 'filterModel'
     | 'onFilterModelChange'
     | 'filterMode'

@@ -135,6 +135,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Спри групиране по ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Разгъване',
   collapseDetailPanel: 'Свиване',
 
