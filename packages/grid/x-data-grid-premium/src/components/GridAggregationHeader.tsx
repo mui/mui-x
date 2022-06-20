@@ -31,7 +31,7 @@ const GridAggregationFunctionLabel = styled('div', {
   return {
     fontSize: theme.typography.caption.fontSize,
     lineHeight: theme.typography.caption.fontSize,
-    marginTop: `calc(0px - ${theme.typography.caption.fontSize})`,
+    marginTop: `calc(-2px - ${theme.typography.caption.fontSize})`,
     fontWeight: theme.typography.fontWeightMedium,
     color: theme.palette.grey['600'],
     textTransform: 'uppercase',
