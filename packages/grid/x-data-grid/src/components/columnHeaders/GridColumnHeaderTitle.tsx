@@ -49,11 +49,12 @@ export interface GridColumnHeaderTitleProps {
   label: string;
   columnWidth: number;
   description?: React.ReactNode;
+  className?: string;
 }
 
 // No React.memo here as if we display the sort icon, we need to recalculate the isOver
 function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
-  const { label, description, columnWidth } = props;
+  const { label, description, columnWidth, className } = props;
   const rootProps = useGridRootProps();
   const titleRef = React.useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = React.useState('');
@@ -74,7 +75,9 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
       title={description || tooltip}
       {...rootProps.componentsProps?.baseTooltip}
     >
-      <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
+      <ColumnHeaderInnerTitle ref={titleRef} className={className}>
+        {label}
+      </ColumnHeaderInnerTitle>
     </rootProps.components.BaseTooltip>
   );
 }

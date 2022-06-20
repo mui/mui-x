@@ -145,15 +145,11 @@ export const GridRootStyles = styled('div', {
       cursor: 'pointer',
     },
     [`& .${gridClasses['columnHeader--alignCenter']} .${gridClasses.columnHeaderTitleContainer}`]: {
-      justifyContent: 'center',m
+      justifyContent: 'center',
     },
     [`& .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderDraggableContainer}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderTitleContainer}`]:
       {
         flexDirection: 'row-reverse',
-      },
-    [`& .${gridClasses['columnHeader--alignLeft']} .${gridClasses.columnHeaderTitleContainerContent}`]:
-      {
-        flex: 1,
       },
     [`& .${gridClasses['columnHeader--alignCenter']} .${gridClasses.menuIcon}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}`]:
       {

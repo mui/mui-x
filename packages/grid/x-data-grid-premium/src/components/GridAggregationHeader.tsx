@@ -21,26 +21,19 @@ const GridAggregationHeaderRoot = styled(Box, {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeader',
   overridesResolver: (_, styles) => styles.aggregationColumnHeader,
-})<{ ownerState: OwnerState }>({
-  position: 'relative',
-  flex: 1,
-});
+})<{ ownerState: OwnerState }>({});
+
+const GridAggregationColumnHeaderTitle = styled(GridColumnHeaderTitle)({});
 
 const GridAggregationFunctionLabel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeaderLabel',
   overridesResolver: (_, styles) => styles.aggregationColumnHeaderLabel,
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => {
-  const isCompact = ownerState.headerHeight < 40;
-
+})<{ ownerState: OwnerState }>(({ theme }) => {
   return {
-    position: 'absolute',
-    bottom: `calc(50% - ${theme.typography.fontSize}px / 2 - ${
-      theme.typography.caption.fontSize
-    } - ${isCompact ? '0px' : theme.spacing(0.5)})`,
-    left: 0,
     fontSize: theme.typography.caption.fontSize,
     lineHeight: theme.typography.caption.fontSize,
+    marginTop: `calc(0px - ${theme.typography.caption.fontSize})`,
     fontWeight: theme.typography.fontWeightMedium,
     color: theme.palette.grey['600'],
     textTransform: 'uppercase',
@@ -67,7 +60,7 @@ const GridAggregationHeader = (props: GridColumnHeaderParams) => {
 
   return (
     <GridAggregationHeaderRoot ownerState={ownerState}>
-      <GridColumnHeaderTitle
+      <GridAggregationColumnHeaderTitle
         label={colDef.headerName ?? colDef.field}
         description={colDef.description}
         columnWidth={colDef.computedWidth}
