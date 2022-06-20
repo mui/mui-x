@@ -23,8 +23,6 @@ const GridAggregationHeaderRoot = styled(Box, {
   overridesResolver: (_, styles) => styles.aggregationColumnHeader,
 })<{ ownerState: OwnerState }>({});
 
-const GridAggregationColumnHeaderTitle = styled(GridColumnHeaderTitle)({});
-
 const GridAggregationFunctionLabel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeaderLabel',
@@ -60,7 +58,7 @@ const GridAggregationHeader = (props: GridColumnHeaderParams) => {
 
   return (
     <GridAggregationHeaderRoot ownerState={ownerState}>
-      <GridAggregationColumnHeaderTitle
+      <GridColumnHeaderTitle
         label={colDef.headerName ?? colDef.field}
         description={colDef.description}
         columnWidth={colDef.computedWidth}
