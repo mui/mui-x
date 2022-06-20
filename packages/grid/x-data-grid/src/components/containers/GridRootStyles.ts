@@ -137,7 +137,6 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
-      flex: 1,
     },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
@@ -146,11 +145,15 @@ export const GridRootStyles = styled('div', {
       cursor: 'pointer',
     },
     [`& .${gridClasses['columnHeader--alignCenter']} .${gridClasses.columnHeaderTitleContainer}`]: {
-      justifyContent: 'center',
+      justifyContent: 'center',m
     },
     [`& .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderDraggableContainer}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderTitleContainer}`]:
       {
         flexDirection: 'row-reverse',
+      },
+    [`& .${gridClasses['columnHeader--alignLeft']} .${gridClasses.columnHeaderTitleContainerContent}`]:
+      {
+        flex: 1,
       },
     [`& .${gridClasses['columnHeader--alignCenter']} .${gridClasses.menuIcon}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}`]:
       {
