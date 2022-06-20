@@ -10,6 +10,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridLoadIcon } from '../icons/index';
 import { SUBMIT_FILTER_STROKE_TIME } from '../panel/filterPanel/GridFilterInputValue';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -76,6 +77,7 @@ function GridEditInputCell(props: GridEditInputCellProps) {
     ...other
   } = props;
 
+  const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>();
   const [valueState, setValueState] = React.useState(value);
   const ownerState = { classes: rootProps.classes };
@@ -90,9 +92,9 @@ function GridEditInputCell(props: GridEditInputCellProps) {
       }
 
       setValueState(newValue);
-      api.setEditCellValue({ id, field, value: newValue, debounceMs }, event);
+      apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs }, event);
     },
-    [api, debounceMs, field, id, onValueChange],
+    [apiRef, debounceMs, field, id, onValueChange],
   );
 
   React.useEffect(() => {

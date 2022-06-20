@@ -1,15 +1,16 @@
 import * as React from 'react';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { DataGrid, GridRenderEditCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid';
 
 const SelectEditInputCell = (props: GridRenderEditCellParams) => {
-  const { id, value, api, field } = props;
+  const { id, value, field } = props;
+  const apiRef = useGridApiContext();
 
   const handleChange = (event) => {
-    api.setEditCellValue({ id, field, value: event.target.value }, event);
-    api.commitCellChange({ id, field });
-    api.setCellMode(id, field, 'view');
+    apiRef.current.setEditCellValue({ id, field, value: event.target.value }, event);
+    apiRef.current.commitCellChange({ id, field });
+    apiRef.current.setCellMode(id, field, 'view');
   };
 
   return (
