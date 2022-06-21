@@ -563,3 +563,4 @@ See [Localization](/x/react-date-pickers/localization/) for more information.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
