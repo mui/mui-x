@@ -5,7 +5,7 @@
 ## Introduction
 
 This is a reference for migrating your site's pickers from `@mui/lab` to `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
-This migration only concerns packages and should do not affect the behavior of the components in your app.
+This migration only concerns packages and **should not** affect the behavior of the components in your app.
 
 We explored the reasons of this migration in a [blog post](/blog/lab-date-pickers-to-mui-x/)
 
