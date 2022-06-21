@@ -56,10 +56,8 @@ import {
   useGridRowReorder,
   useGridRowReorderPreProcessors,
 } from '@mui/x-data-grid-pro/internals';
-
 import { GridApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
-
 // Premium-only features
 import {
   useGridRowGrouping,
