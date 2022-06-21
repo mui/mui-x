@@ -30,6 +30,12 @@ Depending on where you are trying to access this variable, you will have to use 
 If you need to access the api object inside component slots or inside renders (e.g: `renderCell`, `renderHeader`),
 you can use the `useGridApiContext` hook.
 
+```tsx
+const apiRef = useGridApiContext();
+
+<Button onClick={() => apiRef.current.setPage(1)}>Go to page 1</Button>;
+```
+
 :::info
 You don't have to initialize the API object using `useGridApiRef` to be able to it inside the grid components.
 :::
@@ -40,6 +46,15 @@ You don't have to initialize the API object using `useGridApiRef` to be able to 
 
 When using the API object outside the grid components, you need to initialize it using the `useGridApiRef` hook.
 You can then pass it to the `apiRef` prop of the grid.
+
+```tsx
+const apiRef = useGridApiRef();
+
+<div>
+  <Button onClick={() => apiRef.current.setPage(1)}>Go to page 1</Button>
+  <DataGridPro apiRef={apiRef} {...other} />
+</div>;
+```
 
 :::warning
 The API object will be populated by the various plugins of the grid during the 1st render of our component.
