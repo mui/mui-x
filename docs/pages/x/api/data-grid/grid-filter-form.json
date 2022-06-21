@@ -16,6 +16,7 @@
     "deleteIconProps": { "type": { "name": "any" }, "default": "{}" },
     "disableMultiFilterOperator": { "type": { "name": "bool" } },
     "focusElementRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "InputComponentProps": { "type": { "name": "any" }, "default": "{}" },
     "linkOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
     "linkOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },

@@ -299,6 +299,11 @@ More details are available in the demo.
 | `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
 | `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
 
+The value input is a spacial case, because it can be any input component.
+You can either [create your own `InputComponent`](#create-a-custom-operator).
+You can provide `InputComponentProps` which will be passed directly to `InputComponent`.
+Contrary to `valueInputProps` which are passe to its wrapper.
+
 {{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
 
 ### Customize the filter panel position
