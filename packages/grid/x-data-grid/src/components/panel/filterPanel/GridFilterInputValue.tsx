@@ -109,6 +109,9 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       setIsApplying(true);
       // TODO singleSelect doesn't debounce
       filterTimeout.current = setTimeout(() => {
+        if (type !== 'singleSelect') {
+          value = value.trim();
+        }
         applyValue({ ...item, value });
         setIsApplying(false);
       }, SUBMIT_FILTER_STROKE_TIME);
