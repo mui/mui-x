@@ -39,7 +39,7 @@ The grid exposes two hooks to help you to access the grid data while overriding 
 
 They can be used as below:
 
-- `useGridApiContext`: returns the `apiRef` (more details in the [API object page](/x/react-data-grid/api-object/#use-it-outside-the-grid)).
+- `useGridApiContext`: returns the `apiRef` object (more details in the [API object page](/x/react-data-grid/api-object/#use-it-inside-the-grid)).
 - `useGridSelector`: returns the result of a selector on the current state (more details in the [State page](/x/react-data-grid/state/#access-the-state)).
 
 ```tsx
