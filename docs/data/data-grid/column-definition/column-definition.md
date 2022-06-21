@@ -134,7 +134,7 @@ You can check the [tab sequence](/x/react-data-grid/accessibility/#tab-sequence)
 
 The `renderCell` property is a function returning a React node, not a React component.
 
-If you can to use React hooks inside your renderer, you should wrap them inside a component.
+If you want to use React hooks inside your renderer, you should wrap them inside a component.
 
 ```tsx
 // ❌ Not valid
@@ -163,6 +163,13 @@ const column = {
   renderCell: () => <CountButton />,
 };
 ```
+
+:::warning
+Because of pagination and virtualization, cells can be unmounted when scrolling or switching pages.
+The internal state of the component returned by renderCell will be lost.
+
+If you want to persist cell information, you should save it either in the data grid state or in the data grid parent
+:::
 
 ### Expand cell renderer
 
