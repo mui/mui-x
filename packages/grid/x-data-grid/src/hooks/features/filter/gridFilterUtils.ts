@@ -241,17 +241,18 @@ export const buildAggregatedQuickFilterApplier = (
 
   return (rowId, shouldApplyFilter) => {
     const usedCellParams: { [field: string]: GridCellParams } = {};
+    const columnsFieldsToFilter: string[] = [];
 
     Object.keys(appliersPerColumnField).forEach((columnField) => {
       if (!shouldApplyFilter || shouldApplyFilter(columnField)) {
         usedCellParams[columnField] = apiRef.current.getCellParams(rowId, columnField);
+        columnsFieldsToFilter.push(columnField);
       }
     });
-
     // Return `false` as soon as we have a quick filter value that does not match any column
     if (quickFilterLogicOperator === GridLinkOperator.And) {
       return sanitizedQuickFilterValues.every((value, index) =>
-        Object.keys(appliersPerColumnField).some((field) => {
+        columnsFieldsToFilter.some((field) => {
           if (appliersPerColumnField[field][index] == null) {
             return false;
           }
@@ -262,7 +263,7 @@ export const buildAggregatedQuickFilterApplier = (
 
     // Return `true` as soon as we have have a quick filter value that match any column
     return sanitizedQuickFilterValues.some((value, index) =>
-      Object.keys(appliersPerColumnField).some((field) => {
+      columnsFieldsToFilter.some((field) => {
         if (appliersPerColumnField[field][index] == null) {
           return false;
         }
