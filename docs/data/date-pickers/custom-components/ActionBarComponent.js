@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import DialogActions from '@mui/material/DialogActions';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import { useLocaleText, WrapperVariantContext } from '@mui/x-date-pickers/internals';
 import useId from '@mui/utils/useId';
@@ -19,13 +19,6 @@ const CustomActionBar = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const id = useId();
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const actionsArray =
     typeof actions === 'function' ? actions(wrapperVariant) : actions;
@@ -102,7 +95,7 @@ const CustomActionBar = (props) => {
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
+        onClick={(event) => setAnchorEl(event.currentTarget)}
       >
         Actions
       </Button>
@@ -110,7 +103,7 @@ const CustomActionBar = (props) => {
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={() => setAnchorEl(null)}
         MenuListProps={{
           'aria-labelledby': `picker-actions-${id}`,
         }}
@@ -142,7 +135,7 @@ export default function ActionBarComponent() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <StaticDateTimePicker
+      <StaticDatePicker
         onChange={(newValue) => setValue(newValue)}
         value={value}
         renderInput={(params) => <TextField {...params} />}

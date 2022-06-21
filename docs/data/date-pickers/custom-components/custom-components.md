@@ -54,7 +54,7 @@ You can override the action displayed using the `actions` prop passed to this co
 />
 ```
 
-In the example below, the action bar contains only one button to reset to today's date and time.
+In the example below, the action bar contains only one button to reset to today's date:
 
 {{"demo": "ActionBarComponentProps.js"}}
 
@@ -74,6 +74,6 @@ The build-in `ActionBar` component supports 4 different actions:
 If the customization above are not flexible enough, you can provide a custom component.
 It can be used in combination with `componentsProps`.
 
-In the example below, the actions are the same as in the section above, but they are rendered inside a menu.
+In the example below, the actions are the same as in the section above, but they are rendered inside a menu:
 
 {{"demo": "ActionBarComponent.js"}}

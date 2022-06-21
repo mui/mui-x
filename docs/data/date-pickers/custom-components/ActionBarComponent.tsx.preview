@@ -1,5 +1,5 @@
 <LocalizationProvider dateAdapter={AdapterDateFns}>
-  <StaticDateTimePicker
+  <StaticDatePicker
     onChange={(newValue) => setValue(newValue)}
     value={value}
     renderInput={(params) => <TextField {...params} />}
