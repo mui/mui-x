@@ -66,7 +66,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
     warnDeprecatedTypeSupport(type as string);
   }
   const filterTimeout = React.useRef<any>();
-  const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
+  const [filterValueState, setFilterValueState] = React.useState<string>(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
@@ -127,7 +127,9 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
 
   React.useEffect(() => {
     const itemValue = item.value ?? '';
-    setFilterValueState(String(itemValue));
+    setFilterValueState((prevValue) =>
+      prevValue.trim() === itemValue ? prevValue : String(itemValue),
+    );
   }, [item.value]);
 
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
