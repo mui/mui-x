@@ -46,7 +46,7 @@ describe('<CalendarPicker />', () => {
     const handleViewChange = spy();
     render(
       <CalendarPicker
-        date={new Date(2019, 0, 1)}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={() => {}}
         onViewChange={handleViewChange}
       />,
@@ -64,7 +64,7 @@ describe('<CalendarPicker />', () => {
     const onMonthChangeMock = spy();
     render(
       <CalendarPicker
-        date={new Date(2019, 0, 1)}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onMonthChange={onMonthChangeMock}
         readOnly
@@ -89,7 +89,7 @@ describe('<CalendarPicker />', () => {
     const onMonthChangeMock = spy();
     render(
       <CalendarPicker
-        date={new Date(2019, 0, 1)}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onMonthChange={onMonthChangeMock}
         disabled
@@ -115,7 +115,7 @@ describe('<CalendarPicker />', () => {
     const onMonthChangeMock = spy();
     render(
       <CalendarPicker
-        date={new Date(2019, 0, 1)}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onMonthChange={onMonthChangeMock}
         disabled
@@ -137,7 +137,7 @@ describe('<CalendarPicker />', () => {
         dateAdapter={AdapterClassToUse}
         dateFormats={{ monthAndYear: 'yyyy/MM' }}
       >
-        <CalendarPicker date={new Date(2019, 0, 1)} onChange={() => {}} />,
+        <CalendarPicker date={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />,
       </LocalizationProvider>,
     );
 
@@ -149,9 +149,9 @@ describe('<CalendarPicker />', () => {
 
     render(
       <CalendarPicker
-        date={new Date(2019, 0, 1)}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChange}
-        maxDate={new Date(2018, 0, 1)}
+        maxDate={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -162,7 +162,7 @@ describe('<CalendarPicker />', () => {
 
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
-      render(<CalendarPicker date={new Date(2019, 0, 1)} onChange={() => {}} />);
+      render(<CalendarPicker date={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />);
 
       expect(screen.getByText('January 2019')).toBeVisible();
       expect(screen.getAllByMuiTest('day')).to.have.length(31);
@@ -179,7 +179,7 @@ describe('<CalendarPicker />', () => {
         <CalendarPicker
           date={null}
           onChange={onChange}
-          defaultCalendarMonth={new Date(2018, 0, 1)}
+          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
           view="day"
         />,
       );
@@ -194,16 +194,18 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={new Date(2018, 0, 3, 11, 11, 11, 111)}
+          date={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
           onChange={onChange}
-          defaultCalendarMonth={new Date(2018, 0, 1)}
+          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
           view="day"
         />,
       );
 
       userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2, 11, 11, 11));
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date(new Date(2018, 0, 2, 11, 11, 11)),
+      );
     });
   });
 
@@ -213,7 +215,7 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={new Date(2019, 0, 1)}
+          date={adapterToUse.date(new Date(2019, 0, 1))}
           onChange={onChange}
           shouldDisableDate={(date) => {
             // Missing `getDate` in adapters
@@ -240,8 +242,8 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={new Date(2019, 5, 1)}
-          minDate={new Date(2019, 3, 7)}
+          date={adapterToUse.date(new Date(2019, 5, 1))}
+          minDate={adapterToUse.date(new Date(2019, 3, 7))}
           onChange={onChange}
           views={['month', 'day']}
           openTo="month"
@@ -260,8 +262,8 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={new Date(2019, 0, 29)}
-          maxDate={new Date(2019, 3, 22)}
+          date={adapterToUse.date(new Date(2019, 0, 29))}
+          maxDate={adapterToUse.date(new Date(2019, 3, 22))}
           onChange={onChange}
           views={['month', 'day']}
           openTo="month"
@@ -280,7 +282,7 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={new Date(2019, 0, 29)}
+          date={adapterToUse.date(new Date(2019, 0, 29))}
           onChange={onChange}
           shouldDisableDate={(date) => adapterToUse.getMonth(date) === 3}
           views={['month', 'day']}
@@ -299,7 +301,13 @@ describe('<CalendarPicker />', () => {
 
   describe('view: year', () => {
     it('renders year selection standalone', () => {
-      render(<CalendarPicker date={new Date(2019, 0, 1)} openTo="year" onChange={() => {}} />);
+      render(
+        <CalendarPicker
+          date={adapterToUse.date(new Date(2019, 0, 1))}
+          openTo="year"
+          onChange={() => {}}
+        />,
+      );
 
       expect(screen.getAllByMuiTest('year')).to.have.length(200);
     });
@@ -309,7 +317,7 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={new Date(2019, 3, 29)}
+          date={adapterToUse.date(new Date(2019, 3, 29))}
           onChange={onChange}
           shouldDisableDate={(date) =>
             adapterToUse.getYear(date) === 2022 && adapterToUse.getMonth(date) === 3
@@ -331,8 +339,8 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={new Date(2019, 3, 29)}
-          minDate={new Date(2017, 4, 12)}
+          date={adapterToUse.date(new Date(2019, 3, 29))}
+          minDate={adapterToUse.date(new Date(2017, 4, 12))}
           onChange={onChange}
           views={['year', 'day']}
           openTo="year"
@@ -351,8 +359,8 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={new Date(2019, 3, 29)}
-          maxDate={new Date(2022, 2, 31)}
+          date={adapterToUse.date(new Date(2019, 3, 29))}
+          maxDate={adapterToUse.date(new Date(2022, 2, 31))}
           onChange={onChange}
           views={['year', 'day']}
           openTo="year"
@@ -371,7 +379,7 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={new Date(2019, 3, 29)}
+          date={adapterToUse.date(new Date(2019, 3, 29))}
           onChange={onChange}
           shouldDisableDate={(date) => adapterToUse.getYear(date) === 2022}
           views={['year', 'day']}

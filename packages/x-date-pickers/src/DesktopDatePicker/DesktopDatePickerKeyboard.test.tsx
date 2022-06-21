@@ -5,14 +5,16 @@ import { isWeekend } from 'date-fns';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
-import { createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 import { MakeOptional } from '../internals/models/helpers';
 
 function TestKeyboardDatePicker(
   PickerProps: MakeOptional<DesktopDatePickerProps<any, any>, 'value' | 'onChange' | 'renderInput'>,
 ) {
   const { onChange: propsOnChange, value: propsValue, ...other } = PickerProps;
-  const [value, setValue] = React.useState<unknown>(propsValue ?? new Date(2019, 0, 1));
+  const [value, setValue] = React.useState<unknown>(
+    propsValue ?? adapterToUse.date(new Date(2019, 0, 1)),
+  );
 
   return (
     <DesktopDatePicker
@@ -149,12 +151,12 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
       { expectedError: 'disableFuture', props: { disableFuture: true }, input: '01/01/2050' },
       {
         expectedError: 'minDate',
-        props: { minDate: new Date(2000, 0, 1) },
+        props: { minDate: adapterToUse.date(new Date(2000, 0, 1)) },
         input: '01/01/1990',
       },
       {
         expectedError: 'maxDate',
-        props: { maxDate: new Date(2000, 0, 1) },
+        props: { maxDate: adapterToUse.date(new Date(2000, 0, 1)) },
         input: '01/01/2010',
       },
       {

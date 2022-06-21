@@ -9,6 +9,7 @@ import {
   createPickerRenderer,
   withPickerControls,
   FakeTransitionComponent,
+  adapterToUse,
   openPicker,
 } from '../../../../test/utils/pickers-utils';
 
@@ -77,7 +78,10 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedMobileDateRangePicker
@@ -114,7 +118,10 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedMobileDateRangePicker
@@ -143,7 +150,10 @@ describe('<MobileDateRangePicker />', () => {
     it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', () => {
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedMobileDateRangePicker
@@ -169,7 +179,10 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedMobileDateRangePicker
@@ -199,7 +212,10 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedMobileDateRangePicker
@@ -228,7 +244,10 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedMobileDateRangePicker

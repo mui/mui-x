@@ -9,6 +9,7 @@ import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import {
   createPickerRenderer,
   FakeTransitionComponent,
+  adapterToUse,
   withPickerControls,
   openPicker,
 } from '../../../../test/utils/pickers-utils';
@@ -50,7 +51,7 @@ describe('<DesktopDatePicker />', () => {
       const handleOpen = spy();
       render(
         <DesktopDatePicker
-          value={new Date(2019, 0, 1)}
+          value={adapterToUse.date(new Date(2019, 0, 1))}
           {...{ [prop]: true }}
           onChange={() => {}}
           onOpen={handleOpen}
@@ -119,7 +120,7 @@ describe('<DesktopDatePicker />', () => {
         showToolbar
         onChange={() => {}}
         TransitionComponent={FakeTransitionComponent}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
@@ -135,7 +136,7 @@ describe('<DesktopDatePicker />', () => {
         showToolbar
         onChange={() => {}}
         TransitionComponent={FakeTransitionComponent}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         renderInput={(params) => <TextField {...params} />}
         onViewChange={handleViewChange}
       />,
@@ -254,7 +255,7 @@ describe('<DesktopDatePicker />', () => {
           <React.Fragment>
             <div style={{ height: '200vh' }}>Spacer</div>
             <DesktopDatePicker
-              value={new Date(2018, 0, 1)}
+              value={adapterToUse.date(new Date(2018, 0, 1))}
               OpenPickerButtonProps={{ ref: anchorElRef }}
               onChange={() => {}}
               onClose={handleClose}
@@ -292,7 +293,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDatePicker
@@ -321,7 +322,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDatePicker
@@ -354,7 +355,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDatePicker
@@ -384,7 +385,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDatePicker
@@ -409,7 +410,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDatePicker
@@ -438,7 +439,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDatePicker
@@ -461,7 +462,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDatePicker
@@ -485,7 +486,7 @@ describe('<DesktopDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDatePicker
@@ -542,7 +543,7 @@ describe('<DesktopDatePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          initialValue={new Date(2018, 0, 1)}
+          initialValue={adapterToUse.date(new Date(2018, 0, 1))}
         />,
       );
 
@@ -565,7 +566,7 @@ describe('<DesktopDatePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          initialValue={new Date(2018, 0, 1)}
+          initialValue={adapterToUse.date(new Date(2018, 0, 1))}
           openTo="year"
         />,
       );

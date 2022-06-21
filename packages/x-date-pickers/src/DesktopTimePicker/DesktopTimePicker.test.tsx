@@ -53,7 +53,7 @@ describe('<DesktopTimePicker />', () => {
       const handleOpen = spy();
       render(
         <DesktopTimePicker
-          value={new Date(2019, 0, 1)}
+          value={adapterToUse.date(new Date(2019, 0, 1))}
           {...{ [prop]: true }}
           onChange={() => {}}
           onOpen={handleOpen}
@@ -75,7 +75,7 @@ describe('<DesktopTimePicker />', () => {
       <DesktopTimePicker
         open
         views={['hours', 'minutes', 'seconds']}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -106,7 +106,7 @@ describe('<DesktopTimePicker />', () => {
         onChange={handleChange}
         open
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2019, 0, 1, 4, 20)}
+        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
       />,
     );
     const buttonPM = screen.getByRole('button', { name: 'PM' });
@@ -127,7 +127,7 @@ describe('<DesktopTimePicker />', () => {
         onChange={handleChange}
         open
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2019, 0, 1, 4, 20)}
+        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
       />,
     );
 
@@ -157,7 +157,7 @@ describe('<DesktopTimePicker />', () => {
         onChange={handleChange}
         open
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2019, 0, 1, 4, 20)}
+        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
       />,
     );
 
@@ -208,12 +208,12 @@ describe('<DesktopTimePicker />', () => {
       { expectedError: 'invalidDate', props: { disableMaskedInput: true }, input: 'invalidText' },
       {
         expectedError: 'minTime',
-        props: { minTime: new Date(2000, 0, 1, 8) },
+        props: { minTime: adapterToUse.date(new Date(2000, 0, 1, 8)) },
         input: '03:00',
       },
       {
         expectedError: 'maxTime',
-        props: { maxTime: new Date(2000, 0, 1, 8) },
+        props: { maxTime: adapterToUse.date(new Date(2000, 0, 1, 8)) },
         input: '12:00',
       },
       { expectedError: 'shouldDisableTime-hours', props: { shouldDisableTime }, input: '10:00' },
@@ -324,7 +324,7 @@ describe('<DesktopTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopTimePicker
@@ -364,7 +364,7 @@ describe('<DesktopTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopTimePicker
@@ -394,7 +394,7 @@ describe('<DesktopTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopTimePicker
@@ -424,7 +424,7 @@ describe('<DesktopTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopTimePicker
@@ -448,7 +448,7 @@ describe('<DesktopTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopTimePicker
@@ -477,7 +477,7 @@ describe('<DesktopTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopTimePicker
@@ -499,7 +499,7 @@ describe('<DesktopTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopTimePicker

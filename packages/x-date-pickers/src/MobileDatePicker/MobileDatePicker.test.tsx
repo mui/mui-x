@@ -27,7 +27,7 @@ describe('<MobileDatePicker />', () => {
     render(
       <MobileDatePicker
         open
-        value={new Date(2019, 0, 1)}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -48,8 +48,8 @@ describe('<MobileDatePicker />', () => {
         value={null}
         onChange={() => {}}
         openTo="year"
-        minDate={new Date(2000, 0, 1)}
-        maxDate={new Date(2010, 0, 1)}
+        minDate={adapterToUse.date(new Date(2000, 0, 1))}
+        maxDate={adapterToUse.date(new Date(2010, 0, 1))}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
@@ -66,7 +66,7 @@ describe('<MobileDatePicker />', () => {
         toolbarTitle="test"
         label="something"
         onChange={() => {}}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -80,7 +80,7 @@ describe('<MobileDatePicker />', () => {
         label="Default label"
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -94,7 +94,7 @@ describe('<MobileDatePicker />', () => {
         open
         onChange={() => {}}
         toolbarFormat="MMMM"
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -109,7 +109,7 @@ describe('<MobileDatePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         onChange={() => {}}
         onMonthChange={onMonthChangeMock}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -124,7 +124,7 @@ describe('<MobileDatePicker />', () => {
         loading
         renderInput={(params) => <TextField {...params} />}
         onChange={() => {}}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -140,7 +140,7 @@ describe('<MobileDatePicker />', () => {
         open
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -167,7 +167,7 @@ describe('<MobileDatePicker />', () => {
       <MobileDatePicker
         renderInput={(params) => <TextField {...params} />}
         open
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         onChange={() => {}}
         renderDay={(day, _selected, pickersDayProps) => (
           <PickersDay {...pickersDayProps} data-testid="test-day" />
@@ -185,7 +185,7 @@ describe('<MobileDatePicker />', () => {
         open
         value={null}
         onChange={() => {}}
-        defaultCalendarMonth={new Date(2018, 6, 1)}
+        defaultCalendarMonth={adapterToUse.date(new Date(2018, 6, 1))}
       />,
     );
 
@@ -200,7 +200,7 @@ describe('<MobileDatePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         onClose={onCloseMock}
         onChange={handleChange}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         DialogProps={{ TransitionComponent: FakeTransitionComponent }}
         componentsProps={{ actionBar: { actions: ['today'] } }}
       />,
@@ -234,7 +234,7 @@ describe('<MobileDatePicker />', () => {
       const handleOpen = spy();
       render(
         <MobileDatePicker
-          value={new Date(2019, 0, 1)}
+          value={adapterToUse.date(new Date(2019, 0, 1))}
           {...{ [prop]: true }}
           onChange={() => {}}
           onOpen={handleOpen}
@@ -265,7 +265,7 @@ describe('<MobileDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileDatePicker
@@ -300,7 +300,7 @@ describe('<MobileDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileDatePicker
@@ -327,7 +327,7 @@ describe('<MobileDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileDatePicker
@@ -355,7 +355,7 @@ describe('<MobileDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileDatePicker
@@ -382,7 +382,7 @@ describe('<MobileDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileDatePicker
@@ -406,7 +406,7 @@ describe('<MobileDatePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileDatePicker

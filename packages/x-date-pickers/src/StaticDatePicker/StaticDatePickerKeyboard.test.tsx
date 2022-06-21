@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 describe('<StaticDatePicker /> keyboard interactions', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -14,7 +14,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         <StaticDatePicker
           autoFocus
           displayStaticWrapperAs="desktop"
-          value={new Date(2020, 7, 13)}
+          value={adapterToUse.date(new Date(2020, 7, 13))}
           onChange={() => {}}
           renderInput={(params) => <TextField placeholder="10/10/2018" {...params} />}
         />,
@@ -36,7 +36,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
           <StaticDatePicker
             autoFocus
             displayStaticWrapperAs="desktop"
-            value={new Date(2020, 7, 13)}
+            value={adapterToUse.date(new Date(2020, 7, 13))}
             onChange={() => {}}
             renderInput={(params) => <TextField placeholder="10/10/2018" {...params} />}
           />,
@@ -56,8 +56,8 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
       <StaticDatePicker
         autoFocus
         displayStaticWrapperAs="desktop"
-        value={new Date(2020, 7, 13)}
-        minDate={new Date(2020, 7, 13)}
+        value={adapterToUse.date(new Date(2020, 7, 13))}
+        minDate={adapterToUse.date(new Date(2020, 7, 13))}
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -89,7 +89,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
             openTo="year"
             reduceAnimations
             displayStaticWrapperAs="desktop"
-            value={new Date(2020, 7, 13)}
+            value={adapterToUse.date(new Date(2020, 7, 13))}
             onChange={() => {}}
             renderInput={(params) => <TextField {...params} />}
           />,

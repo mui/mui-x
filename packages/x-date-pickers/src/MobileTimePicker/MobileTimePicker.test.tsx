@@ -12,6 +12,7 @@ import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   wrapPickerMount,
   createPickerRenderer,
+  adapterToUse,
   withPickerControls,
   FakeTransitionComponent,
   openPicker,
@@ -71,7 +72,7 @@ describe('<MobileTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileTimePicker
@@ -89,13 +90,17 @@ describe('<MobileTimePicker />', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 11));
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date(new Date(2018, 0, 1, 11)),
+      );
 
       // Change the minutes
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', getClockTouchEvent());
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', getClockTouchEvent());
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 11, 53));
+      expect(onChange.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date(new Date(2018, 0, 1, 11, 53)),
+      );
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
@@ -107,7 +112,7 @@ describe('<MobileTimePicker />', () => {
 
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileTimePicker
@@ -130,7 +135,9 @@ describe('<MobileTimePicker />', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', getClockTouchEvent());
 
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 11, 53));
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date(new Date(2018, 0, 1, 11, 53)),
+      );
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -142,7 +149,7 @@ describe('<MobileTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileTimePicker
@@ -176,7 +183,7 @@ describe('<MobileTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileTimePicker
@@ -198,7 +205,9 @@ describe('<MobileTimePicker />', () => {
       userEvent.mousePress(screen.getByText(/ok/i));
       expect(onChange.callCount).to.equal(1); // Hours change
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 11));
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(
+        adapterToUse.date(new Date(2018, 0, 1, 11)),
+      );
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -206,7 +215,7 @@ describe('<MobileTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedMobileTimePicker

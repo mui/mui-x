@@ -10,6 +10,7 @@ import {
   wrapPickerMount,
   createPickerRenderer,
   FakeTransitionComponent,
+  adapterToUse,
   AdapterClassToUse,
   withPickerControls,
   openPicker,
@@ -60,7 +61,10 @@ describe('<DesktopDateRangePicker />', () => {
     it('should accept single day range', () => {
       render(
         <WrappedDesktopDateRangePicker
-          initialValue={[new Date(2018, 0, 1), new Date(2018, 0, 1)]}
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 1)),
+          ]}
         />,
       );
       const textboxes = screen.getAllByRole('textbox');
@@ -71,7 +75,10 @@ describe('<DesktopDateRangePicker />', () => {
     it('should not accept end date prior to start state', () => {
       render(
         <WrappedDesktopDateRangePicker
-          initialValue={[new Date(2018, 0, 2), new Date(2018, 0, 1)]}
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 2)),
+            adapterToUse.date(new Date(2018, 0, 1)),
+          ]}
         />,
       );
       const textboxes = screen.getAllByRole('textbox');
@@ -83,7 +90,10 @@ describe('<DesktopDateRangePicker />', () => {
   it('should highlight the selected range of dates', () => {
     render(
       <WrappedDesktopDateRangePicker
-        initialValue={[new Date(2018, 0, 1), new Date(2018, 0, 31)]}
+        initialValue={[
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 31)),
+        ]}
       />,
     );
 
@@ -100,7 +110,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           onChange={handleChange}
-          initialValue={[new Date(2019, 0, 1), null]}
+          initialValue={[adapterToUse.date(new Date(2019, 0, 1)), null]}
         />,
       );
 
@@ -126,7 +136,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           onChange={handleChange}
-          defaultCalendarMonth={new Date(2019, 0, 1)}
+          defaultCalendarMonth={adapterToUse.date(new Date(2019, 0, 1))}
           initialValue={[null, null]}
         />,
       );
@@ -182,7 +192,10 @@ describe('<DesktopDateRangePicker />', () => {
     render(
       <WrappedDesktopDateRangePicker
         reduceAnimations
-        initialValue={[new Date(2019, 4, 19), new Date(2019, 9, 30)]}
+        initialValue={[
+          adapterToUse.date(new Date(2019, 4, 19)),
+          adapterToUse.date(new Date(2019, 9, 30)),
+        ]}
       />,
     );
 
@@ -198,7 +211,11 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   it(`should not crash when opening picker with invalid date value`, async () => {
-    render(<WrappedDesktopDateRangePicker initialValue={[new Date(NaN), new Date(2019, 0, 31)]} />);
+    render(
+      <WrappedDesktopDateRangePicker
+        initialValue={[new Date(NaN), adapterToUse.date(new Date(2019, 0, 31))]}
+      />,
+    );
 
     openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
     expect(screen.getByRole('tooltip')).toBeVisible();
@@ -262,7 +279,10 @@ describe('<DesktopDateRangePicker />', () => {
     function DesktopDateRangePickerClearable() {
       return (
         <WrappedDesktopDateRangePicker
-          initialValue={[new Date(2018, 0, 1), new Date(2018, 0, 31)]}
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 31)),
+          ]}
           componentsProps={{ actionBar: { actions: ['clear'] } }}
         />
       );
@@ -366,7 +386,10 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedDesktopDateRangePicker
@@ -405,7 +428,10 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedDesktopDateRangePicker
@@ -436,7 +462,10 @@ describe('<DesktopDateRangePicker />', () => {
     it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedDesktopDateRangePicker
@@ -460,7 +489,10 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedDesktopDateRangePicker
@@ -515,7 +547,10 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedDesktopDateRangePicker
@@ -595,7 +630,10 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedDesktopDateRangePicker
@@ -626,7 +664,10 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = [new Date(2018, 0, 1), new Date(2018, 0, 6)];
+      const initialValue = [
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
+      ];
 
       render(
         <WrappedDesktopDateRangePicker
@@ -687,7 +728,10 @@ describe('<DesktopDateRangePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          initialValue={[new Date(2018, 0, 1), new Date(2018, 0, 6)]}
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 6)),
+          ]}
         />,
       );
 
@@ -711,7 +755,10 @@ describe('<DesktopDateRangePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          initialValue={[new Date(2018, 0, 1), new Date(2018, 0, 6)]}
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 6)),
+          ]}
         />,
       );
 
@@ -755,7 +802,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           initialValue={[null, null]}
-          minDate={new Date(2018, 0, 15)}
+          minDate={adapterToUse.date(new Date(2018, 0, 15))}
         />,
       );
 
@@ -772,7 +819,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           initialValue={[null, null]}
-          maxDate={new Date(2018, 0, 15)}
+          maxDate={adapterToUse.date(new Date(2018, 0, 15))}
         />,
       );
 

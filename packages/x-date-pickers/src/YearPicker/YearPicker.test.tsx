@@ -14,8 +14,8 @@ describe('<YearPicker />', () => {
 
   describeConformance(
     <YearPicker
-      minDate={new Date(2019, 0, 1)}
-      maxDate={new Date(2029, 0, 1)}
+      minDate={adapterToUse.date(new Date(2019, 0, 1))}
+      maxDate={adapterToUse.date(new Date(2029, 0, 1))}
       date={adapterToUse.date()}
       onChange={() => {}}
     />,
@@ -42,9 +42,9 @@ describe('<YearPicker />', () => {
     const onChangeMock = spy();
     render(
       <YearPicker
-        minDate={new Date(2019, 0, 1)}
-        maxDate={new Date(2029, 0, 1)}
-        date={new Date(2019, 1, 2)}
+        minDate={adapterToUse.date(new Date(2019, 0, 1))}
+        maxDate={adapterToUse.date(new Date(2029, 0, 1))}
+        date={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
       />,
     );
@@ -67,9 +67,9 @@ describe('<YearPicker />', () => {
     const onChangeMock = spy();
     render(
       <YearPicker
-        minDate={new Date(2019, 0, 1)}
-        maxDate={new Date(2029, 0, 1)}
-        date={new Date(2019, 1, 2)}
+        minDate={adapterToUse.date(new Date(2019, 0, 1))}
+        maxDate={adapterToUse.date(new Date(2029, 0, 1))}
+        date={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
         readOnly
       />,
@@ -85,7 +85,9 @@ describe('<YearPicker />', () => {
   describe('Disabled', () => {
     it('should disable all years if props.disabled = true', () => {
       const onChange = spy();
-      render(<YearPicker date={new Date(2017, 1, 15)} onChange={onChange} disabled />);
+      render(
+        <YearPicker date={adapterToUse.date(new Date(2017, 1, 15))} onChange={onChange} disabled />,
+      );
 
       screen.getAllByRole('button').forEach((monthButton) => {
         expect(monthButton).to.have.attribute('disabled');
@@ -98,9 +100,9 @@ describe('<YearPicker />', () => {
       const onChange = spy();
       render(
         <YearPicker
-          date={new Date(2017, 1, 15)}
+          date={adapterToUse.date(new Date(2017, 1, 15))}
           onChange={onChange}
-          minDate={new Date(2018, 1, 12)}
+          minDate={adapterToUse.date(new Date(2018, 1, 12))}
         />,
       );
 
@@ -118,9 +120,9 @@ describe('<YearPicker />', () => {
       const onChange = spy();
       render(
         <YearPicker
-          date={new Date(2019, 1, 15)}
+          date={adapterToUse.date(new Date(2019, 1, 15))}
           onChange={onChange}
-          maxDate={new Date(2025, 3, 12)}
+          maxDate={adapterToUse.date(new Date(2025, 3, 12))}
         />,
       );
 
@@ -138,7 +140,7 @@ describe('<YearPicker />', () => {
       const onChange = spy();
       render(
         <YearPicker
-          date={new Date(2019, 0, 2)}
+          date={adapterToUse.date(new Date(2019, 0, 2))}
           onChange={onChange}
           shouldDisableYear={(month) => adapterToUse.getYear(month) === 2024}
         />,
@@ -161,10 +163,10 @@ describe('<YearPicker />', () => {
   it('should allows to focus years when it contains valid date', () => {
     render(
       <YearPicker
-        minDate={new Date(2018, 10, 1)}
-        maxDate={new Date(2020, 3, 1)}
+        minDate={adapterToUse.date(new Date(2018, 10, 1))}
+        maxDate={adapterToUse.date(new Date(2020, 3, 1))}
         // date is chose such as replacing year by 2018 or 2020 makes it out of valid range
-        date={new Date(2019, 7, 1)}
+        date={adapterToUse.date(new Date(2019, 7, 1))}
         onChange={() => {}}
         autoFocus // needed to allow keyboard navigation
       />,

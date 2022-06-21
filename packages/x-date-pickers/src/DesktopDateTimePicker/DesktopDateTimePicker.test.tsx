@@ -30,7 +30,7 @@ describe('<DesktopDateTimePicker />', () => {
       const handleOpen = spy();
       render(
         <DesktopDateTimePicker
-          value={new Date(2019, 0, 1)}
+          value={adapterToUse.date(new Date(2019, 0, 1))}
           {...{ [prop]: true }}
           onChange={() => {}}
           onOpen={handleOpen}
@@ -73,8 +73,8 @@ describe('<DesktopDateTimePicker />', () => {
         openTo="minutes"
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2018, 0, 1, 12)}
-        minDateTime={new Date(2018, 0, 1, 12, 30)}
+        value={adapterToUse.date(new Date(2018, 0, 1, 12))}
+        minDateTime={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
       />,
     );
 
@@ -90,8 +90,8 @@ describe('<DesktopDateTimePicker />', () => {
         onChange={() => {}}
         ampm={false}
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2018, 0, 1)}
-        minDateTime={new Date(2018, 0, 1, 12, 30)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
+        minDateTime={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
       />,
     );
 
@@ -132,7 +132,7 @@ describe('<DesktopDateTimePicker />', () => {
         openTo="hours"
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -146,7 +146,7 @@ describe('<DesktopDateTimePicker />', () => {
         openTo="hours"
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -226,7 +226,7 @@ describe('<DesktopDateTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDateTimePicker
@@ -277,7 +277,7 @@ describe('<DesktopDateTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDateTimePicker
@@ -310,7 +310,7 @@ describe('<DesktopDateTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDateTimePicker
@@ -343,7 +343,7 @@ describe('<DesktopDateTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDateTimePicker
@@ -367,7 +367,7 @@ describe('<DesktopDateTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDateTimePicker
@@ -399,7 +399,7 @@ describe('<DesktopDateTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDateTimePicker
@@ -421,7 +421,7 @@ describe('<DesktopDateTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = new Date(2018, 0, 1);
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
         <WrappedDesktopDateTimePicker
@@ -478,7 +478,7 @@ describe('<DesktopDateTimePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          initialValue={new Date(2018, 0, 1, 11, 53)}
+          initialValue={adapterToUse.date(new Date(2018, 0, 1, 11, 53))}
           openTo="year"
         />,
       );

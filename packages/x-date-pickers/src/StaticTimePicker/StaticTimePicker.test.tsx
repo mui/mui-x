@@ -10,7 +10,11 @@ import {
   fireEvent,
 } from '@mui/monorepo/test/utils';
 import { StaticTimePicker } from './StaticTimePicker';
-import { wrapPickerMount, createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import {
+  adapterToUse,
+  wrapPickerMount,
+  createPickerRenderer,
+} from '../../../../test/utils/pickers-utils';
 
 describe('<StaticTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -59,7 +63,7 @@ describe('<StaticTimePicker />', () => {
     const onViewChangeMock = spy();
     render(
       <StaticTimePicker
-        value={new Date(2019, 0, 1)}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onViewChange={onViewChangeMock}
         renderInput={(props) => <TextField {...props} />}
@@ -110,7 +114,7 @@ describe('<StaticTimePicker />', () => {
     const onViewChangeMock = spy();
     render(
       <StaticTimePicker
-        value={new Date(2019, 0, 1)}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onViewChange={onViewChangeMock}
         renderInput={(props) => <TextField {...props} />}

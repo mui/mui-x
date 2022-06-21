@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
-import { createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 describe('<StaticDateTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -15,7 +15,7 @@ describe('<StaticDateTimePicker />', () => {
       <StaticDateTimePicker
         onChange={onChangeMock}
         renderInput={(params) => <TextField {...params} />}
-        value={new Date(2018, 0, 1)}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
