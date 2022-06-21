@@ -141,6 +141,32 @@ describe('<DataGrid /> - Filter', () => {
       });
       expect(getColumnValues(0)).to.deep.equal(['France']);
     });
+
+    it('should pick a default operator when none provided on an item', () => {
+      expect(() => {
+        render(
+          <TestCase
+            filterModel={{ items: [{ columnField: 'brand', value: 'a' }] }}
+            rows={[
+              {
+                id: 3,
+                brand: 'Asics',
+              },
+              {
+                id: 4,
+                brand: 'RedBull',
+              },
+              {
+                id: 5,
+                brand: 'Hugo',
+              },
+            ]}
+          />,
+        );
+      }).toWarnDev('MUI: One of your filtering item have no `operatorValue` provided.');
+
+      expect(getColumnValues(0)).to.deep.equal(['Asics']);
+    });
   });
 
   describe('prop: initialState.filter', () => {

@@ -2,7 +2,7 @@
 title: Data Grid - Styling
 ---
 
-# Data Grid - Styling
+# Data grid - Styling
 
 <p class="description">The grid CSS can be easily overwritten.</p>
 
@@ -137,3 +137,4 @@ The following demo illustrates how this can be achieved.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

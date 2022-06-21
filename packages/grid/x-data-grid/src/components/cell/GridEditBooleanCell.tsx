@@ -10,6 +10,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -64,6 +65,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
     ...other
   } = props;
 
+  const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const id = useId();
   const [valueState, setValueState] = React.useState(value);
@@ -80,9 +82,9 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
       }
 
       setValueState(newValue);
-      await api.setEditCellValue({ id: idProp, field, value: newValue }, event);
+      await apiRef.current.setEditCellValue({ id: idProp, field, value: newValue }, event);
     },
-    [api, field, idProp, onValueChange],
+    [apiRef, field, idProp, onValueChange],
   );
 
   React.useEffect(() => {

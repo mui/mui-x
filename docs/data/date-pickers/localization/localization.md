@@ -1,10 +1,10 @@
 ---
-title: Date and time pickers - Localization
+title: Date and Time pickers - Localization
 ---
 
-# Date and time pickers - Localization
+# Date and Time pickers - Localization
 
-<p class="description">Date and time pickers allow to support users from different locales, with formatting, RTL, and localized strings.</p>
+<p class="description">Date and Time pickers allow to support users from different locales, with formatting, RTL, and localized strings.</p>
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
@@ -111,7 +111,9 @@ import bgLocale from 'date-fns/locale/bg';
 | English (United States) | en-US               | `enUS`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
+| Swedish                 | sv-SE               | `svSE`      |
 | Turkish                 | tr-TR               | `trTr`      |
+| Dutch                   | nl-NL               | `nlNL`      |
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
 

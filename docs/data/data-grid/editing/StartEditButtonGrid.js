@@ -61,7 +61,6 @@ function EditToolbar(props) {
         onClick={handleSaveOrEdit}
         onMouseDown={handleMouseDown}
         disabled={!selectedCellParams}
-        color="primary"
         variant="outlined"
       >
         {cellMode === 'edit' ? 'Save' : 'Edit'}
@@ -70,7 +69,6 @@ function EditToolbar(props) {
         onClick={handleCancel}
         onMouseDown={handleMouseDown}
         disabled={cellMode === 'view'}
-        color="primary"
         variant="outlined"
         sx={{ ml: 1 }}
       >

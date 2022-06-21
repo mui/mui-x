@@ -431,11 +431,23 @@ export const useGridRows = (
       return;
     }
 
+    const areNewRowsAlreadyInState =
+      apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows;
+    const isNewLoadingAlreadyInState =
+      apiRef.current.unstable_caches.rows!.loadingPropBeforePartialUpdates === props.loading;
+
     // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
-    if (
-      apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows &&
-      apiRef.current.unstable_caches.rows!.loadingPropBeforePartialUpdates === props.loading
-    ) {
+    if (areNewRowsAlreadyInState) {
+      // If the loading prop has changed, we need to update its value in the state because it won't be done by `throttledRowsChange`
+      if (!isNewLoadingAlreadyInState) {
+        apiRef.current.setState((state) => ({
+          ...state,
+          rows: { ...state.rows, loading: props.loading },
+        }));
+        apiRef.current.unstable_caches.rows!.loadingPropBeforePartialUpdates = props.loading;
+        apiRef.current.forceUpdate();
+      }
+
       return;
     }
 

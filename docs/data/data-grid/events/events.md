@@ -2,7 +2,7 @@
 title: Data Grid - Events
 ---
 
-# Data Grid - Events [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Events [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 <p class="description">The data grid emits events that can be subscribed to attach custom behavior.</p>
 
@@ -60,3 +60,4 @@ The following example changes this behavior by also requiring <kbd class="key">C
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

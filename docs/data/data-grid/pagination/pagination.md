@@ -2,7 +2,7 @@
 title: Data Grid - Pagination
 ---
 
-# Data Grid - Pagination
+# Data grid - Pagination
 
 <p class="description">Easily paginate your rows and only fetch what you need.</p>
 
@@ -148,3 +148,4 @@ More information about the selectors and how to use them on the [dedicated page]
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

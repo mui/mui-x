@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Row Grouping
+title: Data Grid - Row grouping
 ---
 
-# Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+# Data grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 <p class="description">Group your rows according to some column values.</p>
 
@@ -289,3 +289,4 @@ const rows = apiRef.current.getRowGroupChildren({
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
