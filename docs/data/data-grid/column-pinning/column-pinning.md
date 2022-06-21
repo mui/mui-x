@@ -85,3 +85,4 @@ To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECK
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -7,16 +7,33 @@ import { getValueFromOption } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import type { ValueOptions } from '../../../models/colDef/gridColDef';
 
-export type GridFilterInputMultipleSingleSelectProps = {
+export interface GridFilterInputMultipleSingleSelectProps
+  extends Omit<
+      AutocompleteProps<ValueOptions, true, false, true>,
+      | 'options'
+      | 'renderInput'
+      | 'onChange'
+      | 'value'
+      | 'id'
+      | 'filterOptions'
+      | 'isOptionEqualToValue'
+      | 'limitTags'
+      | 'multiple'
+      | 'color'
+    >,
+    GridFilterInputValueProps<GridApiCommon> {
   type?: 'singleSelect';
-} & GridFilterInputValueProps<GridApiCommon> &
-  Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
+}
 
-const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEqualToValue'] = (
-  option,
-  value,
-) => getValueFromOption(option) === getValueFromOption(value);
+const isOptionEqualToValue: AutocompleteProps<
+  ValueOptions,
+  true,
+  false,
+  true
+>['isOptionEqualToValue'] = (option, value) =>
+  getValueFromOption(option) === getValueFromOption(value);
 
 const filter = createFilterOptions<any>();
 
@@ -47,9 +64,15 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
 
   const resolvedColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
   const resolvedValueOptions = React.useMemo(() => {
-    return typeof resolvedColumn?.valueOptions === 'function'
-      ? resolvedColumn.valueOptions({ field: resolvedColumn.field })
-      : resolvedColumn?.valueOptions;
+    if (!resolvedColumn?.valueOptions) {
+      return [];
+    }
+
+    if (typeof resolvedColumn.valueOptions === 'function') {
+      return resolvedColumn.valueOptions({ field: resolvedColumn.field });
+    }
+
+    return resolvedColumn.valueOptions;
   }, [resolvedColumn]);
   const resolvedFormattedValueOptions = React.useMemo(() => {
     return resolvedValueOptions?.map(getValueFromOption);
@@ -57,7 +80,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
 
   const { valueFormatter, field } = apiRef.current.getColumn(item.columnField);
 
-  const filterValueOptionFormatter = (option: any) => {
+  const filterValueOptionFormatter = (option: ValueOptions) => {
     if (typeof option === 'object') {
       return option.label;
     }
@@ -106,17 +129,17 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   );
 
   return (
-    <Autocomplete
+    <Autocomplete<ValueOptions, true, false, true>
       multiple
       limitTags={1}
-      options={resolvedValueOptions as any} // TODO: avoid `any`?
+      options={resolvedValueOptions}
       isOptionEqualToValue={isOptionEqualToValue}
       filterOptions={filter}
       id={id}
       value={filterValues}
       onChange={handleChange}
-      renderTags={(value: any[], getTagProps) =>
-        value.map((option: string, index: number) => (
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => (
           <Chip
             variant="outlined"
             size="small"

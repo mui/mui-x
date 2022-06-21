@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import {
   randomInt,
   randomUserName,
@@ -48,17 +49,17 @@ for (let i = 0; i < 200; i += 1) {
 
 export default function DynamicRowHeightGrid() {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
         getRowHeight={() => 'auto'}
         sx={{
-          '& .MuiDataGrid-cell': {
-            py: '8px',
+          [`& .${gridClasses.cell}`]: {
+            py: 1,
           },
         }}
       />
-    </div>
+    </Box>
   );
 }

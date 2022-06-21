@@ -69,3 +69,4 @@ Function signature can also be useful to derive `colSpan` value from row data:
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

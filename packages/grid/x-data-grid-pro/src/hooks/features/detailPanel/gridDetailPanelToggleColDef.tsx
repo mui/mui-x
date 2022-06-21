@@ -8,7 +8,6 @@ export const GRID_DETAIL_PANEL_TOGGLE_FIELD = '__detail_panel_toggle__';
 export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   ...GRID_STRING_COL_DEF,
   field: GRID_DETAIL_PANEL_TOGGLE_FIELD,
-  headerName: '',
   type: 'detailPanelToggle',
   editable: false,
   sortable: false,
@@ -24,4 +23,5 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
     return expandedRowIds.includes(params.id);
   },
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
+  renderHeader: () => null,
 };

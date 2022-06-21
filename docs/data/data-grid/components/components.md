@@ -174,3 +174,4 @@ As any component slot, every icon can be customized. However, it is not yet poss
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
