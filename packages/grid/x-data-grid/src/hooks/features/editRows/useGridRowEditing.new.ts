@@ -512,12 +512,14 @@ export const useGridRowEditing = (
       const column = apiRef.current.getColumn(field);
       const row = apiRef.current.getRow(id)!;
 
+      let editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const { value: oldValue } = editingState[id][field];
+
       let parsedValue = value;
-      if (column.valueParser) {
+      if (column.valueParser && oldValue !== parsedValue) {
         parsedValue = column.valueParser(value, apiRef.current.getCellParams(id, field));
       }
 
-      let editingState = gridEditRowsStateSelector(apiRef.current.state);
       let newProps = { ...editingState[id][field], value: parsedValue };
 
       if (!column.preProcessEditCellProps) {

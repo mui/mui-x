@@ -327,10 +327,12 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         updatedRow = apiRef.current.unstable_getRowWithUpdatedValues(rowId, column.field);
       }
 
+      const { hasPreProcessedPropsOnce, ...filteredEditCellState } = editCellState;
+
       const params: GridRenderEditCellParams = {
         ...cellParams,
         row: updatedRow,
-        ...editCellState,
+        ...filteredEditCellState,
         api: apiRef.current,
       };
 

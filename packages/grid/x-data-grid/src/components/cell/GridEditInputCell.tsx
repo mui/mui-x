@@ -74,6 +74,7 @@ function GridEditInputCell(props: GridEditInputCellProps) {
     debounceMs = rootProps.experimentalFeatures?.newEditingApi ? 200 : SUBMIT_FILTER_STROKE_TIME,
     isProcessingProps,
     onValueChange,
+    onBlur,
     ...other
   } = props;
 
@@ -97,6 +98,19 @@ function GridEditInputCell(props: GridEditInputCellProps) {
     [apiRef, debounceMs, field, id, onValueChange],
   );
 
+  const handleBlur = React.useCallback(
+    (event) => {
+      if (apiRef.current.ensurePreProcessEditCellPropsRanOnce) {
+        apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id, field });
+      }
+
+      if (onBlur) {
+        onBlur(event);
+      }
+    },
+    [apiRef, field, id, onBlur],
+  );
+
   React.useEffect(() => {
     setValueState(value);
   }, [value]);
@@ -115,6 +129,7 @@ function GridEditInputCell(props: GridEditInputCellProps) {
       type={colDef.type === 'number' ? colDef.type : 'text'}
       value={valueState ?? ''}
       onChange={handleChange}
+      onBlur={handleBlur}
       endAdornment={isProcessingProps ? <GridLoadIcon /> : undefined}
       {...other}
     />

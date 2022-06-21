@@ -26,6 +26,11 @@ export type GridRowModesModelProps =
 
 export type GridRowModesModel = Record<GridRowId, GridRowModesModelProps>;
 
+export interface GridEnsurePreProcesEditCellPropsRanOnceParams {
+  id: GridRowId;
+  field: string;
+}
+
 export interface GridNewEditingSharedApi {
   /**
    * Controls if a cell is editable.
@@ -44,6 +49,14 @@ export interface GridNewEditingSharedApi {
     params: GridEditCellValueParams,
     event?: MuiBaseEvent,
   ) => Promise<boolean> | void;
+  /**
+   * Calls `preProcessEditCellProps` if never called yet.
+   * @param {GridEnsurePreProcesEditCellPropsRanOnceParams} params Contains the id and field.
+   * @returns {Promise<boolean | void>} A promise with the validation status.
+   */
+  ensurePreProcessEditCellPropsRanOnce: (
+    params: GridEnsurePreProcesEditCellPropsRanOnceParams,
+  ) => Promise<boolean | void>;
   /**
    * Immediatelly updates the value of the cell, without waiting for the debounce.
    * @param {GridRowId} id The row id.

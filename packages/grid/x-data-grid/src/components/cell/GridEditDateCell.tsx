@@ -55,6 +55,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
     isValidating,
     isProcessingProps,
     onValueChange,
+    onBlur,
     ...other
   } = props;
 
@@ -121,6 +122,19 @@ function GridEditDateCell(props: GridEditDateCellProps) {
     [apiRef, field, id, onValueChange],
   );
 
+  const handleBlur = React.useCallback(
+    (event) => {
+      if (apiRef.current.ensurePreProcessEditCellPropsRanOnce) {
+        apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id, field });
+      }
+
+      if (onBlur) {
+        onBlur(event);
+      }
+    },
+    [apiRef, field, id, onBlur],
+  );
+
   React.useEffect(() => {
     setValueState((state) => {
       if (
@@ -151,6 +165,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       }}
       value={valueState.formatted}
       onChange={handleChange}
+      onBlur={handleBlur}
       {...other}
     />
   );

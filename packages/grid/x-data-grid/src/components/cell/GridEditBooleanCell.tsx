@@ -62,6 +62,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
     isProcessingProps,
     error,
     onValueChange,
+    onBlur,
     ...other
   } = props;
 
@@ -87,6 +88,19 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
     [apiRef, field, idProp, onValueChange],
   );
 
+  const handleBlur = React.useCallback(
+    (event) => {
+      if (apiRef.current.ensurePreProcessEditCellPropsRanOnce) {
+        apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id: idProp, field });
+      }
+
+      if (onBlur) {
+        onBlur(event);
+      }
+    },
+    [apiRef, field, idProp, onBlur],
+  );
+
   React.useEffect(() => {
     setValueState(value);
   }, [value]);
@@ -104,6 +118,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
         inputRef={inputRef}
         checked={Boolean(valueState)}
         onChange={handleChange}
+        onBlur={handleBlur}
         size="small"
         {...rootProps.componentsProps?.baseCheckbox}
       />

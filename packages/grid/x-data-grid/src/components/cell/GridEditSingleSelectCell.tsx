@@ -60,6 +60,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     isProcessingProps,
     error,
     onValueChange,
+    onBlur,
     ...other
   } = props;
 
@@ -133,6 +134,19 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
   };
 
+  const handleBlur: SelectProps['onBlur'] = React.useCallback(
+    (event) => {
+      if (apiRef.current.ensurePreProcessEditCellPropsRanOnce) {
+        apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id, field });
+      }
+
+      if (onBlur) {
+        onBlur(event);
+      }
+    },
+    [apiRef, field, id, onBlur],
+  );
+
   const handleClose = (event: React.KeyboardEvent, reason: string) => {
     if (rootProps.editMode === GridEditModes.Row) {
       setOpen(false);
@@ -163,6 +177,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       inputRef={inputRef}
       value={value}
       onChange={handleChange}
+      onBlur={handleBlur}
       open={open}
       onOpen={handleOpen}
       MenuProps={{

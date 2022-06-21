@@ -418,16 +418,18 @@ export const useGridCellEditing = (
       const column = apiRef.current.getColumn(field);
       const row = apiRef.current.getRow(id)!;
 
+      let editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const { value: oldValue } = editingState[id][field];
+
       let parsedValue = value;
-      if (column.valueParser) {
+      if (column.valueParser && oldValue !== parsedValue) {
         parsedValue = column.valueParser(value, apiRef.current.getCellParams(id, field));
       }
 
-      let editingState = gridEditRowsStateSelector(apiRef.current.state);
       let newProps: GridEditCellProps = { ...editingState[id][field], value: parsedValue };
 
       if (column.preProcessEditCellProps) {
-        const hasChanged = value !== editingState[id][field].value;
+        const hasChanged = parsedValue !== editingState[id][field].value;
 
         newProps = { ...newProps, isProcessingProps: true };
         updateOrDeleteFieldState(id, field, newProps);
@@ -444,7 +446,7 @@ export const useGridCellEditing = (
       }
 
       editingState = gridEditRowsStateSelector(apiRef.current.state);
-      newProps = { ...newProps, isProcessingProps: false };
+      newProps = { ...newProps, isProcessingProps: false, hasPreProcessedPropsOnce: true };
       // We don't update the value with the one coming from the props pre-processing
       // because when the promise resolves it may be already outdated. The only
       // exception to this rule is when there's no pre-processing.

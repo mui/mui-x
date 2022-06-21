@@ -144,6 +144,23 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Puma');
     });
+
+    it('should call ensurePreProcessEditCellPropsRanOnce on blur', () => {
+      render(<TestCase />);
+      const spiedEnsurePreProcessEditCellPropsRanOnce = spy(
+        apiRef.current,
+        'ensurePreProcessEditCellPropsRanOnce',
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.blur(cell.querySelector('input'));
+
+      expect(spiedEnsurePreProcessEditCellPropsRanOnce.lastCall.args[0]).to.deep.equal({
+        id: 0,
+        field: 'brand',
+      });
+    });
   });
 
   describe('column type: number', () => {
@@ -225,6 +242,23 @@ describe('<DataGridPro /> - Edit Components', () => {
       clock.tick(500);
       await new Promise((resolve) => nativeSetTimeout(resolve));
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+    });
+
+    it('should call ensurePreProcessEditCellPropsRanOnce on blur', () => {
+      render(<TestCase />);
+      const spiedEnsurePreProcessEditCellPropsRanOnce = spy(
+        apiRef.current,
+        'ensurePreProcessEditCellPropsRanOnce',
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.blur(cell.querySelector('input'));
+
+      expect(spiedEnsurePreProcessEditCellPropsRanOnce.lastCall.args[0]).to.deep.equal({
+        id: 0,
+        field: 'quantity',
+      });
     });
   });
 
@@ -347,6 +381,23 @@ describe('<DataGridPro /> - Edit Components', () => {
         new Date(2022, 1, 10).toISOString(),
       );
     });
+
+    it('should call ensurePreProcessEditCellPropsRanOnce on blur', () => {
+      render(<TestCase />);
+      const spiedEnsurePreProcessEditCellPropsRanOnce = spy(
+        apiRef.current,
+        'ensurePreProcessEditCellPropsRanOnce',
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.blur(cell.querySelector('input'));
+
+      expect(spiedEnsurePreProcessEditCellPropsRanOnce.lastCall.args[0]).to.deep.equal({
+        id: 0,
+        field: 'createdAt',
+      });
+    });
   });
 
   describe('column type: dateTime', () => {
@@ -462,6 +513,23 @@ describe('<DataGridPro /> - Edit Components', () => {
         generateDate(1999, 0, 1, 20, 25),
       );
     });
+
+    it('should call ensurePreProcessEditCellPropsRanOnce on blur', () => {
+      render(<TestCase />);
+      const spiedEnsurePreProcessEditCellPropsRanOnce = spy(
+        apiRef.current,
+        'ensurePreProcessEditCellPropsRanOnce',
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.blur(cell.querySelector('input'));
+
+      expect(spiedEnsurePreProcessEditCellPropsRanOnce.lastCall.args[0]).to.deep.equal({
+        id: 0,
+        field: 'createdAt',
+      });
+    });
   });
 
   describe('column type: singleSelect', () => {
@@ -575,6 +643,23 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
     });
+
+    it('should call ensurePreProcessEditCellPropsRanOnce on blur', () => {
+      render(<TestCase componentsProps={{ baseSelect: { native: true } }} />);
+      const spiedEnsurePreProcessEditCellPropsRanOnce = spy(
+        apiRef.current,
+        'ensurePreProcessEditCellPropsRanOnce',
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.blur(screen.getByRole('combobox'));
+
+      expect(spiedEnsurePreProcessEditCellPropsRanOnce.lastCall.args[0]).to.deep.equal({
+        id: 0,
+        field: 'brand',
+      });
+    });
   });
 
   describe('column type: boolean', () => {
@@ -618,6 +703,23 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal(true);
+    });
+
+    it('should call ensurePreProcessEditCellPropsRanOnce on blur', () => {
+      render(<TestCase />);
+      const spiedEnsurePreProcessEditCellPropsRanOnce = spy(
+        apiRef.current,
+        'ensurePreProcessEditCellPropsRanOnce',
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.blur(cell.querySelector('input'));
+
+      expect(spiedEnsurePreProcessEditCellPropsRanOnce.lastCall.args[0]).to.deep.equal({
+        id: 0,
+        field: 'isAdmin',
+      });
     });
   });
 });

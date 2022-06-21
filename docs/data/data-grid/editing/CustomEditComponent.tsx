@@ -29,6 +29,10 @@ function RatingEditInputCell(props: GridRenderCellParams<number>) {
     }
   };
 
+  React.useEffect(() => {
+    apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id, field });
+  }, [apiRef, id, field]);
+
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
       <Rating

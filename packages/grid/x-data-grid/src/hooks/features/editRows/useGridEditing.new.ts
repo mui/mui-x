@@ -8,6 +8,7 @@ import { useGridCellEditing } from './useGridCellEditing.new';
 import { GridCellModes, GridEditModes } from '../../../models/gridEditRowModel';
 import { useGridRowEditing } from './useGridRowEditing.new';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 
 export const editingStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -147,9 +148,24 @@ export const useGridEditing = (
     [apiRef, props.editMode],
   );
 
+  const ensurePreProcessEditCellPropsRanOnce = React.useCallback<
+    GridNewEditingSharedApi['ensurePreProcessEditCellPropsRanOnce']
+  >(
+    async ({ id, field }) => {
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const { hasPreProcessedPropsOnce, value } = editingState[id][field];
+      if (!hasPreProcessedPropsOnce) {
+        return apiRef.current.setEditCellValue({ id, field, value });
+      }
+      return false;
+    },
+    [apiRef],
+  );
+
   const editingSharedApi: GridNewEditingSharedApi = {
     isCellEditable,
     setEditCellValue,
+    ensurePreProcessEditCellPropsRanOnce,
     unstable_runPendingEditCellValueMutation: runPendingEditCellValueMutation,
     unstable_getRowWithUpdatedValues: getRowWithUpdatedValues,
   };

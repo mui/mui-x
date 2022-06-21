@@ -570,6 +570,40 @@ describe('<DataGridPro /> - Row Editing', () => {
         });
       });
     });
+
+    describe('ensurePreProcessEditCellPropsRanOnce', () => {
+      it('should call preProcessEditCellProps with the correct params', async () => {
+        column1Props.preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        }));
+        render(<TestCase />);
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        expect(renderEditCell1.lastCall.args[0].error).not.to.equal(true);
+        await act(() =>
+          apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id: 0, field: 'currencyPair' }),
+        );
+        expect(renderEditCell1.lastCall.args[0].error).to.equal(true);
+        const args = column1Props.preProcessEditCellProps.lastCall.args[0];
+        expect(args.hasChanged).to.equal(false);
+      });
+
+      it('should not call the value parser', async () => {
+        column1Props.valueParser = spy();
+        column1Props.preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        }));
+        render(<TestCase />);
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        expect(renderEditCell1.lastCall.args[0].error).not.to.equal(true);
+        await act(() =>
+          apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id: 0, field: 'currencyPair' }),
+        );
+        expect(renderEditCell1.lastCall.args[0].error).to.equal(true);
+        expect(column1Props.valueParser.callCount).to.equal(0);
+      });
+    });
   });
 
   describe('start edit mode', () => {

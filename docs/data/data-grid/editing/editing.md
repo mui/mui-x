@@ -340,7 +340,24 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  return <input type="text" value={value} onValueChange={handleValueChange}>;
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    // The call below ensures that the props will be validated at least once
+    // Here it's done during the blur but it can also be done when the component is mounted
+    // Use it in an effect as follow instead:
+    // React.useEffect(() => {
+    //   apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id, field });
+    // }, [apiRef, id, field]);
+    apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id, field });
+  };
+
+  return (
+    <input
+      type="text"
+      value={value}
+      onBlur={handleBlur}
+      onValueChange={handleValueChange}
+    />
+  );
 }
 ```
 

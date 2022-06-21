@@ -552,6 +552,58 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(processRowUpdate.lastCall.args[0].currencyPair).to.equal('USD GBP');
       });
     });
+
+    describe('ensurePreProcessEditCellPropsRanOnce', () => {
+      it('should call preProcessEditCellProps with the correct params', async () => {
+        columnProps.preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        }));
+        render(<TestCase />);
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        expect(renderEditCell.lastCall.args[0].error).not.to.equal(true);
+        await act(() =>
+          apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id: 0, field: 'currencyPair' }),
+        );
+        expect(renderEditCell.lastCall.args[0].error).to.equal(true);
+        const args = columnProps.preProcessEditCellProps.lastCall.args[0];
+        expect(args.hasChanged).to.equal(false);
+      });
+
+      it('should call preProcessEditCellProps only once', async () => {
+        columnProps.preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        }));
+        render(<TestCase />);
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        expect(columnProps.preProcessEditCellProps.callCount).to.equal(0);
+        await act(() =>
+          apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id: 0, field: 'currencyPair' }),
+        );
+        expect(columnProps.preProcessEditCellProps.callCount).to.equal(1);
+        await act(() =>
+          apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id: 0, field: 'currencyPair' }),
+        );
+        expect(columnProps.preProcessEditCellProps.callCount).to.equal(1);
+      });
+
+      it('should not call the value parser', async () => {
+        columnProps.valueParser = spy();
+        columnProps.preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        }));
+        render(<TestCase />);
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        expect(renderEditCell.lastCall.args[0].error).not.to.equal(true);
+        await act(() =>
+          apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id: 0, field: 'currencyPair' }),
+        );
+        expect(renderEditCell.lastCall.args[0].error).to.equal(true);
+        expect(columnProps.valueParser.callCount).to.equal(0);
+      });
+    });
   });
 
   describe('start edit mode', () => {
