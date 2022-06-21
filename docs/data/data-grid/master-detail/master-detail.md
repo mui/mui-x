@@ -139,3 +139,4 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
