@@ -66,6 +66,37 @@ function App({ children }) {
 }
 ```
 
+## TypeScript
+
+In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#global-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
+Internally, it uses module augmentation to extend the default theme structure.
+
+```tsx
+// When using TypeScript 4.x and above
+import type {} from '@mui/x-date-pickers/themeAugmentation';
+import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
+// When using TypeScript 3.x and below
+import '@mui/x-date-pickers/themeAugmentation';
+import '@mui/x-date-pickers-pro/themeAugmentation';
+
+const theme = createTheme({
+  components: {
+    MuiDatePicker: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+      },
+    },
+  },
+});
+```
+
+:::info
+You don't have to import the theme augmentation from both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` when using `@mui/x-date-pickers-pro`.
+Importing it from `@mui/x-date-pickers-pro` is enough.
+:::
+
 ## Native pickers
 
 :::warning
