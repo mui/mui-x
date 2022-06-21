@@ -32,6 +32,7 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps<any> & T
       value={filterValueState}
       onChange={onFilterChange}
       select
+      variant="standard"
       SelectProps={{
         native: isSelectNative,
         displayEmpty: true,

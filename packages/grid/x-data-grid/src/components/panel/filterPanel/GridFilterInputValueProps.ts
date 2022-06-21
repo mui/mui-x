@@ -8,5 +8,4 @@ export type GridFilterInputValueProps<T> = {
   // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
   apiRef: React.MutableRefObject<T>;
   focusElementRef?: React.Ref<any>;
-} & Pick<TextFieldProps, 'color' | 'error' | 'helperText' | 'size' | 'variant'> &
-  any;
+} & Pick<TextFieldProps, 'color' | 'error' | 'helperText' | 'size' | 'variant'>;

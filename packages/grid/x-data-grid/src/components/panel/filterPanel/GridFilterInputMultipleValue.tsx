@@ -72,7 +72,6 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
       renderInput={(params) => (
         <rootProps.components.BaseTextField
           {...params}
-          {...TextFieldProps}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
           InputLabelProps={{
@@ -81,6 +80,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           }}
           inputRef={focusElementRef}
           type={type || 'text'}
+          {...TextFieldProps}
           {...rootProps.componentsProps?.baseTextField}
         />
       )}

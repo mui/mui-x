@@ -481,7 +481,6 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               item={item}
               applyValue={applyFilterChanges}
               focusElementRef={valueRef}
-              variant="standard"
               {...currentOperator.InputComponentProps}
               {...InputComponentProps}
             />

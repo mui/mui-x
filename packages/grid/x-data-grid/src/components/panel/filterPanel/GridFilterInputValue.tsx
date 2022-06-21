@@ -136,6 +136,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
+      variant="standard"
       type={type || 'text'}
       InputProps={InputProps}
       InputLabelProps={{

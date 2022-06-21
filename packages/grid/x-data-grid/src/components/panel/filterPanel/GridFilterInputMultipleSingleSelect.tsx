@@ -31,7 +31,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     error,
     helperText,
     size,
-    variant,
+    variant = 'standard',
     ...other
   } = props;
   const TextFieldProps = {
@@ -74,7 +74,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
     if (resolvedValueOptions !== undefined) {
       const itemValueIndexes = item.value.map((element) => {
-        // get the index matching between values and valueoptions
+        // get the index matching between values and valueOptions
         const formattedElement = getValueFromOption(element);
         const index =
           resolvedFormattedValueOptions?.findIndex(
@@ -128,7 +128,6 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       renderInput={(params) => (
         <rootProps.components.BaseTextField
           {...params}
-          {...TextFieldProps}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
           InputLabelProps={{
@@ -137,6 +136,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
           }}
           inputRef={focusElementRef}
           type="singleSelect"
+          {...TextFieldProps}
           {...rootProps.componentsProps?.baseTextField}
         />
       )}
