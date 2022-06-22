@@ -69,7 +69,7 @@ function OneMasterDemo() {
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => {
         if (!params.value) return;
-        return <Link href={params.value}>{params.value} </Link>;
+        return <Link href={`/x/react-data-grid${params.value}`}>{params.value}</Link>;
       },
     },
   ];
