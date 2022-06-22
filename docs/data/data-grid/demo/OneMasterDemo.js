@@ -8,7 +8,7 @@ import DemoHub, { featuresSet } from './DemoHub';
 import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 export const PlanTag = (props) => {
   const { plan } = props;
