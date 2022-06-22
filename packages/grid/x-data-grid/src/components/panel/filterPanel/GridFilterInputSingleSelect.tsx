@@ -37,7 +37,7 @@ const renderSingleSelectOptions = (
   });
 };
 
-export type GridFilterInputSingleSelectProps = GridFilterInputValueProps<any> &
+export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps & { type?: 'singleSelect' };
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
@@ -125,7 +125,7 @@ GridFilterInputSingleSelect.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.any.isRequired,
+    current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([

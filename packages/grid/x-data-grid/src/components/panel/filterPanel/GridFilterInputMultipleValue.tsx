@@ -8,7 +8,7 @@ import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
 export type GridFilterInputMultipleValueProps = {
   type?: 'text' | 'number';
-} & GridFilterInputValueProps<any> &
+} & GridFilterInputValueProps &
   Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
 
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {
@@ -95,7 +95,7 @@ GridFilterInputMultipleValue.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.any.isRequired,
+    current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([

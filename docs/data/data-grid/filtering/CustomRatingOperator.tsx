@@ -9,7 +9,7 @@ import {
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function RatingInputValue(props: GridFilterInputValueProps<any>) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const { item, applyValue, focusElementRef } = props;
 
   const ratingRef: React.Ref<any> = React.useRef(null);

@@ -52,7 +52,7 @@ const renderSingleSelectOptions = (
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
-export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps<any> {
+export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps {
   type?: 'text' | 'number' | 'date' | 'datetime-local' | 'singleSelect';
 }
 
@@ -156,7 +156,7 @@ GridFilterInputValue.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.any.isRequired,
+    current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([

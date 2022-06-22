@@ -10,7 +10,6 @@
     "disableMultiFilterOperator": "If <code>true</code>, disables the logic operator field but still renders it.",
     "focusElementRef": "A ref allowing to set imperative focus. It can be passed to the el",
     "hasMultipleFilters": "If <code>true</code>, the logic operator field is rendered. The field will be invisible if <code>showMultiFilterOperators</code> is also <code>true</code>.",
-    "InputComponentProps": "Props passed to the input component of value input.",
     "item": "The <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a> representing this form.",
     "linkOperatorInputProps": "Props passed to the logic operator input component.",
     "linkOperators": "Sets the available logic operators.",

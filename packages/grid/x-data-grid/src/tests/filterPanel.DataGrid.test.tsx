@@ -28,7 +28,7 @@ function deleteFilterForm() {
   fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
 }
 
-function CustomInputValue(props: GridFilterInputValueProps<any>) {
+function CustomInputValue(props: GridFilterInputValueProps) {
   const { item, applyValue } = props;
 
   const handleFilterChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {

@@ -13,7 +13,7 @@ import SyncIcon from '@mui/icons-material/Sync';
 
 const SUBMIT_FILTER_STROKE_TIME = 500;
 
-function InputNumberInterval(props: GridFilterInputValueProps<any>) {
+function InputNumberInterval(props: GridFilterInputValueProps) {
   const { item, applyValue, focusElementRef = null } = props;
 
   const filterTimeout = React.useRef<any>();

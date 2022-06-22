@@ -431,7 +431,7 @@ export function CommodityWithNewRowsViaApi() {
   );
 }
 
-function RatingInputValue(props: GridFilterInputValueProps<any>) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const { item, applyValue } = props;
 
   const onFilterChange = React.useCallback(

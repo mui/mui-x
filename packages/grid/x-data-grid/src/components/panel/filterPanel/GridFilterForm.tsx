@@ -96,11 +96,6 @@ export interface GridFilterFormProps {
    * @default {}
    */
   valueInputProps?: any;
-  /**
-   * Props passed to the input component of value input.
-   * @default {}
-   */
-  InputComponentProps?: any;
 }
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -202,7 +197,6 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       operatorInputProps = {},
       columnInputProps = {},
       valueInputProps = {},
-      InputComponentProps = {},
       children,
       ...other
     } = props;
@@ -225,6 +219,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
     const isBaseSelectNative = baseSelectProps.native ?? true;
     const OptionComponent = isBaseSelectNative ? 'option' : MenuItem;
+
+    const { InputComponentProps, ...propagatedValueInputProps } = valueInputProps;
 
     const sortedFilterableColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -468,11 +464,11 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           variant="standard"
           as={rootProps.components.BaseFormControl}
           {...baseFormControlProps}
-          {...valueInputProps}
+          {...propagatedValueInputProps}
           className={clsx(
             classes.valueInput,
             baseFormControlProps.className,
-            valueInputProps.className,
+            propagatedValueInputProps.className,
           )}
         >
           {currentOperator?.InputComponent ? (
@@ -543,11 +539,6 @@ GridFilterForm.propTypes = {
    * The field will be invisible if `showMultiFilterOperators` is also `true`.
    */
   hasMultipleFilters: PropTypes.bool.isRequired,
-  /**
-   * Props passed to the input component of value input.
-   * @default {}
-   */
-  InputComponentProps: PropTypes.any,
   /**
    * The [[GridFilterItem]] representing this form.
    */

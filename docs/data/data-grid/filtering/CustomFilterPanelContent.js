@@ -69,9 +69,11 @@ export default function CustomFilterPanelContent() {
                 size: 'small',
                 sx: { mt: 'auto' },
               },
-              InputComponentProps: {
-                variant: 'outlined',
-                size: 'small',
+              valueInputProps: {
+                InputComponentProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                },
               },
               deleteIconProps: {
                 sx: {
