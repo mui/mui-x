@@ -12,6 +12,7 @@ __diff_output__
 /coverage
 /docs/.next
 /docs/pages/playground.tsx
+/docs/pages/playground
 /docs/export
 /test/regressions/screenshots
 build
