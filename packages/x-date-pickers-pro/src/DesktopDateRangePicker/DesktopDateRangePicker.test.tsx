@@ -228,6 +228,31 @@ describe('<DesktopDateRangePicker />', () => {
     expect(firstChangeValues[1]).to.equal(null);
   });
 
+  it('should allow partial year without adding zeros', () => {
+    const handleChange = spy();
+    render(
+      <WrappedDesktopDateRangePicker
+        reduceAnimations
+        initialValue={[null, null]}
+        onChange={handleChange}
+      />,
+    );
+
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+    fireEvent.change(screen.getAllByRole('textbox')[0], {
+      target: {
+        value: '01/01/19',
+      },
+    });
+
+    // TODO: remove, the `onChange` should be called immediately
+    clock.runToLast();
+
+    expect(handleChange.callCount).to.equal(1);
+    expect(screen.getAllByRole('textbox')[0].value).to.equal('01/01/19');
+  });
+
   it('should scroll current month to the active selection when focusing appropriate field', () => {
     render(
       <WrappedDesktopDateRangePicker
