@@ -91,7 +91,9 @@ describe('<DesktopDatePicker />', () => {
             value={value}
             onChange={(newValue) => setValue(newValue)}
             renderInput={(inputProps) => <TextField {...inputProps} />}
-            inputFormat="dd/MM/yyyy"
+            inputFormat={
+              ['moment', 'dayjs'].includes(adapterToUse.lib) ? 'DD/MM/YYYY' : 'dd/MM/yyyy'
+            }
           />
           <button data-mui-test="reset" onClick={() => setValue(null)}>
             Clear

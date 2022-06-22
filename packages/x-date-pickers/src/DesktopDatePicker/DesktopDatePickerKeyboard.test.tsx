@@ -53,7 +53,12 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
   describe('input', () => {
     it('allows to change selected date from the input according to `format`', () => {
       const onChangeMock = spy();
-      render(<TestKeyboardDatePicker onChange={onChangeMock} inputFormat="dd/MM/yyyy" />);
+      render(
+        <TestKeyboardDatePicker
+          onChange={onChangeMock}
+          inputFormat={['moment', 'dayjs'].includes(adapterToUse.lib) ? 'DD/MM/YYYY' : 'dd/MM/yyyy'}
+        />,
+      );
 
       fireEvent.change(screen.getByRole('textbox'), {
         target: { value: '10/11/2018' },
