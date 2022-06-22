@@ -88,14 +88,6 @@ export const featuresSet = [
   },
   {
     id: 10,
-    name: 'Row reordering',
-    description: 'To support vast volumes of data',
-    plan: 'Pro',
-    detailPage: '/virtualization/#row-virtualization',
-    demo: <RowOrderingGrid />,
-  },
-  {
-    id: 11,
     name: 'Column Virtualization',
     description: 'Wanna try the grid with 1000 columns?',
     plan: 'Community',
@@ -103,7 +95,7 @@ export const featuresSet = [
     demo: <ColumnVirtualizationGrid />,
   },
   {
-    id: 12,
+    id: 11,
     name: 'Row Virtualization',
     description: 'To support vast volumes of data',
     plan: 'Pro',
