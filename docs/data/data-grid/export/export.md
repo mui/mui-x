@@ -344,3 +344,4 @@ Only use this API as the last option. Give preference to the props to control th
 - [excelOptions](/x/api/data-grid/grid-excel-export-options/)
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

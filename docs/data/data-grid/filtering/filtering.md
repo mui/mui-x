@@ -412,10 +412,11 @@ More information about the selectors and how to use them on the [dedicated page]
 
 ## API
 
-- [DataGrid](/x/api/data-grid/data-grid/)
-- [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [GridFilterForm](/x/api/data-grid/grid-filter-form/)
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
 - [GridFilterModel](/x/api/data-grid/grid-filter-model/)
 - [GridFilterOperator](/x/api/data-grid/grid-filter-operator/)
 - [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

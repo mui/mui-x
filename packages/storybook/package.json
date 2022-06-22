@@ -28,7 +28,7 @@
     "react": "^17.0.2",
     "react-is": "^17.0.2",
     "rxjs": "^7.5.5",
-    "webpack": "^5.72.1"
+    "webpack": "^5.73.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
