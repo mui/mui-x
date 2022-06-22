@@ -65,7 +65,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG as dataGridBgBG } from '@mui/x-data-grid';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 import bgLocale from 'date-fns/locale/bg';
-
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
