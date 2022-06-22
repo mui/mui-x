@@ -10,6 +10,18 @@ export interface GridClasses {
    */
   aggregationColumnHeader: string;
   /**
+   * Styles applied to the root element of the header when aggregation if `headerAlign="left"`.
+   */
+  'aggregationColumnHeader--alignLeft': string;
+  /**
+   * Styles applied to the root element of the header when aggregation if `headerAlign="center"`.
+   */
+  'aggregationColumnHeader--alignCenter': string;
+  /**
+   * Styles applied to the root element of the header when aggregation if `headerAlign="right"`.
+   */
+  'aggregationColumnHeader--alignRight': string;
+  /**
    * Styles applied to the aggregation label in the column header when aggregated.
    */
   aggregationColumnHeaderLabel: string;
@@ -444,6 +456,10 @@ export function getDataGridUtilityClass(slot: string): string {
 
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'actionsCell',
+  'aggregationColumnHeader',
+  'aggregationColumnHeader--alignLeft',
+  'aggregationColumnHeader--alignCenter',
+  'aggregationColumnHeader--alignRight',
   'autoHeight',
   'booleanCell',
   'cell--editable',
