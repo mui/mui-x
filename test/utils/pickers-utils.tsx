@@ -20,7 +20,7 @@ let AdapterClassToExtend = availableAdapters['date-fns'];
 // Check if we are in unit tests
 if (/jsdom/.test(window.navigator.userAgent)) {
   // Add parameter `--date-adapter luxon` to use AdapterLuxon for running tests
-  // adapter available : date-fns (default one), day-js, luxon, moment
+  // adapter available : date-fns (default one), dayjs, luxon, moment
   const args = process.argv.slice(2);
   const flagIndex = args.findIndex((element) => element === '--date-adapter');
   if (flagIndex !== -1 && flagIndex + 1 < args.length) {
@@ -34,7 +34,7 @@ if (/jsdom/.test(window.navigator.userAgent)) {
           .map((key) => `"${key}"`)
           .join(', ')}`;
         // eslint-disable-next-line no-console
-        console.log(message);
+        console.log(message); // log message explicitly, because error message gets swallowed by mocha
         throw new Error(message);
       }
     }
