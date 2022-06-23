@@ -76,7 +76,7 @@ function App({ children }) {
 If you use another library you should import the adapter directly from the `@date-io` package as follow.
 
 ```jsx
-import AdapterJalaali from "@date-io/jalaali";
+import AdapterJalaali from '@date-io/jalaali';
 
 function App({ children }) {
   return (
