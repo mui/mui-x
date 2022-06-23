@@ -109,9 +109,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       setIsApplying(true);
       // TODO singleSelect doesn't debounce
       filterTimeout.current = setTimeout(() => {
-        if (type !== 'singleSelect') {
-          value = value.trim();
-        }
         applyValue({ ...item, value });
         setIsApplying(false);
       }, SUBMIT_FILTER_STROKE_TIME);
@@ -127,9 +124,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
 
   React.useEffect(() => {
     const itemValue = item.value ?? '';
-    setFilterValueState((prevValue) =>
-      prevValue.trim() === itemValue ? prevValue : String(itemValue),
-    );
+    setFilterValueState(String(itemValue));
   }, [item.value]);
 
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
