@@ -39,7 +39,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [docs] Add plan badge next to event name in the Events page (#5200) @flaviendelangle
 - [docs] Add section for theme augmentation in the picker doc (#5276) @flaviendelangle
 - [docs] Add waiting for upvote section for row group panel (#5271) @flaviendelangle
-- [docs] Fix typo in the `DateRangePicker` documentation' (#5259) @flaviendelangle
+- [docs] Fix typo in the `DateRangePicker` documentation (#5259) @flaviendelangle
 
 ### Core
 
