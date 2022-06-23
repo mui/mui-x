@@ -179,17 +179,32 @@ function GridEditDateCell({
   id,
   field,
   value,
+  colDef,
 }: GridRenderEditCellParams<Date | string | null>) {
   const apiRef = useGridApiContext();
+
+  const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue: unknown) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
   return (
-    <DatePicker
+    <Component
       value={value}
-      renderInput={(params) => <TextField {...params} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          fullWidth
+          InputProps={{
+            ...params.InputProps,
+            sx: {
+              fontSize: 'inherit',
+              ...params.InputProps?.sx,
+            },
+          }}
+        />
+      )}
       onChange={handleChange}
     />
   );
@@ -236,7 +251,7 @@ const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
   ...GRID_DATETIME_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
-    return <GridEditDateTimeCell {...params} />;
+    return <GridEditDateCell {...params} />;
   },
   filterOperators: getDateFilterOperators(true),
   valueFormatter: (params) => {
@@ -249,26 +264,6 @@ const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
     return '';
   },
 };
-
-function GridEditDateTimeCell({
-  id,
-  field,
-  value,
-}: GridRenderEditCellParams<Date | string | null>) {
-  const apiRef = useGridApiContext();
-
-  const handleChange = (newValue: unknown) => {
-    apiRef.current.setEditCellValue({ id, field, value: newValue });
-  };
-
-  return (
-    <DateTimePicker
-      value={value}
-      renderInput={(params) => <TextField {...params} />}
-      onChange={handleChange}
-    />
-  );
-}
 
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
