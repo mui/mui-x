@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "5.0.0-alpha.6",
+  "version": "5.0.0-alpha.7",
   "description": "The community edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
