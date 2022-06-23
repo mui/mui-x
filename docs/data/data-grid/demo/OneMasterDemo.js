@@ -4,14 +4,13 @@ import {
   GridToolbarContainer,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid-premium';
-import DemoHub, { featuresSet } from './DemoHub';
 import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
+import DemoHub, { featuresSet } from './DemoHub';
 
 export const PlanTag = (props) => {
-  const { plan } = props;
   function getChipProperties(plan) {
     switch (plan.toLowerCase()) {
       case 'premium':
@@ -23,7 +22,7 @@ export const PlanTag = (props) => {
     }
   }
 
-  const chipPropperties = getChipProperties(plan);
+  const chipPropperties = getChipProperties(props.plan);
   const avatar = !chipPropperties.avatarLink ? undefined : (
     <Avatar src={chipPropperties.avatarLink} />
   );
@@ -31,7 +30,7 @@ export const PlanTag = (props) => {
     <Chip
       avatar={avatar}
       sx={{ background: chipPropperties.color, color: 'rgba(0, 0, 0, 0.87)' }}
-      label={plan}
+      label={props.plan}
     />
   );
 };
@@ -43,7 +42,9 @@ function OneMasterDemo() {
       headerName: 'Feature name',
       width: 130,
       renderCell: (params) => {
-        if (!params.value) return;
+        if (!params.value) {
+          return <React.Fragment/>;
+        }
         return (
           <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
             {params.value}
@@ -61,7 +62,9 @@ function OneMasterDemo() {
       headerName: 'Plan',
       width: 120,
       renderCell: (params) => {
-        if (!params.value) return;
+        if (!params.value) {
+          return <React.Fragment/>;
+        }
         return <PlanTag plan={params.value} />;
       },
     },
@@ -70,8 +73,12 @@ function OneMasterDemo() {
       headerName: 'Details',
       width: 150,
       renderCell: (params) => {
-        if (!params.value) return;
-        return <Link href={`/x/react-data-grid${params.value}`}>{params.value}</Link>;
+        if (!params.value) {
+          return <React.Fragment/>;
+        }
+        return (
+          <Link href={`/x/react-data-grid${params.value}`}>{params.value}</Link>
+        );
       },
     },
   ];
@@ -87,9 +94,7 @@ function OneMasterDemo() {
     <div style={{ height: 600, width: '100%' }}>
       <DataGridPremium
         getDetailPanelContent={({ row }) => DemoHub(row)}
-        getDetailPanelHeight={({ row }) =>
-          row.name === 'Virtualization' ? 500 : 300
-        }
+        getDetailPanelHeight={({ row }) => (row.name === 'Virtualization' ? 500 : 300)}
         components={{ Toolbar: CustomToolbar }}
         componentsProps={{
           toolbar: {

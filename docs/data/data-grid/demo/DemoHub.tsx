@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box } from '@mui/material';
 import EditingWithDatePickers from '../editing/EditingWithDatePickers';
 import ExcelExport from '../export/ExcelExport';
@@ -7,7 +8,6 @@ import RowGroupingInitialState from '../row-grouping/RowGroupingInitialState';
 import FullFeaturedDemo from './FullFeaturedDemo';
 import ControlPinnedColumns from '../column-pinning/ControlPinnedColumns';
 import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid';
-import ColumnHiding from '../column-visibility/ColumnHiding';
 import CursorPaginationGrid from '../pagination/CursorPaginationGrid';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
 import RowOrderingGrid from '../rows/RowOrderingGrid';
