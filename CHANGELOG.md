@@ -45,7 +45,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - [core] Allows having multiple playgrounds (#5288) @alexfauquette
 - [core] Improve typing of `GridFilterInputMultipleSingleSelect` (#5206) @flaviendelangle
-- [core] Remove arbitraries new lines (#5245) @oliviertassinari
+- [core] Remove arbitrary new lines (#5245) @oliviertassinari
 - [core] Remove dead logic (#5282) @oliviertassinari
 - [test] Fix `inputFormat` when testing with different date adapters (#5291) @cherniavskii
 - [test] Fix date assertion in Safari 13 (#5221) @m4theushw
