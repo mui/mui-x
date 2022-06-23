@@ -9,7 +9,7 @@ _Jun 23, 2022_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Add Swedish (sv-SE) locale on the data grid (#5210) @mrxdst
+- 🌍 Add Swedish (sv-SE) locale on the data grid and the pickers (#5210) @mrxdst
 - 🌍 Add Dutch (nl-NL) locale on the pickers (#5237) @DDukers
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -18,6 +18,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 #### Changes
 
+- [DataGrid] Do not hide non-hideable column when pressing Hide All button (#5298) @flaviendelangle
 - [DataGrid] Do not regenerate the row tree when `props.loading` changes (#5213) @flaviendelangle
 - [DataGrid] Fix the default filter operator fallback on state initialization (#5266) @flaviendelangle
 - [DataGrid] Stop using the deprecated `api` prop in the grid components (#5205) @flaviendelangle
