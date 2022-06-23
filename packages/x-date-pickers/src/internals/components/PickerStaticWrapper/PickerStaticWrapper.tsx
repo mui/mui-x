@@ -4,7 +4,6 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
-
 import {
   getStaticWrapperUtilityClass,
   PickerStaticWrapperClasses,
