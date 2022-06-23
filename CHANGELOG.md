@@ -53,7 +53,6 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [test] Throw if date adapter is not found (#5289) @cherniavskii
 - [test] Use mock for `ResizeObserver` (#5215) @m4theushw
 
-
 ## v5.12.2
 
 _Jun 16, 2022_
