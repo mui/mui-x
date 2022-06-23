@@ -132,7 +132,7 @@ You can check the [tab sequence](/x/react-data-grid/accessibility/#tab-sequence)
 
 ### Using hooks inside a renderer
 
-The `renderCell` property is a function returning a React node, not a React component.
+The `renderCell` property is a function that returns a React node, not a React component.
 
 If you want to use React hooks inside your renderer, you should wrap them inside a component.
 
