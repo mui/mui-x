@@ -58,6 +58,8 @@ function OneMasterDemo() {
       field: 'plan',
       headerName: 'Plan',
       width: 130,
+      type: 'singleSelect',
+      valueOptions: ['Premium', 'Pro', 'Community'],
       renderCell: (params: GridRenderCellParams<string>) => {
         if (!params.value) return;
         return <PlanTag plan={params.value} />;
