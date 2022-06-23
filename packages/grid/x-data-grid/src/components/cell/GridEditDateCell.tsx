@@ -152,6 +152,10 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       value={valueState.formatted}
       onChange={handleChange}
       {...other}
+      sx={{
+        fontSize: 'inherit',
+        ...other.sx,
+      }}
     />
   );
 }
