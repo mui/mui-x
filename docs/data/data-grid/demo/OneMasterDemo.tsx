@@ -99,7 +99,9 @@ function OneMasterDemo() {
     <div style={{ height: 600, width: '100%' }}>
       <DataGridPremium
         components={{ Toolbar: CustomToolbar }}
-        componentsProps={{toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 }, },}}
+        componentsProps={{
+          toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+        }}
         getDetailPanelContent={({ row }) => DemoHub(row)}
         getDetailPanelHeight={({ row }) =>
           row.name === 'Virtualization' ? 500 : 300
@@ -108,7 +110,7 @@ function OneMasterDemo() {
           '& .MuiDataGrid-columnHeaderTitle': {
             fontWeight: 400,
           },
-          borderRadius: 2
+          borderRadius: 2,
         }}
         rows={featuresSet}
         columns={columns}

@@ -95,7 +95,7 @@ function OneMasterDemo() {
 
   function CustomToolbar() {
     return (
-      <GridToolbarContainer>
+      <GridToolbarContainer sx={{ p: 1 }}>
         <GridToolbarQuickFilter />
       </GridToolbarContainer>
     );
