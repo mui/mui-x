@@ -172,6 +172,14 @@ As a workaround, you can create a cell renderer that will allow seeing the full 
 
 {{"demo": "RenderExpandCellGrid.js", "bg": "inline"}}
 
+:::warning
+Because of pagination and virtualization, cells can be unmounted when scrolling or switching pages.
+The internal state of the component returned by `renderCell` will be lost.
+
+If you want to persist cell information, you should save it either in the data grid parent or in the row model.
+Updating the row will rerender the row and so call renderCell with updated params.
+:::
+
 ## Column types
 
 To facilitate the configuration of the columns, some column types are predefined.
