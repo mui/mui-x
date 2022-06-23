@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   DataGridPremium,
   GridToolbarContainer,
@@ -10,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import DemoHub, { featuresSet } from './DemoHub';
 
-export const PlanTag = (props) => {
+const PlanTag = (props) => {
   function getChipProperties(plan) {
     switch (plan.toLowerCase()) {
       case 'premium':
@@ -26,6 +27,7 @@ export const PlanTag = (props) => {
   const avatar = !chipPropperties.avatarLink ? undefined : (
     <Avatar src={chipPropperties.avatarLink} />
   );
+
   return (
     <Chip
       avatar={avatar}
@@ -34,6 +36,12 @@ export const PlanTag = (props) => {
     />
   );
 };
+
+PlanTag.propTypes = {
+  plan: PropTypes.string.isRequired,
+};
+
+export { PlanTag };
 
 function OneMasterDemo() {
   const columns = [
@@ -60,7 +68,7 @@ function OneMasterDemo() {
     {
       field: 'plan',
       headerName: 'Plan',
-      width: 120,
+      width: 130,
       type: 'singleSelect',
       valueOptions: ['Premium', 'Pro', 'Community'],
       renderCell: (params) => {
@@ -87,28 +95,23 @@ function OneMasterDemo() {
 
   function CustomToolbar() {
     return (
-      <GridToolbarContainer sx={{ p: 1 }}>
+      <GridToolbarContainer>
         <GridToolbarQuickFilter />
       </GridToolbarContainer>
     );
   }
+
   return (
     <div style={{ height: 600, width: '100%' }}>
       <DataGridPremium
+        components={{ Toolbar: CustomToolbar }}
         getDetailPanelContent={({ row }) => DemoHub(row)}
         getDetailPanelHeight={({ row }) =>
           row.name === 'Virtualization' ? 500 : 300
         }
-        components={{ Toolbar: CustomToolbar }}
-        componentsProps={{
-          toolbar: {
-            showQuickFilter: true,
-            quickFilterProps: { debounceMs: 500 },
-          },
-        }}
         sx={{
           '& .MuiDataGrid-columnHeaderTitle': {
-            fontWeight: '400',
+            fontWeight: 400,
           },
           borderRadius: 2,
         }}

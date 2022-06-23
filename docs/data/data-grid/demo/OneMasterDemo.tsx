@@ -89,7 +89,7 @@ function OneMasterDemo() {
 
   function CustomToolbar() {
     return (
-      <GridToolbarContainer>
+      <GridToolbarContainer sx={{ p: 1 }}>
         <GridToolbarQuickFilter />
       </GridToolbarContainer>
     );
@@ -99,6 +99,7 @@ function OneMasterDemo() {
     <div style={{ height: 600, width: '100%' }}>
       <DataGridPremium
         components={{ Toolbar: CustomToolbar }}
+        componentsProps={{toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 }, },}}
         getDetailPanelContent={({ row }) => DemoHub(row)}
         getDetailPanelHeight={({ row }) =>
           row.name === 'Virtualization' ? 500 : 300
