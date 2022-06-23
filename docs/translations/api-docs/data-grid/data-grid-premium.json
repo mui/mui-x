@@ -52,6 +52,7 @@
     "getRowSpacing": "Function that allows to specify the spacing between rows.<br><br><strong>Signature:</strong><br><code>function(params: GridRowSpacingParams) =&gt; GridRowSpacing</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-spacing-params/\">GridRowSpacingParams</a>.<br> <em>returns</em> (GridRowSpacing): The row spacing values.",
     "getTreeDataPath": "Determines the path of a row in the tree data. For instance, a row with the path [&quot;A&quot;, &quot;B&quot;] is the child of the row with the path [&quot;A&quot;]. Note that all paths must contain at least one element.<br><br><strong>Signature:</strong><br><code>function(row: R) =&gt; Array&lt;string&gt;</code><br><em>row:</em> The row from which we want the path.<br> <em>returns</em> (Array<string>): The path to the row.",
     "groupingColDef": "The grouping column used by the tree data.",
+    "headerGroupingRowHeight": "The height of a row of grouping column headers. TODO: choose correctly this value",
     "headerHeight": "Set the height in pixel of the column headers in the grid.",
     "hideFooter": "If <code>true</code>, the footer component is hidden.",
     "hideFooterPagination": "If <code>true</code>, the pagination component in the footer is hidden.",
@@ -246,6 +247,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
     },
+    "columnGroupHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column group header element"
+    },
     "columnHeaderCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header checkbox cell element"
@@ -271,6 +276,15 @@
     "columnHeaderTitleContainerContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's title excepted buttons"
+    },
+    "columnGroupHeaderTitleContainerContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column group header's title excepted buttons"
+    },
+    "columnGroupHeader--withName": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "not empty"
     },
     "columnHeaders": {
       "description": "Styles applied to {{nodeName}}.",
