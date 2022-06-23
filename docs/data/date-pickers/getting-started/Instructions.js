@@ -4,8 +4,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import HighlightedCode from '@mui/monorepo/docs/src/modules/components/HighlightedCode';
 
 const libraries = ['date-fns', 'dayjs', 'luxon', 'moment'];
 

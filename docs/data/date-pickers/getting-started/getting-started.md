@@ -25,9 +25,9 @@ packageName: '@mui/x-date-pickers'
 
 You need to install 3 different types of package to make the pickers work:
 
-1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) which manages the rendering.
-2. **The date-library** ([`moment`](https://momentjs.com/), [`dayjs`](https://day.js.org/), ...) which manages the date manipulation.
-3. **The adapter** ([`@date-io`](https://github.com/dmtrKovalenko/date-io#projects)) expose your favorite **date-library** under a unified api used by **component**.
+1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
+2. **The date-library** ([`moment`](https://momentjs.com/), [`dayjs`](https://day.js.org/), ...) manages the date manipulation.
+3. **The adapter** ([`@date-io`](https://github.com/dmtrKovalenko/date-io#projects)) exposes your favorite **date-library** under a unified api used by **component**.
 
 First you have to install the date-library you want to use to manage dates, and the component package:
 
@@ -86,6 +86,14 @@ function App({ children }) {
   );
 }
 ```
+
+### Unsupported libraries
+
+To use a date-library that is not supported yet by `@date-io`, you will have to write an adapter.
+Which means writing a file containing the default formats, and the methods.
+As an example, you can look to the [`dayjs` adapter](https://github.com/dmtrKovalenko/date-io/blob/master/packages/dayjs/src/dayjs-utils.ts).
+
+In such a case, don't hesitate to open a PR to get some help.
 
 ## TypeScript
 
