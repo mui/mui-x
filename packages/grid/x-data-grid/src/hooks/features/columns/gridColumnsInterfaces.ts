@@ -1,5 +1,6 @@
 import type { GridRowId } from '../../../models';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import type { GridColumnDimensionProperties } from './gridColumnsUtils';
 
 export type GridColumnLookup = {
@@ -17,6 +18,19 @@ export interface GridColumnsState {
   all: string[];
   lookup: GridColumnLookup;
   columnVisibilityModel: GridColumnVisibilityModel;
+}
+
+export type GridColumnGroupLookup = {
+  [field: string]: Omit<GridColumnGroup, 'children'>;
+};
+
+export type GridColumnGroupCollapsedModel = {
+  [field: string]: GridStateColDef;
+};
+
+export interface GridColumnsGroupingState {
+  lookup: GridColumnGroupLookup;
+  groupCollapsedModel: GridColumnGroupCollapsedModel;
 }
 
 export interface GridColumnsInternalCache {

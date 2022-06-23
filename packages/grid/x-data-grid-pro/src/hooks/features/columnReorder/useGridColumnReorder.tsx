@@ -62,6 +62,7 @@ export const useGridColumnReorder = (
     y: 0,
   });
   const originColumnIndex = React.useRef<number | null>(null);
+  const forbiddenIndexes = React.useRef<{ [key: number]: boolean }>({});
   const removeDnDStylesTimeout = React.useRef<any>();
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
@@ -97,6 +98,71 @@ export const useGridColumnReorder = (
       });
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
+
+      const draggingColumnGroupPath = apiRef.current.getColumnGroupPath(params.field);
+      if (draggingColumnGroupPath.length === 0) {
+        forbiddenIndexes.current = {};
+        return;
+      }
+      const visibleColumnIndex = apiRef.current.getColumnIndex(params.field, true);
+      const visibleColumns = apiRef.current.getVisibleColumns();
+      const groupsLookup = apiRef.current.getAllGroupDetails();
+
+      let limitingGroupId: string | null = null;
+
+      draggingColumnGroupPath.forEach((groupId) => {
+        if (!groupsLookup[groupId]?.freeReordering) {
+          // Only consider group that are made of more than one column
+          if (
+            visibleColumnIndex > 0 &&
+            visibleColumns[visibleColumnIndex - 1].groupPath?.includes(groupId)
+          ) {
+            limitingGroupId = groupId;
+          } else if (
+            visibleColumnIndex + 1 < visibleColumns.length &&
+            visibleColumns[visibleColumnIndex + 1].groupPath?.includes(groupId)
+          ) {
+            limitingGroupId = groupId;
+          }
+        }
+      });
+
+      forbiddenIndexes.current = {};
+
+      for (let indexToForbid = 0; indexToForbid < visibleColumns.length; indexToForbid += 1) {
+        const leftIndex = indexToForbid <= visibleColumnIndex ? indexToForbid - 1 : indexToForbid;
+        const rightIndex = indexToForbid < visibleColumnIndex ? indexToForbid : indexToForbid + 1;
+
+        if (limitingGroupId !== null) {
+          // verify this indexToForbid will be linked to the limiting group. Otherwise forbid it
+          let allowIndex = false;
+          if (leftIndex >= 0 && visibleColumns[leftIndex].groupPath?.includes(limitingGroupId!)) {
+            allowIndex = true;
+          } else if (
+            rightIndex < visibleColumns.length &&
+            visibleColumns[rightIndex].groupPath?.includes(limitingGroupId!)
+          ) {
+            allowIndex = true;
+          }
+          if (!allowIndex) {
+            forbiddenIndexes.current[indexToForbid] = true;
+          }
+        }
+
+        // Verify we are not splitting another group
+        if (leftIndex >= 0 && rightIndex < visibleColumns.length) {
+          visibleColumns[rightIndex]?.groupPath?.forEach((groupId) => {
+            if (visibleColumns[leftIndex].groupPath?.includes(groupId)) {
+              if (!draggingColumnGroupPath.includes(groupId)) {
+                // moving here split the group groupId in two distincts chunks
+                if (!groupsLookup[groupId]?.freeReordering) {
+                  forbiddenIndexes.current[indexToForbid] = true;
+                }
+              }
+            }
+          });
+        }
+      }
     },
     [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
   );
@@ -154,6 +220,10 @@ export const useGridColumnReorder = (
             canBeReordered =
               targetColIndex < visibleColumns.length - 1 &&
               !visibleColumns[targetColIndex + 1].disableReorder;
+          }
+
+          if (forbiddenIndexes.current[targetColIndex]) {
+            canBeReordered = false;
           }
 
           const canBeReorderedProcessed = apiRef.current.unstable_applyPipeProcessors(

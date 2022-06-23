@@ -30,6 +30,7 @@ import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
+import { GridColumnGroupingModel } from '../gridColumnGrouping';
 
 export interface GridExperimentalFeatures {
   /**
@@ -329,6 +330,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
+  /**
+   * The height of a row of grouping column headers.
+   * TODO: choose correctly this value
+   * @default 32
+   */
+  headerGroupingRowHeight: number;
 }
 
 /**
@@ -779,4 +786,5 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;
+  columnGroupingModel?: GridColumnGroupingModel;
 }

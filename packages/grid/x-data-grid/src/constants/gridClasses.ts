@@ -94,6 +94,10 @@ export interface GridClasses {
    */
   columnHeader: string;
   /**
+   * Styles applied to the column group header element.
+   */
+  columnGroupHeader: string;
+  /**
    * Styles applied to the header checkbox cell element.
    */
   columnHeaderCheckbox: string;
@@ -121,6 +125,14 @@ export interface GridClasses {
    * Styles applied to the column header's title excepted buttons.
    */
   columnHeaderTitleContainerContent: string;
+  /**
+   * Styles applied to the column group header's title excepted buttons.
+   */
+  columnGroupHeaderTitleContainerContent: string;
+  /**
+   * Styles applied to the column group header cell if not empty.
+   */
+  'columnGroupHeader--withName': string;
   /**
    * Styles applied to the column headers.
    */
@@ -459,7 +471,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeaderDropZone',
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
+  'columnGroupHeader',
+  'columnGroupHeader--withName',
   'columnHeaderTitleContainerContent',
+  'columnGroupHeaderTitleContainerContent',
   'columnHeaders',
   'columnHeadersInner',
   'columnHeadersInner--scrollable',

@@ -85,12 +85,13 @@ export const GridRootStyles = styled('div', {
       {
         borderBottomColor: 'transparent',
       },
-    [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
-      WebkitTapHighlightColor: 'transparent',
-      lineHeight: null,
-      padding: '0 10px',
-      boxSizing: 'border-box',
-    },
+    [`& .${gridClasses.columnHeader}, & .${gridClasses.columnGroupHeader}, & .${gridClasses.cell}`]:
+      {
+        WebkitTapHighlightColor: 'transparent',
+        lineHeight: null,
+        padding: '0 10px',
+        boxSizing: 'border-box',
+      },
     [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
       outline: `solid ${alpha(theme.palette.primary.main, 0.5)} 1px`,
       outlineWidth: 1,
@@ -137,6 +138,16 @@ export const GridRootStyles = styled('div', {
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
+    },
+    [`& .${gridClasses['columnGroupHeader--withName']} .${gridClasses.columnGroupHeaderTitleContainerContent}`]:
+      {
+        borderBottom: `solid ${theme.palette.divider} 2px`,
+      },
+    [`& .${gridClasses.withBorder} .${gridClasses.columnGroupHeaderTitleContainerContent}`]: {
+      borderBottom: `none`,
+    },
+    [`& .${gridClasses.withBorder}.${gridClasses.columnGroupHeader}`]: {
+      borderBottom: `solid ${borderColor} 1px`,
     },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',

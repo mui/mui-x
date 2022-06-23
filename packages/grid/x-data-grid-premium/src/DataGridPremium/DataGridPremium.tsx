@@ -118,6 +118,23 @@ DataGridPremiumRaw.propTypes = {
    * @default 3
    */
   columnBuffer: PropTypes.number,
+  columnGroupingModel: PropTypes.arrayOf(
+    PropTypes.shape({
+      children: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.object,
+          PropTypes.shape({
+            field: PropTypes.string.isRequired,
+          }),
+        ]).isRequired,
+      ).isRequired,
+      description: PropTypes.string,
+      freeReordering: PropTypes.bool,
+      groupId: PropTypes.string.isRequired,
+      headerName: PropTypes.string,
+      renderHeaderGroup: PropTypes.func,
+    }),
+  ),
   /**
    * Set of columns of type [[GridColumns]].
    */
@@ -354,6 +371,12 @@ DataGridPremiumRaw.propTypes = {
    * The grouping column used by the tree data.
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  /**
+   * The height of a row of grouping column headers.
+   * TODO: choose correctly this value
+   * @default 32
+   */
+  headerGroupingRowHeight: PropTypes.number,
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56

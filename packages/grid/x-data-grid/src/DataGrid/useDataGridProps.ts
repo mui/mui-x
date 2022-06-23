@@ -76,6 +76,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableColumnReorder: false,
   disableColumnResize: false,
   keepNonExistentRowsSelected: false,
+  headerGroupingRowHeight: 40,
 };
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {

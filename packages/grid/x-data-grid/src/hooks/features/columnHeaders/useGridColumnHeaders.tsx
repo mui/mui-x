@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useForkRef } from '@mui/material/utils';
+import { styled } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -13,7 +14,12 @@ import {
   gridTabIndexCellSelector,
   gridFocusColumnHeaderSelector,
 } from '../focus/gridFocusStateSelector';
-import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
+import {
+  gridDensityHeaderHeightSelector,
+  gridDensityHeaderGroupingMaxDepthSelector,
+  gridDensityHeaderGroupingRowHeightSelector,
+  gridDensityTotalHeaderHeightSelector,
+} from '../density/densitySelector';
 import { gridFilterActiveItemsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortColumnLookupSelector } from '../sorting/gridSortingSelector';
 import { gridColumnMenuSelector } from '../columnMenu/columnMenuSelector';
@@ -25,6 +31,26 @@ import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColu
 import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
+import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
+
+// TODO: add the possibility to switch this value if needed for customization
+const MERGE_EMPTY_CELLS = true;
+
+const GridColumnHeaderRow = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderRow',
+  overridesResolver: (props, styles) => styles.columnHeaderRow,
+})(() => ({
+  display: 'flex',
+}));
+
+interface HeaderInfo {
+  groupId: string | null;
+  width: number;
+  fields: string[];
+  colIndex: number;
+  description?: string;
+}
 
 interface UseGridColumnHeadersProps {
   innerRef?: React.Ref<HTMLDivElement>;
@@ -48,6 +74,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
+  const headerGroupingRowHeight = useGridSelector(
+    apiRef,
+    gridDensityHeaderGroupingRowHeightSelector,
+  );
+  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
@@ -187,7 +219,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   useGridApiEventHandler(apiRef, 'rowsScroll', handleScroll);
 
-  const getColumns = (
+  const getColumnsHeader = (
     params?: {
       renderContext: GridRenderContext | null;
       minFirstColumn?: number;
@@ -268,20 +300,215 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       );
     }
 
+    return (
+      <GridColumnHeaderRow role="row" aria-rowindex={headerGroupingMaxDepth + 1}>
+        {columns}
+      </GridColumnHeaderRow>
+    );
+  };
+
+  const getColumnsHeaderGroups = (params?: {
+    renderContext: GridRenderContext | null;
+    minFirstColumn?: number;
+    maxLastColumn?: number;
+  }) => {
+    if (headerGroupingMaxDepth === 0) {
+      return null;
+    }
+
+    const {
+      renderContext: nextRenderContext = renderContext,
+      minFirstColumn = minColumnIndex,
+      maxLastColumn = visibleColumns.length,
+    } = params || {};
+
+    if (!nextRenderContext) {
+      return null;
+    }
+
+    const columns: JSX.Element[] = [];
+
+    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      firstIndex: nextRenderContext.firstRowIndex,
+      lastIndex: nextRenderContext.lastRowIndex,
+      minFirstIndex: 0,
+      maxLastIndex: currentPage.rows.length,
+      buffer: rootProps.rowBuffer,
+    });
+
+    const firstColumnToRender = getFirstColumnIndexToRenderRef.current({
+      firstColumnIndex: nextRenderContext!.firstColumnIndex,
+      minColumnIndex: minFirstColumn,
+      columnBuffer: rootProps.columnBuffer,
+      apiRef,
+      firstRowToRender,
+      lastRowToRender,
+      visibleRows: currentPage.rows,
+    });
+
+    const lastColumnToRender = Math.min(
+      nextRenderContext.lastColumnIndex! + rootProps.columnBuffer,
+      maxLastColumn,
+    );
+
+    const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
+
+    const headerToRender: {
+      leftOverflow: number;
+      elements: HeaderInfo[];
+    }[] = [];
+
+    for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1) {
+      // Initialize the header line with a grouping item containing all the columns on the left of the virtualization which are in the same group as the first group to render
+      const initialHeader: HeaderInfo[] = [];
+      let leftOverflow = 0;
+
+      let columnIndex = firstColumnToRender - 1;
+      const firstColumnToRenderGroup = visibleColumns[firstColumnToRender]?.groupPath?.[depth]!;
+      while (
+        firstColumnToRenderGroup !== null &&
+        columnIndex >= minColumnIndex &&
+        visibleColumns[columnIndex]?.groupPath &&
+        visibleColumns[columnIndex]?.groupPath?.[depth] === firstColumnToRenderGroup
+      ) {
+        const column = visibleColumns[columnIndex];
+
+        leftOverflow += column.width ?? 0;
+
+        if (initialHeader.length === 0) {
+          initialHeader.push({
+            width: column.width ?? 0,
+            fields: [column.field],
+            groupId: firstColumnToRenderGroup,
+            colIndex: columnIndex,
+          });
+        } else {
+          initialHeader[0].width += column.width ?? 0;
+          initialHeader[0].fields.push(column.field);
+          initialHeader[0].colIndex = columnIndex;
+        }
+
+        columnIndex -= 1;
+      }
+
+      const depthInfo = renderedColumns.reduce((aggregated, column, i) => {
+        const lastItem: HeaderInfo | undefined = aggregated[aggregated.length - 1];
+
+        if (column.groupPath && column.groupPath.length > depth) {
+          if (lastItem && lastItem.groupId === column.groupPath[depth]) {
+            // Merge with the previous columns
+            return [
+              ...aggregated.slice(0, aggregated.length - 1),
+              {
+                ...lastItem,
+                width: lastItem.width + (column.width ?? 0),
+                fields: [...lastItem.fields, column.field],
+              },
+            ];
+          }
+          // Create a new grouping
+          return [
+            ...aggregated,
+            {
+              groupId: column.groupPath[depth],
+              width: column.width ?? 0,
+              fields: [column.field],
+              colIndex: firstColumnToRender + i,
+            },
+          ];
+        }
+
+        // It is the first level for which their is no group
+        if (MERGE_EMPTY_CELLS && lastItem && lastItem.groupId === null) {
+          // We merge with previous column
+          return [
+            ...aggregated.slice(0, aggregated.length - 1),
+            {
+              ...lastItem,
+              width: lastItem.width + (column.width ?? 0),
+              fields: [...lastItem.fields, column.field],
+            },
+          ];
+        }
+        // We create new empty cell
+        return [
+          ...aggregated,
+          {
+            groupId: null,
+            width: column.width ?? 0,
+            fields: [column.field],
+            colIndex: firstColumnToRender + i,
+          },
+        ];
+      }, initialHeader);
+
+      columnIndex = lastColumnToRender;
+      const lastColumnToRenderGroup = depthInfo[depthInfo.length - 1].groupId;
+
+      while (
+        lastColumnToRenderGroup !== null &&
+        columnIndex < maxLastColumn &&
+        visibleColumns[columnIndex]?.groupPath &&
+        visibleColumns[columnIndex]?.groupPath?.[depth] === lastColumnToRenderGroup
+      ) {
+        const column = visibleColumns[columnIndex];
+
+        depthInfo[depthInfo.length - 1].width += column.width ?? 0;
+        depthInfo[depthInfo.length - 1].fields.push(column.field);
+        columnIndex += 1;
+      }
+
+      headerToRender.push({ leftOverflow, elements: [...depthInfo] });
+    }
+
+    headerToRender.forEach((depthInfo, depthIndex) => {
+      columns.push(
+        <GridColumnHeaderRow
+          style={{
+            height: `${headerGroupingRowHeight}px`,
+            lineHeight: `${headerGroupingRowHeight}px`,
+            transform: `translateX(-${depthInfo.leftOverflow}px)`,
+          }}
+          key={depthIndex}
+          role="row"
+          aria-rowindex={depthIndex + 1}
+        >
+          {depthInfo.elements.map(({ groupId, width, fields, colIndex }, groupIndex) => {
+            return (
+              <GridColumnGroupHeader
+                key={groupIndex}
+                groupId={groupId}
+                width={width}
+                fields={fields}
+                colIndex={colIndex}
+                depth={depthIndex}
+                isLastColumn={colIndex === visibleColumns.length - fields.length}
+                extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
+                maxDepth={headerToRender.length}
+              />
+            );
+          })}
+        </GridColumnHeaderRow>,
+      );
+    });
     return columns;
   };
 
   const rootStyle = {
-    minHeight: headerHeight,
-    maxHeight: headerHeight,
+    minHeight: totalHeaderHeight,
+    maxHeight: totalHeaderHeight,
     lineHeight: `${headerHeight}px`,
   };
 
   return {
     renderContext,
-    getColumns,
+    getColumnsHeader,
+    getColumnsHeaderGroups,
     isDragging: !!dragCol,
     getRootProps: (other = {}) => ({ style: rootStyle, ...other }),
-    getInnerProps: () => ({ ref: handleInnerRef, 'aria-rowindex': 1, role: 'row' }),
+    getInnerProps: () => ({
+      ref: handleInnerRef,
+      role: 'rowgroup',
+    }),
   };
 };

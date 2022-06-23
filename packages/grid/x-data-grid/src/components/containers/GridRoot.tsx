@@ -17,7 +17,10 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
-import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
+import {
+  gridDensityHeaderGroupingMaxDepthSelector,
+  gridDensityValueSelector,
+} from '../../hooks/features/density/densitySelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
 
@@ -51,6 +54,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
+  const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
 
@@ -86,7 +90,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
       className={clsx(className, classes.root)}
       role="grid"
       aria-colcount={visibleColumns.length}
-      aria-rowcount={totalRowCount}
+      aria-rowcount={headerGroupingMaxDepth + 1 + totalRowCount}
       aria-multiselectable={!rootProps.disableMultipleSelection}
       aria-label={rootProps['aria-label']}
       aria-labelledby={rootProps['aria-labelledby']}

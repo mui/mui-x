@@ -16,7 +16,7 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
-import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
+import { gridDensityTotalHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -62,7 +62,7 @@ export function useGridDimensions(
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -94,7 +94,7 @@ export function useGridDimensions(
       width: rootDimensionsRef.current.width,
       height: props.autoHeight
         ? rowsMeta.currentPageTotalHeight
-        : rootDimensionsRef.current.height - headerHeight,
+        : rootDimensionsRef.current.height - totalHeaderHeight,
     };
 
     const { hasScrollX, hasScrollY } = hasScroll({
@@ -129,7 +129,7 @@ export function useGridDimensions(
     apiRef,
     props.scrollbarSize,
     props.autoHeight,
-    headerHeight,
+    totalHeaderHeight,
     rowsMeta.currentPageTotalHeight,
   ]);
 

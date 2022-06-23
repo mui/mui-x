@@ -4,5 +4,6 @@ export type {
   GridColumnsState,
   GridColumnsInitialState,
   GridColumnVisibilityModel,
+  GridColumnsGroupingState,
 } from './gridColumnsInterfaces';
 export { getGridColDef } from './gridColumnsUtils';

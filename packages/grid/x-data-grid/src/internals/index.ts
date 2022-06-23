@@ -18,6 +18,10 @@ export {
 } from '../hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
+export {
+  useGridColumnGrouping,
+  columnGroupsStateInitializer,
+} from '../hooks/features/columns/useGridColumnGrouping';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
