@@ -8,6 +8,7 @@ import {
   gridRowTreeSelector,
   useFirstRender,
   GridColDef,
+  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -122,7 +123,7 @@ export const useGridRowGroupingPreProcessors = (
 
         newColumnsLookup[groupingColDef.field] = groupingColDef;
       });
-      const startIndex = newColumnFields[0] === '__check__' ? 1 : 0;
+      const startIndex = newColumnFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
       newColumnFields = [
         ...newColumnFields.slice(0, startIndex),
         ...groupingColDefs.map((colDef) => colDef.field),

@@ -4,6 +4,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridColDef } from '../../models/colDef/gridColDef';
 
@@ -40,6 +41,8 @@ export const GridBooleanCell = React.memo((props: GridBooleanCellProps) => {
     getValue,
     ...other
   } = props;
+
+  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -54,7 +57,9 @@ export const GridBooleanCell = React.memo((props: GridBooleanCellProps) => {
     <Icon
       fontSize="small"
       className={classes.root}
-      titleAccess={api.getLocaleText(value ? 'booleanCellTrueLabel' : 'booleanCellFalseLabel')}
+      titleAccess={apiRef.current.getLocaleText(
+        value ? 'booleanCellTrueLabel' : 'booleanCellFalseLabel',
+      )}
       data-value={Boolean(value)}
       {...other}
     />

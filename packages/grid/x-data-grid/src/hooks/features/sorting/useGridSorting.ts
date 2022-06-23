@@ -54,7 +54,6 @@ export const useGridSorting = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'initialState'
     | 'sortModel'
     | 'onSortModelChange'
     | 'sortingOrder'

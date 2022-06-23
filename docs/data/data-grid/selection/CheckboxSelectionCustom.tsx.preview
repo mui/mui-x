@@ -1,0 +1,1 @@
+<DataGrid {...data} checkboxSelection columns={columns} />

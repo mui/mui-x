@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
 
 function renderRating(params) {
   return <Rating readOnly value={params.value} />;
@@ -16,18 +16,20 @@ renderRating.propTypes = {
 };
 
 function RatingEditInputCell(props) {
-  const { id, value, api, field } = props;
+  const { id, value, field } = props;
+
+  const apiRef = useGridApiContext();
 
   const handleChange = async (event, newValue) => {
-    api.setEditCellValue({ id, field, value: Number(newValue) }, event);
+    apiRef.current.setEditCellValue({ id, field, value: Number(newValue) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
     const nativeEvent = event.nativeEvent;
     if (nativeEvent.clientX !== 0 && nativeEvent.clientY !== 0) {
       // Wait for the validation to run
-      const isValid = await api.commitCellChange({ id, field });
+      const isValid = await apiRef.current.commitCellChange({ id, field });
       if (isValid) {
-        api.setCellMode(id, field, 'view');
+        apiRef.current.setCellMode(id, field, 'view');
       }
     }
   };
@@ -54,11 +56,6 @@ function RatingEditInputCell(props) {
 }
 
 RatingEditInputCell.propTypes = {
-  /**
-   * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
-   */
-  api: PropTypes.any.isRequired,
   /**
    * The column field of the cell that triggered the event.
    */

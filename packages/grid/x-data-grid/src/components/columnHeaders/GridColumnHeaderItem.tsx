@@ -225,6 +225,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       ? column.headerClassName({ field: column.field, colDef: column })
       : column.headerClassName;
 
+  const label = column.headerName ?? column.field;
+
   return (
     <div
       ref={headerCellRef}
@@ -239,6 +241,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       tabIndex={tabIndex}
       aria-colindex={colIndex + 1}
       aria-sort={ariaSort}
+      aria-label={column.renderHeader && headerComponent == null ? label : undefined}
       {...mouseEventsHandlers}
     >
       <div
@@ -248,9 +251,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       >
         <div className={classes.titleContainer}>
           <div className={classes.titleContainerContent}>
-            {headerComponent || (
+            {column.renderHeader ? (
+              headerComponent
+            ) : (
               <GridColumnHeaderTitle
-                label={column.headerName ?? column.field}
+                label={label}
                 description={column.description}
                 columnWidth={width}
               />

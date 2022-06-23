@@ -2,7 +2,7 @@
 title: Data Grid - Column definition
 ---
 
-# Data Grid - Column definition
+# Data grid - Column definition
 
 <p class="description">Define your columns.</p>
 
@@ -98,7 +98,6 @@ const columns: GridColDef[] = [
         {params.value.getFullYear()}
         <Button
           variant="contained"
-          color="primary"
           size="small"
           style={{ marginLeft: 16 }}
           tabIndex={params.hasFocus ? 0 : -1}
@@ -133,9 +132,9 @@ You can check the [tab sequence](/x/react-data-grid/accessibility/#tab-sequence)
 
 ### Using hooks inside a renderer
 
-The `renderCell` property is a function returning a React node, not a React component.
+The `renderCell` property is a function that returns a React node, not a React component.
 
-If you can to use React hooks inside your renderer, you should wrap them inside a component.
+If you want to use React hooks inside your renderer, you should wrap them inside a component.
 
 ```tsx
 // ❌ Not valid
@@ -164,6 +163,13 @@ const column = {
   renderCell: () => <CountButton />,
 };
 ```
+
+:::warning
+Because of pagination and virtualization, cells can be unmounted when scrolling or switching pages.
+The internal state of the component returned by renderCell will be lost.
+
+If you want the cell information to persist, you should save it either in the data grid state or in the data grid parent.
+:::
 
 ### Expand cell renderer
 
@@ -285,3 +291,4 @@ More information about the selectors and how to use them on the [dedicated page]
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

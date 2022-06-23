@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "5.12.0",
+  "version": "5.12.2",
   "description": "The community edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -50,7 +50,7 @@
     "@mui/utils": "^5.4.1",
     "clsx": "^1.1.1",
     "prop-types": "^15.8.1",
-    "reselect": "^4.1.5"
+    "reselect": "^4.1.6"
   },
   "peerDependencies": {
     "@mui/material": "^5.4.1",

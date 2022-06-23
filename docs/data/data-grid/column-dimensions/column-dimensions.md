@@ -2,7 +2,7 @@
 title: Data Grid - Column dimensions
 ---
 
-# Data Grid - Column dimensions
+# Data grid - Column dimensions
 
 <p class="description">Customize the dimensions and resizing behavior of your columns.</p>
 
@@ -66,3 +66,4 @@ To capture changes in the width of a column there are two callbacks that are cal
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

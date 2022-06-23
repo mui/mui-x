@@ -66,7 +66,6 @@ import {
   useGridDetailPanel,
   detailPanelStateInitializer,
 } from '../hooks/features/detailPanel/useGridDetailPanel';
-import { useGridDetailPanelCache } from '../hooks/features/detailPanel/useGridDetailPanelCache';
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
@@ -118,13 +117,12 @@ export const useDataGridProComponent = (
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
-  useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
-  useGridDetailPanelCache(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
     ? useGridEditing_new

@@ -17,6 +17,11 @@ export interface GridDimensions {
    * Indicates if a scroll is currently needed to go from the beginning of the first row to the end of the last row.
    */
   hasScrollY: boolean;
+  /**
+   * Size of the scrollbar used to scroll the rows in pixel.
+   * It is defined even when the scrollbar is currently not needed.
+   */
+  scrollBarSize: number;
 }
 
 export interface GridDimensionsApi {

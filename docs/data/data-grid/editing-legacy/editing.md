@@ -2,7 +2,7 @@
 title: Data Grid - Editing (legacy)
 ---
 
-# Data Grid - Editing (legacy)
+# Data grid - Editing (legacy)
 
 <p class="description">The data grid has built-in edit capabilities that you can customize to your needs.</p>
 
@@ -276,3 +276,4 @@ Only use this API as the last option. Give preference to the props to control th
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

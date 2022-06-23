@@ -50,7 +50,6 @@ import {
   useGridColumnPinningPreProcessors,
   useGridDetailPanel,
   detailPanelStateInitializer,
-  useGridDetailPanelCache,
   useGridDetailPanelPreProcessors,
   useGridInfiniteLoader,
   useGridColumnSpanning,
@@ -119,13 +118,12 @@ export const useDataGridPremiumComponent = (
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
-  useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
-  useGridDetailPanelCache(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
     ? useGridEditing_new

@@ -2,7 +2,7 @@
 title: Data Grid - State
 ---
 
-# Data Grid - State
+# Data grid - State
 
 <p class="description">Initialize and read the state of the data grid.</p>
 
@@ -136,3 +136,4 @@ Restoring the pagination without restoring the filters or the sorting will work,
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

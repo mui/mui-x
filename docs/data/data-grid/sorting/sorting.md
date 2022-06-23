@@ -2,7 +2,7 @@
 title: Data Grid - Sorting
 ---
 
-# Data Grid - Sorting
+# Data grid - Sorting
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 
@@ -156,3 +156,4 @@ More information about the selectors and how to use them on the [dedicated page]
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
