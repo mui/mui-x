@@ -5,7 +5,6 @@ import Chip from '@mui/material/Chip';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { getValueFromOption } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import type { ValueOptions } from '../../../models/colDef/gridColDef';
 
@@ -23,7 +22,7 @@ export interface GridFilterInputMultipleSingleSelectProps
       | 'multiple'
       | 'color'
     >,
-    GridFilterInputValueProps<GridApiCommon> {
+    GridFilterInputValueProps {
   type?: 'singleSelect';
 }
 
