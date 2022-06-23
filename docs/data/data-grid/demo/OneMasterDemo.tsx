@@ -31,7 +31,7 @@ export const PlanTag = (props: { plan: string }) => {
   return (
     <Chip
       avatar={avatar}
-      sx={{ background: chipPropperties.color }}
+      sx={{ background: chipPropperties.color, color: 'rgba(0, 0, 0, 0.87)' }}
       label={props.plan}
     />
   );
@@ -107,8 +107,7 @@ function OneMasterDemo() {
           '& .MuiDataGrid-columnHeaderTitle': {
             fontWeight: 400,
           },
-          borderRadius: 2,
-          border: '3px solid grey',
+          borderRadius: 2
         }}
         rows={featuresSet}
         columns={columns}

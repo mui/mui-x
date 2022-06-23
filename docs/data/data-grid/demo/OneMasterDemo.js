@@ -61,6 +61,8 @@ function OneMasterDemo() {
       field: 'plan',
       headerName: 'Plan',
       width: 120,
+      type: 'singleSelect',
+      valueOptions: ['Premium', 'Pro', 'Community'],
       renderCell: (params) => {
         if (!params.value) {
           return <React.Fragment />;
