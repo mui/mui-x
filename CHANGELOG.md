@@ -43,7 +43,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 ### Core
 
-- [core] Allows having multiple playgrounds (#5288) @alexfauquette
+- [core] Allow having multiple playgrounds (#5288) @alexfauquette
 - [core] Improve typing of `GridFilterInputMultipleSingleSelect` (#5206) @flaviendelangle
 - [core] Remove arbitrary new lines (#5245) @oliviertassinari
 - [core] Remove dead logic (#5282) @oliviertassinari
