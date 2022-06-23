@@ -31,7 +31,7 @@ You need to install 3 different types of package to make the pickers work:
 
 First you have to install the date-library you want to use to manage dates, and the component package:
 
-{{"demo": "Instructions.js", "bg": "inline", "hideToolbar": true, "disableAd": true}}
+{{"demo": "InstructionsNoSnap.js", "bg": "inline", "hideToolbar": true, "disableAd": true}}
 
 We currently support 4 different date-libraries:
 

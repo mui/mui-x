@@ -1,14 +1,14 @@
 import * as React from 'react';
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import HighlightedCode from '@mui/monorepo/docs/src/modules/components/HighlightedCode';
 
 const libraries = ['date-fns', 'dayjs', 'luxon', 'moment'];
 
-const Instructions = () => {
+const InstructionsNoSnap = () => {
   const [licenceType, setLicenceType] = React.useState('community');
   const [packageManger, setPackageManger] = React.useState('yarn');
   const [libraryUsed, setLibraryUsed] = React.useState('moment');
@@ -76,4 +76,4 @@ const Instructions = () => {
   );
 };
 
-export default Instructions;
+export default InstructionsNoSnap;
