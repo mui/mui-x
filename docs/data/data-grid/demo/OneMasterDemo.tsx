@@ -45,7 +45,7 @@ function OneMasterDemo() {
       width: 130,
       renderCell: (params) => {
         if (!params.value) {
-          return <React.Fragment/>;
+          return <React.Fragment />;
         }
         return (
           <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
@@ -67,7 +67,7 @@ function OneMasterDemo() {
       valueOptions: ['Premium', 'Pro', 'Community'],
       renderCell: (params: GridRenderCellParams<string>) => {
         if (!params.value) {
-          return <React.Fragment/>;
+          return <React.Fragment />;
         }
         return <PlanTag plan={params.value} />;
       },
@@ -78,7 +78,7 @@ function OneMasterDemo() {
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => {
         if (!params.value) {
-          return <React.Fragment/>;
+          return <React.Fragment />;
         }
         return (
           <Link href={`/x/react-data-grid${params.value}`}>{params.value}</Link>
@@ -100,7 +100,9 @@ function OneMasterDemo() {
       <DataGridPremium
         components={{ Toolbar: CustomToolbar }}
         getDetailPanelContent={({ row }) => DemoHub(row)}
-        getDetailPanelHeight={({ row }) => (row.name === 'Virtualization' ? 500 : 300)}
+        getDetailPanelHeight={({ row }) =>
+          row.name === 'Virtualization' ? 500 : 300
+        }
         sx={{
           '& .MuiDataGrid-columnHeaderTitle': {
             fontWeight: 400,

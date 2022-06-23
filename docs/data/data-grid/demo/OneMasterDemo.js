@@ -43,7 +43,7 @@ function OneMasterDemo() {
       width: 130,
       renderCell: (params) => {
         if (!params.value) {
-          return <React.Fragment/>;
+          return <React.Fragment />;
         }
         return (
           <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
@@ -63,7 +63,7 @@ function OneMasterDemo() {
       width: 120,
       renderCell: (params) => {
         if (!params.value) {
-          return <React.Fragment/>;
+          return <React.Fragment />;
         }
         return <PlanTag plan={params.value} />;
       },
@@ -74,7 +74,7 @@ function OneMasterDemo() {
       width: 150,
       renderCell: (params) => {
         if (!params.value) {
-          return <React.Fragment/>;
+          return <React.Fragment />;
         }
         return (
           <Link href={`/x/react-data-grid${params.value}`}>{params.value}</Link>
@@ -94,7 +94,9 @@ function OneMasterDemo() {
     <div style={{ height: 600, width: '100%' }}>
       <DataGridPremium
         getDetailPanelContent={({ row }) => DemoHub(row)}
-        getDetailPanelHeight={({ row }) => (row.name === 'Virtualization' ? 500 : 300)}
+        getDetailPanelHeight={({ row }) =>
+          row.name === 'Virtualization' ? 500 : 300
+        }
         components={{ Toolbar: CustomToolbar }}
         componentsProps={{
           toolbar: {
