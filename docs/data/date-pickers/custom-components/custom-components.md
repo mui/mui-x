@@ -9,7 +9,7 @@ title: Date and Time pickers - Custom components
 
 ## Overriding components
 
-The picker components allows you to override internal components with the `components` prop.
+You can override the internal elements of the component (known as "slots") using the `components` prop.
 
 If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop.
 
