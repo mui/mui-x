@@ -72,7 +72,7 @@ The build-in `ActionBar` component supports 4 different actions:
 ### Component
 
 If the customization above are not flexible enough, you can provide a custom component.
-It can be used in combination with `componentsProps`.
+This can be used in combination with `componentsProps`.
 
 In the example below, the actions are the same as in the section above, but they are rendered inside a menu:
 
