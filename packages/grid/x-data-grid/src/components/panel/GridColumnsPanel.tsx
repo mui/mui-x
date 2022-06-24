@@ -83,7 +83,9 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
         }
 
         return apiRef.current.setColumnVisibilityModel(
-          Object.fromEntries(columns.map((col) => [col.field, false])),
+          Object.fromEntries(
+            columns.filter((col) => col.hideable !== false).map((col) => [col.field, false]),
+          ),
         );
       }
 

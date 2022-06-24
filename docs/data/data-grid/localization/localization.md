@@ -134,3 +134,4 @@ Note that these translations of the Data grid component depend on the [Localizat
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

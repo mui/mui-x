@@ -306,3 +306,4 @@ Pinned (or frozen, locked, or sticky) rows are rows that are visible at all time
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

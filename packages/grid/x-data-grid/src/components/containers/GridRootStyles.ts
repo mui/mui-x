@@ -7,6 +7,20 @@ export const GridRootStyles = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => [
     { [`&.${gridClasses.autoHeight}`]: styles.autoHeight },
+    { [`&.${gridClasses.aggregationColumnHeader}`]: styles.aggregationColumnHeader },
+    {
+      [`&.${gridClasses['aggregationColumnHeader--alignLeft']}`]:
+        styles['aggregationColumnHeader--alignLeft'],
+    },
+    {
+      [`&.${gridClasses['aggregationColumnHeader--alignCenter']}`]:
+        styles['aggregationColumnHeader--alignCenter'],
+    },
+    {
+      [`&.${gridClasses['aggregationColumnHeader--alignRight']}`]:
+        styles['aggregationColumnHeader--alignRight'],
+    },
+    { [`&.${gridClasses.aggregationColumnHeaderLabel}`]: styles.aggregationColumnHeaderLabel },
     { [`& .${gridClasses.editBooleanCell}`]: styles.editBooleanCell },
     { [`& .${gridClasses['cell--editing']}`]: styles['cell--editing'] },
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },

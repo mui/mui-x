@@ -18,3 +18,4 @@ Pivoting will allow you to take a columns values and turn them into columns.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -136,3 +136,4 @@ Restoring the pagination without restoring the filters or the sorting will work,
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
