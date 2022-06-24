@@ -121,7 +121,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const lastMeasuredIndexRelativeToCurrentPage =
         lastMeasuredIndexRelativeToAllRows - (currentPage.range?.firstRowIndex || 0);
       const lastMeasuredIndex = Math.max(0, lastMeasuredIndexRelativeToCurrentPage);
-      const allRowsMeasured = lastMeasuredIndex === Infinity;
+
+      let allRowsMeasured = lastMeasuredIndex === Infinity;
+      if (currentPage.range?.lastRowIndex && !allRowsMeasured) {
+        // Check if all rows in this page are already measured
+        allRowsMeasured = lastMeasuredIndex >= currentPage.range.lastRowIndex;
+      }
 
       if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndex] >= offset) {
         // If all rows were measured (when no row has "auto" as height) or all rows before the offset
