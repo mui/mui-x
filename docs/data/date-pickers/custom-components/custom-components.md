@@ -55,7 +55,7 @@ You can override the action displayed by passing the `actions` prop to the `acti
 />
 ```
 
-In the example below, the action bar contains only one button to reset to today's date:
+In the example below, the action bar contains only one button, which resets the selection to today's date:
 
 {{"demo": "ActionBarComponentProps.js"}}
 
