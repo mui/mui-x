@@ -261,7 +261,7 @@ To avoid this, use the `disableIgnoreModificationsIfProcessingProps` prop to kee
 <DataGrid disableIgnoreModificationsIfProcessingProps />
 ```
 
-In v6, this prop will be enabled by default.
+In v6, this prop will be removed and the editing API will behave, by default, like if it was enabled.
 :::
 
 ## Persistence
