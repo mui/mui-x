@@ -47,7 +47,7 @@ export interface GridFilterInitialState {
 export type GridAggregatedFilterItemApplier = (
   rowId: GridRowId,
   shouldApplyItem?: (columnField: string) => boolean,
-) => boolean;
+) => { passFilterItems: boolean; passQuickFilter: boolean };
 
 export interface GridFilteringMethodParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;

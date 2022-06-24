@@ -17,6 +17,11 @@ type GridFilterItemApplier = {
   item: GridFilterItem;
 };
 
+type GridFilterItemApplierNotAggregated = (
+  rowId: GridRowId,
+  shouldApplyItem?: (columnField: string) => boolean,
+) => boolean;
+
 /**
  * Adds default values to the optional fields of a filter items.
  * @param {GridFilterItem} item The raw filter item.
@@ -126,7 +131,7 @@ export const mergeStateWithFilterModel =
 export const buildAggregatedFilterItemsApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
-): GridAggregatedFilterItemApplier | null => {
+): GridFilterItemApplierNotAggregated | null => {
   const { items, linkOperator = GridLinkOperator.And } = filterModel;
 
   const getFilterCallbackFromItem = (filterItem: GridFilterItem): GridFilterItemApplier | null => {
@@ -210,7 +215,7 @@ export const buildAggregatedFilterItemsApplier = (
 export const buildAggregatedQuickFilterApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
-): GridAggregatedFilterItemApplier | null => {
+): GridFilterItemApplierNotAggregated | null => {
   const { quickFilterValues = [], quickFilterLogicOperator = GridLinkOperator.And } = filterModel;
   if (quickFilterValues.length === 0) {
     return null;
@@ -280,19 +285,13 @@ export const buildAggregatedFilterApplier = (
   const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(filterModel, apiRef);
   const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(filterModel, apiRef);
 
-  if (isRowMatchingFilterItems == null && isRowMatchingQuickFilter == null) {
+  if (isRowMatchingFilterItems === null && isRowMatchingQuickFilter === null) {
     return null;
   }
-
-  if (isRowMatchingFilterItems == null) {
-    return isRowMatchingQuickFilter;
-  }
-
-  if (isRowMatchingQuickFilter == null) {
-    return isRowMatchingFilterItems;
-  }
-
-  return (rowId, shouldApplyFilter) =>
-    isRowMatchingFilterItems(rowId, shouldApplyFilter) &&
-    isRowMatchingQuickFilter(rowId, shouldApplyFilter);
+  return (rowId, shouldApplyFilter) => ({
+    passFilterItems:
+      isRowMatchingFilterItems === null || isRowMatchingFilterItems(rowId, shouldApplyFilter),
+    passQuickFilter:
+      isRowMatchingQuickFilter === null || isRowMatchingQuickFilter(rowId, shouldApplyFilter),
+  });
 };

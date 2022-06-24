@@ -317,7 +317,8 @@ export const useGridFilter = (
         const filteredRowsLookup: Record<GridRowId, boolean> = {};
         for (let i = 0; i < rowIds.length; i += 1) {
           const rowId = rowIds[i];
-          filteredRowsLookup[rowId] = params.isRowMatchingFilters(rowId);
+          const { passFilterItems, passQuickFilter } = params.isRowMatchingFilters(rowId);
+          filteredRowsLookup[rowId] = passFilterItems && passQuickFilter;
         }
         return {
           filteredRowsLookup,

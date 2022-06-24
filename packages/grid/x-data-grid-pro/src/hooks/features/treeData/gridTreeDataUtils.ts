@@ -40,7 +40,8 @@ export const filterRowTreeFromTreeData = (
     } else if (!isRowMatchingFilters) {
       isMatchingFilters = true;
     } else {
-      isMatchingFilters = isRowMatchingFilters(node.id);
+      const { passFilterItems, passQuickFilter } = isRowMatchingFilters(node.id);
+      isMatchingFilters = passFilterItems && passQuickFilter;
     }
 
     let filteredDescendantCount = 0;
