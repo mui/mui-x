@@ -140,7 +140,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
       return exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndex);
     },
-    [apiRef, currentPage.range?.firstRowIndex, rowsMeta.positions],
+    [apiRef, currentPage.range?.firstRowIndex, currentPage.range?.lastRowIndex, rowsMeta.positions],
   );
 
   const computeRenderContext = React.useCallback(() => {
