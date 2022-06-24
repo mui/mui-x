@@ -71,7 +71,7 @@ The built-in `ActionBar` component supports four different actions:
 
 ### Component
 
-If the customization above are not flexible enough, you can provide a custom component.
+If you need to customize the date picker beyond the options described above, you can provide a custom component.
 This can be used in combination with `componentsProps`.
 
 In the example below, the actions are the same as in the section above, but they are rendered inside a menu:
