@@ -27,7 +27,7 @@ As an example, you could override the `ActionBar` and pass additional props to t
 />
 ```
 
-:::info
+:::warning
 The casing is different between the `components` (ActionBar) and `componentsProps` (actionBar) props.
 :::
 
