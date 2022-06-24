@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jun 23, 2022_
 
-We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Add Swedish (sv-SE) locale on the data grid and the pickers (#5210) @mrxdst
 - 🌍 Add Dutch (nl-NL) locale on the pickers (#5237) @DDukers
@@ -40,6 +40,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [docs] Add plan badge next to event name in the Events page (#5200) @flaviendelangle
 - [docs] Add section for theme augmentation in the picker docs (#5276) @flaviendelangle
 - [docs] Add waiting for upvote section for row group panel (#5271) @flaviendelangle
+- [docs] Disable ad on main demo page (#5301) @joserodolfofreitas
 - [docs] Fix typo in the `DateRangePicker` documentation (#5259) @flaviendelangle
 
 ### Core
