@@ -2113,8 +2113,69 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
           />,
         );
 
-        // TODO: allows grouping filter to be more flexible when it is quick filter
         expect(getColumnValues(1)).to.deep.equal(['', '3', '4']);
+      });
+
+      it('should let group appears when a leaf rows pass quick filter', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['Cat 1'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+      });
+
+      it('should let group appears when a rows pass quick filter base don both grouping and leaf values', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['Cat A', 'Cat 2'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows A.1 and B.1
+        expect(getColumnValues(1)).to.deep.equal(['', '1', '2']);
+      });
+
+      it('should show all children when a group pass quick filter', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['Cat A'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
       });
     });
 
