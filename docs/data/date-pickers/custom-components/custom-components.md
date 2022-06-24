@@ -60,7 +60,7 @@ In the example below, the action bar contains only one button to reset to today'
 
 #### Available actions
 
-The build-in `ActionBar` component supports 4 different actions:
+The built-in `ActionBar` component supports four different actions:
 
 | Action   | Behavior                                                               |
 | -------- | ---------------------------------------------------------------------- |
