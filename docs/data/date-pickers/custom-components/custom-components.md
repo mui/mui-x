@@ -13,7 +13,7 @@ You can override the internal elements of the component (known as "slots") using
 
 Use the `componentsProps` prop if you need to pass additional props to a component slot.
 
-As an example, you could override the action bar and pass additional props as below.
+As an example, you could override the `ActionBar` and pass additional props to the custom component as shown below:
 
 ```jsx
 <DatePicker
