@@ -39,7 +39,7 @@ The action bar is available on all picker components.
 It is located at the bottom of the picker's views.
 By default, it contains no action on desktop, and the actions **Cancel** and **Accept** on mobile.
 
-You can override the action displayed using the `actions` prop passed to this component.
+You can override the action displayed by passing the `actions` prop to the `actionBar` within `componentsProps`, as shown here:
 
 ```jsx
 <DatePicker
