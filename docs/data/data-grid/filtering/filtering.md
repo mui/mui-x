@@ -353,7 +353,7 @@ This function takes as an input a value of the quick filter and returns another 
 In the example below, a custom filter is created for the `date` column to check if it contains the correct year.
 
 ```ts
-getApplyFilterFn: (value: string) => {
+getApplyQuickFilterFn: (value: string) => {
   if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
     // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
     return null;
@@ -364,7 +364,7 @@ getApplyFilterFn: (value: string) => {
 };
 ```
 
-To remove the quick filtering on a given column set `getApplyFilterFn: undefined`.
+To remove the quick filtering on a given column set `getApplyQuickFilterFn: undefined`.
 
 In the demo bellow, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on".
 
