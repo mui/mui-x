@@ -65,7 +65,7 @@ The built-in `ActionBar` component supports four different actions:
 | Action   | Behavior                                                               |
 | -------- | ---------------------------------------------------------------------- |
 | `accept` | Accept the current value and close the picker view                     |
-| `cancel` | Resets to the last accepted date and close the picker view             |
+| `cancel` | Reset to the last accepted date and close the picker view             |
 | `clear`  | Reset to the empty value and close the picker view                    |
 | `today`  | Reset to today's date (and time if relevant) and close the picker view |
 
