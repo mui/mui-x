@@ -28,7 +28,7 @@ As an example, you could override the `ActionBar` and pass additional props to t
 ```
 
 :::warning
-The casing is different between the `components` (ActionBar) and `componentsProps` (actionBar) props.
+The `components` prop uses Pascal case (`ActionBar`), while `componentsProps` uses camel case (`actionBar`).
 :::
 
 ## Action bar
