@@ -34,7 +34,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   describeConformance(
     <DesktopDateRangePicker
-      onChange={() => { }}
+      onChange={() => {}}
       renderInput={(props) => <TextField {...props} />}
       value={[null, null]}
     />,
@@ -307,7 +307,7 @@ describe('<DesktopDateRangePicker />', () => {
                 <TextField {...endProps} variant="standard" />
               </React.Fragment>
             )}
-            onChange={() => { }}
+            onChange={() => {}}
             TransitionComponent={FakeTransitionComponent}
             value={[null, null]}
           />
@@ -373,7 +373,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <DesktopDateRangePicker
           open
-          onChange={() => { }}
+          onChange={() => {}}
           PopperProps={{
             onClick: handleClick,
             onTouchStart: handleTouchStart,
