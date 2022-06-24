@@ -117,7 +117,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const getNearestIndexToRender = React.useCallback(
     (offset) => {
-      const lastMeasuredIndex = Math.max(0, apiRef.current.unstable_getLastMeasuredRowIndex());
+      const lastMeasuredIndexRelativeToAllRows = apiRef.current.unstable_getLastMeasuredRowIndex();
+      const lastMeasuredIndexRelativeToCurrentPage =
+        lastMeasuredIndexRelativeToAllRows - (currentPage.range?.firstRowIndex || 0);
+      const lastMeasuredIndex = Math.max(0, lastMeasuredIndexRelativeToCurrentPage);
       const allRowsMeasured = lastMeasuredIndex === Infinity;
 
       if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndex] >= offset) {
@@ -132,7 +135,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
       return exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndex);
     },
-    [apiRef, rowsMeta.positions],
+    [apiRef, currentPage.range?.firstRowIndex, rowsMeta.positions],
   );
 
   const computeRenderContext = React.useCallback(() => {
