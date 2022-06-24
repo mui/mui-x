@@ -5,7 +5,7 @@ export function getValueFromOption(option: any | undefined) {
   return option;
 }
 
-export function getValueFromValueOptions(value: string, valueOptions: any[]) {
+export function getValueFromValueOptions(value: string, valueOptions?: any[]) {
   if (valueOptions === undefined) {
     return undefined;
   }

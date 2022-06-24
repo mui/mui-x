@@ -136,8 +136,8 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
-      type={type || 'text'}
       variant="standard"
+      type={type || 'text'}
       InputProps={InputProps}
       InputLabelProps={{
         shrink: true,
@@ -155,7 +155,9 @@ GridFilterInputValue.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  apiRef: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
