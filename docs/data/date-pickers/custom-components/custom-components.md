@@ -37,7 +37,7 @@ The `components` prop uses Pascal case (`ActionBar`), while `componentsProps` us
 
 The action bar is available on all picker components.
 It is located at the bottom of the picker's views.
-By default, it contains no action on desktop and the action _Cancel_ and _Accept_ on mobile.
+By default, it contains no action on desktop, and the actions **Cancel** and **Accept** on mobile.
 
 You can override the action displayed using the `actions` prop passed to this component.
 
