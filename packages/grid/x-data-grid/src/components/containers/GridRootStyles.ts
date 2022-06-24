@@ -141,7 +141,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses['columnGroupHeader--withName']} .${gridClasses.columnGroupHeaderTitleContainerContent}`]:
       {
-        borderBottom: `solid ${theme.palette.divider} 2px`,
+        borderBottom: `solid ${borderColor} 1px`,
       },
     [`& .${gridClasses.withBorder} .${gridClasses.columnGroupHeaderTitleContainerContent}`]: {
       borderBottom: `none`,
