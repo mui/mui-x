@@ -220,7 +220,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const isBaseSelectNative = baseSelectProps.native ?? true;
     const OptionComponent = isBaseSelectNative ? 'option' : MenuItem;
 
-    const { InputComponentProps, ...propagatedValueInputProps } = valueInputProps;
+    const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
     const sortedFilterableColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -464,11 +464,11 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           variant="standard"
           as={rootProps.components.BaseFormControl}
           {...baseFormControlProps}
-          {...propagatedValueInputProps}
+          {...valueInputPropsOther}
           className={clsx(
             classes.valueInput,
             baseFormControlProps.className,
-            propagatedValueInputProps.className,
+            valueInputPropsOther.className,
           )}
         >
           {currentOperator?.InputComponent ? (
