@@ -11,7 +11,7 @@ title: Date and Time pickers - Custom components
 
 You can override the internal elements of the component (known as "slots") using the `components` prop.
 
-If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop.
+Use the `componentsProps` prop if you need to pass additional props to a component slot.
 
 As an example, you could override the action bar and pass additional props as below.
 
