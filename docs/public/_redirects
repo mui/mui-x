@@ -20,6 +20,8 @@
 /:lang/x/react-data-grid/group-pivot/ /:lang/x/react-data-grid/tree-data/ 301
 /x/react-data-grid/columns/ /x/react-data-grid/column-definition/ 301
 /:lang/x/react-data-grid/columns/ /:lang/x/react-data-grid/column-definition/ 301
+/x/advanced-components/ /x/introduction/ 301
+/:lang/x/advanced-components/ /:lang/x/introduction/ 301
 # 2023
 
 # Proxies
