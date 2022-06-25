@@ -116,9 +116,10 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 You need to call `setLicenseKey` before React renders the first component.
 You only need to install the key once in your application.
 
-### Does each developer need their own key?
+### What is the key for?
 
-No, you only need one key installed.
+The license key is meant to help you [get compliant](https://mui.com/store/legal/mui-x-eula/#license-key) with the EULA of the commercial licenses.
+While each developer needs to be licensed, the license key is set once per project, where the components are used.
 
 ### Security
 
