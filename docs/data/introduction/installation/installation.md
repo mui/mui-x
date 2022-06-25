@@ -12,7 +12,7 @@ Note that you only need to install the packages corresponding to the components 
 MUI X components have a peer dependency on `@mui/material`.
 To install Material UI, run:
 
-npm
+With **npm**:
 
 ```sh
 npm install @mui/material @emotion/react @emotion/styled
