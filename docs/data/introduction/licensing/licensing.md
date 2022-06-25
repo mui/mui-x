@@ -24,7 +24,7 @@ Free packages:
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 
-## Pro version<span class="pro-version"></span>
+## Pro version<span class="plan-pro"></span>
 
 The Pro version of MUI X expands on the features of the free version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
 
@@ -36,7 +36,7 @@ Pro version packages:
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
 
 :::info
-The features exclusive to the Pro version are marked with the <span class="pro-version"></span> icon throughout the documentation.
+The features exclusive to the Pro version are marked with the <span class="plan-pro"></span> icon throughout the documentation.
 :::
 
 <div class="only-light-mode">
@@ -46,7 +46,7 @@ The features exclusive to the Pro version are marked with the <span class="pro-v
   <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
 </div>
 
-## Premium version<span class="premium-version"></span>
+## Premium version<span class="plan-premium"></span>
 
 The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, aggregation, in addition to everything that's included in the Pro Plan.
 
@@ -57,7 +57,7 @@ Premium version package:
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
 :::info
-The features exclusive to the Premium version are marked with the <span class="premium-version"></span> icon throughout the documentation.
+The features exclusive to the Premium version are marked with the <span class="plan-premium"></span> icon throughout the documentation.
 :::
 
 ## Evaluation (trial) licenses
