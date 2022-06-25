@@ -69,6 +69,27 @@ You don't need to contact us to use these components for evaluation purposes.
 
 You will need to purchase a commercial license in order to remove the watermarks and console warnings, and after the 30-day evaluation period.
 
+## How many developer seats do I need?
+
+The number of seats purchased on your license must correspond to the number of concurrent
+developers contributing changes to the front-end code of the projects that uses MUI X Pro or
+Premium.
+
+**Example 1.** Company 'A' is developing an application named 'AppA'. The app needs to
+render 10K rows of data in a table and allow users to group, filter, and sort. The dev team
+adds MUI X Pro to the project to satisfy that requirement. 5 front-end and 10 back-end
+developers are working on 'AppA'. Only 1 developer is tasked with configuring and modifying
+the data grid. The front-end developers and only are contributing code to the front-end.
+Company 'A' purchases 5 licenses.
+
+**Example 2.** A UI development team at Company 'A' creates its own UI library for
+internal development and includes MUI X Pro as a component. The team working on 'AppA' uses
+the new library and so does the team working on 'AppB'. 'AppA' has 5 front-end developers
+and 'AppB' has 3. There are 2 front-end developers on the UI development team. Company 'B'
+purchases 10 licenses.
+
+[The clause in the EULA.](https://mui.com/store/legal/mui-x-eula/#required-quantity-of-licenses)
+
 ## License key installation
 
 When you purchase a commercial license, you'll receive a license key by email.
