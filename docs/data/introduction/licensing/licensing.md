@@ -118,7 +118,7 @@ You only need to install the key once in your application.
 
 ### What is the key for?
 
-The license key is meant to help you [get compliant](https://mui.com/store/legal/mui-x-eula/#license-key) with the EULA of the commercial licenses.
+The license key is meant to help you [stay compliant](https://mui.com/store/legal/mui-x-eula/#license-key) with the EULA of the commercial licenses.
 While each developer needs to be licensed, the license key is set once per project, where the components are used.
 
 ### Security
