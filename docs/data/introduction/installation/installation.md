@@ -18,7 +18,7 @@ With **npm**:
 npm install @mui/material @emotion/react @emotion/styled
 ```
 
-yarn
+With **yarn**
 
 ```sh
 yarn add @mui/material @emotion/react @emotion/styled
@@ -27,13 +27,13 @@ yarn add @mui/material @emotion/react @emotion/styled
 Material UI uses Emotion as its default style library.
 If you prefer styled-components, run:
 
-npm
+With **npm**
 
 ```sh
 npm install @mui/material @mui/styled-engine-sc styled-components
 ```
 
-yarn
+With **yarn**
 
 ```sh
 yarn add @mui/material @mui/styled-engine-sc styled-components
