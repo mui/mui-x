@@ -45,48 +45,24 @@ yarn add @mui/material @mui/styled-engine-sc styled-components
 
 To install the free version of the data grid, run:
 
-With **npm**
-
 ```sh
 npm install @mui/x-data-grid
-```
-
-With **yarn**
-
-```sh
-yarn add @mui/x-data-grid
 ```
 
 ### Pro version
 
 To install the Pro version, run:
 
-With **npm**
-
 ```sh
 npm install @mui/x-data-grid-pro
-```
-
-With **yarn**
-
-```sh
-yarn add @mui/x-data-grid-pro
 ```
 
 ### Premium version
 
 To install the Premium version, run:
 
-With **npm**
-
 ```sh
 npm install @mui/x-data-grid-premium
-```
-
-With **yarn**
-
-```sh
-yarn add @mui/x-data-grid-premium
 ```
 
 ## Date and Time Pickers
@@ -100,88 +76,40 @@ To install the adapter package for the library you want to use, run:
 
 #### date-fns
 
-npm
-
 ```sh
 npm install @date-io/date-fns
 ```
 
-yarn
-
-```sh
-yarn add @date-io/date-fns
-```
-
 #### Day.js
-
-npm
 
 ```sh
 npm install @date-io/dayjs
 ```
 
-yarn
-
-```sh
-yarn add @date-io/dayjs
-```
-
 #### Luxon
-
-npm
 
 ```sh
 npm install @date-io/luxon
 ```
 
-yarn
-
-```sh
-yarn add @date-io/luxon
-```
-
 #### Moment.js
-
-npm
 
 ```sh
 npm install @date-io/moment
-```
-
-yarn
-
-```sh
-yarn add @date-io/moment
 ```
 
 ### Free version
 
 To install the free version, run:
 
-npm
-
 ```sh
 npm install @mui/x-date-pickers
-```
-
-yarn
-
-```sh
-yarn add @mui/x-date-pickers
 ```
 
 ### Pro version
 
 To install the Pro version, run:
 
-npm
-
 ```sh
 npm install @mui/x-date-pickers-pro
-```
-
-yarn
-
-```sh
-yarn add @mui/x-date-pickers-pro
 ```
