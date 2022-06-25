@@ -2,6 +2,8 @@
 
 <p class="description">Find out about our plans for MUI X.</p>
 
+## MUI X roadmap
+
 To learn more about our plans for MUI X, visit the [public roadmap](https://github.com/mui/mui-x/projects/1).
 
 :::warning
@@ -12,3 +14,7 @@ We may decide to add or remove new items at any time, depending on our capabilit
 The development, releases, and timing of any features or functionality remains at the sole discretion of MUI.
 The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
 :::
+
+## Global roadmap
+
+To learn more about our plans for MUI in general, visit the [global roadmap](/material-ui/discover-more/roadmap/).
