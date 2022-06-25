@@ -45,13 +45,13 @@ yarn add @mui/material @mui/styled-engine-sc styled-components
 
 To install the free version of the data grid, run:
 
-npm
+With **npm**
 
 ```sh
 npm install @mui/x-data-grid
 ```
 
-yarn
+With **yarn**
 
 ```sh
 yarn add @mui/x-data-grid
@@ -61,13 +61,13 @@ yarn add @mui/x-data-grid
 
 To install the Pro version, run:
 
-npm
+With **npm**
 
 ```sh
 npm install @mui/x-data-grid-pro
 ```
 
-yarn
+With **yarn**
 
 ```sh
 yarn add @mui/x-data-grid-pro
