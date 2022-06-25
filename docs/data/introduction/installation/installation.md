@@ -77,13 +77,13 @@ yarn add @mui/x-data-grid-pro
 
 To install the Premium version, run:
 
-npm
+With **npm**
 
 ```sh
 npm install @mui/x-data-grid-premium
 ```
 
-yarn
+With **yarn**
 
 ```sh
 yarn add @mui/x-data-grid-premium
