@@ -14,7 +14,9 @@ Rest assured that when we release features commercially, it's only because we be
 
 See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparison.
 
-## Community Plan
+## Plans
+
+### Community Plan
 
 The free version of MUI X is [published under an MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 This version contains features that we believe are maintainable by contributions from the open-source community.
@@ -24,7 +26,7 @@ Free packages:
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 
-## Pro version<span class="plan-pro"></span>
+### Pro Plan<span class="plan-pro"></span>
 
 The Pro version of MUI X expands on the features of the free version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
 
@@ -46,7 +48,7 @@ The features exclusive to the Pro version are marked with the <span class="plan-
   <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
 </div>
 
-## Premium version<span class="plan-premium"></span>
+### Premium Plan<span class="plan-premium"></span>
 
 The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, aggregation, in addition to everything that's included in the Pro Plan.
 
