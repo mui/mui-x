@@ -5,7 +5,7 @@
 MUI X packages are available through the free MIT-licensed Community Plan, or the commercially-licensed Pro and Premium Plans.
 See [the licensing page](/x/introduction/licensing/) for complete details.
 
-Note that you only need to install the packages corresponding to the components you're using—e.g. Data Grid users don't need to install Date and Time Pickers.
+Note that you only need to install the packages corresponding to the components you're using—e.g. data grid users don't need to install date and time pickers.
 
 ## Dependencies
 
