@@ -31,12 +31,13 @@ Throughout the documentation, Pro- and Premium-only features are denoted with th
 ## MUI X vs. MUI Core
 
 MUI X is a collection of advanced UI components for complex use cases.
-
-MUI Core contains foundational UI component libraries like Material UI and MUI Base.
-The primary goal of MUI Core is to solve **design** related problems.
-These libraries are open source, MIT-licensed, and free forever.
-
 Most of MUI X's components are available for free, but more advanced features require a Pro or Premium commercial license.
 
+MUI Core focuses on empowering the creation of great design systems with React.
+It comes with two themes (Material Design and a in-house one).
+It’s about solving design problems.
+It contains foundational UI component libraries like Material UI and MUI Base.
+These libraries are open source, MIT-licensed, and free forever.
+
 MUI X components are fully compatible with MUI Core.
-MUI X can extend the functionality of UIs built with Material UI or MUI Base, but its components can also stand on their own, or be used with another React component library.
+MUI X can extend the functionality of UIs built with Material UI or MUI Base, but its components can also stand on their own, they can be used with third-parties React component libraries that implement different designs.
