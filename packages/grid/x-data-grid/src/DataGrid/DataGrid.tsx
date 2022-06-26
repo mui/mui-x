@@ -100,7 +100,7 @@ DataGridRaw.propTypes = {
           `MUI: \`column.resizable = true\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
           '',
-          'You need to upgrade to the DataGridPro component to unlock this feature.',
+          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -599,7 +599,7 @@ DataGridRaw.propTypes = {
           `MUI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
           `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
           '',
-          'You need to upgrade to the DataGridPro component to unlock this feature.',
+          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -612,7 +612,7 @@ DataGridRaw.propTypes = {
           'MUI: `<DataGrid pagination={false} />` is not a valid prop.',
           'Infinite scrolling is not available in the MIT version.',
           '',
-          'You need to upgrade to the DataGridPro component to disable the pagination.',
+          'You need to upgrade to DataGridPro or DataGridPremium component to disable the pagination.',
         ].join('\n'),
       );
     }
@@ -694,7 +694,7 @@ DataGridRaw.propTypes = {
             )}} />\` is not a valid prop.`,
             'selectionModel can only be of 1 item in DataGrid.',
             '',
-            'You need to upgrade to the DataGridPro component to unlock multiple selection.',
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
           ].join('\n'),
         );
       }
