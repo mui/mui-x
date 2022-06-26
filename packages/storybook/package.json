@@ -46,7 +46,7 @@
     "react-docgen-typescript-loader": "^3.7.2",
     "source-map-loader": "^3.0.1",
     "string-replace-loader": "^3.1.0",
-    "ts-loader": "^9.3.0"
+    "ts-loader": "^9.3.1"
   },
   "browserslist": [
     ">0.3%",
