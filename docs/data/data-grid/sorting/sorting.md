@@ -17,7 +17,7 @@ Following clicks change the column's sorting direction. You can see the applied 
 :::warning
 The `DataGrid` can only sort the rows according to one criterion at a time.
 
-To use multi-sorting, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+To use multi-sorting, you need to upgrade to [Pro](https://mui.com/store/items/mui-x-pro/) or [Premium](https://mui.com/store/items/mui-x-premium/) plan.
 :::
 
 ## Multi-sorting [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)

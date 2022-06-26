@@ -23,7 +23,7 @@ _See [the dedicated section](#customize-the-operators) to learn how to create yo
 :::warning
 The `DataGrid` can only filter the rows according to one criterion at the time.
 
-To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+To use multi-filtering, you need to upgrade to [Pro](https://mui.com/store/items/mui-x-pro/) or [Premium](https://mui.com/store/items/mui-x-premium/) plan.
 :::
 
 ## Multi-filtering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
