@@ -37,7 +37,7 @@ const InstructionsNoSnap = () => {
   ].join('\n');
 
   return (
-    <Stack sx={{ width: '100%' }}>
+    <Stack sx={{ width: '100%' }} px={{ xs: 3, sm: 0 }}>
       <Stack direction="row" spacing={2}>
         <ToggleButtonGroup
           // orientation="vertical"
