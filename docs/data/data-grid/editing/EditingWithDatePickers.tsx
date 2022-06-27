@@ -25,6 +25,7 @@ import {
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import TextField from '@mui/material/TextField';
 import locale from 'date-fns/locale/en-US';
+import { styled } from '@mui/material/styles';
 
 function buildApplyDateFilterFn(
   filterItem: GridFilterItem,
@@ -175,6 +176,12 @@ const dateColumnType: GridColTypeDef<Date | string, string> = {
   },
 };
 
+const GridEditDateTextField = styled(TextField)({
+  '& .MuiInputBase-root': {
+    fontSize: 'inherit',
+  },
+});
+
 function GridEditDateCell({
   id,
   field,
@@ -192,19 +199,7 @@ function GridEditDateCell({
   return (
     <Component
       value={value}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          fullWidth
-          InputProps={{
-            ...params.InputProps,
-            sx: {
-              fontSize: 'inherit',
-              ...params.InputProps?.sx,
-            },
-          }}
-        />
-      )}
+      renderInput={(params) => <GridEditDateTextField fullWidth {...params} />}
       onChange={handleChange}
     />
   );
