@@ -68,7 +68,7 @@ export const GridRootStyles = styled('div', {
     boxSizing: 'border-box',
     position: 'relative',
     border: `1px solid ${borderColor}`,
-     borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadius,
     color: theme.palette.text.primary,
     ...theme.typography.body2,
     outline: 'none',
