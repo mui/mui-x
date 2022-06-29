@@ -283,12 +283,12 @@ You can customize the rendering of the filter panel as shown in [the component s
 The customization of the filter panel content can be performed by passing props to the default [`<GridFilterPanel />`](/x/api/data-grid/grid-filter-panel/) component.
 The available props allow overriding:
 
-- The `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
+- The `linkOperators` (can contain `GridLinkOperator.And` and `GridLinkOperator.Or`)
 - The order of the column selector (can be `"asc"` or `"desc"`)
 - Any prop of the input components
 
 Input components can be [customized](/material-ui/customization/how-to-customize/) by using two approaches.
-You can pass a `sx` prop to any input container or you can use CSS selectors on nested components of the filter panel.
+You can pass a `sx` prop to any input container, or you can use CSS selectors on nested components of the filter panel.
 More details are available in the demo.
 
 | Props                    | CSS class                                 |

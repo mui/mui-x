@@ -9,7 +9,9 @@ title: Data Grid - Virtualization
 DOM virtualization is the feature that allows the grid to handle an unlimited\* number of rows and columns.
 This is a built-in feature of the rendering engine and greatly improves rendering performance.
 
-_\*unlimited: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
+_\*unlimited: Browsers set a limit on the number of pixels a scroll container can host:
+17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari.
+A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
 ## Row virtualization [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
@@ -27,7 +29,7 @@ Column virtualization is the insertion and removal of columns as the grid scroll
 - Overscanning more allows the built-in search feature of the browser to find more matching cells.
 - Overscanning too much can negatively impact performance.
 
-By default, 2 columns are rendered outside of the viewport. You can change this option with the `columnBuffer` prop. The following demo renders 1,000 columns in total:
+By default, 2 columns are rendered outside the viewport. You can change this option with the `columnBuffer` prop. The following demo renders 1,000 columns in total:
 
 {{"demo": "ColumnVirtualizationGrid.js", "bg": "inline"}}
 

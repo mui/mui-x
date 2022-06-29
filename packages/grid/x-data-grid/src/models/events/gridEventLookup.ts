@@ -31,22 +31,32 @@ export interface GridRowEventLookup {
   /**
    * Fired when a row is clicked.
    * Not fired if the cell clicked is from an interactive column (actions, checkbox, etc).
+   * Mapped to the `click` DOM event.
+   * Called with a [[GridRowParams]] object.
    */
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   /**
    * Fired when a row is double-clicked.
+   * Mapped to the `doubleClick` DOM event.
+   * Called with a [[GridRowParams]] object.
    */
   rowDoubleClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   /**
-   * Fired when the mouse enters the row. Called with a [[GridRowParams]] object.
+   * Fired when the mouse enters a row.
+   * Mapped to the `mouseEnter` DOM event.
+   * Called with a [[GridRowParams]] object.
    */
   rowMouseEnter: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   /**
-   * Fired when the mouse leaves the row. Called with a [[GridRowParams]] object.
+   * Fired when the mouse leaves a row.
+   * Called with a [[GridRowParams]] object.
+   * Mapped to the `mouseLeave` DOM event.
    */
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   /**
-   * Fired when the user starts dragging a row. It's mapped to the `dragstart` DOM event.
+   * Fired when the user starts dragging a row.
+   * Called with a [[GridRowParams]] object.
+   * Mapped to the `dragStart` DOM event.
    * @ignore - do not document.
    */
   rowDragStart: {
@@ -54,8 +64,9 @@ export interface GridRowEventLookup {
     event: React.DragEvent<HTMLElement>;
   };
   /**
-   * Fired while an element or text selection is dragged over the row.
-   * It's mapped to the `dragover` DOM event.
+   * Fired while an element or text selection is dragged over a row.
+   * Called with a [[GridRowParams]] object.
+   * Mapped to the `dragOver` DOM event.
    * @ignore - do not document.
    */
   rowDragOver: {
@@ -64,6 +75,8 @@ export interface GridRowEventLookup {
   };
   /**
    * Fired when the dragging of a row ends.
+   * Called with a [[GridRowParams]] object.
+   * Mapped to the `dragEnd` DOM event.
    * @ignore - do not document.
    */
   rowDragEnd: {
@@ -75,6 +88,8 @@ export interface GridRowEventLookup {
 export interface GridColumnHeaderEventLookup {
   /**
    * Fired when a column header is clicked
+   * Mapped to the `click` DOM event.
+   * Called with a [[GridColumnHeaderParams]] object.
    */
   columnHeaderClick: {
     params: GridColumnHeaderParams;
@@ -82,13 +97,17 @@ export interface GridColumnHeaderEventLookup {
   };
   /**
    * Fired when a column header is double-clicked.
+   * Mapped to the `doubleClick` DOM event.
+   * Called with a [[GridColumnHeaderParams]] object.
    */
   columnHeaderDoubleClick: {
     params: GridColumnHeaderParams;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
-   * Fired when a `mouseover` event happens in a column header.
+   * Fired when the mouse enters a colum header.
+   * Mapped to the `mouseOver` DOM event.
+   * Called with a [[GridColumnHeaderParams]] object.
    * @ignore - do not document.
    */
   columnHeaderOver: {
@@ -96,7 +115,8 @@ export interface GridColumnHeaderEventLookup {
     event: React.MouseEvent<HTMLElement>;
   };
   /**
-   * Fired when a `mouseout` event happens in a column header.
+   * Fired when the mouse leaves a colum header.
+   * Mapped to the `mouseOut` DOM event.
    * @ignore - do not document.
    */
   columnHeaderOut: {
@@ -104,7 +124,9 @@ export interface GridColumnHeaderEventLookup {
     event: React.MouseEvent<HTMLElement>;
   };
   /**
-   * Fired when a `mouseenter` event happens in a column header.
+   * Fired when the mouse enters a column header.
+   * Mapped to the `mouseEnter` DOM event.
+   * Called with a [[GridColumnHeaderParams]] object.
    * @ignore - do not document.
    */
   columnHeaderEnter: {
@@ -112,15 +134,19 @@ export interface GridColumnHeaderEventLookup {
     event: React.MouseEvent<HTMLElement>;
   };
   /**
-   * Fired when a `mouseleave` event happens in a column header.
-   * @ignore - do not document.*
+   * Fired when the mouse leaves a column header.
+   * Called with a [[GridColumnHeaderParams]] object.
+   * Mapped to the `mouseLeave` DOM event.
+   * @ignore - do not document.
    */
   columnHeaderLeave: {
     params: GridColumnHeaderParams;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
-   * Fired when a key is pressed in a column header. It's mapped do the `keydown` DOM event.
+   * Fired when a key is pressed in a column header.
+   * Called with a [[GridColumnHeaderParams]] object.
+   * Mapped do the `keydown` DOM event.
    */
   columnHeaderKeyDown: {
     params: GridColumnHeaderParams;
@@ -143,7 +169,8 @@ export interface GridColumnHeaderEventLookup {
     event: React.FocusEvent<HTMLElement>;
   };
   /**
-   * Fired when the user starts dragging a column header. It's mapped to the `dragstart` DOM event.
+   * Fired when the user starts dragging a column header.
+   * Mapped to the `dragStart` DOM event.
    * @ignore - do not document.
    */
   columnHeaderDragStart: {
@@ -152,7 +179,7 @@ export interface GridColumnHeaderEventLookup {
   };
   /**
    * Fired when the dragged column header enters a valid drop target.
-   * It's mapped to the `dragend` DOM event.
+   * Mapped to the `dragEnd` DOM event.
    * @ignore - do not document.
    */
   columnHeaderDragEnter: {
@@ -161,7 +188,7 @@ export interface GridColumnHeaderEventLookup {
   };
   /**
    * Fired while an element or text selection is dragged over the column header.
-   * It's mapped to the `dragover` DOM event.
+   * Mapped to the `dragOver` DOM event.
    * @ignore - do not document.
    */
   columnHeaderDragOver: {
@@ -177,7 +204,7 @@ export interface GridColumnHeaderEventLookup {
     event: React.DragEvent<HTMLElement>;
   };
   /**
-   * Fired when a `mousedown` DOM event happens in the column header separator.
+   * Fired when a `mouseDown` DOM event happens in the column header separator.
    * @ignore - do not document.
    */
   columnSeparatorMouseDown: {
@@ -223,7 +250,8 @@ export interface GridCellEventLookup {
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
-   * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
+   * Fired when the dragged cell enters a valid drop target.
+   * Mapped to the `dragEnd` DOM event.
    * @ignore - do not document.
    */
   cellDragEnter: {
@@ -232,7 +260,7 @@ export interface GridCellEventLookup {
   };
   /**
    * Fired while an element or text selection is dragged over the cell.
-   * It's mapped to the `dragover` DOM event.
+   * Mapped to the `dragOver` DOM event.
    * @ignore - do not document.
    */
   cellDragOver: {
@@ -300,10 +328,12 @@ export interface GridEventLookup
   stateChange: { params: any };
   /**
    * Fired when the grid is resized.
+   * Called with an [[ElementSize]] object.
    */
   resize: { params: ElementSize };
   /**
-   * Fired when the inner size of the viewport changes. Called with an [[ElementSize]] object.
+   * Fired when the inner size of the viewport changes.
+   * Called with an [[ElementSize]] object.
    */
   viewportInnerSizeChange: { params: ElementSize };
   /**
@@ -345,8 +375,8 @@ export interface GridEventLookup
   columnResizeStop: { params: null; event: MouseEvent };
   /**
    * Fired when a column visibility changes.
-   * It is not fired when the `columnVisibilityModel` is controlled or initialized.
-   * It is not fired when toggling all column's visibility at once.
+   * Not fired when the `columnVisibilityModel` is controlled or initialized.
+   * Not fired when toggling all column's visibility at once.
    * @deprecated Use `'columnVisibilityModelChange'` instead.
    */
   columnVisibilityChange: { params: GridColumnVisibilityChangeParams };
@@ -376,7 +406,8 @@ export interface GridEventLookup
    */
   sortedRowsSet: {};
   /**
-   * Fired when the expansion of a row is changed. Called with a [[GridRowTreeNodeConfig]] object.
+   * Fired when the expansion of a row is changed.
+   * Called with a [[GridRowTreeNodeConfig]] object.
    * @ignore - do not document.
    */
   rowExpansionChange: { params: GridRowTreeNodeConfig };
@@ -444,10 +475,6 @@ export interface GridEventLookup
    * Fired when a cell gains focus.
    */
   cellFocusIn: { params: GridCellParams };
-  /**
-   * Fired when a cell loses focus.
-   */
-  cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
 
   // Navigation
   /**
@@ -479,13 +506,13 @@ export interface GridEventLookup
   virtualScrollerContentSizeChange: {};
   /**
    * Fired when the content is scrolled by the mouse wheel.
-   * It's attached to the "mousewheel" event.
+   * Mapped to the `mouseWheel` DOM event.
    * @ignore - do not document.
    */
   virtualScrollerWheel: { params: {}; event: React.WheelEvent };
   /**
    * Fired when the content is moved using a touch device.
-   * It's attached to the "touchmove" event.
+   * Mapped to the `touchMove` DOM event.
    * @ignore - do not document.
    */
   virtualScrollerTouchMove: { params: {}; event: React.TouchEvent };

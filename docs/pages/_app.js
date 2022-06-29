@@ -106,18 +106,18 @@ function LanguageNegotiation() {
 
   React.useEffect(() => {
     const { userLanguage: userLanguageUrl, canonicalAs } = pathnameToLanguage(router.asPath);
-    const preferedLanguage =
+    const preferredLanguage =
       LANGUAGES.find((lang) => lang === getCookie('userLanguage')) ||
       acceptLanguage.get(navigator.language) ||
       userLanguage;
 
     if (
       userLanguageUrl === 'en' &&
-      userLanguage !== preferedLanguage &&
+      userLanguage !== preferredLanguage &&
       !process.env.PULL_REQUEST
     ) {
       window.location =
-        preferedLanguage === 'en' ? canonicalAs : `/${preferedLanguage}${canonicalAs}`;
+        preferredLanguage === 'en' ? canonicalAs : `/${preferredLanguage}${canonicalAs}`;
     } else if (userLanguage !== userLanguageUrl) {
       setUserLanguage(userLanguageUrl);
     }

@@ -41,7 +41,6 @@ enum GridEvents {
   columnHeaderClick = 'columnHeaderClick',
   columnHeaderDoubleClick = 'columnHeaderDoubleClick',
   columnHeaderOver = 'columnHeaderOver',
-  columnHeaderOut = 'columnHeaderOut',
   columnHeaderEnter = 'columnHeaderEnter',
   columnHeaderLeave = 'columnHeaderLeave',
   columnHeaderDragStart = 'columnHeaderDragStart',

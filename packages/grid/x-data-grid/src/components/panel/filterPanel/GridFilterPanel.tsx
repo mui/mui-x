@@ -169,7 +169,7 @@ GridFilterPanel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Changes how the options in the columns selector should be ordered.
+   * Changes how the options in the column's selector should be ordered.
    * If not specified, the order is derived from the `columns` prop.
    */
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
@@ -185,7 +185,7 @@ GridFilterPanel.propTypes = {
     valueInputProps: PropTypes.any,
   }),
   /**
-   * Sets the available logic operators.
+   * The available logic operators.
    * @default [GridLinkOperator.And, GridLinkOperator.Or]
    */
   linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),

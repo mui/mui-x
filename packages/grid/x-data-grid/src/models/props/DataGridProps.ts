@@ -101,7 +101,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
    */
   components?: Partial<GridSlotsComponent>;
   /**
-   * Set the locale text of the grid.
+   * The locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText?: Partial<GridLocaleText>;
@@ -115,23 +115,24 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  */
 export interface DataGridPropsWithDefaultValues {
   /**
-   * If `true`, the grid height is dynamic and follow the number of rows in the grid.
+   * If `true`, the grid height is dynamic and follows the number of rows in the grid.
    * @default false
    */
   autoHeight: boolean;
   /**
-   * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
+   * If `true`, the page size is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false
    */
   autoPageSize: boolean;
   /**
-   * If `true`, the grid get a first column with a checkbox that allows to select rows.
+   * If `true`, the grid gets a first column with a checkbox that allows to select rows.
    * @default false
    */
   checkboxSelection: boolean;
   /**
-   * If `true`, the "Select All" header checkbox selects only the rows on the current page. To be used in combination with `checkboxSelection`.
-   * It only works if the pagination is enabled.
+   * If `true`, the "Select All" header checkbox selects only the rows on the current page.
+   * To be used in combination with `checkboxSelection`.
+   * Only works if the pagination is enabled.
    * @default false
    */
   checkboxSelectionVisibleOnly: boolean;
@@ -156,7 +157,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   columnThreshold: number;
   /**
-   * Set the density of the grid.
+   * The density of the grid.
    * @default "standard"
    */
   density: GridDensity;
@@ -176,12 +177,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableColumnMenu: boolean;
   /**
-   * If `true`, hiding/showing columns is disabled.
+   * If `true`, the preference panel to show and hide columns is disabled both in the toolbar and the column menu.
    * @default false
    */
   disableColumnSelector: boolean;
   /**
-   * If `true`, the density selector is disabled.
+   * If `true`, the density selector is disabled in the toolbar.
    * @default false
    */
   disableDensitySelector: boolean;
@@ -191,7 +192,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableMultipleColumnsFiltering: boolean;
   /**
-   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
+   * If `true`, multiple selection using the Ctrl or Cmd key is disabled.
    * @default false
    */
   disableMultipleSelection: boolean;
@@ -222,7 +223,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   filterMode: GridFeatureMode;
   /**
-   * Set the height in pixel of the column headers in the grid.
+   * The height in pixel of the column headers in the grid.
    * @default 56
    */
   headerHeight: number;
@@ -238,7 +239,7 @@ export interface DataGridPropsWithDefaultValues {
   hideFooterPagination: boolean;
   /**
    * If `true`, the row count in the footer is hidden.
-   * It has no effect if the pagination is enabled.
+   * Has no effect if the pagination is enabled.
    * @default false
    */
   hideFooterRowCount: boolean;
@@ -282,12 +283,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowHeight: number;
   /**
-   * Select the pageSize dynamically using the component UI.
+   * Page sizes users can pick using the component UI.
    * @default [25, 50, 100]
    */
   rowsPerPageOptions: number[];
   /**
-   * Sets the type of space between rows added by `getRowSpacing`.
+   * The type of space between rows added by `getRowSpacing`.
    * @default "margin"
    */
   rowSpacingType: 'margin' | 'border';
@@ -314,8 +315,8 @@ export interface DataGridPropsWithDefaultValues {
    */
   sortingMode: GridFeatureMode;
   /**
-   * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
-   * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
+   * If positive, the DataGrid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
+   * Can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each individual update.
    * @default 0
    */
   throttleRowsMs: number;
@@ -404,13 +405,13 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
   /**
-   * Callback fired when a cell is rendered, returns true if the cell is editable.
+   * Function that determines if a cell is editable (fired during the cell rendering).
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
   isCellEditable?: (params: GridCellParams<any, R>) => boolean;
   /**
-   * Determines if a row can be selected.
+   * Function that determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
@@ -590,31 +591,32 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   page?: number;
   /**
    * Callback fired when the current page has changed.
-   * @param {number} page Index of the page displayed on the Grid.
+   * @param {number} page Index of the page displayed on the DataGrid.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageChange?: (page: number, details: GridCallbackDetails) => void;
   /**
-   * Set the number of rows in one page.
-   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
+   * The number of rows in one page.
+   * If some rows have children (with the tree data or the row grouping),
+   * this number represents the amount of top level rows wanted on each page.
    * @default 100
    */
   pageSize?: number;
   /**
    * Callback fired when the page size has changed.
-   * @param {number} pageSize Size of the page displayed on the Grid.
+   * @param {number} pageSize Size of the page displayed on the DataGrid.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
   /**
-   * Callback fired when the preferences panel is closed.
+   * Callback fired when the preference panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPreferencePanelClose?: GridEventListener<'preferencePanelClose'>;
   /**
-   * Callback fired when the preferences panel is opened.
+   * Callback fired when the preference panel is opened.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -635,7 +637,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onMenuClose?: GridEventListener<'menuClose'>;
   /**
-   * Set the edit rows model of the grid.
+   * The edit rows model of the grid.
    */
   editRowsModel?: GridEditRowsModel;
   /**
@@ -668,7 +670,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onRowModesModelChange?: (rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void;
   /**
-   * Set the filter model of the grid.
+   * The filter model of the grid.
    */
   filterModel?: GridFilterModel;
   /**
@@ -678,7 +680,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onFilterModelChange?: (model: GridFilterModel, details: GridCallbackDetails<'filter'>) => void;
   /**
-   * Set the selection model of the grid.
+   * The selection model of the grid.
    */
   selectionModel?: GridInputSelectionModel;
   /**
@@ -691,7 +693,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
     details: GridCallbackDetails,
   ) => void;
   /**
-   * Set the column visibility model of the grid.
+   * The column visibility model of the grid.
    * If defined, the grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel?: GridColumnVisibilityModel;
@@ -705,7 +707,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
     details: GridCallbackDetails,
   ) => void;
   /**
-   * Set the sort model of the grid.
+   * The sort model of the grid.
    */
   sortModel?: GridSortModel;
   /**

@@ -50,7 +50,7 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    */
   description?: string;
   /**
-   * Set the width of the column.
+   * The width of the column.
    * @default 100
    */
   width?: number;
@@ -59,12 +59,12 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    */
   flex?: number;
   /**
-   * Sets the minimum width of a column.
+   * The minimum width of a column (both for its default width and for resizing).
    * @default 50
    */
   minWidth?: number;
   /**
-   * Sets the maximum width of a column.
+   * The maximum width of a column (both for its default width and for resizing).
    * @default Infinity
    */
   maxWidth?: number;

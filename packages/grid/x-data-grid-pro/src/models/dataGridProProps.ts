@@ -58,7 +58,7 @@ export type DataGridProForcedPropsKey = 'signature';
  */
 export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefaultValues {
   /**
-   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * Sets the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * @default 80
    */
   scrollEndThreshold: number;
@@ -124,7 +124,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
-   * Note that all paths must contain at least one element.
+   * All paths must be unique and contain at least one element.
    * @template R
    * @param {R} row The row from which we want the path.
    * @returns {string[]} The path to the row.

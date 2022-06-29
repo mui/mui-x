@@ -78,12 +78,12 @@ DataGridPremiumRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the grid height is dynamic and follow the number of rows in the grid.
+   * If `true`, the grid height is dynamic and follows the number of rows in the grid.
    * @default false
    */
   autoHeight: PropTypes.bool,
   /**
-   * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
+   * If `true`, the page size is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    * @default false
    */
   autoPageSize: PropTypes.bool,
@@ -92,13 +92,14 @@ DataGridPremiumRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
-   * If `true`, the grid get a first column with a checkbox that allows to select rows.
+   * If `true`, the grid gets a first column with a checkbox that allows to select rows.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
   /**
-   * If `true`, the "Select All" header checkbox selects only the rows on the current page. To be used in combination with `checkboxSelection`.
-   * It only works if the pagination is enabled.
+   * If `true`, the "Select All" header checkbox selects only the rows on the current page.
+   * To be used in combination with `checkboxSelection`.
+   * Only works if the pagination is enabled.
    * @default false
    */
   checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
@@ -132,7 +133,7 @@ DataGridPremiumRaw.propTypes = {
    */
   columnTypes: PropTypes.object,
   /**
-   * Set the column visibility model of the grid.
+   * The column visibility model of the grid.
    * If defined, the grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
@@ -151,7 +152,7 @@ DataGridPremiumRaw.propTypes = {
    */
   defaultGroupingExpansionDepth: PropTypes.number,
   /**
-   * Set the density of the grid.
+   * Sets the density of the grid.
    * @default "standard"
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
@@ -197,12 +198,12 @@ DataGridPremiumRaw.propTypes = {
    */
   disableColumnResize: PropTypes.bool,
   /**
-   * If `true`, hiding/showing columns is disabled.
+   * If `true`, the preference panel to show and hide columns is disabled both in the toolbar and the column menu.
    * @default false
    */
   disableColumnSelector: PropTypes.bool,
   /**
-   * If `true`, the density selector is disabled.
+   * If `true`, the density selector is disabled in the toolbar.
    * @default false
    */
   disableDensitySelector: PropTypes.bool,
@@ -222,7 +223,7 @@ DataGridPremiumRaw.propTypes = {
    */
   disableMultipleColumnsSorting: PropTypes.bool,
   /**
-   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
+   * If `true`, multiple selection using the Ctrl or Cmd key is disabled.
    * @default false
    */
   disableMultipleSelection: PropTypes.bool,
@@ -247,7 +248,7 @@ DataGridPremiumRaw.propTypes = {
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
   /**
-   * Set the edit rows model of the grid.
+   * Sets the edit rows model of the grid.
    */
   editRowsModel: PropTypes.object,
   /**
@@ -277,7 +278,7 @@ DataGridPremiumRaw.propTypes = {
     return null;
   }),
   /**
-   * Set the filter model of the grid.
+   * Sets the filter model of the grid.
    */
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
@@ -344,7 +345,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
-   * Note that all paths must contain at least one element.
+   * All paths must be unique and contain at least one element.
    * @template R
    * @param {R} row The row from which we want the path.
    * @returns {string[]} The path to the row.
@@ -355,7 +356,7 @@ DataGridPremiumRaw.propTypes = {
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
-   * Set the height in pixel of the column headers in the grid.
+   * Sets the height in pixel of the column headers in the grid.
    * @default 56
    */
   headerHeight: PropTypes.number,
@@ -371,7 +372,7 @@ DataGridPremiumRaw.propTypes = {
   hideFooterPagination: PropTypes.bool,
   /**
    * If `true`, the row count in the footer is hidden.
-   * It has no effect if the pagination is enabled.
+   * Has no effect if the pagination is enabled.
    * @default false
    */
   hideFooterRowCount: chainPropTypes(PropTypes.bool, (props: any) => {
@@ -424,7 +425,7 @@ DataGridPremiumRaw.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Set the locale text of the grid.
+   * Sets the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
@@ -627,13 +628,13 @@ DataGridPremiumRaw.propTypes = {
   onMenuOpen: PropTypes.func,
   /**
    * Callback fired when the current page has changed.
-   * @param {number} page Index of the page displayed on the Grid.
+   * @param {number} page Index of the page displayed on the DataGrid.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageChange: PropTypes.func,
   /**
    * Callback fired when the page size has changed.
-   * @param {number} pageSize Size of the page displayed on the Grid.
+   * @param {number} pageSize Size of the page displayed on the DataGrid.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange: PropTypes.func,
@@ -754,8 +755,9 @@ DataGridPremiumRaw.propTypes = {
    */
   page: PropTypes.number,
   /**
-   * Set the number of rows in one page.
-   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
+   * Sets the number of rows in one page.
+   * If some rows have children (with the tree data or the row grouping),
+   * this number represents the amount of top level rows wanted on each page.
    * @default 100
    */
   pageSize: PropTypes.number,
@@ -831,7 +833,7 @@ DataGridPremiumRaw.propTypes = {
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
-   * Select the pageSize dynamically using the component UI.
+   * Page sizes users can pick using the component UI.
    * @default [25, 50, 100]
    */
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
@@ -845,12 +847,12 @@ DataGridPremiumRaw.propTypes = {
    */
   scrollbarSize: PropTypes.number,
   /**
-   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * Sets the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * @default 80
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * Set the selection model of the grid.
+   * Sets the selection model of the grid.
    */
   selectionModel: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
@@ -880,7 +882,7 @@ DataGridPremiumRaw.propTypes = {
    */
   sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
   /**
-   * Set the sort model of the grid.
+   * The sort model of the grid.
    */
   sortModel: PropTypes.arrayOf(
     PropTypes.shape({
@@ -897,8 +899,8 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
-   * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
+   * If positive, the DataGrid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
+   * Can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each individual update.
    * @default 0
    */
   throttleRowsMs: PropTypes.number,

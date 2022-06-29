@@ -213,7 +213,7 @@ In order for the Print export to work as expected set `X-Frame-Options: SAMEORIG
 
 You can add custom export formats by creating your own export menu.
 To simplify its creation, we export `<GridToolbarExportContainer />` which contains the menu logic.
-The default `<GridToolbarExport />` is defined as follow:
+The default `<GridToolbarExport />` is defined as follows:
 
 ```jsx
 const GridToolbarExport = ({ csvOptions, printOptions, ...other }) => (

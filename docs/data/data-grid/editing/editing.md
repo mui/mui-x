@@ -156,7 +156,7 @@ For convenience, you can also listen to these events using their respective prop
 These events and props are called with an object containing the row ID and column field of the cell that is being edited.
 The object also contains a `reason` param that specifies which type of interaction caused the event to be fired—for instance, `'cellDoubleClick'` when a double-click initiates edit mode.
 
-The following demo shows how to prevent the user from exiting edit mode when clicking outside of a cell.
+The following demo shows how to prevent the user from exiting edit mode when clicking outside a cell.
 To do this, the `onCellEditStop` prop is used to check if the `reason` is `'cellFocusOut'`.
 If that condition is true, it [disables](/x/react-data-grid/events/#disabling-the-default-behavior) the default event behavior.
 In this context, the user can only stop editing a cell by pressing <kbd class="key">Enter</kbd>, <kbd class="key">Escape</kbd> or <kbd class="key">Tab</kbd>.
@@ -292,7 +292,7 @@ In this case, `processRowUpdate` is resolved with the second argument—the orig
 
 The following demo shows how this approach can be used to ask for confirmation before sending the data to the server.
 If the user accepts the change, the internal state is updated with the values.
-But if the changes are rejected, the internal state remains unchanged, and the cell is reverted back to its original value.
+But if the changes are rejected, the internal state remains unchanged, and the cell is reverted to its original value.
 The demo also employs validation to prevent entering an empty name.
 
 {{"demo": "AskConfirmationBeforeSave.js", "bg": "inline", "defaultCodeOpen": false}}

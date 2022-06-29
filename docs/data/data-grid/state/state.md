@@ -37,7 +37,7 @@ const pageSize = gridPageSizeSelector(apiRef);
 ```
 
 :::info
-Calling with `apiRef.current.state` also works but it may cause side effects when multiple grid instances are in the same page.
+Calling with `apiRef.current.state` also works, but it may cause side effects when multiple grid instances are in the same page.
 If you still need to call it with the state, do not forget to pass the instance ID as the example:
 
 ```tsx
