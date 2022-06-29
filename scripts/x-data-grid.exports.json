@@ -461,6 +461,7 @@
   { "name": "renderEditDateCell", "kind": "Variable" },
   { "name": "renderEditInputCell", "kind": "Variable" },
   { "name": "renderEditSingleSelectCell", "kind": "Variable" },
+  { "name": "roRO", "kind": "Variable" },
   { "name": "ruRU", "kind": "Variable" },
   { "name": "selectedGridRowsCountSelector", "kind": "Variable" },
   { "name": "selectedGridRowsSelector", "kind": "Variable" },
