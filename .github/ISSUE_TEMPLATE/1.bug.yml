@@ -36,7 +36,7 @@ body:
       description: |
         Please provide a link to a live example and an unambiguous set of steps to reproduce this bug.
              
-        As a starting point, we recommend you browse our [documentation](https://mui.com/x/advanced-components/), and [select](https://mui.com/static/x/forking-an-example.png) the closest example to your use case.
+        As a starting point, we recommend you browse our [documentation](https://mui.com/x/advanced-components/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case.
 
         Or you can use a [basic template](https://codesandbox.io/s/mui-x-basic-template-uh3pm2?file=/src/App.tsx) to build a reproduction case.
 
