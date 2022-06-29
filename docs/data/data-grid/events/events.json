@@ -43,13 +43,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocusOut",
-    "description": "Fired when a cell loses focus.",
-    "params": "GridCellParams",
-    "event": "MuiEvent<MuiBaseEvent>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell.",
     "params": "GridCellParams",
@@ -79,21 +72,21 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnHeaderClick",
-    "description": "Fired when a column header is clicked",
+    "description": "Fired when a column header is clicked\nMapped to the <code>click</code> DOM event.\nCalled with a GridColumnHeaderParams object.",
     "params": "GridColumnHeaderParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnHeaderDoubleClick",
-    "description": "Fired when a column header is double-clicked.",
+    "description": "Fired when a column header is double-clicked.\nMapped to the <code>doubleClick</code> DOM event.\nCalled with a GridColumnHeaderParams object.",
     "params": "GridColumnHeaderParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnHeaderKeyDown",
-    "description": "Fired when a key is pressed in a column header. It&#39;s mapped do the <code>keydown</code> DOM event.",
+    "description": "Fired when a key is pressed in a column header.\nCalled with a GridColumnHeaderParams object.\nMapped do the <code>keydown</code> DOM event.",
     "params": "GridColumnHeaderParams",
     "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
@@ -135,7 +128,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnVisibilityChange",
-    "description": "Fired when a column visibility changes.\nIt is not fired when the <code>columnVisibilityModel</code> is controlled or initialized.\nIt is not fired when toggling all column&#39;s visibility at once.",
+    "description": "Fired when a column visibility changes.\nNot fired when the <code>columnVisibilityModel</code> is controlled or initialized.\nNot fired when toggling all column&#39;s visibility at once.",
     "params": "GridColumnVisibilityChangeParams",
     "event": "MuiEvent<{}>"
   },
@@ -240,21 +233,21 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "resize",
-    "description": "Fired when the grid is resized.",
+    "description": "Fired when the grid is resized.\nCalled with an ElementSize object.",
     "params": "ElementSize",
     "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowClick",
-    "description": "Fired when a row is clicked.\nNot fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
+    "description": "Fired when a row is clicked.\nNot fired if the cell clicked is from an interactive column (actions, checkbox, etc).\nMapped to the <code>click</code> DOM event.\nCalled with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowDoubleClick",
-    "description": "Fired when a row is double-clicked.",
+    "description": "Fired when a row is double-clicked.\nMapped to the <code>doubleClick</code> DOM event.\nCalled with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
@@ -296,14 +289,14 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowMouseEnter",
-    "description": "Fired when the mouse enters the row. Called with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
+    "description": "Fired when the mouse enters a row.\nMapped to the <code>mouseEnter</code> DOM event.\nCalled with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowMouseLeave",
-    "description": "Fired when the mouse leaves the row. Called with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
+    "description": "Fired when the mouse leaves a row.\nCalled with a <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a> object.\nMapped to the <code>mouseLeave</code> DOM event.",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
@@ -366,7 +359,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "viewportInnerSizeChange",
-    "description": "Fired when the inner size of the viewport changes. Called with an ElementSize object.",
+    "description": "Fired when the inner size of the viewport changes.\nCalled with an ElementSize object.",
     "params": "ElementSize",
     "event": "MuiEvent<{}>"
   }

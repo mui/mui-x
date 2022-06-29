@@ -149,7 +149,7 @@ DataGridProRaw.propTypes = {
    */
   defaultGroupingExpansionDepth: PropTypes.number,
   /**
-   * Sets the density of the grid.
+   * The density of the grid.
    * @default "standard"
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
@@ -240,7 +240,7 @@ DataGridProRaw.propTypes = {
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
   /**
-   * Sets the edit rows model of the grid.
+   * The edit rows model of the grid.
    */
   editRowsModel: PropTypes.object,
   /**
@@ -270,7 +270,7 @@ DataGridProRaw.propTypes = {
     return null;
   }),
   /**
-   * Sets the filter model of the grid.
+   * The filter model of the grid.
    */
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
@@ -348,7 +348,7 @@ DataGridProRaw.propTypes = {
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
-   * Sets the height in pixel of the column headers in the grid.
+   * The height in pixel of the column headers in the grid.
    * @default 56
    */
   headerHeight: PropTypes.number,
@@ -387,7 +387,7 @@ DataGridProRaw.propTypes = {
    */
   initialState: PropTypes.object,
   /**
-   * Callback fired when a cell is rendered, returns true if the cell is editable.
+   * Function that determines if a cell is editable (fired during the cell rendering).
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
@@ -400,7 +400,7 @@ DataGridProRaw.propTypes = {
    */
   isGroupExpandedByDefault: PropTypes.func,
   /**
-   * Determines if a row can be selected.
+   * Function that determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
@@ -417,7 +417,7 @@ DataGridProRaw.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Sets the locale text of the grid.
+   * The locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
@@ -637,14 +637,14 @@ DataGridProRaw.propTypes = {
    */
   onPinnedColumnsChange: PropTypes.func,
   /**
-   * Callback fired when the preferences panel is closed.
+   * Callback fired when the preference panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPreferencePanelClose: PropTypes.func,
   /**
-   * Callback fired when the preferences panel is opened.
+   * Callback fired when the preference panel is opened.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -741,7 +741,7 @@ DataGridProRaw.propTypes = {
    */
   page: PropTypes.number,
   /**
-   * Sets the number of rows in one page.
+   * The number of rows in one page.
    * If some rows have children (with the tree data or the row grouping),
    * this number represents the amount of top level rows wanted on each page.
    * @default 100
@@ -804,7 +804,7 @@ DataGridProRaw.propTypes = {
    */
   rows: PropTypes.array.isRequired,
   /**
-   * Sets the type of space between rows added by `getRowSpacing`.
+   * The type of space between rows added by `getRowSpacing`.
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
@@ -828,7 +828,7 @@ DataGridProRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * Sets the selection model of the grid.
+   * The selection model of the grid.
    */
   selectionModel: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
