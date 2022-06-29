@@ -77,7 +77,7 @@ function EditToolbar(props) {
 
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+      <Button startIcon={<AddIcon />} onClick={handleClick}>
         Add record
       </Button>
     </GridToolbarContainer>
@@ -168,7 +168,6 @@ export default function FullFeaturedCrudGrid() {
               icon={<SaveIcon />}
               label="Save"
               onClick={handleSaveClick(id)}
-              color="primary"
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}

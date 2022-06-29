@@ -48,7 +48,6 @@ function EditToolbar(props) {
         onClick={handleClick}
         onMouseDown={handleMouseDown}
         disabled={!selectedCellParams}
-        color="primary"
       >
         {selectedCellParams?.cellMode === 'edit' ? 'Save' : 'Edit'}
       </Button>

@@ -105,7 +105,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       });
     });
 
-    it('should call onColumnVisibilityModelChange with the new model when toggling all rows', () => {
+    it('should call onColumnVisibilityModelChange with the new model when toggling all columns', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGrid
@@ -130,6 +130,26 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       fireEvent.click(screen.getByText('Show all'));
       expect(onColumnVisibilityModelChange.callCount).to.equal(2);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
+    });
+
+    it('should not hide non hideable columns when toggling all columns', () => {
+      render(
+        <TestDataGrid
+          components={{
+            Toolbar: GridToolbar,
+          }}
+          columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {},
+            },
+          }}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      fireEvent.click(screen.getByText('Hide all'));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
     });
   });
 

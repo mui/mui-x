@@ -21,6 +21,7 @@ import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const nativeSetTimeout = setTimeout;
+const nativeClearTimeout = clearTimeout;
 
 describe('<DataGrid /> - Rows', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -485,6 +486,39 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     describe('dynamic row height', () => {
+      function ResizeObserverMock(
+        callback: (entries: { borderBoxSize: [{ blockSize: number }] }[]) => void,
+      ) {
+        let timeout: NodeJS.Timeout;
+
+        return {
+          observe: (element: HTMLElement) => {
+            // Simulates the async behavior of the native ResizeObserver
+            timeout = nativeSetTimeout(() => {
+              callback([{ borderBoxSize: [{ blockSize: element.clientHeight }] }]);
+            });
+          },
+          disconnect: () => {
+            nativeClearTimeout(timeout);
+          },
+        };
+      }
+
+      const originalResizeObserver = window.ResizeObserver;
+
+      beforeEach(() => {
+        const { userAgent } = window.navigator;
+
+        if (userAgent.includes('Chrome') && !userAgent.includes('Headless')) {
+          // Only use the mock in non-headless Chrome
+          window.ResizeObserver = ResizeObserverMock as any;
+        }
+      });
+
+      afterEach(() => {
+        window.ResizeObserver = originalResizeObserver;
+      });
+
       const TestCase = (
         props: Partial<DataGridProps> & {
           getBioContentHeight: (row: GridRowModel) => number;
@@ -520,11 +554,6 @@ describe('<DataGrid /> - Rows', () => {
       };
 
       it('should measure all rows and update the content size', async () => {
-        // Swallow "ResizeObserver loop limit exceeded" errors
-        // See https://github.com/WICG/resize-observer/issues/38
-        const originalErrorHandler = window.onerror;
-        window.onerror = () => {};
-
         const border = 1;
         const contentHeight = 100;
         render(<TestCase getBioContentHeight={() => contentHeight} getRowHeight={() => 'auto'} />);
@@ -538,8 +567,6 @@ describe('<DataGrid /> - Rows', () => {
           width: 'auto',
           height: `${expectedHeight}px`,
         });
-
-        window.onerror = originalErrorHandler;
       });
 
       it('should use the default row height to calculate the content size when the row has not been measured yet', async () => {
@@ -612,14 +639,14 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         );
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
         clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: '101px',
         });
-        setProps({ rows: [{ clientId: 'c1', expanded: true }] }); // Wait for ResizeObserver to send dimensions
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        setProps({ rows: [{ clientId: 'c1', expanded: true }] });
+        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
         clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
@@ -678,15 +705,12 @@ describe('<DataGrid /> - Rows', () => {
         expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 52);
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
         expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101); // Ensure that all rows before the last were measured
       });
 
       it('should allow to mix rows with dynamic row height and default row height', async () => {
-        // Swallow "ResizeObserver loop limit exceeded" errors
-        // See https://github.com/WICG/resize-observer/issues/38
-        const originalErrorHandler = window.onerror;
-        window.onerror = () => {};
-
         const headerHeight = 50;
         const densityFactor = 1.3;
         const rowHeight = 52;
@@ -713,8 +737,6 @@ describe('<DataGrid /> - Rows', () => {
           width: 'auto',
           height: `${Math.floor(expectedHeight)}px`,
         });
-
-        window.onerror = originalErrorHandler;
       });
     });
   });

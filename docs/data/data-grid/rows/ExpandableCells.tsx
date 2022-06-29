@@ -84,7 +84,7 @@ export default function ExpandableCells() {
         components={{ Toolbar: GridToolbar }}
         sx={{
           '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
-            py: '8px',
+            py: 1,
           },
           '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': {
             py: '15px',

@@ -63,7 +63,7 @@ describe('<StaticTimePicker />', () => {
     const onViewChangeMock = spy();
     render(
       <StaticTimePicker
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onViewChange={onViewChangeMock}
         renderInput={(props) => <TextField {...props} />}
@@ -114,7 +114,7 @@ describe('<StaticTimePicker />', () => {
     const onViewChangeMock = spy();
     render(
       <StaticTimePicker
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onViewChange={onViewChangeMock}
         renderInput={(props) => <TextField {...props} />}

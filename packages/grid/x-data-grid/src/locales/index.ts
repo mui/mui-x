@@ -20,6 +20,7 @@ export * from './plPL';
 export * from './ptBR';
 export * from './ruRU';
 export * from './skSK';
+export * from './svSE';
 export * from './trTR';
 export * from './ukUA';
 export * from './viVN';

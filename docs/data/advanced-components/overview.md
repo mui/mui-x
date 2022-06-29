@@ -1,5 +1,5 @@
 ---
-title: MUI X - Overview
+title: Overview
 ---
 
 # MUI X - Overview
@@ -89,6 +89,16 @@ You will need to purchase a commercial license in order to remove the watermarks
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
 
+:::warning
+Licenses purchased after **May 13, 2022** are only compatible with MUI X `v5.11.0` or later.
+
+Please update your packages if you are using an earlier version.
+
+If this is not a viable solution for your use case, please contact sales@mui.com.
+:::
+
+### How to install the key?
+
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
 
@@ -98,7 +108,7 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ### Where to install the key?
 
 You must call `setLicenseKey` before React renders the first component.
-You only need to install the key once in your application.
+You only need to install the key **once** in your application.
 
 ### Does each developer need its own key?
 
@@ -111,7 +121,7 @@ The license key is checked without making any network requests—it's designed t
 In fact, it's expected for the license key to be exposed in a JavaScript bundle.
 We just ask our licensed users not to publicize their license keys.
 
-### Validation errors
+### Validation failures
 
 If the validation of the license key fails, the component displays a watermark and provides a console warning in both development and production.
 End users can still use the component.
@@ -133,23 +143,38 @@ If the license key is missing, the component will look something like this:
 
 #### License key expired
 
-Licenses are perpetual: the license key will work forever with the current version of the software.
+The license key will work **forever in a production environment** with any version released before your license term ends.
 
-But **access to updates and upgrades** is not perpetual.
-An expired license key will always work with the version of the component it was licensed to cover.
-But if you try to install a newer version of the component with an expired license, it will display a watermark and a console warning.
+However, when the term ends, you won't be licensed to access newer updates and upgrades, nor use the current or older versions in a **development environment**.
+In these cases, the component will display a watermark and a console warning, stating that the license is no longer valid.
+
 For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next 12 months.
-But you will not be able to install a newer version released two years from now, unless you purchase a new license to cover it.
+Those versions will always be available for use in a deployed application.
+But you'll be required to renew your license if you need to update to a version released 18 months later or continue development with a version released in the first 12 months.
 
 #### Invalid license key
 
-This error indicates that your license key doesn't match what was issued by MUI—this is likely a typo.
+This error indicates that your license key doesn't match what was issued by MUI (this is likely a typo).
+
+#### Invalid license key (TypeError: extracting license expiry timestamp)
+
+The following JavaScript exception indicates that you may be trying to validate [the new license's key format on an older version of the npm package](#license-key-installation).
+
+:::error
+Error extracting license expiry timestamp.
+
+TypeError: Cannot read properties of null (reading '1') at verifyLicense.
+:::
+
+You can solve this error by updating MUI X to `v5.11.0` or later (assuming your license key is correct).
 
 ## Support
 
 ### GitHub
 
-We use GitHub issues as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
+We use GitHub issues as a bug and feature request tracker.
+If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed).
+You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 
 [Open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repo.
 
