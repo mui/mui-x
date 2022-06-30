@@ -56,10 +56,8 @@ import {
   useGridRowReorder,
   useGridRowReorderPreProcessors,
 } from '@mui/x-data-grid-pro/internals';
-
 import { GridApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
-
 // Premium-only features
 import {
   useGridRowGrouping,
@@ -118,11 +116,11 @@ export const useDataGridPremiumComponent = (
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
-  useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi

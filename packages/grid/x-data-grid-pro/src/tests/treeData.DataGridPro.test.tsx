@@ -525,6 +525,43 @@ describe('<DataGridPro /> - Tree Data', () => {
       // B has B.A (match filter), B.B (has matching children), B.B.A (match filters), B.B.A.A (match filters)
       expect(getColumnValues(0)).to.deep.equal(['A (1)', 'B (4)']);
     });
+
+    it('should apply quick filter without throwing error', () => {
+      render(
+        <Test
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: ['A', 'B'],
+              },
+            },
+          }}
+        />,
+      );
+
+      // A has A.A but not A.B
+      // B has B.A (match filter), B.B (has matching children), B.B.A (match filters), B.B.A.A (match filters)
+      expect(getColumnValues(0)).to.deep.equal(['A (1)', 'B (4)']);
+    });
+
+    it('should remove generated rows when they and their children do not pass quick filter', () => {
+      render(
+        <Test
+          rows={[
+            { name: 'A.B' },
+            { name: 'A.C' },
+            { name: 'B.C' },
+            { name: 'B.D' },
+            { name: 'D.A' },
+          ]}
+          filterModel={{ items: [], quickFilterValues: ['D'] }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['B (1)', 'D', 'D (1)', 'A']);
+    });
   });
 
   describe('sorting', () => {

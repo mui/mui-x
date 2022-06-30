@@ -299,6 +299,9 @@ More details are available in the demo.
 | `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
 | `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
 
+The value input is a special case, because it can contain a wide variety of components (the one we provide or [your custom `InputComponent`](#create-a-custom-operator)).
+To pass props directly to the `InputComponent` and not its wrapper, you can use `valueInputProps.InputComponentProps`.
+
 {{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
 
 ### Customize the filter panel position
@@ -353,7 +356,7 @@ This function takes as an input a value of the quick filter and returns another 
 In the example below, a custom filter is created for the `date` column to check if it contains the correct year.
 
 ```ts
-getApplyFilterFn: (value: string) => {
+getApplyQuickFilterFn: (value: string) => {
   if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
     // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
     return null;
@@ -364,7 +367,7 @@ getApplyFilterFn: (value: string) => {
 };
 ```
 
-To remove the quick filtering on a given column set `getApplyFilterFn: undefined`.
+To remove the quick filtering on a given column set `getApplyQuickFilterFn: undefined`.
 
 In the demo bellow, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on".
 
@@ -412,10 +415,11 @@ More information about the selectors and how to use them on the [dedicated page]
 
 ## API
 
-- [DataGrid](/x/api/data-grid/data-grid/)
-- [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [GridFilterForm](/x/api/data-grid/grid-filter-form/)
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
 - [GridFilterModel](/x/api/data-grid/grid-filter-model/)
 - [GridFilterOperator](/x/api/data-grid/grid-filter-operator/)
 - [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
