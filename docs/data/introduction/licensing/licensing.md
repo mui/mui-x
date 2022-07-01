@@ -5,6 +5,7 @@
 ## MIT vs. commercial licenses
 
 MUI has been building MIT-licensed React components since 2014, and we are committed to the continued advancement of the open-source libraries.
+Anything we release under an MIT license will remain MIT-licensed forever.
 You can learn more about our stewardship ethos in [this document from our company handbook](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 
 We offer commercial licenses to developers who need the most advanced features that cannot be easily maintained by the open-source community.
@@ -41,13 +42,6 @@ Pro packages:
 The features exclusive to the Pro version are marked with the <span class="plan-pro"></span> icon throughout the documentation.
 :::
 
-<div class="only-light-mode">
-  <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
-</div>
-<div class="only-dark-mode">
-  <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
-</div>
-
 ### Premium Plan<span class="plan-premium"></span>
 
 The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, and aggregation, in addition to everything that's included in the Pro Plan.
@@ -71,22 +65,22 @@ You will need to purchase a commercial license in order to remove the watermarks
 
 ## How many developer seats do I need?
 
-The number of seats purchased on your license must correspond to the number of concurrent
-developers contributing changes to the front-end code of the projects that uses MUI X Pro or
-Premium.
+The number of seats purchased on your license must correspond to the number of concurrent developers contributing changes to the front-end code of the project that uses MUI X Pro or Premium.
 
-**Example 1.** Company 'A' is developing an application named 'AppA'. The app needs to
-render 10K rows of data in a table and allow users to group, filter, and sort. The dev team
-adds MUI X Pro to the project to satisfy this requirement. Five front-end and ten back-end
-developers are working on 'AppA'. Only one developer is tasked with configuring and modifying
-the data grid. The front-end developers and only are contributing code to the front-end.
+**Example 1.** Company 'A' is developing an application named 'AppA'. 
+The app needs to render 10K rows of data in a table and allow users to group, filter, and sort. 
+The dev team adds MUI X Pro to the project to satisfy this requirement. 
+Five front-end and ten back-end developers are working on 'AppA'. 
+Only one developer is tasked with configuring and modifying the data grid. 
+The front-end developers and only are contributing code to the front-end. 
 Company 'A' purchases five licenses.
 
 **Example 2.** A UI development team at Company 'B' creates its own UI library for
-internal development and includes MUI X Pro as a component. The team working on 'AppA' uses
-the new library and so does the team working on 'AppB'. 'AppA' has 5 front-end developers
-and 'AppB' has three. There are two front-end developers on the UI development team. Company 'B'
-purchases ten licenses.
+internal development and includes MUI X Pro as a component. 
+The team working on 'AppA' uses the new library and so does the team working on 'AppB'. 
+'AppA' has 5 front-end developers and 'AppB' has three. 
+There are two front-end developers on the UI development team. 
+Company 'B' purchases ten licenses.
 
 This is [the relevant clause in the EULA.](https://mui.com/store/legal/mui-x-eula/#required-quantity-of-licenses)
 
@@ -115,6 +109,20 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 You need to call `setLicenseKey` before React renders the first component.
 You only need to install the key once in your application.
+
+:::info
+When using NextJS, you should call `setLicenseKey` in [`_app.js`](https://nextjs.org/docs/advanced-features/custom-app):
+
+```tsx
+LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+
+function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />
+}
+
+export default MyApp;
+```
+:::
 
 ### What is the key for?
 
