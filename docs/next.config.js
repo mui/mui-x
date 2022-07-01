@@ -162,15 +162,5 @@ module.exports = {
       destination: '/x/introduction/',
       permanent: false,
     },
-    {
-      source: '/components/data-grid/:path*',
-      destination: '/x/react-data-grid/:path*',
-      permanent: false,
-    },
-    {
-      source: '/api/data-grid/:path*',
-      destination: '/x/api/data-grid/:path*',
-      permanent: false,
-    },
   ],
 };

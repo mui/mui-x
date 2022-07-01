@@ -12,6 +12,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
 import { ValueOptions } from '../../models/colDef/gridColDef';
 import { getValueFromValueOptions } from '../panel/filterPanel/filterPanelUtils';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.ElementType) => {
   const isOptionTypeObject = typeof option === 'object';
@@ -62,6 +63,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     ...other
   } = props;
 
+  const apiRef = useGridApiContext();
   const ref = React.useRef<any>();
   const inputRef = React.useRef<any>();
   const rootProps = useGridRootProps();
@@ -101,7 +103,10 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       await onValueChange(event, formattedTargetValue);
     }
 
-    const isValid = await api.setEditCellValue({ id, field, value: formattedTargetValue }, event);
+    const isValid = await apiRef.current.setEditCellValue(
+      { id, field, value: formattedTargetValue },
+      event,
+    );
 
     if (rootProps.experimentalFeatures?.newEditingApi) {
       return;
@@ -112,14 +117,18 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       return;
     }
 
-    const canCommit = await Promise.resolve(api.commitCellChange({ id, field }, event));
+    const canCommit = await Promise.resolve(apiRef.current.commitCellChange({ id, field }, event));
     if (canCommit) {
-      api.setCellMode(id, field, 'view');
+      apiRef.current.setCellMode(id, field, 'view');
 
       if ((event as any).key) {
         // TODO v6: remove once we stop ignoring events fired from portals
-        const params = api.getCellParams(id, field);
-        api.publishEvent('cellNavigationKeyDown', params, event);
+        const params = apiRef.current.getCellParams(id, field);
+        apiRef.current.publishEvent(
+          'cellNavigationKeyDown',
+          params,
+          event as any as React.KeyboardEvent<HTMLElement>,
+        );
       }
     }
   };
@@ -131,9 +140,9 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
     if (reason === 'backdropClick' || isEscapeKey(event.key)) {
       if (rootProps.experimentalFeatures?.newEditingApi) {
-        api.stopCellEditMode({ id, field, ignoreModifications: true });
+        apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
       } else {
-        api.setCellMode(id, field, 'view');
+        apiRef.current.setCellMode(id, field, 'view');
       }
     }
   };
