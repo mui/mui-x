@@ -56,6 +56,12 @@ Premium package:
 The features exclusive to the Premium version are marked with the <span class="plan-premium"></span> icon throughout the documentation.
 :::
 
+## Upgrading from Pro to Premium
+
+You can use your Pro license as a credit when purchasing MUI X Premium.
+We’ll provide you with a discount based on the remaining time that your current license is valid.
+Please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium) to upgrade.
+
 ## Evaluation (trial) licenses
 
 In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
