@@ -2,36 +2,72 @@
 title: Data Grid - Events
 ---
 
-# Data grid - Events [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Events
 
-<p class="description">The data grid emits events that can be subscribed to attach custom behavior.</p>
+<p class="description">Subscribe to the events emitted by the data grid to trigger custom behavior.</p>
 
 ## Subscribing to events
 
-You can subscribe to one of the [events emitted](/x/react-data-grid/events/#catalog-of-events) by calling `apiRef.current.subscribeEvent()` with the name of the event and a handler. The handler will be called with three arguments:
+You can subscribe to one of the [events emitted](/x/react-data-grid/events/#catalog-of-events) by providing an event handler to the grid.
 
-1. an object with information related to the event
-2. a `MuiEvent` containing the DOM event or the React synthetic event, when available
-3. a `GridCallbackDetails` containing the `GridApi` only if `DataGridPro` is being used.
+The handler is a method that will be called with three arguments:
+
+1. the parameters containing the information related to the event.
+2. the `MuiEvent` containing the DOM event or the React synthetic event, when available.
+3. the `GridCallbackDetails` containing the `GridApi` only if `DataGridPro` or `DataGridPremium` is being used.
+
+For instance here is an event handler for the `rowClick` event:
 
 ```tsx
-/**
- * Allows to register a handler for an event.
- * @param event The name of event
- * @param handler The handler to be called
- * @param options Additional options for this listener
- * @returns A function to unsubscribe from this event
- */
-subscribeEvent: (
-    event: GridEventsStr,
-    handler: (params: any, event: MuiEvent, details: GridCallbackDetails) => void,
-    options?: EventListenerOptions,
-) => () => void;
+const onEvent: GridEventListener<'rowClick'> = (
+  params, // GridRowParams
+  event, // MuiEvent<React.MouseEvent<HTMLElement>>
+  details, // GridCallbackDetails
+) => {
+  setMessage(`Movie "${params.row.title}" clicked`);
+};
 ```
 
-The following demo shows how to subscribe to the `columnResize` event. Try it by resizing the columns.
+You can provide this event handler to the grid in several ways:
 
-{{"demo": "SubscribeToEvents.js", "bg": "inline"}}
+### With the prop of the event
+
+```tsx
+<DataGrid onRowClick={onEvent} {...other} />
+```
+
+:::info
+Not all the event have a dedicated prop.
+You can find if the event you want to use has one by looking at its example in the catalog below.
+:::
+
+The following demo shows how to subscribe to the `rowClick` event using the `onRowClick` prop. Try it by clicking on any row.
+
+{{"demo": "SubscribeToEventsProp.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### With `useGridApiEventHandler`
+
+```tsx
+useGridApiEventHandler('rowClick', onEvent);
+```
+
+:::warning
+This hook can only be used inside the scope of the grid (inside component slots or cell renderers for instance).
+:::
+
+The following demo shows how to subscribe to the `rowClick` event using `useGridApiEventHandler`. Try it by clicking on any row.
+
+{{"demo": "SubscribeToEventsHook.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### With `apiRef.current.subscribeEvent` [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+
+```tsx
+apiRef.current.subscribeEvent('rowClick', onEvent);
+```
+
+The following demo shows how to subscribe to the `rowClick` event using `apiRef.current.subscribeEvent`. Try it by clicking on any row.
+
+{{"demo": "SubscribeToEventsApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Disabling the default behavior
 
