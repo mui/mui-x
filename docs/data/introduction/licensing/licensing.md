@@ -67,19 +67,19 @@ You will need to purchase a commercial license in order to remove the watermarks
 
 The number of seats purchased on your license must correspond to the number of concurrent developers contributing changes to the front-end code of the project that uses MUI X Pro or Premium.
 
-**Example 1.** Company 'A' is developing an application named 'AppA'. 
-The app needs to render 10K rows of data in a table and allow users to group, filter, and sort. 
-The dev team adds MUI X Pro to the project to satisfy this requirement. 
-Five front-end and ten back-end developers are working on 'AppA'. 
-Only one developer is tasked with configuring and modifying the data grid. 
-The front-end developers and only are contributing code to the front-end. 
+**Example 1.** Company 'A' is developing an application named 'AppA'.
+The app needs to render 10K rows of data in a table and allow users to group, filter, and sort.
+The dev team adds MUI X Pro to the project to satisfy this requirement.
+Five front-end and ten back-end developers are working on 'AppA'.
+Only one developer is tasked with configuring and modifying the data grid.
+The front-end developers and only are contributing code to the front-end.
 Company 'A' purchases five licenses.
 
 **Example 2.** A UI development team at Company 'B' creates its own UI library for
-internal development and includes MUI X Pro as a component. 
-The team working on 'AppA' uses the new library and so does the team working on 'AppB'. 
-'AppA' has 5 front-end developers and 'AppB' has three. 
-There are two front-end developers on the UI development team. 
+internal development and includes MUI X Pro as a component.
+The team working on 'AppA' uses the new library and so does the team working on 'AppB'.
+'AppA' has 5 front-end developers and 'AppB' has three.
+There are two front-end developers on the UI development team.
 Company 'B' purchases ten licenses.
 
 This is [the relevant clause in the EULA.](https://mui.com/store/legal/mui-x-eula/#required-quantity-of-licenses)
@@ -117,11 +117,12 @@ When using NextJS, you should call `setLicenseKey` in [`_app.js`](https://nextjs
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;
 ```
+
 :::
 
 ### What is the key for?
