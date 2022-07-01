@@ -50,7 +50,7 @@ The features exclusive to the Pro version are marked with the <span class="plan-
 
 ### Premium Plan<span class="plan-premium"></span>
 
-The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, aggregation, in addition to everything that's included in the Pro Plan.
+The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, and aggregation, in addition to everything that's included in the Pro Plan.
 
 The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
 
