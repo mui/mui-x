@@ -38,9 +38,7 @@ body:
              
         As a starting point, we recommend you browse our [documentation](https://mui.com/x/advanced-components/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case.
 
-        Or you can use a [basic template](https://codesandbox.io/s/mui-x-basic-template-uh3pm2?file=/src/App.tsx) to build a reproduction case.
-
-        If you have an issue concerning TypeScript please start from this TypeScript playground: https://mui.com/r/ts-issue-template.
+        Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
 
         Issues that we can't reproduce will be closed.
       value: |
