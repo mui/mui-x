@@ -42,6 +42,7 @@ import {
   selectionStateInitializer,
   useGridColumnGrouping,
   columnGroupsStateInitializer,
+  useGridColumnGroupingPreProcessors,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -79,6 +80,7 @@ export const useDataGridProComponent = (
   /**
    * Register all pre-processors called during state initialization here.
    */
+  useGridColumnGroupingPreProcessors(apiRef, props);
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);

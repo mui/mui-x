@@ -22,6 +22,7 @@ export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columns/useGridColumnGrouping';
+export { useGridColumnGroupingPreProcessors } from '../hooks/features/columns/useGridColumnGroupingPreProcessors';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,

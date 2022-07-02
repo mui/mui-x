@@ -49,6 +49,7 @@ import {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columns/useGridColumnGrouping';
+import { useGridColumnGroupingPreProcessors } from '../hooks/features/columns/useGridColumnGroupingPreProcessors';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
@@ -56,6 +57,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   /**
    * Register all pre-processors called during state initialization here.
    */
+  useGridColumnGroupingPreProcessors(apiRef, props);
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
 

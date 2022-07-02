@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
@@ -12,7 +11,6 @@ import { gridColumnGroupsLookupSelector, gridColumnLookupSelector } from './grid
 import { GridColumnGroupLookup } from './gridColumnsInterfaces';
 import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { isDeepEqual } from '../../../utils/utils';
 import { GridStateColDef, GridColDef } from '../../../models/colDef';
 
 export function hasGroupPath(
@@ -157,39 +155,6 @@ export const useGridColumnGrouping = (
   };
 
   useGridApiMethod(apiRef, columnGroupingApi, 'GridColumnGroupingApi');
-
-  /**
-   * Processors
-   * */
-  const addHeaderGroups = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
-    (columnsState) => {
-      if (!props.columnGroupingModel) {
-        return columnsState;
-      }
-      const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel);
-      if (Object.keys(unwrappedGroupingModel).length === 0) {
-        return columnsState;
-      }
-
-      columnsState.all.forEach((field) => {
-        const newGroupPath = unwrappedGroupingModel[field] ?? [];
-
-        const lookupElement = columnsState.lookup[field];
-        if (hasGroupPath(lookupElement) && isDeepEqual(newGroupPath, lookupElement?.groupPath)) {
-          // Avoid modifying the pointer to allow shadow comparison in https://github.com/mui/mui-x/blob/f90afbf10a1264ee8b453d7549dd7cdd6110a4ed/packages/grid/x-data-grid/src/hooks/features/columns/gridColumnsUtils.ts#L446:L453
-          return;
-        }
-        columnsState.lookup[field] = {
-          ...columnsState.lookup[field],
-          groupPath: unwrappedGroupingModel[field] ?? [],
-        };
-      });
-      return columnsState;
-    },
-    [props.columnGroupingModel],
-  );
-
-  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', addHeaderGroups);
 
   /**
    * EFFECTS

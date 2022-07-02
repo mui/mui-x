@@ -55,6 +55,7 @@ import {
   useGridColumnSpanning,
   useGridRowReorder,
   useGridRowReorderPreProcessors,
+  useGridColumnGroupingPreProcessors,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -75,6 +76,7 @@ export const useDataGridPremiumComponent = (
   /**
    * Register all pre-processors called during state initialization here.
    */
+  useGridColumnGroupingPreProcessors(apiRef, props);
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
