@@ -16,6 +16,7 @@
     "displayStaticWrapperAs": "Force static wrapper inner components to be rendered in mobile or desktop mode.",
     "getOpenDialogAriaText": "Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(date: TInputDate, utils: MuiPickersAdapter&lt;TDate&gt;) =&gt; string</code><br><em>date:</em> The date from which we want to add an aria-text.<br><em>utils:</em> The utils to manipulate the date.<br> <em>returns</em> (string): The aria-text to render inside the dialog.",
     "getViewSwitchingButtonText": "Get aria-label text for switching between views button.<br><br><strong>Signature:</strong><br><code>function(currentView: CalendarPickerView) =&gt; string</code><br><em>currentView:</em> The view from which we want to get the button text.<br> <em>returns</em> (string): The label of the view.",
+    "headerDayFormatter": "Format the day name displayed in the calendar header<br><br><strong>Signature:</strong><br><code>function(day: string) =&gt; string</code><br><em>day:</em> The day name provided by the adapter&#39;s method <code>getWeekdays</code><br> <em>returns</em> (string): The name to display",
     "InputAdornmentProps": "Props to pass to keyboard input adornment.",
     "inputFormat": "Format string.",
     "inputRef": "Pass a ref to the <code>input</code> element.",

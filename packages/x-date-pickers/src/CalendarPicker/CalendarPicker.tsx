@@ -497,6 +497,13 @@ CalendarPicker.propTypes = {
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**
+   * Format the day name displayed in the calendar header
+   * @param {string} day The day name provided by the adapter's method `getWeekdays`
+   * @returns {string} The name to display
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  headerDayFormatter: PropTypes.func,
+  /**
    * Left arrow icon aria-label text.
    * @deprecated
    */
