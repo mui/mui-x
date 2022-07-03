@@ -11,9 +11,10 @@ import {
 import Button from '@mui/joy/Button';
 import IconButton from '@mui/joy/IconButton';
 import Checkbox from '@mui/joy/Checkbox';
-// import TextField from '@mui/joy/TextField';
+import TextField from '@mui/joy/TextField';
 import DarkMode from '@mui/icons-material/DarkMode';
 import LightMode from '@mui/icons-material/LightMode';
+import Search from '@mui/icons-material/Search';
 
 const theme = extendJoyTheme(extendMuiTheme() as ThemeInput);
 
@@ -69,7 +70,7 @@ export default function Playground() {
           components={{
             Toolbar: GridToolbar,
             BaseCheckbox: Checkbox,
-            // BaseTextField: TextField,
+            BaseTextField: TextField,
             BaseButton: Button,
           }}
           componentsProps={{
@@ -77,6 +78,11 @@ export default function Playground() {
             baseButton: {
               variant: 'plain',
               size: 'sm',
+            },
+            baseTextField: {
+              size: 'sm',
+              variant: 'outlined',
+              startDecorator: <Search />,
             },
           }}
           loading={loading}
