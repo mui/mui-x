@@ -19,10 +19,12 @@ As an example, you could override the action bar and pass additional props as be
 <DatePicker
   {...otherProps}
   components={{
+    // Override default <ActionBar /> with a custom one
     ActionBar: CustomActionBar,
   }}
   componentsProps={{
-    actionBar: ['clear'],
+    // pass props `actions={['clear']}` to the actionBar slot
+    actionBar: { actions: ['clear'] },
   }}
 />
 ```
